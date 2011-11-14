@@ -1,0 +1,22 @@
+<!DOCTYPE validators PUBLIC
+        "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.2.dtd">
+
+<validators>
+	
+    <field name="serviceKey">
+    	<field-validator type="requiredstring" short-circuit="true">
+            <message key="requiredstring"/>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+           <param name="expression"><![CDATA[([a-zA-Z0-9_])*]]></param>
+           <message key="wrongCharacters" />
+        </field-validator>
+		<field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+			<message key="wrongMaxLength" />
+		</field-validator>
+    </field>
+    
+</validators>

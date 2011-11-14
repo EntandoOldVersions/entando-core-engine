@@ -1,0 +1,7 @@
+<project name="entando-core-engine" default="init" basedir=".">
+	<description>entando-core-engine - Build file</description>
+	
+	<import file="buildProperties.xml"/>
+	<import file="buildTasks.xml"/>
+	
+</project>

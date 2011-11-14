@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <constant name="struts.devMode" value="false" />
+    
+    <package name="japs-default" extends="tiles-default">
+    	
+		<result-types>
+			
+			<result-type name="redirectActionWithAnchor" class="com.agiletec.apsadmin.system.dispatcher.ServletActionRedirectResultWithAnchor" />
+			
+			<!-- **Deprecated** : inserted to ensure compatibility with previous of jAPS 2.0 version 2.0.6 -->
+			<result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>
+			
+		</result-types>
+    	
+    	<interceptors>
+    		
+    		<interceptor name="requestAuth" class="com.agiletec.apsadmin.system.InterceptorMadMax" />
+    		<interceptor name="backofficeRequestAuth" class="com.agiletec.apsadmin.system.InterceptorMadMax2nd" />
+    		<interceptor name="apsActionParams" class="com.agiletec.apsadmin.system.ApsActionParamsInterceptor" />
+    		<interceptor name="chain" class="com.agiletec.apsadmin.system.ChainingInterceptor" />
+    		
+    		<interceptor-stack name="japsFreeStack">
+				<interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="apsActionParams"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+			</interceptor-stack>
+			
+			<interceptor-stack name="japsFreeValidationStack">
+				<interceptor-ref name="japsFreeStack" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+			</interceptor-stack>
+			
+			<interceptor-stack name="japsDefaultStack">
+				<interceptor-ref name="backofficeRequestAuth"/>
+        		<interceptor-ref name="requestAuth"/>
+        		<interceptor-ref name="japsFreeStack"/>
+			</interceptor-stack>
+			
+			<interceptor-stack name="japsValidationStack">
+				<interceptor-ref name="backofficeRequestAuth"/>
+        		<interceptor-ref name="requestAuth"/>
+				<interceptor-ref name="japsFreeValidationStack" />
+			</interceptor-stack>
+			
+		</interceptors>
+    	
+    	<global-results>
+    		<result name="homepage">/index.jsp</result>
+    		<result name="failure">/WEB-INF/apsadmin/jsp/common/error.jsp</result>
+    		<result name="userNotAllowed" type="tiles">admin.userNotAllowedMessage</result>
+    		<result name="apslogin" type="redirectAction">
+    			<param name="actionName">login</param>
+            	<param name="namespace">/do</param>
+            </result>
+		</global-results>
+    	
+    </package>
+    
+    <package name="japs-front-default" extends="japs-default">
+		
+    	<interceptors>
+    		
+    		<interceptor name="i18nFrontEnd" class="com.agiletec.apsadmin.system.I18nFrontEndInterceptor" />
+    		
+    		<interceptor-stack name="japsFrontEndFreeStack">
+				<interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18nFrontEnd"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="apsActionParams"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="params"/>
+                <interceptor-ref name="conversionError"/>
+			</interceptor-stack>
+    		
+			<interceptor-stack name="japsFrontEndStack">
+        		<interceptor-ref name="requestAuth"/>
+        		<interceptor-ref name="japsFrontEndFreeStack"/>
+			</interceptor-stack>
+			
+			<interceptor-stack name="japsFrontEndFreeValidationStack">
+				<interceptor-ref name="japsFrontEndFreeStack" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel</param>
+                </interceptor-ref>
+			</interceptor-stack>
+			
+			<interceptor-stack name="japsFrontEndValidationStack">
+        		<interceptor-ref name="requestAuth"/>
+				<interceptor-ref name="japsFrontEndFreeValidationStack" />
+			</interceptor-stack>
+			
+    	</interceptors>
+    	
+    	<global-results>
+    		<result name="failure" type="dispatcher">/WEB-INF/aps/jsp/system/internalServlet_error.jsp</result>
+    		<result name="userNotAllowed" type="dispatcher">/WEB-INF/aps/jsp/system/internalServlet_userNotAllowed.jsp</result>
+		</global-results>
+		
+	</package>
+	
+	<include file="com/agiletec/apsadmin/admin/baseAdmin.xml"/>
+    <include file="com/agiletec/apsadmin/admin/lang/lang.xml"/>
+	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml"/>
+    <include file="com/agiletec/apsadmin/common/common.xml"/>
+    
+    <include file="com/agiletec/apsadmin/category/category.xml"/>
+    
+    <include file="com/agiletec/apsadmin/portal/page.xml" />
+	<include file="com/agiletec/apsadmin/portal/specialshowlet/specialShowlet.xml" />
+	<include file="com/agiletec/apsadmin/portal/showletType.xml" />
+	
+	<include file="com/agiletec/apsadmin/content/model/contentModel.xml" />
+    <include file="com/agiletec/apsadmin/user/user.xml" />
+    <include file="com/agiletec/apsadmin/user/role/role.xml" />
+    <include file="com/agiletec/apsadmin/user/group/group.xml" />
+    
+    <include file="com/agiletec/apsadmin/system/entity/entity.xml"/>
+    <include file="com/agiletec/apsadmin/system/entity/type/entity.xml"/>
+    
+    <include file="org/entando/entando/apsadmin/api/api.xml" />
+    
+</struts>

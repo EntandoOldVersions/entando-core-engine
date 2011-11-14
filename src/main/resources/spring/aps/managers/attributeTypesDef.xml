@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="DateAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.DateAttribute" >
+		<property name="type" value="Date" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.DateAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="NumberAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute" >
+		<property name="type" value="Number" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.NumberAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="MonoTextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute" >
+		<property name="type" value="Monotext" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.MonoTextAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="EnumeratorAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute" 
+			parent="MonoTextAttribute">
+		<property name="type" value="Enumerator" />
+	</bean>
+	
+	<bean id="TextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.TextAttribute" >
+		<property name="type" value="Text" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.TextAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="LongtextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.TextAttribute" >
+		<property name="type" value="Longtext" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.TextAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="HypertextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute" >
+		<property name="type" value="Hypertext" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.HypertextAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="BooleanAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute" >
+		<property name="type" value="Boolean" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.BooleanAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="ThreeStateBooleanAttribute" parent="BooleanAttribute" >
+		<property name="type" value="ThreeState" />
+	</bean>
+	
+	<bean id="CheckBoxAttribute" parent="BooleanAttribute" >
+		<property name="type" value="CheckBox" />
+	</bean>
+	
+	<bean id="CompositeAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute" >
+		<property name="type" value="Composite" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.CompositeAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="ListAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.ListAttribute" >
+		<property name="type" value="List" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.ListAttributeHandler" />
+		</property>
+	</bean>
+	
+	<bean id="MonoListAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute" >
+		<property name="type" value="Monolist" />
+		<property name="handler" >
+			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.ListAttributeHandler" />
+		</property>
+	</bean>
+	
+</beans>

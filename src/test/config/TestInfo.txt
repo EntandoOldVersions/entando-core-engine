@@ -1,0 +1,28 @@
+Info per la corretta esecuzione dei test.
+
+
+FILE systemParams.properties
+Configurare adeguatamente questi parametri:
+1) Le property "username" e "password" dei datasource di test definiti. 
+Configurare "url" e "driverClassName" nel caso di configurazioni particolari.
+2) La property "logFilePrefix";
+La property definisce la posizione assoluta su disco della cartella dove vengono scrittii log di sistema; 
+nel caso si vogliano velocizzare i test (e non interessino i log) inserire un percorso inesistente.
+3) Le property "resourceDiskRootFolder", "indexDiskRootFolder" e "protectedResourceDiskRootFolder".
+Non modificare le proprietà "configVersion", "applicationBaseURL", "resourceRootURL" e "cachePropertiesFilePath".
+
+
+FILE oscacheTest.properties
+Configurare (secondo istruzioni presenti nello stesso file) il parametro cache.path
+
+
+NOTA:
+Per sistemi windows, i percorsi assoluti su disco devono presentare il FileSeparator 
+con doppio slash \\
+ESEMPIO:
+indexDiskRootFolder=C:\\Tomcat 5.0\\webapps\\Entando\\indexdir
+
+Per sistemi non windows, i percorsi assoluti su disco devono presentare il FileSeparator 
+con slash singolo /
+ESEMPIO:
+indexDiskRootFolder=/usr/local/tomcat5/webapps/Entando/indexdir

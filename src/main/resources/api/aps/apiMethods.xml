@@ -1,0 +1,29 @@
+<apiMethodDefinitions>
+	
+	<method name="getServices" active="true" canSpawnOthers="false">
+		<source>core</source>
+		<description>Returns the services configured in this instance of Entando.</description>
+		<springBean name="MasterApiMethodsInterface" method="getServices" />
+		<responseClass>org.entando.entando.aps.system.services.api.response.ServiceResponse</responseClass>
+		<parameters>
+			<parameter key="tag" required="false">
+				<description>The tag (or part thereof) of the services to return.</description>
+			</parameter>
+                        <parameter key="myentando" required="false">
+				<description>Filters the services based on compatibility with MyEntando. Entries true or false</description>
+			</parameter>
+		</parameters>
+	</method>
+	
+	<method name="getService" active="true" canSpawnOthers="false">
+		<source>core</source>
+		<description>Returns one of the services configured in this instance of Entando.</description>
+		<springBean name="MasterApiMethodsInterface" method="getService" />
+		<parameters>
+			<parameter key="key" required="true">
+				<description>The unique key of the wanted service.</description>
+			</parameter>
+		</parameters>
+	</method>
+	
+</apiMethodDefinitions>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="AbstractAttributeManager" abstract="true" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.AbstractAttributeManager" >
+		<property name="langManager" ref="LangManager" />
+		<property name="i18nManager" ref="I18nManager" />
+	</bean>
+	
+	<!-- DEPRECATED : to guaranted compatibility with previsous version of jAPS 2.0.12 -->
+	<bean id="AbstractMultiLangAttributeManager" abstract="true" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.AbstractMultiLangAttributeManager" />
+	
+	<bean id="DateAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.DateAttributeManager" />
+	
+	<bean id="NumberAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.NumberAttributeManager" />
+	
+	<bean id="MonoTextAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.MonoTextAttributeManager" />
+	
+	<bean id="TextAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager" />
+	
+	<bean id="HypertextAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.HypertextAttributeManager" />
+	
+	<bean id="BooleanAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.BooleanAttributeManager" />
+	
+	<bean id="CheckBoxAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.CheckBoxAttributeManager" />
+	
+	<bean id="CompositeAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.CompositeAttributeManager" />
+	
+	<bean id="ListAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.ListAttributeManager" />
+	
+	<bean id="MonoListAttributeManager" parent="AbstractAttributeManager" 
+			class="com.agiletec.apsadmin.system.entity.attribute.manager.MonoListAttributeManager" />
+	
+	<bean id="entityActionHelper" parent="abstractBaseActionHelper" 
+			class="com.agiletec.apsadmin.system.entity.EntityActionHelper" >
+		<property name="attributeManagers">
+			<map>
+				<entry key="Date"><ref bean="DateAttributeManager" /></entry>
+				<entry key="Number"><ref bean="NumberAttributeManager" /></entry>
+				<entry key="Monotext"><ref bean="MonoTextAttributeManager" /></entry>
+				<entry key="Enumerator"><ref bean="MonoTextAttributeManager" /></entry>
+				<entry key="Text"><ref bean="TextAttributeManager" /></entry>
+				<entry key="Longtext"><ref bean="TextAttributeManager" /></entry>
+				<entry key="Hypertext"><ref bean="HypertextAttributeManager" /></entry>
+				<entry key="Boolean"><ref bean="BooleanAttributeManager" /></entry>
+				<entry key="CheckBox"><ref bean="CheckBoxAttributeManager" /></entry>
+				<entry key="ThreeState"><ref bean="BooleanAttributeManager" /></entry>
+				
+				<entry key="Composite"><ref bean="CompositeAttributeManager" /></entry>
+				<entry key="Monolist"><ref bean="MonoListAttributeManager" /></entry>
+				<entry key="List"><ref bean="ListAttributeManager" /></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="abstractEntityAction" abstract="true" parent="abstractBaseAction" 
+			class="com.agiletec.apsadmin.system.entity.AbstractApsEntityAction">
+		<property name="langManager" ref="LangManager" />
+		<property name="entityActionHelper" ref="entityActionHelper" />
+		<property name="configManager" ref="BaseConfigManager" />
+	</bean>
+	
+</beans>

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:jee="http://www.springframework.org/schema/jee"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	
+	<bean id="NotifyManager" class="com.agiletec.aps.system.common.notify.NotifyManager" />
+	
+	<bean id="abstractService" abstract="true" class="com.agiletec.aps.system.common.AbstractService" 
+			init-method="init" destroy-method="destroy" >
+		<property name="notifyManager" ref="NotifyManager" />
+	</bean>
+	
+	<bean id="BaseConfigManager" class="com.agiletec.aps.system.services.baseconfig.BaseConfigManager" 
+			parent="abstractService" >
+		<property name="systemParams">
+		<map>
+			<entry key="version"><value>${version}</value></entry>
+			<entry key="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></entry>
+			<entry key="applicationBaseURL"><jee:jndi-lookup jndi-name="java:comp/env/applicationBaseURL" /></entry>
+			<entry key="resourceRootURL"><jee:jndi-lookup jndi-name="java:comp/env/resourceRootURL" /></entry>
+			<entry key="resourceDiskRootFolder"><jee:jndi-lookup jndi-name="java:comp/env/resourceDiskRootFolder" /></entry>
+		</map>
+		</property>
+		<property name="configDAO" >
+			<bean class="com.agiletec.aps.system.services.baseconfig.ConfigItemDAO">
+				<property name="dataSource" ref="portDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="abstractApsAutorityManager" abstract="true" class="com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityManager" 
+			parent="abstractService" >
+		<property name="userManager" ref="UserManager" />
+	</bean>
+	
+	<bean id="GroupManager" class="com.agiletec.aps.system.services.group.GroupManager" 
+			parent="abstractApsAutorityManager" >
+		<property name="groupDAO" >
+			<bean class="com.agiletec.aps.system.services.group.GroupDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="RoleManager" class="com.agiletec.aps.system.services.role.RoleManager" 
+			parent="abstractApsAutorityManager" >
+		<property name="roleDAO" >
+			<bean class="com.agiletec.aps.system.services.role.RoleDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+		<property name="permissionDAO" >
+			<bean class="com.agiletec.aps.system.services.role.PermissionDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="UserManager" class="com.agiletec.aps.system.services.user.UserManager" 
+			parent="abstractService" >
+		<property name="userDAO" >
+			<bean class="com.agiletec.aps.system.services.user.UserDAO">
+				<property name="dataSource" ref="servDataSource" />
+				<property name="encrypter">
+					<bean class="com.agiletec.aps.util.DefaultApsEncrypter"></bean>
+				</property>
+			</bean>
+		</property>
+		<property name="configManager" ref="BaseConfigManager"/>
+	</bean>
+	
+	<bean id="AuthenticationProviderManager" class="com.agiletec.aps.system.services.user.AuthenticationProviderManager" 
+			parent="abstractService" >
+		<property name="userManager" ref="UserManager" />
+		<property name="authorizators">
+		<list>
+			<ref bean="RoleManager" />
+			<ref bean="GroupManager" />
+		</list>
+		</property>
+	</bean>
+	
+	<bean id="AuthorizationManager" class="com.agiletec.aps.system.services.authorization.AuthorizationManager" 
+			parent="abstractService" >
+		<property name="roleManager" ref="RoleManager" />
+		<property name="groupManager" ref="GroupManager" />
+	</bean>
+	
+	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.EhCacheManager" 
+			parent="abstractService" >
+		<property name="cacheConfigurationFilePath" ><value>${cacheConfigurationFilePath}</value></property>
+		<property name="cacheDiskRootFolder"><jee:jndi-lookup jndi-name="java:comp/env/cacheDiskRootFolder" /></property>
+	</bean>
+	
+	<bean id="LangManager" class="com.agiletec.aps.system.services.lang.LangManager" 
+			parent="abstractService" >
+		<property name="configManager" ref="BaseConfigManager"/>
+	</bean>
+	
+	<bean id="CategoryManager" class="com.agiletec.aps.system.services.category.CategoryManager" 
+			parent="abstractService" >
+		<property name="langManager" ref="LangManager"/>
+		<property name="categoryDAO" >
+			<bean class="com.agiletec.aps.system.services.category.CategoryDAO">
+				<property name="dataSource" ref="portDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="ShowletTypeManager" class="com.agiletec.aps.system.services.showlettype.ShowletTypeManager" 
+			parent="abstractService" >
+		<property name="showletTypeDAO" >
+			<bean class="com.agiletec.aps.system.services.showlettype.ShowletTypeDAO">
+				<property name="dataSource" ref="portDataSource" />
+				<property name="langManager" ref="LangManager"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="PageModelManager" class="com.agiletec.aps.system.services.pagemodel.PageModelManager" 
+			parent="abstractService" >
+		<property name="pageModelDAO" >
+			<bean class="com.agiletec.aps.system.services.pagemodel.PageModelDAO">
+				<property name="dataSource" ref="portDataSource" />
+				<property name="showletTypeManager" ref="ShowletTypeManager" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="PageManager" class="com.agiletec.aps.system.services.page.PageManager" 
+			parent="abstractService" >
+		<property name="pageDAO" >
+			<bean class="com.agiletec.aps.system.services.page.PageDAO">
+				<property name="dataSource" ref="portDataSource" />
+				<property name="showletTypeManager" ref="ShowletTypeManager" />
+				<property name="pageModelManager" ref="PageModelManager" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="NavigatorParser" class="com.agiletec.aps.system.services.page.showlet.NavigatorParser">
+		<property name="authManager" ref="AuthorizationManager"/>
+		<property name="pageManager" ref="PageManager"/>
+	</bean>
+	
+	<bean id="URLManager" class="com.agiletec.aps.system.services.url.URLManager" 
+			parent="abstractService" >
+		<property name="configManager" ref="BaseConfigManager"/>
+		<property name="pageManager" ref="PageManager"/>
+		<property name="langManager" ref="LangManager"/>
+	</bean>
+	
+	<bean id="I18nManager" class="com.agiletec.aps.system.services.i18n.I18nManager" 
+			parent="abstractService" >
+		<property name="i18nDAO" >
+			<bean class="com.agiletec.aps.system.services.i18n.I18nDAO">
+				<property name="dataSource" ref="portDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="KeyGeneratorManager" class="com.agiletec.aps.system.services.keygenerator.KeyGeneratorManager" 
+			parent="abstractService" >
+		<property name="keyGeneratorDAO" >
+			<bean class="com.agiletec.aps.system.services.keygenerator.KeyGeneratorDAO">
+				<property name="dataSource" ref="portDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
+</beans>

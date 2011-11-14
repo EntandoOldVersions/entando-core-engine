@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	
+    <package name="core_do/BaseAdmin" namespace="/do/BaseAdmin" extends="japs-default">
+    	
+        <action name="reloadConfig" class="baseAdminAction" method="reloadConfig">
+            <result type="tiles">admin.BaseAdmin.reloadConfigResult</result>
+        	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="reloadEntitiesReferences" class="baseAdminAction" method="reloadEntitiesReferences">
+            <result type="tiles">admin.BaseAdmin.reloadEntitiesReferencesResult</result>
+        	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="configSystemParams" class="baseAdminAction" method="configSystemParams">
+            <result type="tiles">admin.BaseAdmin.configSystemParams</result>
+        	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="updateSystemParams" class="baseAdminAction" method="updateSystemParams">
+            <result type="tiles">admin.BaseAdmin.configSystemParams</result>
+        	<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+    </package>
+    
+</struts>

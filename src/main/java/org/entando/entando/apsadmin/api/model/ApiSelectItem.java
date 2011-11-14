@@ -1,0 +1,47 @@
+/*
+*
+* Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+*
+* This file is part of jAPS software.
+* jAPS is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+*
+*/
+package org.entando.entando.apsadmin.api.model;
+
+import com.agiletec.aps.util.SelectItem;
+
+/**
+ * @author E.Santoboni
+ */
+public class ApiSelectItem extends SelectItem {
+	
+	public ApiSelectItem(String key, String value, String optgroup) {
+		super(key, value, optgroup);
+	}
+	
+	public boolean isActiveItem() {
+		return _activeItem;
+	}
+	public void setActiveItem(boolean activeItem) {
+		this._activeItem = activeItem;
+	}
+	public boolean isPublicItem() {
+		return _publicItem;
+	}
+	public void setPublicItem(boolean publicItem) {
+		this._publicItem = publicItem;
+	}
+	
+	private boolean _activeItem;
+	private boolean _publicItem;
+	
+}

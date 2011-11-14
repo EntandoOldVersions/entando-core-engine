@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+    "http://struts.apache.org/dtds/struts-2.1.dtd">
+
+<struts>
+	
+    <package name="core_do/Portal/ShowletType" namespace="/do/Portal/ShowletType" extends="japs-default">
+		
+		<global-results>
+			<result name="pageTree" type="chain">
+				<param name="namespace">/do/Page</param>
+				<param name="actionName">viewTree</param>
+			</result>
+			<result name="inputShowletTypes" type="chain">
+				<param name="actionName">viewShowlets</param>
+			</result>
+		</global-results>
+		
+		<action name="viewShowlets" class="showletsViewerAction" method="viewShowlets">
+			<result type="tiles">admin.Portal.viewShowlets</result>
+			<interceptor-ref name="japsDefaultStack">
+				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+				<param name="requestAuth.requiredPermission">managePages</param>
+			</interceptor-ref>
+		</action>
+		
+		<action name="viewShowletUtilizers" class="showletsViewerAction" method="viewShowletUtilizers">
+			<result name="input" type="tiles">admin.Portal.viewShowlets</result>
+			<result type="tiles">admin.Portal.viewShowletUtilizers</result>
+			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+		</action>
+		
+		<action name="trashShowletFromPage" class="pageConfigAction" method="trashShowlet">
+			<result type="tiles">admin.Page.showlet.trash</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+		</action>
+		
+		<action name="deleteShowletFromPage" class="pageConfigAction" method="deleteShowlet">
+			<result type="redirectAction">
+				<param name="actionName">viewShowletUtilizers</param>
+				<param name="showletTypeCode">${showletTypeCode}</param>
+			</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+		</action>
+		
+		<!-- edit/create/delete showlet Type - start section -->
+		
+		<action name="edit" class="showletTypeAction" method="edit">
+			<result type="tiles">admin.Portal.showletType.entry</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+		</action>
+		
+		<action name="new" class="showletTypeAction" method="newUserShowlet">
+			<result type="tiles">admin.Portal.showletType.entry</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<action name="copy" class="showletTypeAction" method="copy">
+			<result type="tiles">admin.Portal.showletType.entry</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<action name="save*" class="showletTypeAction" method="save">
+			<result name="input" type="tiles">admin.Portal.showletType.entry</result>
+			<result name="replaceOnPage" type="redirectAction">
+				<param name="namespace">/do/Page</param>
+				<param name="actionName">configure</param>
+				<param name="pageCode">${pageCode}</param>
+			</result>
+			<result type="redirectAction">viewShowlets</result>
+			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+		</action>
+		
+		<action name="trash" class="showletTypeAction" method="trash">
+			<result type="tiles">admin.Portal.showletType.trash</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<action name="delete" class="showletTypeAction" method="delete">
+			<result type="redirectAction">
+				<param name="actionName">viewShowlets</param>
+			</result>
+			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
+		<!-- create/delete user showlet - end section -->
+		
+	</package>
+	
+</struts>

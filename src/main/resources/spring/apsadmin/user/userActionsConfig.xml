@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	
+	<bean id="userFinderAction" scope="prototype" 
+			class="com.agiletec.apsadmin.user.UserFinderAction" parent="abstractBaseAction" >
+		<property name="userManager" ref="UserManager" />
+	</bean>
+	
+	<bean id="userAction" scope="prototype" 
+			class="com.agiletec.apsadmin.user.UserAction" parent="abstractBaseAction" >
+		<property name="userManager" ref="UserManager" />
+	</bean>
+	
+	<bean id="userToAuthoritiesAction" scope="prototype" 
+			class="com.agiletec.apsadmin.user.UserToAuthoritiesAction" parent="abstractBaseAction" >
+		<property name="userManager" ref="UserManager" />
+		<property name="roleManager" ref="RoleManager" />
+		<property name="groupManager" ref="GroupManager" />
+	</bean>
+	
+	<bean id="abstractAuthorityToUsersAction" abstract="true" 
+			class="com.agiletec.apsadmin.user.AuthorityToUsersAction" parent="abstractBaseAction" >
+		<property name="userManager" ref="UserManager" />
+	</bean>
+	
+</beans>
