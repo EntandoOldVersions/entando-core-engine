@@ -3,15 +3,15 @@
 * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
 *
 * This file is part of jAPS software.
-* jAPS is a free software; 
+* jAPS is a free software;
 * you can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
 *
 */
@@ -19,9 +19,6 @@ package com.agiletec.plugins.jacms.aps.system.services.api;
 
 import java.util.List;
 import java.util.Properties;
-
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-import org.entando.entando.aps.system.services.api.model.ApiException;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -39,6 +36,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiException;
 
 /**
  * @author E.Santoboni
@@ -99,9 +98,13 @@ public class ApiContentWrapper {
 			if (null == modelIdInteger) return null;
 			List<String> contentsId = this.extractContents(properties);
 			String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
+			render.append(this.getItemsStartElement());
 			for (int i = 0; i < contentsId.size(); i++) {
+				render.append(this.getItemStartElement());
 				render.append(this.getContentDispenser().getRenderedContent(contentsId.get(i), modelIdInteger, langCode, null));
+				render.append(this.getItemEndElement());
 			}
+			render.append(this.getItemsEndElement());
 		} catch (ApiException ae) {
 			throw ae;
 		} catch (Throwable t) {
@@ -253,6 +256,34 @@ public class ApiContentWrapper {
 	public void setContentDispenser(IContentDispenser contentDispenser) {
 		this._contentDispenser = contentDispenser;
 	}
+        
+        public String getItemsStartElement() {
+		return _itemsStartElement;
+	}
+	public void setItemsStartElement(String itemsStartElement) {
+		this._itemsStartElement = itemsStartElement;
+	}
+
+	public String getItemStartElement() {
+		return _itemStartElement;
+	}
+	public void setItemStartElement(String itemStartElement) {
+		this._itemStartElement = itemStartElement;
+	}
+
+	public String getItemEndElement() {
+		return _itemEndElement;
+	}
+	public void setItemEndElement(String itemEndElement) {
+		this._itemEndElement = itemEndElement;
+	}
+
+	public String getItemsEndElement() {
+		return _itemsEndElement;
+	}
+	public void setItemsEndElement(String itemsEndElement) {
+		this._itemsEndElement = itemsEndElement;
+	}
 	
 	private IContentManager _contentManager;
 	private IContentListHelper _contentListHelper;
@@ -261,5 +292,10 @@ public class ApiContentWrapper {
 	private ICmsCacheWrapperManager _cmsCacheWrapperManager;
 	private IContentModelManager _contentModelManager;
 	private IContentDispenser _contentDispenser;
-	
+
+	private String _itemsStartElement = "<ul>";
+	private String _itemStartElement = "<li>";
+	private String _itemEndElement = "</li>";
+	private String _itemsEndElement = "</ul>";
+        
 }
