@@ -76,10 +76,10 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 			if (null == method.getResponseClassName()) {
 				return masterResult;
 			}
-			if (masterResult instanceof String) {
+                        apiResponse = this.buildApiResponseObject(method);
+			if (null == apiResponse && (masterResult instanceof String)) {
 				return masterResult;
 			}
-			apiResponse = this.buildApiResponseObject(method);
 			String htmlResult = this.extractHtmlResult(masterResult, apiResponse, method, parameters, bean);
 			if (masterResult instanceof ApiMethodResult) {
 				apiResponse.addErrors(((ApiMethodResult) masterResult).getErrors());
@@ -139,7 +139,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 				is = resource.getInputStream();
 			}
 			if (null == is) {
-				ApsSystemUtils.getLogger().severe("Null Input Stream - template file path " + path.toString());
+				ApsSystemUtils.getLogger().info("Null Input Stream - template file path " + path.toString());
 				return null;
 			}
 			template = FileTextReader.getText(is);
@@ -186,7 +186,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "createResponse",
 					"Error creating instance of response '" + api.getResponseClassName() + "'");
-			throw new ApiException(IApiErrorCodes.INVALID_RESPONSE, "Invalid response class '" + api.getResponseClassName() + "'");
+			//throw new ApiException(IApiErrorCodes.INVALID_RESPONSE, "Invalid response class '" + api.getResponseClassName() + "'");
 		}
 		return apiResponse;
 	}
