@@ -334,7 +334,7 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     		diskFolder.append(this.getBaseDiskRoot());
     	}
     	String folder = this.getFolder();
-    	if (!diskFolder.toString().endsWith("\\") 
+    	if ((!diskFolder.toString().endsWith("\\") || !diskFolder.toString().endsWith("/")) 
     			&& (!folder.startsWith("\\") || !folder.startsWith("/"))) {
     		diskFolder.append(File.separator);
     	}
