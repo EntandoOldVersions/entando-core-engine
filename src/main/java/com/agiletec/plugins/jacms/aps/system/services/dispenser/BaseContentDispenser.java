@@ -112,7 +112,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		return authInfo;
 	}
 	
-	private ContentRenderizationInfo getRenderizationInfo(ContentAuthorizationInfo authInfo, Content contentToRender,
+	protected ContentRenderizationInfo getRenderizationInfo(ContentAuthorizationInfo authInfo, Content contentToRender,
 			String contentId, long modelId, String langCode, RequestContext reqCtx) {
 		ContentRenderizationInfo renderInfo = null;
 		try {
