@@ -23,6 +23,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
@@ -99,10 +100,25 @@ public interface IAuthorizationManager {
 	public boolean isAuth(UserDetails user, IApsEntity entity);
 	
 	/**
-	 * Restituisce la lista di gruppi jAPS di cui l'utente specificato fa parte.
-	 * @param user L'utente del quale verificare l'appartenenza a gruppi.
-	 * @return La lista di gruppi di cui l'utente corrente fa parte.
+	 * Returns the groups of the given user
+	 * @param user The user
+	 * @return The list of groups the given user
+         * @deprecated from Entando 2.4.0, Use getUserGroups(UserDetails)
 	 */
 	public List<Group> getGroupsOfUser(UserDetails user);
+        
+        /**
+	 * Returns the groups of the given user
+	 * @param user The user
+	 * @return The list of groups the given user
+	 */
+	public List<Group> getUserGroups(UserDetails user);
+        
+        /**
+         * Returns the roles of the given user
+         * @param user The user.
+	 * @return The list of roles of the given user.
+         */
+        public List<Role> getUserRoles(UserDetails user);
 	
 }

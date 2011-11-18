@@ -117,7 +117,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		ContentRenderizationInfo renderInfo = null;
 		try {
 			UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
-			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getGroupsOfUser(currentUser) : new ArrayList<Group>();
+			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
 			if (authInfo.isUserAllowed(userGroups)) {
 				String cacheKey = ContentManager.getRenderedContentCacheKey(contentId, modelId, langCode);
 				if (null != this.getCacheManager()) {
@@ -172,7 +172,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		String renderedContent = null;
 		try {
 			UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
-			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getGroupsOfUser(currentUser) : new ArrayList<Group>();
+			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
 			//verifica autorizzazione
 			if (authInfo.isUserAllowed(userGroups)) {
 				String cacheKey = ContentManager.getRenderedContentCacheKey(contentId, modelId, langCode);

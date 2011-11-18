@@ -55,7 +55,7 @@ public class SearcherTagHelper {
 			UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 	    	ICmsSearchEngineManager searchEngine = (ICmsSearchEngineManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.SEARCH_ENGINE_MANAGER, reqCtx.getRequest());
 	    	IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, reqCtx.getRequest());
-			List<Group> groups = authManager.getGroupsOfUser(currentUser);
+			List<Group> groups = authManager.getUserGroups(currentUser);
 			Set<String> userGroups = new HashSet<String>();
 			Iterator<Group> iter = groups.iterator();
 	    	while (iter.hasNext()) {

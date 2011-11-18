@@ -113,7 +113,7 @@ public class BaseContentListHelper implements IContentListHelper {
 		Set<String> allowedGroup = new HashSet<String>();
 		allowedGroup.add(Group.FREE_GROUP_NAME);
 		if (null != user) {
-			List<Group> groups = this.getAuthorizationManager().getGroupsOfUser(user);
+			List<Group> groups = this.getAuthorizationManager().getUserGroups(user);
 			Iterator<Group> iter = groups.iterator();
 	    	while (iter.hasNext()) {
 	    		Group group = iter.next();

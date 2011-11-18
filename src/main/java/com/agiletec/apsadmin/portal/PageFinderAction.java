@@ -53,7 +53,7 @@ public class PageFinderAction extends AbstractPortalAction implements IPageFinde
 	private List<String> getAllowedGroupCodes() {
 		List<String> allowedGroups = new ArrayList<String>();
 		UserDetails currentUser = this.getCurrentUser();
-		List<Group> userGroups = this.getAuthorizationManager().getGroupsOfUser(currentUser);
+		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(currentUser);
 		Iterator<Group> iter = userGroups.iterator();
     	while (iter.hasNext()) {
     		Group group = iter.next();

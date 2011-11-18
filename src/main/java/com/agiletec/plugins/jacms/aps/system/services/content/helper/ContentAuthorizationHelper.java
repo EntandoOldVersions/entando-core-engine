@@ -49,7 +49,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	
 	@Override
 	public boolean isAuth(UserDetails user, ContentAuthorizationInfo info) throws ApsSystemException {
-		List<Group> userGroups = this.getAuthorizationManager().getGroupsOfUser(user);
+		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(user);
 		return info.isUserAllowed(userGroups);
 	}
 	
@@ -75,7 +75,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 			return false;
 		}
 		if (groupCodes.contains(Group.FREE_GROUP_NAME)) return true;
-		List<Group> userGroups = this.getAuthorizationManager().getGroupsOfUser(user);
+		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(user);
 		if (null != userGroups) {
 			for (int i = 0; i < userGroups.size(); i++) {
 				Group group = userGroups.get(i);

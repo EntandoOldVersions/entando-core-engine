@@ -42,7 +42,7 @@ public abstract class BaseActionHelper {
 	 */
 	protected List<Group> getAllowedGroups(UserDetails user) {
 		List<Group> groups = new ArrayList<Group>();
-		List<Group> groupsOfUser = this.getAuthorizationManager().getGroupsOfUser(user);
+		List<Group> groupsOfUser = this.getAuthorizationManager().getUserGroups(user);
 		if (this.getAuthorizationManager().isAuthOnGroup(user, Group.ADMINS_GROUP_NAME)) {
 			groups.addAll(this.getGroupManager().getGroups());
 		} else {

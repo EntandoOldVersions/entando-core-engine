@@ -128,10 +128,16 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 		}
 		return false;
 	}
+        
+        @Deprecated
+        public List<Group> getGroupsOfUser(UserDetails user) {
+            return this.getUserGroups(user);
+        }
 	
 	@Override
-	public List<Group> getGroupsOfUser(UserDetails user) {
-		List<Group> groups = new ArrayList<Group>();
+	public List<Group> getUserGroups(UserDetails user) {
+		if (null == user) return null;
+                List<Group> groups = new ArrayList<Group>();
 		IApsAuthority[] auths = user.getAuthorities();
 		if (null != auths) {
 			for (int i=0; i<auths.length; i++) {
@@ -139,12 +145,29 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
 				if (null == auth) continue;
 				String authName = auth.getAuthority();
 				Group group = this.getGroupManager().getGroup(authName);
-				if (null != group) {
-					groups.add(group);
-				}
+				if (null != group) groups.add(group);
 			}
 		}
 		return groups;
+	}
+	
+	@Override
+	public List<Role> getUserRoles(UserDetails user) {
+		if (null == user) return null;
+                List<Role> roles = new ArrayList<Role>();
+		IApsAuthority[] auths = user.getAuthorities();
+		if (null != auths) {
+			for (int i=0; i<auths.length; i++) {
+				IApsAuthority auth = auths[i];
+				if (null == auth) continue;
+				if (auth instanceof Role) {
+                                    String authName = auth.getAuthority();
+                                    Role role = this.getRoleManager().getRole(authName);
+                                    if (null != role) roles.add(role);
+				}
+			}
+		}
+		return roles;
 	}
 	
 	private boolean checkAuth(UserDetails user, IApsAuthority requiredAuth) {

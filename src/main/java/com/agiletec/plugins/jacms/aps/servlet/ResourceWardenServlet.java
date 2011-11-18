@@ -113,7 +113,7 @@ public class ResourceWardenServlet extends HttpServlet {
 		IContentDispenser dispender = (IContentDispenser) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER, request);
 		ContentAuthorizationInfo authInfo = dispender.getAuthorizationInfo(contentId);
 		IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
-		return (authInfo.isProtectedResourceReference(resourceId) && authInfo.isUserAllowed(authManager.getGroupsOfUser(currentUser)));
+		return (authInfo.isProtectedResourceReference(resourceId) && authInfo.isUserAllowed(authManager.getUserGroups(currentUser)));
 	}
 	
 	private void createResponse(HttpServletResponse resp, ResourceInterface resource, 
