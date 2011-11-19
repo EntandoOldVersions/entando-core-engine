@@ -98,7 +98,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 					}
 				}
 			}
-			if (!isUserFilterExecuted) {
+			if (!isUserFilterExecuted && bean.isCacheable()) {
 				contentsId = this.searchInCache(bean.getListName(), reqCtx);
 			}
 			if (null == contentsId) {
