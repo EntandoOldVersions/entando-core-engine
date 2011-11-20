@@ -32,6 +32,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
+import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
@@ -119,6 +120,14 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 			String check = this.checkMasterMethod(this.getApiMethodName());
 			if (null != check) return check;
 			ApiMethod masterMethod = this.getMethod(this.getApiMethodName());
+                        if (null != this.getShowletTypeCode() && null != masterMethod.getRelatedShowlet()) {
+                            ShowletType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+                            if (null != type && type.isLogic()) {
+                                ApsProperties parameters = 
+                                        this.extractParametersFromShowletProperties(masterMethod.getRelatedShowlet(), type.getConfig());
+                                this.setApiParameterValues(parameters);
+                            }
+                        }
 			this.setApiParameters(masterMethod.getParameters());
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
 			this.setServiceKey(this.buildTempKey(masterMethod.getMethodName()));
@@ -180,10 +189,14 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	}
 	
 	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedShowlet relatedShowlet, Showlet masterShowlet) {
-		ApsProperties parameters = new ApsProperties();
 		ApsProperties showletProperties = (masterShowlet.getType().isLogic()) 
 				? masterShowlet.getType().getConfig() : masterShowlet.getConfig();
-		ApsProperties mapping = relatedShowlet.getMapping();
+		return this.extractParametersFromShowletProperties(relatedShowlet, showletProperties);
+	}
+	
+	private ApsProperties extractParametersFromShowletProperties(ApiMethodRelatedShowlet relatedShowlet, ApsProperties showletProperties) {
+		ApsProperties parameters = new ApsProperties();
+                ApsProperties mapping = relatedShowlet.getMapping();
 		if (null != showletProperties && null != mapping) {
 			Iterator<Object> keyIter = showletProperties.keySet().iterator();
 			while (keyIter.hasNext()) {
@@ -404,7 +417,14 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	public void setFramePos(Integer framePos) {
 		this._framePos = framePos;
 	}
-	
+        
+        public String getShowletTypeCode() {
+                return _showletTypeCode;
+        }
+        public void setShowletTypeCode(String showletTypeCode) {
+                this._showletTypeCode = showletTypeCode;
+        }
+        
 	protected IApiCatalogManager getApiCatalogManager() {
 		return _apiCatalogManager;
 	}
@@ -417,6 +437,13 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
+	}
+	
+	protected IShowletTypeManager getShowletTypeManager() {
+		return _showletTypeManager;
+	}
+	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+		this._showletTypeManager = showletTypeManager;
 	}
 	
 	private String _serviceGroup;
@@ -442,8 +469,10 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	
 	private String _pageCode;
 	private Integer _framePos;
-	
+        private String _showletTypeCode;
+        
 	private IApiCatalogManager _apiCatalogManager;
 	private IPageManager _pageManager;
+        private IShowletTypeManager _showletTypeManager;
 	
 }
