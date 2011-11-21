@@ -41,6 +41,7 @@
 		<name>Tzente S.r.l.</name>
 		<url>http://www.tzente.com/</url>
 	</organization>
+<!--
 	<distributionManagement>
 		<snapshotRepository>
 			<id>entando-snapshots</id>
@@ -51,6 +52,7 @@
 			<url>dav:http://localhost/nexus/content/repositories/entando-releases</url>
 		</repository>
 	</distributionManagement>
+-->
 	<properties>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>5432</test.database.port>
