@@ -178,58 +178,14 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.6</version><!--$NO-MVN-MAN-VER$ -->
-				<executions>
-					<execution>
-						<phase>process-test-resources</phase>
-						<configuration>
-							<target>
-								<taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-								<if>
-									<available file="target/test-package/db/export" type="dir" />
-									<then>
-										<replace dir="target/test-package/db/export">
-											<replacefilter>
-												<replacetoken><![CDATA[SET client_encoding = 'UTF-8';]]></replacetoken>
-												<replacevalue><![CDATA[SET client_encoding = 'UNICODE';]]></replacevalue>
-											</replacefilter>
-											<replacefilter>
-												<replacetoken><![CDATA[SET client_encoding = 'UTF8';]]></replacetoken>
-												<replacevalue><![CDATA[SET client_encoding = 'UNICODE';]]></replacevalue>
-											</replacefilter>
-											<replacefilter>
-												<replacetoken><![CDATA[CREATE PROCEDURAL LANGUAGE plpgsql;]]></replacetoken>
-												<replacevalue />
-											</replacefilter>
-										</replace>
-									</then>
-								</if>
-							</target>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>ant-contrib</groupId>
-						<artifactId>ant-contrib</artifactId>
-						<version>20020829</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sql-maven-plugin</artifactId>
-				<version>1.4</version>
+				<version>1.5</version>
 				<dependencies>
 					<dependency>
 						<groupId>postgresql</groupId>
 						<artifactId>postgresql</artifactId>
-						<version>8.3-603.jdbc4</version>
+						<version>9.1-901.jdbc4</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -451,7 +407,7 @@
 											sql-maven-plugin
 										</artifactId>
 										<versionRange>
-											[1.4,)
+											[1.5,)
 										</versionRange>
 										<goals>
 											<goal>execute</goal>
@@ -775,7 +731,7 @@
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>8.3-603.jdbc4</version>
+			<version>9.1-901.jdbc4</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
