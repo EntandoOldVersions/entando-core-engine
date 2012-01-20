@@ -30,19 +30,18 @@ import org.entando.entando.aps.system.services.api.model.CDataAdapter;
  * @author E.Santoboni
  */
 public class CDataMappedXMLStreamWriter extends MappedXMLStreamWriter {
-	
-	public CDataMappedXMLStreamWriter(MappedNamespaceConvention convention, Writer writer) {
-		super(convention, writer);
-	}
-	
-	@Override
-    public void writeCharacters(String text) throws XMLStreamException {
-		if (CDataAdapter.isCdata(new String(text))) {
-			String parsedCDataText = CDataAdapter.parse(new String(text));
-			super.writeCharacters(parsedCDataText);
-		} else {
-			super.writeCharacters(text);
-		}
+    
+    public CDataMappedXMLStreamWriter(MappedNamespaceConvention convention, Writer writer) {
+        super(convention, writer);
     }
-	
+    
+    public void writeCharacters(String text) throws XMLStreamException {
+        if (CDataAdapter.isCdata(new String(text))) {
+            String parsedCDataText = CDataAdapter.parse(new String(text));
+            super.writeCharacters(parsedCDataText);
+        } else {
+            super.writeCharacters(text);
+        }
+    }
+    
 }

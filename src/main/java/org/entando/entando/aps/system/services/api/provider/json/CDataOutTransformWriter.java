@@ -31,21 +31,20 @@ import org.entando.entando.aps.system.services.api.model.CDataAdapter;
  * @author E.Santoboni
  */
 public class CDataOutTransformWriter extends OutTransformWriter {
-	
-	public CDataOutTransformWriter(XMLStreamWriter writer,
-			Map<String, String> outMap, Map<String, String> append,
-			List<String> dropEls, boolean attributesToElements) {
-		super(writer, outMap, append, dropEls, attributesToElements);
-	}
-	
-	@Override
-    public void writeCharacters(String text) throws XMLStreamException {
-		if (CDataAdapter.isCdata(new String(text))) {
-			String parsedCDataText = CDataAdapter.parse(new String(text));
-			super.writeCharacters(parsedCDataText);
-		} else {
-			super.writeCharacters(text);
-		}
+    
+    public CDataOutTransformWriter(XMLStreamWriter writer, 
+            Map<String, String> outMap, Map<String, String> append, 
+            List<String> dropEls, boolean attributesToElements, String defaultNamespace) {
+        super(writer, outMap, append, dropEls, attributesToElements, defaultNamespace);
     }
-	
+    
+    public void writeCharacters(String text) throws XMLStreamException {
+        if (CDataAdapter.isCdata(new String(text))) {
+            String parsedCDataText = CDataAdapter.parse(new String(text));
+            super.writeCharacters(parsedCDataText);
+        } else {
+            super.writeCharacters(text);
+        }
+    }
+    
 }
