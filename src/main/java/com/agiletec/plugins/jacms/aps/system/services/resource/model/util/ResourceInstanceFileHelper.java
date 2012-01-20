@@ -32,70 +32,67 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
-	
-	@Override
-	public void save(String filePath, ResourceDataBean bean) throws ApsSystemException {
-		try {
-			this.save(filePath, bean.getInputStream());
-		} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "save");
-    		throw new ApsSystemException("Error on saving file", t);
-    	}
-	}
-	
-	@Override
-	public void save(String filePath, InputStream is) throws ApsSystemException {
-    	try {
-    		FileOutputStream outStream = new FileOutputStream(filePath);
-    		while (is.available() > 0) {
-    			outStream.write(is.read());
-    		}
-    		outStream.close();
-    		is.close();
-    	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "save");
-    		throw new ApsSystemException("Error on saving file", t);
-    	}
+    
+    public void save(String filePath, ResourceDataBean bean) throws ApsSystemException {
+        try {
+            this.save(filePath, bean.getInputStream());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "save");
+            throw new ApsSystemException("Error on saving file", t);
+        }
     }
     
-	@Override
-	public String getFileExtension(String fileName) {
-		String extension = fileName.substring(fileName.lastIndexOf('.')+1).trim();
-		return extension;
-	}
-	
-	@Override
-	public String getResourceDiskFolder(ResourceInterface resource) {
-		String resDiskFolder = resource.getDiskFolder();
-		File dir = new File(resDiskFolder);
-		if (!dir.exists() || !dir.isDirectory()) {
-			dir.mkdirs();
-		}
-		return resDiskFolder;
-	}
-	
-	@Override
-	public boolean delete(String filePath) throws ApsSystemException {
-		File file = new File(filePath);
-		if (file.exists()) {
-			return file.delete();
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean exists(String filePath) throws ApsSystemException {
-		File file = new File(filePath);
-		return file.exists();
-	}
-	
-	protected ConfigInterface getConfigManager() {
-		return _configManager;
-	}
-	public void setConfigManager(ConfigInterface configService) {
-		this._configManager = configService;
-	}
+    public void save(String filePath, InputStream is) throws ApsSystemException {
+        try {
+            byte[] buffer = new byte[1024];
+            int length = -1;
+            FileOutputStream outStream = new FileOutputStream(filePath);
+            while ((length = is.read(buffer)) != -1) {
+                outStream.write(buffer, 0, length);
+                outStream.flush();
+            }
+            outStream.close();
+            is.close();
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "save");
+            throw new ApsSystemException("Error on saving file", t);
+        }
+    }
     
-	private ConfigInterface _configManager;
-	
+    public String getFileExtension(String fileName) {
+        String extension = fileName.substring(fileName.lastIndexOf('.') + 1).trim();
+        return extension;
+    }
+    
+    public String getResourceDiskFolder(ResourceInterface resource) {
+        String resDiskFolder = resource.getDiskFolder();
+        File dir = new File(resDiskFolder);
+        if (!dir.exists() || !dir.isDirectory()) {
+            dir.mkdirs();
+        }
+        return resDiskFolder;
+    }
+    
+    public boolean delete(String filePath) throws ApsSystemException {
+        File file = new File(filePath);
+        if (file.exists()) {
+            return file.delete();
+        }
+        return false;
+    }
+    
+    public boolean exists(String filePath) throws ApsSystemException {
+        File file = new File(filePath);
+        return file.exists();
+    }
+    
+    protected ConfigInterface getConfigManager() {
+        return _configManager;
+    }
+    public void setConfigManager(ConfigInterface configService) {
+        this._configManager = configService;
+    }
+    
+    private ConfigInterface _configManager;
+    
 }
