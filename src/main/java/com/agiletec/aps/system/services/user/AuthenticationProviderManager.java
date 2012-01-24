@@ -37,67 +37,81 @@ import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthority
  */
 public class AuthenticationProviderManager extends AbstractService 
 		implements IAuthenticationProviderManager {
+    
+    public void init() throws Exception {
+        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
+    }
+    
+    public UserDetails getUser(String username) throws ApsSystemException {
+        return this.extractUser(username, null);
+    }
+    
+    public UserDetails getUser(String username, String password) throws ApsSystemException {
+        return this.extractUser(username, password);
+    }
+    
+    protected UserDetails extractUser(String username, String password) throws ApsSystemException {
+        UserDetails user = null;
+        try {
+            if (null == password) {
+                user = this.getUserManager().getUser(username);
+            } else {
+                user = this.getUserManager().getUser(username, password);
+            }
+            if (null == user || (null != user && user.isDisabled())) {
+                return null;
+            }
+            if (!user.getUsername().equals(SystemConstants.ADMIN_USER_NAME)) {
+                if (!user.isAccountNotExpired()) {
+                    ApsSystemUtils.getLogger().info("USER ACCOUNT '" + user.getUsername() + "' EXPIRED");
+                    return user;
+                }
+            }
+            this.getUserManager().updateLastAccess(user);
+            if (!user.isCredentialsNotExpired()) {
+                ApsSystemUtils.getLogger().info("USER '" + user.getUsername() + "' credentials EXPIRED");
+                return user;
+            }
+            this.addUserAuthorizations(user);
+        } catch (Throwable t) {
+            throw new ApsSystemException("Error detected during the authentication of the user " + username, t);
+        }
+        return user;
+    }
+    
+    protected void addUserAuthorizations(UserDetails user) throws ApsSystemException {
+        if (null == user) {
+            return;
+        }
+        //setta autorizzazioni "interne"
+        for (int i = 0; i < this.getAuthorizators().size(); i++) {
+            IApsAuthorityManager authorizator = this.getAuthorizators().get(i);
+            List<IApsAuthority> auths = authorizator.getAuthorizationsByUser(user);
+            user.addAutorities(auths);
+            /*
+            Nel caso che le autorizzazioni vengano settate all'esterno dell'applicazione, 
+            bisogna prevedere un elemento di aggancio alle autorizzazioni remote.
+            L'oggetto non può essere in questo caso generalizzabile, in quanto presuppone l'interazione diretta con il sistema esterno e 
+            con la logica di assegnazione delle autorizzazioni che man mano vengono stabilite caso per caso nel sistema centrale.
+             */
+        }
+    }
 
-	@Override
-	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
-	}
+    protected IUserManager getUserManager() {
+        return _userManager;
+    }
+    public void setUserManager(IUserManager userManager) {
+        this._userManager = userManager;
+    }
 
-	@Override
-	public UserDetails getUser(String username, String password) throws ApsSystemException {
-		UserDetails user = null;
-		try {
-			user = this.getUserManager().getUser(username, password);
-			if (null == user || (null != user && user.isDisabled())) return null;
-			if (!user.getUsername().equals(SystemConstants.ADMIN_USER_NAME)) {
-				if (!user.isAccountNotExpired()) {
-					ApsSystemUtils.getLogger().info("USER ACCOUNT '" + user.getUsername() + "' EXPIRED");
-					return user;
-				}
-			}
-			this.getUserManager().updateLastAccess(user);
-			if (!user.isCredentialsNotExpired()) {
-				ApsSystemUtils.getLogger().info("USER '" + user.getUsername() + "' credentials EXPIRED");
-				return user;
-			}
-			this.addUserAuthorizations(user);
-		} catch (Throwable t) {
-			throw new ApsSystemException("Error detected during the authentication of the user "+username, t);
-		}
-		return user;
-	}
-
-	protected void addUserAuthorizations(UserDetails user) throws ApsSystemException {
-		if (null == user) return;
-		//setta autorizzazioni "interne"
-		for (int i=0; i<this.getAuthorizators().size(); i++) {
-			IApsAuthorityManager authorizator = this.getAuthorizators().get(i);
-			List<IApsAuthority> auths = authorizator.getAuthorizationsByUser(user);
-			user.addAutorities(auths);
-			/*
-			Nel caso che le autorizzazioni vengano settate all'esterno dell'applicazione, 
-			bisogna prevedere un elemento di aggancio alle autorizzazioni remote.
-			L'oggetto non può essere in questo caso generalizzabile, in quanto presuppone l'interazione diretta con il sistema esterno e 
-			con la logica di assegnazione delle autorizzazioni che man mano vengono stabilite caso per caso nel sistema centrale.
-			 */
-		}
-	}
-
-	protected IUserManager getUserManager() {
-		return _userManager;
-	}
-	public void setUserManager(IUserManager userManager) {
-		this._userManager = userManager;
-	}
-
-	protected List<IApsAuthorityManager> getAuthorizators() {
-		return _authorizators;
-	}
-	public void setAuthorizators(List<IApsAuthorityManager> authorizators) {
-		this._authorizators = authorizators;
-	}
-
-	private List<IApsAuthorityManager> _authorizators;
-	private IUserManager _userManager;
-
+    protected List<IApsAuthorityManager> getAuthorizators() {
+        return _authorizators;
+    }
+    public void setAuthorizators(List<IApsAuthorityManager> authorizators) {
+        this._authorizators = authorizators;
+    }
+    
+    private List<IApsAuthorityManager> _authorizators;
+    private IUserManager _userManager;
+    
 }
