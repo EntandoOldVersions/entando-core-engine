@@ -33,74 +33,78 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ServiceExtraConfigDOM {
-	
-	protected ServiceExtraConfigDOM() throws ApsSystemException {
-		this._doc = new Document();
-		Element elementRoot = new Element("config");
-		this._doc.setRootElement(elementRoot);
-	}
-	
-	protected ServiceExtraConfigDOM(String xml) throws ApsSystemException {
-		if (null == xml || xml.trim().length() == 0) return;
-		this.decodeDOM(xml);
-	}
-	
-	protected String[] extractFreeParameters() {
-		String[] freeParameters = null;
-		Element freeParametersElement = this._doc.getRootElement().getChild(FREE_PARAMETERS_ELEMENT_NAME);
-		if (null != freeParametersElement) {
-			List<Element> freeParametersElements = freeParametersElement.getChildren(FREE_PARAMETER_ELEMENT_NAME);
-			if (null != freeParametersElements && freeParametersElements.size()>0) {
-				freeParameters = new String[freeParametersElements.size()];
-				for (int i = 0; i < freeParametersElements.size(); i++) {
-					freeParameters[i] = freeParametersElements.get(i).getAttributeValue(FREE_PARAMETER_ATTRIBUTE_NAME);
-				}
-			}
-		}
-		return freeParameters;
-	}
-	
-	private void decodeDOM(String xml) throws ApsSystemException {
-		SAXBuilder builder = new SAXBuilder();
-		builder.setValidation(false);
-		StringReader reader = new StringReader(xml);
-		try {
-			this._doc = builder.build(reader);
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Error while parsing: " + t.getMessage());
-			throw new ApsSystemException("Error detected while parsing the XML", t);
-		}
-	}
-	
-	public String extractXml(String[] freeParameters) {
-		this.fillDocument(freeParameters);
-		return this.getXMLDocument();
-	}
-	
-	protected void fillDocument(String[] freeParameters) {
-		if (null != freeParameters && freeParameters.length > 0) {
-			Element freeParametersElement = new Element(FREE_PARAMETERS_ELEMENT_NAME);
-			this._doc.getRootElement().addContent(freeParametersElement);
-			for (int i = 0; i < freeParameters.length; i++) {
-				String paramName = freeParameters[i];
-				Element freeParameterElement = new Element(FREE_PARAMETER_ELEMENT_NAME);
-				freeParameterElement.setAttribute(FREE_PARAMETER_ATTRIBUTE_NAME, paramName);
-				freeParametersElement.addContent(freeParameterElement);
-			}
-		}
-	}
-	
-	protected String getXMLDocument() {
-		XMLOutputter out = new XMLOutputter();
-		Format format = Format.getPrettyFormat();
-		out.setFormat(format);
-		return out.outputString(this._doc);
-	}
-	
-	private Document _doc;
-	
-	private static final String FREE_PARAMETERS_ELEMENT_NAME = "freeparameters";
-	private static final String FREE_PARAMETER_ELEMENT_NAME = "parameter";
-	private static final String FREE_PARAMETER_ATTRIBUTE_NAME = "name";
-	
+    
+    protected ServiceExtraConfigDOM() throws ApsSystemException {
+        this._doc = new Document();
+        Element elementRoot = new Element("config");
+        this._doc.setRootElement(elementRoot);
+    }
+    
+    protected ServiceExtraConfigDOM(String xml) throws ApsSystemException {
+        if (null == xml || xml.trim().length() == 0) {
+            return;
+        }
+        this.decodeDOM(xml);
+    }
+    
+    protected String[] extractFreeParameters() {
+        String[] freeParameters = null;
+        Element freeParametersElement = this._doc.getRootElement().getChild(FREE_PARAMETERS_ELEMENT_NAME);
+        if (null != freeParametersElement) {
+            List<Element> freeParametersElements = freeParametersElement.getChildren(FREE_PARAMETER_ELEMENT_NAME);
+            if (null != freeParametersElements && freeParametersElements.size() > 0) {
+                freeParameters = new String[freeParametersElements.size()];
+                for (int i = 0; i < freeParametersElements.size(); i++) {
+                    freeParameters[i] = freeParametersElements.get(i).getAttributeValue(FREE_PARAMETER_ATTRIBUTE_NAME);
+                }
+            }
+        }
+        return freeParameters;
+    }
+    
+    private void decodeDOM(String xml) throws ApsSystemException {
+        SAXBuilder builder = new SAXBuilder();
+        builder.setValidation(false);
+        StringReader reader = new StringReader(xml);
+        try {
+            this._doc = builder.build(reader);
+        } catch (Throwable t) {
+            ApsSystemUtils.getLogger().severe("Error while parsing: " + t.getMessage());
+            throw new ApsSystemException("Error detected while parsing the XML", t);
+        }
+    }
+    
+    public String extractXml(String[] freeParameters) {
+        this.fillDocument(freeParameters);
+        return this.getXMLDocument();
+    }
+    
+    protected void fillDocument(String[] freeParameters) {
+        if (null != freeParameters && freeParameters.length > 0) {
+            Element freeParametersElement = new Element(FREE_PARAMETERS_ELEMENT_NAME);
+            this._doc.getRootElement().addContent(freeParametersElement);
+            for (int i = 0; i < freeParameters.length; i++) {
+                String paramName = freeParameters[i];
+                Element freeParameterElement = new Element(FREE_PARAMETER_ELEMENT_NAME);
+                freeParameterElement.setAttribute(FREE_PARAMETER_ATTRIBUTE_NAME, paramName);
+                freeParametersElement.addContent(freeParameterElement);
+            }
+        }
+    }
+    
+    protected String getXMLDocument() {
+        XMLOutputter out = new XMLOutputter();
+        Format format = Format.getPrettyFormat();
+        out.setFormat(format);
+        return out.outputString(this._doc);
+    }
+    
+    private Document _doc;
+    
+    private static final String FREE_PARAMETERS_ELEMENT_NAME = "freeparameters";
+    
+    private static final String FREE_PARAMETER_ELEMENT_NAME = "parameter";
+    
+    private static final String FREE_PARAMETER_ATTRIBUTE_NAME = "name";
+    
 }

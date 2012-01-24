@@ -3,7 +3,7 @@
 	<method name="getServices" active="true" canSpawnOthers="false">
 		<source>core</source>
 		<description>Returns the services configured in this instance of Entando.</description>
-		<springBean name="MasterApiMethodsInterface" method="getServices" />
+		<springBean name="ApiServiceInterface" method="getServices" />
 		<responseClass>org.entando.entando.aps.system.services.api.response.ServiceResponse</responseClass>
 		<parameters>
 			<parameter key="tag" required="false">
@@ -18,7 +18,7 @@
 	<method name="getService" active="true" canSpawnOthers="false">
 		<source>core</source>
 		<description>Returns one of the services configured in this instance of Entando.</description>
-		<springBean name="MasterApiMethodsInterface" method="getService" />
+		<springBean name="ApiServiceInterface" method="getService" />
 		<parameters>
 			<parameter key="key" required="true">
 				<description>The unique key of the wanted service.</description>

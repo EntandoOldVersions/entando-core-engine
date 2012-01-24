@@ -23,14 +23,14 @@ import java.util.Properties;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ServiceInfo;
 
-
 /**
  * @author E.Santoboni
+ * @deprecated 
  */
 public interface IMasterApiMethodsInterface {
-	
-	public ArrayList<ServiceInfo> getServices(Properties properties) throws ApiException;
-	
-	public Object getService(Properties properties) throws ApiException;
-	
+    
+    public ArrayList<ServiceInfo> getServices(Properties properties) throws ApiException;
+    
+    public Object getService(Properties properties) throws ApiException;
+    
 }

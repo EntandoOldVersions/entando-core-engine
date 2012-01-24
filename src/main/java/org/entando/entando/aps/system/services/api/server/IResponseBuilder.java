@@ -28,11 +28,20 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public interface IResponseBuilder {
-	
-	public Object invoke(String methodName, Properties parameters) throws ApiException, ApsSystemException;
-	
-	public Object createResponse(String methodName, Properties parameters) throws ApsSystemException;
-	
-	public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException;
-	
+    
+    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApiException;
+    
+    @Deprecated
+    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException;
+    
+    @Deprecated
+    public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException;
+    
+    public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException;
+    
+    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException;
+    
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAILURE = "FAILURE";
+    
 }

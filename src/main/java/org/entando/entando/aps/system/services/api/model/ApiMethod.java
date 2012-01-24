@@ -24,166 +24,269 @@ import java.util.List;
 import org.entando.entando.aps.system.services.api.ApiMethodsDefDOM;
 import org.jdom.Element;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class ApiMethod implements Serializable {
-	
-	protected ApiMethod() {}
-	
-	public ApiMethod(Element element) {
-		this.setMethodName(element.getAttributeValue(ApiMethodsDefDOM.METHOD_ATTRIBUTE_NAME));
-		this.setActive(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.ACTIVE_ATTRIBUTE_NAME)));
-		this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
-		Element sourceElement = element.getChild(ApiMethodsDefDOM.SOURCE_ELEMENT_NAME);
-		this.setSource(sourceElement.getText());
-		this.setPluginCode(sourceElement.getAttributeValue(ApiMethodsDefDOM.PLUGIN_CODE_ATTRIBUTE_NAME));
-		this.setDescription(element.getChildText(ApiMethodsDefDOM.DESCRIPTION_ELEMENT_NAME));
-		Element springBeanElement = element.getChild(ApiMethodsDefDOM.SPRING_BEAN_ELEMENT_NAME);
-		this.setSpringBean(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_NAME_ATTRIBUTE_NAME));
-		this.setSpringBeanMethod(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_METHOD_ATTRIBUTE_NAME));
-		this.setResponseClassName(element.getChildText(ApiMethodsDefDOM.RESPONSE_CLASS_ELEMENT_NAME));
-		Element parametersElement = element.getChild(ApiMethodsDefDOM.PARAMETERS_ELEMENT_NAME);
-		if (null != parametersElement) {
-			List<Element> parametersElements = parametersElement.getChildren(ApiMethodsDefDOM.PARAMETER_ELEMENT_NAME);
-			for (int i = 0; i < parametersElements.size(); i++) {
-				Element parameterElement = parametersElements.get(i);
-				ApiMethodParameter parameter = new ApiMethodParameter(parameterElement);
-				if (null == this.getParameters()) {
-					this.setParameters(new ArrayList<ApiMethodParameter>());
-				}
-				this.getParameters().add(parameter);
-			}
-		}
-		Element relatedShowletElement = element.getChild(ApiMethodsDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
-		if (null != relatedShowletElement) {
-			this.setRelatedShowlet(new ApiMethodRelatedShowlet(relatedShowletElement));
-		}
-	}
-	
-	@Override
-	public ApiMethod clone() {
-		ApiMethod clone = new ApiMethod();
-		clone.setActive(this.isActive());
-		clone.setDescription(this.getDescription());
-		clone.setMethodName(this.getMethodName());
-		if (null != this.getParameters()) {
-			List<ApiMethodParameter> clonedParameters = new ArrayList<ApiMethodParameter>();
-			for (int i = 0; i < this.getParameters().size(); i++) {
-				ApiMethodParameter clonedParameter = this.getParameters().get(i).clone();
-				clonedParameters.add(clonedParameter);
-			}
-			clone.setParameters(clonedParameters);
-		}
-		clone.setPluginCode(this.getPluginCode());
-		clone.setResponseClassName(this.getResponseClassName());
-		clone.setSource(this.getSource());
-		clone.setSpringBean(this.getSpringBean());
-		clone.setSpringBeanMethod(this.getSpringBeanMethod());
-		clone.setCanSpawnOthers(this.isCanSpawnOthers());
-		if (null != this.getRelatedShowlet()) {
-			clone.setRelatedShowlet(this.getRelatedShowlet().clone());
-		}
-		return clone;
-	}
-	
-	public String getSource() {
-		return _source;
-	}
-	protected void setSource(String source) {
-		this._source = source;
-	}
-	
-	public String getPluginCode() {
-		return _pluginCode;
-	}
-	protected void setPluginCode(String pluginCode) {
-		this._pluginCode = pluginCode;
-	}
-	
-	public String getMethodName() {
-		return _methodName;
-	}
-	protected void setMethodName(String methodName) {
-		this._methodName = methodName;
-	}
-	
-	public String getDescription() {
-		return _description;
-	}
-	protected void setDescription(String description) {
-		this._description = description;
-	}
-	
-	public boolean isActive() {
-		return _active;
-	}
-	public void setActive(boolean active) {
-		this._active = active;
-	}
-	
-	public boolean isCanSpawnOthers() {
-		return _canSpawnOthers;
-	}
-	protected void setCanSpawnOthers(boolean canSpawnOthers) {
-		this._canSpawnOthers = canSpawnOthers;
-	}
-	
-	public String getSpringBean() {
-		return _springBean;
-	}
-	protected void setSpringBean(String springBean) {
-		this._springBean = springBean;
-	}
-	
-	public String getSpringBeanMethod() {
-		return _springBeanMethod;
-	}
-	protected void setSpringBeanMethod(String springBeanMethod) {
-		this._springBeanMethod = springBeanMethod;
-	}
-	
-	public String getResponseClassName() {
-		return _responseClassName;
-	}
-	protected void setResponseClassName(String responseClassName) {
-		this._responseClassName = responseClassName;
-	}
-	
-	public List<ApiMethodParameter> getParameters() {
-		return _parameters;
-	}
-	protected void setParameters(List<ApiMethodParameter> parameters) {
-		this._parameters = parameters;
-	}
-	public ApiMethodParameter getParameter(String key) {
-		if (null == key || key.trim().length() == 0 || this._parameters == null) return null;
-		for (int i = 0; i < this._parameters.size(); i++) {
-			ApiMethodParameter parameter = this._parameters.get(i);
-			if (parameter.getKey().equals(key)) return parameter;
-		}
-		return null;
-	}
-	
-	public ApiMethodRelatedShowlet getRelatedShowlet() {
-		return _relatedShowlet;
-	}
-	protected void setRelatedShowlet(ApiMethodRelatedShowlet relatedShowlet) {
-		this._relatedShowlet = relatedShowlet;
-	}
-	
-	private String _source;
-	private String _pluginCode;
-	private String _methodName;
-	private String _description;
-	private boolean _active;
-	private boolean _canSpawnOthers;
-	private String _springBean;
-	private String _springBeanMethod;
-	private String _responseClassName;
-	private List<ApiMethodParameter> _parameters;
-	
-	private ApiMethodRelatedShowlet _relatedShowlet;
-	
+    
+    protected ApiMethod() {}
+    
+    public ApiMethod(Element element) {
+        this.setResourceName(element.getAttributeValue(ApiMethodsDefDOM.RESOURCE_ATTRIBUTE_NAME));
+        Element sourceElement = element.getChild(ApiMethodsDefDOM.SOURCE_ELEMENT_NAME);
+        if (null != sourceElement) {
+            this.setSource(sourceElement.getText());
+            this.setPluginCode(sourceElement.getAttributeValue(ApiMethodsDefDOM.PLUGIN_CODE_ATTRIBUTE_NAME));
+        }
+        this.buildMethod(element);
+    }
+    
+    public ApiMethod(String resourceName, 
+            String source, String pluginCode, Element element) {
+        this.setResourceName(resourceName);
+        this.setSource(source);
+        this.setPluginCode(pluginCode);
+        this.buildMethod(element);
+    }
+    
+    private void buildMethod(Element element) {
+        try {
+            this.setRequiredAuth(Boolean.parseBoolean(element.getAttributeValue("requiredAuth")));
+            this.setRequiredPermission(element.getAttributeValue("requiredPermission"));
+            String httpMethod = element.getAttributeValue("httpMethod");
+            if (null != httpMethod) {
+                this.setHttpMethod(Enum.valueOf(ApiMethod.HttpMethod.class, httpMethod.toUpperCase()));
+            } else {
+                this.setHttpMethod(HttpMethod.GET);
+            }
+            this.setActive(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.ACTIVE_ATTRIBUTE_NAME)));
+            this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
+            this.setDescription(element.getChildText(ApiMethodsDefDOM.DESCRIPTION_ELEMENT_NAME));
+            Element springBeanElement = element.getChild(ApiMethodsDefDOM.SPRING_BEAN_ELEMENT_NAME);
+            this.setSpringBean(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_NAME_ATTRIBUTE_NAME));
+            this.setSpringBeanMethod(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_METHOD_ATTRIBUTE_NAME));
+            this.setResponseClassName(element.getChildText(ApiMethodsDefDOM.RESPONSE_CLASS_ELEMENT_NAME));
+            Element parametersElement = element.getChild(ApiMethodsDefDOM.PARAMETERS_ELEMENT_NAME);
+            if (null != parametersElement) {
+                List<Element> parametersElements = parametersElement.getChildren(ApiMethodsDefDOM.PARAMETER_ELEMENT_NAME);
+                for (int i = 0; i < parametersElements.size(); i++) {
+                    Element parameterElement = parametersElements.get(i);
+                    ApiMethodParameter parameter = new ApiMethodParameter(parameterElement);
+                    if (null == this.getParameters()) {
+                        this.setParameters(new ArrayList<ApiMethodParameter>());
+                    }
+                    this.getParameters().add(parameter);
+                }
+            }
+            Element relatedShowletElement = element.getChild(ApiMethodsDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
+            if (null != relatedShowletElement) {
+                this.setRelatedShowlet(new ApiMethodRelatedShowlet(relatedShowletElement));
+            }
+            if (this.getHttpMethod().equals(HttpMethod.POST) || this.getHttpMethod().equals(HttpMethod.PUT)) {
+                Element expectedTypeElement = element.getChild("expectedType");
+                String className = (null != expectedTypeElement) ? expectedTypeElement.getText() : null;
+                if (null == className || className.trim().length() == 0) {
+                    throw new ApsSystemException("Expected Class required for Http Methods POST and PUT");
+                }
+		Class beanClass = Class.forName(className);
+                this.setExpectedType(beanClass);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "ApiMethod", "Error building api method '" 
+                    + this.getResourceName() + "'");
+            throw new RuntimeException("Error building api method", t);
+        }
+    }
+    
+    public ApiMethod clone() {
+        ApiMethod clone = new ApiMethod();
+        clone.setActive(this.isActive());
+        clone.setDescription(this.getDescription());
+        clone.setResourceName(this.getResourceName());
+        if (null != this.getParameters()) {
+            List<ApiMethodParameter> clonedParameters = new ArrayList<ApiMethodParameter>();
+            for (int i = 0; i < this.getParameters().size(); i++) {
+                ApiMethodParameter clonedParameter = this.getParameters().get(i).clone();
+                clonedParameters.add(clonedParameter);
+            }
+            clone.setParameters(clonedParameters);
+        }
+        clone.setPluginCode(this.getPluginCode());
+        clone.setResponseClassName(this.getResponseClassName());
+        clone.setSource(this.getSource());
+        clone.setSpringBean(this.getSpringBean());
+        clone.setSpringBeanMethod(this.getSpringBeanMethod());
+        clone.setCanSpawnOthers(this.isCanSpawnOthers());
+        if (null != this.getRelatedShowlet()) {
+            clone.setRelatedShowlet(this.getRelatedShowlet().clone());
+        }
+        clone.setHttpMethod(this.getHttpMethod());
+        clone.setRequiredAuth(this.isRequiredAuth());
+        clone.setRequiredPermission(this.getRequiredPermission());
+        if (null != this.getExpectedType()) {
+            try {
+                clone.setExpectedType(Class.forName(this.getExpectedType().getName()));
+            } catch (Throwable t) {
+                //nothing to catch
+            }
+        }
+        return clone;
+    }
+    
+    public String getResourceName() {
+        return _resourceName;
+    }
+    protected void setResourceName(String resourceName) {
+        this._resourceName = resourceName;
+    }
+    
+    public HttpMethod getHttpMethod() {
+        return _httpMethod;
+    }
+    protected void setHttpMethod(HttpMethod httpMethod) {
+        this._httpMethod = httpMethod;
+    }
+    
+    public Class getExpectedType() {
+        return _expectedType;
+    }
+    protected void setExpectedType(Class expectedType) {
+        this._expectedType = expectedType;
+    }
+    
+    public boolean isRequiredAuth() {
+        return _requiredAuth;
+    }
+    protected void setRequiredAuth(boolean requiredAuth) {
+        this._requiredAuth = requiredAuth;
+    }
+    
+    public String getRequiredPermission() {
+        return _requiredPermission;
+    }
+    protected void setRequiredPermission(String requiredPermission) {
+        this._requiredPermission = requiredPermission;
+    }
+
+    public String getSource() {
+        return _source;
+    }
+    protected void setSource(String source) {
+        this._source = source;
+    }
+
+    public String getPluginCode() {
+        return _pluginCode;
+    }
+    protected void setPluginCode(String pluginCode) {
+        this._pluginCode = pluginCode;
+    }
+    
+    @Deprecated
+    public String getMethodName() {
+        return this.getResourceName();
+    }
+    @Deprecated
+    protected void setMethodName(String methodName) {
+        this.setResourceName(methodName);
+    }
+
+    public String getDescription() {
+        return _description;
+    }
+    protected void setDescription(String description) {
+        this._description = description;
+    }
+
+    public boolean isActive() {
+        return _active;
+    }
+    public void setActive(boolean active) {
+        this._active = active;
+    }
+
+    public boolean isCanSpawnOthers() {
+        return _canSpawnOthers;
+    }
+    protected void setCanSpawnOthers(boolean canSpawnOthers) {
+        this._canSpawnOthers = canSpawnOthers;
+    }
+
+    public String getSpringBean() {
+        return _springBean;
+    }
+    protected void setSpringBean(String springBean) {
+        this._springBean = springBean;
+    }
+
+    public String getSpringBeanMethod() {
+        return _springBeanMethod;
+    }
+    protected void setSpringBeanMethod(String springBeanMethod) {
+        this._springBeanMethod = springBeanMethod;
+    }
+
+    public String getResponseClassName() {
+        return _responseClassName;
+    }
+    protected void setResponseClassName(String responseClassName) {
+        this._responseClassName = responseClassName;
+    }
+
+    public List<ApiMethodParameter> getParameters() {
+        return _parameters;
+    }
+    protected void setParameters(List<ApiMethodParameter> parameters) {
+        this._parameters = parameters;
+    }
+
+    public ApiMethodParameter getParameter(String key) {
+        if (null == key || key.trim().length() == 0 || this._parameters == null) {
+            return null;
+        }
+        for (int i = 0; i < this._parameters.size(); i++) {
+            ApiMethodParameter parameter = this._parameters.get(i);
+            if (parameter.getKey().equals(key)) {
+                return parameter;
+            }
+        }
+        return null;
+    }
+
+    public ApiMethodRelatedShowlet getRelatedShowlet() {
+        return _relatedShowlet;
+    }
+
+    protected void setRelatedShowlet(ApiMethodRelatedShowlet relatedShowlet) {
+        this._relatedShowlet = relatedShowlet;
+    }
+    
+    public static enum HttpMethod {
+        GET,PUT,POST,DELETE
+    }
+    
+    private String _resourceName;
+    
+    private HttpMethod _httpMethod;
+    
+    private boolean _requiredAuth;
+    private String _requiredPermission;
+    
+    private Class _expectedType;
+    
+    private String _source;
+    private String _pluginCode;
+    
+    private String _description;
+    private boolean _active;
+    private boolean _canSpawnOthers;
+    private String _springBean;
+    private String _springBeanMethod;
+    private String _responseClassName;
+    private List<ApiMethodParameter> _parameters;
+    private ApiMethodRelatedShowlet _relatedShowlet;
+    
 }

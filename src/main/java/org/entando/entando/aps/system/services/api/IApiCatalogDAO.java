@@ -17,28 +17,34 @@
 */
 package org.entando.entando.aps.system.services.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-
 
 /**
  * Interfrace for service Objects
  * @author E.Santoboni
  */
 public interface IApiCatalogDAO {
-	
-	public void loadApiStatus(Map<String, ApiMethod> methods);
-	
-	public void saveApiStatus(ApiMethod method);
-	
-	public Map<String, ApiService> loadServices(Map<String, ApiMethod> methods);
-	
-	public void addService(ApiService service);
-	
-	public void updateService(ApiService service);
-	
-	public void deleteService(String key);
-	
+    
+    @Deprecated
+    public void loadApiStatus(Map<String, ApiMethod> methods);
+    
+    public void loadApiStatus(List<ApiMethod> methods);
+
+    public void saveApiStatus(ApiMethod method);
+
+    @Deprecated
+    public Map<String, ApiService> loadServices(Map<String, ApiMethod> methods);
+    
+    public Map<String, ApiService> loadServices(List<ApiMethod> methods);
+    
+    public void addService(ApiService service);
+
+    public void updateService(ApiService service);
+
+    public void deleteService(String key);
+    
 }

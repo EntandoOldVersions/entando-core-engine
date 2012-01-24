@@ -65,7 +65,7 @@
 		</property>
 	</bean>
 	
-	<bean id="MasterApiMethodsInterface" class="org.entando.entando.aps.system.services.api.MasterApiMethodsInterface" >
+	<bean id="ApiServiceInterface" class="org.entando.entando.aps.system.services.api.ApiServiceInterface" >
 		<property name="apiCatalogManager" ref="ApiCatalogManager" />
 		<property name="langManager" ref="LangManager" />
 		<property name="responseBuilder" ref="ApiResponseBuilder" />

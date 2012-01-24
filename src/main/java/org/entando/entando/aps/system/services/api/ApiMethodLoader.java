@@ -20,6 +20,7 @@ package org.entando.entando.aps.system.services.api;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
@@ -39,66 +40,80 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class ApiMethodLoader {
-	
-	protected ApiMethodLoader(String locationPatterns, ServletContext servletContext) throws ApsSystemException {
-		this.setMethods(new HashMap<String, ApiMethod>());
-		try {
-			StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
-			while (tokenizer.hasMoreTokens()) {
-				String locationPattern = tokenizer.nextToken().trim();
-				this.loadApiMethodsObjects(locationPattern, servletContext);
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
-			throw new ApsSystemException("Error loading Api Method definitions", t);
-		}
-	}
-	
-	private void loadApiMethodsObjects(String locationPattern, ServletContext servletContext) throws Exception {
-		Logger log = ApsSystemUtils.getLogger();
-		Resource[] resources = ApsWebApplicationUtils.getResources(locationPattern, servletContext);
-		ApiMethodsDefDOM dom = null;
-		for (int i = 0; i < resources.length; i++) {
-			Resource resource = resources[i];
-			InputStream is = null;
-			try {
-				String path = resource.getFilename();
-				is = resource.getInputStream();
-				String xml = FileTextReader.getText(is);
-				dom = new ApiMethodsDefDOM(xml, path);
-				Map<String, ApiMethod> extractedMethods = dom.getMethods();
-				if (null != extractedMethods) {
-					Iterator<ApiMethod> extractedMethodsIter = extractedMethods.values().iterator();
-					while (extractedMethodsIter.hasNext()) {
-						ApiMethod extractedApiMethod = extractedMethodsIter.next();
-						if (this.getMethods().containsKey(extractedApiMethod.getMethodName())) {
-							String alertMessage = "ALERT: Into definition file '" + path + "' " +
-									"there is an API method '" + extractedApiMethod.getMethodName() + "' with the same name of one already present - " +
-									"This definition will be ignored!!!";
-							ApsSystemUtils.getLogger().severe(alertMessage);
-						} else {
-							this.getMethods().put(extractedApiMethod.getMethodName(), extractedApiMethod);
-						}
-					}
-				}
-				log.info("Loaded Shortcut definition by file " + path);
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definition by location Pattern '" + locationPattern + "'");
-			} finally {
-				if (null != is) {
-					is.close();
-				}
-			}
-		}
-	}
-	
-	public Map<String, ApiMethod> getMethods() {
-		return _methods;
-	}
-	protected void setMethods(Map<String, ApiMethod> methods) {
-		this._methods = methods;
-	}
-	
-	private Map<String, ApiMethod> _methods;
-	
+    
+    protected ApiMethodLoader(String locationPatterns, ServletContext servletContext) throws ApsSystemException {
+        try {
+            StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
+            while (tokenizer.hasMoreTokens()) {
+                String locationPattern = tokenizer.nextToken().trim();
+                this.loadApiMethodsObjects(locationPattern, servletContext);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
+            throw new ApsSystemException("Error loading Api Method definitions", t);
+        }
+    }
+    
+    private void loadApiMethodsObjects(String locationPattern, ServletContext servletContext) throws Exception {
+        Logger log = ApsSystemUtils.getLogger();
+        Resource[] resources = ApsWebApplicationUtils.getResources(locationPattern, servletContext);
+        ApiMethodsDefDOM dom = null;
+        for (int i = 0; i < resources.length; i++) {
+            Resource resource = resources[i];
+            InputStream is = null;
+            try {
+                String path = resource.getFilename();
+                is = resource.getInputStream();
+                String xml = FileTextReader.getText(is);
+                dom = new ApiMethodsDefDOM(xml, path);
+                Map<ApiMethod.HttpMethod, List<ApiMethod>> extractedMethods = dom.getRestFulMethods();
+                if (null != extractedMethods) {
+                    Iterator<ApiMethod.HttpMethod> httpMethodIter = extractedMethods.keySet().iterator();
+                    while (httpMethodIter.hasNext()) {
+                        ApiMethod.HttpMethod httpMethod = httpMethodIter.next();
+                        List<ApiMethod> extractedHttpMethods = extractedMethods.get(httpMethod);
+                        List<ApiMethod> httpMethods = this.getMethods().get(httpMethod);
+                        if (null != httpMethods) {
+                            for (int j = 0; j < extractedHttpMethods.size(); j++) {
+                                ApiMethod extractedHttpMethod = extractedHttpMethods.get(j);
+                                if (this.hasConflict(extractedHttpMethod, httpMethods)) {
+                                    String alertMessage = "ALERT: Into definition file '" + path + "' "
+                                            + "there is an API method '" + extractedHttpMethod.getHttpMethod() 
+                                            + "' resource '" + extractedHttpMethod.getResourceName() + "' and there is just one already present - "
+                                            + "This definition will be ignored!!!";
+                                    ApsSystemUtils.getLogger().severe(alertMessage);
+                                } else {
+                                    httpMethods.add(extractedHttpMethod);
+                                }
+                            }
+                        } else {
+                            this.getMethods().put(httpMethod, extractedHttpMethods);
+                        }
+                    }
+                }
+                log.info("Loaded Shortcut definition by file " + path);
+            } catch (Throwable t) {
+                ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definition by location Pattern '" + locationPattern + "'");
+            } finally {
+                if (null != is) {
+                    is.close();
+                }
+            }
+        }
+    }
+    
+    private boolean hasConflict(ApiMethod newMethod, List<ApiMethod> extractedMethods) {
+        for (int i = 0; i < extractedMethods.size(); i++) {
+            ApiMethod apiMethod = extractedMethods.get(i);
+            if (newMethod.getResourceName().equals(apiMethod.getResourceName())) return true;
+        }
+        return false;
+    }
+    
+    public Map<ApiMethod.HttpMethod, List<ApiMethod>> getMethods() {
+        return _apiMethods;
+    }
+    
+    private Map<ApiMethod.HttpMethod, List<ApiMethod>> _apiMethods = new HashMap<ApiMethod.HttpMethod, List<ApiMethod>>();
+    
 }

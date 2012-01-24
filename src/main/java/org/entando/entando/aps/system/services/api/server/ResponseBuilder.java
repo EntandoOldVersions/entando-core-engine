@@ -51,260 +51,379 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, ServletContextAware {
+    
+    @Deprecated
+    public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException {
+        Object apiResponse = null;
+        try {
+            ApiMethod method = this.extractApiMethod(ApiMethod.HttpMethod.GET, resourceName);
+            apiResponse = this.createResponse(method, parameters);
+        } catch (ApiException e) {
+            ApsSystemUtils.logThrowable(e, this, "createResponse", "Error creating response for method GET, resource '" + resourceName + "'");
+            if (apiResponse == null) {
+                apiResponse = new BaseApiResponse();
+            }
+            ((AbstractApiResponse) apiResponse).addErrors(e.getErrors());
+        }
+        return apiResponse;
+    }
+    
+    public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException {
+        return createResponse(method, null, parameters);
+    }
+    
+    public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException {
+        AbstractApiResponse response = null;
+        try {
+            this.checkParameter(method, parameters);
+            Object bean = this.extractBean(method);
+            Object masterResult = null;
+            if (method.getHttpMethod().equals(ApiMethod.HttpMethod.GET)) {
+                masterResult = this.invokeGetMethod(method, bean, null, parameters, true);
+                if (null == masterResult) {
+                    throw new ApiException(IApiErrorCodes.API_INVALID_RESPONSE, "Invalid or null Response");
+                }
+            } else {
+                masterResult = this.invokePutPostDeleteMethod(method, bean, parameters, bodyObject);
+            }
+            if (null == method.getResponseClassName()) {
+                return masterResult;
+            }
+            response = this.buildApiResponseObject(method);
+            if (null == response && (masterResult instanceof String)) {
+                return masterResult;
+            }
+            String htmlResult = this.extractHtmlResult(masterResult, response, method, parameters, bean);
+            if (masterResult instanceof ApiMethodResult) {
+                response.addErrors(((ApiMethodResult) masterResult).getErrors());
+                response.setResult(((ApiMethodResult) masterResult).getResult(), htmlResult);
+            } else {
+                response.setResult(masterResult, htmlResult);
+            }
+        } catch (ApiException e) {
+            if (response == null) {
+                response = new BaseApiResponse();
+            }
+            response.addErrors(e.getErrors());
+            response.setResult(FAILURE, null);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "createResponse", "Error creating response - " + this.buildApiSignature(method));
+            if (response == null) {
+                response = new BaseApiResponse();
+            }
+            ApiError error = new ApiError(IApiErrorCodes.API_METHOD_ERROR, "Error creating response - " + this.buildApiSignature(method));
+            response.addError(error);
+            response.setResult(FAILURE, null);
+        }
+        return response;
+    }
 
-	@Override
-	public Object createResponse(String methodName, Properties parameters) throws ApsSystemException {
-		Object apiResponse = null;
-		try {
-			ApiMethod method = this.extractApi(methodName);
-			apiResponse = this.createResponse(method, parameters);
-		} catch (ApiException e) {
-			ApsSystemUtils.logThrowable(e, this, "createResponse", "Error creating response for api method '" + methodName + "'");
-			if (apiResponse == null) apiResponse = new BaseApiResponse();
-			((AbstractApiResponse) apiResponse).addErrors(e.getErrors());
-		}
-		return apiResponse;
-	}
+    private String extractHtmlResult(Object masterResult,
+            AbstractApiResponse apiResponse, ApiMethod apiMethod, Properties parameters, Object bean) {
+        String htmlResult = null;
+        try {
+            htmlResult = (String) this.invokeGetMethod(apiMethod, bean, "ToHtml", parameters, false);
+            if (null != htmlResult) {
+                return htmlResult;
+            }
+            String template = this.extractTemplate(apiMethod);
+            if (null == template) {
+                return null;
+            }
+            htmlResult = this.getVelocityRenderer().render(masterResult, template);
+        } catch (ApiException t) {
+            ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
+                    "Error creating html response - " + this.buildApiSignature(apiMethod));
+            if (null != t.getErrors()) {
+                apiResponse.addErrors(t.getErrors());
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
+                    "Error creating html response - " + this.buildApiSignature(apiMethod));
+        }
+        return htmlResult;
+    }
 
-	@Override
-	public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException {
-		AbstractApiResponse apiResponse = null;
-		try {
-			this.checkParameter(method, parameters);
-			Object bean = this.extractBean(method);
-			Object masterResult = this.invokeMethod(method, bean, null, parameters, true);
-			if (null == method.getResponseClassName()) {
-				return masterResult;
-			}
-                        apiResponse = this.buildApiResponseObject(method);
-			if (null == apiResponse && (masterResult instanceof String)) {
-				return masterResult;
-			}
-			String htmlResult = this.extractHtmlResult(masterResult, apiResponse, method, parameters, bean);
-			if (masterResult instanceof ApiMethodResult) {
-				apiResponse.addErrors(((ApiMethodResult) masterResult).getErrors());
-				apiResponse.setResult(((ApiMethodResult) masterResult).getResult(), htmlResult);
-			} else {
-				apiResponse.setResult(masterResult, htmlResult);
-			}
-		} catch (ApiException e) {
-			ApsSystemUtils.logThrowable(e, this, "createResponse", "Error creating response for api method '" + method.getMethodName() + "'");
-			if (apiResponse == null) apiResponse = new BaseApiResponse();
-			apiResponse.addErrors(e.getErrors());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createResponse", "Error creating response for api method '" + method.getMethodName() + "'");
-			if (apiResponse == null) apiResponse = new BaseApiResponse();
-			ApiError error = new ApiError(IApiErrorCodes.API_METHOD_ERROR, "Error creating response for api method '" + method.getMethodName() + "'");
-			apiResponse.addError(error);
-		}
-		return apiResponse;
-	}
+    protected String extractTemplate(ApiMethod apiMethod) throws Exception {
+        String template = null;
+        InputStream is = null;
+        try {
+            StringBuffer path = new StringBuffer("classpath*:/api/");
+            if (null != apiMethod.getPluginCode()) {
+                path.append("plugins/" + apiMethod.getPluginCode() + "/");
+            } else if (!apiMethod.getSource().equalsIgnoreCase("core")) {
+                path.append(apiMethod.getSource() + "/");
+            }
+            path.append("aps/get/" + apiMethod.getResourceName() + "/description-item.vm");
+            Resource[] resources = ApsWebApplicationUtils.getResources(path.toString(), this.getServletContext());
+            if (null != resources && resources.length == 1) {
+                Resource resource = resources[0];
+                is = resource.getInputStream();
+            }
+            if (null == is) {
+                ApsSystemUtils.getLogger().info("Null Input Stream - template file path " + path.toString());
+                return null;
+            }
+            template = FileTextReader.getText(is);
+        } catch (Throwable t) {
+            String message = "Error extracting template - " + this.buildApiSignature(apiMethod);
+            ApsSystemUtils.logThrowable(t, this, "extractTemplate", message);
+        } finally {
+            if (null != is) {
+                is.close();
+            }
+        }
+        return template;
+    }
 
-	private String extractHtmlResult(Object masterResult, 
-			AbstractApiResponse apiResponse, ApiMethod api, Properties parameters, Object bean) {
-		String htmlResult = null;
-		try {
-			htmlResult = (String) this.invokeMethod(api, bean, "ToHtml", parameters, false);
-			if (null != htmlResult) return htmlResult;
-			String template = this.extractTemplate(api);
-			if (null == template) return null;
-			htmlResult = this.getVelocityRenderer().render(masterResult, template);
-		} catch (ApiException t) {
-			ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
-					"Error creating html response for api method '" + api.getMethodName() + "'");
-			if (null != t.getErrors()) {
-				apiResponse.addErrors(t.getErrors());
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
-					"Error creating html response for api method '" + api.getMethodName() + "'");
-		}
-		return htmlResult;
-	}
-	
-	protected String extractTemplate(ApiMethod api) throws Exception {
-		String template = null;
-		InputStream is = null;
-		try {
-			StringBuffer path = new StringBuffer("classpath*:/api/");
-			if (null != api.getPluginCode()) {
-				path.append("plugins/" + api.getPluginCode() + "/");
-			} else if (!api.getSource().equalsIgnoreCase("core")) {
-				path.append(api.getSource() + "/");
-			}
-			path.append("aps/get/" + api.getMethodName() + "/description-item.vm");
-			Resource[] resources = ApsWebApplicationUtils.getResources(path.toString(), this.getServletContext());
-			if (null != resources && resources.length == 1) {
-				Resource resource = resources[0];
-				is = resource.getInputStream();
-			}
-			if (null == is) {
-				ApsSystemUtils.getLogger().info("Null Input Stream - template file path " + path.toString());
-				return null;
-			}
-			template = FileTextReader.getText(is);
-		} catch (Throwable t) {
-			String message = "Error template for api '" + api.getMethodName() + "'";
-			ApsSystemUtils.logThrowable(t, this, "extractTemplate", message);
-		} finally {
-			if (null != is) {
-				is.close();
-			}
-		}
-		return template;
-	}
+    private void checkParameter(ApiMethod apiMethod, Properties parameters) throws ApiException, Throwable {
+        try {
+            List<ApiMethodParameter> apiParameters = apiMethod.getParameters();
+            if (null == apiParameters || apiParameters.isEmpty()) {
+                return;
+            }
+            List<ApiError> errors = new ArrayList<ApiError>();
+            for (int i = 0; i < apiParameters.size(); i++) {
+                ApiMethodParameter apiParam = apiParameters.get(i);
+                String paramName = apiParam.getKey();
+                Object value = parameters.get(paramName);
+                if (apiParam.isRequired() && (null == value || value.toString().trim().length() == 0)) {
+                    errors.add(new ApiError(IApiErrorCodes.API_PARAMETER_REQUIRED, "Parameter '" + paramName + "' is required"));
+                }
+            }
+            if (!errors.isEmpty()) {
+                throw new ApiException(errors);
+            }
+        } catch (ApiException t) {
+            throw t;
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "checkParameter", "Error checking api parameters");
+            throw new ApsSystemException("Internal Error", t);
+        }
+    }
 
-	private void checkParameter(ApiMethod api, Properties parameters) throws ApiException, Throwable {
-		try {
-			List<ApiMethodParameter> apiParameters = api.getParameters();
-			if (null == apiParameters || apiParameters.isEmpty()) return;
-			List<ApiError> errors = new ArrayList<ApiError>();
-			for (int i = 0; i < apiParameters.size(); i++) {
-				ApiMethodParameter apiParam = apiParameters.get(i);
-				String paramName = apiParam.getKey();
-				Object value = parameters.get(paramName);
-				if (apiParam.isRequired() && (null == value || value.toString().trim().length() == 0)) {
-					errors.add(new ApiError(IApiErrorCodes.API_PARAMETER_REQUIRED, "Parameter '" + paramName + "' is required"));
-				}
-			}
-			if (!errors.isEmpty()) {
-				throw new ApiException(errors);
-			}
-		} catch (ApiException t) {
-			throw t;
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkParameter", "Error checking api parameters");
-			throw new ApsSystemException("Internal Error", t);
-		}
-	}
+    private AbstractApiResponse buildApiResponseObject(ApiMethod apiMethod) throws ApiException {
+        AbstractApiResponse apiResponse = null;
+        try {
+            Class responseClass = Class.forName(apiMethod.getResponseClassName());
+            apiResponse = (AbstractApiResponse) responseClass.newInstance();
+        } catch (Exception e) {
+            ApsSystemUtils.logThrowable(e, this, "createResponse",
+                    "Error creating instance of response '" + apiMethod.getResponseClassName() + "'");
+            //throw new ApiException(IApiErrorCodes.INVALID_RESPONSE, "Invalid response class '" + api.getResponseClassName() + "'");
+        }
+        return apiResponse;
+    }
+    
+    @Deprecated
+    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
+        Object result = null;
+        try {
+            ApiMethod api = this.extractApi(resourceName);
+            this.checkParameter(api, parameters);
+            Object bean = this.extractBean(api);
+            result = this.invokeGetMethod(api, bean, "", parameters, true);
+        } catch (ApiException ae) {
+            ApsSystemUtils.logThrowable(ae, this, "invoke", "Error invoking method GET for resource '" + resourceName + "'");
+            throw ae;
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "invoke", "Error invoking method GET for resource '" + resourceName + "'");
+            throw new ApsSystemException("Error invoking method GET for resource '" + resourceName + "'", t);
+        }
+        return result;
+    }
+    
+    @Deprecated
+    protected ApiMethod extractApi(String resourceName) throws ApiException {
+        return this.extractApiMethod(ApiMethod.HttpMethod.GET, resourceName);
+    }
 
-	private AbstractApiResponse buildApiResponseObject(ApiMethod api) throws ApiException {
-		AbstractApiResponse apiResponse = null;
-		try {
-			Class responseClass = Class.forName(api.getResponseClassName());
-			apiResponse = (AbstractApiResponse) responseClass.newInstance();
-		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "createResponse",
-					"Error creating instance of response '" + api.getResponseClassName() + "'");
-			//throw new ApiException(IApiErrorCodes.INVALID_RESPONSE, "Invalid response class '" + api.getResponseClassName() + "'");
-		}
-		return apiResponse;
-	}
+    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApiException {
+        ApiMethod api = null;
+        try {
+            api = this.getApiCatalogManager().getMethod(httpMethod, resourceName);
+            if (null == api) {
+                throw new ApiException(IApiErrorCodes.API_INVALID, this.buildApiSignature(httpMethod, resourceName) + " does not exists");
+            }
+            if (!api.isActive()) {
+                throw new ApiException(IApiErrorCodes.API_ACTIVE_FALSE, this.buildApiSignature(httpMethod, resourceName) + " is not active");
+            }
+        } catch (ApiException ae) {
+            ApsSystemUtils.logThrowable(ae, this, "extractApi", "Error extracting api method " + this.buildApiSignature(httpMethod, resourceName));
+            throw ae;
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "extractApi", "Error extracting api method - " + this.buildApiSignature(httpMethod, resourceName));
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(httpMethod, resourceName) + " is not supported");
+        }
+        return api;
+    }
+    
+    private String buildApiSignature(ApiMethod apiMethod) {
+        return this.buildApiSignature(apiMethod.getHttpMethod(), apiMethod.getResourceName());
+    }
+    
+    private String buildApiSignature(ApiMethod.HttpMethod httpMethod, String resourceName) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("Method '").append(httpMethod.toString()).append("' Resource '").append(resourceName).append("'");
+        return buffer.toString();
+    }
+    
+    protected Object extractBean(ApiMethod api) throws ApsSystemException, ApiException {
+        Object bean = this.getBeanFactory().getBean(api.getSpringBean());
+        if (null == bean) {
+            ApsSystemUtils.getLogger().severe("Null bean '" + api.getSpringBean() + "' for api " + this.buildApiSignature(api));
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported");
+        }
+        return bean;
+    }
+    
+    @Deprecated
+    protected Object invokeMethod(ApiMethod api, Object bean,
+            String methodSuffix, Properties parameters, boolean throwException) throws ApiException, Throwable {
+        return this.invokeGetMethod(api, bean, methodSuffix, parameters, throwException);
+    }
+    
+    protected Object invokeGetMethod(ApiMethod apiMethod, Object bean,
+            String methodSuffix, Properties parameters, boolean throwException) throws ApiException, Throwable {
+        String methodName = null;
+        Object result = null;
+        try {
+            Class[] parameterTypes = new Class[]{Properties.class};
+            Class beanClass = bean.getClass();
+            methodName = (null != methodSuffix) ? apiMethod.getSpringBeanMethod() + methodSuffix.trim() : apiMethod.getSpringBeanMethod();
+            Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
+            result = method.invoke(bean, parameters);
+        } catch (NoSuchMethodException e) {
+            if (throwException) {
+                ApsSystemUtils.logThrowable(e, this, "invokeGetMethod", "No such method '"
+                        + methodName + "' of class '" + bean.getClass() + "'");
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod));
+            }
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof ApiException) {
+                throw (ApiException) e.getTargetException();
+            } else if (throwException) {
+                ApsSystemUtils.logThrowable(e.getTargetException(), this, "invokeGetMethod", "Error invoking method '"
+                        + methodName + "' of class '" + bean.getClass() + "'");
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod));
+            }
+        } catch (Throwable t) {
+            if (throwException) {
+                ApsSystemUtils.logThrowable(t, this, "invokeGetMethod", "Error invoking method - " + this.buildApiSignature(apiMethod)
+                        + methodName + "' of class '" + bean.getClass() + "'");
+                throw t;
+            }
+        }
+        return result;
+    }
+    
+    protected Object invokePutPostDeleteMethod(ApiMethod apiMethod, Object bean,
+            Properties parameters, Object bodyObject) throws ApiException, Throwable {
+        Object result = null;
+        try {
+            if (apiMethod.getHttpMethod().equals(ApiMethod.HttpMethod.DELETE)) {
+                this.invokeDeleteMethod(apiMethod, bean, parameters);
+            } else {
+                this.invokePutPostMethod(apiMethod, bean, parameters, bodyObject);
+            }
+            BaseApiResponse response = new BaseApiResponse();
+            response.setResult(SUCCESS, null);
+            result = response;
+        } catch (NoSuchMethodException e) {
+            ApsSystemUtils.logThrowable(e, this, "invokePutPostDeleteMethod", "No such method '"
+                    + apiMethod.getSpringBeanMethod() + "' of class '" + bean.getClass() + "'");
+            throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method not supported - " + this.buildApiSignature(apiMethod));
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof ApiException) {
+                throw (ApiException) e.getTargetException();
+            } else {
+                ApsSystemUtils.logThrowable(e.getTargetException(), this, "invokePutPostDeleteMethod", "Error invoking method '"
+                        + apiMethod.getSpringBeanMethod() + "' of class '" + bean.getClass() + "'");
+                throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method - " + this.buildApiSignature(apiMethod));
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "invokePutPostDeleteMethod", "Error invoking method '"
+                    + apiMethod.getSpringBeanMethod() + "' of class '" + bean.getClass() + "'");
+            throw t;
+        }
+        return result;
+    }
+    
+    private void invokePutPostMethod(ApiMethod api, Object bean, 
+            Properties parameters, Object bodyObject) throws NoSuchMethodException, InvocationTargetException, Throwable {
+        Class beanClass = bean.getClass();
+        String methodName = api.getSpringBeanMethod();
+        try {
+            Class[] parameterTypes = new Class[]{bodyObject.getClass(), Properties.class};
+            Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
+            method.invoke(bean, bodyObject, parameters);
+        } catch (NoSuchMethodException e) {
+            //the first exception of type "NoSuchMethodException" will not catched... the second yes
+            Class[] parameterTypes = new Class[]{bodyObject.getClass()};
+            Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
+            method.invoke(bean, bodyObject);
+        } catch (InvocationTargetException e) {
+            throw e;
+        } catch (Throwable t) {
+            throw t;
+        }
+    }
+    
+    private void invokeDeleteMethod(ApiMethod api, Object bean, 
+            Properties parameters) throws NoSuchMethodException, InvocationTargetException, Throwable {
+        Class[] parameterTypes = new Class[]{String.class};
+        Class beanClass = bean.getClass();
+        String methodName = api.getSpringBeanMethod();
+        ApiMethodParameter requiredParameter = null;
+        List<ApiMethodParameter> apiParameters = api.getParameters();
+        for (int i = 0; i < apiParameters.size(); i++) {
+            ApiMethodParameter apiMethodParameter = apiParameters.get(i);
+            if (apiMethodParameter.isRequired()) {
+                requiredParameter = apiMethodParameter;
+                break;
+            }
+        }
+        if (null == requiredParameter) {
+            throw new ApsSystemException("No one required parameter - " + this.buildApiSignature(api));
+        }
+        Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
+        method.invoke(bean, parameters.get(requiredParameter.getKey()));
+    }
+    
+    protected IApiCatalogManager getApiCatalogManager() {
+        return _apiCatalogManager;
+    }
 
-	@Override
-	public Object invoke(String methodName, Properties parameters) throws ApiException, ApsSystemException {
-		Object result = null;
-		try {
-			ApiMethod api = this.extractApi(methodName);
-			this.checkParameter(api, parameters);
-			Object bean = this.extractBean(api);
-			result = this.invokeMethod(api, bean, "", parameters, true);
-		} catch (ApiException ae) {
-			ApsSystemUtils.logThrowable(ae, this, "invoke", "Error invoking api method '" + methodName + "'");
-			throw ae;
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "invoke", "Error invoking api method '" + methodName + "'");
-			throw new ApsSystemException("Error invoking api method '" + methodName + "'", t);
-		}
-		return result;
-	}
+    public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
+        this._apiCatalogManager = apiCatalogManager;
+    }
 
-	protected ApiMethod extractApi(String methodName) throws ApiException {
-		ApiMethod api = null;
-		try {
-			api = this.getApiCatalogManager().getMethod(methodName);
-			if (null == api) {
-				throw new ApiException(IApiErrorCodes.API_INVALID, "Method '" + methodName + "' does not exist");
-			}
-			if (!api.isActive()) {
-				throw new ApiException(IApiErrorCodes.API_ACTIVE_FALSE, "Method '" + methodName + "' is not active");
-			}
-		} catch (ApiException ae) {
-			ApsSystemUtils.logThrowable(ae, this, "extractApi", "Error extracting api method '" + methodName + "'");
-			throw ae;
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractApi", "Error extracting api method '" + methodName + "'");
-			throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Method '" + methodName + "' is not supported");
-		}
-		return api;
-	}
+    protected IVelocityRenderer getVelocityRenderer() {
+        return _velocityRenderer;
+    }
 
-	protected Object extractBean(ApiMethod api) throws ApsSystemException, ApiException {
-		Object bean = this.getBeanFactory().getBean(api.getSpringBean());
-		if (null == bean) {
-			ApsSystemUtils.getLogger().severe("Null bean '" + api.getSpringBean() + "' for api '" + api.getMethodName() + "'");
-			throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Method '" + api.getMethodName() + "' is not supported");
-		}
-		return bean;
-	}
+    public void setVelocityRenderer(IVelocityRenderer velocityRenderer) {
+        this._velocityRenderer = velocityRenderer;
+    }
 
-	protected Object invokeMethod(ApiMethod api, Object bean,
-			String methodSuffix, Properties parameters, boolean throwException) throws ApiException, Throwable {
-		String methodName = null;
-		Object result = null;
-		try {
-			Class[] parameterTypes = new Class[] {Properties.class};
-			Class beanClass = bean.getClass();
-			methodName = (null != methodSuffix) ? api.getSpringBeanMethod() + methodSuffix.trim() : api.getSpringBeanMethod();
-			Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
-			result = method.invoke(bean, parameters);
-		} catch (NoSuchMethodException e) {
-			if (throwException) {
-				ApsSystemUtils.logThrowable(e, this, "extractApi", "No such method '"
-						+ methodName + "' of class '" + bean.getClass() + "'");
-				throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Method '" + api.getMethodName() + "' is not supported");
-			}
-		} catch (InvocationTargetException e) {
-			if (e.getTargetException() instanceof ApiException) {
-				throw (ApiException) e.getTargetException();
-			} else if (throwException) {
-				ApsSystemUtils.logThrowable(e.getTargetException(), this, "extractApi", "Error invoking method '"
-						+ methodName + "' of class '" + bean.getClass() + "'");
-				throw new ApiException(IApiErrorCodes.API_METHOD_ERROR, "Error invoking Method '" + api.getMethodName() + "'");
-			}
-		} catch (Throwable t) {
-			if (throwException) {
-				ApsSystemUtils.logThrowable(t, this, "extractApi", "Error invoking method '"
-						+ methodName + "' of class '" + bean.getClass() + "'");
-				throw t;
-			}
-		}
-		return result;
-	}
-	
-	protected IApiCatalogManager getApiCatalogManager() {
-		return _apiCatalogManager;
-	}
-	public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
-		this._apiCatalogManager = apiCatalogManager;
-	}
+    protected BeanFactory getBeanFactory() {
+        return this._beanFactory;
+    }
 
-	protected IVelocityRenderer getVelocityRenderer() {
-		return _velocityRenderer;
-	}
-	public void setVelocityRenderer(IVelocityRenderer velocityRenderer) {
-		this._velocityRenderer = velocityRenderer;
-	}
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this._beanFactory = beanFactory;
+    }
 
-	protected BeanFactory getBeanFactory() {
-		return this._beanFactory;
-	}
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this._beanFactory = beanFactory;
-	}
-
-	protected ServletContext getServletContext() {
-		return this._servletContext;
-	}
-	@Override
-	public void setServletContext(ServletContext servletContext) {
-		this._servletContext = servletContext;
-	}
-	
-	private IApiCatalogManager _apiCatalogManager;
-	private IVelocityRenderer _velocityRenderer;
-	private BeanFactory _beanFactory;
-	private ServletContext _servletContext;
-	
+    protected ServletContext getServletContext() {
+        return this._servletContext;
+    }
+    public void setServletContext(ServletContext servletContext) {
+        this._servletContext = servletContext;
+    }
+    
+    private IApiCatalogManager _apiCatalogManager;
+    private IVelocityRenderer _velocityRenderer;
+    private BeanFactory _beanFactory;
+    private ServletContext _servletContext;
+    
 }
