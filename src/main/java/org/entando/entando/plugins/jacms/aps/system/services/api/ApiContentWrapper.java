@@ -23,14 +23,15 @@ import java.util.Properties;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 
+import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
+import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
-import com.agiletec.plugins.jacms.aps.system.services.api.model.JAXBContent;
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper;

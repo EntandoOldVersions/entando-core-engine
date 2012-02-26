@@ -15,7 +15,7 @@
  * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
  *
  */
-package com.agiletec.plugins.jacms.aps.system.services.api.model;
+package org.entando.entando.plugins.jacms.aps.system.services.api.model;
 
 import java.util.ArrayList;
 import java.util.Date;

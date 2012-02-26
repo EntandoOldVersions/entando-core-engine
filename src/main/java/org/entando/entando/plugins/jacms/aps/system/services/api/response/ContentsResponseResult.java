@@ -15,7 +15,7 @@
  * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
  *
  */
-package com.agiletec.plugins.jacms.aps.system.services.api.response;
+package org.entando.entando.plugins.jacms.aps.system.services.api.response;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
 
-import com.agiletec.plugins.jacms.aps.system.services.api.model.JAXBContent;
+import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
 
 /**
  * @author E.Santoboni

@@ -1,11 +1,10 @@
-
 <apiMethodDefinitions>
     
     <method name="getContents" active="true" canSpawnOthers="true">
         <source pluginCode="jacms">plugins</source>
         <description>Returns a list of public contents, composed using the specified filters.</description>
         <springBean name="jacmsApiContentWrapper" method="getContents" />
-        <responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
+        <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
         <parameters>
             <parameter key="contentType" required="true">
                 <description>The key of a content type (Example: CNG, NEW, EVN...).</description>
@@ -32,7 +31,7 @@
         <source pluginCode="jacms">plugins</source>
         <description>Returns a public content.</description>
         <springBean name="jacmsApiContentWrapper" method="getContent" />
-        <responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
+        <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
         <parameters>
             <parameter key="id" required="true">
                 <description>The Id of the content to return (Example: "CNG34", or "NEW45")</description>

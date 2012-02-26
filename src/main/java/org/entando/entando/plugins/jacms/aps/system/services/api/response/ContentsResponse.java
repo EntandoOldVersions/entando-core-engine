@@ -15,7 +15,7 @@
  * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
  *
  */
-package com.agiletec.plugins.jacms.aps.system.services.api.response;
+package org.entando.entando.plugins.jacms.aps.system.services.api.response;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
