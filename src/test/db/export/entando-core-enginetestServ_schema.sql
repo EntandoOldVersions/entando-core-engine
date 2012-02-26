@@ -47,7 +47,7 @@ CREATE TABLE api_oauth_consumers (
 
 CREATE TABLE api_oauth_tokens (
     accesstoken character(100) NOT NULL,
-    tokensecret character varying(100),
+    tokensecret character varying(100) NOT NULL,
     consumerkey character varying(100) NOT NULL,
     lastaccess date NOT NULL,
     username character varying(40) NOT NULL

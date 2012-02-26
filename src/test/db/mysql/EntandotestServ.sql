@@ -20,9 +20,33 @@
 
 CREATE DATABASE IF NOT EXISTS EntandotestServ;
 USE EntandotestServ;
+CREATE TABLE  `EntandotestServ`.`api_oauth_consumers` (
+  `consumerkey` varchar(100) NOT NULL,
+  `consumersecret` varchar(100) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `callbackurl` varchar(500),
+  `expirationdate` date DEFAULT NULL,
+  PRIMARY KEY (`consumerkey`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE  `EntandotestServ`.`api_oauth_consumers` (
+  `accesstoken` varchar(100) NOT NULL,
+  `tokensecret` varchar(100) NOT NULL,
+  `consumerkey` varchar(500) NOT NULL,
+  `lastaccess` date DEFAULT NULL,
+  `username` varchar(40) NOT NULL,
+  PRIMARY KEY (`accesstoken`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE  `EntandotestServ`.`apicatalog_methods` (
+  `resource` varchar(100) NOT NULL,
+  `httpmethod` varchar(6) NOT NULL,
+  `isactive` tinyint(4),
+  `authenticationrequired` tinyint(4),
+  `authorizationrequired` varchar(100),
+  PRIMARY KEY (`resource`, `httpmethod`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE  `EntandotestServ`.`apicatalog_services` (
   `servicekey` varchar(100) NOT NULL,
-  `parentapi` varchar(100) DEFAULT NULL,
+  `resource` varchar(100) DEFAULT NULL,
   `description` longtext NOT NULL,
   `parameters` longtext,
   `tag` varchar(100) DEFAULT NULL,
@@ -31,11 +55,6 @@ CREATE TABLE  `EntandotestServ`.`apicatalog_services` (
   `ispublic` tinyint(4) NOT NULL,
   `myentando` tinyint(4) NOT NULL,
   PRIMARY KEY (`servicekey`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE  `EntandotestServ`.`apicatalog_status` (
-  `method` varchar(100) NOT NULL,
-  `isactive` tinyint(4) NOT NULL,
-  PRIMARY KEY (`method`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 CREATE TABLE  `EntandotestServ`.`authgroups` (
   `groupname` varchar(20) NOT NULL,
