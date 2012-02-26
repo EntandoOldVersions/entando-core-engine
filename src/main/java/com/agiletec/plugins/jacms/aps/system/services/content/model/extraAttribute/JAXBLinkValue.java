@@ -18,6 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -31,35 +32,35 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
  */
 @XmlRootElement(name = "value")
 @XmlType(propOrder = {"text", "url", "symbolikLink"})
-@XmlSeeAlso({SymbolicLink.class})
+@XmlSeeAlso({SymbolicLink.class, HashMap.class})
 public class JAXBLinkValue implements Serializable {
-	
-	@XmlElement(name = "text", required = true)
-	public String getText() {
-		return _text;
-	}
-	public void setText(String text) {
-		this._text = text;
-	}
-	
-	@XmlElement(name = "url", required = true)
-	public String getUrl() {
-		return _url;
-	}
-	public void setUrl(String url) {
-		this._url = url;
-	}
-	
-	@XmlElement(name = "symbolikLink", required = false)
-	public SymbolicLink getSymbolikLink() {
-		return _symbolikLink;
-	}
-	public void setSymbolikLink(SymbolicLink symbolikLink) {
-		this._symbolikLink = symbolikLink;
-	}
-
-	private String _text;
-	private String _url;
-	private SymbolicLink _symbolikLink;
-	
+    
+    @XmlElement(name = "text", required = true)
+    public Object getText() {
+        return _text;
+    }
+    public void setText(Object text) {
+        this._text = text;
+    }
+    
+    @XmlElement(name = "url", required = true)
+    public String getUrl() {
+        return _url;
+    }
+    public void setUrl(String url) {
+        this._url = url;
+    }
+    
+    @XmlElement(name = "symbolikLink", required = false)
+    public SymbolicLink getSymbolikLink() {
+        return _symbolikLink;
+    }
+    public void setSymbolikLink(SymbolicLink symbolikLink) {
+        this._symbolikLink = symbolikLink;
+    }
+    
+    private Object _text;
+    private String _url;
+    private SymbolicLink _symbolikLink;
+    
 }

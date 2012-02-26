@@ -17,6 +17,7 @@
 */
 package org.entando.entando.aps.system.services.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
@@ -29,22 +30,22 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 public class TestApiCatalogManager extends ApiBaseTestCase {
 	
     public void testGetMethod() throws Throwable {
-    	ApiMethod method = this.getApiCatalogManager().getMethod("getService");
+    	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	assertNotNull(method);
     	assertTrue(method.isActive());
     }
     
     public void testGetMethods() throws Throwable {
-    	Map<String, ApiMethod> methods = this.getApiCatalogManager().getMethods();
+    	List<ApiMethod> methods = this.getApiCatalogManager().getMethods(ApiMethod.HttpMethod.GET);
     	assertNotNull(methods);
     	assertTrue(methods.size() > 0);
     }
     
     public void testUpdateMethodStatus() throws Throwable {
-    	ApiMethod method = this.getApiCatalogManager().getMethod("getService");
-    	method.setActive(false);
-    	this.getApiCatalogManager().updateApiStatus(method);
-    	method = this.getApiCatalogManager().getMethod("getService");
+    	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
+    	method.setStatus(false);
+    	this.getApiCatalogManager().updateMethodConfig(method);
+    	method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getService");
     	assertFalse(method.isActive());
     }
     

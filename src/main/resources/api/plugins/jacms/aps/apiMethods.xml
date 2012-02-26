@@ -1,49 +1,84 @@
+
 <apiMethodDefinitions>
-	
-	<method name="getContents" active="true" canSpawnOthers="true">
-		<source pluginCode="jacms">plugins</source>
-		<description>Returns a list of public contents, composed using the specified filters.</description>
-		<springBean name="jacmsApiContentWrapper" method="getContents" />
-		<responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
-		<parameters>
-			<parameter key="contentType" required="true">
-				<description>The key of a content type (Example: CNG, NEW, EVN...).</description>
-			</parameter>
-			<parameter key="categories" required="false">
-				<description>A CSV list of category codes (Example: "music,sports,frontpage").</description>
-			</parameter>
-			<parameter key="filters" required="false">
-				<description>The filters (Example: "(order=DESC;attributeFilter=true;key=Date)+(order=ASC;attributeFilter=true;key=Title)" )</description>
-			</parameter>
-			<parameter key="modelId" required="false">
-				<description>The Id of the content model used to render each content in the HTML section of the response. Must be an integer, "default" or "list".</description>
-			</parameter>
-		</parameters>
-		<relatedShowlet code="content_viewer_list">
-			<mapParameter showlet="contentType" method="contentType" />
-			<mapParameter showlet="categories" method="categories" />
-			<mapParameter showlet="filters" method="filters" />
-			<mapParameter showlet="modelId" method="modelId" />
-		</relatedShowlet>
-	</method>
-	
-	<method name="getContent" active="true" canSpawnOthers="true">
-		<source pluginCode="jacms">plugins</source>
-		<description>Returns a public content.</description>
-		<springBean name="jacmsApiContentWrapper" method="getContent" />
-		<responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
-		<parameters>
-			<parameter key="id" required="true">
-				<description>The Id of the content to return (Example: "CNG34", or "NEW45")</description>
-			</parameter>
-			<parameter key="modelId" required="false">
-				<description>The Id of the content model used to render each content in the HTML section of the response. Must be an integer, "default" or "list".</description>
-			</parameter>
-		</parameters>
-		<relatedShowlet code="content_viewer">
-			<mapParameter showlet="contentId" method="id" />
-			<mapParameter showlet="modelId" method="modelId" />
-		</relatedShowlet>
-	</method>
-	
+    
+    <method name="getContents" active="true" canSpawnOthers="true">
+        <source pluginCode="jacms">plugins</source>
+        <description>Returns a list of public contents, composed using the specified filters.</description>
+        <springBean name="jacmsApiContentWrapper" method="getContents" />
+        <responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
+        <parameters>
+            <parameter key="contentType" required="true">
+                <description>The key of a content type (Example: CNG, NEW, EVN...).</description>
+            </parameter>
+            <parameter key="categories" required="false">
+                <description>A CSV list of category codes (Example: "music,sports,frontpage").</description>
+            </parameter>
+            <parameter key="filters" required="false">
+                <description>The filters (Example: "(order=DESC;attributeFilter=true;key=Date)+(order=ASC;attributeFilter=true;key=Title)" )</description>
+            </parameter>
+            <parameter key="modelId" required="false">
+                <description>The Id of the content model used to render each content in the HTML section of the response. Must be an integer, "default" or "list".</description>
+            </parameter>
+        </parameters>
+        <relatedShowlet code="content_viewer_list">
+            <mapParameter showlet="contentType" method="contentType" />
+            <mapParameter showlet="categories" method="categories" />
+            <mapParameter showlet="filters" method="filters" />
+            <mapParameter showlet="modelId" method="modelId" />
+        </relatedShowlet>
+    </method>
+    
+    <method name="getContent" active="true" canSpawnOthers="true">
+        <source pluginCode="jacms">plugins</source>
+        <description>Returns a public content.</description>
+        <springBean name="jacmsApiContentWrapper" method="getContent" />
+        <responseClass>com.agiletec.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
+        <parameters>
+            <parameter key="id" required="true">
+                <description>The Id of the content to return (Example: "CNG34", or "NEW45")</description>
+            </parameter>
+            <parameter key="modelId" required="false">
+                <description>The Id of the content model used to render each content in the HTML section of the response. Must be an integer, "default" or "list".</description>
+            </parameter>
+        </parameters>
+        <relatedShowlet code="content_viewer">
+            <mapParameter showlet="contentId" method="id" />
+            <mapParameter showlet="modelId" method="modelId" />
+        </relatedShowlet>
+    </method>
+    
+    <resource name="contentType">
+        <description>The rappresentation of the content type</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return an entity type</description>
+            <springBean name="ApiContentTypeInterface" method="getContentType" />
+            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.model.ContentTypeResponse</responseClass>
+            <parameters>
+                <parameter key="contentTypeCode" required="true">
+                    <description>The code of the type to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add an entity type</description>
+            <springBean name="ApiContentTypeInterface" method="addContentType" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update an entity type</description>
+            <springBean name="ApiContentTypeInterface" method="updateContentType" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete an entity type</description>
+            <springBean name="ApiContentTypeInterface" method="deleteContentType" />
+            <parameters>
+                <parameter key="contentTypeCode" required="true">
+                    <description>The code of the type to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
 </apiMethodDefinitions>

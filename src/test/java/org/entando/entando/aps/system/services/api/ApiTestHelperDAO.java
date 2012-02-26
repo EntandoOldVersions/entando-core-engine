@@ -28,7 +28,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
 public class ApiTestHelperDAO extends AbstractDAO {
 	
 	public void cleanApiStatus() {
-		String sql = "DELETE FROM apicatalog_status";
+		String sql = "DELETE FROM apicatalog_methods";
 		this.clean(sql);
 	}
 

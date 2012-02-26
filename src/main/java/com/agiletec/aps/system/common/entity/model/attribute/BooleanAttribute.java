@@ -32,76 +32,75 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author E.Santoboni
  */
 public class BooleanAttribute extends AbstractAttribute {
-	
-	/**
-	 * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getJDOMElement()
-	 */
-	@Override
-	public Element getJDOMElement() {
-		Element attributeElement = new Element("attribute");
-		attributeElement.setAttribute("name", this.getName());
-		attributeElement.setAttribute("attributetype", this.getType());
-		if (null != this.getBooleanValue()) {
-			Element booleanElement = new Element("boolean");
-			booleanElement.setText(this.getBooleanValue().toString());
-			attributeElement.addContent(booleanElement);
-		}
-		return attributeElement;
-	}
-	
-	/**
-	 * Return the object characterizing the attribute.
-	 * @return The boolean
-	 */
-	@Override
-	public Boolean getValue() {
-		if (null != _boolean) {
-			return _boolean.booleanValue();
-		}
-		return false;
-	}
-	
-	/**
-	 * Return the object characterizing the attribute.
-	 * @return The boolean
-	 */
-	public Boolean getBooleanValue() {
-		return _boolean;
-	}
-	
-	/**
-	 * Set up the boolean for the current attribute
-	 * @param booleanObject The boolean
-	 */
-	public void setBooleanValue(Boolean booleanObject) {
-		this._boolean = booleanObject;
-	}
-	
-	@Override
-	public boolean isSearchableOptionSupported() {
-		return true;
-	}
-	
-	@Override
-	public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
-		List<AttributeSearchInfo> infos = new ArrayList<AttributeSearchInfo>();
-		if (null != this.getBooleanValue()) {
-			AttributeSearchInfo info = new AttributeSearchInfo(this.getBooleanValue().toString(), null, null, null);
-			infos.add(info);
-		}
-		return infos;
-	}
-	
-	@Override
-	public String getIndexingType() {
-		return IndexableAttributeInterface.INDEXING_TYPE_NONE;
-	}
-	
-	@Override
-	protected Object getJAXBValue(String langCode) {
-		return (null != this.getBooleanValue()) ? this.getBooleanValue().toString() : "false";
-	}
-	
-	private Boolean _boolean;
-	
+
+    public Element getJDOMElement() {
+        Element attributeElement = new Element("attribute");
+        attributeElement.setAttribute("name", this.getName());
+        attributeElement.setAttribute("attributetype", this.getType());
+        if (null != this.getBooleanValue()) {
+            Element booleanElement = new Element("boolean");
+            booleanElement.setText(this.getBooleanValue().toString());
+            attributeElement.addContent(booleanElement);
+        }
+        return attributeElement;
+    }
+
+    /**
+     * Return the object characterizing the attribute.
+     * @return The boolean
+     */
+    public Boolean getValue() {
+        if (null != _boolean) {
+            return _boolean.booleanValue();
+        }
+        return false;
+    }
+
+    /**
+     * Return the object characterizing the attribute.
+     * @return The boolean
+     */
+    public Boolean getBooleanValue() {
+        return _boolean;
+    }
+
+    /**
+     * Set up the boolean for the current attribute
+     * @param booleanObject The boolean
+     */
+    public void setBooleanValue(Boolean booleanObject) {
+        this._boolean = booleanObject;
+    }
+
+    public boolean isSearchableOptionSupported() {
+        return true;
+    }
+
+    public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
+        List<AttributeSearchInfo> infos = new ArrayList<AttributeSearchInfo>();
+        if (null != this.getBooleanValue()) {
+            AttributeSearchInfo info = new AttributeSearchInfo(this.getBooleanValue().toString(), null, null, null);
+            infos.add(info);
+        }
+        return infos;
+    }
+
+    public String getIndexingType() {
+        return IndexableAttributeInterface.INDEXING_TYPE_NONE;
+    }
+    
+    protected Object getJAXBValue(String langCode) {
+        return (null != this.getBooleanValue()) ? this.getBooleanValue().toString() : "false";
+    }
+    
+    public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
+        super.valueFrom(jaxbAttribute);
+        String value = (String) jaxbAttribute.getValue();
+        if (null != value) {
+            this.setBooleanValue(new Boolean(value));
+        }
+    }
+    
+    private Boolean _boolean;
+    
 }

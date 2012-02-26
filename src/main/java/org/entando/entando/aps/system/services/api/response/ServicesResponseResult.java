@@ -22,38 +22,33 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
 import org.entando.entando.aps.system.services.api.model.ServiceInfo;
 
-
 /**
  * @author E.Santoboni
  */
-@XmlRootElement(name = "response")
 public class ServicesResponseResult extends AbstractApiResponseResult {
-	
-	@Override
-	@XmlElement(name = "service", required=false)
-	public ServiceInfo getResult() {
-		if (this.getMainResult() instanceof ServiceInfo) {
-			return (ServiceInfo) this.getMainResult();
-		}
-		return null;
-	}
-	
-	@Override
-	@XmlElement(name = "services", required=false)
-	public ListResponse getResults() {
-		if (this.getMainResult() instanceof Collection) {
-			List<ServiceInfo> services = new ArrayList<ServiceInfo>();
-			services.addAll((Collection<ServiceInfo>) this.getMainResult());
-			ListResponse listResponse = new ListResponse(services) {};
-			return listResponse;
-		}
-		return null;
-	}
-	
+    
+    @XmlElement(name = "service", required = false)
+    public ServiceInfo getResult() {
+        if (this.getMainResult() instanceof ServiceInfo) {
+            return (ServiceInfo) this.getMainResult();
+        }
+        return null;
+    }
+    
+    @XmlElement(name = "services", required = false)
+    public ListResponse getResults() {
+        if (this.getMainResult() instanceof Collection) {
+            List<ServiceInfo> services = new ArrayList<ServiceInfo>();
+            services.addAll((Collection<ServiceInfo>) this.getMainResult());
+            ListResponse listResponse = new ListResponse(services) {};
+            return listResponse;
+        }
+        return null;
+    }
+    
 }

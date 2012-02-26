@@ -44,12 +44,17 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import net.oauth.OAuthAccessor;
+import net.oauth.OAuthMessage;
+import net.oauth.server.OAuthServlet;
+
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
 import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
+import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -62,6 +67,36 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class ApiRestServer {
+    
+    @GET
+    @Produces({"application/json", "application/xml"})
+    @Path("/apistatus/{resourceName}/{httpMethod}")
+    public Object getApiStatus(@PathParam("httpMethod") String httpMethodString, 
+            @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
+        BaseApiResponse response = new BaseApiResponse();
+        ApiMethod.HttpMethod httpMethod = Enum.valueOf(ApiMethod.HttpMethod.class, httpMethodString.toUpperCase());
+        try {
+            IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+            ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, resourceName);
+            if (null != apiMethod.getRequiredPermission()) {
+                response.setResult(ApiStatus.AUTHORIZATION_REQUIRED.toString(), null);
+            } else if (apiMethod.getRequiredAuth()) {
+                response.setResult(ApiStatus.AUTHENTICATION_REQUIRED.toString(), null);
+            } else {
+                response.setResult(ApiStatus.FREE.toString(), null);
+            }
+        } catch (ApiException ae) {
+            response = (BaseApiResponse) this.buildErrorResponse(httpMethod, resourceName, ae);
+            response.setResult(ApiStatus.INACTIVE.toString(), null);
+        } catch (Throwable t) {
+            return this.buildErrorResponse(httpMethod, resourceName, t);
+        }
+        return response;
+    }
+    
+    public static enum ApiStatus {
+        FREE, INACTIVE, AUTHENTICATION_REQUIRED, AUTHORIZATION_REQUIRED
+    }
     
     @GET
     @Produces({"application/xml", "text/plain", "application/json"})
@@ -123,10 +158,7 @@ public class ApiRestServer {
             Properties properties = this.extractRequestParameters(ui);
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, resourceName);
-            UserDetails user = this.extractUser(apiMethod, request, response);
-            if (null != user) {
-                properties.put(SystemConstants.API_USER_PARAMETER, user);
-            }
+            this.extractOAuthParameters(apiMethod, request, response, properties);
             responseObject = responseBuilder.createResponse(apiMethod, properties);
         } catch (ApiException ae) {
             return this.buildErrorResponse(httpMethod, resourceName, ae);
@@ -144,10 +176,7 @@ public class ApiRestServer {
             Properties properties = this.extractRequestParameters(ui);
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, resourceName);
-            UserDetails user = this.extractUser(apiMethod, request, response);
-            if (null != user) {
-                properties.put(SystemConstants.API_USER_PARAMETER, user);
-            }
+            this.extractOAuthParameters(apiMethod, request, response, properties);
             Class expectedType = apiMethod.getExpectedType();
             Object bodyObject = null;
             if (MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
@@ -167,7 +196,7 @@ public class ApiRestServer {
         }
         return responseObject;
     }
-
+    
     protected Properties extractRequestParameters(UriInfo ui) {
         MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
         Properties properties = new Properties();
@@ -202,11 +231,38 @@ public class ApiRestServer {
         return response;
     }
     
-    protected UserDetails extractUser(ApiMethod apiMethod, 
-            HttpServletRequest request, HttpServletResponse response) throws ApiException, IOException, ServletException {
+    protected void extractOAuthParameters(ApiMethod apiMethod, 
+            HttpServletRequest request, HttpServletResponse response, Properties properties) throws ApiException, IOException, ServletException {
         UserDetails user = null;
-        //extract user
-        return user;
+        IOAuthConsumerManager consumerManager = 
+                (IOAuthConsumerManager) ApsWebApplicationUtils.getBean(SystemConstants.OAUTH_CONSUMER_MANAGER, request);
+        IAuthenticationProviderManager authenticationProvider = 
+                (IAuthenticationProviderManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHENTICATION_PROVIDER_MANAGER, request);
+        IAuthorizationManager authorizationManager = 
+                (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
+        try {
+            OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
+            OAuthAccessor accessor = consumerManager.getAuthorizedAccessor(requestMessage);
+            consumerManager.getOAuthValidator().validateMessage(requestMessage, accessor);
+            if (null != accessor.consumer) {
+                properties.put(SystemConstants.API_OAUTH_CONSUMER_PARAMETER, accessor.consumer);
+            }
+            String username = (String) accessor.getProperty("user");
+            user = authenticationProvider.getUser(username);
+            if (null != user) {
+                properties.put(SystemConstants.API_USER_PARAMETER, user);
+            }
+        } catch (Exception e) {
+            if (apiMethod.getRequiredAuth()) {
+                consumerManager.handleException(e, request, response, false);
+            }
+        }
+        if (null == user && (apiMethod.getRequiredAuth() || null != apiMethod.getRequiredPermission())) {
+            throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required");
+        } else if (null != user && null != apiMethod.getRequiredPermission() 
+                && !authorizationManager.isAuthOnPermission(user, apiMethod.getRequiredPermission())) {
+            throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required");
+        }
     }
     
 }

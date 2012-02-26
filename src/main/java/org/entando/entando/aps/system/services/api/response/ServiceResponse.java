@@ -22,22 +22,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 
-
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "response")
 public class ServiceResponse extends AbstractApiResponse {
-	
-	@Override
-	public void setResult(Object result, String html) {
-		ServicesResponseResult responseResult = new ServicesResponseResult();
-		responseResult.setMainResult(result);
-		responseResult.setHtml(html);
-		this._result = responseResult;
-	}
-	
-	@XmlElement(name = "result", required = true)
-	private ServicesResponseResult _result;
-	
+    
+    public void setResult(Object result, String html) {
+        ServicesResponseResult responseResult = new ServicesResponseResult();
+        responseResult.setMainResult(result);
+        responseResult.setHtml(html);
+        this._result = responseResult;
+    }
+    
+    @XmlElement(name = "result", required = true)
+    private ServicesResponseResult _result;
+    
 }

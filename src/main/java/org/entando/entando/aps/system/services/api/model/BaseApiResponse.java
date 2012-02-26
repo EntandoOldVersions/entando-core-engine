@@ -25,13 +25,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "response")
 public class BaseApiResponse extends AbstractApiResponse {
-	
-	@Override
-	public void setResult(Object result, String html) {
-		this._result = result.toString();
-	}
-	
-	@XmlElement(name = "result", required = false)
-	private String _result;
-	
+    
+    @XmlElement(name = "result", required = false)
+    public String getResult() {
+        return this._result;
+    }
+    public void setResult(String result) {
+        this._result = result.toString();
+    }
+    public void setResult(Object result, String html) {
+        this._result = result.toString();
+    }
+    
+    private String _result;
+    
 }

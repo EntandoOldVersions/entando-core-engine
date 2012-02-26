@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -44,11 +44,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 /**
  * @author E.Santoboni
  */
-public class ApiMethodsDefDOM {
+public class ApiResourcesDefDOM {
     
-    public ApiMethodsDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
-        //this.validate(xmlText, definitionPath);
-        ApsSystemUtils.getLogger().info("Loading Methods from file : " + definitionPath);
+    public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
+        this.validate(xmlText, definitionPath);
+        ApsSystemUtils.getLogger().info("Loading Resources from file : " + definitionPath);
         this.decodeDOM(xmlText);
     }
     
@@ -58,7 +58,7 @@ public class ApiMethodsDefDOM {
         InputStream schemaIs = null;
         InputStream xmlIs = null;
         try {
-            schemaIs = this.getClass().getResourceAsStream("apiMethodsDef-2.2.xsd");
+            schemaIs = this.getClass().getResourceAsStream("apiMethodsDef-3.0.xsd");
             Source schemaSource = new StreamSource(schemaIs);
             Schema schema = factory.newSchema(schemaSource);
             Validator validator = schema.newValidator();
@@ -84,15 +84,21 @@ public class ApiMethodsDefDOM {
         }
     }
     
-    public Map<ApiMethod.HttpMethod, List<ApiMethod>> getRestFulMethods() {
-        Map<ApiMethod.HttpMethod, List<ApiMethod>> apiMethods = new HashMap<ApiMethod.HttpMethod, List<ApiMethod>>();
+    public Map<String, ApiResource> getResources() {
+        Map<String, ApiResource> apiResources = new HashMap<String, ApiResource>();
         try {
             List<Element> methodElements = this._doc.getRootElement().getChildren(METHOD_ELEMENT_NAME);
             if (null != methodElements) {
                 for (int i = 0; i < methodElements.size(); i++) {
                     Element methodElement = methodElements.get(i);
                     ApiMethod apiMethod = new ApiMethod(methodElement);
-                    this.checkMethod(apiMethod, apiMethods);
+                    ApiResource resource = new ApiResource();
+                    resource.setResourceName(apiMethod.getResourceName());
+                    resource.setDescription(apiMethod.getDescription());
+                    resource.setPluginCode(apiMethod.getPluginCode());
+                    resource.setSource(apiMethod.getSource());
+                    resource.setMethod(apiMethod);
+                    this.checkResource(resource, apiResources);
                 }
             }
             List<Element> resourceElements = this._doc.getRootElement().getChildren(RESOURCE_ELEMENT_NAME);
@@ -100,53 +106,64 @@ public class ApiMethodsDefDOM {
                 for (int j = 0; j < resourceElements.size(); j++) {
                     Element resourceElement = resourceElements.get(j);
                     String resourceName = resourceElement.getAttributeValue(RESOURCE_ATTRIBUTE_NAME);
-                    Element sourceElement = resourceElement.getChild(ApiMethodsDefDOM.SOURCE_ELEMENT_NAME);
+                    Element descriptionElement = resourceElement.getChild(RESOURCE_DESCRIPTION_ELEMENT_NAME);
+                    String resourceDescription = (null != descriptionElement) ? descriptionElement.getText() : null;
+                    Element sourceElement = resourceElement.getChild(ApiResourcesDefDOM.SOURCE_ELEMENT_NAME);
                     String source = null;
                     String pluginCode = null;
                     if (null != sourceElement) {
                         source = sourceElement.getText();
                         pluginCode = sourceElement.getAttributeValue(PLUGIN_CODE_ATTRIBUTE_NAME);
                     }
+                    ApiResource resource = new ApiResource();
+                    resource.setResourceName(resourceName);
+                    resource.setDescription(resourceDescription);
+                    resource.setPluginCode(pluginCode);
+                    resource.setSource(source);
                     List<Element> resourceMethodElements = resourceElement.getChildren(METHOD_ELEMENT_NAME);
                     for (int k = 0; k < resourceMethodElements.size(); k++) {
                         Element methodElement = resourceMethodElements.get(k);
                         ApiMethod apiMethod = new ApiMethod(resourceName, source, pluginCode, methodElement);
-                        this.checkMethod(apiMethod, apiMethods);
+                        this.checkMethod(apiMethod, resource);
                     }
+                    this.checkResource(resource, apiResources);
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getRestFulMethods", "Error building api method");
+            ApsSystemUtils.logThrowable(t, this, "getResources", "Error building api resources");
         }
-        return apiMethods;
+        return apiResources;
     }
     
-    private void checkMethod(ApiMethod apiMethod, Map<ApiMethod.HttpMethod, List<ApiMethod>> apiMethods) {
+    private void checkResource(ApiResource resource, Map<String, ApiResource> apiResources) {
         try {
-            List<ApiMethod> extractedMethods = apiMethods.get(apiMethod.getHttpMethod());
-            if (null == extractedMethods) {
-                extractedMethods = new ArrayList<ApiMethod>();
-                apiMethods.put(apiMethod.getHttpMethod(), extractedMethods);
+            ApiResource extractedResource = apiResources.get(resource.getResourceName());
+            if (null != extractedResource) {
+                String alertMessage = "ALERT: There is more than one API resource '" + resource.getResourceName() + 
+                        "' into the same definitions file - The second definition will be ignored!!!";
+                ApsSystemUtils.getLogger().severe(alertMessage);
+            } else {
+                apiResources.put(resource.getResourceName(), resource);
             }
-            if (this.hasConflict(apiMethod, extractedMethods)) {
+        } catch (Exception e) {
+            ApsSystemUtils.logThrowable(e, this, "checkResource", "Error checking api resource");
+        }
+    }
+    
+    private void checkMethod(ApiMethod apiMethod, ApiResource resource) {
+        try {
+            ApiMethod extractedMethod = resource.getMethod(apiMethod.getHttpMethod());
+            if (null != extractedMethod) {
                 String alertMessage = "ALERT: There is more than one API method " + apiMethod.getHttpMethod() 
                         + " for resource '" + apiMethod.getResourceName() + "' into the same definitions file "
                         + "- The second definition will be ignored!!!";
                 ApsSystemUtils.getLogger().severe(alertMessage);
             } else {
-                extractedMethods.add(apiMethod);
+                resource.setMethod(apiMethod);
             }
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "buildMethod", "Error building api method");
+            ApsSystemUtils.logThrowable(e, this, "checkMethod", "Error checking api method");
         }
-    }
-    
-    private boolean hasConflict(ApiMethod newMethod, List<ApiMethod> extractedMethods) {
-        for (int i = 0; i < extractedMethods.size(); i++) {
-            ApiMethod apiMethod = extractedMethods.get(i);
-            if (newMethod.getResourceName().equals(apiMethod.getResourceName())) return true;
-        }
-        return false;
     }
     
     private void decodeDOM(String xmlText) throws ApsSystemException {
@@ -166,7 +183,8 @@ public class ApiMethodsDefDOM {
     public static final String METHOD_ELEMENT_NAME = "method";
     public static final String RESOURCE_ELEMENT_NAME = "resource";
     public static final String RESOURCE_ATTRIBUTE_NAME = "name";
-    public static final String DESCRIPTION_ELEMENT_NAME = "description";
+    public static final String RESOURCE_DESCRIPTION_ELEMENT_NAME = "description";
+    public static final String METHOD_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String ACTIVE_ATTRIBUTE_NAME = "active";
     public static final String CAN_SPAWN_OTHER_ATTRIBUTE_NAME = "canSpawnOthers";
     public static final String SOURCE_ELEMENT_NAME = "source";

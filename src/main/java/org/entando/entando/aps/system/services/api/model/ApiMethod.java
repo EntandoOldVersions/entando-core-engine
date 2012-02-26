@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.api.ApiMethodsDefDOM;
+import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -35,17 +35,16 @@ public class ApiMethod implements Serializable {
     protected ApiMethod() {}
     
     public ApiMethod(Element element) {
-        this.setResourceName(element.getAttributeValue(ApiMethodsDefDOM.RESOURCE_ATTRIBUTE_NAME));
-        Element sourceElement = element.getChild(ApiMethodsDefDOM.SOURCE_ELEMENT_NAME);
+        this.setResourceName(element.getAttributeValue(ApiResourcesDefDOM.RESOURCE_ATTRIBUTE_NAME));
+        Element sourceElement = element.getChild(ApiResourcesDefDOM.SOURCE_ELEMENT_NAME);
         if (null != sourceElement) {
             this.setSource(sourceElement.getText());
-            this.setPluginCode(sourceElement.getAttributeValue(ApiMethodsDefDOM.PLUGIN_CODE_ATTRIBUTE_NAME));
+            this.setPluginCode(sourceElement.getAttributeValue(ApiResourcesDefDOM.PLUGIN_CODE_ATTRIBUTE_NAME));
         }
         this.buildMethod(element);
     }
     
-    public ApiMethod(String resourceName, 
-            String source, String pluginCode, Element element) {
+    public ApiMethod(String resourceName, String source, String pluginCode, Element element) {
         this.setResourceName(resourceName);
         this.setSource(source);
         this.setPluginCode(pluginCode);
@@ -54,24 +53,27 @@ public class ApiMethod implements Serializable {
     
     private void buildMethod(Element element) {
         try {
-            this.setRequiredAuth(Boolean.parseBoolean(element.getAttributeValue("requiredAuth")));
-            this.setRequiredPermission(element.getAttributeValue("requiredPermission"));
+            this.setDefaultRequiredAuth(Boolean.parseBoolean(element.getAttributeValue("requiredAuth")));
+            this.setRequiredAuth(this.getDefaultRequiredAuth());
+            this.setDefaultRequiredPermission(element.getAttributeValue("requiredPermission"));
+            this.setRequiredPermission(this.getDefaultRequiredPermission());
             String httpMethod = element.getAttributeValue("httpMethod");
             if (null != httpMethod) {
                 this.setHttpMethod(Enum.valueOf(ApiMethod.HttpMethod.class, httpMethod.toUpperCase()));
             } else {
                 this.setHttpMethod(HttpMethod.GET);
             }
-            this.setActive(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.ACTIVE_ATTRIBUTE_NAME)));
-            this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
-            this.setDescription(element.getChildText(ApiMethodsDefDOM.DESCRIPTION_ELEMENT_NAME));
-            Element springBeanElement = element.getChild(ApiMethodsDefDOM.SPRING_BEAN_ELEMENT_NAME);
-            this.setSpringBean(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_NAME_ATTRIBUTE_NAME));
-            this.setSpringBeanMethod(springBeanElement.getAttributeValue(ApiMethodsDefDOM.SPRING_BEAN_METHOD_ATTRIBUTE_NAME));
-            this.setResponseClassName(element.getChildText(ApiMethodsDefDOM.RESPONSE_CLASS_ELEMENT_NAME));
-            Element parametersElement = element.getChild(ApiMethodsDefDOM.PARAMETERS_ELEMENT_NAME);
+            this.setDefaultStatus(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.ACTIVE_ATTRIBUTE_NAME)));
+            this.setStatus(this.getDefaultStatus());
+            this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
+            this.setDescription(element.getChildText(ApiResourcesDefDOM.METHOD_DESCRIPTION_ELEMENT_NAME));
+            Element springBeanElement = element.getChild(ApiResourcesDefDOM.SPRING_BEAN_ELEMENT_NAME);
+            this.setSpringBean(springBeanElement.getAttributeValue(ApiResourcesDefDOM.SPRING_BEAN_NAME_ATTRIBUTE_NAME));
+            this.setSpringBeanMethod(springBeanElement.getAttributeValue(ApiResourcesDefDOM.SPRING_BEAN_METHOD_ATTRIBUTE_NAME));
+            this.setResponseClassName(element.getChildText(ApiResourcesDefDOM.RESPONSE_CLASS_ELEMENT_NAME));
+            Element parametersElement = element.getChild(ApiResourcesDefDOM.PARAMETERS_ELEMENT_NAME);
             if (null != parametersElement) {
-                List<Element> parametersElements = parametersElement.getChildren(ApiMethodsDefDOM.PARAMETER_ELEMENT_NAME);
+                List<Element> parametersElements = parametersElement.getChildren(ApiResourcesDefDOM.PARAMETER_ELEMENT_NAME);
                 for (int i = 0; i < parametersElements.size(); i++) {
                     Element parameterElement = parametersElements.get(i);
                     ApiMethodParameter parameter = new ApiMethodParameter(parameterElement);
@@ -81,7 +83,7 @@ public class ApiMethod implements Serializable {
                     this.getParameters().add(parameter);
                 }
             }
-            Element relatedShowletElement = element.getChild(ApiMethodsDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
+            Element relatedShowletElement = element.getChild(ApiResourcesDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
             if (null != relatedShowletElement) {
                 this.setRelatedShowlet(new ApiMethodRelatedShowlet(relatedShowletElement));
             }
@@ -103,9 +105,10 @@ public class ApiMethod implements Serializable {
     
     public ApiMethod clone() {
         ApiMethod clone = new ApiMethod();
-        clone.setActive(this.isActive());
-        clone.setDescription(this.getDescription());
         clone.setResourceName(this.getResourceName());
+        clone.setDefaultStatus(this.getDefaultStatus());
+        clone.setStatus(this.getStatus());
+        clone.setDescription(this.getDescription());
         if (null != this.getParameters()) {
             List<ApiMethodParameter> clonedParameters = new ArrayList<ApiMethodParameter>();
             for (int i = 0; i < this.getParameters().size(); i++) {
@@ -124,8 +127,12 @@ public class ApiMethod implements Serializable {
             clone.setRelatedShowlet(this.getRelatedShowlet().clone());
         }
         clone.setHttpMethod(this.getHttpMethod());
-        clone.setRequiredAuth(this.isRequiredAuth());
+        clone.setDefaultRequiredAuth(this.getDefaultRequiredAuth());
+        clone.setDefaultRequiredPermission(this.getDefaultRequiredPermission());
+        clone.setRequiredAuth(this.getRequiredAuth());
         clone.setRequiredPermission(this.getRequiredPermission());
+        clone.setDefaultRequiredAuth(this.getDefaultRequiredAuth());
+        clone.setDefaultRequiredPermission(this.getDefaultRequiredPermission());
         if (null != this.getExpectedType()) {
             try {
                 clone.setExpectedType(Class.forName(this.getExpectedType().getName()));
@@ -134,6 +141,12 @@ public class ApiMethod implements Serializable {
             }
         }
         return clone;
+    }
+    
+    public void resetConfiguration() {
+        this.setRequiredAuth(this.getDefaultRequiredAuth());
+        this.setRequiredPermission(this.getDefaultRequiredPermission());
+        this.setStatus(this.getDefaultStatus());
     }
     
     public String getResourceName() {
@@ -150,6 +163,20 @@ public class ApiMethod implements Serializable {
         this._httpMethod = httpMethod;
     }
     
+    public Boolean getStatus() {
+        return _status;
+    }
+    public void setStatus(Boolean status) {
+        this._status = status;
+    }
+    
+    public Boolean getDefaultStatus() {
+        return _defaultStatus;
+    }
+    protected void setDefaultStatus(Boolean defaultStatus) {
+        this._defaultStatus = defaultStatus;
+    }
+    
     public Class getExpectedType() {
         return _expectedType;
     }
@@ -157,31 +184,47 @@ public class ApiMethod implements Serializable {
         this._expectedType = expectedType;
     }
     
-    public boolean isRequiredAuth() {
+    public Boolean getDefaultRequiredAuth() {
+        if (null == this._defaultRequiredAuth) return false;
+        return _defaultRequiredAuth;
+    }
+    protected void setDefaultRequiredAuth(Boolean defaultRequiredAuth) {
+        this._defaultRequiredAuth = defaultRequiredAuth;
+    }
+    
+    public String getDefaultRequiredPermission() {
+        return _defaultRequiredPermission;
+    }
+    protected void setDefaultRequiredPermission(String defaultRequiredPermission) {
+        this._defaultRequiredPermission = defaultRequiredPermission;
+    }
+    
+    public Boolean getRequiredAuth() {
+        if (null == this._requiredAuth) return false;
         return _requiredAuth;
     }
-    protected void setRequiredAuth(boolean requiredAuth) {
+    public void setRequiredAuth(Boolean requiredAuth) {
         this._requiredAuth = requiredAuth;
     }
     
     public String getRequiredPermission() {
         return _requiredPermission;
     }
-    protected void setRequiredPermission(String requiredPermission) {
+    public void setRequiredPermission(String requiredPermission) {
         this._requiredPermission = requiredPermission;
     }
-
+    
     public String getSource() {
         return _source;
     }
-    protected void setSource(String source) {
+    public void setSource(String source) {
         this._source = source;
     }
 
     public String getPluginCode() {
         return _pluginCode;
     }
-    protected void setPluginCode(String pluginCode) {
+    public void setPluginCode(String pluginCode) {
         this._pluginCode = pluginCode;
     }
     
@@ -200,12 +243,10 @@ public class ApiMethod implements Serializable {
     protected void setDescription(String description) {
         this._description = description;
     }
-
+    
     public boolean isActive() {
-        return _active;
-    }
-    public void setActive(boolean active) {
-        this._active = active;
+        if (null == this.getStatus()) return false;
+        return this.getStatus();
     }
 
     public boolean isCanSpawnOthers() {
@@ -272,7 +313,12 @@ public class ApiMethod implements Serializable {
     
     private HttpMethod _httpMethod;
     
-    private boolean _requiredAuth;
+    private Boolean _defaultStatus;
+    private Boolean _status;
+    
+    private Boolean _defaultRequiredAuth;
+    private String _defaultRequiredPermission;
+    private Boolean _requiredAuth;
     private String _requiredPermission;
     
     private Class _expectedType;
@@ -281,7 +327,7 @@ public class ApiMethod implements Serializable {
     private String _pluginCode;
     
     private String _description;
-    private boolean _active;
+    
     private boolean _canSpawnOthers;
     private String _springBean;
     private String _springBeanMethod;

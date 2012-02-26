@@ -86,8 +86,10 @@
 	
 	<bean id="AuthorizationManager" class="com.agiletec.aps.system.services.authorization.AuthorizationManager" 
 			parent="abstractService" >
+                <!--
 		<property name="roleManager" ref="RoleManager" />
 		<property name="groupManager" ref="GroupManager" />
+                -->
 	</bean>
 	
 	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.EhCacheManager" 

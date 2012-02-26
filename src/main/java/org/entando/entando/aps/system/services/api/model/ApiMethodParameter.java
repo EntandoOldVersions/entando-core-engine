@@ -19,9 +19,8 @@ package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
 
-import org.entando.entando.aps.system.services.api.ApiMethodsDefDOM;
+import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 import org.jdom.Element;
-
 
 /**
  * The rappresentation of an API parameter
@@ -32,10 +31,10 @@ public class ApiMethodParameter implements Serializable {
 	protected ApiMethodParameter() {}
 	
 	protected ApiMethodParameter(Element element) {
-		this.setKey(element.getAttributeValue(ApiMethodsDefDOM.PARAMETER_KEY_ATTRIBUTE_NAME));
-		this.setRequired(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.PARAMETER_REQUIRED_ATTRIBUTE_NAME)));
-		this.setOverridable(Boolean.parseBoolean(element.getAttributeValue(ApiMethodsDefDOM.PARAMETER_OVERRIDABLE_ATTRIBUTE_NAME)));
-		this.setDescription(element.getChildText(ApiMethodsDefDOM.PARAMETER_DESCRIPTION_ELEMENT_NAME));
+		this.setKey(element.getAttributeValue(ApiResourcesDefDOM.PARAMETER_KEY_ATTRIBUTE_NAME));
+		this.setRequired(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.PARAMETER_REQUIRED_ATTRIBUTE_NAME)));
+		this.setOverridable(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.PARAMETER_OVERRIDABLE_ATTRIBUTE_NAME)));
+		this.setDescription(element.getChildText(ApiResourcesDefDOM.PARAMETER_DESCRIPTION_ELEMENT_NAME));
 	}
 	
 	@Override

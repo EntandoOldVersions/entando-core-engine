@@ -19,6 +19,7 @@ package org.entando.entando.apsadmin.api;
 
 /**
  * @author E.Santoboni
+ * @deprecated 
  */
 public interface IApiMethodFinderAction {
 	

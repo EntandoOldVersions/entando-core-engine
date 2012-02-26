@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2011-11-10 17:08:27 CET
+-- Started on 2012-02-25 14:30:52 CET
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -11,7 +11,7 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 
 --
--- TOC entry 311 (class 2612 OID 16386)
+-- TOC entry 460 (class 2612 OID 16386)
 -- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: -
 --
 
@@ -25,14 +25,59 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 1483 (class 1259 OID 2939747)
+-- TOC entry 137 (class 1259 OID 83959)
+-- Dependencies: 6
+-- Name: api_oauth_consumers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE api_oauth_consumers (
+    consumerkey character varying(100) NOT NULL,
+    consumersecret character varying(100) NOT NULL,
+    description character varying(500) NOT NULL,
+    callbackurl character varying(500),
+    expirationdate date
+);
+
+
+--
+-- TOC entry 138 (class 1259 OID 83967)
+-- Dependencies: 6
+-- Name: api_oauth_tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE api_oauth_tokens (
+    accesstoken character(100) NOT NULL,
+    tokensecret character varying(100),
+    consumerkey character varying(100) NOT NULL,
+    lastaccess date NOT NULL,
+    username character varying(40) NOT NULL
+);
+
+
+--
+-- TOC entry 128 (class 1259 OID 83585)
+-- Dependencies: 6
+-- Name: apicatalog_methods; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE apicatalog_methods (
+    resource character varying(100) NOT NULL,
+    httpmethod character varying(6) NOT NULL,
+    isactive smallint,
+    authenticationrequired smallint,
+    authorizationrequired character varying(100)
+);
+
+
+--
+-- TOC entry 127 (class 1259 OID 83579)
 -- Dependencies: 6
 -- Name: apicatalog_services; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE apicatalog_services (
     servicekey character varying(100) NOT NULL,
-    parentapi character varying(100) NOT NULL,
+    resource character varying(100) NOT NULL,
     description character varying NOT NULL,
     parameters character varying,
     tag character varying(100),
@@ -43,22 +88,10 @@ CREATE TABLE apicatalog_services (
 );
 
 
---
--- TOC entry 1484 (class 1259 OID 2939753)
--- Dependencies: 6
--- Name: apicatalog_status; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE apicatalog_status (
-    method character varying(100) NOT NULL,
-    isactive smallint NOT NULL
-);
-
-
 SET default_with_oids = true;
 
 --
--- TOC entry 1485 (class 1259 OID 2939756)
+-- TOC entry 129 (class 1259 OID 83588)
 -- Dependencies: 6
 -- Name: authgroups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -70,7 +103,7 @@ CREATE TABLE authgroups (
 
 
 --
--- TOC entry 1486 (class 1259 OID 2939759)
+-- TOC entry 130 (class 1259 OID 83591)
 -- Dependencies: 6
 -- Name: authpermissions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -82,7 +115,7 @@ CREATE TABLE authpermissions (
 
 
 --
--- TOC entry 1487 (class 1259 OID 2939762)
+-- TOC entry 131 (class 1259 OID 83594)
 -- Dependencies: 6
 -- Name: authrolepermissions; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -94,7 +127,7 @@ CREATE TABLE authrolepermissions (
 
 
 --
--- TOC entry 1488 (class 1259 OID 2939765)
+-- TOC entry 132 (class 1259 OID 83597)
 -- Dependencies: 6
 -- Name: authroles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -106,7 +139,7 @@ CREATE TABLE authroles (
 
 
 --
--- TOC entry 1489 (class 1259 OID 2939768)
+-- TOC entry 133 (class 1259 OID 83600)
 -- Dependencies: 6
 -- Name: authusergroups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -120,7 +153,7 @@ CREATE TABLE authusergroups (
 SET default_with_oids = false;
 
 --
--- TOC entry 1490 (class 1259 OID 2939771)
+-- TOC entry 134 (class 1259 OID 83603)
 -- Dependencies: 6
 -- Name: authuserroles; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -134,7 +167,7 @@ CREATE TABLE authuserroles (
 SET default_with_oids = true;
 
 --
--- TOC entry 1491 (class 1259 OID 2939774)
+-- TOC entry 135 (class 1259 OID 83606)
 -- Dependencies: 6
 -- Name: authusers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -150,7 +183,7 @@ CREATE TABLE authusers (
 
 
 --
--- TOC entry 1492 (class 1259 OID 2939777)
+-- TOC entry 136 (class 1259 OID 83609)
 -- Dependencies: 6
 -- Name: authusershortcuts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
@@ -162,8 +195,28 @@ CREATE TABLE authusershortcuts (
 
 
 --
--- TOC entry 1760 (class 2606 OID 2939784)
--- Dependencies: 1483 1483
+-- TOC entry 1799 (class 2606 OID 83966)
+-- Dependencies: 137 137
+-- Name: api_oauth_consumers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY api_oauth_consumers
+    ADD CONSTRAINT api_oauth_consumers_pkey PRIMARY KEY (consumerkey);
+
+
+--
+-- TOC entry 1801 (class 2606 OID 83971)
+-- Dependencies: 138 138
+-- Name: api_oauth_tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY api_oauth_tokens
+    ADD CONSTRAINT api_oauth_tokens_pkey PRIMARY KEY (accesstoken);
+
+
+--
+-- TOC entry 1779 (class 2606 OID 83616)
+-- Dependencies: 127 127
 -- Name: apicatalog_services_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -172,18 +225,18 @@ ALTER TABLE ONLY apicatalog_services
 
 
 --
--- TOC entry 1762 (class 2606 OID 2939786)
--- Dependencies: 1484 1484
+-- TOC entry 1781 (class 2606 OID 83973)
+-- Dependencies: 128 128 128
 -- Name: apicatalog_status_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY apicatalog_status
-    ADD CONSTRAINT apicatalog_status_pkey PRIMARY KEY (method);
+ALTER TABLE ONLY apicatalog_methods
+    ADD CONSTRAINT apicatalog_status_pkey PRIMARY KEY (resource, httpmethod);
 
 
 --
--- TOC entry 1764 (class 2606 OID 2939788)
--- Dependencies: 1485 1485
+-- TOC entry 1783 (class 2606 OID 83620)
+-- Dependencies: 129 129
 -- Name: authgroups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -192,8 +245,8 @@ ALTER TABLE ONLY authgroups
 
 
 --
--- TOC entry 1766 (class 2606 OID 2939790)
--- Dependencies: 1486 1486
+-- TOC entry 1785 (class 2606 OID 83622)
+-- Dependencies: 130 130
 -- Name: authpermissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -202,8 +255,8 @@ ALTER TABLE ONLY authpermissions
 
 
 --
--- TOC entry 1768 (class 2606 OID 2939792)
--- Dependencies: 1487 1487 1487
+-- TOC entry 1787 (class 2606 OID 83624)
+-- Dependencies: 131 131 131
 -- Name: authrolepermissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -212,8 +265,8 @@ ALTER TABLE ONLY authrolepermissions
 
 
 --
--- TOC entry 1770 (class 2606 OID 2939794)
--- Dependencies: 1488 1488
+-- TOC entry 1789 (class 2606 OID 83626)
+-- Dependencies: 132 132
 -- Name: authroles_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -222,8 +275,8 @@ ALTER TABLE ONLY authroles
 
 
 --
--- TOC entry 1772 (class 2606 OID 2939796)
--- Dependencies: 1489 1489 1489
+-- TOC entry 1791 (class 2606 OID 83628)
+-- Dependencies: 133 133 133
 -- Name: authusergroups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -232,8 +285,8 @@ ALTER TABLE ONLY authusergroups
 
 
 --
--- TOC entry 1774 (class 2606 OID 2939798)
--- Dependencies: 1490 1490 1490
+-- TOC entry 1793 (class 2606 OID 83630)
+-- Dependencies: 134 134 134
 -- Name: authuserroles_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -242,8 +295,8 @@ ALTER TABLE ONLY authuserroles
 
 
 --
--- TOC entry 1776 (class 2606 OID 2939800)
--- Dependencies: 1491 1491
+-- TOC entry 1795 (class 2606 OID 83632)
+-- Dependencies: 135 135
 -- Name: authusers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -252,8 +305,8 @@ ALTER TABLE ONLY authusers
 
 
 --
--- TOC entry 1778 (class 2606 OID 2939802)
--- Dependencies: 1492 1492
+-- TOC entry 1797 (class 2606 OID 83634)
+-- Dependencies: 136 136
 -- Name: authusershortcuts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -262,8 +315,8 @@ ALTER TABLE ONLY authusershortcuts
 
 
 --
--- TOC entry 1779 (class 2606 OID 2939803)
--- Dependencies: 1765 1486 1487
+-- TOC entry 1802 (class 2606 OID 83635)
+-- Dependencies: 130 1784 131
 -- Name: authrolepermissions_permissionname_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -272,8 +325,8 @@ ALTER TABLE ONLY authrolepermissions
 
 
 --
--- TOC entry 1780 (class 2606 OID 2939808)
--- Dependencies: 1769 1487 1488
+-- TOC entry 1803 (class 2606 OID 83640)
+-- Dependencies: 1788 131 132
 -- Name: authrolepermissions_rolename_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -282,8 +335,8 @@ ALTER TABLE ONLY authrolepermissions
 
 
 --
--- TOC entry 1781 (class 2606 OID 2939813)
--- Dependencies: 1489 1485 1763
+-- TOC entry 1804 (class 2606 OID 83645)
+-- Dependencies: 133 1782 129
 -- Name: authusergroups_groupname_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -292,8 +345,8 @@ ALTER TABLE ONLY authusergroups
 
 
 --
--- TOC entry 1782 (class 2606 OID 2939818)
--- Dependencies: 1488 1490 1769
+-- TOC entry 1805 (class 2606 OID 83650)
+-- Dependencies: 134 1788 132
 -- Name: authuserroles_rolename_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -302,7 +355,7 @@ ALTER TABLE ONLY authuserroles
 
 
 --
--- TOC entry 1787 (class 0 OID 0)
+-- TOC entry 1810 (class 0 OID 0)
 -- Dependencies: 6
 -- Name: public; Type: ACL; Schema: -; Owner: -
 --
@@ -313,7 +366,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2011-11-10 17:08:27 CET
+-- Completed on 2012-02-25 14:30:52 CET
 
 --
 -- PostgreSQL database dump complete

@@ -35,113 +35,109 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author W.Ambu - S.Didaci - E.Santoboni
  */
 public class NumberAttribute extends AbstractAttribute {
+    
+    /**
+     * Return the number in the format used for the current language.
+     * @return The formatted number
+     */
+    public String getNumber() {
+        if (null != this.getValue()) {
+            return this.getValue().toString();
+        }
+        return null;
+    }
 
-	/**
-	 * Return the number in the format used for the current language.
-	 * @return The formatted number
-	 */
-	public String getNumber() {
-		if (null != this.getValue()){
-			return this.getValue().toString();
-		}
-		return null;
-	}
+    /**
+     * Return the number in the format used for the current language,
+     * expressed in form of percentage.
+     * Using this method, a fractional number like. eg., 0.53 is displayed as 53%. 
+     * @return The formatted number.
+     */
+    public String getPercentNumber() {
+        String number = "";
+        if (null != this.getNumber()) {
+            NumberFormat numberInstance =
+                    NumberFormat.getPercentInstance(new Locale(getRenderingLang(), ""));
+            number = numberInstance.format(this.getNumber());
+        }
+        return number;
+    }
+    
+    public Element getJDOMElement() {
+        Element attributeElement = new Element("attribute");
+        attributeElement.setAttribute("name", this.getName());
+        attributeElement.setAttribute("attributetype", this.getType());
+        String number = this.getNumber();
+        if (null != number && number.trim().length() > 0) {
+            Element numberElement = new Element("number");
+            numberElement.setText(number);
+            attributeElement.addContent(numberElement);
+        }
+        return attributeElement;
+    }
 
-	/**
-	 * Return the number in the format used for the current language,
-	 * expressed in form of percentage.
-	 * Using this method, a fractional number like. eg., 0.53 is displayed as 53%. 
-	 * @return The formatted number.
-	 */
-	public String getPercentNumber() {
-		String number = "";
-		if (null != this.getNumber()) {
-			NumberFormat numberInstance = 
-				NumberFormat.getPercentInstance(new Locale(getRenderingLang(), ""));
-			number = numberInstance.format(this.getNumber());
-		}
-		return number;
-	}
+    /**
+     * Return the number held by the attribute.
+     * @return The number held by the attribute.
+     */
+    public BigDecimal getValue() {
+        return _number;
+    }
 
-	/**
-	 * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getJDOMElement()
-	 */
-	@Override
-	public Element getJDOMElement() {
-		Element attributeElement = new Element("attribute");
-		attributeElement.setAttribute("name", this.getName());
-		attributeElement.setAttribute("attributetype", this.getType());
-		String number = this.getNumber();
-		if (null != number && number.trim().length() > 0) {
-			Element numberElement = new Element("number");
-			numberElement.setText(number);
-			attributeElement.addContent(numberElement);
-		}
-		return attributeElement;
-	}
-	
-	/**
-	 * Return the number held by the attribute.
-	 * @return The number held by the attribute.
-	 */
-	@Override
-	public BigDecimal getValue() {
-		return _number;
-	}
+    /**
+     * Associate the given number to the current attribute.
+     * @param number The number to associate to the current attribute.
+     */
+    public void setValue(BigDecimal number) {
+        this._number = number;
+    }
+    
+    public boolean isSearchableOptionSupported() {
+        return true;
+    }
+    
+    public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
+        if (this.getValue() != null) {
+            List<AttributeSearchInfo> infos = new ArrayList<AttributeSearchInfo>();
+            AttributeSearchInfo info = new AttributeSearchInfo(null, null, this.getValue(), null);
+            infos.add(info);
+            return infos;
+        }
+        return null;
+    }
+    
+    protected IAttributeValidationRules getValidationRuleNewIntance() {
+        return new NumberAttributeValidationRules();
+    }
 
-	/**
-	 * Associate the given number to the current attribute.
-	 * @param number The number to associate to the current attribute.
-	 */
-	public void setValue(BigDecimal number) {
-		this._number = number;
-	}
-	
-	@Override
-	public boolean isSearchableOptionSupported() {
-		return true;
-	}
-	
-	@Override
-	public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
-		if (this.getValue() != null) {
-			List<AttributeSearchInfo> infos = new ArrayList<AttributeSearchInfo>();
-			AttributeSearchInfo info = new AttributeSearchInfo(null, null, this.getValue(), null);
-			infos.add(info);
-			return infos;
-		}
-		return null;
-	}
-	
-	@Override
-	protected IAttributeValidationRules getValidationRuleNewIntance() {
-		return new NumberAttributeValidationRules();
-	}
-	
-	/**
-	 * Associate the (numeric) string submitted in the back-office form to the current attribute.
-	 * This method is only invoked by the entity handling routines within the back-office area.
-	 * @param failedNumberString The numeric string submitted in the back-office form.
-	 */
-	public void setFailedNumberString(String failedNumberString) {
-		this._failedNumberString = failedNumberString;
-	}
+    /**
+     * Associate the (numeric) string submitted in the back-office form to the current attribute.
+     * This method is only invoked by the entity handling routines within the back-office area.
+     * @param failedNumberString The numeric string submitted in the back-office form.
+     */
+    public void setFailedNumberString(String failedNumberString) {
+        this._failedNumberString = failedNumberString;
+    }
 
-	/**
-	 * Return the numeric string inserted in the back-office form; this method
-	 * is only invoked by the entity handling routines within the back-office area. 
-	 * @return The requested numeric string.
-	 */
-	public String getFailedNumberString() {
-		return _failedNumberString;
-	}
-	
-	@Override
-	protected Object getJAXBValue(String langCode) {
-		return this.getValue();
-	}
-	
-	private BigDecimal _number;
-	private String _failedNumberString;
-
+    /**
+     * Return the numeric string inserted in the back-office form; this method
+     * is only invoked by the entity handling routines within the back-office area. 
+     * @return The requested numeric string.
+     */
+    public String getFailedNumberString() {
+        return _failedNumberString;
+    }
+    
+    protected Object getJAXBValue(String langCode) {
+        return this.getValue();
+    }
+    
+    public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
+        super.valueFrom(jaxbAttribute);
+        this.setValue((BigDecimal) jaxbAttribute.getValue());
+    }
+    
+    private BigDecimal _number;
+    private String _failedNumberString;
+    
 }

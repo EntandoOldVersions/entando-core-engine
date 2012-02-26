@@ -28,28 +28,19 @@ import javax.xml.bind.annotation.XmlType;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "attribute")
-@XmlType(propOrder = {"name", "type", "listElements"})
+@XmlType(propOrder = {"listElements"})
 public class JAXBListAttribute extends DefaultJAXBAttribute {
-	
-	@XmlElement(name = "name", required = true)
-	public String getName() {
-		return super.getName();
-	}
-	
-	@XmlElement(name = "type", required = true)
-	public String getType() {
-		return super.getType();
-	}
-	
-	@XmlElement(name = "listElement", required = true)
-	@XmlElementWrapper(name = "listElements")
-	public List<DefaultJAXBAttribute> getAttributes() {
-		return _attributes;
-	}
-	public void setAttributes(List<DefaultJAXBAttribute> attributes) {
-		this._attributes = attributes;
-	}
-	
-	private List<DefaultJAXBAttribute> _attributes = null;
-	
+    
+    @XmlElement(name = "listElement", required = true)
+    @XmlElementWrapper(name = "listElements")
+    public List<DefaultJAXBAttribute> getAttributes() {
+        return _attributes;
+    }
+    
+    public void setAttributes(List<DefaultJAXBAttribute> attributes) {
+        this._attributes = attributes;
+    }
+    
+    private List<DefaultJAXBAttribute> _attributes = null;
+    
 }

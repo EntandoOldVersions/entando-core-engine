@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -50,7 +51,9 @@ public interface IApiCatalogManager {
     
     public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException;
     
-    public Map<ApiMethod.HttpMethod, List<ApiMethod>> getApiRestFulMethods() throws ApsSystemException;
+    public Map<String, ApiResource> getApiResources() throws ApsSystemException;
+    
+    public ApiResource getApiResource(String resourceName) throws ApsSystemException;
     
     /**
      * Return a GET methods by name.
@@ -67,13 +70,21 @@ public interface IApiCatalogManager {
     public Map<String, ApiService> getApiServices(String tag, Boolean myentando) throws ApsSystemException;
 
     public ApiService getApiService(String key) throws ApsSystemException;
-
+    
+    @Deprecated
     public void updateApiStatus(ApiMethod apiMethod) throws ApsSystemException;
+    
+    public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException;
+    
+    public void resetMethodConfig(ApiMethod apiMethod) throws ApsSystemException;
 
     public void saveService(ApiService service) throws ApsSystemException;
 
     public void deleteService(String key) throws ApsSystemException;
-
+    
+    public void updateService(ApiService service) throws ApsSystemException;
+    
+    @Deprecated
     public void updateApiServiceStatus(ApiService service) throws ApsSystemException;
     
 }

@@ -23,27 +23,29 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author E.Santoboni
  */
-@XmlRootElement(name = "response")
 public abstract class AbstractApiResponse implements Serializable {
-	
-	public abstract void setResult(Object result, String html);
-	
-	public void addError(ApiError error) {
-		if (null != error) this._errors.add(error);
-	}
-	
-	public void addErrors(List<ApiError> errors) {
-		if (null == errors) return;
-		this._errors.addAll(errors);
-	}
-	
-	@XmlElement(name = "error", required = true)
-	@XmlElementWrapper(name = "errors")
-	private List<ApiError> _errors = new ArrayList<ApiError>();
-	
+    
+    public abstract void setResult(Object result, String html);
+    
+    public void addError(ApiError error) {
+        if (null != error) {
+            this._errors.add(error);
+        }
+    }
+
+    public void addErrors(List<ApiError> errors) {
+        if (null == errors) {
+            return;
+        }
+        this._errors.addAll(errors);
+    }
+    
+    @XmlElement(name = "error", required = true)
+    @XmlElementWrapper(name = "errors")
+    private List<ApiError> _errors = new ArrayList<ApiError>();
+    
 }

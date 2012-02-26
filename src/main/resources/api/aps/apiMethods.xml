@@ -1,29 +1,87 @@
 <apiMethodDefinitions>
-	
-	<method name="getServices" active="true" canSpawnOthers="false">
-		<source>core</source>
-		<description>Returns the services configured in this instance of Entando.</description>
-		<springBean name="ApiServiceInterface" method="getServices" />
-		<responseClass>org.entando.entando.aps.system.services.api.response.ServiceResponse</responseClass>
-		<parameters>
-			<parameter key="tag" required="false">
-				<description>The tag (or part thereof) of the services to return.</description>
-			</parameter>
-                        <parameter key="myentando" required="false">
-				<description>Filters the services based on compatibility with MyEntando. Entries true or false</description>
-			</parameter>
-		</parameters>
-	</method>
-	
-	<method name="getService" active="true" canSpawnOthers="false">
-		<source>core</source>
-		<description>Returns one of the services configured in this instance of Entando.</description>
-		<springBean name="ApiServiceInterface" method="getService" />
-		<parameters>
-			<parameter key="key" required="true">
-				<description>The unique key of the wanted service.</description>
-			</parameter>
-		</parameters>
-	</method>
-	
+    
+    
+    
+    
+    
+    <method name="getServices" active="true" canSpawnOthers="false">
+        <source>core</source>
+        <description>Returns the services configured in this instance of Entando.</description>
+        <springBean name="ApiServiceInterface" method="getServices" />
+        <responseClass>org.entando.entando.aps.system.services.api.response.ServiceResponse</responseClass>
+        <parameters>
+            <parameter key="tag" required="false">
+                <description>The tag (or part thereof) of the services to return.</description>
+            </parameter>
+            <parameter key="myentando" required="false">
+                <description>Filters the services based on compatibility with MyEntando. Entries true or false</description>
+            </parameter>
+        </parameters>
+    </method>
+    
+    <method name="getService" active="true" canSpawnOthers="false">
+        <source>core</source>
+        <description>Returns one of the services configured in this instance of Entando.</description>
+        <springBean name="ApiServiceInterface" method="getService" />
+        <parameters>
+            <parameter key="key" required="true">
+                <description>The unique key of the wanted service.</description>
+            </parameter>
+        </parameters>
+    </method>
+    
+    <resource name="myOAuthAccessToken">
+        <description>My OAuth Access Token</description>
+        <source>core</source>
+        <method httpMethod="DELETE" active="true" requiredAuth="true">
+            <description>Delete his Access Token</description>
+            <springBean name="OAuthConsumerManager" method="deleteMyAccessToken" />
+            <parameters>
+                <parameter key="accessToken" required="true" />
+            </parameters>
+        </method>
+    </resource>
+    
+    
+    <!--
+    <resource name="entandoEntity">
+        <source>core</source>
+        <method httpMethod="GET" active="true">
+            <description>Return an entity</description>
+            <springBean name="ApiEntityManagerInterface" method="getEntity" />
+            <parameters>
+                <parameter key="entityManagerName" required="true">
+                    <description>The Entity Manager Bean Name</description>
+                </parameter>
+                <parameter key="id" required="true">
+                    <description>The id of the entity to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add an entity</description>
+            <springBean name="ApiEntityManagerInterface" method="addEntity" />
+            <expectedType>org.entando.entando.aps.system.common.entity.api.JAXBEntityType</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update an entity</description>
+            <springBean name="ApiEntityManagerInterface" method="updateEntity" />
+            <expectedType>org.entando.entando.aps.system.common.entity.api.JAXBEntityType</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete an entity</description>
+            <springBean name="ApiEntityManagerInterface" method="deleteEntity" />
+            <parameters>
+                <parameter key="entityManagerName" required="true">
+                    <description>The Entity Manager Bean Name</description>
+                </parameter>
+                <parameter key="id" required="true">
+                    <description>The code of the type to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    -->
+    
+    
 </apiMethodDefinitions>

@@ -174,7 +174,9 @@ public interface SystemConstants {
     
     public static final String API_USER_PARAMETER = "apiMethod:user";
     
-    public static String[] API_RESERVED_PARAMETERS = {API_LANG_CODE_PARAMETER, API_USER_PARAMETER};
+    public static final String API_OAUTH_CONSUMER_PARAMETER = "apiMethod:OAuthConsumer";
+    
+    public static String[] API_RESERVED_PARAMETERS = {API_LANG_CODE_PARAMETER, API_USER_PARAMETER, API_OAUTH_CONSUMER_PARAMETER};
     
     public static final String OAUTH_CONSUMER_MANAGER = "OAuthConsumerManager";
     

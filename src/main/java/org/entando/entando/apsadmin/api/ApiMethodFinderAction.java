@@ -28,6 +28,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
  * @author E.Santoboni
+ * @deprecated 
  */
 public class ApiMethodFinderAction extends AbstractApiFinderAction implements IApiMethodFinderAction {
 	
@@ -41,7 +42,7 @@ public class ApiMethodFinderAction extends AbstractApiFinderAction implements IA
 				boolean activeMethod = (this.getRequest().getParameter(apiMethod.getMethodName() + "_active") != null);
 				boolean checkParameter = (this.getRequest().getParameter(apiMethod.getMethodName() + "_checkField") != null);
 				if (checkParameter && (activeMethod != apiMethod.isActive())) {
-					apiMethod.setActive(activeMethod);
+					apiMethod.setStatus(activeMethod);
 					this.getApiCatalogManager().updateApiStatus(apiMethod);
 					this.addActionMessage(this.getText("message.method.status.updated", new String[]{apiMethod.getMethodName()}));
 					ApsSystemUtils.getLogger().log(Level.INFO, "Updated api method status - Method ''{0}''", apiMethod.getMethodName());

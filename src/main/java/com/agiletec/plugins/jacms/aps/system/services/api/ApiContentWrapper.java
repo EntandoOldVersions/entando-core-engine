@@ -41,6 +41,7 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 
 /**
  * @author E.Santoboni
+ * @deprecated 
  */
 public class ApiContentWrapper {
 	

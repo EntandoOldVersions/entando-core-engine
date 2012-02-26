@@ -322,10 +322,11 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         Object result = null;
         try {
             if (apiMethod.getHttpMethod().equals(ApiMethod.HttpMethod.DELETE)) {
-                this.invokeDeleteMethod(apiMethod, bean, parameters);
+                result = this.invokeDeleteMethod(apiMethod, bean, parameters);
             } else {
-                this.invokePutPostMethod(apiMethod, bean, parameters, bodyObject);
+                result = this.invokePutPostMethod(apiMethod, bean, parameters, bodyObject);
             }
+            if (null != result) return result;
             BaseApiResponse response = new BaseApiResponse();
             response.setResult(SUCCESS, null);
             result = response;
@@ -349,51 +350,40 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return result;
     }
     
-    private void invokePutPostMethod(ApiMethod api, Object bean, 
+    private Object invokePutPostMethod(ApiMethod api, Object bean, 
             Properties parameters, Object bodyObject) throws NoSuchMethodException, InvocationTargetException, Throwable {
+        Object result = null;
         Class beanClass = bean.getClass();
         String methodName = api.getSpringBeanMethod();
         try {
             Class[] parameterTypes = new Class[]{bodyObject.getClass(), Properties.class};
             Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
-            method.invoke(bean, bodyObject, parameters);
+            result = method.invoke(bean, bodyObject, parameters);
         } catch (NoSuchMethodException e) {
             //the first exception of type "NoSuchMethodException" will not catched... the second yes
             Class[] parameterTypes = new Class[]{bodyObject.getClass()};
             Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
-            method.invoke(bean, bodyObject);
+            result = method.invoke(bean, bodyObject);
         } catch (InvocationTargetException e) {
             throw e;
         } catch (Throwable t) {
             throw t;
         }
+        return result;
     }
     
-    private void invokeDeleteMethod(ApiMethod api, Object bean, 
+    private Object invokeDeleteMethod(ApiMethod api, Object bean, 
             Properties parameters) throws NoSuchMethodException, InvocationTargetException, Throwable {
-        Class[] parameterTypes = new Class[]{String.class};
+        Class[] parameterTypes = new Class[]{Properties.class};
         Class beanClass = bean.getClass();
         String methodName = api.getSpringBeanMethod();
-        ApiMethodParameter requiredParameter = null;
-        List<ApiMethodParameter> apiParameters = api.getParameters();
-        for (int i = 0; i < apiParameters.size(); i++) {
-            ApiMethodParameter apiMethodParameter = apiParameters.get(i);
-            if (apiMethodParameter.isRequired()) {
-                requiredParameter = apiMethodParameter;
-                break;
-            }
-        }
-        if (null == requiredParameter) {
-            throw new ApsSystemException("No one required parameter - " + this.buildApiSignature(api));
-        }
         Method method = beanClass.getDeclaredMethod(methodName, parameterTypes);
-        method.invoke(bean, parameters.get(requiredParameter.getKey()));
+        return method.invoke(bean, parameters);
     }
     
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;
     }
-
     public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
         this._apiCatalogManager = apiCatalogManager;
     }
@@ -401,7 +391,6 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected IVelocityRenderer getVelocityRenderer() {
         return _velocityRenderer;
     }
-
     public void setVelocityRenderer(IVelocityRenderer velocityRenderer) {
         this._velocityRenderer = velocityRenderer;
     }
@@ -409,7 +398,6 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected BeanFactory getBeanFactory() {
         return this._beanFactory;
     }
-
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }

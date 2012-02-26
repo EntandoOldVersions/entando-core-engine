@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
 
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
@@ -57,7 +56,7 @@ public class TestResponseBuilder extends ApiBaseTestCase {
     
     public void testInvokeWithErrors_4() throws Throwable {
     	ApiMethod method = this.getApiCatalogManager().getMethod("getServices");
-    	method.setActive(false);
+    	method.setStatus(false);
     	this.getApiCatalogManager().updateApiStatus(method);
     	Properties properties = new Properties();
     	this.testInvokeWithErrors("getServices", properties, IApiErrorCodes.API_ACTIVE_FALSE);

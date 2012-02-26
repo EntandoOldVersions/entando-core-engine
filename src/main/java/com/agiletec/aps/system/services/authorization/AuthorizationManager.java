@@ -27,9 +27,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -41,166 +39,231 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author E.Santoboni
  */
 public class AuthorizationManager extends AbstractService implements IAuthorizationManager {
-	
-	@Override
-	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
-	}
-	
-	@Override
-	public boolean isAuth(UserDetails user, IApsAuthority auth) {
-		return this.checkAuth(user, auth);
-	}
-	
-	@Override
-	public boolean isAuth(UserDetails user, Group group) {
-		return this.isAuthOnGroup(user, group.getName());
-	}
-	
-	@Override
-	public boolean isAuth(UserDetails user, IApsEntity entity) {
-		if (null == entity) return false;
-		String mainGroupName = entity.getMainGroup();
-		Group group = this.getGroupManager().getGroup(mainGroupName);
-		boolean check = this.isAuth(user, group);
-		if (check || mainGroupName.equals(Group.FREE_GROUP_NAME)) return true;
-		Set<String> groups = entity.getGroups();
-		Iterator<String> iter = groups.iterator();
-		while (iter.hasNext()) {
-			String groupName = iter.next();
-			group = this.getGroupManager().getGroup(groupName);
-			check = this.isAuth(user, group);
-			if (check || groupName.equals(Group.FREE_GROUP_NAME)) return true;
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean isAuth(UserDetails user, Permission permission) {
-		return this.isAuthOnPermission(user, permission.getName());
-	}
-	
-	@Override
-	public boolean isAuth(UserDetails user, IPage page) {
-		if (this.isAuthOnGroup(user, Group.ADMINS_GROUP_NAME)) return true;
-		String pageGroup = page.getGroup();
-		if (Group.FREE_GROUP_NAME.equals(pageGroup)) return true;
-		boolean isAuthorized = this.isAuthOnGroup(user, pageGroup);
-		if (isAuthorized) return true;
-		Collection<String> extraGroups = page.getExtraGroups();
-		if (null != extraGroups && !extraGroups.isEmpty()) {
-			if (extraGroups.contains(Group.FREE_GROUP_NAME)) return true;
-			Iterator<String> iter = extraGroups.iterator();
-			while (iter.hasNext()) {
-				String extraGroupName = iter.next();
-				if (this.isAuthOnGroup(user, extraGroupName)) return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean isAuthOnGroup(UserDetails user, String groupName) {
-		Group group = this.getGroupManager().getGroup(groupName);
-		Group adminGroup = this.getGroupManager().getGroup(Group.ADMINS_GROUP_NAME);
-		return (this.checkAuth(user, group) || this.checkAuth(user, adminGroup));
-	}
-	
-	@Override
-	public boolean isAuthOnRole(UserDetails user, String roleName) {
-		Role role = this.getRoleManager().getRole(roleName);
-		return (this.isAuthOnPermission(user, Permission.SUPERUSER) || this.checkAuth(user, role));
-	}
-	
-	@Override
-	public boolean isAuthOnPermission(UserDetails user, String permissionName) {
-		boolean check = this.isAuthOnSinglePermission(user, permissionName);
-		if (check) return true;
-		return this.isAuthOnSinglePermission(user, Permission.SUPERUSER);
-	}
-	
-	private boolean isAuthOnSinglePermission(UserDetails user, String permissionName) {
-		List<Role> rolesWithPermission = this.getRoleManager().getRolesWithPermission(permissionName);
-		for (int i=0; i<rolesWithPermission.size(); i++) {
-			Role role = rolesWithPermission.get(i);
-			boolean check = this.checkAuth(user, role);
-			if (check) return true;
-		}
-		return false;
-	}
-        
-        @Deprecated
-        public List<Group> getGroupsOfUser(UserDetails user) {
-            return this.getUserGroups(user);
-        }
-	
-	@Override
-	public List<Group> getUserGroups(UserDetails user) {
-		if (null == user) return null;
-                List<Group> groups = new ArrayList<Group>();
-		IApsAuthority[] auths = user.getAuthorities();
-		if (null != auths) {
-			for (int i=0; i<auths.length; i++) {
-				IApsAuthority auth = auths[i];
-				if (null == auth) continue;
-				String authName = auth.getAuthority();
-				Group group = this.getGroupManager().getGroup(authName);
-				if (null != group) groups.add(group);
-			}
-		}
-		return groups;
-	}
-	
-	@Override
-	public List<Role> getUserRoles(UserDetails user) {
-		if (null == user) return null;
-                List<Role> roles = new ArrayList<Role>();
-		IApsAuthority[] auths = user.getAuthorities();
-		if (null != auths) {
-			for (int i=0; i<auths.length; i++) {
-				IApsAuthority auth = auths[i];
-				if (null == auth) continue;
-				if (auth instanceof Role) {
-                                    String authName = auth.getAuthority();
-                                    Role role = this.getRoleManager().getRole(authName);
-                                    if (null != role) roles.add(role);
-				}
-			}
-		}
-		return roles;
-	}
-	
-	private boolean checkAuth(UserDetails user, IApsAuthority requiredAuth) {
-		if (null == requiredAuth) return false;
-		IApsAuthority[] auths = user.getAuthorities();
-		if (null != auths) {
-			for (int i=0; i<auths.length; i++) {
-				IApsAuthority auth = auths[i];
-				if (null == auth) continue;
-				String authName = auth.getAuthority();
-				if (requiredAuth.getAuthority().equals(authName)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	protected IGroupManager getGroupManager() {
-		return _groupManager;
-	}
-	public void setGroupManager(IGroupManager groupManager) {
-		this._groupManager = groupManager;
-	}
-	
-	protected IRoleManager getRoleManager() {
-		return _roleManager;
-	}
-	public void setRoleManager(IRoleManager roleManager) {
-		this._roleManager = roleManager;
-	}
     
-	private IGroupManager _groupManager;
-	private IRoleManager _roleManager;
-	
+    public void init() throws Exception {
+        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
+    }
+    
+    public boolean isAuth(UserDetails user, IApsAuthority auth) {
+        return this.checkAuth(user, auth);
+    }
+    
+    public boolean isAuth(UserDetails user, Group group) {
+        return this.isAuthOnGroup(user, group.getName());
+    }
+    
+    public boolean isAuth(UserDetails user, IApsEntity entity) {
+        if (null == entity) {
+            return false;
+        }
+        String mainGroupName = entity.getMainGroup();
+        //Group group = this.getGroupManager().getGroup(mainGroupName);
+        boolean check = this.checkAuth(user, mainGroupName, AuthorityType.GROUP);
+        if (check || mainGroupName.equals(Group.FREE_GROUP_NAME)) {
+            return true;
+        }
+        Set<String> groups = entity.getGroups();
+        Iterator<String> iter = groups.iterator();
+        while (iter.hasNext()) {
+            String groupName = iter.next();
+            //group = this.getGroupManager().getGroup(groupName);
+            check = this.checkAuth(user, groupName, AuthorityType.GROUP);
+            if (check || groupName.equals(Group.FREE_GROUP_NAME)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAuth(UserDetails user, Permission permission) {
+        return this.isAuthOnPermission(user, permission.getName());
+    }
+    
+    public boolean isAuth(UserDetails user, IPage page) {
+        if (this.isAuthOnGroup(user, Group.ADMINS_GROUP_NAME)) {
+            return true;
+        }
+        String pageGroup = page.getGroup();
+        if (Group.FREE_GROUP_NAME.equals(pageGroup)) {
+            return true;
+        }
+        boolean isAuthorized = this.isAuthOnGroup(user, pageGroup);
+        if (isAuthorized) {
+            return true;
+        }
+        Collection<String> extraGroups = page.getExtraGroups();
+        if (null != extraGroups && !extraGroups.isEmpty()) {
+            if (extraGroups.contains(Group.FREE_GROUP_NAME)) {
+                return true;
+            }
+            Iterator<String> iter = extraGroups.iterator();
+            while (iter.hasNext()) {
+                String extraGroupName = iter.next();
+                if (this.isAuthOnGroup(user, extraGroupName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean isAuthOnGroup(UserDetails user, String groupName) {
+        //Group group = this.getGroupManager().getGroup(groupName);
+        //Group adminGroup = this.getGroupManager().getGroup(Group.ADMINS_GROUP_NAME);
+        //return (this.checkAuth(user, group) || this.checkAuth(user, adminGroup));
+        return ((this.checkAuth(user, groupName, AuthorityType.GROUP) 
+                || this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)));
+    }
+    
+    public boolean isAuthOnRole(UserDetails user, String roleName) {
+        //Role role = this.getRoleManager().getRole(roleName);
+        //return (this.isAuthOnPermission(user, Permission.SUPERUSER) || this.checkAuth(user, role));
+        return ((this.isAuthOnPermission(user, Permission.SUPERUSER) 
+                || this.checkAuth(user, roleName, AuthorityType.ROLE)));
+    }
+    
+    public boolean isAuthOnPermission(UserDetails user, String permissionName) {
+        boolean check = this.isAuthOnSinglePermission(user, permissionName);
+        if (check) {
+            return true;
+        }
+        return this.isAuthOnSinglePermission(user, Permission.SUPERUSER);
+    }
+
+    private boolean isAuthOnSinglePermission(UserDetails user, String permissionName) {
+        List<Role> rolesWithPermission = this.getRolesWithPermission(user, permissionName);
+        for (int i = 0; i < rolesWithPermission.size(); i++) {
+            Role role = rolesWithPermission.get(i);
+            boolean check = this.checkAuth(user, role.getAuthority(), AuthorityType.ROLE);
+            if (check) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    private List<Role> getRolesWithPermission(UserDetails user, String permissionName) {
+        List<Role> roles = new ArrayList<Role>();
+        if (null == user) return roles;
+        IApsAuthority[] auths = user.getAuthorities();
+        if (null != auths) {
+            for (int i = 0; i < auths.length; i++) {
+                IApsAuthority auth = auths[i];
+                if (null == auth) {
+                    continue;
+                }
+                if (auth instanceof Role && ((Role) auth).hasPermission(permissionName)) {
+                    roles.add((Role) auth);
+                }
+            }
+        }
+        return roles;
+    }
+
+    @Deprecated
+    public List<Group> getGroupsOfUser(UserDetails user) {
+        return this.getUserGroups(user);
+    }
+    
+    public List<Group> getUserGroups(UserDetails user) {
+        if (null == user) {
+            return null;
+        }
+        List<Group> groups = new ArrayList<Group>();
+        IApsAuthority[] auths = user.getAuthorities();
+        if (null != auths) {
+            for (int i = 0; i < auths.length; i++) {
+                IApsAuthority auth = auths[i];
+                if (null == auth) {
+                    continue;
+                }
+                if (auth instanceof Group) {
+                    groups.add((Group) auth);
+                }
+            }
+        }
+        return groups;
+    }
+    
+    public List<Role> getUserRoles(UserDetails user) {
+        if (null == user) {
+            return null;
+        }
+        List<Role> roles = new ArrayList<Role>();
+        IApsAuthority[] auths = user.getAuthorities();
+        if (null != auths) {
+            for (int i = 0; i < auths.length; i++) {
+                IApsAuthority auth = auths[i];
+                if (null == auth) {
+                    continue;
+                }
+                if (auth instanceof Role) {
+                    roles.add((Role) auth);
+                }
+            }
+        }
+        return roles;
+    }
+    
+    private boolean checkAuth(UserDetails user, IApsAuthority requiredAuth) {
+        if (null == requiredAuth) {
+            return false;
+        }
+        IApsAuthority[] auths = user.getAuthorities();
+        if (null != auths) {
+            for (int i = 0; i < auths.length; i++) {
+                IApsAuthority auth = auths[i];
+                if (null == auth) {
+                    continue;
+                }
+                String authName = auth.getAuthority();
+                if (requiredAuth.getAuthority().equals(authName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean checkAuth(UserDetails user, String requiredAuthName, AuthorityType type) {
+        if (null == requiredAuthName) {
+            return false;
+        }
+        IApsAuthority[] auths = user.getAuthorities();
+        if (null != auths) {
+            for (int i = 0; i < auths.length; i++) {
+                IApsAuthority auth = auths[i];
+                if (null == auth) {
+                    continue;
+                }
+                String authName = auth.getAuthority();
+                boolean check = requiredAuthName.equals(authName);
+                if ((check && type.equals(AuthorityType.GROUP) && (auth instanceof Group)) 
+                        || (check && type.equals(AuthorityType.ROLE) && (auth instanceof Role))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private enum AuthorityType{ROLE,GROUP}
+    /*
+    protected IGroupManager getGroupManager() {
+        return _groupManager;
+    }
+    public void setGroupManager(IGroupManager groupManager) {
+        this._groupManager = groupManager;
+    }
+    
+    protected IRoleManager getRoleManager() {
+        return _roleManager;
+    }
+    public void setRoleManager(IRoleManager roleManager) {
+        this._roleManager = roleManager;
+    }
+    
+    private IGroupManager _groupManager;
+    private IRoleManager _roleManager;
+    */
 }

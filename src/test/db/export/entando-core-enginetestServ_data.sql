@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2011-11-10 17:08:28 CET
+-- Started on 2012-02-25 14:30:53 CET
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,24 +13,40 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1783 (class 0 OID 2939747)
--- Dependencies: 1483
+-- TOC entry 1816 (class 0 OID 83959)
+-- Dependencies: 137
+-- Data for Name: api_oauth_consumers; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+
+
+--
+-- TOC entry 1817 (class 0 OID 83967)
+-- Dependencies: 138
+-- Data for Name: api_oauth_tokens; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+
+
+--
+-- TOC entry 1807 (class 0 OID 83585)
+-- Dependencies: 128
+-- Data for Name: apicatalog_methods; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+
+
+--
+-- TOC entry 1806 (class 0 OID 83579)
+-- Dependencies: 127
 -- Data for Name: apicatalog_services; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
 --
--- TOC entry 1784 (class 0 OID 2939753)
--- Dependencies: 1484
--- Data for Name: apicatalog_status; Type: TABLE DATA; Schema: public; Owner: agile
---
-
-
-
---
--- TOC entry 1785 (class 0 OID 2939756)
--- Dependencies: 1485
+-- TOC entry 1808 (class 0 OID 83588)
+-- Dependencies: 129
 -- Data for Name: authgroups; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -43,8 +59,8 @@ INSERT INTO authgroups (groupname, descr) VALUES ('management', 'Management');
 
 
 --
--- TOC entry 1788 (class 0 OID 2939765)
--- Dependencies: 1488
+-- TOC entry 1811 (class 0 OID 83597)
+-- Dependencies: 132
 -- Data for Name: authroles; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -55,8 +71,8 @@ INSERT INTO authroles (rolename, descr) VALUES ('pageManager', 'Gestore di Pagin
 
 
 --
--- TOC entry 1786 (class 0 OID 2939759)
--- Dependencies: 1486
+-- TOC entry 1809 (class 0 OID 83591)
+-- Dependencies: 130
 -- Data for Name: authpermissions; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -70,8 +86,8 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('manageCategories', 
 
 
 --
--- TOC entry 1787 (class 0 OID 2939762)
--- Dependencies: 1487
+-- TOC entry 1810 (class 0 OID 83594)
+-- Dependencies: 131
 -- Data for Name: authrolepermissions; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -85,9 +101,10 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'ed
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('supervisor', 'validateContents');
 INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'manageResources');
 
+
 --
--- TOC entry 1789 (class 0 OID 2939768)
--- Dependencies: 1489
+-- TOC entry 1812 (class 0 OID 83600)
+-- Dependencies: 133
 -- Data for Name: authusergroups; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -105,8 +122,8 @@ INSERT INTO authusergroups (username, groupname) VALUES ('admin', 'administrator
 
 
 --
--- TOC entry 1790 (class 0 OID 2939771)
--- Dependencies: 1490
+-- TOC entry 1813 (class 0 OID 83603)
+-- Dependencies: 134
 -- Data for Name: authuserroles; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -121,8 +138,8 @@ INSERT INTO authuserroles (username, rolename) VALUES ('pageManagerCustomers', '
 
 
 --
--- TOC entry 1791 (class 0 OID 2939774)
--- Dependencies: 1491
+-- TOC entry 1814 (class 0 OID 83606)
+-- Dependencies: 135
 -- Data for Name: authusers; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -137,8 +154,8 @@ INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpassw
 
 
 --
--- TOC entry 1792 (class 0 OID 2939777)
--- Dependencies: 1492
+-- TOC entry 1815 (class 0 OID 83609)
+-- Dependencies: 136
 -- Data for Name: authusershortcuts; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -154,7 +171,7 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<shortcuts>
 </shortcuts>');
 
 
--- Completed on 2011-11-10 17:08:28 CET
+-- Completed on 2012-02-25 14:30:53 CET
 
 --
 -- PostgreSQL database dump complete

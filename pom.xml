@@ -28,17 +28,17 @@
 		<developer>
 			<id>e.santoboni</id>
 			<name>Eugenio Santoboni</name>
-			<email>e.santoboni@agiletec.it</email>
+			<email>e.santoboni@entando.com</email>
 		</developer>
 		<developer>
 			<id>w.ghelfi</id>
 			<name>William Ghelfi</name>
-			<email>w.ghelfi@tzente.it</email>		
+			<email>w.ghelfi@entando.com</email>
 		</developer>
 	</developers>
 	<organization>
-		<name>Tzente S.r.l.</name>
-		<url>http://www.tzente.com/</url>
+		<name>Entando S.r.l.</name>
+		<url>http://www.entando.com/</url>
 	</organization>
 <!--
 	<distributionManagement>
@@ -560,49 +560,49 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-asm</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -725,7 +725,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.0.5.RELEASE</version>
+			<version>3.0.6.RELEASE</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -786,6 +786,20 @@
                                                 </exclusion>
 					</exclusions>	
                 </dependency>
+                
+                <dependency>
+                        <groupId>net.oauth.core</groupId>
+                        <artifactId>oauth</artifactId>
+                        <version>20100527</version>
+                        <type>jar</type>
+                </dependency>
+                <dependency>
+                        <groupId>net.oauth.core</groupId>
+                        <artifactId>oauth-provider</artifactId>
+                        <version>20100527</version>
+                        <type>jar</type>
+                </dependency>
+                
 	</dependencies>
 	<reporting>
 		<plugins>

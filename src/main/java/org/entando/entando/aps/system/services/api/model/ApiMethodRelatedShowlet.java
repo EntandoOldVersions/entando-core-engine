@@ -20,7 +20,7 @@ package org.entando.entando.aps.system.services.api.model;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.api.ApiMethodsDefDOM;
+import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 import org.jdom.Element;
 
 import com.agiletec.aps.util.ApsProperties;
@@ -33,13 +33,13 @@ public class ApiMethodRelatedShowlet {
 	protected ApiMethodRelatedShowlet() {}
 	
 	protected ApiMethodRelatedShowlet(Element element) {
-		this.setShowletCode(element.getAttributeValue(ApiMethodsDefDOM.RELATED_SHOWLET_CODE_ATTRIBUTE_NAME));
+		this.setShowletCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_CODE_ATTRIBUTE_NAME));
 		this.setMapping(new ApsProperties());
-		List<Element> mappingsElements = element.getChildren(ApiMethodsDefDOM.RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME);
+		List<Element> mappingsElements = element.getChildren(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME);
 		for (int i = 0; i < mappingsElements.size(); i++) {
 			Element mappingsElement = mappingsElements.get(i);
-			String showletParam = mappingsElement.getAttributeValue(ApiMethodsDefDOM.RELATED_SHOWLET_MAP_PARAMETER_SHOWLET_ATTRIBUTE_NAME);
-			String methodParam = mappingsElement.getAttributeValue(ApiMethodsDefDOM.RELATED_SHOWLET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME);
+			String showletParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_SHOWLET_ATTRIBUTE_NAME);
+			String methodParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME);
 			this.getMapping().put(showletParam, methodParam);
 		}
 	}
