@@ -30,4 +30,8 @@ public interface IApiResourceAction {
     
     public String resetMethodStatus();
     
+    public String updateAllMethodStatus();
+    
+    public String resetAllMethodStatus();
+    
 }

@@ -119,11 +119,63 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     public String updateMethodStatus() {
         try {
             ApiMethod method = this.checkAndReturnMethod();
-            String requiredAuthority = this.getRequest().getParameter(method.getHttpMethod().toString() + "_methodAuthority"); //this.getRequiredAuthority();
+            String requiredAuthority = this.getRequest().getParameter(method.getHttpMethod().toString() + "_methodAuthority");
+            String active = this.getRequest().getParameter(method.getHttpMethod().toString() + "_active");
             if (null == requiredAuthority) {
                 //TODO MANAGE
                 return SUCCESS;
             }
+            this.updateMethodStatus(method, requiredAuthority, active);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+    
+    public String resetMethodStatus() {
+        try {
+            ApiMethod method = this.checkAndReturnMethod();
+            this.resetMethodStatus(method);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error resetting method status");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+    
+    private ApiMethod checkAndReturnMethod() throws Throwable {
+        ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+        ApiMethod method = resource.getMethod(this.getHttpMethod());
+        if (null == method) {
+            throw new ApsSystemException("Null Method " + this.getHttpMethod() + " for resource " + this.getResourceName());
+        }
+        return method;
+    }
+    
+    public String updateAllMethodStatus() {
+        try {
+            ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+            String requiredAuthority = this.getRequest().getParameter("methodAuthority");
+            String active = this.getRequest().getParameter("active");
+            if (null == requiredAuthority) {
+                //TODO MANAGE
+                return SUCCESS;
+            }
+            this.updateMethodStatus(resource.getGetMethod(), requiredAuthority, active);
+            this.updateMethodStatus(resource.getPostMethod(), requiredAuthority, active);
+            this.updateMethodStatus(resource.getPutMethod(), requiredAuthority, active);
+            this.updateMethodStatus(resource.getDeleteMethod(), requiredAuthority, active);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "updateAllMethodStatus", "Error updating all method status");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+    
+    private void updateMethodStatus(ApiMethod method, String requiredAuthority, String active) {
+        if (null == method) return;
+        try {
             if (null != requiredAuthority && requiredAuthority.equals("0")) {
                 method.setRequiredAuth(true);
                 method.setRequiredPermission(null);
@@ -134,38 +186,42 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
                 method.setRequiredAuth(false);
                 method.setRequiredPermission(null);
             }
-            String active = this.getRequest().getParameter(method.getHttpMethod().toString() + "_active"); //this.getRequiredAuthority();
             method.setStatus(active != null);
             this.getApiCatalogManager().updateMethodConfig(method);
             String[] args = {method.getHttpMethod().toString()};
             this.addActionMessage(this.getText("message.resource.method.configUpdated", args));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status");
+            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", 
+                    "Error updating method status - " + method.getResourceName() + " - " + method.getHttpMethod());
             throw new RuntimeException("Error updating method status", t);
+        }
+    }
+    
+    public String resetAllMethodStatus() {
+        try {
+            ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+            this.resetMethodStatus(resource.getGetMethod());
+            this.resetMethodStatus(resource.getPostMethod());
+            this.resetMethodStatus(resource.getPutMethod());
+            this.resetMethodStatus(resource.getDeleteMethod());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "resetAllMethodStatus", "Error resetting all method status");
+            return FAILURE;
         }
         return SUCCESS;
     }
     
-    public String resetMethodStatus() {
+    public void resetMethodStatus(ApiMethod method) {
+        if (null == method) return;
         try {
-            ApiMethod method = this.checkAndReturnMethod();
             this.getApiCatalogManager().resetMethodConfig(method);
             String[] args = {method.getHttpMethod().toString()};
             this.addActionMessage(this.getText("message.resource.method.configResetted", args));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error resetting method status");
+            ApsSystemUtils.logThrowable(t, this, "resetMethodStatus", 
+                    "Error resetting method status - " + method.getResourceName() + " - " + method.getHttpMethod());
             throw new RuntimeException("Error resetting method status", t);
         }
-        return SUCCESS;
-    }
-    
-    public ApiMethod checkAndReturnMethod() throws Throwable {
-        ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
-        ApiMethod method = resource.getMethod(this.getHttpMethod());
-        if (null == method) {
-            throw new ApsSystemException("Null Method " + this.getHttpMethod() + " for resource " + this.getResourceName());
-        }
-        return method;
     }
     
     public List<SelectItem> getMethodAuthorityOptions() {

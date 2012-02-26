@@ -55,6 +55,18 @@
             <interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
+        <action name="updateAllMethodStatus" class="apiResourceAction" method="updateAllMethodStatus">
+            <result name="input" type="chain">list</result>
+            <result type="tiles">admin.api.resource.detail</result>
+            <interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
+        <action name="resetAllMethodStatus" class="apiResourceAction" method="resetAllMethodStatus">
+            <result name="input" type="chain">list</result>
+            <result type="tiles">admin.api.resource.detail</result>
+            <interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
     </package>
     
     <!--
