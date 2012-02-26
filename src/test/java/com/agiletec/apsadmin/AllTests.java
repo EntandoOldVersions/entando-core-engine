@@ -17,7 +17,6 @@
 */
 package com.agiletec.apsadmin;
 
-import org.entando.entando.apsadmin.api.TestApiMethodFinderAction;
 import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
 
 import junit.framework.Test;
@@ -75,7 +74,7 @@ public class AllTests {
 		suite.addTestSuite(TestShortcutConfigAction.class);
 		
 		//API
-		suite.addTestSuite(TestApiMethodFinderAction.class);
+		//suite.addTestSuite(TestApiMethodFinderAction.class);
 		suite.addTestSuite(TestApiServiceFinderAction.class);
 		
 		//Category

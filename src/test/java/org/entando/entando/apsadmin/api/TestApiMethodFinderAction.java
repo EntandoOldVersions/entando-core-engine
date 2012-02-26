@@ -30,6 +30,7 @@ import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 
 /**
  * @author E.Santoboni
+ * @deprecated
  */
 public class TestApiMethodFinderAction extends ApsAdminBaseTestCase {
 	
