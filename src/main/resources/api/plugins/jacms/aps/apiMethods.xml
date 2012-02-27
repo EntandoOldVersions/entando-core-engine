@@ -52,7 +52,7 @@
         <method httpMethod="GET" active="true">
             <description>Return an entity type</description>
             <springBean name="ApiContentTypeInterface" method="getContentType" />
-            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.model.ContentTypeResponse</responseClass>
+            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentTypeResponse</responseClass>
             <parameters>
                 <parameter key="contentTypeCode" required="true">
                     <description>The code of the type to return</description>
