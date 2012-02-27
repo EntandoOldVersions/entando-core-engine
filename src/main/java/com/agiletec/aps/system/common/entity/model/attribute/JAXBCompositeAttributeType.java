@@ -19,11 +19,16 @@ package com.agiletec.aps.system.common.entity.model.attribute;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiException;
 
 /**
  * @author E.Santoboni
@@ -32,6 +37,22 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {"elementTypes"})
 @XmlSeeAlso({DefaultJAXBAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBCompositeAttributeType extends DefaultJAXBAttributeType {
+    
+    public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
+        CompositeAttribute compositeAttribute = (CompositeAttribute) super.createAttribute(attributes);
+        List<Object> jaxbElementTypes = this.getElementTypes();
+        if (null == jaxbElementTypes) return compositeAttribute;
+        for (int i = 0; i < jaxbElementTypes.size(); i++) {
+            DefaultJAXBAttributeType jaxbElementType = (DefaultJAXBAttributeType) jaxbElementTypes.get(i);
+            if (null == attributes.get(jaxbElementType.getType())) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        "Attribute Element '" + jaxbElementType.getName() + "' - Type '" + jaxbElementType.getType() + "' does not exist");
+            }
+            AttributeInterface attributeElement = jaxbElementType.createAttribute(attributes);
+            compositeAttribute.addAttribute(attributeElement);
+        }
+        return compositeAttribute;
+    }
     
     @XmlElement(name = "compositeElementType", required = true)
     @XmlElementWrapper(name = "compositeElementTypes")

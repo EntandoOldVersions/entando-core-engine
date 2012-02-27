@@ -120,7 +120,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
      * Add an attribute to the current Composite Attribute.
      * @param attribute The attribute to add.
      */
-    private void addAttribute(AttributeInterface attribute) {
+    protected void addAttribute(AttributeInterface attribute) {
         this.getAttributes().add(attribute);
         this.getAttributeMap().put(attribute.getName(), attribute);
     }
