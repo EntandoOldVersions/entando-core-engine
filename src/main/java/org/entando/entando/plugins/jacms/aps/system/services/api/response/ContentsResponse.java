@@ -28,16 +28,15 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
  */
 @XmlRootElement(name = "response")
 public class ContentsResponse extends AbstractApiResponse {
-	
-	@Override
-	public void setResult(Object result, String html) {
-		ContentsResponseResult responseResult = new ContentsResponseResult();
-		responseResult.setMainResult(result);
-		responseResult.setHtml(html);
-		this._result = responseResult;
-	}
-	
-	@XmlElement(name = "result", required = true)
-	private ContentsResponseResult _result;
-	
+    
+    public void setResult(Object result, String html) {
+        ContentsResponseResult responseResult = new ContentsResponseResult();
+        responseResult.setMainResult(result);
+        responseResult.setHtml(html);
+        this._result = responseResult;
+    }
+    
+    @XmlElement(name = "result", required = true)
+    private ContentsResponseResult _result;
+    
 }

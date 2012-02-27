@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
@@ -31,7 +30,6 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
 /**
  * @author E.Santoboni
  */
-@XmlRootElement(name = "response")
 public class ContentTypeResponseResult extends AbstractApiResponseResult {
     
     @XmlElement(name = "contentType", required = false)

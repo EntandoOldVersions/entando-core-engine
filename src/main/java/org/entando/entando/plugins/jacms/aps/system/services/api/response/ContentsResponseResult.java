@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
@@ -32,28 +31,24 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
 /**
  * @author E.Santoboni
  */
-@XmlRootElement(name = "response")
 public class ContentsResponseResult extends AbstractApiResponseResult {
-	
-	@Override
-	@XmlElement(name = "item", required =false)
-	public JAXBContent getResult() {
-		if (this.getMainResult() instanceof JAXBContent) {
-			return (JAXBContent) this.getMainResult();
-		}
-		return null;
-	}
-	
-	@Override
-	@XmlElement(name = "items", required = false)
-	public ListResponse<String> getResults() {
-		if (this.getMainResult() instanceof Collection) {
-			List<String> contentsId = new ArrayList<String>();
-			contentsId.addAll((Collection<String>) this.getMainResult());
-			ListResponse<String> entity = new ListResponse<String>(contentsId) {};
-			return entity;
-		}
-		return null;
-	}
-	
+    
+    @XmlElement(name = "item", required = false)
+    public JAXBContent getResult() {
+        if (this.getMainResult() instanceof JAXBContent) {
+            return (JAXBContent) this.getMainResult();
+        }
+        return null;
+    }
+    
+    @XmlElement(name = "items", required = false)
+    public ListResponse<String> getResults() {
+        if (this.getMainResult() instanceof Collection) {
+            List<String> contentsId = new ArrayList<String>();
+            contentsId.addAll((Collection<String>) this.getMainResult());
+            ListResponse<String> entity = new ListResponse<String>(contentsId) {};
+            return entity;
+        }
+        return null;
+    }
 }
