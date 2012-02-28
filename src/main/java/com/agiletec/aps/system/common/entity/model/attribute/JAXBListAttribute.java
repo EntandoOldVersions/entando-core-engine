@@ -21,18 +21,16 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
  * @author E.Santoboni
  */
-@XmlRootElement(name = "attribute")
-@XmlType(propOrder = {"listElements"})
+@XmlType(propOrder = {"attributes"})
 public class JAXBListAttribute extends DefaultJAXBAttribute {
     
-    @XmlElement(name = "listElement", required = true)
-    @XmlElementWrapper(name = "listElements")
+    @XmlElement(name = "attribute", required = true)
+    @XmlElementWrapper(name = "attributes")
     public List<DefaultJAXBAttribute> getAttributes() {
         return _attributes;
     }

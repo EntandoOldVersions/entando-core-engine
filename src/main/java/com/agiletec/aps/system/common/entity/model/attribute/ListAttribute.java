@@ -185,28 +185,14 @@ public class ListAttribute extends AbstractListAttribute {
     }
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
-        super.valueFrom(jaxbAttribute);
-        Object value = jaxbAttribute.getValue();
-        if (null == value) return;
-        if (value instanceof Map) {
-            Map<String, List<DefaultJAXBAttribute>> map = (Map<String, List<DefaultJAXBAttribute>>) value;
-            Iterator<String> langCodesIter = map.keySet().iterator();
-            while (langCodesIter.hasNext()) {
-                String listLangCode = langCodesIter.next();
-                List<DefaultJAXBAttribute> attributes = map.get(listLangCode);
-                for (int i = 0; i < attributes.size(); i++) {
-                    DefaultJAXBAttribute jaxbAttributeElement = attributes.get(i);
-                    AttributeInterface attribute = this.addAttribute(listLangCode);
-                    attribute.valueFrom(jaxbAttributeElement);
-                }
-            }
-        } else if (value instanceof List) {
-            List<DefaultJAXBAttribute> attributes = (List<DefaultJAXBAttribute>) value;
-            for (int i = 0; i < attributes.size(); i++) {
-                DefaultJAXBAttribute jaxbAttributeElement = attributes.get(i);
-                AttributeInterface attribute = this.addAttribute(this.getDefaultLangCode());
-                attribute.valueFrom(jaxbAttributeElement);
-            }
+        JAXBListAttribute jaxbListAttribute = (JAXBListAttribute) jaxbAttribute;
+        if (null == jaxbListAttribute) return;
+        List<DefaultJAXBAttribute> attributes = jaxbListAttribute.getAttributes();
+        if (null == attributes) return;
+        for (int i = 0; i < attributes.size(); i++) {
+            DefaultJAXBAttribute jaxbAttributeElement = attributes.get(i);
+            AttributeInterface attribute = this.addAttribute(this.getDefaultLangCode());
+            attribute.valueFrom(jaxbAttributeElement);
         }
     }
     

@@ -19,7 +19,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttrib
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.jdom.Element;
 import org.springframework.beans.BeansException;
@@ -155,7 +154,7 @@ public class LinkAttribute extends TextAttribute
         return this.getSymbolicLink();
     }
     
-    protected Object getJAXBValue(String langCode) {
+    protected JAXBLinkValue getJAXBValue(String langCode) {
         Object text = super.getJAXBValue(langCode);
         JAXBLinkValue value = new JAXBLinkValue();
         value.setText(text);

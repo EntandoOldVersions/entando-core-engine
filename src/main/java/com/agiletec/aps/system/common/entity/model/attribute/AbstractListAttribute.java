@@ -142,12 +142,11 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         return false;
     }
     
-    public DefaultJAXBAttribute getJAXBAttribute(String langCode) {
+    public JAXBListAttribute getJAXBAttribute(String langCode) {
         if (null == this.getAttributes() || this.getAttributes().size() == 0) {
             return null;
         }
-        //JAXRListAttribute jaxrAttribute = new JAXRListAttribute();
-        DefaultJAXBAttribute jaxrAttribute = new DefaultJAXBAttribute();
+        JAXBListAttribute jaxrAttribute = new JAXBListAttribute();
         jaxrAttribute.setName(this.getName());
         jaxrAttribute.setType(this.getType());
         jaxrAttribute.setAttributes((List<DefaultJAXBAttribute>) this.getJAXBValue(langCode));

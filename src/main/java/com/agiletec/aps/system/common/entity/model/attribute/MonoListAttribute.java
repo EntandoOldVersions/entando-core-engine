@@ -122,22 +122,22 @@ public class MonoListAttribute extends AbstractListAttribute {
     public Object getValue() {
         return this.getAttributes();
     }
-
+    
     protected Object getJAXBValue(String langCode) {
-        List<DefaultJAXBAttribute> jaxrAttributes = new ArrayList<DefaultJAXBAttribute>();
+        List<DefaultJAXBAttribute> jaxbAttributes = new ArrayList<DefaultJAXBAttribute>();
         List<AttributeInterface> attributes = this.getAttributes();
         for (int i = 0; i < attributes.size(); i++) {
             AttributeInterface attribute = attributes.get(i);
-            jaxrAttributes.add(attribute.getJAXBAttribute(langCode));
+            jaxbAttributes.add(attribute.getJAXBAttribute(langCode));
         }
-        return jaxrAttributes;
+        return jaxbAttributes;
     }
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
-        super.valueFrom(jaxbAttribute);
-        Object value = jaxbAttribute.getValue();
-        if (null == value) return;
-        List<DefaultJAXBAttribute> attributes = (List<DefaultJAXBAttribute>) value;
+        JAXBListAttribute jaxbListAttribute = (JAXBListAttribute) jaxbAttribute;
+        if (null == jaxbListAttribute) return;
+        List<DefaultJAXBAttribute> attributes = jaxbListAttribute.getAttributes();
+        if (null == attributes) return;
         for (int i = 0; i < attributes.size(); i++) {
             DefaultJAXBAttribute jaxbAttributeElement = attributes.get(i);
             AttributeInterface attribute = this.addAttribute();

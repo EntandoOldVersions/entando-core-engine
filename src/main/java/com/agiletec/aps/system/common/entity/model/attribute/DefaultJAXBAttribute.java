@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlType;
 /**
  * @author E.Santoboni
  */
-@XmlType(propOrder = {"name", "type", "value", "roles", "attributes"})
+@XmlType(propOrder = {"name", "type", "value", "roles"})
 public class DefaultJAXBAttribute {
     
     @XmlElement(name = "name", required = true)
@@ -56,16 +56,6 @@ public class DefaultJAXBAttribute {
         this._value = value;
     }
     
-    @XmlElement(name = "element", required = false)
-    @XmlElementWrapper(name = "elements")
-    public List<DefaultJAXBAttribute> getAttributes() {
-        return _attributes;
-    }
-    
-    public void setAttributes(List<DefaultJAXBAttribute> attributes) {
-        this._attributes = attributes;
-    }
-    
     @XmlElement(name = "role", required = false)
     @XmlElementWrapper(name = "roles")
     public List<String> getRoles() {
@@ -79,7 +69,6 @@ public class DefaultJAXBAttribute {
     private String _name;
     private String _type;
     private Object _value;
-    private List<DefaultJAXBAttribute> _attributes = null;
     private List<String> _roles;
     
 }

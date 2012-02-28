@@ -28,6 +28,7 @@ import java.util.Iterator;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 
@@ -42,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "entity")
 @XmlType(propOrder = {"id", "descr", "typeCode", "typeDescr", "mainGroup", "categories", "groups", "attributes"})
-@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBHypertextAttribute.class})
+@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBHypertextAttribute.class, JAXBListAttribute.class})
 public class JAXBEntity implements Serializable {
     
     public JAXBEntity() {}

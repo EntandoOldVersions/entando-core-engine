@@ -170,7 +170,11 @@ public class TextAttribute extends AbstractTextAttribute {
         if (null == langCode) {
             langCode = this.getDefaultLangCode();
         }
-        return this.getTextForLang(langCode);
+        String text = this.getTextForLang(langCode);
+        if (null == text || text.trim().length() == 0) {
+            text = this.getTextForLang(this.getDefaultLangCode());
+        }
+        return text;
     }
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {

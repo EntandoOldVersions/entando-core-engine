@@ -168,7 +168,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this;
     }
     
-    protected Object getJAXBValue(String langCode) {
+    protected JAXBResourceValue getJAXBValue(String langCode) {
         Object text = super.getJAXBValue(langCode);
         JAXBResourceValue value = new JAXBResourceValue();
         value.setText(text);
