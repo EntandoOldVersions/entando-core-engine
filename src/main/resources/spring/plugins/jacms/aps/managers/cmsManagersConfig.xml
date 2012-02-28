@@ -160,13 +160,14 @@
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
         <property name="userManager" ref="UserManager" />
+        <property name="categoryManager" ref="CategoryManager" />
         <property name="contentListHelper" ref="jacmsBaseContentListHelper" />
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
         <property name="cmsCacheWrapperManager" ref="jacmsCacheWrapperManager" />
     </bean>
     
-    <bean id="ApiContentTypeInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentTypeInterface" >
+    <bean id="jacmsApiContentTypeInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentTypeInterface" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
     </bean>

@@ -30,6 +30,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
@@ -38,13 +39,15 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 /**
  * @author E.Santoboni
  */
 public class ApiContentWrapper extends AbstractCmsApiInterface {
     
-    public Object getContents(Properties properties) throws Throwable {
+    public List<String> getContents(Properties properties) throws Throwable {
         return this.extractContents(properties);
     }
     
@@ -62,7 +65,7 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
         }
         return contentsId;
     }
-
+    
     protected ApiContentListBean buildSearchBean(Properties properties) throws ApiException, Throwable {
         ApiContentListBean bean = null;
         try {
@@ -118,8 +121,8 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
         }
         return render.toString();
     }
-
-    public Object getContent(Properties properties) throws ApiException, Throwable {
+    
+    public JAXBContent getContent(Properties properties) throws ApiException, Throwable {
         JAXBContent jaxbContent = null;
         String id = properties.getProperty("id");
         try {
@@ -141,7 +144,7 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
         }
         return jaxbContent;
     }
-
+    
     public String getContentToHtml(Properties properties) throws ApiException, Throwable {
         String render = null;
         String id = properties.getProperty("id");
@@ -221,7 +224,47 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
         }
         return modelIdInteger;
     }
-
+    
+    public BaseApiResponse addContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        BaseApiResponse response = new BaseApiResponse();
+        try {
+            String typeCode = jaxbContent.getTypeCode();
+            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
+            if (null == masterContentType) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist");
+            }
+            Content content = (Content) jaxbContent.buildEntity(masterContentType, this.getCategoryManager());
+            if (null != content.getId() && null != this.getContentManager().loadContentVO(content.getId())) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + content.getId() + "' already exists");
+            }
+            //TODO VALIDATE
+            
+            String insertOnLineString = properties.getProperty("insertOnLine");
+            boolean insertOnLine = (null != insertOnLineString) ? Boolean.parseBoolean(insertOnLineString) : false;
+            if (!insertOnLine) {
+                this.getContentManager().saveContent(content);
+            } else {
+                this.getContentManager().insertOnLineContent(content);
+            }
+            response.setResult(IResponseBuilder.SUCCESS, null);
+        } catch (ApiException ae) {
+            response.addErrors(ae.getErrors());
+            response.setResult(IResponseBuilder.FAILURE, null);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "addContent");
+            throw new ApsSystemException("Error adding content", t);
+        }
+        return response;
+    }
+    
+    public BaseApiResponse updateContent(JAXBContent jaxbContent) throws Throwable {
+        return null;
+    }
+    
+    public BaseApiResponse deleteContent(Properties properties) throws Throwable {
+        return null;
+    }
+    
     protected IContentListHelper getContentListHelper() {
         return _contentListHelper;
     }
@@ -235,7 +278,14 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
     }
-
+    
+    protected ICategoryManager getCategoryManager() {
+        return _categoryManager;
+    }
+    public void setCategoryManager(ICategoryManager categoryManager) {
+        this._categoryManager = categoryManager;
+    }
+    
     protected IContentAuthorizationHelper getContentAuthorizationHelper() {
         return _contentAuthorizationHelper;
     }
@@ -287,6 +337,8 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     
     private IContentListHelper _contentListHelper;
     private IUserManager _userManager;
+    private ICategoryManager _categoryManager;
+    
     private IContentAuthorizationHelper _contentAuthorizationHelper;
     private ICmsCacheWrapperManager _cmsCacheWrapperManager;
     private IContentDispenser _contentDispenser;
