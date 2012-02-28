@@ -17,8 +17,6 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -29,23 +27,16 @@ import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
  */
 public class JAXBHypertextAttribute extends DefaultJAXBAttribute {
     
-    @XmlElement(name = "value", required = false)
-    public HashMap getValues() {
-        Object value = super.getValue();
-        if (value instanceof HashMap) {
-            return (HashMap) value;
-        }
-        return null;
+    @XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
+    @XmlElement(name = "htmlValue", required = false)
+    public String getHtmlValue() {
+        return _htmlValue;
     }
     
-    @XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
-    @XmlElement(name = "value", required = false)
-    public String getValue() {
-        Object value = super.getValue();
-        if (value instanceof String) {
-            return (String) value;
-        }
-        return null;
+    public void setHtmlValue(String htmlValue) {
+        this._htmlValue = htmlValue;
     }
+    
+    private String _htmlValue;
     
 }

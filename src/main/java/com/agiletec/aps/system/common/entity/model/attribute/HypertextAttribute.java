@@ -24,6 +24,9 @@ import org.jdom.CDATA;
 import org.jdom.Element;
 
 import com.agiletec.aps.util.HtmlHandler;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a 'Hypertext' Attribute.
@@ -98,6 +101,40 @@ public class HypertextAttribute extends TextAttribute {
     
     protected JAXBHypertextAttribute getJAXBAttributeInstance() {
         return new JAXBHypertextAttribute();
+    }
+    
+    public JAXBHypertextAttribute getJAXBAttribute(String langCode) {
+        if (null == this.getValue()) {
+            return null;
+        }
+        JAXBHypertextAttribute jaxbAttribute = this.getJAXBAttributeInstance();
+        jaxbAttribute.setName(this.getName());
+        jaxbAttribute.setType(this.getType());
+        Object value = this.getJAXBValue(langCode);
+        if (value instanceof Map) {
+            jaxbAttribute.setValue(value);
+        } else {
+            jaxbAttribute.setHtmlValue((String) value);
+        }
+        if (null != this.getRoles() && this.getRoles().length > 0) {
+            List<String> roles = Arrays.asList(this.getRoles());
+            jaxbAttribute.setRoles(roles);
+        }
+        return jaxbAttribute;
+    }
+    
+    public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
+        super.valueFrom(jaxbAttribute);
+        JAXBHypertextAttribute jaxbHypertextAttribute = (JAXBHypertextAttribute) jaxbAttribute;
+        Object mapValue = jaxbHypertextAttribute.getValue();
+        if (null != mapValue && mapValue instanceof Map) {
+            this.getTextMap().putAll((Map) mapValue);
+        } else {
+            String value = jaxbHypertextAttribute.getHtmlValue();
+            if (null != value) {
+                this.getTextMap().put(this.getDefaultLangCode(), value);
+            }
+        }
     }
     
 }

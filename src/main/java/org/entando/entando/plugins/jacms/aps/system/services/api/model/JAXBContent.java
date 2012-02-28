@@ -27,6 +27,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
 import com.agiletec.aps.system.common.entity.model.JAXBEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.JAXBLinkValue;
@@ -37,7 +38,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribu
  */
 @XmlRootElement(name = "content")
 @XmlType(propOrder = {"created", "lastModified", "version", "lastEditor"})
-@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBResourceValue.class, JAXBLinkValue.class, SymbolicLink.class})
+@XmlSeeAlso({ArrayList.class, HashMap.class, JAXBHypertextAttribute.class, JAXBResourceValue.class, JAXBLinkValue.class, SymbolicLink.class})
 public class JAXBContent extends JAXBEntity {
     
     public JAXBContent() {
