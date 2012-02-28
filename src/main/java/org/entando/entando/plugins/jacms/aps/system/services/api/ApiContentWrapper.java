@@ -29,16 +29,27 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+import java.util.ArrayList;
+import java.util.Iterator;
+import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
@@ -237,8 +248,62 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
             if (null != content.getId() && null != this.getContentManager().loadContentVO(content.getId())) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + content.getId() + "' already exists");
             }
-            //TODO VALIDATE
-            
+            response = this.validateAndSaveContent(content, properties);
+        } catch (ApiException ae) {
+            response.addErrors(ae.getErrors());
+            response.setResult(IResponseBuilder.FAILURE, null);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "addContent");
+            throw new ApsSystemException("Error adding content", t);
+        }
+        return response;
+    }
+    
+    public BaseApiResponse updateContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        BaseApiResponse response = new BaseApiResponse();
+        try {
+            String typeCode = jaxbContent.getTypeCode();
+            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
+            if (null == masterContentType) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist");
+            }
+            Content content = (Content) jaxbContent.buildEntity(masterContentType, this.getCategoryManager());
+            Content masterContent = this.getContentManager().loadContent(content.getId(), false);
+            if (null == masterContent) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + content.getId() + "' does not exist");
+            } else if (!masterContent.getMainGroup().equals(content.getMainGroup())) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        "Invalid main group " + content.getMainGroup() + " not equals then master " + masterContent.getMainGroup());
+            }
+            response = this.validateAndSaveContent(content, properties);
+        } catch (ApiException ae) {
+            response.addErrors(ae.getErrors());
+            response.setResult(IResponseBuilder.FAILURE, null);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "addContent");
+            throw new ApsSystemException("Error adding content", t);
+        }
+        return response;
+    }
+    
+    private BaseApiResponse validateAndSaveContent(Content content, Properties properties) throws ApiException, Throwable {
+        BaseApiResponse response = new BaseApiResponse();
+        try {
+            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
+            if (null == user) {
+                user = this.getUserManager().getGuestUser();
+            }
+            if (!this.getContentAuthorizationHelper().isAuth(user, content)) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        "Content groups makes the new content not allowed for user " + user.getUsername());
+            }
+            //checkRequiredAttribute
+            List<ApiError> errors = this.validate(content);
+            if (errors.size() > 0) {
+                response.addErrors(errors);
+                response.setResult(IResponseBuilder.FAILURE, null);
+                return response;
+            }
             String insertOnLineString = properties.getProperty("insertOnLine");
             boolean insertOnLine = (null != insertOnLineString) ? Boolean.parseBoolean(insertOnLineString) : false;
             if (!insertOnLine) {
@@ -257,8 +322,43 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
         return response;
     }
     
-    public BaseApiResponse updateContent(JAXBContent jaxbContent) throws Throwable {
-        return null;
+    private List<ApiError> validate(Content content) throws ApsSystemException {
+        List<ApiError> errors = new ArrayList<ApiError>();
+        try {
+            if (null == content.getMainGroup() || null == this.getGroupManager().getGroup(content.getMainGroup())) {
+                errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid main group - " + content.getMainGroup()));
+            }
+            if (null != content.getGroups()) {
+                Iterator<String> groupsIter = content.getGroups().iterator();
+                while (groupsIter.hasNext()) {
+                    String groupName = groupsIter.next();
+                    if (null == this.getGroupManager().getGroup(groupName)) {
+                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid extra group - " + groupName));
+                    }
+                }
+            }
+            EntityAttributeIterator iterator = new EntityAttributeIterator(content);
+            while (iterator.hasNext()) {
+                AttributeInterface attribute = (AttributeInterface) iterator.next();
+                if (attribute instanceof AbstractResourceAttribute) {
+                    //nothing to do
+                } else if (attribute instanceof LinkAttribute) {
+                    SymbolicLink symbLink = ((LinkAttribute) attribute).getSymbolicLink();
+                    if (null != symbLink) {
+                        if (null != symbLink.getContentDest() && null == this.getContentManager().loadContentVO(symbLink.getContentDest())) {
+                            errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid link to content " + symbLink.getContentDest()));
+                        }
+                        if (null != symbLink.getPageDest() && null == this.getPageManager().getPage(symbLink.getPageDest())) {
+                            errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid link to page " + symbLink.getPageDest()));
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "addContent");
+            throw new ApsSystemException("Error adding content", t);
+        }
+        return errors;
     }
     
     public BaseApiResponse deleteContent(Properties properties) throws Throwable {
@@ -285,6 +385,34 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     public void setCategoryManager(ICategoryManager categoryManager) {
         this._categoryManager = categoryManager;
     }
+    
+    
+    
+    
+    
+    protected IGroupManager getGroupManager() {
+        return _groupManager;
+    }
+    public void setGroupManager(IGroupManager groupManager) {
+        this._groupManager = groupManager;
+    }
+    
+    protected IPageManager getPageManager() {
+        return _pageManager;
+    }
+    public void setPageManager(IPageManager pageManager) {
+        this._pageManager = pageManager;
+    }
+    
+    protected IResourceManager getResourceManager() {
+        return _resourceManager;
+    }
+    public void setResourceManager(IResourceManager resourceManager) {
+        this._resourceManager = resourceManager;
+    }
+    
+    
+    
     
     protected IContentAuthorizationHelper getContentAuthorizationHelper() {
         return _contentAuthorizationHelper;
@@ -338,6 +466,10 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     private IContentListHelper _contentListHelper;
     private IUserManager _userManager;
     private ICategoryManager _categoryManager;
+    
+    private IGroupManager _groupManager;
+    private IPageManager _pageManager;
+    private IResourceManager _resourceManager;
     
     private IContentAuthorizationHelper _contentAuthorizationHelper;
     private ICmsCacheWrapperManager _cmsCacheWrapperManager;
