@@ -98,7 +98,7 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getConsumer", "Error extracting consumer by key '" + consumerKey + "'");
-            throw new OAuthProblemException("token_expired");
+            throw new RuntimeException("Error extracting consumer by key '" + consumerKey + "'");
         }
         if (consumer == null) {
             OAuthProblemException problem = new OAuthProblemException("Invalid Consumer - key '" + consumerKey + "'");
@@ -120,9 +120,13 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
                     this.getAuthorizedTokensCache().put(consumerToken, accessor);
                 }
             }
+        } catch (OAuthProblemException t) {
+            throw t;
+        } catch (IOException io) {
+            throw io;
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getAuthorizedAccessor", "Error extracting access token");
-            throw new OAuthProblemException("token_expired");
+            throw new RuntimeException("Error extracting access token");
         }
         if (accessor == null) {
             throw new OAuthProblemException("token_expired");
