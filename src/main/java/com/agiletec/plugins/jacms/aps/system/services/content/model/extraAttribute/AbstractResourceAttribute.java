@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +33,9 @@ import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribut
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
+import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
 /**
@@ -198,13 +201,49 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         super.valueFrom(jaxbAttribute);
-        //TODO
+        JAXBResourceValue value = (JAXBResourceValue) jaxbAttribute.getValue();
+        if (null == value) return;
+        Object resourceId = value.getResourceId();
+        if (null == resourceId) return;
+        try {
+            IResourceManager resourceManager = this.getResourceManager();
+            if (resourceId instanceof Map) {
+                Map map = (Map) resourceId;
+                Iterator<Object> keyIter = map.keySet().iterator();
+                while (keyIter.hasNext()) {
+                    String langCode = keyIter.next().toString();
+                    String id = map.get(langCode).toString();
+                    ResourceInterface resource = resourceManager.loadResource(id);
+                    if (null != resource) {
+                        this.setResource(resource, langCode);
+                    }
+                }
+            } else if (resourceId instanceof String) {
+                ResourceInterface resource = resourceManager.loadResource(resourceId.toString());
+                if (null != resource) {
+                    this.setResource(resource, this.getDefaultLangCode());
+                }
+            }
+            Object text = value.getText();
+            if (null == text) return;
+            if (text instanceof Map) {
+                this.getTextMap().putAll((Map) text);
+            } else if (text instanceof String) {
+                this.getTextMap().put(this.getDefaultLangCode(), (String) text);
+            }
+        } catch (Exception e) {
+            ApsSystemUtils.logThrowable(e, this, "valueFrom", "Error extracting resource from jaxbAttribute");
+        }
     }
     
     protected abstract String getDefaultPath();
     
     public Map<String, ResourceInterface> getResources() {
         return this._resources;
+    }
+    
+    protected IResourceManager getResourceManager() {
+        return (IResourceManager) this.getBeanFactory().getBean(JacmsSystemConstants.RESOURCE_MANAGER);
     }
     
     protected BeanFactory getBeanFactory() {
