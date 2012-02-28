@@ -165,16 +165,12 @@ public class LinkAttribute extends TextAttribute
     }
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
-        super.valueFrom(jaxbAttribute);
         JAXBLinkValue value = (JAXBLinkValue) jaxbAttribute.getValue();
         if (null == value) return;
-        Object textValue = value.getText();
-        if (textValue instanceof Map) {
-            this.getTextMap().putAll((Map) textValue);
-        } else if (textValue instanceof String) {
-            this.getTextMap().put(this.getDefaultLangCode(), (String) textValue);
-        }
         this.setSymbolicLink(value.getSymbolikLink());
+        Object textValue = value.getText();
+        if (null == textValue) return;
+        this.getTextMap().put(this.getDefaultLangCode(), textValue.toString());
     }
     
     protected ILinkResolverManager getLinkResolverManager() {

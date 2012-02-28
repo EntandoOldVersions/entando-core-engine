@@ -172,65 +172,33 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         Object text = super.getJAXBValue(langCode);
         JAXBResourceValue value = new JAXBResourceValue();
         value.setText(text);
-        if (null != langCode) {
-            this.setRenderingLang(langCode);
-            String path = this.getDefaultPath();
-            value.setPath(path);
-            ResourceInterface resource = this.getResource(langCode);
-            if (null != resource) {
-                value.setResourceId(resource.getId());
-            }
-        } else {
-            Map<String, ResourceInterface> resources = this.getResources();
-            Iterator<String> langIter = resources.keySet().iterator();
-            Map<String, String> resourceIds = new HashMap<String, String>();
-            Map<String, String> paths = new HashMap<String, String>();
-            while (langIter.hasNext()) {
-                String resourceLangCode = langIter.next();
-                this.setRenderingLang(resourceLangCode);
-                String path = this.getDefaultPath();
-                paths.put(resourceLangCode, path);
-                ResourceInterface resource = this.getResource(langCode);
-                resourceIds.put(resourceLangCode, resource.getId());
-            }
-            if (!resourceIds.isEmpty()) value.setResourceId(resourceIds);
-            if (!paths.isEmpty()) value.setPath(paths);
+        if (null == langCode) {
+            langCode = this.getDefaultLangCode();
+        }
+        this.setRenderingLang(langCode);
+        String path = this.getDefaultPath();
+        value.setPath(path);
+        ResourceInterface resource = this.getResource();
+        if (null != resource) {
+            value.setResourceId(resource.getId());
         }
         return value;
     }
     
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
-        super.valueFrom(jaxbAttribute);
         JAXBResourceValue value = (JAXBResourceValue) jaxbAttribute.getValue();
         if (null == value) return;
         Object resourceId = value.getResourceId();
         if (null == resourceId) return;
         try {
             IResourceManager resourceManager = this.getResourceManager();
-            if (resourceId instanceof Map) {
-                Map map = (Map) resourceId;
-                Iterator<Object> keyIter = map.keySet().iterator();
-                while (keyIter.hasNext()) {
-                    String langCode = keyIter.next().toString();
-                    String id = map.get(langCode).toString();
-                    ResourceInterface resource = resourceManager.loadResource(id);
-                    if (null != resource) {
-                        this.setResource(resource, langCode);
-                    }
-                }
-            } else if (resourceId instanceof String) {
-                ResourceInterface resource = resourceManager.loadResource(resourceId.toString());
-                if (null != resource) {
-                    this.setResource(resource, this.getDefaultLangCode());
-                }
+            ResourceInterface resource = resourceManager.loadResource(resourceId.toString());
+            if (null != resource) {
+                this.setResource(resource, this.getDefaultLangCode());
             }
             Object text = value.getText();
             if (null == text) return;
-            if (text instanceof Map) {
-                this.getTextMap().putAll((Map) text);
-            } else if (text instanceof String) {
-                this.getTextMap().put(this.getDefaultLangCode(), (String) text);
-            }
+            this.getTextMap().put(this.getDefaultLangCode(), text.toString());
         } catch (Exception e) {
             ApsSystemUtils.logThrowable(e, this, "valueFrom", "Error extracting resource from jaxbAttribute");
         }

@@ -168,7 +168,7 @@ public class TextAttribute extends AbstractTextAttribute {
     
     protected Object getJAXBValue(String langCode) {
         if (null == langCode) {
-            return this.getValue();
+            langCode = this.getDefaultLangCode();
         }
         return this.getTextForLang(langCode);
     }
@@ -177,11 +177,7 @@ public class TextAttribute extends AbstractTextAttribute {
         super.valueFrom(jaxbAttribute);
         Object value = jaxbAttribute.getValue();
         if (null == value) return;
-        if (value instanceof Map) {
-            this.getTextMap().putAll((Map) value);
-        } else if (value instanceof String) {
-            this.getTextMap().put(this.getDefaultLangCode(), (String) value);
-        }
+        this.getTextMap().put(this.getDefaultLangCode(), value.toString());
     }
     
     private Map<String, String> _textMap;
