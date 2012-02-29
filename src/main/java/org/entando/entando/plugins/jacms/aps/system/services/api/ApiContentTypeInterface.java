@@ -42,10 +42,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
  */
 public class ApiContentTypeInterface extends AbstractCmsApiInterface {
     
-    public List<JAXBContentType> getContentTypes(Properties properties) throws Throwable {
-        return null;
-    }
-    
     public JAXBContentType getContentType(Properties properties) throws ApiException, Throwable {
         JAXBContentType jaxbContentType = null;
         try {
