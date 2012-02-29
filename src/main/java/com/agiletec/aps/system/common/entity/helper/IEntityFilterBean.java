@@ -15,14 +15,26 @@
 * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.helper;
-
-import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
+package com.agiletec.aps.system.common.entity.helper;
 
 /**
+ * 
  * @author E.Santoboni
- * @deprecated use com.agiletec.aps.system.common.entity.helper.IEntityFilterBean
  */
-public interface IContentListFilterBean extends IEntityFilterBean {
+public interface IEntityFilterBean {
+    
+    public String getKey();
+    
+    public boolean isAttributeFilter();
+    
+    public boolean getLikeOption();
+    
+    public String getValue();
+    
+    public String getStart();
+    
+    public String getEnd();
+    
+    public String getOrder();
     
 }
