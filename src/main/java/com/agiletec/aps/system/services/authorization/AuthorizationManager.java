@@ -58,8 +58,9 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         String mainGroupName = entity.getMainGroup();
         //Group group = this.getGroupManager().getGroup(mainGroupName);
-        boolean check = this.checkAuth(user, mainGroupName, AuthorityType.GROUP);
-        if (check || mainGroupName.equals(Group.FREE_GROUP_NAME)) {
+        if (mainGroupName.equals(Group.FREE_GROUP_NAME) 
+        		|| this.checkAuth(user, mainGroupName, AuthorityType.GROUP) 
+        		|| this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)) {
             return true;
         }
         Set<String> groups = entity.getGroups();
@@ -67,8 +68,8 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         while (iter.hasNext()) {
             String groupName = iter.next();
             //group = this.getGroupManager().getGroup(groupName);
-            check = this.checkAuth(user, groupName, AuthorityType.GROUP);
-            if (check || groupName.equals(Group.FREE_GROUP_NAME)) {
+            if (groupName.equals(Group.FREE_GROUP_NAME) 
+            		|| this.checkAuth(user, groupName, AuthorityType.GROUP)) {
                 return true;
             }
         }
