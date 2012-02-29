@@ -17,11 +17,16 @@
 */
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.ApiError;
+import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
@@ -38,25 +43,22 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
-import java.util.ArrayList;
-import java.util.Iterator;
-import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
-import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 /**
  * @author E.Santoboni
  */
-public class ApiContentWrapper extends AbstractCmsApiInterface {
+public class ApiContentInterface extends AbstractCmsApiInterface {
     
     public List<String> getContents(Properties properties) throws Throwable {
         return this.extractContents(properties);
@@ -297,7 +299,7 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
                         "Content groups makes the new content not allowed for user " + user.getUsername());
             }
-            //checkRequiredAttribute
+            //todo checkRequiredAttribute
             List<ApiError> errors = this.validate(content);
             if (errors.size() > 0) {
                 response.addErrors(errors);
@@ -355,15 +357,65 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addContent");
-            throw new ApsSystemException("Error adding content", t);
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new ApsSystemException("Error validating content", t);
         }
         return errors;
     }
     
     public BaseApiResponse deleteContent(Properties properties) throws Throwable {
-        return null;
+        BaseApiResponse response = new BaseApiResponse();
+        try {
+            String id = properties.getProperty("id");
+            Content masterContent = this.getContentManager().loadContent(id, false);
+            if (null == masterContent) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + id + "' does not exist");
+            }
+            UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
+            if (null == user) {
+                user = this.getUserManager().getGuestUser();
+            }
+            if (!this.getContentAuthorizationHelper().isAuth(user, masterContent)) {
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        "Content groups makes the new content not allowed for user " + user.getUsername());
+            }
+            List<String> references = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(id);
+            if (references != null && references.size() > 0) {
+                boolean found = false;
+                for (int i = 0; i < references.size(); i++) {
+                    String reference = references.get(i);
+                    ContentRecordVO record = this.getContentManager().loadContentVO(reference);
+                    if (null != record) {
+                        found = true;
+                        response.addError(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
+                                "Content " + id + " referenced to content " + record.getId() + " - '" + record.getDescr() + "'"));
+                    }
+                }
+                if (found) {
+                    response.setResult(IResponseBuilder.FAILURE, null);
+                    return response;
+                }
+            }
+            if (masterContent.isOnLine()) {
+                this.getContentManager().removeOnLineContent(masterContent);
+            }
+            String removeWorkVersionString = properties.getProperty("removeWorkVersion");
+            boolean removeWorkVersion = (null != removeWorkVersionString) ? Boolean.parseBoolean(removeWorkVersionString) : false;
+            if (removeWorkVersion) {
+                this.getContentManager().deleteContent(masterContent);
+            }
+            response.setResult(IResponseBuilder.SUCCESS, null);
+        } catch (ApiException ae) {
+            response.addErrors(ae.getErrors());
+            response.setResult(IResponseBuilder.FAILURE, null);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "deleteContent");
+            throw new ApsSystemException("Error deleting content", t);
+        }
+        return response;
     }
+    
+    
     
     protected IContentListHelper getContentListHelper() {
         return _contentListHelper;
@@ -371,7 +423,7 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     public void setContentListHelper(IContentListHelper contentListHelper) {
         this._contentListHelper = contentListHelper;
     }
-
+    
     protected IUserManager getUserManager() {
         return _userManager;
     }
@@ -385,10 +437,6 @@ public class ApiContentWrapper extends AbstractCmsApiInterface {
     public void setCategoryManager(ICategoryManager categoryManager) {
         this._categoryManager = categoryManager;
     }
-    
-    
-    
-    
     
     protected IGroupManager getGroupManager() {
         return _groupManager;

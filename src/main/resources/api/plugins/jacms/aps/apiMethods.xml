@@ -3,7 +3,7 @@
     <method name="getContents" active="true" canSpawnOthers="true">
         <source pluginCode="jacms">plugins</source>
         <description>Returns a list of public contents, composed using the specified filters.</description>
-        <springBean name="jacmsApiContentWrapper" method="getContents" />
+        <springBean name="jacmsApiContentInterface" method="getContents" />
         <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
         <parameters>
             <parameter key="contentType" required="true">
@@ -30,7 +30,7 @@
     <method name="getContent" active="true" canSpawnOthers="true">
         <source pluginCode="jacms">plugins</source>
         <description>Returns a public content.</description>
-        <springBean name="jacmsApiContentWrapper" method="getContent" />
+        <springBean name="jacmsApiContentInterface" method="getContent" />
         <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
         <parameters>
             <parameter key="id" required="true">
@@ -50,7 +50,7 @@
         <description>The rappresentation of the content type</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true">
-            <description>Return an entity type</description>
+            <description>Return a content type</description>
             <springBean name="jacmsApiContentTypeInterface" method="getContentType" />
             <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentTypeResponse</responseClass>
             <parameters>
@@ -60,17 +60,17 @@
             </parameters>
         </method>
         <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
-            <description>Add an entity type</description>
+            <description>Add a content type</description>
             <springBean name="jacmsApiContentTypeInterface" method="addContentType" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType</expectedType>
         </method>
         <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
-            <description>Update an entity type</description>
+            <description>Update a content type</description>
             <springBean name="jacmsApiContentTypeInterface" method="updateContentType" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType</expectedType>
         </method>
         <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
-            <description>Delete an entity type</description>
+            <description>Delete a content type</description>
             <springBean name="jacmsApiContentTypeInterface" method="deleteContentType" />
             <parameters>
                 <parameter key="contentTypeCode" required="true">
@@ -85,7 +85,7 @@
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true" canSpawnOthers="true">
             <description>Return a public content</description>
-            <springBean name="jacmsApiContentWrapper" method="getContent" />
+            <springBean name="jacmsApiContentInterface" method="getContent" />
             <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentsResponse</responseClass>
             <parameters>
                 <parameter key="id" required="true">
@@ -102,7 +102,7 @@
         </method>
         <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="validateContents">
             <description>Add a content</description>
-            <springBean name="jacmsApiContentWrapper" method="addContent" />
+            <springBean name="jacmsApiContentInterface" method="addContent" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent</expectedType>
             <parameters>
                 <parameter key="insertOnLine" required="false">
@@ -112,7 +112,7 @@
         </method>
         <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="validateContents">
             <description>Update a content</description>
-            <springBean name="jacmsApiContentWrapper" method="updateContent" />
+            <springBean name="jacmsApiContentInterface" method="updateContent" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent</expectedType>
             <parameters>
                 <parameter key="insertOnLine" required="false">
@@ -121,9 +121,12 @@
             </parameters>
         </method>
         <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="validateContents">
-            <description>Delete a content.</description>
-            <springBean name="jacmsApiContentWrapper" method="deleteContent" />
+            <description>Delete a content</description>
+            <springBean name="jacmsApiContentInterface" method="deleteContent" />
             <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the content to delete (Example: "CNG34", or "NEW45")</description>
+                </parameter>
                 <parameter key="removeWorkVersion" required="false">
                     <description>If true, remove also the work version. Default value false.</description>
                 </parameter>

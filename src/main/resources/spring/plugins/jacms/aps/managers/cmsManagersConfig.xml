@@ -155,8 +155,8 @@
     
     <!-- API -->
     
-    <bean id="jacmsApiContentWrapper" 
-			class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentWrapper" >
+    <bean id="jacmsApiContentInterface" 
+			class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentInterface" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
         <property name="userManager" ref="UserManager" />
