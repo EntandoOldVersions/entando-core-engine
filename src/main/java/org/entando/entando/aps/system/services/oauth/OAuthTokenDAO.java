@@ -17,15 +17,16 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
+import com.agiletec.aps.system.common.AbstractDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
-
-import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
  * @author E.Santoboni
@@ -105,13 +106,38 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
         }
     }
     
+    public Map<String, Integer> getOccurrencesByConsumer() {
+        Connection conn = null;
+        Map<String, Integer> occurrences = new HashMap<String, Integer>();
+        PreparedStatement stat = null;
+        ResultSet res = null;
+        try {
+            conn = this.getConnection();
+            stat = conn.prepareStatement(SELECT_OCCURRENCES);
+            res = stat.executeQuery();
+            while (res.next()) {
+                String consumerkey = res.getString(1);
+                int count = res.getInt(2);
+                occurrences.put(consumerkey, count);
+            }
+        } catch (Throwable t) {
+            processDaoException(t, "Error while loading occurrences", "getOccurrencesByConsumer");
+        } finally {
+            closeDaoResources(res, stat, conn);
+        }
+        return occurrences;
+    }
+    
     private String INSERT_TOKEN = 
-            "INSERT INTO api_oauth_tokens (accesstoken, tokensecret, consumerkey, username, lastaccess) "
-            + "VALUES (? , ? , ? , ? , ? )";
+            "INSERT INTO api_oauth_tokens (accesstoken, tokensecret, consumerkey, username, lastaccess) " + 
+            "VALUES (? , ? , ? , ? , ? )";
     
     private String SELECT_TOKEN = 
-            "SELECT tokensecret, username "
-            + "FROM api_oauth_tokens WHERE accesstoken = ? AND consumerkey = ?";
+            "SELECT tokensecret, username " + 
+            "FROM api_oauth_tokens WHERE accesstoken = ? AND consumerkey = ?";
+    
+    private String SELECT_OCCURRENCES = 
+            "SELECT consumerkey, count(consumerkey) FROM api_oauth_tokens GROUP BY consumerkey";
     
     private String DELETE_TOKEN = "DELETE FROM api_oauth_tokens WHERE username = ? AND accesstoken = ? AND consumerkey = ?";
     

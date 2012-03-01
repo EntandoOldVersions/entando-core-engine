@@ -17,6 +17,7 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
+import java.util.Map;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 
@@ -30,5 +31,7 @@ public interface IOAuthTokenDAO {
     public OAuthAccessor getAccessor(String accessToken, OAuthConsumer consumer);
     
     public void deleteAccessToken(String username, String accessToken, String consumerKey);
+    
+    public Map<String, Integer> getOccurrencesByConsumer();
     
 }

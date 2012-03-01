@@ -22,6 +22,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.IOException;
 
 import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,18 +33,22 @@ import net.oauth.OAuthException;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthProblemException;
 import net.oauth.OAuthValidator;
-import org.entando.entando.aps.system.services.oauth.model.Consumer;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 
 /**
  * @author E.Santoboni
  */
 public interface IOAuthConsumerManager {
     
+    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException;
+    
+    public void addConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    
+    public void updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException;
+    
     public void deleteConsumer(String consumerKey) throws ApsSystemException;
     
-    public Consumer getConsumerRecord(String consumerKey) throws ApsSystemException;
-    
-    public void updateConsumer(Consumer consumer) throws ApsSystemException;
+    public Map<String, Integer> getTokenOccurrencesByConsumer() throws ApsSystemException;
     
     public List<String> getConsumerKeys(FieldSearchFilter[] filters) throws ApsSystemException;
     

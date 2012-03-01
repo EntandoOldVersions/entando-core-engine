@@ -18,13 +18,14 @@
 package org.entando.entando.apsadmin.api;
 
 import java.util.List;
+import java.util.Map;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.apsadmin.system.BaseAction;
 
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
-import org.entando.entando.aps.system.services.oauth.model.Consumer;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 
 /**
  * @author E.Santoboni
@@ -70,8 +71,22 @@ public class ConsumerFinderAction extends BaseAction {
         return newFilters;
     }
     
-    public Consumer getConsumer(String key) throws Throwable {
-        return this.getOauthConsumerManager().getConsumerRecord(key);
+    public Map<String, Integer> getTokenOccurrencesByConsumer() throws Throwable {
+        try {
+            return this.getOauthConsumerManager().getTokenOccurrencesByConsumer();
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer");
+            throw t;
+        }
+    }
+    
+    public ConsumerRecordVO getConsumer(String key) throws Throwable {
+        try {
+            return this.getOauthConsumerManager().getConsumerRecord(key);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getConsumer");
+            throw t;
+        }
     }
     
     public String getInsertedDescription() {

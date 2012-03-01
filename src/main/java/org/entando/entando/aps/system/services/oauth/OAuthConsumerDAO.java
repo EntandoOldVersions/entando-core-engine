@@ -27,8 +27,9 @@ import java.util.List;
 import net.oauth.OAuthConsumer;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import java.sql.SQLException;
 import java.sql.Types;
-import org.entando.entando.aps.system.services.oauth.model.Consumer;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 
 /**
  * @author E.Santoboni
@@ -39,8 +40,8 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
         return super.searchId(filters);
     }
     
-    public Consumer getConsumerRecord(String consumerKey) {
-        return (Consumer) this.getConsumer(consumerKey, true);
+    public ConsumerRecordVO getConsumerRecord(String consumerKey) {
+        return (ConsumerRecordVO) this.getConsumer(consumerKey, true);
     }
     
     public OAuthConsumer getConsumer(String consumerKey) {
@@ -68,7 +69,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
                 String callbackurl = res.getString(3);
                 Date expirationdate = res.getDate(4);
                 if (needRecord) {
-                    Consumer consumerRecord = new Consumer();
+                    ConsumerRecordVO consumerRecord = new ConsumerRecordVO();
                     consumerRecord.setCallbackUrl(callbackurl);
                     consumerRecord.setDescription(description);
                     consumerRecord.setExpirationDate(expirationdate);
@@ -93,6 +94,58 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
         return consumer;
     }
     
+    public void addConsumer(ConsumerRecordVO consumer) {
+        Connection conn = null;
+        PreparedStatement stat = null;
+        int index = 1;
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            stat = conn.prepareStatement(UPDATE_CONSUMER);
+            stat.setString(index++, consumer.getSecret());
+            index = this.fillStatement(consumer, index, stat);
+            stat.executeUpdate();
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            processDaoException(t, "Error while updating a consumer", "updateConsumer");
+        } finally {
+            closeDaoResources(null, stat, conn);
+        }
+    }
+    
+    public void updateConsumer(ConsumerRecordVO consumer) {
+        Connection conn = null;
+        PreparedStatement stat = null;
+        int index = 1;
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            stat = conn.prepareStatement(UPDATE_CONSUMER);
+            index = this.fillStatement(consumer, index, stat);
+            stat.setString(index++, consumer.getKey());
+            stat.executeUpdate();
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            processDaoException(t, "Error while updating a consumer", "updateConsumer");
+        } finally {
+            closeDaoResources(null, stat, conn);
+        }
+    }
+    
+    private int fillStatement(ConsumerRecordVO consumer, int index, PreparedStatement stat) throws SQLException {
+        stat.setString(index++, consumer.getSecret());
+        stat.setString(index++, consumer.getDescription());
+        stat.setString(index++, consumer.getCallbackUrl());
+        if (null != consumer.getExpirationDate()) {
+            stat.setDate(index++, new java.sql.Date(consumer.getExpirationDate().getTime()));
+        } else {
+            stat.setNull(index++, Types.DATE);
+        }
+        return index;
+    }
+    
     public void deleteConsumer(String consumerKey) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -109,6 +162,7 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             closeDaoResources(null, stat, conn);
         }
     }
+    
     public void delete(String key, String query, Connection conn) {
         PreparedStatement stat = null;
         try {
@@ -120,36 +174,6 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             processDaoException(t, "Error while deleting records", "delete");
         } finally {
             closeDaoResources(null, stat);
-        }
-    }
-    
-    public void updateConsumer(Consumer consumer) {
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            conn = this.getConnection();
-            conn.setAutoCommit(false);
-            /*
-            UPDATE api_oauth_consumers SET consumersecret = ? , "
-            + "description = ? , callbackurl = ? , expirationdate = ? WHERE consumerkey = ? 
-             */
-            stat = conn.prepareStatement(UPDATE_CONSUMER);
-            stat.setString(1, consumer.getSecret());
-            stat.setString(2, consumer.getDescription());
-            stat.setString(3, consumer.getCallbackUrl());
-            if (null != consumer.getExpirationDate()) {
-                stat.setDate(4, new java.sql.Date(consumer.getExpirationDate().getTime()));
-            } else {
-                stat.setNull(4, Types.DATE);
-            }
-            stat.setString(5, consumer.getKey());
-            stat.executeUpdate();
-            conn.commit();
-        } catch (Throwable t) {
-            this.executeRollback(conn);
-            processDaoException(t, "Error while updating a consumer", "updateConsumer");
-        } finally {
-            closeDaoResources(null, stat, conn);
         }
     }
     
@@ -172,6 +196,10 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
     private String SELECT_CONSUMER =
             "SELECT consumersecret, description, callbackurl, expirationdate "
             + "FROM api_oauth_consumers WHERE consumerkey = ? ";
+    
+    private String ADD_CONSUMER = 
+            "INSERT INTO api_oauth_consumers (consumerkey, "
+            + "consumersecret, description, callbackurl, expirationdate) VALUES (?, ?, ?, ?, ?) ";
     
     private String UPDATE_CONSUMER = 
             "UPDATE api_oauth_consumers SET consumersecret = ? , "

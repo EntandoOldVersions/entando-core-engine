@@ -44,7 +44,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.oauth.model.Consumer;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 
 /**
  * Manager of consumers, access token (stored in database and in local cache) 
@@ -214,8 +214,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         }
     }
     
-    public Consumer getConsumerRecord(String consumerKey) throws ApsSystemException {
-        Consumer consumer = null;
+    public ConsumerRecordVO getConsumerRecord(String consumerKey) throws ApsSystemException {
+        ConsumerRecordVO consumer = null;
         try {
             consumer = this.getConsumerDAO().getConsumerRecord(consumerKey);
         } catch (Throwable t) {
@@ -225,21 +225,30 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         return consumer;
     }
     
+    public void addConsumer(ConsumerRecordVO consumer) throws ApsSystemException {
+        try {
+            this.getConsumerDAO().addConsumer(consumer);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "addConsumer", "Error adding consumer");
+            throw new ApsSystemException("Error adding consumer", t);
+        }
+    }
+    
+    public void updateConsumer(ConsumerRecordVO consumer) throws ApsSystemException {
+        try {
+            this.getConsumerDAO().updateConsumer(consumer);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "updateConsumer", "Error updating consumer");
+            throw new ApsSystemException("Error updating consumer", t);
+        }
+    }
+    
     public void deleteConsumer(String consumerKey) throws ApsSystemException {
         try {
             this.getConsumerDAO().deleteConsumer(consumerKey);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getConsumerRecord", "Error deleting consumer record by key " + consumerKey);
             throw new ApsSystemException("Error deleting consumer record by key " + consumerKey, t);
-        }
-    }
-    
-    public void updateConsumer(Consumer consumer) throws ApsSystemException {
-        try {
-            this.getConsumerDAO().updateConsumer(consumer);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateConsumer", "Error updating consumer");
-            throw new ApsSystemException("Error updating consumer", t);
         }
     }
     
@@ -252,6 +261,17 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
             throw new ApsSystemException("Error extracting consumer keys", t);
         }
         return consumerKeys;
+    }
+    
+    public Map<String, Integer> getTokenOccurrencesByConsumer() throws ApsSystemException {
+        Map<String, Integer> occurrences = null;
+        try {
+            occurrences = this.getTokenDAO().getOccurrencesByConsumer();
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer", "Error extracting token occurrences");
+            throw new ApsSystemException("Error extracting token occurrences", t);
+        }
+        return occurrences;
     }
     
     protected Map<String, OAuthConsumer> getConsumers() {

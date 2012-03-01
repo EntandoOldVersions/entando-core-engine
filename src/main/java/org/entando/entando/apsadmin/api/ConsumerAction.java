@@ -17,18 +17,36 @@
 */
 package org.entando.entando.apsadmin.api;
 
+import java.util.Date;
+
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 
-import java.util.Date;
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
-import org.entando.entando.aps.system.services.oauth.model.Consumer;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 
 /**
  * @author E.Santoboni
  */
 public class ConsumerAction extends BaseAction {
+    
+    public void validate() {
+        super.validate();
+        try {
+            ConsumerRecordVO consumer = this.getOauthConsumerManager().getConsumerRecord(this.getConsumerKey());
+            if (this.getStrutsAction() == ApsAdminSystemConstants.ADD && null != consumer) {
+                String[] args = {this.getConsumerKey()};
+                this.addFieldError("consumerKey", this.getText("error.consumer.duplicated", args));
+            } else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT && null == consumer) {
+                this.addActionError(this.getText("error.consumer.notExist"));
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating consumer");
+            this.addActionError(this.getText("error.consumer.systemError"));
+        }
+    }
     
     public String newConsumer() {
         this.setStrutsAction(ApsAdminSystemConstants.ADD);
@@ -37,7 +55,8 @@ public class ConsumerAction extends BaseAction {
     
     public String edit() {
         try {
-            Consumer consumer = this.getOauthConsumerManager().getConsumerRecord(this.getConsumerKey());
+            this.setStrutsAction(ApsAdminSystemConstants.EDIT);
+            ConsumerRecordVO consumer = this.getOauthConsumerManager().getConsumerRecord(this.getConsumerKey());
             if (null == consumer) {
                 String[] args = {this.getConsumerKey()};
                 this.addActionError(this.getText("error.consumer.notExist", args));
@@ -55,21 +74,67 @@ public class ConsumerAction extends BaseAction {
     }
     
     public String save() {
+        ConsumerRecordVO consumer = null;
+        try {
+            if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+                consumer = new ConsumerRecordVO();
+                consumer.setKey(this.getConsumerKey());
+            } else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
+                consumer = this.getOauthConsumerManager().getConsumerRecord(this.getConsumerKey());
+            }
+            consumer.setCallbackUrl(this.getCallbackUrl());
+            consumer.setDescription(this.getDescription());
+            consumer.setExpirationDate(this.getExpirationDate());
+            consumer.setSecret(this.getSecret());
+            if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+                this.getOauthConsumerManager().addConsumer(consumer);
+            } else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
+                this.getOauthConsumerManager().updateConsumer(consumer);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "save");
+            return FAILURE;
+        }
         return SUCCESS;
     }
     
     public String trash() {
+        try {
+            String check = this.checkForDelete();
+            if (null != check) return check;
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "trash");
+            return FAILURE;
+        }
         return SUCCESS;
     }
     
     public String delete() {
+        try {
+            String check = this.checkForDelete();
+            if (null != check) return check;
+            this.getOauthConsumerManager().deleteConsumer(this.getConsumerKey());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "delete");
+            return FAILURE;
+        }
         return SUCCESS;
     }
-    /*
-    public Consumer getConsumer(String key) throws Throwable {
+    
+    protected String checkForDelete() throws ApsSystemException {
+        ConsumerRecordVO consumer = this.getOauthConsumerManager().getConsumerRecord(this.getConsumerKey());
+        if (null == consumer) {
+            String[] args = {this.getConsumerKey()};
+            this.addActionError(this.getText("error.consumer.notExist", args));
+            return "list";
+        }
+        return null;
+    }
+    
+    public ConsumerRecordVO getConsumer(String key) throws Throwable {
         return this.getOauthConsumerManager().getConsumerRecord(key);
     }
-    */
+    
     public String getConsumerKey() {
         return _consumerKey;
     }

@@ -22,7 +22,7 @@ import java.util.Date;
 /**
  * @author E.Santoboni
  */
-public class Consumer {
+public class ConsumerRecordVO {
     
     public String getKey() {
         return _key;
