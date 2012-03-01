@@ -17,104 +17,49 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Date;
 
-import net.oauth.OAuthAccessor;
+import java.util.List;
 import net.oauth.OAuthConsumer;
 
-import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import java.sql.Types;
+import org.entando.entando.aps.system.services.oauth.model.Consumer;
 
 /**
  * @author E.Santoboni
  */
-public class OAuthConsumerDAO extends AbstractDAO implements IOAuthConsumerDAO {
+public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsumerDAO {
     
-    public void addAccessToken(OAuthAccessor accessor) {
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            String consumer_key = (String) accessor.consumer.getProperty("name");
-            String username = (String) accessor.getProperty("user");
-            conn = this.getConnection();
-            conn.setAutoCommit(false);
-            stat = conn.prepareStatement(INSERT_TOKEN);
-            stat.setString(1, accessor.accessToken);
-            stat.setString(2, accessor.tokenSecret);
-            stat.setString(3, consumer_key);
-            stat.setString(4, username);
-            stat.setDate(5, new java.sql.Date(new Date().getTime()));
-            stat.executeUpdate();
-            conn.commit();
-        } catch (Throwable t) {
-            this.executeRollback(conn);
-            processDaoException(t, "Error while adding an access token", "addAccessToken");
-        } finally {
-            closeDaoResources(null, stat, conn);
-        }
+    public List<String> getConsumerKeys(FieldSearchFilter[] filters) {
+        return super.searchId(filters);
     }
     
-    public void deleteAccessToken(String username, String accessToken, String consumerKey) {
-        Connection conn = null;
-        PreparedStatement stat = null;
-        try {
-            conn = this.getConnection();
-            conn.setAutoCommit(false);
-            stat = conn.prepareStatement(DELETE_TOKEN);
-            stat.setString(1, username);
-            stat.setString(2, accessToken);
-            stat.setString(3, consumerKey);
-            stat.executeUpdate();
-            conn.commit();
-        } catch (Throwable t) {
-            this.executeRollback(conn);
-            processDaoException(t, "Error while deleting an access token", "deleteAccessToken");
-        } finally {
-            closeDaoResources(null, stat, conn);
-        }
-    }
-    
-    public OAuthAccessor getAccessor(String accessToken, OAuthConsumer consumer) {
-        Connection conn = null;
-        OAuthAccessor accessor = null;
-        PreparedStatement stat = null;
-        ResultSet res = null;
-        try {
-            String consumer_key = (String) consumer.getProperty("name");
-            conn = this.getConnection();
-            stat = conn.prepareStatement(SELECT_TOKEN);
-            stat.setString(1, accessToken);
-            stat.setString(2, consumer_key);
-            res = stat.executeQuery();
-            if (res.next()) {
-                String tokensecret = res.getString(1);
-                String username = res.getString(2);
-                accessor = new OAuthAccessor(consumer);
-                accessor.accessToken = accessToken;
-                accessor.tokenSecret = tokensecret;
-                accessor.setProperty("user", username);
-                accessor.setProperty("authorized", Boolean.TRUE);
-            }
-        } catch (Throwable t) {
-            processDaoException(t, "Error while loading accessor " + accessToken, "getAccessor");
-        } finally {
-            closeDaoResources(res, stat, conn);
-        }
-        return accessor;
+    public Consumer getConsumerRecord(String consumerKey) {
+        return (Consumer) this.getConsumer(consumerKey, true);
     }
     
     public OAuthConsumer getConsumer(String consumerKey) {
+        return (OAuthConsumer) this.getConsumer(consumerKey, false);
+    }
+    
+    private Object getConsumer(String consumerKey, boolean needRecord) {
         Connection conn = null;
-        OAuthConsumer consumer = null;
+        Object consumer = null;
         PreparedStatement stat = null;
         ResultSet res = null;
         try {
             conn = this.getConnection();
-            stat = conn.prepareStatement(SELECT_CONSUMER);
+            String query = (!needRecord) ? SELECT_CONSUMER + SELECT_CONSUMER_EXPIRATION_DATE_FILTER : SELECT_CONSUMER;
+            stat = conn.prepareStatement(query);
             stat.setString(1, consumerKey);
-            stat.setDate(2, new java.sql.Date(new Date().getTime()));
+            if (!needRecord) {
+                stat.setDate(2, new java.sql.Date(new Date().getTime()));
+            }
             res = stat.executeQuery();
             if (res.next()) {
                 //consumersecret, description, callbackurl, expirationdate
@@ -122,12 +67,23 @@ public class OAuthConsumerDAO extends AbstractDAO implements IOAuthConsumerDAO {
                 String description = res.getString(2);
                 String callbackurl = res.getString(3);
                 Date expirationdate = res.getDate(4);
-                if (null != expirationdate && new Date().after(expirationdate)) {
-                    //trace exception
+                if (needRecord) {
+                    Consumer consumerRecord = new Consumer();
+                    consumerRecord.setCallbackUrl(callbackurl);
+                    consumerRecord.setDescription(description);
+                    consumerRecord.setExpirationDate(expirationdate);
+                    consumerRecord.setKey(consumerKey);
+                    consumerRecord.setSecret(consumerSecret);
+                    consumer = consumerRecord;
+                } else {
+                    //if (null != expirationdate && new Date().after(expirationdate)) {
+                        //trace exception
+                    //}
+                    OAuthConsumer oauthConsumer = new OAuthConsumer(callbackurl, consumerKey, consumerSecret, null);
+                    oauthConsumer.setProperty("name", consumerKey);
+                    oauthConsumer.setProperty("description", description);
+                    consumer = oauthConsumer;
                 }
-                consumer = new OAuthConsumer(callbackurl, consumerKey, consumerSecret, null);
-                consumer.setProperty("name", consumerKey);
-                consumer.setProperty("description", description);
             }
         } catch (Throwable t) {
             processDaoException(t, "Error while loading consumer by key " + consumerKey, "getConsumer");
@@ -137,18 +93,97 @@ public class OAuthConsumerDAO extends AbstractDAO implements IOAuthConsumerDAO {
         return consumer;
     }
     
-    private String INSERT_TOKEN = 
-            "INSERT INTO api_oauth_tokens (accesstoken, tokensecret, consumerkey, username, lastaccess) "
-            + "VALUES (? , ? , ? , ? , ? )";
+    public void deleteConsumer(String consumerKey) {
+        Connection conn = null;
+        PreparedStatement stat = null;
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            this.delete(consumerKey, DELETE_CONSUMER_TOKENS, conn);
+            this.delete(consumerKey, DELETE_CONSUMER, conn);
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            processDaoException(t, "Error while deleting a consumer and its tokens", "deleteConsumer");
+        } finally {
+            closeDaoResources(null, stat, conn);
+        }
+    }
+    public void delete(String key, String query, Connection conn) {
+        PreparedStatement stat = null;
+        try {
+            stat = conn.prepareStatement(query);
+            stat.setString(1, key);
+            stat.executeUpdate();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            processDaoException(t, "Error while deleting records", "delete");
+        } finally {
+            closeDaoResources(null, stat);
+        }
+    }
     
-    private String SELECT_TOKEN = 
-            "SELECT tokensecret, username "
-            + "FROM api_oauth_tokens WHERE accesstoken = ? AND consumerkey = ?";
+    public void updateConsumer(Consumer consumer) {
+        Connection conn = null;
+        PreparedStatement stat = null;
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            /*
+            UPDATE api_oauth_consumers SET consumersecret = ? , "
+            + "description = ? , callbackurl = ? , expirationdate = ? WHERE consumerkey = ? 
+             */
+            stat = conn.prepareStatement(UPDATE_CONSUMER);
+            stat.setString(1, consumer.getSecret());
+            stat.setString(2, consumer.getDescription());
+            stat.setString(3, consumer.getCallbackUrl());
+            if (null != consumer.getExpirationDate()) {
+                stat.setDate(4, new java.sql.Date(consumer.getExpirationDate().getTime()));
+            } else {
+                stat.setNull(4, Types.DATE);
+            }
+            stat.setString(5, consumer.getKey());
+            stat.executeUpdate();
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            processDaoException(t, "Error while updating a consumer", "updateConsumer");
+        } finally {
+            closeDaoResources(null, stat, conn);
+        }
+    }
     
-    private String DELETE_TOKEN = "DELETE FROM api_oauth_tokens WHERE username = ? AND accesstoken = ? AND consumerkey = ?";
+    protected String getMasterTableIdFieldName() {
+        return "consumerkey";
+    }
+    
+    protected String getMasterTableName() {
+        return "api_oauth_consumers";
+    }
+    
+    protected String getTableFieldName(String metadataFieldKey) {
+        return metadataFieldKey;
+    }
+    
+    protected boolean isForceCaseInsensitiveLikeSearch() {
+        return true;
+    }
     
     private String SELECT_CONSUMER =
             "SELECT consumersecret, description, callbackurl, expirationdate "
-            + "FROM api_oauth_consumers WHERE consumerkey = ? AND (expirationdate IS NULL OR expirationdate >= ? )";
+            + "FROM api_oauth_consumers WHERE consumerkey = ? ";
+    
+    private String UPDATE_CONSUMER = 
+            "UPDATE api_oauth_consumers SET consumersecret = ? , "
+            + "description = ? , callbackurl = ? , expirationdate = ? WHERE consumerkey = ? ";
+    
+    private String DELETE_CONSUMER = 
+            "DELETE FROM api_oauth_consumers WHERE consumerkey = ? ";
+    
+    private String DELETE_CONSUMER_TOKENS = 
+            "DELETE FROM api_oauth_tokens WHERE consumerkey = ? ";
+    
+    private String SELECT_CONSUMER_EXPIRATION_DATE_FILTER =
+            " AND (expirationdate IS NULL OR expirationdate >= ? )";
     
 }

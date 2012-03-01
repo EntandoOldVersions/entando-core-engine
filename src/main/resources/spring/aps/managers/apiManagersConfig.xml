@@ -30,13 +30,16 @@
         <property name="langManager" ref="LangManager" />
         <property name="responseBuilder" ref="ApiResponseBuilder" />
     </bean>
-    <!--
-    <bean id="ApiEntityManagerInterface" class="org.entando.entando.aps.system.common.entity.api.ApiEntityManagerInterface" />
-    -->
+    
     <bean id="OAuthConsumerManager" class="org.entando.entando.aps.system.services.oauth.OAuthConsumerManager" 
             parent="abstractService" >
         <property name="consumerDAO" >
             <bean class="org.entando.entando.aps.system.services.oauth.OAuthConsumerDAO">
+                <property name="dataSource" ref="servDataSource" />
+            </bean>
+        </property>
+        <property name="tokenDAO" >
+            <bean class="org.entando.entando.aps.system.services.oauth.OAuthTokenDAO">
                 <property name="dataSource" ref="servDataSource" />
             </bean>
         </property>
