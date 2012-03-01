@@ -28,4 +28,14 @@
         <property name="roleManager" ref="RoleManager" />
     </bean>
     
+    <bean id="apiConsumerFinderAction" scope="prototype" 
+            class="org.entando.entando.apsadmin.api.ConsumerFinderAction" parent="abstractBaseAction">
+        <property name="oauthConsumerManager" ref="OAuthConsumerManager" />
+    </bean>
+    
+    <bean id="apiConsumerAction" scope="prototype" 
+            class="org.entando.entando.apsadmin.api.ConsumerAction" parent="abstractBaseAction">
+        <property name="oauthConsumerManager" ref="OAuthConsumerManager" />
+    </bean>
+    
 </beans>

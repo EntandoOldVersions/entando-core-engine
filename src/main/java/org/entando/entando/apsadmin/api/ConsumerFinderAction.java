@@ -1,0 +1,103 @@
+/*
+*
+* Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+*
+* This file is part of jAPS software.
+* jAPS is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+*
+*/
+package org.entando.entando.apsadmin.api;
+
+import java.util.List;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.apsadmin.system.BaseAction;
+
+import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
+import org.entando.entando.aps.system.services.oauth.model.Consumer;
+
+/**
+ * @author E.Santoboni
+ */
+public class ConsumerFinderAction extends BaseAction {
+    
+    public List<String> getSearchResult() throws Throwable {
+        List<String> consumerKeys = null;
+        try {
+            consumerKeys = this.getOauthConsumerManager().getConsumerKeys(this.getSearchFilters());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+            throw t;
+        }
+        return consumerKeys;
+    }
+    
+    private FieldSearchFilter[] getSearchFilters() {
+        FieldSearchFilter[] filters = new FieldSearchFilter[0];
+        FieldSearchFilter keyFilter = null;
+        if (null != this.getInsertedKey() && this.getInsertedKey().trim().length() > 0) {
+            keyFilter = new FieldSearchFilter(IOAuthConsumerManager.CONSUMER_KEY_FILTER_KEY, this.getInsertedKey(), true);
+        } else {
+            keyFilter = new FieldSearchFilter(IOAuthConsumerManager.CONSUMER_KEY_FILTER_KEY);
+        }
+        keyFilter.setOrder(FieldSearchFilter.ASC_ORDER);
+        filters = this.addFilter(keyFilter, filters);
+        if (null != this.getInsertedDescription() && this.getInsertedDescription().trim().length() > 0) {
+            FieldSearchFilter descrFilter = 
+                    new FieldSearchFilter(IOAuthConsumerManager.CONSUMER_DESCRIPTION_FILTER_KEY, this.getInsertedDescription(), true);
+            filters = this.addFilter(descrFilter, filters);
+        }
+        return filters;
+    }
+    
+    protected FieldSearchFilter[] addFilter(FieldSearchFilter filterToAdd, FieldSearchFilter[] filters) {
+        int len = filters.length;
+        FieldSearchFilter[] newFilters = new FieldSearchFilter[len + 1];
+        for (int i = 0; i < len; i++) {
+            newFilters[i] = filters[i];
+        }
+        newFilters[len] = filterToAdd;
+        return newFilters;
+    }
+    
+    public Consumer getConsumer(String key) throws Throwable {
+        return this.getOauthConsumerManager().getConsumerRecord(key);
+    }
+    
+    public String getInsertedDescription() {
+        return _insertedDescription;
+    }
+    public void setInsertedDescription(String insertedDescription) {
+        this._insertedDescription = insertedDescription;
+    }
+    
+    public String getInsertedKey() {
+        return _insertedKey;
+    }
+    public void setInsertedKey(String insertedKey) {
+        this._insertedKey = insertedKey;
+    }
+    
+    protected IOAuthConsumerManager getOauthConsumerManager() {
+        return _oauthConsumerManager;
+    }
+    public void setOauthConsumerManager(IOAuthConsumerManager oauthConsumerManager) {
+        this._oauthConsumerManager = oauthConsumerManager;
+    }
+    
+    private String _insertedKey;
+    private String _insertedDescription;
+    
+    private IOAuthConsumerManager _oauthConsumerManager;
+    
+}
