@@ -150,7 +150,7 @@
     	
         <action name="edit" class="apiConsumerAction" method="edit">
             <result type="tiles">admin.api.consumer.entry</result>
-            <result name="groupList" type="chain">list</result>
+            <result name="list" type="chain">list</result>
             <interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
@@ -161,13 +161,13 @@
         </action>
         
         <action name="trash" class="apiConsumerAction" method="trash">
-            <result name="groupList" type="chain">list</result>
+            <result name="list" type="chain">list</result>
             <result type="tiles">admin.api.consumer.trash</result>
             <interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
         <action name="delete" class="apiConsumerAction" method="delete">
-            <result name="groupList" type="chain">list</result>
+            <result name="list" type="chain">list</result>
             <result type="redirectAction">list</result>
             <interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
