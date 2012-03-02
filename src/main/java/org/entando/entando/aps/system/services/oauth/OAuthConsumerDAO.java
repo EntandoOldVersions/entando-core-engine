@@ -101,14 +101,14 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
         try {
             conn = this.getConnection();
             conn.setAutoCommit(false);
-            stat = conn.prepareStatement(UPDATE_CONSUMER);
+            stat = conn.prepareStatement(ADD_CONSUMER);
             stat.setString(index++, consumer.getSecret());
             index = this.fillStatement(consumer, index, stat);
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while updating a consumer", "updateConsumer");
+            processDaoException(t, "Error while adding a consumer", "addConsumer");
         } finally {
             closeDaoResources(null, stat, conn);
         }
