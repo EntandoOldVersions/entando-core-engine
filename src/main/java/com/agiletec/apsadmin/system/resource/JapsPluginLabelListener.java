@@ -1,8 +1,8 @@
 /*
  *
- * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
- * This file is part of JAPS software.
+ * This file is part of Entando software.
  * JAPS and its  source-code is  licensed under the  terms of the
  * GNU General Public License  as published by  the Free Software
  * Foundation (http://www.fsf.org/licensing/licenses/gpl.txt).
@@ -12,7 +12,7 @@
  * When copying,  adapting,  or redistributing  this document you
  * are required to provide proper attribution  to AgileTec, using
  * the following attribution line:
- * Copyright 2005 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.apsadmin.system.resource;
