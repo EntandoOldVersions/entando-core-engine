@@ -4,11 +4,11 @@
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
-	</parent>	
+	</parent>
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>2.4.1-SNAPSHOT</version>
+	<version>3.0.0-TP1</version>
 	<name>Entando: Core Engine</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
