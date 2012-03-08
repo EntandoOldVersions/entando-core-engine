@@ -35,53 +35,73 @@ import com.opensymphony.xwork2.ActionInvocation;
  * @author E.Santoboni
  */
 public class InterceptorMadMax extends BaseInterceptorMadMax {
-	
-	/**
-	 * Restituisce il permesso specifico.
-	 * @return Il permesso specifico.
-	 */
-	@Override
-	public String getRequiredPermission() {
-		return _requiredPermission;
-	}
-	
-	/**
-	 * Setta il permesso specifico.
-	 * @param requiredPermission Il permesso specifico.
-	 */
-	public void setRequiredPermission(String requiredPermission) {
-		this._requiredPermission = requiredPermission;
-	}
-	
-	@Override
-	public String getErrorResultName() {
-		if (this._errorResultName == null) {
-			return DEFAULT_ERROR_RESULT;
-		}
-		return this._errorResultName;
-	}
-	
-	public void setErrorResultName(String errorResultName) {
-		this._errorResultName = errorResultName;
-	}
-	
-	@Override
-	protected String invoke(ActionInvocation invocation) throws Exception {
-		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.INFO)) {
-			HttpSession session = ServletActionContext.getRequest().getSession();
-			UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-			String message = "Action invoked '" + invocation.getProxy().getActionName() + "' on namespace '" 
-				+ invocation.getProxy().getNamespace() + "' from user '" + currentUser.getUsername() + "'";
-			log.info(message);
-		}
-		return super.invoke(invocation);
-	}
-	
-	private String _requiredPermission;
-	
-	private String _errorResultName;
-	
-	public static final String DEFAULT_ERROR_RESULT = "userNotAllowed";
-	
+    
+    /**
+     * Return the single required permission.
+     * @return The required permission.
+     */
+    public String getRequiredPermission() {
+        return _requiredPermission;
+    }
+    
+    /**
+     * Set the single required permission.
+     * @param requiredPermission The single required permission.
+     */
+    public void setRequiredPermission(String requiredPermission) {
+        this._requiredPermission = requiredPermission;
+    }
+    
+    /**
+     * Return the required permissions, list of string comma separated.
+     * @param requiredPermission The required permissions, list of string comma separated.
+     */
+    public String getRequiredPermissions() {
+        return _requiredPermissions;
+    }
+    
+    /**
+     * Set the required permissions, list of string comma separated.
+     * @param requiredPermission The required permissions, list of string comma separated.
+     */
+    public void setRequiredPermissions(String requiredPermissions) {
+        this._requiredPermissions = requiredPermissions;
+    }
+    
+    public String getErrorResultName() {
+        if (this._errorResultName == null) {
+            return DEFAULT_ERROR_RESULT;
+        }
+        return this._errorResultName;
+    }
+    
+    public void setErrorResultName(String errorResultName) {
+        this._errorResultName = errorResultName;
+    }
+    
+    public Boolean getORClause() {
+        return _ORClause;
+    }
+    public void setORClause(Boolean ORClause) {
+        this._ORClause = ORClause;
+    }
+    
+    protected String invoke(ActionInvocation invocation) throws Exception {
+        Logger log = ApsSystemUtils.getLogger();
+        if (log.isLoggable(Level.INFO)) {
+            HttpSession session = ServletActionContext.getRequest().getSession();
+            UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+            String message = "Action invoked '" + invocation.getProxy().getActionName() + "' on namespace '"
+                    + invocation.getProxy().getNamespace() + "' from user '" + currentUser.getUsername() + "'";
+            log.info(message);
+        }
+        return super.invoke(invocation);
+    }
+    
+    private String _requiredPermission;
+    private String _requiredPermissions;
+    private String _errorResultName;
+    private Boolean _ORClause;
+    public static final String DEFAULT_ERROR_RESULT = "userNotAllowed";
+    
 }

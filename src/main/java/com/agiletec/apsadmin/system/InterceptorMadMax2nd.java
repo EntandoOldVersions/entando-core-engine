@@ -23,21 +23,28 @@ import com.agiletec.aps.system.services.role.Permission;
  * Interceptor gestore della verifica delle autorizzazioni dell'utente corrente.
  * Verifica che l'utente corrente sia abilitato all'accesso all'area di backoffice.
  * Nel caso di verifica non a buon fine, si viene redirezionati alla pagina di login.
- * @version 1.0
  * @author E.Santoboni
  */
 public class InterceptorMadMax2nd extends BaseInterceptorMadMax {
-	
-	public String getErrorResultName() {
-		return "apslogin";
-	}
-	
-	/**
-	 * Restituisce il permesso di accesso al backoffice.
-	 * @return Il permesso di accesso al backoffice.
-	 */
-	public String getRequiredPermission() {
-		return Permission.BACKOFFICE;
-	}
-	
+    
+    public String getErrorResultName() {
+        return "apslogin";
+    }
+    
+    /**
+     * Restituisce il permesso di accesso al backoffice.
+     * @return Il permesso di accesso al backoffice.
+     */
+    public String getRequiredPermission() {
+        return Permission.BACKOFFICE;
+    }
+    
+    public Boolean getORClause() {
+        return new Boolean(false);
+    }
+    
+    public String getRequiredPermissions() {
+        return null;
+    }
+    
 }
