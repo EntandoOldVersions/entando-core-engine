@@ -1,6 +1,6 @@
 /*
 *
-!	* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -27,28 +27,28 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
  * @author E.Santoboni
  */
 public class BooleanAttributeHandler extends AbstractAttributeHandler {
-	
-	public void startAttribute(Attributes attributes, String qName) throws SAXException {
-		if (qName.equals("boolean")) {
-			this.startBoolean(attributes, qName);
-		}
-	}
-	
-	private void startBoolean(Attributes attributes, String qName) throws SAXException {
-		//nothing to do
-	}
-	
-	public void endAttribute(String qName, StringBuffer textBuffer) {
-		if (qName.equals("boolean")) {
-			this.endBoolean(textBuffer);
-		}
-	}
-	
-	private void endBoolean(StringBuffer textBuffer) {
-		if (null != textBuffer && null != this.getCurrentAttr()) {
-			Boolean booleanValue = new Boolean(textBuffer.toString());
-			((BooleanAttribute) this.getCurrentAttr()).setBooleanValue(booleanValue);
-		}
-	}
-
+    
+    public void startAttribute(Attributes attributes, String qName) throws SAXException {
+        if (qName.equals("boolean")) {
+            this.startBoolean(attributes, qName);
+        }
+    }
+    
+    private void startBoolean(Attributes attributes, String qName) throws SAXException {
+        //nothing to do
+    }
+    
+    public void endAttribute(String qName, StringBuffer textBuffer) {
+        if (qName.equals("boolean")) {
+            this.endBoolean(textBuffer);
+        }
+    }
+    
+    private void endBoolean(StringBuffer textBuffer) {
+        if (null != textBuffer && null != this.getCurrentAttr()) {
+            Boolean booleanValue = new Boolean(textBuffer.toString());
+            ((BooleanAttribute) this.getCurrentAttr()).setBooleanValue(booleanValue);
+        }
+    }
+    
 }

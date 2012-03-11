@@ -157,7 +157,7 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 			this._entityTypes.put(entity.getTypeCode(), entity);
 			this.fillEntityType(entity, currentContentElem);
 			entity.setDefaultLang(this.getLangManager().getDefaultLang().getCode());
-			ApsSystemUtils.getLogger().finest("Definining the Entity Type: " + entity.getTypeCode());
+			ApsSystemUtils.getLogger().finest("Entity Type '" + entity.getTypeCode() + "' defined");
 		}
 	}
 	

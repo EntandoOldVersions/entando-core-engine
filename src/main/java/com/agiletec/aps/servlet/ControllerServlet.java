@@ -38,69 +38,68 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author  
  */
 public class ControllerServlet extends HttpServlet {
-	
-	@Override
-	protected void service(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException, IOException {
-		request.setCharacterEncoding("UTF-8");
-		RequestContext reqCtx = new RequestContext();
-		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.FINEST)) {
-			log.finest("Request:" + request.getServletPath());
-		}
-		request.setAttribute(RequestContext.REQCTX, reqCtx);
-		reqCtx.setRequest(request);
-		reqCtx.setResponse(response);
-		ControllerManager controller = 
-			(ControllerManager) ApsWebApplicationUtils.getBean(SystemConstants.CONTROLLER_MANAGER, request);
-		int status = controller.service(reqCtx);
-		if (status == ControllerManager.REDIRECT) {
-			if (log.isLoggable(Level.FINEST)) {
-				log.finest("Redirezione");
-			}
-			this.redirect(reqCtx, response);
-		} else if (status == ControllerManager.OUTPUT) {
-			if (log.isLoggable(Level.FINEST)) {
-				log.finest("Output");
-			}
-		} else if (status == ControllerManager.ERROR) {
-			this.outputError(reqCtx, response);
-			if (log.isLoggable(Level.FINEST)) {
-				log.finest("Errore");
-			}
-		} else {
-			log.severe("Errore: stato uscita controller = " 
-					+ ControllerManager.getStatusDescription(status) 
-					+ " per richiesta: ");
-			log.severe(request.getServletPath());
-			throw new ServletException("Servizio non disponibile");
-		}
-		return;
-	}
-	
-	private void redirect(RequestContext reqCtx, HttpServletResponse response) throws ServletException {
-		try {
-			String url = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-			response.sendRedirect(url);
-		} catch (Exception e) {
-			throw new ServletException("Servizio non disponibile");
-		}
-	}
-	
-	private void outputError(RequestContext reqCtx, HttpServletResponse response)
-			throws ServletException {
-		try {
-			if (!response.isCommitted()) {
-				Integer httpErrorCode = (Integer) reqCtx.getExtraParam("errorCode");
-				if (httpErrorCode == null) {
-					httpErrorCode = new Integer(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-				}
-				response.sendError(httpErrorCode.intValue());
-			}
-		} catch (IOException e) {
-			ApsSystemUtils.logThrowable(e, this, "outputError");
-			throw new ServletException("Servizio non disponibile");
-		}
-	}
-	
+    
+    protected void service(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        RequestContext reqCtx = new RequestContext();
+        Logger log = ApsSystemUtils.getLogger();
+        if (log.isLoggable(Level.FINEST)) {
+            log.finest("Request:" + request.getServletPath());
+        }
+        request.setAttribute(RequestContext.REQCTX, reqCtx);
+        reqCtx.setRequest(request);
+        reqCtx.setResponse(response);
+        ControllerManager controller =
+                (ControllerManager) ApsWebApplicationUtils.getBean(SystemConstants.CONTROLLER_MANAGER, request);
+        int status = controller.service(reqCtx);
+        if (status == ControllerManager.REDIRECT) {
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("Redirection");
+            }
+            this.redirect(reqCtx, response);
+        } else if (status == ControllerManager.OUTPUT) {
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("Output");
+            }
+        } else if (status == ControllerManager.ERROR) {
+            this.outputError(reqCtx, response);
+            if (log.isLoggable(Level.FINEST)) {
+                log.finest("Error");
+            }
+        } else {
+            log.severe("Error: final status = "
+                    + ControllerManager.getStatusDescription(status)
+                    + " - request: ");
+            log.severe(request.getServletPath());
+            throw new ServletException("Service not available");
+        }
+        return;
+    }
+    
+    private void redirect(RequestContext reqCtx, HttpServletResponse response) throws ServletException {
+        try {
+            String url = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
+            response.sendRedirect(url);
+        } catch (Exception e) {
+            throw new ServletException("Service not available", e);
+        }
+    }
+    
+    private void outputError(RequestContext reqCtx, HttpServletResponse response)
+            throws ServletException {
+        try {
+            if (!response.isCommitted()) {
+                Integer httpErrorCode = (Integer) reqCtx.getExtraParam("errorCode");
+                if (httpErrorCode == null) {
+                    httpErrorCode = new Integer(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+                }
+                response.sendError(httpErrorCode.intValue());
+            }
+        } catch (IOException e) {
+            ApsSystemUtils.logThrowable(e, this, "outputError");
+            throw new ServletException("Service not available");
+        }
+    }
+    
 }

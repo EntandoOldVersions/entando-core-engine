@@ -17,6 +17,7 @@
  */
 package com.agiletec.aps.system.common.entity.model;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,338 +45,314 @@ import com.agiletec.aps.system.services.category.Category;
  * @author E.Santoboni
  */
 public class ApsEntity implements IApsEntity, Serializable {
-	
-	/**
-	 * Initialization of the entity with its related elements.
-	 */
-	public ApsEntity() {
-		this._attributeList = new ArrayList<AttributeInterface>();
-		this._attributeMap = new HashMap<String, AttributeInterface>();
-		this._categories = new ArrayList<Category>();
-		this._groups = new HashSet<String>();
-	}
+    
+    /**
+     * Initialization of the entity with its related elements.
+     */
+    public ApsEntity() {
+        this._attributeList = new ArrayList<AttributeInterface>();
+        this._attributeMap = new HashMap<String, AttributeInterface>();
+        this._categories = new ArrayList<Category>();
+        this._groups = new HashSet<String>();
+    }
 
-	/**
-	 * Return the ID of the entity.
-	 * @return The identification string of the entity.
-	 */
-	@Override
-	public String getId() {
-		return this._id;
-	}
+    /**
+     * Return the ID of the entity.
+     * @return The identification string of the entity.
+     */
+    public String getId() {
+        return this._id;
+    }
 
-	/**
-	 * Associate the entity to the given ID code.
-	 * @param id The identification string of the entity.
-	 */
-	@Override
-	public void setId(String id) {
-		this._id = id;
-	}
+    /**
+     * Associate the entity to the given ID code.
+     * @param id The identification string of the entity.
+     */
+    public void setId(String id) {
+        this._id = id;
+    }
 
-	/**
-	 * Return the code of the Entity Type.
-	 * @return The code of the Entity Type.
-	 */
-	@Override
-	public String getTypeCode() {
-		return this._typeCode;
-	}
+    /**
+     * Return the code of the Entity Type.
+     * @return The code of the Entity Type.
+     */
+    public String getTypeCode() {
+        return this._typeCode;
+    }
 
-	/**
-	 * Set up the code of the Entity Type.
-	 * @param typeCode The Entity Type code.
-	 */
-	@Override
-	public void setTypeCode(String typeCode) {
-		this._typeCode = typeCode;
-	}
+    /**
+     * Set up the code of the Entity Type.
+     * @param typeCode The Entity Type code.
+     */
+    public void setTypeCode(String typeCode) {
+        this._typeCode = typeCode;
+    }
 
-	/**
-	 * Return the description of the entity.
-	 * @return The entity description.
-	 */
-	@Override
-	public String getDescr() {
-		return this._descr;
-	}
+    /**
+     * Return the description of the entity.
+     * @return The entity description.
+     */
+    public String getDescr() {
+        return this._descr;
+    }
 
-	/**
-	 * Set up the description of the entity.
-	 * @param descr The description to associate to the entity.
-	 */
-	@Override
-	public void setDescr(String descr) {
-		this._descr = descr;
-	}
+    /**
+     * Set up the description of the entity.
+     * @param descr The description to associate to the entity.
+     */
+    public void setDescr(String descr) {
+        this._descr = descr;
+    }
 
-	/**
-	 * Return the string that identifies the main group this entity belongs to.
-	 * @return The main group this entity belongs to.
-	 */
-	@Override
-	public String getMainGroup() {
-		return _mainGroup;
-	}
+    /**
+     * Return the string that identifies the main group this entity belongs to.
+     * @return The main group this entity belongs to.
+     */
+    public String getMainGroup() {
+        return _mainGroup;
+    }
 
-	/**
-	 * Set the string that identifies the main group this entity belongs to.
-	 * @param mainGroup The main group this entity belongs to.
-	 */
-	@Override
-	public void setMainGroup(String mainGroup) {
-		this._mainGroup = mainGroup;
-	}
+    /**
+     * Set the string that identifies the main group this entity belongs to.
+     * @param mainGroup The main group this entity belongs to.
+     */
+    public void setMainGroup(String mainGroup) {
+        this._mainGroup = mainGroup;
+    }
 
-	/**
-	 * Return the set of codes of the additional groups authorized to view the entity in the front-end. 
-	 * @return The set of codes belonging to the additional group authorized to access the entity, 
-	 */
-	@Override
-	public Set<String> getGroups() {
-		return _groups;
-	}
+    /**
+     * Return the set of codes of the additional groups authorized to view the entity in the front-end. 
+     * @return The set of codes belonging to the additional group authorized to access the entity, 
+     */
+    public Set<String> getGroups() {
+        return _groups;
+    }
 
-	/**
-	 * Add a group (code) authorized to view/access the entity in the Front-end.
-	 * @param groupName The group to add.
-	 */
-	@Override
-	public void addGroup(String groupName) {
-		this.getGroups().add(groupName);
-	}
+    /**
+     * Add a group (code) authorized to view/access the entity in the Front-end.
+     * @param groupName The group to add.
+     */
+    public void addGroup(String groupName) {
+        this.getGroups().add(groupName);
+    }
 
-	/**
-	 * Add an attribute to the list of the Entity Attributes.
-	 * @param attribute An attribute of the entity.
-	 */
-	@Override
-	public void addAttribute(AttributeInterface attribute) {
-		this._attributeList.add(attribute);
-		this._attributeMap.put(attribute.getName(), attribute);
-	}
+    /**
+     * Add an attribute to the list of the Entity Attributes.
+     * @param attribute An attribute of the entity.
+     */
+    public void addAttribute(AttributeInterface attribute) {
+        this._attributeList.add(attribute);
+        this._attributeMap.put(attribute.getName(), attribute);
+    }
 
-	/**
-	 * Return the Entity Attribute identified by the the attribute name.
-	 * @param key The name of the attribute
-	 * @return The requested attribute.
-	 */
-	@Override
-	public Object getAttribute(String key) {
-		return this._attributeMap.get(key);
-	}
-	
-	@Override
-	public AttributeInterface getAttributeByRole(String roleName) {
-		List<AttributeInterface> attributes = this.getAttributeList();
-		for (int i = 0; i < attributes.size(); i++) {
-			AttributeInterface attribute = attributes.get(i);
-			if (null != attribute.getRoles() 
-					&& Arrays.asList(attribute.getRoles()).contains(roleName)) {
-				return attribute;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Add a new category to the list of the entity categories.
-	 * @param category The category to add.
-	 */
-	@Override
-	public void addCategory(Category category) {
-		this._categories.add(category);
-	}
+    /**
+     * Return the Entity Attribute identified by the the attribute name.
+     * @param key The name of the attribute
+     * @return The requested attribute.
+     */
+    public Object getAttribute(String key) {
+        return this._attributeMap.get(key);
+    }
+    
+    public AttributeInterface getAttributeByRole(String roleName) {
+        List<AttributeInterface> attributes = this.getAttributeList();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attribute = attributes.get(i);
+            if (null != attribute.getRoles()
+                    && Arrays.asList(attribute.getRoles()).contains(roleName)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Return the list of the categories associated to the entity.
-	 * @return A list of categories.
-	 */
-	@Override
-	public List<Category> getCategories() {
-		return this._categories;
-	}
+    /**
+     * Add a new category to the list of the entity categories.
+     * @param category The category to add.
+     */
+    public void addCategory(Category category) {
+        this._categories.add(category);
+    }
 
-	/**
-	 * Remove a category from the list of the entity categories.
-	 * @param category The category to remove from the list.
-	 */
-	@Override
-	public void removeCategory(Category category) {
-		this._categories.remove(category);
-	}
+    /**
+     * Return the list of the categories associated to the entity.
+     * @return A list of categories.
+     */
+    public List<Category> getCategories() {
+        return this._categories;
+    }
 
-	/**
-	 * Return the Map of the Entity Attributes.
-	 * @return A map containing the attributes.
-	 */
-	@Override
-	public Map<String, AttributeInterface> getAttributeMap() {
-		return this._attributeMap;
-	}
+    /**
+     * Remove a category from the list of the entity categories.
+     * @param category The category to remove from the list.
+     */
+    public void removeCategory(Category category) {
+        this._categories.remove(category);
+    }
 
-	/**
-	 * Return a list of the Entity Attributes.
-	 * @return The list of attributes.
-	 */
-	@Override
-	public List<AttributeInterface> getAttributeList() {
-		return this._attributeList;
-	}
+    /**
+     * Return the Map of the Entity Attributes.
+     * @return A map containing the attributes.
+     */
+    public Map<String, AttributeInterface> getAttributeMap() {
+        return this._attributeMap;
+    }
 
-	/**
-	 * Return the description of the Entity Type.
-	 * @return The description of the Entity Type.
-	 */
-	@Override
-	public String getTypeDescr() {
-		return this._typeDescr;
-	}
+    /**
+     * Return a list of the Entity Attributes.
+     * @return The list of attributes.
+     */
+    public List<AttributeInterface> getAttributeList() {
+        return this._attributeList;
+    }
 
-	/**
-	 * Set up the description of the Entity Type.
-	 * @param typeDescr The description of the Entity Type.
-	 */
-	@Override
-	public void setTypeDescr(String typeDescr) {
-		this._typeDescr = typeDescr;
-	}
+    /**
+     * Return the description of the Entity Type.
+     * @return The description of the Entity Type.
+     */
+    public String getTypeDescr() {
+        return this._typeDescr;
+    }
 
-	/**
-	 * Set up the language to use in the rendering process of the entity and its attributes.
-	 * @param langCode The code of the language to use in the rendering process.
-	 */
-	@Override
-	public void setRenderingLang(String langCode) {
-		this._renderingLang = langCode;
-		for (int i=0; i< this._attributeList.size(); i++) {
-			AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
-			attr.setRenderingLang(this._renderingLang);
-		}
-	}
+    /**
+     * Set up the description of the Entity Type.
+     * @param typeDescr The description of the Entity Type.
+     */
+    public void setTypeDescr(String typeDescr) {
+        this._typeDescr = typeDescr;
+    }
 
-	/**
-	 * Set up the default language of the entity and its attributes.
-	 * @param langCode The code of the default language.
-	 */
-	@Override
-	public void setDefaultLang(String langCode) {
-		this._defaultLang = langCode;
-		for (int i=0; i< this._attributeList.size(); i++){
-			AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
-			attr.setDefaultLangCode(this._defaultLang);
-		}
-	}
+    /**
+     * Set up the language to use in the rendering process of the entity and its attributes.
+     * @param langCode The code of the language to use in the rendering process.
+     */
+    public void setRenderingLang(String langCode) {
+        this._renderingLang = langCode;
+        for (int i = 0; i < this._attributeList.size(); i++) {
+            AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
+            attr.setRenderingLang(this._renderingLang);
+        }
+    }
 
-	/**
-	 * Create an object from the prototype.
-	 * @return The object created from the prototype.
-	 */
-	@Override
-	public IApsEntity getEntityPrototype() {
-		IApsEntity entity = null;
-		try {
-			Class entityClass = Class.forName(this.getClass().getName());
-			entity = (IApsEntity) entityClass.newInstance();
-		} catch (Exception e) {
-			throw new RuntimeException("Errore in clonazione entità");
-		}
-		entity.setId(null);
-		entity.setTypeCode(this.getTypeCode());
-		entity.setTypeDescr(this.getTypeDescr());
-		entity.setDescr(this.getDescr());
-		AttributeInterface attr;
-		for(int i = 0; i < this._attributeList.size(); i++) {
-			attr = (AttributeInterface) this._attributeList.get((i));
-			attr = (AttributeInterface) attr.getAttributePrototype();
-			attr.setParentEntity(entity);
-			entity.addAttribute(attr);
-		}
-		entity.setEntityDOM(this.getEntityDOM());
-		return entity;
-	}
-	
-	@Override
-	public String getXML() {
-		IApsEntityDOM entityDOM = this.getBuildJDOM();
-		String xml = entityDOM.getXMLDocument();
-		entityDOM.dispose();
-		return xml;
-	}
-	
-	/**
-	 * Return the DOM class that generates the XML corresponding to the entity
-	 * with its data.
-	 * This method must be extended to support customized XML structures;
-	 * this happen when, for example, a custom entity is based on an
-	 * object class which, in turn, extends ApsEntity.
-	 * @return The DOM class that generates the XML 
-	 */
-	protected IApsEntityDOM getBuildJDOM() {
-		IApsEntityDOM entityDom = this.getEntityDOM();
-		entityDom.init();
-		entityDom.setId(String.valueOf(this.getId()));
-		entityDom.setTypeCode(this._typeCode);
-		entityDom.setTypeDescr(this._typeDescr);
-		entityDom.setDescr(this._descr);
-		entityDom.setMainGroup(this._mainGroup);
-		Iterator<String> iterGroups = this.getGroups().iterator();
-		while (iterGroups.hasNext()) {
-			String groupName = iterGroups.next();
-			entityDom.addGroup(groupName);
-		}
-		Iterator<Category> iterCategory = this._categories.iterator();
-		while (iterCategory.hasNext()) {
-			Category category = iterCategory.next();
-			entityDom.addCategory(category.getCode());
-		}
-		Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
-		while (iterAttribute.hasNext()) {
-			AttributeInterface currentAttribute = iterAttribute.next();
-			Element attributeElement = currentAttribute.getJDOMElement();
-			if (attributeElement != null) entityDom.addAttribute(currentAttribute.getJDOMElement());
-		}
-		return entityDom;
-	}
+    /**
+     * Set up the default language of the entity and its attributes.
+     * @param langCode The code of the default language.
+     */
+    public void setDefaultLang(String langCode) {
+        this._defaultLang = langCode;
+        for (int i = 0; i < this._attributeList.size(); i++) {
+            AttributeInterface attr = (AttributeInterface) this._attributeList.get(i);
+            attr.setDefaultLangCode(this._defaultLang);
+        }
+    }
 
-	/**
-	 * Disable those attributes whose deactivation code matches the given one.
-	 * @param disablingCode The deactivation code.
-	 */
-	@Override
-	public void disableAttributes(String disablingCode) {
-		Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
-		while (iterAttribute.hasNext()) {
-			AttributeInterface currentAttribute = iterAttribute.next();
-			currentAttribute.disable(disablingCode);
-		}
-	}
+    /**
+     * Create an object from the prototype.
+     * @return The object created from the prototype.
+     */
+    public IApsEntity getEntityPrototype() {
+        IApsEntity entity = null;
+        try {
+            Class entityClass = Class.forName(this.getClass().getName());
+            entity = (IApsEntity) entityClass.newInstance();
+            entity.setId(null);
+            entity.setTypeCode(this.getTypeCode());
+            entity.setTypeDescr(this.getTypeDescr());
+            entity.setDescr(this.getDescr());
+            AttributeInterface attr;
+            for (int i = 0; i < this._attributeList.size(); i++) {
+                attr = (AttributeInterface) this._attributeList.get((i));
+                attr = (AttributeInterface) attr.getAttributePrototype();
+                attr.setParentEntity(entity);
+                entity.addAttribute(attr);
+            }
+            entity.setEntityDOM(this.getEntityDOM());
+        } catch (Exception e) {
+            ApsSystemUtils.logThrowable(e, this, "getEntityPrototype", "Error creating entity prototype");
+            throw new RuntimeException("Error creating entity prototype", e);
+        }
+        return entity;
+    }
+    
+    public String getXML() {
+        IApsEntityDOM entityDOM = this.getBuildJDOM();
+        String xml = entityDOM.getXMLDocument();
+        entityDOM.dispose();
+        return xml;
+    }
 
-	/**
-	 * Return the DOM class that generates the XML associated to the entity.
-	 * @return The DOM class that generates the XML
-	 */
-	protected IApsEntityDOM getEntityDOM() {
-		return _entityDom;
-	}
+    /**
+     * Return the DOM class that generates the XML corresponding to the entity
+     * with its data.
+     * This method must be extended to support customized XML structures;
+     * this happen when, for example, a custom entity is based on an
+     * object class which, in turn, extends ApsEntity.
+     * @return The DOM class that generates the XML 
+     */
+    protected IApsEntityDOM getBuildJDOM() {
+        IApsEntityDOM entityDom = this.getEntityDOM();
+        entityDom.init();
+        entityDom.setId(String.valueOf(this.getId()));
+        entityDom.setTypeCode(this._typeCode);
+        entityDom.setTypeDescr(this._typeDescr);
+        entityDom.setDescr(this._descr);
+        entityDom.setMainGroup(this._mainGroup);
+        Iterator<String> iterGroups = this.getGroups().iterator();
+        while (iterGroups.hasNext()) {
+            String groupName = iterGroups.next();
+            entityDom.addGroup(groupName);
+        }
+        Iterator<Category> iterCategory = this._categories.iterator();
+        while (iterCategory.hasNext()) {
+            Category category = iterCategory.next();
+            entityDom.addCategory(category.getCode());
+        }
+        Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
+        while (iterAttribute.hasNext()) {
+            AttributeInterface currentAttribute = iterAttribute.next();
+            Element attributeElement = currentAttribute.getJDOMElement();
+            if (attributeElement != null) {
+                entityDom.addAttribute(currentAttribute.getJDOMElement());
+            }
+        }
+        return entityDom;
+    }
 
-	@Override
-	public void setEntityDOM(IApsEntityDOM entityDom) {
-		this._entityDom = entityDom;
-	}
+    /**
+     * Disable those attributes whose deactivation code matches the given one.
+     * @param disablingCode The deactivation code.
+     */
+    public void disableAttributes(String disablingCode) {
+        Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
+        while (iterAttribute.hasNext()) {
+            AttributeInterface currentAttribute = iterAttribute.next();
+            currentAttribute.disable(disablingCode);
+        }
+    }
 
-	private String _id;
-	private String _typeCode;
-	private String _typeDescr;
-	private String _descr;
-	private String _mainGroup;
-	private Set<String> _groups;
-	private List<AttributeInterface> _attributeList;
-	private Map<String, AttributeInterface> _attributeMap;
-	private List<Category> _categories;
-	private String _renderingLang;
-	private String _defaultLang;
-
-	private IApsEntityDOM _entityDom;
-
+    /**
+     * Return the DOM class that generates the XML associated to the entity.
+     * @return The DOM class that generates the XML
+     */
+    protected IApsEntityDOM getEntityDOM() {
+        return _entityDom;
+    }
+    
+    public void setEntityDOM(IApsEntityDOM entityDom) {
+        this._entityDom = entityDom;
+    }
+    
+    private String _id;
+    private String _typeCode;
+    private String _typeDescr;
+    private String _descr;
+    private String _mainGroup;
+    private Set<String> _groups;
+    private List<AttributeInterface> _attributeList;
+    private Map<String, AttributeInterface> _attributeMap;
+    private List<Category> _categories;
+    private String _renderingLang;
+    private String _defaultLang;
+    private IApsEntityDOM _entityDom;
+    
 }
