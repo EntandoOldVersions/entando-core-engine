@@ -110,7 +110,9 @@ public class HypertextAttribute extends TextAttribute {
         jaxbAttribute.setName(this.getName());
         jaxbAttribute.setType(this.getType());
         Object value = this.getJAXBValue(langCode);
-        jaxbAttribute.setHtmlValue(value.toString());
+        if (null != value) {
+            jaxbAttribute.setHtmlValue(value.toString());
+        }
         if (null != this.getRoles() && this.getRoles().length > 0) {
             List<String> roles = Arrays.asList(this.getRoles());
             jaxbAttribute.setRoles(roles);
