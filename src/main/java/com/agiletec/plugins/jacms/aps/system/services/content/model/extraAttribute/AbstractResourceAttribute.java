@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
@@ -43,13 +40,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public abstract class AbstractResourceAttribute extends TextAttribute
-        implements IReferenceableAttribute, ResourceAttributeInterface, BeanFactoryAware {
-    
-    public Object getAttributePrototype() {
-        AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) super.getAttributePrototype();
-        resourceAttribute.setBeanFactory(this.getBeanFactory());
-        return resourceAttribute;
-    }
+        implements IReferenceableAttribute, ResourceAttributeInterface {
     
     /**
      * Setta una risorsa sull'attributo.
@@ -204,6 +195,14 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         }
     }
     
+    public Status getStatus() {
+        Status textStatus = super.getStatus();
+        Status resourceStatus = (null != this.getResource()) ? Status.VALUED : Status.EMPTY;
+        if (!textStatus.equals(resourceStatus)) return Status.INCOMPLETE;
+        if (textStatus.equals(resourceStatus) && textStatus.equals(Status.VALUED)) return Status.VALUED;
+        return Status.EMPTY;
+    }
+    
     protected abstract String getDefaultPath();
     
     public Map<String, ResourceInterface> getResources() {
@@ -214,15 +213,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return (IResourceManager) this.getBeanFactory().getBean(JacmsSystemConstants.RESOURCE_MANAGER);
     }
     
-    protected BeanFactory getBeanFactory() {
-        return this._beanFactory;
-    }
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this._beanFactory = beanFactory;
-    }
-    
     private Map<String, ResourceInterface> _resources = new HashMap<String, ResourceInterface>();
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
-    private BeanFactory _beanFactory;
     
 }

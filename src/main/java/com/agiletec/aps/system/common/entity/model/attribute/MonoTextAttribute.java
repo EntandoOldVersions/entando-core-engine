@@ -109,6 +109,13 @@ public class MonoTextAttribute extends AbstractTextAttribute {
         this.setText((String) jaxbAttribute.getValue());
     }
     
+    public Status getStatus() {
+        if (null != this.getText() && this.getText().trim().length() > 0) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
+    }
+    
     private String _text;
     
 }

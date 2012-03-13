@@ -17,6 +17,7 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import com.agiletec.aps.system.services.lang.ILangManager;
 import java.io.Serializable;
 
 import org.jdom.Element;
@@ -25,29 +26,31 @@ import org.jdom.Element;
  * @author E.Santoboni
  */
 public interface IAttributeValidationRules extends Serializable {
-	
-	public IAttributeValidationRules clone();
-	
-	public void setConfig(Element attributeElement);
-	
-	public Element getJDOMConfigElement();
-	
-	/**
-	 * Set up the required (mandatory) condition for the current attribute.
-	 * @param required True if the attribute is mandatory
-	 */
-	public void setRequired(boolean required);
-	
-	/**
-	 * Test whether this attribute is declared mandatory or not.
-	 * @return True if the attribute is mandatory, false otherwise.
-	 */
-	public boolean isRequired();
+    
+    public IAttributeValidationRules clone();
+    
+    @Deprecated
+    public void setConfig(Element attributeElement);
+    
+    public void setConfig(Element attributeElement, ILangManager langManager);
+    
+    public Element getJDOMConfigElement();
+    
+    /**
+     * Set up the required (mandatory) condition for the current attribute.
+     * @param required True if the attribute is mandatory
+     */
+    public void setRequired(boolean required);
+    
+    /**
+     * Test whether this attribute is declared mandatory or not.
+     * @return True if the attribute is mandatory, false otherwise.
+     */
+    public boolean isRequired();
+    
+    public OgnlValidationRule getOgnlValidationRule();
 
-	public OgnlValidationRule getOgnlValidationRule();
-	
-	public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
-	
-	public static final String VALIDATIONS_ELEMENT_NAME = "validations";
-	
+    public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
+    
+    public static final String VALIDATIONS_ELEMENT_NAME = "validations";
 }

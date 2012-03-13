@@ -196,6 +196,18 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
     
+    public Status getStatus() {
+        List<AttributeInterface> attributes = this.getAttributeList(this.getDefaultLangCode());
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            Status elementStatus = attributeElement.getStatus();
+            if (null != elementStatus && elementStatus.equals(Status.VALUED)) {
+                return Status.VALUED;
+            }
+        }
+        return Status.EMPTY;
+    }
+    
     private Map<String, List<AttributeInterface>> _listMap;
     
 }

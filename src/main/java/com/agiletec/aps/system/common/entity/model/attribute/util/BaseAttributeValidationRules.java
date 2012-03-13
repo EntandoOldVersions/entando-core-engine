@@ -20,6 +20,7 @@ package com.agiletec.aps.system.common.entity.model.attribute.util;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
  * @author E.Santoboni
@@ -72,19 +73,25 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
     }
     
+    @Deprecated
     public void setConfig(Element attributeElement) {
+        this.setConfig(attributeElement, null);
+    }
+    
+    public void setConfig(Element attributeElement, ILangManager langManager) {
         Element validationElement = attributeElement.getChild(VALIDATIONS_ELEMENT_NAME);
         if (null != validationElement) {
-            this.extractValidationRules(validationElement);
+            this.extractValidationRules(validationElement, langManager);
         }
     }
-
-    protected void extractValidationRules(Element validationElement) {
+    
+    protected void extractValidationRules(Element validationElement, ILangManager langManager) {
         String required = this.extractValue(validationElement, "required");
         this.setRequired(null != required && required.equalsIgnoreCase("true"));
         Element expressionElement = validationElement.getChild("expression");
         if (null != expressionElement) {
             OgnlValidationRule validationRule = new OgnlValidationRule(expressionElement);
+            validationRule.setLangManager(langManager);
             this.setOgnlValidationRule(validationRule);
         }
     }

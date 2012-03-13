@@ -342,6 +342,35 @@ public class ApsEntity implements IApsEntity, Serializable {
         this._entityDom = entityDom;
     }
     
+    public List<FieldError> validate() {
+        List<FieldError> errors = new ArrayList<FieldError>();
+        try {
+            /*
+            if (null == this.getDescr() || this.getDescr().trim().length() == 0) {
+                errors.add(new FieldError("description", FieldError.ErrorCode.MANDATORY));
+            }
+            if (null == this.getMainGroup() || this.getMainGroup().trim().length() == 0) {
+                errors.add(new FieldError("mainGroup", FieldError.ErrorCode.MANDATORY));
+            }
+            */
+            if (null != this.getAttributeList()) {
+                List<AttributeInterface> attributes = this.getAttributeList();
+                for (int i = 0; i < attributes.size(); i++) {
+                    AttributeInterface attribute = attributes.get(i);
+                    AttributeTracer tracer = new AttributeTracer();
+                    List<AttributeFieldError> attributeErrors = attribute.validate(tracer);
+                    if (null != attributeErrors) {
+                        errors.addAll(attributeErrors);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating entity");
+        }
+        return errors;
+    }
+    
     private String _id;
     private String _typeCode;
     private String _typeDescr;

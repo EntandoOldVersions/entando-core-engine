@@ -184,6 +184,14 @@ public class TextAttribute extends AbstractTextAttribute {
         this.getTextMap().put(this.getDefaultLangCode(), value.toString());
     }
     
+    public Status getStatus() {
+        String text = this.getTextMap().get(this.getDefaultLangCode());
+        if (null != text && text.trim().length() > 0) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
+    }
+    
     private Map<String, String> _textMap;
     
 }

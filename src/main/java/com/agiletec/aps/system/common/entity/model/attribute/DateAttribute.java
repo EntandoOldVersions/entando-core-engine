@@ -197,6 +197,13 @@ public class DateAttribute extends AbstractAttribute {
         }
     }
     
+    public Status getStatus() {
+        if (null != this.getDate()) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
+    }
+    
     private Date _date;
     private String _failedDateString;
     
