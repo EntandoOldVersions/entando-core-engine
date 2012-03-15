@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
@@ -38,14 +35,7 @@ import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolver
  * la stessa per tutte le lingue, ma il testo associato varia con la lingua.
  * @author W.Ambu - S.Didaci
  */
-public class LinkAttribute extends TextAttribute 
-        implements IReferenceableAttribute, BeanFactoryAware {
-    
-    public Object getAttributePrototype() {
-        LinkAttribute linkAttribute = (LinkAttribute) super.getAttributePrototype();
-        linkAttribute.setBeanFactory(this.getBeanFactory());
-        return linkAttribute;
-    }
+public class LinkAttribute extends TextAttribute implements IReferenceableAttribute {
     
     public Element getJDOMElement() {
         Element attributeElement = new Element("attribute");
@@ -176,14 +166,14 @@ public class LinkAttribute extends TextAttribute
         return (ILinkResolverManager) this.getBeanFactory().getBean(JacmsSystemConstants.LINK_RESOLVER_MANAGER);
     }
     
-    protected BeanFactory getBeanFactory() {
-        return this._beanFactory;
-    }
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this._beanFactory = beanFactory;
+    public Status getStatus() {
+        Status textStatus = super.getStatus();
+        Status linkStatus = (null != this.getSymbolicLink()) ? Status.VALUED : Status.EMPTY;
+        if (!textStatus.equals(linkStatus)) return Status.INCOMPLETE;
+        if (textStatus.equals(linkStatus) && textStatus.equals(Status.VALUED)) return Status.VALUED;
+        return Status.EMPTY;
     }
     
     private SymbolicLink _symbolicLink;
-    private BeanFactory _beanFactory;
     
 }

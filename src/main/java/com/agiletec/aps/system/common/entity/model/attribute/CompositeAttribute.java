@@ -241,6 +241,18 @@ public class CompositeAttribute extends AbstractComplexAttribute {
         return new JAXBCompositeAttributeType();
     }
     
+    public Status getStatus() {
+        List<AttributeInterface> attributes = this.getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            Status elementStatus = attributeElement.getStatus();
+            if (null != elementStatus && elementStatus.equals(Status.VALUED)) {
+                return Status.VALUED;
+            }
+        }
+        return Status.EMPTY;
+    }
+    
     private List<AttributeInterface> _attributeList;
     private Map<String, AttributeInterface> _attributeMap;
     

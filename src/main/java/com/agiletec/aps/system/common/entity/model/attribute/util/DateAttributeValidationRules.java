@@ -17,6 +17,7 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.Date;
 import java.util.Calendar;
 
@@ -60,9 +61,8 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
         return null;
     }
     
-    
-    protected void extractValidationRules(Element validationElement) {
-        super.extractValidationRules(validationElement);
+    protected void extractValidationRules(Element validationElement, ILangManager langManager) {
+        super.extractValidationRules(validationElement, langManager);
         Element valueElement = validationElement.getChild("value");
         if (null != valueElement) {
             this.setValue(DateConverter.parseDate(valueElement.getText(), DATE_PATTERN));
