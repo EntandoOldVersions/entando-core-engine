@@ -23,7 +23,7 @@ import java.util.Properties;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -97,8 +97,8 @@ public class ApiEntityManagerInterface implements BeanFactoryAware {
         return jaxbEntityType;
     }
     
-    public BaseApiResponse addEntityType(JAXBEntityType jaxbEntityType) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse addEntityType(JAXBEntityType jaxbEntityType) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             IEntityManager manager = this.extractEntityManager(jaxbEntityType.getEntityManagerName());
             String typeCode = jaxbEntityType.getTypeCode();

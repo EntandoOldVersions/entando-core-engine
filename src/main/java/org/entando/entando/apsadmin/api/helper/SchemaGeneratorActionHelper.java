@@ -31,7 +31,7 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 
 /**
  * @author E.Santoboni
@@ -47,7 +47,7 @@ public class SchemaGeneratorActionHelper {
                 responseClass = this.extractReturnType(method, request);
             }
             if (null == responseClass) {
-                responseClass = BaseApiResponse.class;
+                responseClass = StringApiResponse.class;
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "extractResponseClass", "Error extracting response Class");

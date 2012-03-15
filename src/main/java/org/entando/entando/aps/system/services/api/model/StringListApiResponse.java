@@ -15,21 +15,24 @@
  * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
-package org.entando.entando.plugins.jacms.aps.system.services.api.response;
+package org.entando.entando.aps.system.services.api.model;
 
 import javax.xml.bind.annotation.XmlElement;
-
-import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
-import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author E.Santoboni
  */
-public class ContentTypeResponseResult extends AbstractApiResponseResult {
+@XmlRootElement(name = "response")
+public class StringListApiResponse extends AbstractApiResponse {
     
-    @XmlElement(name = "contentType", required = false)
-    public JAXBContentType getResult() {
-        return (JAXBContentType) this.getMainResult();
+    @XmlElement(name = "result", required = true)
+    public StringListApiResponseResult getResult() {
+        return (StringListApiResponseResult) super.getResult();
+    }
+    
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        return new StringListApiResponseResult();
     }
     
 }

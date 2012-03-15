@@ -22,10 +22,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author E.Santoboni
- * @deprecated use StringResponse class
  */
 @XmlRootElement(name = "response")
-public class BaseApiResponse extends AbstractApiResponse {
+public class StringApiResponse extends AbstractApiResponse {
     
     @XmlElement(name = "result", required = false)
     public String getResult() {
