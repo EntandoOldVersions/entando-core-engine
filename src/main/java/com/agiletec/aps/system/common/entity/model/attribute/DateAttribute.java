@@ -17,6 +17,7 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,10 +28,14 @@ import java.util.Locale;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.util.DateConverter;
 import java.util.Calendar;
 import javax.xml.datatype.XMLGregorianCalendar;
 

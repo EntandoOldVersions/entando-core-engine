@@ -20,7 +20,13 @@ package com.agiletec.aps.system.common.entity.model.attribute.util;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -39,8 +45,8 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         this.insertJDOMConfigElement("rangeend", this.getRangeEndAttribute(), toStringEndValue, configElement);
     }
     
-    protected void extractValidationRules(Element validationElement, ILangManager langManager) {
-        super.extractValidationRules(validationElement, langManager);
+    protected void extractValidationRules(Element validationElement) {
+        super.extractValidationRules(validationElement);
         Element valueElement = validationElement.getChild("value");
         if (null != valueElement) {
             this.setValue(this.getIntegerValue(valueElement.getText()));
@@ -70,6 +76,44 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
                     "Error in parsing number '" + text + "' for extracting attribute roles");
         }
         return valueInteger;
+    }
+    
+    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
+        if (this.isEmpty()) return errors;
+        try {
+            Integer attributeValue = ((NumberAttribute)attribute).getValue().intValue();
+            Integer startValue = (this.getRangeStart() != null) ? (Integer) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
+            if (null != startValue && attributeValue < startValue) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);
+                error.setMessage("Number less than " + startValue);
+                errors.add(error);
+            }
+            Integer endValue = (this.getRangeEnd() != null) ? (Integer) this.getRangeEnd() : this.getOtherAttributeValue(attribute, this.getRangeEndAttribute());
+            if (null != endValue && attributeValue > endValue) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.GREATER_THAN_ALLOWED, tracer);
+                error.setMessage("Number greater than " + endValue);
+                errors.add(error);
+            }
+            Integer value = (this.getValue() != null) ? (Integer) this.getValue() : this.getOtherAttributeValue(attribute, this.getValueAttribute());
+            if (null != value && attributeValue != value) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
+                error.setMessage("Number not equals than " + value);
+                errors.add(error);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating number attribute", t);
+        }
+        return errors;
+    }
+    
+    private Integer getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
+        AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
+        if (null != other && (other instanceof NumberAttribute) && ((NumberAttribute) other).getValue() != null) {
+            return ((NumberAttribute) other).getValue().intValue();
+        }
+        return null;
     }
     
 }

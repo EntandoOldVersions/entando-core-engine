@@ -47,6 +47,7 @@ public abstract class AbstractMultiLangAttributeManager extends AbstractAttribut
 	}
 	
 	@Override
+        @Deprecated
 	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
 		Lang defaultLang = this.getLangManager().getDefaultLang();
 		boolean valued = this.getValue(attribute, defaultLang) != null;
@@ -66,6 +67,7 @@ public abstract class AbstractMultiLangAttributeManager extends AbstractAttribut
 	 * @param attribute The current attribute (simple or composed) which holds the desired value
 	 * @param lang The localization desired for the returned value.
 	 * @return The value held by the attribute.
+         * @deprecated 
 	 */
 	protected abstract Object getValue(AttributeInterface attribute, Lang lang);
 	

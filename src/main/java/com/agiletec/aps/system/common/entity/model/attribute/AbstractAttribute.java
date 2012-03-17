@@ -21,7 +21,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-import com.agiletec.aps.system.common.entity.model.FieldError.ErrorCode;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +32,6 @@ import org.jdom.Element;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
-import com.agiletec.aps.system.common.entity.model.attribute.util.OgnlValidationRule;
 import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInterface;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -164,9 +163,8 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
             this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
             
-            ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
             IAttributeValidationRules validationCondition = this.getValidationRules();
-            validationCondition.setConfig(attributeElement, langManager);
+            validationCondition.setConfig(attributeElement);
             
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
             String required = this.extractXmlAttribute(attributeElement, "required", false);
@@ -421,19 +419,14 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         List<AttributeFieldError> errors = new ArrayList<AttributeFieldError>();
         try {
             if (this.getStatus().equals(Status.INCOMPLETE)) {
-                errors.add(new AttributeFieldError(this, ErrorCode.INVALID, tracer));
+                errors.add(new AttributeFieldError(this, FieldError.INVALID, tracer));
             } else {
                 IAttributeValidationRules validationRules = this.getValidationRules();
                 if (null == validationRules) return errors;
-                if (validationRules.isRequired() && this.getStatus().equals(Status.INCOMPLETE)) {
-                    errors.add(new AttributeFieldError(this, ErrorCode.MANDATORY, tracer));
-                }
-                OgnlValidationRule ognlValidationRule = validationRules.getOgnlValidationRule();
-                if (null != ognlValidationRule) {
-                    AttributeFieldError error = ognlValidationRule.validate(this, tracer, this.getParentEntity());
-                    if (null != error) {
-                        errors.add(error);
-                    }
+                ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+                List<AttributeFieldError> validationRulesErrors = validationRules.validate(this, tracer, langManager);
+                if (null != validationRulesErrors) {
+                    errors.addAll(validationRulesErrors);
                 }
             }
         } catch (Throwable t) {

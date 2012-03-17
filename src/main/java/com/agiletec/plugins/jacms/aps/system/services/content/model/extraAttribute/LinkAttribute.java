@@ -17,6 +17,10 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,9 +29,13 @@ import org.jdom.Element;
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.util.SymbolicLinkValidator;
 import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
 
 /**
@@ -80,22 +88,6 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         }
         super.addTextElements(attributeElement);
         return attributeElement;
-    }
-    
-    /**
-     * Setta il link simbolico caratterizzante l'attributo.
-     * @param symbolicLink Il link simbolico.
-     */
-    public void setSymbolicLink(SymbolicLink symbolicLink) {
-        this._symbolicLink = symbolicLink;
-    }
-    
-    /**
-     * Restituisce il link simbolico caratterizzante l'attributo.
-     * @return Il link simbolico.
-     */
-    public SymbolicLink getSymbolicLink() {
-        return _symbolicLink;
     }
     
     /**
@@ -163,7 +155,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
     }
     
     protected ILinkResolverManager getLinkResolverManager() {
-        return (ILinkResolverManager) this.getBeanFactory().getBean(JacmsSystemConstants.LINK_RESOLVER_MANAGER);
+        return (ILinkResolverManager) this.getBeanFactory().getBean(JacmsSystemConstants.LINK_RESOLVER_MANAGER, ILinkResolverManager.class);
     }
     
     public Status getStatus() {
@@ -172,6 +164,44 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         if (!textStatus.equals(linkStatus)) return Status.INCOMPLETE;
         if (textStatus.equals(linkStatus) && textStatus.equals(Status.VALUED)) return Status.VALUED;
         return Status.EMPTY;
+    }
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        try {
+            SymbolicLink symbolicLink = this.getSymbolicLink();
+            if (null == symbolicLink) return errors;
+            IContentManager contentManager = (IContentManager) this.getBeanFactory().getBean(JacmsSystemConstants.CONTENT_MANAGER, IContentManager.class);
+            IPageManager pageManager = (IPageManager) this.getBeanFactory().getBean(SystemConstants.PAGE_MANAGER, IPageManager.class);
+            SymbolicLinkValidator sler = new SymbolicLinkValidator(contentManager, pageManager);
+            String linkErrorCode = sler.scan(symbolicLink, (Content) this.getParentEntity());
+            if (null != linkErrorCode) {
+                AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, tracer);
+                error.setMessage("Invalid link - page " + symbolicLink.getPageDest() 
+                        + " - content " + symbolicLink.getContentDest() + " - Error code " + linkErrorCode);
+                errors.add(error);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating link attribute", t);
+        }
+        return errors;
+    }
+    
+    /**
+     * Setta il link simbolico caratterizzante l'attributo.
+     * @param symbolicLink Il link simbolico.
+     */
+    public void setSymbolicLink(SymbolicLink symbolicLink) {
+        this._symbolicLink = symbolicLink;
+    }
+    
+    /**
+     * Restituisce il link simbolico caratterizzante l'attributo.
+     * @return Il link simbolico.
+     */
+    public SymbolicLink getSymbolicLink() {
+        return _symbolicLink;
     }
     
     private SymbolicLink _symbolicLink;

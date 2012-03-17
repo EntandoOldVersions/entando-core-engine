@@ -17,10 +17,16 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import java.util.List;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import java.util.ArrayList;
 
 /**
  * @author E.Santoboni
@@ -73,25 +79,19 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
     }
     
-    @Deprecated
     public void setConfig(Element attributeElement) {
-        this.setConfig(attributeElement, null);
-    }
-    
-    public void setConfig(Element attributeElement, ILangManager langManager) {
         Element validationElement = attributeElement.getChild(VALIDATIONS_ELEMENT_NAME);
         if (null != validationElement) {
-            this.extractValidationRules(validationElement, langManager);
+            this.extractValidationRules(validationElement);
         }
     }
     
-    protected void extractValidationRules(Element validationElement, ILangManager langManager) {
+    protected void extractValidationRules(Element validationElement) {
         String required = this.extractValue(validationElement, "required");
         this.setRequired(null != required && required.equalsIgnoreCase("true"));
         Element expressionElement = validationElement.getChild("expression");
         if (null != expressionElement) {
             OgnlValidationRule validationRule = new OgnlValidationRule(expressionElement);
-            validationRule.setLangManager(langManager);
             this.setOgnlValidationRule(validationRule);
         }
     }
@@ -107,6 +107,31 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
     protected boolean isEmpty() {
         return (!this.isRequired() && null == this.getOgnlValidationRule());
     }
+    
+    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = new ArrayList<AttributeFieldError>();
+        if (this.isEmpty()) return errors;
+        try {
+            if (this.isRequired() && attribute.getStatus().equals(AttributeInterface.Status.EMPTY)) {
+                AttributeTracer defaultLangTracer = (AttributeTracer) tracer.clone();
+                defaultLangTracer.setLang(langManager.getDefaultLang());
+                errors.add(new AttributeFieldError(attribute, FieldError.MANDATORY, defaultLangTracer));
+            }
+            OgnlValidationRule ognlValidationRule = this.getOgnlValidationRule();
+            if (null != ognlValidationRule) {
+                AttributeFieldError error = ognlValidationRule.validate(attribute, tracer, langManager);
+                if (null != error) {
+                    errors.add(error);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
+            throw new RuntimeException("Error validating Attribute '" + attribute.getName() + "'", t);
+        }
+        return errors;
+    }
+    
+    
     
     public boolean isRequired() {
         return this._required;

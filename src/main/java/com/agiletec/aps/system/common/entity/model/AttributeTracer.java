@@ -31,14 +31,20 @@ import com.agiletec.aps.system.services.lang.Lang;
 public class AttributeTracer {
     
     public Object clone() {
-        AttributeTracer clone = new AttributeTracer();
-        clone.setMonoListElement(this._monoListElement);
-        clone.setListElement(this._listElement);
-        clone.setListLang(this._listLang);
-        clone.setListIndex(this._listIndex);
-        clone.setCompositeElement(this._compositeElement);
-        clone.setParentAttribute(this._parentAttribute);
-        clone.setLang(this._lang);
+        AttributeTracer clone = null;
+        try {
+            Class attributeClass = Class.forName(this.getClass().getName());
+            clone = (AttributeTracer) attributeClass.newInstance();
+            clone.setMonoListElement(this._monoListElement);
+            clone.setListElement(this._listElement);
+            clone.setListLang(this._listLang);
+            clone.setListIndex(this._listIndex);
+            clone.setCompositeElement(this._compositeElement);
+            clone.setParentAttribute(this._parentAttribute);
+            clone.setLang(this._lang);
+        } catch (Exception e) {
+            throw new RuntimeException("Error coloning Attribute tracer", e);
+        }
         return clone;
     }
     

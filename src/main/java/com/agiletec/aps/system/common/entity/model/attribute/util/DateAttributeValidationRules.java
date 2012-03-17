@@ -17,14 +17,22 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import java.util.Date;
 import java.util.Calendar;
 
+import java.util.List;
 import org.jdom.Element;
 
 import com.agiletec.aps.util.DateConverter;
 
+import java.util.ArrayList;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
@@ -61,8 +69,8 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
         return null;
     }
     
-    protected void extractValidationRules(Element validationElement, ILangManager langManager) {
-        super.extractValidationRules(validationElement, langManager);
+    protected void extractValidationRules(Element validationElement) {
+        super.extractValidationRules(validationElement);
         Element valueElement = validationElement.getChild("value");
         if (null != valueElement) {
             this.setValue(DateConverter.parseDate(valueElement.getText(), DATE_PATTERN));
@@ -79,6 +87,48 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
             this.setRangeEndAttribute(rangeEndElement.getAttributeValue("attribute"));
         }
     }
+    
+    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+        List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
+        if (this.isEmpty()) return errors;
+        try {
+            Date attributeValue = ((DateAttribute) attribute).getDate();
+            Date startValue = (this.getRangeStart() != null) ? (Date) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
+            if (null != startValue && attributeValue.before(startValue)) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);
+                String allowedDate = DateConverter.getFormattedDate(startValue, DATE_PATTERN);
+                error.setMessage("Date less than " + allowedDate);
+                errors.add(error);
+            }
+            Date endValue = (this.getRangeEnd() != null) ? (Date) this.getRangeEnd() : this.getOtherAttributeValue(attribute, this.getRangeEndAttribute());
+            if (null != endValue && attributeValue.after(endValue)) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.GREATER_THAN_ALLOWED, tracer);
+                String allowedDate = DateConverter.getFormattedDate(endValue, DATE_PATTERN);
+                error.setMessage("Date greater than " + allowedDate);
+                errors.add(error);
+            }
+            Date value = (this.getValue() != null) ? (Date) this.getValue() : this.getOtherAttributeValue(attribute, this.getValueAttribute());
+            if (null != value && !attributeValue.equals(value)) {
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
+                String allowedDate = DateConverter.getFormattedDate(value, DATE_PATTERN);
+                error.setMessage("Date not equals than " + allowedDate);
+                errors.add(error);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
+            throw new RuntimeException("Error validating Attribute '" + attribute.getName() + "'", t);
+        }
+        return errors;
+    }
+    
+    private Date getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
+        AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
+        if (null != other && (other instanceof DateAttribute) && ((DateAttribute) other).getDate() != null) {
+            return ((DateAttribute) other).getDate();
+        }
+        return null;
+    }
+    
     
     public static final String DATE_PATTERN = "dd/MM/yyyy";
     

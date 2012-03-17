@@ -31,8 +31,7 @@ import org.jdom.Element;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-import com.agiletec.aps.system.common.entity.model.FieldError.ErrorCode;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -106,7 +105,7 @@ public class OgnlValidationRule {
         return exprElement;
     }
     
-    public AttributeFieldError validate(AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    public AttributeFieldError validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         AttributeFieldError error = null;
         String expression = this.getExpression();
         if (null == expression || expression.trim().length() == 0) {
@@ -117,10 +116,10 @@ public class OgnlValidationRule {
         }
         try {
             Object expr = Ognl.parseExpression(expression);
-            OgnlContext ctx = this.createContextForExpressionValidation(attribute, tracer, entity);
+            OgnlContext ctx = this.createContextForExpressionValidation(attribute, tracer, langManager);
             Boolean value = (Boolean) Ognl.getValue(expr, ctx, attribute, Boolean.class);
             if (!value) {
-                error = new AttributeFieldError(attribute, ErrorCode.INVALID, tracer);
+                error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
                 error.setMessage(this.getErrorMessage());
                 error.setMessageKey(this.getErrorMessageKey());
             }
@@ -133,24 +132,22 @@ public class OgnlValidationRule {
         return error;
     }
     
-    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         OgnlContext context = new OgnlContext();
-        if (null != this.getLangManager()) {
-            Map<String, Lang> langs = new HashMap<String, Lang>();
-            List<Lang> langList = this.getLangManager().getLangs();
-            for (int i = 0; i < langList.size(); i++) {
-                Lang lang = langList.get(i);
-                langs.put(lang.getCode(), lang);
-            }
-            context.put("langs", langs);
+        Map<String, Lang> langs = new HashMap<String, Lang>();
+        List<Lang> langList = langManager.getLangs();
+        for (int i = 0; i < langList.size(); i++) {
+            Lang lang = langList.get(i);
+            langs.put(lang.getCode(), lang);
         }
+        context.put("langs", langs);
         context.put("attribute", attribute);
         context.put("entity", attribute.getParentEntity());
         if (tracer.isCompositeElement()) {
             context.put("parent", tracer.getParentAttribute());
         } else {
             if (tracer.isListElement() || tracer.isMonoListElement()) {
-                context.put("parent", entity.getAttribute(attribute.getName()));
+                context.put("parent", attribute.getParentEntity().getAttribute(attribute.getName()));
                 context.put("index", tracer.getListIndex());
             }
             if (tracer.isListElement()) {
@@ -202,20 +199,11 @@ public class OgnlValidationRule {
         this._helpMessageKey = helpMessageKey;
     }
     
-    protected ILangManager getLangManager() {
-        return _langManager;
-    }
-    public void setLangManager(ILangManager langManager) {
-        this._langManager = langManager;
-    }
-    
     private String _expression;
     private boolean _evalExpressionOnValuedAttribute;
     private String _errorMessage;
     private String _errorMessageKey;
     private String _helpMessage;
     private String _helpMessageKey;
-    
-    private ILangManager _langManager;
     
 }

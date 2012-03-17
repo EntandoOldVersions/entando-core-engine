@@ -12,16 +12,12 @@ import java.io.Serializable;
  */
 public class AttributeFieldError extends FieldError implements Serializable {
     
-    public AttributeFieldError(AttributeInterface attribute, ErrorCode errorCode, AttributeTracer tracer) {
+    public AttributeFieldError(AttributeInterface attribute, String errorCode, AttributeTracer tracer) {
         super(null, errorCode);
         this.setTracer(tracer);
         this.setAttribute(attribute);
     }
     
-    public AttributeFieldError(String fieldCode, ErrorCode errorCode, AttributeTracer tracer) {
-        super(fieldCode, errorCode);
-        this.setTracer(tracer);
-    }
     public String getFieldCode() {
         String fieldCode = super.getFieldCode();
         if (null == fieldCode) {
@@ -46,26 +42,5 @@ public class AttributeFieldError extends FieldError implements Serializable {
     
     private AttributeTracer _tracer;
     private AttributeInterface _attribute;
-    
-    /*
-EntityAttribute.fieldError.required=Mandatory
-EntityAttribute.fieldError.invalidAttribute=Invalid
-
-NumberAttribute.fieldError.invalidNumber=Number not valid
-NumberAttribute.fieldError.lessValue=Number less than allowed ''{0}''
-NumberAttribute.fieldError.greaterValue=Number greater than allowed ''{0}''
-
-DateAttribute.fieldError.invalidDate=Date not valid
-DateAttribute.fieldError.lessValue=Date less than allowed ''{0}''
-DateAttribute.fieldError.greaterValue=Date greater than allowed ''{0}''
-
-TextAttribute.fieldError.invalidMaxLength=Length ''{0}'' upper than allowed ''{1}'' on text of lang ''{2}''
-TextAttribute.fieldError.invalidMinLength=Length ''{0}'' lower then allowed ''{1}'' on text of lang ''{2}''
-TextAttribute.fieldError.invalidInsertedText=Invalid inserted text on text of lang ''{0}''
-
-MonotextAttribute.fieldError.invalidMaxLength=Length ''{0}'' upper than allowed ''{1}''
-MonotextAttribute.fieldError.invalidMinLength=Length ''{0}'' lower then allowed ''{1}''
-MonotextAttribute.fieldError.invalidInsertedText=Invalid inserted text
-     */
     
 }

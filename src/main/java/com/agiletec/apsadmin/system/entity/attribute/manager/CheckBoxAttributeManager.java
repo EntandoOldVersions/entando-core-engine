@@ -29,12 +29,11 @@ import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
  */
 public class CheckBoxAttributeManager extends AbstractMonoLangAttributeManager {
 	
-	@Override
+        @Deprecated
 	protected Object getValue(AttributeInterface attribute) {
 		return ((BooleanAttribute) attribute).getBooleanValue();
 	}
 	
-	@Override
 	protected void setValue(AttributeInterface attribute, String value) {
 		if (null != value) {
 			((BooleanAttribute) attribute).setBooleanValue(new Boolean(true));
@@ -43,7 +42,6 @@ public class CheckBoxAttributeManager extends AbstractMonoLangAttributeManager {
 		}
 	}
 	
-	@Override
 	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
 		String value = this.getValueFromForm(attribute, tracer, request);
 		if (value != null) {
@@ -54,12 +52,12 @@ public class CheckBoxAttributeManager extends AbstractMonoLangAttributeManager {
 		}
 	}
 	
-	@Override
+        @Deprecated
 	protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
 		return true;
 	}
 	
-	@Override
+        @Deprecated
 	protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
 		return true;
 	}

@@ -23,6 +23,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 /**
  * Manager class for the 'Hypertext' Attribute.
  * @author E.Santoboni
+ * @deprecated 
  */
 public class HypertextAttributeManager extends TextAttributeManager {
 	

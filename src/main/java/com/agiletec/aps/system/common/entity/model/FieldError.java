@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class FieldError implements Serializable {
     
-    public FieldError(String fieldCode, ErrorCode errorCode) {
+    public FieldError(String fieldCode, String errorCode) {
         this.setErrorCode(errorCode);
         this.setFieldCode(fieldCode);
     }
@@ -23,10 +23,10 @@ public class FieldError implements Serializable {
         this._fieldCode = fieldCode;
     }
     
-    public ErrorCode getErrorCode() {
+    public String getErrorCode() {
         return _errorCode;
     }
-    protected void setErrorCode(ErrorCode errorCode) {
+    protected void setErrorCode(String errorCode) {
         this._errorCode = errorCode;
     }
     
@@ -45,11 +45,17 @@ public class FieldError implements Serializable {
     }
     
     private String _fieldCode;
-    private ErrorCode _errorCode;
+    private String _errorCode;
     private String _message;
     private String _messageKey;
     
-    public enum ErrorCode{MANDATORY, INVALID, INVALID_FORMAT, 
-        INVALID_MIN_LENGTH, INVALID_MAX_LENGTH, LESS_THAN_ALLOWED, GREATEST_THAN_ALLOWED};
+    public static final String MANDATORY = "MANDATORY";
+    public static final String INVALID = "INVALID";
+    public static final String INVALID_FORMAT = "INVALID_FORMAT";
+    public static final String INVALID_MIN_LENGTH = "INVALID_MIN_LENGTH";
+    public static final String INVALID_MAX_LENGTH = "INVALID_MAX_LENGTH";
+    public static final String LESS_THAN_ALLOWED = "LESS_THAN_ALLOWED";
+    public static final String GREATER_THAN_ALLOWED = "GREATER_THAN_ALLOWED";
+    public static final String NOT_EQUALS_THAN_ALLOWED = "NOT_EQUALS_THAN_ALLOWED";
     
 }

@@ -34,7 +34,8 @@ import com.opensymphony.xwork2.ActionSupport;
 public class CompositeAttributeManager extends AbstractAttributeManager {
 	
 	@Override
-	protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        @Deprecated
+        protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkAttribute(action, attribute, tracer, entity);
 		this.manageCompositeAttribute(true, false, action, attribute, tracer, null, entity);
 	}
@@ -65,6 +66,7 @@ public class CompositeAttributeManager extends AbstractAttributeManager {
 	}
 	
 	@Override
+        @Deprecated
 	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
 		boolean isVoid = true;
 		List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
