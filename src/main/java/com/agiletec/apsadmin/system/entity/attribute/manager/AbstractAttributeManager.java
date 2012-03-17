@@ -497,6 +497,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
             if (errorCode.equals(FieldError.MANDATORY)) {
                 return action.getText(this.getRequiredAttributeMessage());
             } else if (errorCode.equals(AttributeFieldError.OGNL_VALIDATION)) {
+                String message = attributeFieldError.getMessage();
+                if (null != message && message.trim().length() > 0) {
+                    return message;
+                }
                 String label = null;
                 String labelKey = attributeFieldError.getMessageKey();
                 if (null != labelKey && labelKey.trim().length() > 0) {
