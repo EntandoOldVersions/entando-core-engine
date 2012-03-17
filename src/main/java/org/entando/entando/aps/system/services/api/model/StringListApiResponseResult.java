@@ -17,36 +17,26 @@
  */
 package org.entando.entando.aps.system.services.api.model;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * @author E.Santoboni
  */
-public abstract class AbstractApiResponseResult implements Serializable {
+public class StringListApiResponseResult extends AbstractApiResponseResult {
     
-    public abstract Object getResult();
-    
-    protected Object getMainResult() {
-        return this._mainResult;
-    }
-    public void setMainResult(Object mainResult) {
-        this._mainResult = mainResult;
-    }
-    
-    public void setHtml(String html) {
-        if (null == html) {
-            html = "";
+    @XmlElement(name = "items", required = false)
+    public ListResponse<String> getResult() {
+        if (null != this.getMainResult()) {
+            List<String> strings = new ArrayList<String>();
+            strings.addAll((Collection<String>) this.getMainResult());
+            ListResponse<String> entity = new ListResponse<String>(strings) {};
+            return entity;
         }
-        this._html = html;
+        return null;
     }
-    
-    private Object _mainResult;
-    
-    @XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
-    @XmlElement(name = "html", required = true)
-    private String _html;
     
 }

@@ -32,82 +32,84 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
-	
-	@Override
-	protected Object getValue(AttributeInterface attribute) {
-		String text = ((MonoTextAttribute) attribute).getText();
-		if (null != text && text.trim().length()>0) {
-			return text;
-		}
-		return null;
-	}
-	
-	@Override
-	protected void setValue(AttributeInterface attribute, String value) {
-		((MonoTextAttribute) attribute).setText(value);
-	}
-	
-	@Override
-	protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkSingleAttribute(action, attribute, tracer, entity);
-		this.checkTextLengths(action, attribute, tracer);
-		this.checkRegExp(action, attribute, tracer);
-	}
-	
-	@Override
-	protected void checkListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkListElement(action, attribute, tracer, entity);
-		this.checkTextLengths(action, attribute, tracer);
-		this.checkRegExp(action, attribute, tracer);
-	}
-	
-	@Override
-	protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkMonoListCompositeElement(action, attribute, tracer, entity);
-		this.checkTextLengths(action, attribute, tracer);
-		this.checkRegExp(action, attribute, tracer);
-	}
-	
-	@Override
-	protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkMonoListElement(action, attribute, tracer, entity);
-		this.checkTextLengths(action, attribute, tracer);
-		this.checkRegExp(action, attribute, tracer);
-	}
-	
-	protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
-		int maxLength = ((ITextAttribute) attribute).getMaxLength();
-		int minLength = ((ITextAttribute) attribute).getMinLength();
-		if (maxLength != -1 || minLength != -1) {
-			String text = this.getTextForCheckLength(attribute);
-			if (text != null) {
-				text = text.trim();
-				if (maxLength != -1 && text.length()>maxLength && text.length()>0) {
-					String[] args = {String.valueOf(text.length()), String.valueOf(maxLength)};
-					super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMaxLength", args);
-				}
-				if (minLength != -1 && text.length()<minLength && text.length()>0) {
-					String[] args = {String.valueOf(text.length()), String.valueOf(minLength)};
-					super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMinLength", args);
-				}
-			}
-		}
-	}
-	
-	protected void checkRegExp(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
-		String value = (String) this.getValue(attribute);
-		ITextAttribute textAttribute = (ITextAttribute) attribute;
-		if (null != value && null != textAttribute.getRegexp()) {
-			Pattern pattern = Pattern.compile(textAttribute.getRegexp());
-			Matcher matcher = pattern.matcher(value);
-			if (!matcher.matches()) {
-				super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidInsertedText", null);
-			}
-		}
-	}
-	
-	protected String getTextForCheckLength(AttributeInterface attribute) {
-		return (String) this.getValue(attribute);
-	}
-	
+    
+    @Deprecated
+    protected Object getValue(AttributeInterface attribute) {
+        String text = ((MonoTextAttribute) attribute).getText();
+        if (null != text && text.trim().length() > 0) {
+            return text;
+        }
+        return null;
+    }
+    
+    protected void setValue(AttributeInterface attribute, String value) {
+        ((MonoTextAttribute) attribute).setText(value);
+    }
+    
+    @Deprecated
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkSingleAttribute(action, attribute, tracer, entity);
+        this.checkTextLengths(action, attribute, tracer);
+        this.checkRegExp(action, attribute, tracer);
+    }
+    
+    @Deprecated
+    protected void checkListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkListElement(action, attribute, tracer, entity);
+        this.checkTextLengths(action, attribute, tracer);
+        this.checkRegExp(action, attribute, tracer);
+    }
+    
+    @Deprecated
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkMonoListCompositeElement(action, attribute, tracer, entity);
+        this.checkTextLengths(action, attribute, tracer);
+        this.checkRegExp(action, attribute, tracer);
+    }
+    
+    @Deprecated
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkMonoListElement(action, attribute, tracer, entity);
+        this.checkTextLengths(action, attribute, tracer);
+        this.checkRegExp(action, attribute, tracer);
+    }
+    
+    @Deprecated
+    protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+        int maxLength = ((ITextAttribute) attribute).getMaxLength();
+        int minLength = ((ITextAttribute) attribute).getMinLength();
+        if (maxLength != -1 || minLength != -1) {
+            String text = this.getTextForCheckLength(attribute);
+            if (text != null) {
+                text = text.trim();
+                if (maxLength != -1 && text.length() > maxLength && text.length() > 0) {
+                    String[] args = {String.valueOf(text.length()), String.valueOf(maxLength)};
+                    super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMaxLength", args);
+                }
+                if (minLength != -1 && text.length() < minLength && text.length() > 0) {
+                    String[] args = {String.valueOf(text.length()), String.valueOf(minLength)};
+                    super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMinLength", args);
+                }
+            }
+        }
+    }
+    
+    @Deprecated
+    protected void checkRegExp(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+        String value = (String) this.getValue(attribute);
+        ITextAttribute textAttribute = (ITextAttribute) attribute;
+        if (null != value && null != textAttribute.getRegexp()) {
+            Pattern pattern = Pattern.compile(textAttribute.getRegexp());
+            Matcher matcher = pattern.matcher(value);
+            if (!matcher.matches()) {
+                super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidInsertedText", null);
+            }
+        }
+    }
+    
+    @Deprecated
+    protected String getTextForCheckLength(AttributeInterface attribute) {
+        return (String) this.getValue(attribute);
+    }
+    
 }

@@ -101,6 +101,13 @@ public class BooleanAttribute extends AbstractAttribute {
         }
     }
     
+    public Status getStatus() {
+        if (null != this.getBooleanValue()) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
+    }
+    
     private Boolean _boolean;
     
 }

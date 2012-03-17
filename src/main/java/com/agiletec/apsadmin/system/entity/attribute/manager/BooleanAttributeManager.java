@@ -28,6 +28,7 @@ import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
 	
 	@Override
+        @Deprecated
 	protected Object getValue(AttributeInterface attribute) {
 		return ((BooleanAttribute) attribute).getBooleanValue();
 	}
@@ -42,11 +43,13 @@ public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
 	}
 	
 	@Override
+        @Deprecated
 	protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
 		return true;
 	}
 	
 	@Override
+        @Deprecated
 	protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
 		return true;
 	}

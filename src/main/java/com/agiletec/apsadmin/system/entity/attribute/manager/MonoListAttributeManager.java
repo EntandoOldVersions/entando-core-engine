@@ -32,44 +32,45 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class MonoListAttributeManager extends AbstractAttributeManager {
-	
-	@Override
-	protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkAttribute(action, attribute, tracer, entity);
-		this.manageMonoListAttribute(true, false, action, attribute, tracer, null, entity);
-	}
-	
-	@Override
-	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-		this.manageMonoListAttribute(false, true, null, attribute, tracer, request, null);
-	}
-	
-	private void manageMonoListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action, 
-			AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
-		List<AttributeInterface> attributes = ((MonoListAttribute) attribute).getAttributes();
-		for (int i=0; i<attributes.size(); i++) {
-			AttributeInterface attributeElement = attributes.get(i);
-			AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
-			elementTracer.setMonoListElement(true);
-			elementTracer.setListIndex(i);
-			AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
-			if (elementManager != null) {
-				if (isCheck && !isUpdate) {
-					elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-				}
-				if (!isCheck && isUpdate) {
-					elementManager.updateAttribute(attributeElement, elementTracer, request);
-				}
-			}
-		}
-	}
-	
-	@Override
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
-		boolean valued = ((MonoListAttribute) attribute).getAttributes().size()>0;
-		if (valued) {
-			return VALUED_ATTRIBUTE_STATE;
-		} else return EMPTY_ATTRIBUTE_STATE;
-	}
-	
+    
+    @Deprecated
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkAttribute(action, attribute, tracer, entity);
+        this.manageMonoListAttribute(true, false, action, attribute, tracer, null, entity);
+    }
+    
+    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
+        this.manageMonoListAttribute(false, true, null, attribute, tracer, request, null);
+    }
+    
+    private void manageMonoListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action,
+            AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
+        List<AttributeInterface> attributes = ((MonoListAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+            elementTracer.setMonoListElement(true);
+            elementTracer.setListIndex(i);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            if (elementManager != null) {
+                if (isCheck && !isUpdate) {
+                    elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+                }
+                if (!isCheck && isUpdate) {
+                    elementManager.updateAttribute(attributeElement, elementTracer, request);
+                }
+            }
+        }
+    }
+    
+    @Deprecated
+    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+        boolean valued = ((MonoListAttribute) attribute).getAttributes().size() > 0;
+        if (valued) {
+            return VALUED_ATTRIBUTE_STATE;
+        } else {
+            return EMPTY_ATTRIBUTE_STATE;
+        }
+    }
+    
 }

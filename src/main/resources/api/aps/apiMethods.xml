@@ -1,14 +1,10 @@
 <apiMethodDefinitions>
     
-    
-    
-    
-    
     <method name="getServices" active="true" canSpawnOthers="false">
         <source>core</source>
         <description>Returns the services configured in this instance of Entando.</description>
         <springBean name="ApiServiceInterface" method="getServices" />
-        <responseClass>org.entando.entando.aps.system.services.api.response.ServiceResponse</responseClass>
+        <responseClass>org.entando.entando.aps.system.services.api.response.ServicesResponse</responseClass>
         <parameters>
             <parameter key="tag" required="false">
                 <description>The tag (or part thereof) of the services to return.</description>

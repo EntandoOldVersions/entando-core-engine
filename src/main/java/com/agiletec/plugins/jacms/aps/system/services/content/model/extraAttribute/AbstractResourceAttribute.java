@@ -18,6 +18,9 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,16 +28,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
@@ -43,13 +46,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public abstract class AbstractResourceAttribute extends TextAttribute
-        implements IReferenceableAttribute, ResourceAttributeInterface, BeanFactoryAware {
-    
-    public Object getAttributePrototype() {
-        AbstractResourceAttribute resourceAttribute = (AbstractResourceAttribute) super.getAttributePrototype();
-        resourceAttribute.setBeanFactory(this.getBeanFactory());
-        return resourceAttribute;
-    }
+        implements IReferenceableAttribute, ResourceAttributeInterface {
     
     /**
      * Setta una risorsa sull'attributo.
@@ -204,6 +201,14 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         }
     }
     
+    public Status getStatus() {
+        Status textStatus = super.getStatus();
+        Status resourceStatus = (null != this.getResource()) ? Status.VALUED : Status.EMPTY;
+        if (!textStatus.equals(resourceStatus)) return Status.INCOMPLETE;
+        if (textStatus.equals(resourceStatus) && textStatus.equals(Status.VALUED)) return Status.VALUED;
+        return Status.EMPTY;
+    }
+    
     protected abstract String getDefaultPath();
     
     public Map<String, ResourceInterface> getResources() {
@@ -214,15 +219,59 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return (IResourceManager) this.getBeanFactory().getBean(JacmsSystemConstants.RESOURCE_MANAGER);
     }
     
-    protected BeanFactory getBeanFactory() {
-        return this._beanFactory;
+    
+    
+    /*
+    	protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+		int state = this.getState(attribute, tracer);
+		if (state == VALUED_ATTRIBUTE_STATE) {
+			ResourceInterface resource = ((AbstractResourceAttribute) attribute).getResource();
+			String resourceMainGroup = resource.getMainGroup();
+			if (!resourceMainGroup.equals(Group.FREE_GROUP_NAME) && !resourceMainGroup.equals(entity.getMainGroup()) && !entity.getGroups().contains(resourceMainGroup)) {
+				String messageKey = "ResourceAttribute.fieldError.invalidGroup";
+				this.addFieldError(action, attribute, tracer, messageKey, null);
+			}
+		}
+	}
+     */
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        try {
+            if (null == this.getResources()) return errors;
+            ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+            List<Lang> langs = langManager.getLangs();
+            for (int i = 0; i < langs.size(); i++) {
+                Lang lang = langs.get(i);
+                ResourceInterface resource = this.getResource(lang.getCode());
+                if (null == resource) continue;
+                AttributeTracer resourceTracer = (AttributeTracer) tracer.clone();
+                resourceTracer.setLang(lang);
+                String resourceMainGroup = resource.getMainGroup();
+                Content parentContent = (Content) this.getParentEntity();
+                if (!resourceMainGroup.equals(Group.FREE_GROUP_NAME) 
+                        && !resourceMainGroup.equals(parentContent.getMainGroup()) 
+                        && !parentContent.getGroups().contains(resourceMainGroup)) {
+                    AttributeFieldError fieldError = new AttributeFieldError(this, ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS, resourceTracer);
+                    fieldError.setMessage("Invalid resource group - " + resourceMainGroup);
+                    errors.add(fieldError);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating text attribute", t);
+        }
+        return errors;
     }
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this._beanFactory = beanFactory;
-    }
+    
+    
+    
+    
+    
+    
+    
     
     private Map<String, ResourceInterface> _resources = new HashMap<String, ResourceInterface>();
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
-    private BeanFactory _beanFactory;
     
 }

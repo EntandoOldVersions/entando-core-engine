@@ -25,7 +25,7 @@ import java.util.Properties;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
@@ -238,8 +238,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return modelIdInteger;
     }
     
-    public BaseApiResponse addContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse addContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContent.getTypeCode();
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
@@ -261,8 +261,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return response;
     }
     
-    public BaseApiResponse updateContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse updateContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContent.getTypeCode();
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
@@ -288,8 +288,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return response;
     }
     
-    private BaseApiResponse validateAndSaveContent(Content content, Properties properties) throws ApiException, Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    private StringApiResponse validateAndSaveContent(Content content, Properties properties) throws ApiException, Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
@@ -363,8 +363,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return errors;
     }
     
-    public BaseApiResponse deleteContent(Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse deleteContent(Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String id = properties.getProperty("id");
             Content masterContent = this.getContentManager().loadContent(id, false);

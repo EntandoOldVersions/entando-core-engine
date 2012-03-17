@@ -17,37 +17,45 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import java.io.Serializable;
 
+import java.util.List;
 import org.jdom.Element;
 
 /**
  * @author E.Santoboni
  */
 public interface IAttributeValidationRules extends Serializable {
-	
-	public IAttributeValidationRules clone();
-	
-	public void setConfig(Element attributeElement);
-	
-	public Element getJDOMConfigElement();
-	
-	/**
-	 * Set up the required (mandatory) condition for the current attribute.
-	 * @param required True if the attribute is mandatory
-	 */
-	public void setRequired(boolean required);
-	
-	/**
-	 * Test whether this attribute is declared mandatory or not.
-	 * @return True if the attribute is mandatory, false otherwise.
-	 */
-	public boolean isRequired();
+    
+    public IAttributeValidationRules clone();
+    
+    public void setConfig(Element attributeElement);
+    
+    public Element getJDOMConfigElement();
+    
+    /**
+     * Set up the required (mandatory) condition for the current attribute.
+     * @param required True if the attribute is mandatory
+     */
+    public void setRequired(boolean required);
+    
+    /**
+     * Test whether this attribute is declared mandatory or not.
+     * @return True if the attribute is mandatory, false otherwise.
+     */
+    public boolean isRequired();
+    
+    public OgnlValidationRule getOgnlValidationRule();
 
-	public OgnlValidationRule getOgnlValidationRule();
-	
-	public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
-	
-	public static final String VALIDATIONS_ELEMENT_NAME = "validations";
-	
+    public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule);
+    
+    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager);
+    
+    public static final String VALIDATIONS_ELEMENT_NAME = "validations";
+    
 }

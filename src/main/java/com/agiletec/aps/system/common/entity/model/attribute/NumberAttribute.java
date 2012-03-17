@@ -137,6 +137,13 @@ public class NumberAttribute extends AbstractAttribute {
         this.setValue((BigDecimal) jaxbAttribute.getValue());
     }
     
+    public Status getStatus() {
+        if (null != this.getValue()) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
+    }
+    
     private BigDecimal _number;
     private String _failedNumberString;
     

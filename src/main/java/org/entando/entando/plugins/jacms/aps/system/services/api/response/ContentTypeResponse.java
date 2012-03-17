@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
 /**
  * @author E.Santoboni
@@ -28,14 +29,13 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 @XmlRootElement(name = "response")
 public class ContentTypeResponse extends AbstractApiResponse {
     
-    public void setResult(Object result, String html) {
-        ContentTypeResponseResult responseResult = new ContentTypeResponseResult();
-        responseResult.setMainResult(result);
-        responseResult.setHtml(html);
-        this._result = responseResult;
+    @XmlElement(name = "result", required = true)
+    public ContentTypeResponseResult getResult() {
+        return (ContentTypeResponseResult) super.getResult();
     }
     
-    @XmlElement(name = "result", required = true)
-    private ContentTypeResponseResult _result;
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        return new ContentTypeResponseResult();
+    }
     
 }

@@ -32,25 +32,28 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public interface AttributeManagerInterface {
-	
-	/**
-	 * Update the attribute with the data passed through the entity edit form.
-	 * 
-	 * @param attribute The attribute of the entity
-	 * @param attributeManagers The map of the attribute managers, indexed by type.
-	 * @param request The request.
-	 */
-	public void updateEntityAttribute(AttributeInterface attribute, Map<String, AttributeManagerInterface> attributeManagers, HttpServletRequest request);
-	
-	/**
-	 * Check the validity of the given attribute eventually adding the 
-	 * proper error messages in the action.
-	 * 
-	 * @param action The action where to insert the error messages, if any.
-	 * @param attributeManagers The map of the attributes manager, indexed by type.
-	 * @param attribute The entity attribute.
-	 * @param entity The entity to check.
-	 */
-	public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity);
-	
+
+    /**
+     * Update the attribute with the data passed through the entity edit form.
+     * 
+     * @param attribute The attribute of the entity
+     * @param attributeManagers The map of the attribute managers, indexed by type.
+     * @param request The request.
+     */
+    public void updateEntityAttribute(AttributeInterface attribute, Map<String, AttributeManagerInterface> attributeManagers, HttpServletRequest request);
+    
+    /**
+     * Check the validity of the given attribute eventually adding the 
+     * proper error messages in the action.
+     * 
+     * @param action The action where to insert the error messages, if any.
+     * @param attributeManagers The map of the attributes manager, indexed by type.
+     * @param attribute The entity attribute.
+     * @param entity The entity to check.
+     * @deprecated 
+     */
+    public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity);
+    
+    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute);
+    
 }

@@ -33,64 +33,64 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class ListAttributeManager extends AbstractAttributeManager {
-	
-	@Override
-	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-		this.manageListAttribute(false, true, null, attribute, tracer, request, null);
-	}
-	
-	@Override
-	protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkAttribute(action, attribute, tracer, entity);
-		this.manageListAttribute(true, false, action, attribute, tracer, null, entity);
-	}
-	
-	private void manageListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action, 
-			AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
-		List<Lang> langs = this.getLangManager().getLangs();
-		for (int i=0;i<langs.size(); i++) {
-			Lang lang = langs.get(i);
-			List<AttributeInterface> attributeList = ((ListAttribute)attribute).getAttributeList(lang.getCode());
-			for (int j=0; j<attributeList.size(); j++) {
-				AttributeInterface attributeElement = attributeList.get(j);
-				AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
-				elementTracer.setListElement(true);
-				elementTracer.setListLang(lang);
-				elementTracer.setListIndex(j);
-				AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
-				if (elementManager != null) {
-					if (isCheck && !isUpdate) {
-						elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-					}
-					if (!isCheck && isUpdate) {
-						elementManager.updateAttribute(attributeElement, elementTracer, request);
-					}
-				}
-			}
-		}
-	}
-	
-	@Override
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
-		boolean valued = true;
-		List<Lang> langs = this.getLangManager().getLangs();
-		for (int i=0;i<langs.size(); i++) {
-			Lang lang = langs.get(i);
-			List<AttributeInterface> attributeList = ((ListAttribute)attribute).getAttributeList(lang.getCode());
-			if (attributeList == null || attributeList.size()==0) {
-				valued = false;
-				break;
-			}
-		}
-		if (valued) {
-			return VALUED_ATTRIBUTE_STATE;
-		} else return EMPTY_ATTRIBUTE_STATE;
-	}
-	
-	@Override
-	protected void setExtraPropertyTo(AttributeManagerInterface manager) {
-		super.setExtraPropertyTo(manager);
-		((ListAttributeManager) manager).setLangManager(this.getLangManager());
-	}
-	
+    
+    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
+        this.manageListAttribute(false, true, null, attribute, tracer, request, null);
+    }
+    
+    @Deprecated
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkAttribute(action, attribute, tracer, entity);
+        this.manageListAttribute(true, false, action, attribute, tracer, null, entity);
+    }
+    
+    private void manageListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action,
+            AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
+        List<Lang> langs = this.getLangManager().getLangs();
+        for (int i = 0; i < langs.size(); i++) {
+            Lang lang = langs.get(i);
+            List<AttributeInterface> attributeList = ((ListAttribute) attribute).getAttributeList(lang.getCode());
+            for (int j = 0; j < attributeList.size(); j++) {
+                AttributeInterface attributeElement = attributeList.get(j);
+                AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                elementTracer.setListElement(true);
+                elementTracer.setListLang(lang);
+                elementTracer.setListIndex(j);
+                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+                if (elementManager != null) {
+                    if (isCheck && !isUpdate) {
+                        elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+                    }
+                    if (!isCheck && isUpdate) {
+                        elementManager.updateAttribute(attributeElement, elementTracer, request);
+                    }
+                }
+            }
+        }
+    }
+    
+    @Deprecated
+    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+        boolean valued = true;
+        List<Lang> langs = this.getLangManager().getLangs();
+        for (int i = 0; i < langs.size(); i++) {
+            Lang lang = langs.get(i);
+            List<AttributeInterface> attributeList = ((ListAttribute) attribute).getAttributeList(lang.getCode());
+            if (attributeList == null || attributeList.size() == 0) {
+                valued = false;
+                break;
+            }
+        }
+        if (valued) {
+            return VALUED_ATTRIBUTE_STATE;
+        } else {
+            return EMPTY_ATTRIBUTE_STATE;
+        }
+    }
+    
+    protected void setExtraPropertyTo(AttributeManagerInterface manager) {
+        super.setExtraPropertyTo(manager);
+        ((ListAttributeManager) manager).setLangManager(this.getLangManager());
+    }
+    
 }

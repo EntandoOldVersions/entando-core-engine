@@ -17,8 +17,23 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ognl.Ognl;
+import ognl.OgnlContext;
+import ognl.OgnlException;
+
 import org.jdom.CDATA;
 import org.jdom.Element;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
 
 /**
  * @author E.Santoboni
@@ -87,6 +102,58 @@ public class OgnlValidationRule {
         }
         exprElement.addContent(helpMessageElement);
         return exprElement;
+    }
+    
+    public AttributeFieldError validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+        AttributeFieldError error = null;
+        String expression = this.getExpression();
+        if (null == expression || expression.trim().length() == 0) {
+            return null;
+        }
+        if (this.isEvalExpressionOnValuedAttribute() && attribute.getStatus().equals(AttributeInterface.Status.EMPTY)) {
+            return null;
+        }
+        try {
+            Object expr = Ognl.parseExpression(expression);
+            OgnlContext ctx = this.createContextForExpressionValidation(attribute, tracer, langManager);
+            Boolean value = (Boolean) Ognl.getValue(expr, ctx, attribute, Boolean.class);
+            if (!value) {
+                error = new AttributeFieldError(attribute, AttributeFieldError.OGNL_VALIDATION, tracer);
+                error.setMessage(this.getErrorMessage());
+                error.setMessageKey(this.getErrorMessageKey());
+            }
+        } catch (OgnlException oe) {
+            ApsSystemUtils.logThrowable(oe, this, "checkExpression", "Error on evaluation of expression : " + expression);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "checkExpression");
+            throw new RuntimeException("Generic Error on evaluation Ognl Expression", t);
+        }
+        return error;
+    }
+    
+    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+        OgnlContext context = new OgnlContext();
+        Map<String, Lang> langs = new HashMap<String, Lang>();
+        List<Lang> langList = langManager.getLangs();
+        for (int i = 0; i < langList.size(); i++) {
+            Lang lang = langList.get(i);
+            langs.put(lang.getCode(), lang);
+        }
+        context.put("langs", langs);
+        context.put("attribute", attribute);
+        context.put("entity", attribute.getParentEntity());
+        if (tracer.isCompositeElement()) {
+            context.put("parent", tracer.getParentAttribute());
+        } else {
+            if (tracer.isListElement() || tracer.isMonoListElement()) {
+                context.put("parent", attribute.getParentEntity().getAttribute(attribute.getName()));
+                context.put("index", tracer.getListIndex());
+            }
+            if (tracer.isListElement()) {
+                context.put("listLang", tracer.getListLang());
+            }
+        }
+        return context;
     }
     
     public String getExpression() {

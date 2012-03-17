@@ -17,6 +17,8 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.io.Serializable;
 import java.util.List;
 
@@ -247,5 +249,11 @@ public interface AttributeInterface extends Serializable {
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute);
     
     public DefaultJAXBAttributeType getJAXBAttributeType();
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer);
+    
+    public Status getStatus();
+    
+    public enum Status{EMPTY, INCOMPLETE, VALUED};
     
 }

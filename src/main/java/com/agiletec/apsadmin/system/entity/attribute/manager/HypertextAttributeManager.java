@@ -23,17 +23,18 @@ import com.agiletec.aps.system.services.lang.Lang;
 /**
  * Manager class for the 'Hypertext' Attribute.
  * @author E.Santoboni
+ * @deprecated 
  */
 public class HypertextAttributeManager extends TextAttributeManager {
-	
-	@Override
-	protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
-		String text = super.getTextForCheckLength(attribute, lang);
-		if (text != null) {
-			// remove HTML tags, entities an multiple spaces
-			text = text.replaceAll("<[^<>]+>", " ").replaceAll("&nbsp;", " ").replaceAll("\\&[^\\&;]+;", "_").replaceAll("([\t\n\r\f ])++", " ").trim();
-		}
-		return text;
-	}
-	
+    
+    @Override
+    protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
+        String text = super.getTextForCheckLength(attribute, lang);
+        if (text != null) {
+            // remove HTML tags, entities an multiple spaces
+            text = text.replaceAll("<[^<>]+>", " ").replaceAll("&nbsp;", " ").replaceAll("\\&[^\\&;]+;", "_").replaceAll("([\t\n\r\f ])++", " ").trim();
+        }
+        return text;
+    }
+    
 }

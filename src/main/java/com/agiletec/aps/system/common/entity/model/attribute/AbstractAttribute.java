@@ -17,6 +17,11 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,11 +36,16 @@ import com.agiletec.aps.system.common.entity.parse.attribute.AttributeHandlerInt
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import com.agiletec.aps.system.services.lang.ILangManager;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+
 /**
  * This abstract class must be used when implementing Entity Attributes.
  * @author W.Ambu - E.Santoboni
  */
-public abstract class AbstractAttribute implements AttributeInterface, Serializable {
+public abstract class AbstractAttribute implements AttributeInterface, BeanFactoryAware, Serializable {
     
     public boolean isMultilingual() {
         return false;
@@ -109,79 +119,89 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     }
     
     public Object getAttributePrototype() {
-        AttributeInterface clone = null;
+        AbstractAttribute clone = null;
         try {
             Class attributeClass = Class.forName(this.getClass().getName());
-            clone = (AttributeInterface) attributeClass.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Error detected while cloning the attribute '"
-                    + this.getName() + "' type '" + this.getType() + "'", e);
-        }
-        clone.setName(this.getName());
-        clone.setType(this.getType());
-        clone.setSearcheable(this.isSearcheable());
-        clone.setDefaultLangCode(this.getDefaultLangCode());
-        clone.setIndexingType(this.getIndexingType());
-        clone.setParentEntity(this.getParentEntity());
-        AttributeHandlerInterface handler = (AttributeHandlerInterface) this.getHandler().getAttributeHandlerPrototype();
-        clone.setHandler(handler);
-        if (this.getDisablingCodes() != null) {
-            String[] disablingCodes = new String[this.getDisablingCodes().length];
-            for (int i = 0; i < this.getDisablingCodes().length; i++) {
-                disablingCodes[i] = this.getDisablingCodes()[i];
+            clone = (AbstractAttribute) attributeClass.newInstance();
+            clone.setName(this.getName());
+            clone.setType(this.getType());
+            clone.setSearcheable(this.isSearcheable());
+            clone.setDefaultLangCode(this.getDefaultLangCode());
+            clone.setIndexingType(this.getIndexingType());
+            clone.setParentEntity(this.getParentEntity());
+            AttributeHandlerInterface handler = (AttributeHandlerInterface) this.getHandler().getAttributeHandlerPrototype();
+            clone.setHandler(handler);
+            if (this.getDisablingCodes() != null) {
+                String[] disablingCodes = new String[this.getDisablingCodes().length];
+                for (int i = 0; i < this.getDisablingCodes().length; i++) {
+                    disablingCodes[i] = this.getDisablingCodes()[i];
+                }
+                clone.setDisablingCodes(disablingCodes);
             }
-            clone.setDisablingCodes(disablingCodes);
-        }
-        if (this.getRoles() != null) {
-            String[] roles = new String[this.getRoles().length];
-            for (int i = 0; i < this.getRoles().length; i++) {
-                roles[i] = this.getRoles()[i];
+            if (this.getRoles() != null) {
+                String[] roles = new String[this.getRoles().length];
+                for (int i = 0; i < this.getRoles().length; i++) {
+                    roles[i] = this.getRoles()[i];
+                }
+                clone.setRoles(roles);
             }
-            clone.setRoles(roles);
+            clone.setValidationRules(this.getValidationRules().clone());
+            clone.setBeanFactory(this.getBeanFactory());
+        } catch (Throwable e) {
+            String message = "Error detected while creating the attribute prototype '"
+                    + this.getName() + "' type '" + this.getType() + "'";
+            ApsSystemUtils.logThrowable(e, this, "getAttributePrototype", message);;
+            throw new RuntimeException(message, e);
         }
-        clone.setValidationRules(this.getValidationRules().clone());
         return clone;
     }
     
     public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
-        String name = this.extractXmlAttribute(attributeElement, "name", true);
-        this.setName(name);
-        String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
-        this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
-
-        IAttributeValidationRules validationCondition = this.getValidationRules();
-        validationCondition.setConfig(attributeElement);
-
-        //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
-        String required = this.extractXmlAttribute(attributeElement, "required", false);
-        if (null != required && required.equalsIgnoreCase("true")) {
-            this.setRequired(true);
-        }
-        //to guaranted compatibility with previsous version of jAPS 2.0.12 *** End Block
-
-        String indexingType = this.extractXmlAttribute(attributeElement, "indexingtype", false);
-        if (null != indexingType) {
-            this.setIndexingType(indexingType);
-        } else {
-            this.setIndexingType(IndexableAttributeInterface.INDEXING_TYPE_NONE);
-        }
-        Element disablingCodesElements = attributeElement.getChild("disablingCodes");
-        if (null != disablingCodesElements) {
-            String[] disablingCodes = this.extractValues(disablingCodesElements, "code");
-            this.setDisablingCodes(disablingCodes);
-        } else {
+        try {
+            String name = this.extractXmlAttribute(attributeElement, "name", true);
+            this.setName(name);
+            String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
+            this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
+            
+            IAttributeValidationRules validationCondition = this.getValidationRules();
+            validationCondition.setConfig(attributeElement);
+            
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
-            String disablingCodesStr = this.extractXmlAttribute(attributeElement, "disablingCodes", false);
-            if (disablingCodesStr != null) {
-                String[] disablingCodes = disablingCodesStr.split(",");
-                this.setDisablingCodes(disablingCodes);
+            String required = this.extractXmlAttribute(attributeElement, "required", false);
+            if (null != required && required.equalsIgnoreCase("true")) {
+                this.setRequired(true);
             }
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** End Block
-        }
-        Element rolesElements = attributeElement.getChild("roles");
-        if (null != rolesElements) {
-            String[] roles = this.extractValues(rolesElements, "role");
-            this.setRoles(roles);
+
+            String indexingType = this.extractXmlAttribute(attributeElement, "indexingtype", false);
+            if (null != indexingType) {
+                this.setIndexingType(indexingType);
+            } else {
+                this.setIndexingType(IndexableAttributeInterface.INDEXING_TYPE_NONE);
+            }
+            Element disablingCodesElements = attributeElement.getChild("disablingCodes");
+            if (null != disablingCodesElements) {
+                String[] disablingCodes = this.extractValues(disablingCodesElements, "code");
+                this.setDisablingCodes(disablingCodes);
+            } else {
+                //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
+                String disablingCodesStr = this.extractXmlAttribute(attributeElement, "disablingCodes", false);
+                if (disablingCodesStr != null) {
+                    String[] disablingCodes = disablingCodesStr.split(",");
+                    this.setDisablingCodes(disablingCodes);
+                }
+                //to guaranted compatibility with previsous version of jAPS 2.0.12 *** End Block
+            }
+            Element rolesElements = attributeElement.getChild("roles");
+            if (null != rolesElements) {
+                String[] roles = this.extractValues(rolesElements, "role");
+                this.setRoles(roles);
+            }
+        } catch (Throwable e) {
+            String message = "Error detected while creating the attribute config '"
+                    + this.getName() + "' type '" + this.getType() + "'";
+            ApsSystemUtils.logThrowable(e, this, "getAttributePrototype", message);
+            throw new RuntimeException(message, e);
         }
     }
 
@@ -395,6 +415,34 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
         return new DefaultJAXBAttributeType();
     }
     
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = new ArrayList<AttributeFieldError>();
+        try {
+            if (this.getStatus().equals(Status.INCOMPLETE)) {
+                errors.add(new AttributeFieldError(this, FieldError.INVALID, tracer));
+            } else {
+                IAttributeValidationRules validationRules = this.getValidationRules();
+                if (null == validationRules) return errors;
+                ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+                List<AttributeFieldError> validationRulesErrors = validationRules.validate(this, tracer, langManager);
+                if (null != validationRulesErrors) {
+                    errors.addAll(validationRulesErrors);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + this.getName() + "'");
+            throw new RuntimeException("Error validating Attribute '" + this.getName() + "'", t);
+        }
+        return errors;
+    }
+    
+    protected BeanFactory getBeanFactory() {
+        return this._beanFactory;
+    }
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this._beanFactory = beanFactory;
+    }
+    
     private String _name;
     private String _type;
     private String _defaultLangCode;
@@ -407,5 +455,7 @@ public abstract class AbstractAttribute implements AttributeInterface, Serializa
     private String[] _roles;
     private boolean _active = true;
     private IAttributeValidationRules _validationRules;
+    
+    private BeanFactory _beanFactory;
     
 }

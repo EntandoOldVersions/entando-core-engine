@@ -34,7 +34,7 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodResult;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -61,7 +61,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         } catch (ApiException e) {
             ApsSystemUtils.logThrowable(e, this, "createResponse", "Error creating response for method GET, resource '" + resourceName + "'");
             if (apiResponse == null) {
-                apiResponse = new BaseApiResponse();
+                apiResponse = new StringApiResponse();
             }
             ((AbstractApiResponse) apiResponse).addErrors(e.getErrors());
         }
@@ -102,14 +102,14 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             }
         } catch (ApiException e) {
             if (response == null) {
-                response = new BaseApiResponse();
+                response = new StringApiResponse();
             }
             response.addErrors(e.getErrors());
             response.setResult(FAILURE, null);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "createResponse", "Error creating response - " + this.buildApiSignature(method));
             if (response == null) {
-                response = new BaseApiResponse();
+                response = new StringApiResponse();
             }
             ApiError error = new ApiError(IApiErrorCodes.API_METHOD_ERROR, "Error creating response - " + this.buildApiSignature(method));
             response.addError(error);
@@ -327,7 +327,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
                 result = this.invokePutPostMethod(apiMethod, bean, parameters, bodyObject);
             }
             if (null != result) return result;
-            BaseApiResponse response = new BaseApiResponse();
+            StringApiResponse response = new StringApiResponse();
             response.setResult(SUCCESS, null);
             result = response;
         } catch (NoSuchMethodException e) {
