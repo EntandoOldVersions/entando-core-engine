@@ -168,19 +168,15 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         DateAttributeValidationRules valRule = (DateAttributeValidationRules) attribute.getValidationRules();
         if (null != valRule) {
             String errorCode = attributeFieldError.getErrorCode();
-            System.out.println("////////// " + errorCode);
             if (errorCode.equals(FieldError.GREATER_THAN_ALLOWED)) {
-                System.out.println("MMMMMMMMMMMMMMMMMMM");
                 Date endValue = (valRule.getRangeEnd() != null) ? (Date) valRule.getRangeEnd() : this.getOtherAttributeValue(attribute, valRule.getRangeEndAttribute());
                 String[] args = {DateConverter.getFormattedDate(endValue, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.greaterValue", args);
             } else if (errorCode.equals(FieldError.LESS_THAN_ALLOWED)) {
-                System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNN");
                 Date startValue = (valRule.getRangeStart() != null) ? (Date) valRule.getRangeStart() : this.getOtherAttributeValue(attribute, valRule.getRangeStartAttribute());
                 String[] args = {DateConverter.getFormattedDate(startValue, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.lessValue", args);
             } else if (errorCode.equals(FieldError.NOT_EQUALS_THAN_ALLOWED)) {
-                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO");
                 Date value = (valRule.getValue() != null) ? (Date) valRule.getValue() : this.getOtherAttributeValue(attribute, valRule.getValueAttribute());
                 String[] args = {DateConverter.getFormattedDate(value, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.wrongValue", args);

@@ -34,11 +34,12 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.io.Serializable;
 
 /**
  * @author E.Santoboni
  */
-public class OgnlValidationRule {
+public class OgnlValidationRule implements Serializable {
     
     public OgnlValidationRule() {}
     

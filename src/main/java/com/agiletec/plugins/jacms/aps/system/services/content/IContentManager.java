@@ -174,7 +174,7 @@ public interface IContentManager extends IEntityManager {
 	 * anche sui gruppi extra dei contenuti e non esclusivamente sul gruppo proprietario.
 	 * @return La lista degli id dei contenuti cercati.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
-	 * @deprecated From jAPS 2.0 version 2.0.9. Use {@link loadWorkContentsId} or {@link loadPublicContentsId}
+	 * @deprecated From jAPS 2.0 version 2.0.9. Use loadWorkContentsId or loadPublicContentsId
 	 */
 	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes, boolean onlyOwner) throws ApsSystemException;
