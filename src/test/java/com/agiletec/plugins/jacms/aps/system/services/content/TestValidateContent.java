@@ -23,7 +23,6 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -128,8 +127,6 @@ public class TestValidateContent extends BaseTestCase {
                 + "Ripeto, Titolo che supera la lunghezza massima di cento caratteri";
         try {
             Content content = this.createNewVoid("RAH", "descr", Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
-            ITextAttribute emailAttribute = (ITextAttribute) content.getAttribute("email");
-            emailAttribute.setText("joe.brown@company.com", null);
             
             ITextAttribute textAttribute = (ITextAttribute) content.getAttribute("Titolo");
             textAttribute.setText(shortTitle, "it");

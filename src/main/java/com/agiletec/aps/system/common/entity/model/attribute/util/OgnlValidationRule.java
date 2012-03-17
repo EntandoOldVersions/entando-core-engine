@@ -31,7 +31,6 @@ import org.jdom.Element;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -119,7 +118,7 @@ public class OgnlValidationRule {
             OgnlContext ctx = this.createContextForExpressionValidation(attribute, tracer, langManager);
             Boolean value = (Boolean) Ognl.getValue(expr, ctx, attribute, Boolean.class);
             if (!value) {
-                error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
+                error = new AttributeFieldError(attribute, AttributeFieldError.OGNL_VALIDATION, tracer);
                 error.setMessage(this.getErrorMessage());
                 error.setMessageKey(this.getErrorMessageKey());
             }

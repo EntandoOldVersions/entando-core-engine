@@ -32,61 +32,60 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class CompositeAttributeManager extends AbstractAttributeManager {
-	
-	@Override
-        @Deprecated
-        protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkAttribute(action, attribute, tracer, entity);
-		this.manageCompositeAttribute(true, false, action, attribute, tracer, null, entity);
-	}
-	
-	@Override
-	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-		this.manageCompositeAttribute(false, true, null, attribute, tracer, request, null);
-	}
-	
-	private void manageCompositeAttribute(boolean isCheck, boolean isUpdate, ActionSupport action, 
-			AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
-		List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
-		for (int i=0; i<attributes.size(); i++) {
-			AttributeInterface attributeElement = attributes.get(i);
-			AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
-			elementTracer.setCompositeElement(true);
-			elementTracer.setParentAttribute(attribute);
-			AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
-			if (elementManager != null) {
-				if (isCheck && !isUpdate) {
-					elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-				}
-				if (!isCheck && isUpdate) {
-					elementManager.updateAttribute(attributeElement, elementTracer, request);
-				}
-			}
-		}
-	}
-	
-	@Override
-        @Deprecated
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
-		boolean isVoid = true;
-		List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
-		for (int i=0; i<attributes.size(); i++) {
-			AttributeInterface attributeElement = attributes.get(i);
-			AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
-			if (elementManager != null) {
-				AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
-				elementTracer.setCompositeElement(true);
-				elementTracer.setParentAttribute(attribute);
-				int state = elementManager.getState(attributeElement, elementTracer);
-				if (state != this.EMPTY_ATTRIBUTE_STATE) {
-					isVoid = false;
-					break;
-				}
-			}
-		}
-		if (!isVoid) {
-			return VALUED_ATTRIBUTE_STATE;
-		} else return EMPTY_ATTRIBUTE_STATE;
-	}
-	
+    
+    @Deprecated
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+        super.checkAttribute(action, attribute, tracer, entity);
+        this.manageCompositeAttribute(true, false, action, attribute, tracer, null, entity);
+    }
+    
+    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
+        this.manageCompositeAttribute(false, true, null, attribute, tracer, request, null);
+    }
+    
+    private void manageCompositeAttribute(boolean isCheck, boolean isUpdate, ActionSupport action,
+            AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
+        List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+            elementTracer.setCompositeElement(true);
+            elementTracer.setParentAttribute(attribute);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            if (elementManager != null) {
+                if (isCheck && !isUpdate) {
+                    elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+                }
+                if (!isCheck && isUpdate) {
+                    elementManager.updateAttribute(attributeElement, elementTracer, request);
+                }
+            }
+        }
+    }
+    
+    @Deprecated
+    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+        boolean isVoid = true;
+        List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            if (elementManager != null) {
+                AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                elementTracer.setCompositeElement(true);
+                elementTracer.setParentAttribute(attribute);
+                int state = elementManager.getState(attributeElement, elementTracer);
+                if (state != this.EMPTY_ATTRIBUTE_STATE) {
+                    isVoid = false;
+                    break;
+                }
+            }
+        }
+        if (!isVoid) {
+            return VALUED_ATTRIBUTE_STATE;
+        } else {
+            return EMPTY_ATTRIBUTE_STATE;
+        }
+    }
+    
 }

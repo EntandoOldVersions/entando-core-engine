@@ -24,15 +24,15 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
+
 import java.util.Date;
 import java.util.Calendar;
-
 import java.util.List;
+
 import org.jdom.Element;
 
 import com.agiletec.aps.util.DateConverter;
 
-import java.util.ArrayList;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
@@ -93,6 +93,7 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
         if (this.isEmpty()) return errors;
         try {
             Date attributeValue = ((DateAttribute) attribute).getDate();
+            if (null == attributeValue) return errors;
             Date startValue = (this.getRangeStart() != null) ? (Date) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
             if (null != startValue && attributeValue.before(startValue)) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);
@@ -109,7 +110,7 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
             }
             Date value = (this.getValue() != null) ? (Date) this.getValue() : this.getOtherAttributeValue(attribute, this.getValueAttribute());
             if (null != value && !attributeValue.equals(value)) {
-                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID, tracer);
+                AttributeFieldError error = new AttributeFieldError(attribute, FieldError.NOT_EQUALS_THAN_ALLOWED, tracer);
                 String allowedDate = DateConverter.getFormattedDate(value, DATE_PATTERN);
                 error.setMessage("Date not equals than " + allowedDate);
                 errors.add(error);

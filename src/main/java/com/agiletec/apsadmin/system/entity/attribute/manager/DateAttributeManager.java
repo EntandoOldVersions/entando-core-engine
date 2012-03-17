@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 
 import java.text.ParseException;
@@ -145,18 +147,40 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         }
     }
     
-    protected String getCustomAttributeErrorMessage(String errorCode, ActionSupport action, AttributeInterface attribute) {
+    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute) {
+        try {
+            super.validate(action, tracer, attribute);
+            if (((DateAttribute) attribute).getDate() != null) return;
+            String insertedDateString = ((DateAttribute) attribute).getFailedDateString();
+            if (null != insertedDateString 
+                    && insertedDateString.trim().length() > 0 
+                    && !CheckFormatUtil.isValidDate(insertedDateString)) {
+                AttributeFieldError attributeFieldError = new AttributeFieldError(attribute, FieldError.INVALID_FORMAT, tracer);
+                this.addFieldError(action, attribute, attributeFieldError);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating date attribute", t);
+        }
+    }
+    
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
         DateAttributeValidationRules valRule = (DateAttributeValidationRules) attribute.getValidationRules();
         if (null != valRule) {
+            String errorCode = attributeFieldError.getErrorCode();
+            System.out.println("////////// " + errorCode);
             if (errorCode.equals(FieldError.GREATER_THAN_ALLOWED)) {
+                System.out.println("MMMMMMMMMMMMMMMMMMM");
                 Date endValue = (valRule.getRangeEnd() != null) ? (Date) valRule.getRangeEnd() : this.getOtherAttributeValue(attribute, valRule.getRangeEndAttribute());
                 String[] args = {DateConverter.getFormattedDate(endValue, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.greaterValue", args);
             } else if (errorCode.equals(FieldError.LESS_THAN_ALLOWED)) {
+                System.out.println("NNNNNNNNNNNNNNNNNNNNNNNNN");
                 Date startValue = (valRule.getRangeStart() != null) ? (Date) valRule.getRangeStart() : this.getOtherAttributeValue(attribute, valRule.getRangeStartAttribute());
                 String[] args = {DateConverter.getFormattedDate(startValue, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.lessValue", args);
             } else if (errorCode.equals(FieldError.NOT_EQUALS_THAN_ALLOWED)) {
+                System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOO");
                 Date value = (valRule.getValue() != null) ? (Date) valRule.getValue() : this.getOtherAttributeValue(attribute, valRule.getValueAttribute());
                 String[] args = {DateConverter.getFormattedDate(value, "dd/MM/yyyy")};
                 return action.getText("DateAttribute.fieldError.wrongValue", args);

@@ -141,6 +141,8 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);
+                AttributeTracer textTracer = (AttributeTracer) tracer.clone();
+                textTracer.setLang(lang);
                 String text = this.getTextMap().get(lang.getCode());
                 if (null == text) continue;
                 List<SymbolicLink> links = HypertextAttributeUtil.getSymbolicLinksOnText(text);
@@ -152,7 +154,7 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
                         SymbolicLink symbLink = links.get(j);
                         String linkErrorCode = sler.scan(symbLink, (Content) this.getParentEntity());
                         if (null != linkErrorCode) {
-                            AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, tracer);
+                            AttributeFieldError error = new AttributeFieldError(this, linkErrorCode, textTracer);
                             error.setMessage("Invalid link - page " + symbLink.getPageDest() 
                                 + " - content " + symbLink.getContentDest() + " - Error code " + linkErrorCode);
                             errors.add(error);

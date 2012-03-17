@@ -37,7 +37,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * Classe manager degli attributi tipo Hypertext.
  * @author E.Santoboni
  */
-public class HypertextAttributeManager extends com.agiletec.apsadmin.system.entity.attribute.manager.HypertextAttributeManager {
+public class HypertextAttributeManager extends com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager {
     
     @Deprecated
     protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {

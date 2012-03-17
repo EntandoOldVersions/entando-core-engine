@@ -307,6 +307,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			ActionSupport action = this.getAction();
 			Map<String, List<String>> fieldErros = action.getFieldErrors();
+			
 			assertEquals(1, fieldErros.size());
 			
 			List<String> titleItFieldErrors = fieldErros.get("it_Titolo");

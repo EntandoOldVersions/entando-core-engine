@@ -43,4 +43,6 @@ public class AttributeFieldError extends FieldError implements Serializable {
     private AttributeTracer _tracer;
     private AttributeInterface _attribute;
     
+    public static final String OGNL_VALIDATION = "OGNL_VALIDATION";
+    
 }

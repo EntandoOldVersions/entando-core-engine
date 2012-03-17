@@ -82,7 +82,9 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
         if (this.isEmpty()) return errors;
         try {
-            Integer attributeValue = ((NumberAttribute)attribute).getValue().intValue();
+            NumberAttribute numberAttribute = (NumberAttribute) attribute;
+            if (null == numberAttribute.getValue()) return errors;
+            Integer attributeValue = numberAttribute.getValue().intValue();
             Integer startValue = (this.getRangeStart() != null) ? (Integer) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
             if (null != startValue && attributeValue < startValue) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);

@@ -128,7 +128,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         int minLength = this.getMinLength();
         if (maxLength != -1 || minLength != -1) {
             String text = this.getTextForCheckLength(attribute, lang);
-            if (text != null) {
+            if (text != null && text.trim().length() > 0) {
                 text = text.trim();
                 if (maxLength != -1 && text.length() > maxLength && text.length() > 0) {
                     AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MAX_LENGTH, tracer);
@@ -154,10 +154,10 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
     }
     
     protected void checkRegExp(AttributeInterface attribute, AttributeTracer tracer, Lang lang, List<AttributeFieldError> errors) {
-        String value = ((ITextAttribute)attribute).getTextForLang(lang.getCode());
-        if (null != value && null != this.getRegexp()) {
+        String text = ((ITextAttribute)attribute).getTextForLang(lang.getCode());
+        if (null != text && text.trim().length() > 0 && null != this.getRegexp()) {
             Pattern pattern = Pattern.compile(this.getRegexp());
-            Matcher matcher = pattern.matcher(value);
+            Matcher matcher = pattern.matcher(text);
             if (!matcher.matches()) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_FORMAT, tracer);
                 error.setMessage("Lang '" + lang.getDescr() + "' - invalid format");

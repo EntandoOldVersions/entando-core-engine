@@ -430,7 +430,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param request The request.
      */
     protected abstract void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request);
-
+    
     /**
      * Return the value of the current attribute passed from the form.
      * 
@@ -474,7 +474,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
             if (null != errors && errors.size() > 0) {
                 for (int i = 0; i < errors.size(); i++) {
                     AttributeFieldError attributeFieldError = errors.get(i);
-                    this.addFieldError(action, tracer, attribute, attributeFieldError);
+                    this.addFieldError(action, attribute, attributeFieldError);
                 }
             }
         } catch (Throwable t) {
@@ -483,8 +483,8 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         }
     }
     
-    protected void addFieldError(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer,
-            AttributeInterface attribute, AttributeFieldError attributeFieldError) {
+    protected void addFieldError(ActionSupport action, AttributeInterface attribute, AttributeFieldError attributeFieldError) {
+        com.agiletec.aps.system.common.entity.model.AttributeTracer tracer = attributeFieldError.getTracer();
         String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
         String errorMessage = this.getErrorMessage(attributeFieldError, action, attribute);
         String formFieldName = tracer.getFormFieldName(attribute);
@@ -492,13 +492,29 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     }
     
     protected String getErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
-        String errorCode = attributeFieldError.getErrorCode();
-        if (errorCode.equals(FieldError.MANDATORY)) {
-            return action.getText(this.getRequiredAttributeMessage());
-        //} else if (errorCode.equals(ErrorCode.INVALID)) {
-        //    return action.getText(this.getInvalidAttributeMessage());
-        } else {
-            return this.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+        try {
+            String errorCode = attributeFieldError.getErrorCode();
+            if (errorCode.equals(FieldError.MANDATORY)) {
+                return action.getText(this.getRequiredAttributeMessage());
+            } else if (errorCode.equals(AttributeFieldError.OGNL_VALIDATION)) {
+                String label = null;
+                String labelKey = attributeFieldError.getMessageKey();
+                if (null != labelKey && labelKey.trim().length() > 0) {
+                    Lang currentLang = this.getLangManager().getDefaultLang();
+                    if (action instanceof BaseAction) {
+                        currentLang = ((BaseAction) action).getCurrentLang();
+                    }
+                    label = this.getI18nManager().getLabel(labelKey, currentLang.getCode());
+                }
+                if (label != null) {
+                    return label;
+                } else return this.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+            } else {
+                return this.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getErrorMessage");
+            throw new RuntimeException("Error creating Error Message", t);
         }
     }
 
@@ -509,21 +525,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @return The message for the specific error code.
      */
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
-        try {
-            String labelKey = attributeFieldError.getMessageKey();
-            if (null != labelKey && labelKey.trim().length() > 0) {
-                Lang currentLang = this.getLangManager().getDefaultLang();
-                if (action instanceof BaseAction) {
-                    currentLang = ((BaseAction) action).getCurrentLang();
-                }
-                String label = this.getI18nManager().getLabel(labelKey, currentLang.getCode());
-                if (label != null) return label;
-            }
-            return action.getText(this.getInvalidAttributeMessage());
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getCustomAttributeErrorMessage");
-            throw new RuntimeException("Error on extracting Error Message", t);
-        }
+        return action.getText(this.getInvalidAttributeMessage());
     }
     
     private Map<String, AttributeManagerInterface> getAttributeManagers() {

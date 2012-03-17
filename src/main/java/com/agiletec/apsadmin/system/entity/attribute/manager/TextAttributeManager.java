@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +27,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
@@ -35,20 +38,16 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class TextAttributeManager extends AbstractMultiLangAttributeManager {
 	
-	@Override
+	@Deprecated
 	protected Object getValue(AttributeInterface attribute, Lang lang) {
 		return ((TextAttribute) attribute).getTextMap().get(lang.getCode());
 	}
 	
-	/**
-	 * This applies to simple XML test, hypertext, link and resource.
-	 */
-	@Override
 	protected void setValue(AttributeInterface attribute, Lang lang, String value) {
 		((TextAttribute) attribute).setText(value, lang.getCode());
 	}
-	
-	@Override
+        
+        @Deprecated
 	protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		AttributeTracer textTracer = (AttributeTracer) tracer.clone();
 		Lang defaultLang = this.getLangManager().getDefaultLang();
@@ -57,18 +56,19 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
 		this.checkText(action, attribute, tracer);
 	}
 	
-	@Override
+	@Deprecated
 	protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListCompositeElement(action, attribute, tracer, entity);
 		this.checkText(action, attribute, tracer);
 	}
 	
-	@Override
+	@Deprecated
 	protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListElement(action, attribute, tracer, entity);
 		this.checkText(action, attribute, tracer);
 	}
 	
+        @Deprecated
 	protected void checkText(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
 		Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
 		while (langsIter.hasNext()) {
@@ -80,6 +80,7 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
 		}
 	}
 	
+        @Deprecated
 	protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, Lang lang) {
 		int maxLength = ((ITextAttribute) attribute).getMaxLength();
 		int minLength = ((ITextAttribute) attribute).getMinLength();
@@ -99,6 +100,7 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
 		}
 	}
 	
+        @Deprecated
 	protected void checkRegExp(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, Lang lang) {
 		String value = (String) this.getValue(attribute, lang);
 		ITextAttribute textAttribute = (ITextAttribute) attribute;
@@ -112,8 +114,33 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
 		}
 	}
 	
+        @Deprecated
 	protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
 		return (String) this.getValue(attribute, lang);
 	}
+        
+
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+        TextAttributeValidationRules valRules = (TextAttributeValidationRules) attribute.getValidationRules();
+        if (null != valRules) {
+            ITextAttribute textAttribute = (ITextAttribute) attribute;
+            Lang lang = attributeFieldError.getTracer().getLang();
+            String langCode = (null != lang) ? lang.getCode() : null;
+            String text = textAttribute.getTextForLang(langCode);
+            String errorCode = attributeFieldError.getErrorCode();
+            if (errorCode.equals(FieldError.INVALID_MIN_LENGTH)) {
+                String[] args = {String.valueOf(text.length()), String.valueOf(valRules.getMaxLength()), lang.getDescr()};
+                return action.getText("TextAttribute.fieldError.invalidMaxLength", args);
+            } else if (errorCode.equals(FieldError.INVALID_MIN_LENGTH)) {
+                String[] args = {String.valueOf(text.length()), String.valueOf(valRules.getMinLength()), lang.getDescr()};
+                return action.getText("TextAttribute.fieldError.invalidMinLength", args);
+            } else if (errorCode.equals(FieldError.INVALID_FORMAT)) {
+                String[] args = {lang.getDescr()};
+                return action.getText("TextAttribute.fieldError.invalidInsertedText", args);
+            }
+        }
+        return action.getText(this.getInvalidAttributeMessage());
+    }
+    
 	
 }
