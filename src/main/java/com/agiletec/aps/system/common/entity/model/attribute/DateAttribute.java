@@ -1,26 +1,26 @@
 /*
-*
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software.
-* Entando is a free software; 
-* you can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando software.
+ * Entando is a free software; 
+ * you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -35,8 +35,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.util.DateConverter;
-import java.util.Calendar;
+
 import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
@@ -45,7 +44,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * @author W.Ambu - E.Santoboni
  */
 public class DateAttribute extends AbstractAttribute {
-    
+
     /**
      * Get the FULLy qualified date such as Tuesday, April 12, 1952 AD or 3:30:42pm PST.
      * @return The date format as formatted by the FULL DateFormat.
@@ -53,7 +52,7 @@ public class DateAttribute extends AbstractAttribute {
     public String getFullDate() {
         return this.getFormattedDate(DateFormat.FULL);
     }
-    
+
     /**
      * LONG return the dates such as January 12, 1952 or 3:30:32pm 
      * @return The date formatted using the DateFormat LONG.
@@ -177,21 +176,23 @@ public class DateAttribute extends AbstractAttribute {
     public String getFailedDateString() {
         return _failedDateString;
     }
-    
+
     protected Object getJAXBValue(String langCode) {
         return this.getDate();
     }
-    
+
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         super.valueFrom(jaxbAttribute);
         Date date = null;
         Object value = jaxbAttribute.getValue();
-        if (null == value) return;
+        if (null == value) {
+            return;
+        }
         if (value instanceof XMLGregorianCalendar) {
             XMLGregorianCalendar grCal = (XMLGregorianCalendar) value;
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_MONTH, grCal.getDay());
-            calendar.set(Calendar.MONTH, grCal.getMonth()-1);
+            calendar.set(Calendar.MONTH, grCal.getMonth() - 1);
             calendar.set(Calendar.YEAR, grCal.getYear());
             date = calendar.getTime();
         } else if (value instanceof Date) {
@@ -201,12 +202,20 @@ public class DateAttribute extends AbstractAttribute {
             this.setDate(date);
         }
     }
-    
+
     public Status getStatus() {
-        if (null != this.getDate()) {
+        if (null != this.getDate() || null != this.getFailedDateString()) {
             return Status.VALUED;
         }
         return Status.EMPTY;
+    }
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        if (null == this.getDate() && null != this.getFailedDateString()) {
+            errors.add(new AttributeFieldError(this, FieldError.INVALID_FORMAT, tracer));
+        }
+        return errors;
     }
     
     private Date _date;

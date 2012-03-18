@@ -17,6 +17,8 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.Locale;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -138,10 +141,18 @@ public class NumberAttribute extends AbstractAttribute {
     }
     
     public Status getStatus() {
-        if (null != this.getValue()) {
+        if (null != this.getValue() || null != this.getFailedNumberString()) {
             return Status.VALUED;
         }
         return Status.EMPTY;
+    }
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        if (null == this.getValue() && null != this.getFailedNumberString()) {
+            errors.add(new AttributeFieldError(this, FieldError.INVALID_FORMAT, tracer));
+        }
+        return errors;
     }
     
     private BigDecimal _number;
