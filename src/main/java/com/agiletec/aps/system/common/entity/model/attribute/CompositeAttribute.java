@@ -249,7 +249,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
         for (int i = 0; i < attributes.size(); i++) {
             AttributeInterface attributeElement = attributes.get(i);
             Status elementStatus = attributeElement.getStatus();
-            if (null != elementStatus && elementStatus.equals(Status.VALUED)) {
+            if (!Status.EMPTY.equals(elementStatus)) {
                 return Status.VALUED;
             }
         }
