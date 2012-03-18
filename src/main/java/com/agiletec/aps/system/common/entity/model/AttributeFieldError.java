@@ -26,6 +26,23 @@ public class AttributeFieldError extends FieldError implements Serializable {
         return fieldCode;
     }
     
+    public String getFullMessage() {
+        StringBuffer buffer = new StringBuffer(this.getAttributePositionMessage());
+        buffer.append(" : ");
+        if (null != this.getMessageKey()) {
+            buffer.append(this.getMessageKey());
+        } else if (null != this.getMessage()) {
+            buffer.append(this.getMessage());
+        } else {
+            buffer.append(this.getErrorCode());
+        }
+        return buffer.toString();
+    }
+    
+    public String getAttributePositionMessage() {
+        return this.getTracer().getPositionMessage(this.getAttribute());
+    }
+    
     public AttributeTracer getTracer() {
         return _tracer;
     }

@@ -21,8 +21,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
- * This class implements the 'tracer' for the jAPS Attributes. This class is
- * used, with the singles attributes, to trace the position inside 'composite'
+ * This class implements the 'tracer' for the Entando Attributes. This class is
+ * used, with the singles attributes, to trace the position inside any 'complex'
  * attributes. This class is involved during the update and validation process
  * of the Attribute and, furthermore, it guarantees the correct construction of
  * the form in the content edit interface.
@@ -97,6 +97,30 @@ public class AttributeTracer {
             formFieldName.append(langModule).append(attribute.getName());
         }
         return formFieldName.toString();
+    }
+    
+    public String getPositionMessage(AttributeInterface attribute) {
+        StringBuffer buffer = new StringBuffer("Attribute ");
+        if (this.isMonoListElement()) {
+            if (this.isCompositeElement()) {
+                buffer.append(this.getParentAttribute().getName())
+                        .append(" - element ").append(String.valueOf(this.getListIndex() + 1))
+                        .append(" - Included Attribute ").append(attribute.getName());
+            } else {
+                buffer.append(attribute.getName()).append(" - element ")
+                        .append(String.valueOf(this.getListIndex() + 1));
+            }
+        } else if (this.isCompositeElement()) {
+            buffer.append(this.getParentAttribute().getName())
+                    .append(" - Included Attribute ").append(attribute.getName());
+        } else if (this.isListElement()) {
+            buffer.append(attribute.getName())
+                    .append(" - lang ").append(this.getListLang().getDescr())
+                    .append(" - element ").append(String.valueOf(this.getListIndex() + 1));
+        } else {
+            buffer.append(attribute.getName());
+        }
+        return buffer.toString();
     }
     
     public Lang getLang() {

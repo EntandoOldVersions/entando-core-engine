@@ -33,6 +33,7 @@ import org.jdom.Element;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.group.IGroupManager;
 
 /** 
  * This class represents an entity.
@@ -342,17 +343,25 @@ public class ApsEntity implements IApsEntity, Serializable {
         this._entityDom = entityDom;
     }
     
-    public List<FieldError> validate() {
+    public List<FieldError> validate(IGroupManager groupManager) {
         List<FieldError> errors = new ArrayList<FieldError>();
         try {
-            /*
-            if (null == this.getDescr() || this.getDescr().trim().length() == 0) {
-                errors.add(new FieldError("description", FieldError.ErrorCode.MANDATORY));
+            if (null != this.getMainGroup() && null == groupManager.getGroup(this.getMainGroup())) {
+                FieldError error = new FieldError("mainGroup", FieldError.INVALID);
+                error.setMessage("Invalid main group - " + this.getMainGroup());
+                errors.add(error);
             }
-            if (null == this.getMainGroup() || this.getMainGroup().trim().length() == 0) {
-                errors.add(new FieldError("mainGroup", FieldError.ErrorCode.MANDATORY));
+            if (null != this.getGroups()) {
+                Iterator<String> groupsIter = this.getGroups().iterator();
+                while (groupsIter.hasNext()) {
+                    String groupName = groupsIter.next();
+                    if (null == groupManager.getGroup(groupName)) {
+                        FieldError error = new FieldError("extraGroup", FieldError.INVALID);
+                        error.setMessage("Invalid extra group - " + groupName);
+                        errors.add(error);
+                    }
+                }
             }
-            */
             if (null != this.getAttributeList()) {
                 List<AttributeInterface> attributes = this.getAttributeList();
                 for (int i = 0; i < attributes.size(); i++) {

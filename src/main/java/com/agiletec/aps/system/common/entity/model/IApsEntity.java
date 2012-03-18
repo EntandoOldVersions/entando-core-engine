@@ -24,6 +24,7 @@ import java.util.Set;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.group.IGroupManager;
 
 /**
  * This class represents an Entity.
@@ -195,6 +196,6 @@ public interface IApsEntity {
      */
     public void disableAttributes(String disablingCode);
     
-    public List<FieldError> validate();
+    public List<FieldError> validate(IGroupManager groupManager);
     
 }

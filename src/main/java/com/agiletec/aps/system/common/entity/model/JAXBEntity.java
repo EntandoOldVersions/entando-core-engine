@@ -17,6 +17,7 @@
  */
 package com.agiletec.aps.system.common.entity.model;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -49,56 +50,68 @@ public class JAXBEntity implements Serializable {
     public JAXBEntity() {}
     
     public JAXBEntity(IApsEntity mainEntity, String langCode) {
-        this.setDescr(mainEntity.getDescr());
-        this.setId(mainEntity.getId());
-        this.setMainGroup(mainEntity.getMainGroup());
-        this.setTypeCode(mainEntity.getTypeCode());
-        this.setTypeDescr(mainEntity.getTypeDescr());
-        this.setGroups(mainEntity.getGroups());
-        this.setCategories(mainEntity.getCategories());
-        List<AttributeInterface> attributes = mainEntity.getAttributeList();
-        if (null == attributes || attributes.size() == 0) {
-            return;
-        }
-        for (int i = 0; i < attributes.size(); i++) {
-            AttributeInterface attribute = attributes.get(i);
-            DefaultJAXBAttribute jaxrAttribute = attribute.getJAXBAttribute(langCode);
-            if (null != jaxrAttribute) {
-                this.getAttributes().add(jaxrAttribute);
+        try {
+            this.setDescr(mainEntity.getDescr());
+            this.setId(mainEntity.getId());
+            this.setMainGroup(mainEntity.getMainGroup());
+            this.setTypeCode(mainEntity.getTypeCode());
+            this.setTypeDescr(mainEntity.getTypeDescr());
+            this.setGroups(mainEntity.getGroups());
+            this.setCategories(mainEntity.getCategories());
+            List<AttributeInterface> attributes = mainEntity.getAttributeList();
+            if (null == attributes || attributes.size() == 0) {
+                return;
             }
+            for (int i = 0; i < attributes.size(); i++) {
+                AttributeInterface attribute = attributes.get(i);
+                DefaultJAXBAttribute jaxrAttribute = attribute.getJAXBAttribute(langCode);
+                if (null != jaxrAttribute) {
+                    this.getAttributes().add(jaxrAttribute);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "JAXBEntity");
+            throw new RuntimeException("Error creating JAXBEntity", t);
         }
     }
     
     public IApsEntity buildEntity(IApsEntity prototype, ICategoryManager categoryManager) {
-        prototype.setDescr(this.getDescr());
-        prototype.setId(this.getId());
-        prototype.setMainGroup(this.getMainGroup());
-        prototype.setTypeCode(this.getTypeCode());
-        prototype.setTypeDescr(this.getTypeDescr());
-        if (null != this.getGroups() && !this.getGroups().isEmpty()) {
-            Iterator<String> iter = this.getGroups().iterator();
-            while (iter.hasNext()) {
-                prototype.addGroup(iter.next());
+        try {
+            prototype.setDescr(this.getDescr());
+            prototype.setId(this.getId());
+            prototype.setMainGroup(this.getMainGroup());
+            prototype.setTypeCode(this.getTypeCode());
+            prototype.setTypeDescr(this.getTypeDescr());
+            if (null != this.getGroups() && !this.getGroups().isEmpty()) {
+                Iterator<String> iter = this.getGroups().iterator();
+                while (iter.hasNext()) {
+                    prototype.addGroup(iter.next());
+                }
             }
-        }
-        if (null != this.getCategories() && !this.getCategories().isEmpty()) {
-            Iterator<String> iter = this.getCategories().iterator();
-            while (iter.hasNext()) {
-                String categoryCode = iter.next();
-                Category category = categoryManager.getCategory(categoryCode);
-                if (null != category) prototype.addCategory(category);
+            if (null != this.getCategories() && !this.getCategories().isEmpty()) {
+                Iterator<String> iter = this.getCategories().iterator();
+                while (iter.hasNext()) {
+                    String categoryCode = iter.next();
+                    Category category = categoryManager.getCategory(categoryCode);
+                    if (null != category) {
+                        prototype.addCategory(category);
+                    }
+                }
             }
-        }
-        if (null == this.getAttributes()) {
-            return prototype;
-        }
-        for (int i = 0; i < this.getAttributes().size(); i++) {
-            DefaultJAXBAttribute jaxrAttribute = this.getAttributes().get(i);
-            AttributeInterface attribute = (AttributeInterface) prototype.getAttribute(jaxrAttribute.getName());
-            if (null != attribute && null != jaxrAttribute 
-                    && attribute.getType().equals(jaxrAttribute.getType())) {
-                attribute.valueFrom(jaxrAttribute);
+            if (null == this.getAttributes()) {
+                return prototype;
             }
+            for (int i = 0; i < this.getAttributes().size(); i++) {
+                DefaultJAXBAttribute jaxrAttribute = this.getAttributes().get(i);
+                AttributeInterface attribute = (AttributeInterface) prototype.getAttribute(jaxrAttribute.getName());
+                if (null != attribute && null != jaxrAttribute
+                        && attribute.getType().equals(jaxrAttribute.getType())) {
+                    attribute.valueFrom(jaxrAttribute);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "buildEntity");
+            throw new RuntimeException("Error creating Entity", t);
         }
         return prototype;
     }
