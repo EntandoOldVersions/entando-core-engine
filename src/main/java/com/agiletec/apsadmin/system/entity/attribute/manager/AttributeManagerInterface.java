@@ -17,6 +17,7 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +55,6 @@ public interface AttributeManagerInterface {
      */
     public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity);
     
-    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute);
+    public String getErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action);
     
 }

@@ -17,7 +17,6 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import java.math.BigDecimal;
@@ -128,24 +127,8 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
     }
     
-    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute) {
-        try {
-            super.validate(action, tracer, attribute);
-            if (((NumberAttribute) attribute).getValue() != null) return;
-            String insertedNumberString = ((NumberAttribute) attribute).getFailedNumberString();
-            if (null != insertedNumberString 
-                    && insertedNumberString.trim().length() > 0 
-                    && !CheckFormatUtil.isValidNumber(insertedNumberString)) {
-                AttributeFieldError attributeFieldError = new AttributeFieldError(attribute, FieldError.INVALID_FORMAT, tracer);
-                this.addFieldError(action, attribute, attributeFieldError);
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
-            throw new RuntimeException("Error validating number attribute", t);
-        }
-    }
-    
-    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
+        AttributeInterface attribute = attributeFieldError.getAttribute();
         NumberAttributeValidationRules valRules = (NumberAttributeValidationRules) attribute.getValidationRules();
         if (null != valRules) {
             String errorCode = attributeFieldError.getErrorCode();

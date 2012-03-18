@@ -28,38 +28,40 @@ import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
  * @author E.Santoboni
  */
 public class CheckBoxAttributeManager extends AbstractMonoLangAttributeManager {
-	
-        @Deprecated
-	protected Object getValue(AttributeInterface attribute) {
-		return ((BooleanAttribute) attribute).getBooleanValue();
-	}
-	
-	protected void setValue(AttributeInterface attribute, String value) {
-		if (null != value) {
-			((BooleanAttribute) attribute).setBooleanValue(new Boolean(true));
-		} else {
-			((BooleanAttribute) attribute).setBooleanValue(null);
-		}
-	}
-	
-	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-		String value = this.getValueFromForm(attribute, tracer, request);
-		if (value != null) {
-			if (value.trim().length()==0) value = null;
-			this.setValue(attribute, value);
-		} else {
-			this.setValue(attribute, null);
-		}
-	}
-	
-        @Deprecated
-	protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
-        @Deprecated
-	protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
+    
+    @Deprecated
+    protected Object getValue(AttributeInterface attribute) {
+        return ((BooleanAttribute) attribute).getBooleanValue();
+    }
+    
+    protected void setValue(AttributeInterface attribute, String value) {
+        if (null != value) {
+            ((BooleanAttribute) attribute).setBooleanValue(new Boolean(true));
+        } else {
+            ((BooleanAttribute) attribute).setBooleanValue(null);
+        }
+    }
+    
+    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
+        String value = this.getValueFromForm(attribute, tracer, request);
+        if (value != null) {
+            if (value.trim().length() == 0) {
+                value = null;
+            }
+            this.setValue(attribute, value);
+        } else {
+            this.setValue(attribute, null);
+        }
+    }
+    
+    @Deprecated
+    protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
+        return true;
+    }
+    
+    @Deprecated
+    protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
+        return true;
+    }
+    
 }

@@ -26,32 +26,28 @@ import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
  * @author E.Santoboni
  */
 public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
-	
-	@Override
-        @Deprecated
-	protected Object getValue(AttributeInterface attribute) {
-		return ((BooleanAttribute) attribute).getBooleanValue();
-	}
-	
-	@Override
-	protected void setValue(AttributeInterface attribute, String value) {
-		if (value != null) {
-			((BooleanAttribute) attribute).setBooleanValue(new Boolean(value));
-		} else {
-			((BooleanAttribute) attribute).setBooleanValue(null);
-		}
-	}
-	
-	@Override
-        @Deprecated
-	protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
-	@Override
-        @Deprecated
-	protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
+    
+    @Deprecated
+    protected Object getValue(AttributeInterface attribute) {
+        return ((BooleanAttribute) attribute).getBooleanValue();
+    }
+    
+    protected void setValue(AttributeInterface attribute, String value) {
+        if (value != null) {
+            ((BooleanAttribute) attribute).setBooleanValue(new Boolean(value));
+        } else {
+            ((BooleanAttribute) attribute).setBooleanValue(null);
+        }
+    }
+    
+    @Deprecated
+    protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
+        return true;
+    }
+    
+    @Deprecated
+    protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
+        return true;
+    }
+    
 }

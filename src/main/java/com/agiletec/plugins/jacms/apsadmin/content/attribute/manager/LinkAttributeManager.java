@@ -18,7 +18,6 @@
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.manager;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
@@ -102,7 +101,7 @@ public class LinkAttributeManager extends TextAttributeManager {
         return INCOMPLETE_ATTRIBUTE_STATE;
     }
     
-    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         String errorCode = attributeFieldError.getErrorCode();
         String messageKey = null;
         if (errorCode.equals(ICmsAttributeErrorCodes.INVALID_PAGE)) {
@@ -120,7 +119,7 @@ public class LinkAttributeManager extends TextAttributeManager {
             String[] args = {attributeFieldError.getTracer().getLang().getDescr()};
             return action.getText(messageKey, args);
         } else {
-            return super.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+            return super.getCustomAttributeErrorMessage(attributeFieldError, action);
         }
     }
     

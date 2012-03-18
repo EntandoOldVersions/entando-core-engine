@@ -17,7 +17,6 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 
@@ -147,24 +146,8 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         }
     }
     
-    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute) {
-        try {
-            super.validate(action, tracer, attribute);
-            if (((DateAttribute) attribute).getDate() != null) return;
-            String insertedDateString = ((DateAttribute) attribute).getFailedDateString();
-            if (null != insertedDateString 
-                    && insertedDateString.trim().length() > 0 
-                    && !CheckFormatUtil.isValidDate(insertedDateString)) {
-                AttributeFieldError attributeFieldError = new AttributeFieldError(attribute, FieldError.INVALID_FORMAT, tracer);
-                this.addFieldError(action, attribute, attributeFieldError);
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
-            throw new RuntimeException("Error validating date attribute", t);
-        }
-    }
-    
-    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
+        AttributeInterface attribute = attributeFieldError.getAttribute();
         DateAttributeValidationRules valRule = (DateAttributeValidationRules) attribute.getValidationRules();
         if (null != valRule) {
             String errorCode = attributeFieldError.getErrorCode();

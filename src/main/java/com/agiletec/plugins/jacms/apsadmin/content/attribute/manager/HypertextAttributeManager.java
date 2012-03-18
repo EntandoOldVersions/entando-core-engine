@@ -115,7 +115,7 @@ public class HypertextAttributeManager extends com.agiletec.apsadmin.system.enti
         ((HypertextAttributeManager) manager).setSymbolicLinkErrorMessenger(this.getSymbolicLinkErrorMessenger());
     }
     
-    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         String errorCode = attributeFieldError.getErrorCode();
         String messageKey = null;
         if (errorCode.equals(ICmsAttributeErrorCodes.INVALID_PAGE)) {
@@ -133,7 +133,7 @@ public class HypertextAttributeManager extends com.agiletec.apsadmin.system.enti
             String[] args = {attributeFieldError.getTracer().getLang().getDescr()};
             return action.getText(messageKey, args);
         } else {
-            return super.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+            return super.getCustomAttributeErrorMessage(attributeFieldError, action);
         }
     }
     

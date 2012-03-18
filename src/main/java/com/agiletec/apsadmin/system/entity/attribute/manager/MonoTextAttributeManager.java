@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +26,7 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
 import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -111,5 +114,26 @@ public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
     protected String getTextForCheckLength(AttributeInterface attribute) {
         return (String) this.getValue(attribute);
     }
+    
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
+        AttributeInterface attribute = attributeFieldError.getAttribute();
+        TextAttributeValidationRules valRules = (TextAttributeValidationRules) attribute.getValidationRules();
+        if (null != valRules) {
+            ITextAttribute textAttribute = (ITextAttribute) attribute;
+            String text = textAttribute.getTextForLang(null);
+            String errorCode = attributeFieldError.getErrorCode();
+            if (errorCode.equals(FieldError.INVALID_MIN_LENGTH)) {
+                String[] args = {String.valueOf(text.length()), String.valueOf(valRules.getMinLength())};
+                return action.getText("MonotextAttribute.fieldError.invalidMinLength", args);
+            } else if (errorCode.equals(FieldError.INVALID_MAX_LENGTH)) {
+                String[] args = {String.valueOf(text.length()), String.valueOf(valRules.getMaxLength())};
+                return action.getText("MonotextAttribute.fieldError.invalidMaxLength", args);
+            } else if (errorCode.equals(FieldError.INVALID_FORMAT)) {
+                return action.getText("MonotextAttribute.fieldError.invalidInsertedText");
+            }
+        }
+        return action.getText(this.getInvalidAttributeMessage());
+    }
+    
     
 }

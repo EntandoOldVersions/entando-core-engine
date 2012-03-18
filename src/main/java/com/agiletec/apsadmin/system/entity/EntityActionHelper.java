@@ -78,19 +78,47 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         try {
             List<AttributeInterface> attributes = currentEntity.getAttributeList();
             for (int i = 0; i < attributes.size(); i++) {
-                AttributeInterface attribute = attributes.get(i);
-                if (attribute.isActive()) {
-                    AttributeTracer tracer = new AttributeTracer();
-                    String attributeType = attribute.getType();
-                    AttributeManagerInterface attributeManager = this.getManager(attributeType);
-                    if (attributeManager != null) {
-                        attributeManager.validate(action, tracer, attribute);
+                AttributeInterface entityAttribute = attributes.get(i);
+                if (entityAttribute.isActive()) {
+                    List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer());
+                    if (null != errors && errors.size() > 0) {
+                        for (int j = 0; j < errors.size(); j++) {
+                            AttributeFieldError attributeFieldError = errors.get(j);
+                            AttributeTracer tracer = attributeFieldError.getTracer();
+                            AttributeInterface attribute = attributeFieldError.getAttribute();
+                            String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
+                            AttributeManagerInterface attributeManager = this.getManager(attribute.getType());
+                            String errorMessage = attributeManager.getErrorMessage(attributeFieldError, action);
+                            String formFieldName = tracer.getFormFieldName(attributeFieldError.getAttribute());
+                            action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + errorMessage);
+                        }
                     }
                 }
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "scanEntityAttributes");
             throw new RuntimeException("Error in scanEntityAttributes", t);
+        }
+    }
+    
+    private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer) {
+        if (tracer.isMonoListElement()) {
+            if (tracer.isCompositeElement()) {
+                String[] args = {tracer.getParentAttribute().getName(), String.valueOf(tracer.getListIndex() + 1), attribute.getName()};
+                return action.getText("EntityAttribute.compositeListAttributeElement.errorMessage.prefix", args);
+            } else {
+                String[] args = {attribute.getName(), String.valueOf(tracer.getListIndex() + 1)};
+                return action.getText("EntityAttribute.monolistAttributeElement.errorMessage.prefix", args);
+            }
+        } else if (tracer.isCompositeElement()) {
+            String[] args = {tracer.getParentAttribute().getName(), attribute.getName()};
+            return action.getText("EntityAttribute.compositeAttributeElement.errorMessage.prefix", args);
+        } else if (tracer.isListElement()) {
+            String[] args = {attribute.getName(), tracer.getListLang().getDescr(), String.valueOf(tracer.getListIndex() + 1)};
+            return action.getText("EntityAttribute.listAttributeElement.errorMessage.prefix", args);
+        } else {
+            String[] args = {attribute.getName()};
+            return action.getText("EntityAttribute.singleAttribute.errorMessage.prefix", args);
         }
     }
     

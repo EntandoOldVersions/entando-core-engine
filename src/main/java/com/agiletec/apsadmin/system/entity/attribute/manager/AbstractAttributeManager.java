@@ -55,7 +55,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         this.setAttributeManagers(attributeManagers);
         this.checkAttribute(action, attribute, new AttributeTracer(), entity);
     }
-
+    
     /**
      * Basic method for attribute checking.
      * This method knows in advance all the possible combinations of attributes in the system;
@@ -467,31 +467,8 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     protected void setExtraPropertyTo(AttributeManagerInterface manager) {
         //nothing to do
     }
-
-    public void validate(ActionSupport action, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer, AttributeInterface attribute) {
-        try {
-            List<AttributeFieldError> errors = attribute.validate(tracer);
-            if (null != errors && errors.size() > 0) {
-                for (int i = 0; i < errors.size(); i++) {
-                    AttributeFieldError attributeFieldError = errors.get(i);
-                    this.addFieldError(action, attribute, attributeFieldError);
-                }
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
-            throw new RuntimeException("Error in validate", t);
-        }
-    }
     
-    protected void addFieldError(ActionSupport action, AttributeInterface attribute, AttributeFieldError attributeFieldError) {
-        com.agiletec.aps.system.common.entity.model.AttributeTracer tracer = attributeFieldError.getTracer();
-        String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
-        String errorMessage = this.getErrorMessage(attributeFieldError, action, attribute);
-        String formFieldName = tracer.getFormFieldName(attribute);
-        action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + errorMessage);
-    }
-    
-    protected String getErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    public String getErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         try {
             String errorCode = attributeFieldError.getErrorCode();
             if (errorCode.equals(FieldError.MANDATORY)) {
@@ -512,23 +489,23 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
                 }
                 if (label != null) {
                     return label;
-                } else return this.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+                } else return this.getCustomAttributeErrorMessage(attributeFieldError, action);
             } else {
-                return this.getCustomAttributeErrorMessage(attributeFieldError, action, attribute);
+                return this.getCustomAttributeErrorMessage(attributeFieldError, action);
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getErrorMessage");
             throw new RuntimeException("Error creating Error Message", t);
         }
     }
-
+    
     /**
      * Return a custom error message.
      * This method shouwld to be extended for custom attribute manager
      * @param errorCode The error code 
      * @return The message for the specific error code.
      */
-    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action, AttributeInterface attribute) {
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         return action.getText(this.getInvalidAttributeMessage());
     }
     
