@@ -18,7 +18,6 @@
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -34,10 +33,8 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.FieldError;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -399,19 +396,17 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return response;
     }
-
+    
     protected IContentListHelper getContentListHelper() {
         return _contentListHelper;
     }
-
     public void setContentListHelper(IContentListHelper contentListHelper) {
         this._contentListHelper = contentListHelper;
     }
-
+    
     protected IUserManager getUserManager() {
         return _userManager;
     }
-
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
     }
@@ -419,7 +414,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected ICategoryManager getCategoryManager() {
         return _categoryManager;
     }
-
     public void setCategoryManager(ICategoryManager categoryManager) {
         this._categoryManager = categoryManager;
     }
@@ -427,7 +421,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IGroupManager getGroupManager() {
         return _groupManager;
     }
-
     public void setGroupManager(IGroupManager groupManager) {
         this._groupManager = groupManager;
     }
@@ -435,7 +428,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IPageManager getPageManager() {
         return _pageManager;
     }
-
     public void setPageManager(IPageManager pageManager) {
         this._pageManager = pageManager;
     }
@@ -443,7 +435,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IResourceManager getResourceManager() {
         return _resourceManager;
     }
-
     public void setResourceManager(IResourceManager resourceManager) {
         this._resourceManager = resourceManager;
     }
@@ -451,7 +442,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IContentAuthorizationHelper getContentAuthorizationHelper() {
         return _contentAuthorizationHelper;
     }
-
     public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
         this._contentAuthorizationHelper = contentAuthorizationHelper;
     }
@@ -459,7 +449,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected ICmsCacheWrapperManager getCmsCacheWrapperManager() {
         return _cmsCacheWrapperManager;
     }
-
     public void setCmsCacheWrapperManager(ICmsCacheWrapperManager cmsCacheWrapperManager) {
         this._cmsCacheWrapperManager = cmsCacheWrapperManager;
     }
@@ -467,7 +456,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     protected IContentDispenser getContentDispenser() {
         return _contentDispenser;
     }
-
     public void setContentDispenser(IContentDispenser contentDispenser) {
         this._contentDispenser = contentDispenser;
     }
@@ -475,7 +463,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public String getItemsStartElement() {
         return _itemsStartElement;
     }
-
     public void setItemsStartElement(String itemsStartElement) {
         this._itemsStartElement = itemsStartElement;
     }
@@ -483,7 +470,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public String getItemStartElement() {
         return _itemStartElement;
     }
-
     public void setItemStartElement(String itemStartElement) {
         this._itemStartElement = itemStartElement;
     }
@@ -491,7 +477,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public String getItemEndElement() {
         return _itemEndElement;
     }
-
     public void setItemEndElement(String itemEndElement) {
         this._itemEndElement = itemEndElement;
     }
@@ -499,10 +484,10 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public String getItemsEndElement() {
         return _itemsEndElement;
     }
-
     public void setItemsEndElement(String itemsEndElement) {
         this._itemsEndElement = itemsEndElement;
     }
+    
     private IContentListHelper _contentListHelper;
     private IUserManager _userManager;
     private ICategoryManager _categoryManager;
@@ -516,4 +501,5 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     private String _itemStartElement = "<li>";
     private String _itemEndElement = "</li>";
     private String _itemsEndElement = "</ul>";
+    
 }
