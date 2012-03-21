@@ -64,10 +64,16 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	
 	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
-		return this.buildStatement(filters, null, userGroupCodes, selectAll, conn);
+		return this.buildStatement(filters, null, false, userGroupCodes, selectAll, conn);
 	}
 	
-	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, String[] categories, 
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+			String[] categories, Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
+		return this.buildStatement(filters, categories, false, userGroupCodes, selectAll, conn);
+	}
+	
+	protected PreparedStatement buildStatement(EntitySearchFilter[] filters, 
+			String[] categories, boolean orClauseCategoryFilter, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
 		String query = this.createQueryString(filters, categories, groupsForSelect, selectAll);
@@ -108,25 +114,27 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 	}
 	
 	protected String createQueryString(EntitySearchFilter[] filters, Collection<String> groupsForSelect, boolean selectAll) {
-		return this.createQueryString(filters, null, groupsForSelect, selectAll);
+		return this.createQueryString(filters, null, false, groupsForSelect, selectAll);
 	}
 	
-	protected String createQueryString(EntitySearchFilter[] filters, String[] categories, Collection<String> groupsForSelect, boolean selectAll) {
+	protected String createQueryString(EntitySearchFilter[] filters, 
+			String[] categories, Collection<String> groupsForSelect, boolean selectAll) {
+		return this.createQueryString(filters, categories, false, groupsForSelect, selectAll);
+	}
+	
+	protected String createQueryString(EntitySearchFilter[] filters, 
+			String[] categories, boolean orClauseCategoryFilter, Collection<String> groupsForSelect, boolean selectAll) {
 		StringBuffer query = this.createBaseQueryBlock(filters, selectAll);
-		
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
-		
 		if (null != groupsForSelect && !groupsForSelect.isEmpty()) {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			this.addGroupsQueryBlock(query, groupsForSelect);
 		}
-		
 		if (null != categories && categories.length > 0) {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
-			this.addCategoriesQueryBlock(query, categories, true);
+			this.addCategoriesQueryBlock(query, categories, !orClauseCategoryFilter);
 		}
-		
 		boolean ordered = appendOrderQueryBlocks(filters, query, false);
 		//System.out.println("********** " + query.toString());
 		return query.toString();

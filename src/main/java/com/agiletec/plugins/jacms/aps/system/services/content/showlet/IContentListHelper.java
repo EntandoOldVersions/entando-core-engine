@@ -83,7 +83,7 @@ public interface IContentListHelper extends com.agiletec.plugins.jacms.aps.syste
 	 * (key=KEY;value=VALUE;attributeFilter=TRUE|FALSE;start=START;end=END;like=TRUE|FALSE)+..<OTHER_FILTERS>
 	 * @param filters I filtri tramite il quale ricavare il parametro.
 	 * @return Il parametro da inserire nella configurazione della showlet.
-	 * @deprecated use getFilterParam(EntitySearchFilter[]) method
+	 * @deprecated From Entando 2.0 version 2.4.1. Use getFilterParam(EntitySearchFilter[]) method
 	 */
 	public String getShowletParam(EntitySearchFilter[] filters);
 	
@@ -109,7 +109,8 @@ public interface IContentListHelper extends com.agiletec.plugins.jacms.aps.syste
 	@Deprecated(/** to maintain compatibility with versions prior to 2.2.0.1 */)
 	public static final String SHOWLET_PARAM_CATEGORY = "category";
 	public static final String SHOWLET_PARAM_CATEGORIES = "categories";
-	public static final String SHOWLET_PARAM_FILTERS = "filters";
+	public static final String SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER = "orClauseCategoryFilter";
+        public static final String SHOWLET_PARAM_FILTERS = "filters";
 	public static final String SHOWLET_PARAM_TITLE = "title";
 	public static final String SHOWLET_PARAM_PAGE_LINK = "pageLink";
 	public static final String SHOWLET_PARAM_PAGE_LINK_DESCR = "linkDescr";
