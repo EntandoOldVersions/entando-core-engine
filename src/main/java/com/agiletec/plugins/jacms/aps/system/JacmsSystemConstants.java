@@ -80,7 +80,19 @@ public class JacmsSystemConstants {
 	 * Prefix to the key of the object where are stored the public content.
 	 * That name must be completed with the ID of the public content. 
 	 */
-	public static final String CONTENT_CACHE_PREFIX = "jacms_public_content_";
+	public static final String CONTENT_CACHE_PREFIX = "jacms_publicContent_";
+	
+	/**
+	 * Prefix to the key of the object where are stored the Content Authorization info.
+	 * That name must be completed with the ID of the public content. 
+	 */
+	public static final String CONTENT_AUTH_INFO_CACHE_PREFIX = "jacms_ContentAuthInfo_";
+	
+	/**
+	 * Prefix to the name of the group where are stored the rendered contents by content id.
+	 * That name must be completed with the ID of the content. 
+	 */
+	public static final String CONTENT_CACHE_GROUP_PREFIX = "jacms_ContentCacheGroup_";
 	
 	/**
 	 * Prefix to the name of the group where are stored the rendered contents by model id.
@@ -89,16 +101,16 @@ public class JacmsSystemConstants {
 	public static final String CONTENT_MODEL_CACHE_GROUP_PREFIX = "jacms_GroupModelCacheGroup_";
 	
 	/**
-	 * Prefix to the name of the group where are stored the rendered contents by id.
+	 * Prefix to the name of the group where are stored the content list by type.
 	 * The name must be completed with the ID of the content type.
 	 */
 	public static final String CONTENTS_ID_CACHE_GROUP_PREFIX = "jacms_ContentsIdCacheGroup_";
 	
 	/**
-	 * Prefix to the name of the group where are stored the rendered contents by type.
-	 * That name must be completed with the ID of the content type. 
+	 * Prefix to the name of the group where are stored the contents by type.
+	 * The name must be completed with the ID of the content type. 
 	 */
-	public static final String CONTENTS_TYPE_CACHE_GROUP_PREFIX = "jacms_ContentsTypeCacheGroup_";
+	public static final String CONTENT_TYPE_CACHE_GROUP_PREFIX = "jacms_ContentTypeCacheGroup_";
 	
 	public static final String ATTRIBUTE_ROLE_TITLE = "jacms:title";
 

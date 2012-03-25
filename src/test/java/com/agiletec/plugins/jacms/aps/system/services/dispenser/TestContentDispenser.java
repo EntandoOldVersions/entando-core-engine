@@ -20,9 +20,13 @@ package com.agiletec.plugins.jacms.aps.system.services.dispenser;
 import com.agiletec.aps.BaseTestCase;
 
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 
 /**
  * @author W.Ambu - E.Santoboni
@@ -76,6 +80,71 @@ public class TestContentDispenser extends BaseTestCase {
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART122", 2, "en", reqCtx);
     	assertEquals(this.replaceNewLine(_attendedEnART122.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
     }
+	
+	public void testGetRenderedContent_3() throws Throwable {
+		Content content = this._contentManager.loadContent("ART120", true);
+		content.setId(null);
+		try {
+			RequestContext reqCtx = this.getRequestContext();
+			this.setUserOnSession("admin");
+			this._contentManager.insertOnLineContent(content);
+			ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx);
+			assertNotNull(outputInfo);
+			
+			assertNotNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
+			assertNotNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
+			
+			this._contentManager.insertOnLineContent(content);
+			this.waitNotifyingThread();
+			
+			assertNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
+			assertNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null != content.getId()) {
+				this._contentManager.deleteContent(content);
+			}
+		}
+	}
+    
+	public void testGetRenderedContent_4() throws Throwable {
+		String contentId = "ART120";
+		String contentShapeModel = "title (Text): testo=$content.Titolo.getText()";
+		int modelId = 1972;
+		try {
+			this.addNewContentModel(modelId, contentShapeModel, "ART");
+			RequestContext reqCtx = this.getRequestContext();
+			this.setUserOnSession("admin");
+			ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(contentId, modelId, "en", reqCtx);
+			assertEquals("title (Text): testo=Title of Administrator's Content", outputInfo.getRenderedContent());
+			
+			ContentModel model = this._contentModelManager.getContentModel(modelId);
+			String newContentShapeModel = "title: testo=$content.Titolo.getText()";
+			model.setContentShape(newContentShapeModel);
+			this._contentModelManager.updateContentModel(model);
+			this.waitNotifyingThread();
+			
+			outputInfo = this._contentDispenser.getRenderizationInfo(contentId, modelId, "en", reqCtx);
+			assertEquals("title: testo=Title of Administrator's Content", outputInfo.getRenderedContent());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			ContentModel model = this._contentModelManager.getContentModel(modelId);
+			if (null != model) {
+				this._contentModelManager.removeContentModel(model);
+			}
+		}
+	}
+	
+	public void addNewContentModel(int id, String shape, String contentTypeCode) throws Throwable {
+		ContentModel model = new ContentModel();
+		model.setContentType(contentTypeCode);
+		model.setDescription("test");
+		model.setId(id);
+		model.setContentShape(shape);
+		this._contentModelManager.addContentModel(model);
+	}
     
     public void testGetUnauthorizedContent() throws Throwable {
     	RequestContext reqCtx = this.getRequestContext();
@@ -107,12 +176,18 @@ public class TestContentDispenser extends BaseTestCase {
     private void init() throws Exception {
     	try {
     		this._contentDispenser = (IContentDispenser) this.getService(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER);
+			this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+			this._contentModelManager = (IContentModelManager) this.getService(JacmsSystemConstants.CONTENT_MODEL_MANAGER);
+			this._cacheManager = (ICacheManager) this.getService(SystemConstants.CACHE_MANAGER);
     	} catch (Throwable t) {
     		throw new Exception(t);
     	}
     }
     
     private IContentDispenser _contentDispenser = null;
+    private IContentManager _contentManager = null;
+    private IContentModelManager _contentModelManager = null;
+    private ICacheManager _cacheManager = null;
     
     private String _attendedEnART1 = 
 		"ART1;\n" 

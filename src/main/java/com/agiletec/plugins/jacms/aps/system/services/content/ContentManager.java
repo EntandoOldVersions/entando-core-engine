@@ -289,32 +289,10 @@ public class ContentManager extends ApsEntityManager
 	}
 	
 	/**
-	 * Return the unique key used to reference a rendered content which is going to be cached. 
-	 * @param contentId The id of the rendered content.
-	 * @param modelId The ID of the model used to render the content.
-	 * @param langCode The rendering language.
-	 * @return The unique key used by the caching engine.
-	 */
-	public static String getRenderedContentCacheKey(String contentId, long modelId, String langCode) {
-		String key = contentId + "_" + modelId + "_" + langCode;
-		return key;
-	}
-	
-	/**
-	 * Return the unique key used to cache and retrieve the access authorization 
-	 * of a content (stored in the 'ContentAuthorizationInfo' object).
-	 * @param contentId L'identificativo del contenuto.
-	 * @return The unique key used to cache and retrieve the authorizations of a content.
-	 */
-	public static String getContentAuthInfoCacheKey(String contentId) {
-		return contentId + "_AUTH_INFO";
-	}
-	
-	/**
 	 * Return the list of all the content IDs. 
 	 * @return The list of all the content IDs. 
 	 * @throws ApsSystemException In case of error
-	 * @deprecated From jAPS 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
+	 * @deprecated Since jAPS 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
 	 */
 	@Override
 	public List<String> getAllContentsId() throws ApsSystemException {

@@ -17,10 +17,19 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
+
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
+
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Rappresenta un contenuto nella forma utilizzabile al servizio di renderizzazione. 
@@ -39,6 +48,45 @@ public class ContentWrapper extends EntityWrapper {
 		super(content);
 	}
 	
+	public ContentWrapper(Content content, BeanFactory beanFactory) {
+		super(content, beanFactory);
+	}
+	
+    public boolean isUserAllowed(String permissionName) {
+        try {
+            IAuthorizationManager authManager = 
+                (IAuthorizationManager) this.getBeanFactory().getBean(SystemConstants.AUTHORIZATION_SERVICE);
+            UserDetails currentUser = (UserDetails) this.getReqCtx().getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+            if (null == currentUser) return false;
+            if (!authManager.isAuthOnGroup(currentUser, this.getEntity().getMainGroup())) return false;
+            if (null != permissionName && permissionName.trim().length() > 0 && !authManager.isAuthOnPermission(currentUser, permissionName)) return false;
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking authority - permission " + permissionName);
+			return false;
+        }
+        return true;
+    }
+	
+    /**
+	 * Return the value of a System parameter.
+	 * @param paramName The name of parameters
+	 * @return The value to return
+	 * @deprecated this method has to be moved outside Content Wrapper
+	 */
+    public String getConfigParameter(String paramName) {
+		try {
+            ConfigInterface configManager = (ConfigInterface) this.getBeanFactory().getBean(SystemConstants.BASE_CONFIG_MANAGER);
+            return configManager.getParam(paramName);
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getConfigParameter", "Error extracting config parameter - parameter " + paramName);
+			return null;
+        }
+    }
+	
+	public String getLangCode() {
+        return super.getRenderingLang();
+    }
+    
 	/**
 	 * Restituisce un URL simbolico che punta al contenuto stesso (link di 
 	 * tipo SymbolicLink.CONTENT_TYPE).
@@ -85,5 +133,14 @@ public class ContentWrapper extends EntityWrapper {
 	public String getLastEditor() {
 		return ((Content) super.getEntity()).getLastEditor();
 	}
+	
+    protected RequestContext getReqCtx() {
+        return _reqCtx;
+    }
+    protected void setReqCtx(RequestContext reqCtx) {
+        this._reqCtx = reqCtx;
+    }
+    
+	private RequestContext _reqCtx;
 	
 }
