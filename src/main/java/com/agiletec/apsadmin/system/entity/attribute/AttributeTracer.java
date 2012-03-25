@@ -24,7 +24,8 @@ package com.agiletec.apsadmin.system.entity.attribute;
  * of the Attribute and, furthermore, it guarantees the correct construction of
  * the form in the content edit interface.
  * @author E.Santoboni
- * @deprecated use com.agiletec.aps.system.common.entity.model.AttributeTracer class
+ * @deprecated As of version 2.4.1 of Entando, use com.agiletec.aps.system.common.entity.model.AttributeTracer class.
+ * Attribute validation moved inside single attribute,
  */
 public class AttributeTracer extends com.agiletec.aps.system.common.entity.model.AttributeTracer {
 	

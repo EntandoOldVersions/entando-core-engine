@@ -32,8 +32,10 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class ResourceAttributeManager extends TextAttributeManager {
 	
-	@Override
-	protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkSingleAttribute(action, attribute, tracer, entity);
 		int state = this.getState(attribute, tracer);
 		if (state == INCOMPLETE_ATTRIBUTE_STATE) {
@@ -42,19 +44,26 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	@Override
-	protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListCompositeElement(action, attribute, tracer, entity);
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	@Override
-	protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListElement(action, attribute, tracer, entity);
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		int state = this.getState(attribute, tracer);
 		if (state == VALUED_ATTRIBUTE_STATE) {
 			ResourceInterface resource = ((AbstractResourceAttribute) attribute).getResource();
@@ -66,8 +75,10 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		}
 	}
 	
-	@Override
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
 		boolean isTextValued = super.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE;
 		boolean isResourceValued = ((AbstractResourceAttribute) attribute).getResource() != null;
 		if (isResourceValued && isTextValued) return VALUED_ATTRIBUTE_STATE;
@@ -75,7 +86,6 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		return INCOMPLETE_ATTRIBUTE_STATE;
 	}
 	
-	@Override
 	protected String getInvalidAttributeMessage() {
 		return "ResourceAttribute.fieldError.invalidResource";
 	}

@@ -29,7 +29,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -38,7 +37,9 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class TextAttributeManager extends AbstractMultiLangAttributeManager {
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected Object getValue(AttributeInterface attribute, Lang lang) {
         return ((TextAttribute) attribute).getTextMap().get(lang.getCode());
     }
@@ -47,41 +48,51 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
         ((TextAttribute) attribute).setText(value, lang.getCode());
     }
     
-    @Deprecated
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-        AttributeTracer textTracer = (AttributeTracer) tracer.clone();
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
+        com.agiletec.apsadmin.system.entity.attribute.AttributeTracer textTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
         Lang defaultLang = this.getLangManager().getDefaultLang();
         textTracer.setLang(defaultLang);
         super.checkSingleAttribute(action, attribute, textTracer, entity);
         this.checkText(action, attribute, tracer);
     }
     
-    @Deprecated
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListCompositeElement(action, attribute, tracer, entity);
         this.checkText(action, attribute, tracer);
     }
     
-    @Deprecated
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListElement(action, attribute, tracer, entity);
         this.checkText(action, attribute, tracer);
     }
     
-    @Deprecated
-    protected void checkText(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkText(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
         while (langsIter.hasNext()) {
             Lang lang = (Lang) langsIter.next();
-            AttributeTracer textTracer = (AttributeTracer) tracer.clone();
+            com.agiletec.apsadmin.system.entity.attribute.AttributeTracer textTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
             textTracer.setLang(lang);
             this.checkTextLengths(action, attribute, textTracer, lang);
             this.checkRegExp(action, attribute, textTracer, lang);
         }
     }
     
-    @Deprecated
-    protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, Lang lang) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, Lang lang) {
         int maxLength = ((ITextAttribute) attribute).getMaxLength();
         int minLength = ((ITextAttribute) attribute).getMinLength();
         if (maxLength != -1 || minLength != -1) {
@@ -100,8 +111,10 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
         }
     }
     
-    @Deprecated
-    protected void checkRegExp(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, Lang lang) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkRegExp(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, Lang lang) {
         String value = (String) this.getValue(attribute, lang);
         ITextAttribute textAttribute = (ITextAttribute) attribute;
         if (null != value && null != textAttribute.getRegexp()) {
@@ -114,7 +127,9 @@ public class TextAttributeManager extends AbstractMultiLangAttributeManager {
         }
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
         return (String) this.getValue(attribute, lang);
     }

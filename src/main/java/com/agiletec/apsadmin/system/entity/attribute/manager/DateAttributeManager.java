@@ -29,7 +29,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.util.DateConverter;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -39,7 +38,9 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class DateAttributeManager extends AbstractMonoLangAttributeManager {
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected Object getValue(AttributeInterface attribute) {
         return ((DateAttribute) attribute).getDate();
     }
@@ -56,7 +57,7 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
                 data = dataF.parse(value);
                 dateAttribute.setFailedDateString(null);
             } catch (ParseException ex) {
-                throw new RuntimeException("Error while parsing the date submitted - " + value + " -");
+                throw new RuntimeException("Error while parsing the date submitted - " + value + " -", ex);
             }
         } else {
             dateAttribute.setFailedDateString(value);
@@ -64,8 +65,10 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         dateAttribute.setDate(data);
     }
     
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         int state = super.getState(attribute, tracer);
         boolean valuedString = ((DateAttribute) attribute).getFailedDateString() != null;
         if (state == VALUED_ATTRIBUTE_STATE || valuedString) {
@@ -74,36 +77,46 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         return this.EMPTY_ATTRIBUTE_STATE;
     }
 
-    @Deprecated
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkSingleAttribute(action, attribute, tracer, entity);
         this.checkDate(action, attribute, tracer);
         this.validateDate(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkListElement(action, attribute, tracer, entity);
         this.checkDate(action, attribute, tracer);
         this.validateDate(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListCompositeElement(action, attribute, tracer, entity);
         this.checkDate(action, attribute, tracer);
         this.validateDate(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListElement(action, attribute, tracer, entity);
         this.checkDate(action, attribute, tracer);
         this.validateDate(action, attribute, tracer);
     }
 
-    @Deprecated
-    private void checkDate(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    private void checkDate(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && !this.hasRightValue(attribute)) {
             this.addFieldError(action, attribute, tracer, "DateAttribute.fieldError.invalidDate", null);
         }
@@ -123,8 +136,10 @@ public class DateAttributeManager extends AbstractMonoLangAttributeManager {
         return CheckFormatUtil.isValidDate(insertedDateString);
     }
     
-    @Deprecated
-    private void validateDate(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    private void validateDate(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && this.hasRightValue(attribute)) {
             DateAttributeValidationRules valRule = (DateAttributeValidationRules) attribute.getValidationRules();
             Date attributeValue = ((DateAttribute) attribute).getDate();

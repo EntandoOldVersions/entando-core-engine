@@ -23,11 +23,13 @@ import com.agiletec.aps.system.services.lang.Lang;
 /**
  * Manager class for the 'Hypertext' Attribute.
  * @author E.Santoboni
- * @deprecated 
+/* @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
  */
 public class HypertextAttributeManager extends TextAttributeManager {
     
-    @Override
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected String getTextForCheckLength(AttributeInterface attribute, Lang lang) {
         String text = super.getTextForCheckLength(attribute, lang);
         if (text != null) {

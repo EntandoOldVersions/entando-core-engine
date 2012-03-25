@@ -36,7 +36,9 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class LinkAttributeManager extends TextAttributeManager {
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkSingleAttribute(action, attribute, tracer, entity);
         int state = this.getState(attribute, tracer);
@@ -46,7 +48,9 @@ public class LinkAttributeManager extends TextAttributeManager {
         this.checkLink(action, attribute, tracer, entity);
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListCompositeElement(action, attribute, tracer, entity);
         this.checkLink(action, attribute, tracer, entity);
@@ -58,7 +62,9 @@ public class LinkAttributeManager extends TextAttributeManager {
         this.checkLink(action, attribute, tracer, entity);
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkLink(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         int state = this.getState(attribute, tracer);
         if (state == VALUED_ATTRIBUTE_STATE) {
@@ -88,7 +94,9 @@ public class LinkAttributeManager extends TextAttributeManager {
         }
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
         boolean isTextValued = super.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE;
         boolean isLinkValued = ((LinkAttribute) attribute).getSymbolicLink() != null;
@@ -116,8 +124,7 @@ public class LinkAttributeManager extends TextAttributeManager {
             messageKey = "LinkAttribute.fieldError.linkToContent.wrongGroups";
         }
         if (null != messageKey) {
-            String[] args = {attributeFieldError.getTracer().getLang().getDescr()};
-            return action.getText(messageKey, args);
+            return action.getText(messageKey);
         } else {
             return super.getCustomAttributeErrorMessage(attributeFieldError, action);
         }
@@ -127,17 +134,21 @@ public class LinkAttributeManager extends TextAttributeManager {
         return "LinkAttribute.fieldError.invalidLink";
     }
     
-    @Deprecated
     protected void setExtraPropertyTo(AttributeManagerInterface manager) {
         super.setExtraPropertyTo(manager);
         ((LinkAttributeManager) manager).setSymbolicLinkErrorMessenger(this.getSymbolicLinkErrorMessenger());
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected ISymbolicLinkErrorMessenger getSymbolicLinkErrorMessenger() {
         return _symbolicLinkErrorMessenger;
     }
-    @Deprecated
+	
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     public void setSymbolicLinkErrorMessenger(ISymbolicLinkErrorMessenger symbolicLinkErrorMessenger) {
         this._symbolicLinkErrorMessenger = symbolicLinkErrorMessenger;
     }

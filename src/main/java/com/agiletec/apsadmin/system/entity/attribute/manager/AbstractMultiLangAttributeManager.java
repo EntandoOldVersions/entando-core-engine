@@ -22,14 +22,22 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
+
 
 /**
  * Abstract class for the managers of simple multi-language attributes.
  * @author E.Santoboni
  */
 public abstract class AbstractMultiLangAttributeManager extends AbstractAttributeManager {
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, use updateAttribute(AttributeInterface, AttributeTracer, HttpServletRequest).
+     */
+    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
+        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
+    }
     
     protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
         List<Lang> langs = this.getLangManager().getLangs();
@@ -47,8 +55,10 @@ public abstract class AbstractMultiLangAttributeManager extends AbstractAttribut
         }
     }
     
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         Lang defaultLang = this.getLangManager().getDefaultLang();
         boolean valued = this.getValue(attribute, defaultLang) != null;
         if (valued) {

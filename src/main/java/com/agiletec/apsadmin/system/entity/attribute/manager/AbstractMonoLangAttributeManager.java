@@ -20,13 +20,20 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 
 /**
  * Base abstract class for those manager which handle mono-language simple attributes.
  * @author E.Santoboni
  */
 public abstract class AbstractMonoLangAttributeManager extends AbstractAttributeManager {
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, use updateAttribute(AttributeInterface, AttributeTracer, HttpServletRequest).
+     */
+    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
+        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
+    }
     
     protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
         String value = this.getValueFromForm(attribute, tracer, request);
@@ -38,8 +45,10 @@ public abstract class AbstractMonoLangAttributeManager extends AbstractAttribute
         }
     }
     
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         boolean valued = this.getValue(attribute) != null;
         if (valued) {
             return this.VALUED_ATTRIBUTE_STATE;
@@ -57,7 +66,7 @@ public abstract class AbstractMonoLangAttributeManager extends AbstractAttribute
      * 
      * @param attribute The current attribute (simple or composed) which holds the desired value
      * @return The value held by the attribute.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected abstract Object getValue(AttributeInterface attribute);
     

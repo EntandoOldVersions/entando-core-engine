@@ -19,7 +19,6 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 
 /**
  * Manager class for the 'boolean' attributes.
@@ -27,7 +26,9 @@ import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
  */
 public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected Object getValue(AttributeInterface attribute) {
         return ((BooleanAttribute) attribute).getBooleanValue();
     }
@@ -40,13 +41,17 @@ public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
         }
     }
     
-    @Deprecated
-    protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected boolean isValidListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return true;
     }
     
-    @Deprecated
-    protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected boolean isValidMonoListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return true;
     }
     

@@ -25,7 +25,6 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -54,13 +53,17 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         numberAttribute.setValue(number);
     }
 
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected Object getValue(AttributeInterface attribute) {
         return ((NumberAttribute) attribute).getValue();
     }
 
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         int state = super.getState(attribute, tracer);
         boolean valuedString = ((NumberAttribute) attribute).getFailedNumberString() != null;
         if (state == VALUED_ATTRIBUTE_STATE || valuedString) {
@@ -69,43 +72,55 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         return this.EMPTY_ATTRIBUTE_STATE;
     }
 
-    @Deprecated
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkSingleAttribute(action, attribute, tracer, entity);
         this.checkNumber(action, attribute, tracer);
         this.validateNumber(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkListElement(action, attribute, tracer, entity);
         this.checkNumber(action, attribute, tracer);
         this.validateNumber(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListCompositeElement(action, attribute, tracer, entity);
         this.checkNumber(action, attribute, tracer);
         this.validateNumber(action, attribute, tracer);
     }
 
-    @Deprecated
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListElement(action, attribute, tracer, entity);
         this.checkNumber(action, attribute, tracer);
         this.validateNumber(action, attribute, tracer);
     }
     
-    @Deprecated
-    private void checkNumber(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    private void checkNumber(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && !this.hasRightValue(attribute)) {
             this.addFieldError(action, attribute, tracer, "NumberAttribute.fieldError.invalidNumber", null);
         }
     }
     
-    @Deprecated
-    private void validateNumber(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    private void validateNumber(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && this.hasRightValue(attribute)) {
             NumberAttributeValidationRules valRules = (NumberAttributeValidationRules) attribute.getValidationRules();
             Integer attributeValue = ((NumberAttribute) attribute).getValue().intValue();
@@ -161,7 +176,7 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
      * Check for the coherency of the data of the attribute. 
      * @param attribute The attribute to check.
      * @return true if the attribute is properly valued, false otherwise.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     private boolean hasRightValue(AttributeInterface attribute) {
         if (this.getValue(attribute) != null) {

@@ -33,10 +33,9 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public interface AttributeManagerInterface {
-
+	
     /**
      * Update the attribute with the data passed through the entity edit form.
-     * 
      * @param attribute The attribute of the entity
      * @param attributeManagers The map of the attribute managers, indexed by type.
      * @param request The request.
@@ -46,15 +45,20 @@ public interface AttributeManagerInterface {
     /**
      * Check the validity of the given attribute eventually adding the 
      * proper error messages in the action.
-     * 
      * @param action The action where to insert the error messages, if any.
      * @param attributeManagers The map of the attributes manager, indexed by type.
      * @param attribute The entity attribute.
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity);
     
+	/**
+	 * Return the error message for the given Attribute field error.
+	 * @param attributeFieldError The Field error
+	 * @param action The current action.
+	 * @return The error message for the given attribute error.
+	 */
     public String getErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action);
     
 }

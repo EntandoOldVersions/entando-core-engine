@@ -39,13 +39,17 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class HypertextAttributeManager extends com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager {
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkSingleAttribute(action, attribute, tracer, entity);
         this.checkHypertext(action, attribute, tracer, entity);
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected Object getValue(AttributeInterface attribute, Lang lang) {
         String text = (String) super.getValue(attribute, lang);
         if (text != null) {
@@ -58,19 +62,25 @@ public class HypertextAttributeManager extends com.agiletec.apsadmin.system.enti
         return null;
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListElement(action, attribute, tracer, entity);
         this.checkHypertext(action, attribute, tracer, entity);
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListCompositeElement(action, attribute, tracer, entity);
         this.checkHypertext(action, attribute, tracer, entity);
     }
 
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkHypertext(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         int state = this.getState(attribute, tracer);
         if (state == VALUED_ATTRIBUTE_STATE) {
@@ -109,7 +119,9 @@ public class HypertextAttributeManager extends com.agiletec.apsadmin.system.enti
         }
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void setExtraPropertyTo(AttributeManagerInterface manager) {
         super.setExtraPropertyTo(manager);
         ((HypertextAttributeManager) manager).setSymbolicLinkErrorMessenger(this.getSymbolicLinkErrorMessenger());
@@ -137,16 +149,20 @@ public class HypertextAttributeManager extends com.agiletec.apsadmin.system.enti
         }
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected ISymbolicLinkErrorMessenger getSymbolicLinkErrorMessenger() {
         return _symbolicLinkErrorMessenger;
     }
-    @Deprecated
+	
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     public void setSymbolicLinkErrorMessenger(ISymbolicLinkErrorMessenger symbolicLinkErrorMessenger) {
         this._symbolicLinkErrorMessenger = symbolicLinkErrorMessenger;
     }
-    
-    @Deprecated
+	
     private ISymbolicLinkErrorMessenger _symbolicLinkErrorMessenger;
     
 }

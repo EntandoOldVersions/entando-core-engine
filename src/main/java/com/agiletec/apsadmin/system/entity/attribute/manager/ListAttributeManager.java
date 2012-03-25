@@ -24,8 +24,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -34,18 +34,14 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class ListAttributeManager extends AbstractAttributeManager {
     
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
+        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
+    }
+    
     protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-        this.manageListAttribute(false, true, null, attribute, tracer, request, null);
-    }
-    
-    @Deprecated
-    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-        super.checkAttribute(action, attribute, tracer, entity);
-        this.manageListAttribute(true, false, action, attribute, tracer, null, entity);
-    }
-    
-    private void manageListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action,
-            AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
         List<Lang> langs = this.getLangManager().getLangs();
         for (int i = 0; i < langs.size(); i++) {
             Lang lang = langs.get(i);
@@ -58,19 +54,39 @@ public class ListAttributeManager extends AbstractAttributeManager {
                 elementTracer.setListIndex(j);
                 AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
                 if (elementManager != null) {
-                    if (isCheck && !isUpdate) {
-                        elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-                    }
-                    if (!isCheck && isUpdate) {
-                        elementManager.updateAttribute(attributeElement, elementTracer, request);
-                    }
+                    elementManager.updateAttribute(attributeElement, elementTracer, request);
                 }
             }
         }
     }
     
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
+        super.checkAttribute(action, attribute, tracer, entity);
+        List<Lang> langs = this.getLangManager().getLangs();
+        for (int i = 0; i < langs.size(); i++) {
+            Lang lang = langs.get(i);
+            List<AttributeInterface> attributeList = ((ListAttribute) attribute).getAttributeList(lang.getCode());
+            for (int j = 0; j < attributeList.size(); j++) {
+                AttributeInterface attributeElement = attributeList.get(j);
+                com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
+                elementTracer.setListElement(true);
+                elementTracer.setListLang(lang);
+                elementTracer.setListIndex(j);
+                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+                if (elementManager != null) {
+                    elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+                }
+            }
+        }
+    }
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         boolean valued = true;
         List<Lang> langs = this.getLangManager().getLangs();
         for (int i = 0; i < langs.size(); i++) {

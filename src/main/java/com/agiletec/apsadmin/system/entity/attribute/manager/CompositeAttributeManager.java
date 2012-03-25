@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -33,18 +33,29 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class CompositeAttributeManager extends AbstractAttributeManager {
     
-    @Deprecated
-    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         super.checkAttribute(action, attribute, tracer, entity);
-        this.manageCompositeAttribute(true, false, action, attribute, tracer, null, entity);
+        List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
+            elementTracer.setCompositeElement(true);
+            elementTracer.setParentAttribute(attribute);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            if (elementManager != null) {
+				elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+            }
+        }
     }
     
-    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-        this.manageCompositeAttribute(false, true, null, attribute, tracer, request, null);
+    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
+        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
     }
-    
-    private void manageCompositeAttribute(boolean isCheck, boolean isUpdate, ActionSupport action,
-            AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
+	
+	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
         List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
         for (int i = 0; i < attributes.size(); i++) {
             AttributeInterface attributeElement = attributes.get(i);
@@ -53,25 +64,22 @@ public class CompositeAttributeManager extends AbstractAttributeManager {
             elementTracer.setParentAttribute(attribute);
             AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
             if (elementManager != null) {
-                if (isCheck && !isUpdate) {
-                    elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-                }
-                if (!isCheck && isUpdate) {
                     elementManager.updateAttribute(attributeElement, elementTracer, request);
-                }
             }
         }
     }
-    
-    @Deprecated
-    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+	
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         boolean isVoid = true;
         List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
         for (int i = 0; i < attributes.size(); i++) {
             AttributeInterface attributeElement = attributes.get(i);
             AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
             if (elementManager != null) {
-                AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
                 elementTracer.setCompositeElement(true);
                 elementTracer.setParentAttribute(attribute);
                 int state = elementManager.getState(attributeElement, elementTracer);

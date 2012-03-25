@@ -29,6 +29,7 @@ import ognl.OgnlException;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -38,7 +39,6 @@ import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.BaseAction;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -50,10 +50,12 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public abstract class AbstractAttributeManager implements AttributeManagerInterface {
     
-    @Deprecated
+    /**
+	 * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+	 */
     public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity) {
         this.setAttributeManagers(attributeManagers);
-        this.checkAttribute(action, attribute, new AttributeTracer(), entity);
+        this.checkAttribute(action, attribute, new com.agiletec.apsadmin.system.entity.attribute.AttributeTracer(), entity);
     }
     
     /**
@@ -69,9 +71,9 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute, both 'simple' or 'complex', to check.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one. 
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         if (tracer.isMonoListElement()) {
             if (tracer.isCompositeElement()) {
                 this.checkMonoListCompositeElement(action, attribute, tracer, entity);
@@ -85,9 +87,11 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         }
         this.checkExpression(action, attribute, tracer, entity);
     }
-
-    @Deprecated
-    protected void checkExpression(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	
+    /**
+	 * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+	 */
+    protected void checkExpression(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         OgnlValidationRule ognlValidationRule = attribute.getValidationRules().getOgnlValidationRule();
         if (null == ognlValidationRule) {
             return;
@@ -116,9 +120,11 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
             throw new RuntimeException("Generic Error on evaluation Ognl Expression", t);
         }
     }
-
-    @Deprecated
-    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	
+    /**
+	 * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+	 */
+    protected OgnlContext createContextForExpressionValidation(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         OgnlContext context = new OgnlContext();
         if (null != this.getLangManager()) {
             Map<String, Lang> langs = new HashMap<String, Lang>();
@@ -145,7 +151,9 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         return context;
     }
 
-    @Deprecated
+    /**
+	 * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+	 */
     protected String getOgnlExpressionMessage(OgnlValidationRule ognlValidationRule, ActionSupport action) throws ApsSystemException {
         String ognlMessage = ognlValidationRule.getErrorMessage();
         if (null != ognlMessage && ognlMessage.trim().length() > 0) {
@@ -177,9 +185,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current Attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         if (!this.isValidMonoListCompositeElement(attribute, tracer)) {
             this.addFieldError(action, attribute, tracer, this.getMonoListCompositeElementNotValidMessage(), null);
         } else if (attribute.isRequired() && this.getState(attribute, tracer) != VALUED_ATTRIBUTE_STATE) {
@@ -197,9 +206,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @return true If the element is valid, false otherwise.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected boolean isValidMonoListCompositeElement(AttributeInterface attribute, AttributeTracer tracer) {
+    protected boolean isValidMonoListCompositeElement(AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return this.getState(attribute, tracer) != INCOMPLETE_ATTRIBUTE_STATE;
     }
 
@@ -209,7 +219,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * If the nature of the method requires particular message is necessary to override this method.
      * 
      * @return The message to return.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected String getMonoListCompositeElementNotValidMessage() {
         return this.getInvalidAttributeMessage();
@@ -225,9 +235,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         if (!this.isValidMonoListElement(attribute, tracer)) {
             this.addFieldError(action, attribute, tracer, this.getMonoListElementNotValidMessage(), null);
         }
@@ -243,9 +254,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @return true If the element is valid, false otherwise.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
+    protected boolean isValidMonoListElement(AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE;
     }
 
@@ -255,7 +267,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * is necessary to override this method. 
      * 
      * @return The message to return.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected String getMonoListElementNotValidMessage() {
         return this.getInvalidAttributeMessage();
@@ -271,9 +283,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void checkListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected void checkListElement(ActionSupport action, AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         if (!this.isValidListElement(attribute, tracer)) {
             this.addFieldError(action, attribute, tracer, this.getListElementNotValidMessage(), null);
         }
@@ -289,9 +302,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @return true If the element is valid, false otherwise.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
+    protected boolean isValidListElement(AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE;
     }
 
@@ -301,7 +315,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * If the nature of the method requires particular message is necessary to override this method. 
      * 
      * @return The message to return.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected String getListElementNotValidMessage() {
         return this.getInvalidAttributeMessage();
@@ -320,14 +334,14 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * This method implements the validity criteria of an attribute, both simple or
      * complex; the only check performed here is whether the attribute is mandatory or not. 
      * If the attribute needs further checks other than those by default, extend this method.
-     * 
      * @param action The action to fill with the proper error messages, if any.
      * @param attribute The current attribute to check, both 'simple' or 'complex'.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param entity The entity to check.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
         if (attribute.isRequired() && this.getState(attribute, tracer) == EMPTY_ATTRIBUTE_STATE) {
             this.addFieldError(action, attribute, tracer, this.getRequiredAttributeMessage(), null);
         }
@@ -336,7 +350,6 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     /**
      * Return the key of the message used when a mandatory attribute is not populated.
      * If a customized message is needed eg. due to the nature of the attribute, extend this method.
-     * 
      * @return The key of the message to return.
      */
     protected String getRequiredAttributeMessage() {
@@ -345,12 +358,11 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
 
     /**
      * Add an error message related to a field in a form.
-     * 
      * @param action The action where the error message is added
      * @param fieldName The name of the field.
      * @param messageKey The key of the error message.
      * @param args The arguments of the error message.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected void addFieldError(ActionSupport action, String fieldName, String messageKey, String[] args) {
         action.addFieldError(fieldName, action.getText(messageKey, args));
@@ -364,9 +376,10 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param messageKey The key of the error message.
      * @param args The arguments of the error message.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected void addFieldError(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, String messageKey, String[] args) {
+    protected void addFieldError(ActionSupport action, AttributeInterface attribute, 
+			com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, String messageKey, String[] args) {
         String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
         String messageError = null;
         if (args != null) {
@@ -376,9 +389,12 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         }
         String formFieldName = tracer.getFormFieldName(attribute);
         action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + messageError);
-    }
-
-    private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer) {
+	}
+	
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         if (tracer.isMonoListElement()) {
             if (tracer.isCompositeElement()) {
                 String[] args = {tracer.getParentAttribute().getName(), String.valueOf(tracer.getListIndex() + 1), attribute.getName()};
@@ -413,9 +429,9 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      * @param attribute The current attribute (simple or complex) to check.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @return The code representing the current status
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
-    protected abstract int getState(AttributeInterface attribute, AttributeTracer tracer);
+    protected abstract int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer);
     
     public void updateEntityAttribute(AttributeInterface attribute, Map<String, AttributeManagerInterface> attributeManagers, HttpServletRequest request) {
         this.setAttributeManagers(attributeManagers);
@@ -424,7 +440,15 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
 
     /**
      * Updates the attribute with the criteria specified in the content editing form.
-     * 
+     * @param attribute The current attribute (simple or complex) to check.
+     * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
+     * @param request The request.
+	 * @deprecated As of version 2.4.1 of Entando, use updateAttribute(AttributeInterface, AttributeTracer, HttpServletRequest).
+     */
+    protected abstract void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request);
+    
+	/**
+     * Updates the attribute with the criteria specified in the content editing form.
      * @param attribute The current attribute (simple or complex) to check.
      * @param tracer The 'tracer' class needed to find the position of the attribute inside a 'composite' one.
      * @param request The request.
@@ -538,26 +562,27 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
+	
     private Map<String, AttributeManagerInterface> _attributeManagers;
     private II18nManager _i18nManager;
     private ILangManager _langManager;
     
     /**
      * Constant code describing the status of the empty attribute.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected final int EMPTY_ATTRIBUTE_STATE = 0;
     
     /**
      * Constant code describing the status of the incomplete attribute (not properly populated). Please note
      * that this status cannot be never accepted by the system.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected final int INCOMPLETE_ATTRIBUTE_STATE = 1;
     
     /**
      * Constant code describing the status of the valued attribute.
-     * @deprecated 
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
     protected final int VALUED_ATTRIBUTE_STATE = 2;
     
