@@ -53,7 +53,7 @@ public class TestSystemParamsUtils extends ApsAdminBaseTestCase {
 		assertTrue(newExtractedParams.size()>=6);
 		assertEquals("home", newExtractedParams.get(SystemConstants.CONFIG_PARAM_HOMEPAGE_PAGE_CODE));
 		assertEquals("errorpage", newExtractedParams.get(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE));
-		assertNull(newExtractedParams.get("wrongNewParam"));
+		assertNotNull(newExtractedParams.get("wrongNewParam"));
 	}
 	
 	private void init() {
