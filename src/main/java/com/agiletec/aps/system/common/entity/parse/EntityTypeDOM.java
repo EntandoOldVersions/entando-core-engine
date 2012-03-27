@@ -31,12 +31,17 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
+import com.agiletec.aps.system.common.entity.loader.ExtraAttributeLoader;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This class parses the XML that defines the Entity Types as obtained from the configuration file.
@@ -49,27 +54,9 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  * A note about the source code: the naming conflict between the content "Attribute" and the "Attribute" 
  * found in the HXML tags makes the distinction between the two difficult.
  * Please pay attention to the correct interpretation of the name of variables and the private methods.
- * 
  * @author M.Diana - E.Santoboni
  */
-public class EntityTypeDOM implements IEntityTypeDOM {
-	
-	/**
-	 * Prepare the map with the Attribute Types.
-	 * The map is indexed by the code of the Attribute Type.
-	 * The Attributes are utilized (as elementary "bricks") to build the structure
-	 * of the Entity Types.
-	 * @param attributeTypes The map containing the Attribute Types indexed by the type code. 
-	 */
-	@Override
-	public void setAttributeTypes(Map<String, AttributeInterface> attributeTypes) {
-		this._attributeTypes = attributeTypes;
-	}
-	
-	@Override
-	public Map<String, AttributeInterface> getAttributeTypes() {
-		return this._attributeTypes;
-	}
+public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	
 	/**
 	 * Initialization of the DOM class.
@@ -77,13 +64,39 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 	 * @param entityClass The class of the Entity Type.
 	 * @param entityDom The DOM class that creates the XML of the entity instances. 
 	 * @throws ApsSystemException If errors are detected while parsing the XML.
+	 * @deprecated Since Entando 2.4.1, use initEntityTypeDOM(String, Class, IApsEntityDOM, String)
 	 */
 	@Override
+	public void initEntityTypeDOM(String xml, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
+		this.initEntityTypeDOM(xml, entityClass, entityDom, null);
+	}
+	
+	/**
+	 * Initialization of the DOM class.
+	 * @param xml The configuration XML of the Entity Types available.
+	 * @param entityClass The class of the Entity Type.
+	 * @param entityDom The DOM class that creates the XML of the entity instances. 
+	 * @param entityManagerName The entity manager name
+	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
+	 */
 	public void initEntityTypeDOM(String xml, Class entityClass, 
-			IApsEntityDOM entityDom) throws ApsSystemException {
-		this._entityTypes = new HashMap<String, IApsEntity>();
-		Document document = this.decodeDOM(xml);
-		this.doParsing(document, entityClass, entityDom);
+			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
+		try {
+			this.getEntityTypes().clear();
+			if (null != entityManagerName) {
+				ExtraAttributeLoader loader = new ExtraAttributeLoader();
+				Map<String, AttributeInterface> extraAttributes = loader.extractAttributes(this.getBeanFactory(), entityManagerName);
+				if (null != extraAttributes) {
+					this.getAttributeTypes().putAll(extraAttributes);
+				}
+			}
+			this.setEntityManagerName(entityManagerName);
+			Document document = this.decodeDOM(xml);
+			this.doParsing(document, entityClass, entityDom);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "initEntityTypeDOM", "Error extracting entity types");
+			throw new ApsSystemException("Error extracting entity types", t);
+		}
 	}
 	
 	@Override
@@ -218,7 +231,7 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 	 */
 	private AttributeInterface createAttribute(Element attributeElem) throws ApsSystemException {
 		String typeCode = this.extractXmlAttribute(attributeElem, "attributetype", true);
-		AttributeInterface attr = (AttributeInterface) _attributeTypes.get(typeCode);
+		AttributeInterface attr = (AttributeInterface) getAttributeTypes().get(typeCode);
 		if (null == attr) {
 			throw new ApsSystemException("Wrong Attribute Type: " + typeCode + ", " +
 					"found in the tag <" + attributeElem.getName() + ">");
@@ -226,7 +239,7 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 		attr = (AttributeInterface) attr.getAttributePrototype();
 		attr.setAttributeConfig(attributeElem);
 		if (!attr.isSimple()) {
-			((AbstractComplexAttribute) attr).setComplexAttributeConfig(attributeElem, this._attributeTypes);
+			((AbstractComplexAttribute) attr).setComplexAttributeConfig(attributeElem, this.getAttributeTypes());
 		}
 		return attr;
 	}
@@ -249,6 +262,23 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 	}
 	
 	/**
+	 * Prepare the map with the Attribute Types.
+	 * The map is indexed by the code of the Attribute Type.
+	 * The Attributes are utilized (as elementary "bricks") to build the structure
+	 * of the Entity Types.
+	 * @param attributeTypes The map containing the Attribute Types indexed by the type code. 
+	 */
+	@Override
+	public void setAttributeTypes(Map<String, AttributeInterface> attributeTypes) {
+		this._attributeTypes = attributeTypes;
+	}
+	
+	@Override
+	public Map<String, AttributeInterface> getAttributeTypes() {
+		return this._attributeTypes;
+	}
+	
+	/**
 	 * Return a map, indexed by code, of the Entity Types prototypes. 
 	 * This method must be invoked after the parsing process.
 	 * @return A map whose key is the Entity Type code, the value is an entity object.
@@ -259,17 +289,23 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 	}
 	
 	protected ILangManager getLangManager() {
-		return this._langManager;
+		return this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
 	}
 	
-	/**
-	 * Set up the manager of the system languages.
-	 * This method is silently invoked by the Spring Framework since the language manager is
-	 * declared in the bean of the service. 
-	 * @param langManager The manager of the system languages.
-	 */
-	public void setLangManager(ILangManager langManager) {
-		this._langManager = langManager;
+	protected String getEntityManagerName() {
+		return _entityManagerName;
+	}
+	protected void setEntityManagerName(String entityManagerName) {
+		this._entityManagerName = entityManagerName;
+	}
+	
+	protected BeanFactory getBeanFactory() {
+		return this._beanFactory;
+	}
+	
+	@Override
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		this._beanFactory = beanFactory;
 	}
 	
 	protected String getEntityTypesRootElementName() {
@@ -280,8 +316,10 @@ public class EntityTypeDOM implements IEntityTypeDOM {
 		return "entitytype";
 	}
 	
-	private ILangManager _langManager;
 	private Map<String, AttributeInterface> _attributeTypes;
-	private Map<String, IApsEntity> _entityTypes;
+	private Map<String, IApsEntity> _entityTypes = new HashMap<String, IApsEntity>();
+	
+	private String _entityManagerName;
+	private BeanFactory _beanFactory;
 	
 }

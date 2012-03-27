@@ -28,6 +28,7 @@ import ognl.OgnlContext;
 import ognl.OgnlException;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -40,6 +41,7 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This abstract class is the base for the managers of all attributes.
@@ -54,7 +56,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
 	 * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
 	 */
     public void checkEntityAttribute(ActionSupport action, Map<String, AttributeManagerInterface> attributeManagers, AttributeInterface attribute, IApsEntity entity) {
-        this.setAttributeManagers(attributeManagers);
+        //this.setAttributeManagers(attributeManagers);
         this.checkAttribute(action, attribute, new com.agiletec.apsadmin.system.entity.attribute.AttributeTracer(), entity);
     }
     
@@ -433,8 +435,16 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
      */
     protected abstract int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer);
     
+	/**
+	 * @deprecated As of version 2.4.1 of Entando
+	 */
     public void updateEntityAttribute(AttributeInterface attribute, Map<String, AttributeManagerInterface> attributeManagers, HttpServletRequest request) {
-        this.setAttributeManagers(attributeManagers);
+        //this.setAttributeManagers(attributeManagers);
+        this.updateEntityAttribute(attribute, request);
+    }
+
+    public void updateEntityAttribute(AttributeInterface attribute, HttpServletRequest request) {
+        //this.setAttributeManagers(attributeManagers);
         this.updateAttribute(attribute, new AttributeTracer(), request);
     }
 
@@ -467,7 +477,28 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
         String formFieldName = tracer.getFormFieldName(attribute);
         return request.getParameter(formFieldName);
     }
-
+	
+	protected AttributeManagerInterface getManager(AttributeInterface attribute) {
+		String managerClassName = attribute.getAttributeManagerClassName();
+        try {
+			if (null == managerClassName) return null;
+            Class managerClass = Class.forName(managerClassName);
+            Object managerInstance = managerClass.newInstance();
+            if (managerInstance instanceof AbstractAttributeManager) {
+				AbstractAttributeManager manager = (AbstractAttributeManager) managerInstance;
+				manager.setBeanFactory(this.getBeanFactory());
+				return manager;
+			}
+        } catch (Throwable e) {
+            String message = "Error creating manager of attribute '"
+                    + attribute.getName() + "' type '" + attribute.getType() + "' -  Manager class '" + managerClassName + "'";
+            ApsSystemUtils.logThrowable(e, this, "getManager", message);;
+            throw new RuntimeException(message, e);
+        }
+        return null;
+    }
+	
+	/*
     protected AttributeManagerInterface getManager(String typeCode) {
         AbstractAttributeManager manager = (AbstractAttributeManager) this.getAttributeManagers().get(typeCode);
         AbstractAttributeManager clone = null;
@@ -475,13 +506,13 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
             Class attributeClass = Class.forName(manager.getClass().getName());
             clone = (AbstractAttributeManager) attributeClass.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("Could not clone the attribute manager '" + this.getClass().getName() + "'");
+            throw new RuntimeException("Could not clone the attribute manager '" + this.getClass().getName() + "'", e);
         }
         clone.setAttributeManagers(this.getAttributeManagers());
         manager.setExtraPropertyTo(clone);
         return clone;
     }
-
+	*/
     /**
      * Set the extra properties in the given manager.
      * This method is used when creating a manager to handle the attribute element of a complex
@@ -532,41 +563,47 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         return action.getText(this.getInvalidAttributeMessage());
     }
-    
+    /*
     private Map<String, AttributeManagerInterface> getAttributeManagers() {
         return this._attributeManagers;
     }
     private void setAttributeManagers(Map<String, AttributeManagerInterface> attributeManagers) {
         this._attributeManagers = attributeManagers;
     }
-
+	*/
+	
     protected II18nManager getI18nManager() {
-        return _i18nManager;
+        return this.getBeanFactory().getBean(SystemConstants.I18N_MANAGER, II18nManager.class);
     }
+	/*
     public void setI18nManager(II18nManager i18nManager) {
         this._i18nManager = i18nManager;
     }
-
-    /**
-     * Return the manager of the system languages.
-     * @return The manager of the system languages.
-     */
+	*/
     protected ILangManager getLangManager() {
-        return _langManager;
+        return this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
     }
-
-    /**
-     * Set the manager of the system languages.
-     * @param langManager The manager that handles the language.
-     */
+	/*
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
+	*/
 	
-    private Map<String, AttributeManagerInterface> _attributeManagers;
+    //private Map<String, AttributeManagerInterface> _attributeManagers;
+	/*
     private II18nManager _i18nManager;
     private ILangManager _langManager;
-    
+    */
+	
+	protected BeanFactory getBeanFactory() {
+		return _beanFactory;
+	}
+	public void setBeanFactory(BeanFactory beanFactory) {
+		this._beanFactory = beanFactory;
+	}
+	
+	private BeanFactory _beanFactory;
+	
     /**
      * Constant code describing the status of the empty attribute.
      * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.

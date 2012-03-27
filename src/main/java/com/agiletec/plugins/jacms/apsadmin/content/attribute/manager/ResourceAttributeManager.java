@@ -17,12 +17,14 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -86,6 +88,19 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		return INCOMPLETE_ATTRIBUTE_STATE;
 	}
 	
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
+        String errorCode = attributeFieldError.getErrorCode();
+        String messageKey = null;
+        if (errorCode.equals(ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS)) {
+            messageKey = "ResourceAttribute.fieldError.invalidGroup";
+        }
+        if (null != messageKey) {
+            return action.getText(messageKey);
+        } else {
+            return super.getCustomAttributeErrorMessage(attributeFieldError, action);
+        }
+    }
+    
 	protected String getInvalidAttributeMessage() {
 		return "ResourceAttribute.fieldError.invalidResource";
 	}

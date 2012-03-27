@@ -36,26 +36,7 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public interface IContentActionHelper extends IEntityActionHelper {
 	
-	/**
-	 * Update the content through the current request.
-	 * @param content The content to update.
-	 * @param request The request.
-	 * @deprecated use updateEntity
-	 */
-	public void updateContent(Content content, HttpServletRequest request);
-	
 	public List<Group> getAllowedGroups(UserDetails currentUser);
-	
-	/**
-	 * Effettua la scansione del contenuto.
-	 * Il metodo verifica tutti gli errori presenti all'interno del contenuto inserendo, 
-	 * nell'action specificata, i messaggi di errore appositi per gli errori riscontrati.
-	 * @param content Il contenuto da analizzare.
-	 * @param action La action all'interno del quale inserire gli 
-	 * eventuali errori riscontrati sul contenuto.
-	 * @deprecated use scanEntity
-	 */
-	public void scanContent(Content content, ActionSupport action);
 	
 	/**
 	 * Controlla le referenziazioni di un contenuto. Verifica la referenziazione di un contenuto con altri contenuti o pagine nel caso 

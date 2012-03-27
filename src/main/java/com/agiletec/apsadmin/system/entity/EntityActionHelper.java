@@ -36,45 +36,42 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.apsadmin.system.BaseActionHelper;
+import com.agiletec.apsadmin.system.entity.attribute.manager.AbstractAttributeManager;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AttributeManagerInterface;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
 import com.opensymphony.xwork2.ActionSupport;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This abstract class supports all the helper classes that, in turn, support those
  * classes which handle elements built with the "ApsEntity' entries.
  * @author E.Santoboni
  */
-public class EntityActionHelper extends BaseActionHelper implements IEntityActionHelper {
+public class EntityActionHelper extends BaseActionHelper implements IEntityActionHelper, BeanFactoryAware {
     
     public void updateEntity(IApsEntity currentEntity, HttpServletRequest request) {
-        this.updateEntityAttributes(currentEntity, request);
-    }
-    
-    public void updateEntityAttributes(IApsEntity currentEntity, HttpServletRequest request) {
         try {
             List<AttributeInterface> attributes = currentEntity.getAttributeList();
             for (int i = 0; i < attributes.size(); i++) {
                 AttributeInterface attribute = attributes.get(i);
                 if (attribute.isActive()) {
-                    String attributeType = attribute.getType();
-                    AttributeManagerInterface attributeManager = this.getManager(attributeType);
+					//String attributeType = attribute.getType();
+                    AttributeManagerInterface attributeManager = this.getManager(attribute);
                     if (attributeManager != null) {
-                        attributeManager.updateEntityAttribute(attribute, this.getAttributeManagers(), request);
+                        attributeManager.updateEntityAttribute(attribute, request);
                     }
+					
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateEntityAttributes");
-            throw new RuntimeException("Errore in updateEntityAttributes", t);
+            ApsSystemUtils.logThrowable(t, this, "updateEntity");
+            throw new RuntimeException("Error updating Entity", t);
         }
     }
     
     public void scanEntity(IApsEntity currentEntity, ActionSupport action) {
-        this.scanEntityAttributes(currentEntity, action);
-    }
-    
-    public void scanEntityAttributes(IApsEntity currentEntity, ActionSupport action) {
         try {
             List<AttributeInterface> attributes = currentEntity.getAttributeList();
             for (int i = 0; i < attributes.size(); i++) {
@@ -87,7 +84,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
                             AttributeTracer tracer = attributeFieldError.getTracer();
                             AttributeInterface attribute = attributeFieldError.getAttribute();
                             String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
-                            AttributeManagerInterface attributeManager = this.getManager(attribute.getType());
+                            AttributeManagerInterface attributeManager = this.getManager(attribute);
                             String errorMessage = attributeManager.getErrorMessage(attributeFieldError, action);
                             String formFieldName = tracer.getFormFieldName(attributeFieldError.getAttribute());
                             action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + errorMessage);
@@ -96,8 +93,8 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "scanEntityAttributes");
-            throw new RuntimeException("Error in scanEntityAttributes", t);
+            ApsSystemUtils.logThrowable(t, this, "scanEntity");
+            throw new RuntimeException("Error scanning Entity", t);
         }
     }
     
@@ -121,11 +118,32 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
             return action.getText("EntityAttribute.singleAttribute.errorMessage.prefix", args);
         }
     }
-    
-    public AttributeManagerInterface getManager(String typeCode) {
+    /*
+    protected AttributeManagerInterface getManager(String typeCode) {
         return this.getAttributeManagers().get(typeCode);
     }
-    
+    */
+	
+	protected AttributeManagerInterface getManager(AttributeInterface attribute) {
+		String managerClassName = attribute.getAttributeManagerClassName();
+        try {
+			if (null == managerClassName) return null;
+            Class managerClass = Class.forName(managerClassName);
+            Object managerInstance = managerClass.newInstance();
+            if (managerInstance instanceof AbstractAttributeManager) {
+				AbstractAttributeManager manager = (AbstractAttributeManager) managerInstance;
+				manager.setBeanFactory(this.getBeanFactory());
+				return manager;
+			}
+        } catch (Throwable e) {
+            String message = "Error creating manager of attribute '"
+                    + attribute.getName() + "' type '" + attribute.getType() + "' -  Manager class '" + managerClassName + "'";
+            ApsSystemUtils.logThrowable(e, this, "getManager", message);;
+            throw new RuntimeException(message, e);
+        }
+        return null;
+    }
+	
     public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
         EntitySearchFilter[] filters = new EntitySearchFilter[0];
         List<AttributeInterface> contentAttributes = prototype.getAttributeList();
@@ -213,7 +231,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         newFilters[len] = filterToAdd;
         return newFilters;
     }
-    
+    /*
     protected Map<String, AttributeManagerInterface> getAttributeManagers() {
         return _attributeManagers;
     }
@@ -226,5 +244,21 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
     }
     
     private Map<String, AttributeManagerInterface> _attributeManagers;
-    
+    */
+	/*
+	@Override
+	public void setBeanFactory(BeanFactory bf) throws BeansException {
+		throw new UnsupportedOperationException("Not supported yet.");
+	}
+	*/
+	
+	protected BeanFactory getBeanFactory() {
+		return _beanFactory;
+	}
+	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+		this._beanFactory = beanFactory;
+	}
+	
+	private BeanFactory _beanFactory;
+	
 }

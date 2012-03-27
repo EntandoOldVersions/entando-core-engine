@@ -44,7 +44,7 @@ public class CompositeAttributeManager extends AbstractAttributeManager {
             com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
             elementTracer.setCompositeElement(true);
             elementTracer.setParentAttribute(attribute);
-            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
             if (elementManager != null) {
 				elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
             }
@@ -62,7 +62,7 @@ public class CompositeAttributeManager extends AbstractAttributeManager {
             AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
             elementTracer.setCompositeElement(true);
             elementTracer.setParentAttribute(attribute);
-            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
             if (elementManager != null) {
                     elementManager.updateAttribute(attributeElement, elementTracer, request);
             }
@@ -77,7 +77,7 @@ public class CompositeAttributeManager extends AbstractAttributeManager {
         List<AttributeInterface> attributes = ((CompositeAttribute) attribute).getAttributes();
         for (int i = 0; i < attributes.size(); i++) {
             AttributeInterface attributeElement = attributes.get(i);
-            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
             if (elementManager != null) {
                 com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
                 elementTracer.setCompositeElement(true);

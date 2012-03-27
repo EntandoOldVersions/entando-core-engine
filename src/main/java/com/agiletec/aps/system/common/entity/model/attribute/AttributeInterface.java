@@ -253,6 +253,13 @@ public interface AttributeInterface extends Serializable {
     public List<AttributeFieldError> validate(AttributeTracer tracer);
     
     public Status getStatus();
+	
+	/**
+	 * Return the class name of the manager of the attribute.
+	 * The Attribute Manager magage (the updating process) the attribute inside custom GUI interface (like http form).
+	 * @return The Manager Class name
+	 */
+	public String getAttributeManagerClassName();
     
     public enum Status{EMPTY, INCOMPLETE, VALUED};
     

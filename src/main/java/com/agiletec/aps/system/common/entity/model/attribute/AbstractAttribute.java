@@ -147,6 +147,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             }
             clone.setValidationRules(this.getValidationRules().clone());
             clone.setBeanFactory(this.getBeanFactory());
+			clone.setAttributeManagerClassName(this.getAttributeManagerClassName());
         } catch (Throwable e) {
             String message = "Error detected while creating the attribute prototype '"
                     + this.getName() + "' type '" + this.getType() + "'";
@@ -442,6 +443,13 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }
+	
+	public String getAttributeManagerClassName() {
+		return _attributeManagerClassName;
+	}
+	public void setAttributeManagerClassName(String attributeManagerClassName) {
+		this._attributeManagerClassName = attributeManagerClassName;
+	}
     
     private String _name;
     private String _type;
@@ -457,5 +465,6 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     private IAttributeValidationRules _validationRules;
     
     private BeanFactory _beanFactory;
+	private String _attributeManagerClassName;
     
 }

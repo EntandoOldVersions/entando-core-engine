@@ -25,7 +25,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.services.lang.Lang;
 
-
 /**
  * Abstract class for the managers of simple multi-language attributes.
  * @author E.Santoboni
@@ -91,10 +90,5 @@ public abstract class AbstractMultiLangAttributeManager extends AbstractAttribut
      * @param value The value to assign to the attribute.
      */
     protected abstract void setValue(AttributeInterface attribute, Lang lang, String value);
-    
-    protected void setExtraPropertyTo(AttributeManagerInterface manager) {
-        super.setExtraPropertyTo(manager);
-        ((AbstractMultiLangAttributeManager) manager).setLangManager(this.getLangManager());
-    }
     
 }

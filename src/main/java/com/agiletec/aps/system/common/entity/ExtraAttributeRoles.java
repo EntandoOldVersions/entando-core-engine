@@ -17,45 +17,11 @@
  */
 package com.agiletec.aps.system.common.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.common.entity.parse.AttributeRoleDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.common.entity.loader.ExtraAttributeRolesWrapper;
 
 /**
  * The Class of the extra attribute roles.
  * @author E.Santoboni
+ * @deprecated Since Entando 2.4.1, use ExtraAttributeRolesWrapper
  */
-public final class ExtraAttributeRoles extends AbstractExtraAttributeSupportObject {
-	
-	protected void executeLoading(Map<String, AttributeRole> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		if (!((IManager) entityManager).getName().equals(((IManager) this.getEntityManagerDest()).getName())) {
-			return;
-		}
-		AttributeRoleDOM dom = new AttributeRoleDOM();
-		try {
-			String xml = super.extractXml();
-			Map<String, AttributeRole> attributeRoles = dom.extractRoles(xml, this.getDefsFilePath());
-			List<AttributeRole> roles = new ArrayList<AttributeRole>(attributeRoles.values());
-			for (int i = 0; i < roles.size(); i++) {
-				AttributeRole role = roles.get(i);
-				if (collectionToFill.containsKey(role.getName())) {
-					ApsSystemUtils.getLogger().severe("You can't override existing attribute role : " 
-							+ role.getName() + " - " + role.getDescription());
-				} else {
-					collectionToFill.put(role.getName(), role);
-					ApsSystemUtils.getLogger().info("Added new attribute role : " 
-							+ role.getName() + " - " + role.getDescription());
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute Roles");
-		}
-	}
-	
-}
+public class ExtraAttributeRoles extends ExtraAttributeRolesWrapper {}

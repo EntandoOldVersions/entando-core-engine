@@ -17,11 +17,11 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.opensymphony.xwork2.ActionSupport;
@@ -39,8 +39,11 @@ public interface AttributeManagerInterface {
      * @param attribute The attribute of the entity
      * @param attributeManagers The map of the attribute managers, indexed by type.
      * @param request The request.
+	 * @deprecated As of version 2.4.1 of Entando, use updateEntityAttribute(AttributeInterface, HttpServletRequest).
      */
     public void updateEntityAttribute(AttributeInterface attribute, Map<String, AttributeManagerInterface> attributeManagers, HttpServletRequest request);
+    
+    public void updateEntityAttribute(AttributeInterface attribute, HttpServletRequest request);
     
     /**
      * Check the validity of the given attribute eventually adding the 

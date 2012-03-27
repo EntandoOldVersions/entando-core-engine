@@ -52,7 +52,7 @@ public class ListAttributeManager extends AbstractAttributeManager {
                 elementTracer.setListElement(true);
                 elementTracer.setListLang(lang);
                 elementTracer.setListIndex(j);
-                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
                 if (elementManager != null) {
                     elementManager.updateAttribute(attributeElement, elementTracer, request);
                 }
@@ -75,7 +75,7 @@ public class ListAttributeManager extends AbstractAttributeManager {
                 elementTracer.setListElement(true);
                 elementTracer.setListLang(lang);
                 elementTracer.setListIndex(j);
-                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+                AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
                 if (elementManager != null) {
                     elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
                 }
@@ -102,11 +102,6 @@ public class ListAttributeManager extends AbstractAttributeManager {
         } else {
             return EMPTY_ATTRIBUTE_STATE;
         }
-    }
-    
-    protected void setExtraPropertyTo(AttributeManagerInterface manager) {
-        super.setExtraPropertyTo(manager);
-        ((ListAttributeManager) manager).setLangManager(this.getLangManager());
     }
     
 }

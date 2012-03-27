@@ -44,7 +44,7 @@ public class MonoListAttributeManager extends AbstractAttributeManager {
             com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
             elementTracer.setMonoListElement(true);
             elementTracer.setListIndex(i);
-            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
             if (elementManager != null) {
                 elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
             }
@@ -62,7 +62,7 @@ public class MonoListAttributeManager extends AbstractAttributeManager {
             AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
             elementTracer.setMonoListElement(true);
             elementTracer.setListIndex(i);
-            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
             if (elementManager != null) {
                 elementManager.updateAttribute(attributeElement, elementTracer, request);
             }

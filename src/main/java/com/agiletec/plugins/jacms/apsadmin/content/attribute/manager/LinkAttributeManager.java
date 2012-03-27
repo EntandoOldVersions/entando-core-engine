@@ -56,7 +56,9 @@ public class LinkAttributeManager extends TextAttributeManager {
         this.checkLink(action, attribute, tracer, entity);
     }
     
-    @Deprecated
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
     protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
         super.checkMonoListElement(action, attribute, tracer, entity);
         this.checkLink(action, attribute, tracer, entity);

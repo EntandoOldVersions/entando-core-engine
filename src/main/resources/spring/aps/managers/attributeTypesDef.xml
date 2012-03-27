@@ -10,6 +10,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.DateAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.DateAttributeManager" />
 	</bean>
 	
 	<bean id="NumberAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute" >
@@ -17,6 +19,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.NumberAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.NumberAttributeManager" />
 	</bean>
 	
 	<bean id="MonoTextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute" >
@@ -24,6 +28,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.MonoTextAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.MonoTextAttributeManager" />
 	</bean>
 	
 	<bean id="EnumeratorAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.EnumeratorAttribute" 
@@ -36,13 +42,13 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.TextAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager" />
 	</bean>
 	
-	<bean id="LongtextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.TextAttribute" >
+	<bean id="LongtextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.TextAttribute" 
+			parent="TextAttribute">
 		<property name="type" value="Longtext" />
-		<property name="handler" >
-			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.TextAttributeHandler" />
-		</property>
 	</bean>
 	
 	<bean id="HypertextAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute" >
@@ -50,6 +56,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.HypertextAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.HypertextAttributeManager" />
 	</bean>
 	
 	<bean id="BooleanAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute" >
@@ -57,6 +65,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.BooleanAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.BooleanAttributeManager" />
 	</bean>
 	
 	<bean id="ThreeStateBooleanAttribute" parent="BooleanAttribute" >
@@ -65,6 +75,8 @@
 	
 	<bean id="CheckBoxAttribute" parent="BooleanAttribute" >
 		<property name="type" value="CheckBox" />
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.CheckBoxAttributeManager" />
 	</bean>
 	
 	<bean id="CompositeAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute" >
@@ -72,6 +84,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.CompositeAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.CompositeAttributeManager" />
 	</bean>
 	
 	<bean id="ListAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.ListAttribute" >
@@ -79,6 +93,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.ListAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.ListAttributeManager" />
 	</bean>
 	
 	<bean id="MonoListAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute" >
@@ -86,6 +102,8 @@
 		<property name="handler" >
 			<bean class="com.agiletec.aps.system.common.entity.parse.attribute.ListAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.apsadmin.system.entity.attribute.manager.MonoListAttributeManager" />
 	</bean>
 	
 </beans>

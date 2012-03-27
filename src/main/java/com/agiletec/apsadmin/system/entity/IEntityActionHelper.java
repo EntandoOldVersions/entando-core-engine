@@ -26,36 +26,11 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  * Base interface for the helper classes that support the actions which
  * handle the elements based on 'ApsEntity'.
- * 
  * @author E.Santoboni
  */
 public interface IEntityActionHelper {
 	
-	/**
-	 * Effettua l'aggiornamento degli Attributi della entità specificata 
-	 * attraverso i valori corrispondenti dei parametri estratti dalla richiesta corrente.
-	 * 
-	 * Updates the attributes of the specified entity using the values in the parameters
-	 * extracted from the current request.
-	 * 
-	 * @param currentEntity The ApsEntity to update.
-	 * @param request The current request.
-	 * @deprecated use updateEntity
-	 */
-	public void updateEntityAttributes(IApsEntity currentEntity, HttpServletRequest request);
-	
 	public void updateEntity(IApsEntity currentEntity, HttpServletRequest request);
-	
-	/**
-	 * Perform the validation check of the given ApsEntity.
-	 * The error messages related to the errors found are inserted in the action in the form of
-	 * 'ActionFieldError'. 
-	 * 
-	 * @param currentEntity The ApsEntity to test.
-	 * @param action The current action.
-	 * @deprecated use scanEntity
-	 */
-	public void scanEntityAttributes(IApsEntity currentEntity, ActionSupport action);
 	
 	public void scanEntity(IApsEntity currentEntity, ActionSupport action);
 	
