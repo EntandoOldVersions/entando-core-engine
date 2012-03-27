@@ -219,22 +219,6 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return (IResourceManager) this.getBeanFactory().getBean(JacmsSystemConstants.RESOURCE_MANAGER);
     }
     
-    
-    
-    /*
-    	protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		int state = this.getState(attribute, tracer);
-		if (state == VALUED_ATTRIBUTE_STATE) {
-			ResourceInterface resource = ((AbstractResourceAttribute) attribute).getResource();
-			String resourceMainGroup = resource.getMainGroup();
-			if (!resourceMainGroup.equals(Group.FREE_GROUP_NAME) && !resourceMainGroup.equals(entity.getMainGroup()) && !entity.getGroups().contains(resourceMainGroup)) {
-				String messageKey = "ResourceAttribute.fieldError.invalidGroup";
-				this.addFieldError(action, attribute, tracer, messageKey, null);
-			}
-		}
-	}
-     */
-    
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {
@@ -263,13 +247,6 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         }
         return errors;
     }
-    
-    
-    
-    
-    
-    
-    
     
     private Map<String, ResourceInterface> _resources = new HashMap<String, ResourceInterface>();
     public static final String REFERENCED_RESOURCE_INDICATOR = "ref";
