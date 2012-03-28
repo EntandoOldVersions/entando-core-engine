@@ -34,18 +34,25 @@ public class DateAttributeFilterAction extends BaseFilterAction {
 		Properties properties =  super.createFilterProperties();
 		int filterOption = this.getFilterOptionId();
 		if (filterOption == VALUE_FILTER_OPTION) {
-			this.setDateFilterParam(properties, EntitySearchFilter.VALUE_PARAM, this.getDateValueType(), this.getDateValue());
+			this.setDateFilterParam(properties, EntitySearchFilter.VALUE_PARAM, this.getDateValueType(), this.getDateValue(),EntitySearchFilter.VALUE_DATE_DELAY_PARAM, this.getValueDateDelay());
 		}
 		if (filterOption == RANGE_FILTER_OPTION) {
-			this.setDateFilterParam(properties, EntitySearchFilter.START_PARAM, this.getDateStartType(), this.getDateStart());
-			this.setDateFilterParam(properties, EntitySearchFilter.END_PARAM, this.getDateEndType(), this.getDateEnd());
+			this.setDateFilterParam(properties, EntitySearchFilter.START_PARAM, this.getDateStartType(), this.getDateStart(), EntitySearchFilter.START_DATE_DELAY_PARAM, this.getStartDateDelay() );
+			this.setDateFilterParam(properties, EntitySearchFilter.END_PARAM, this.getDateEndType(), this.getDateEnd(), EntitySearchFilter.END_DATE_DELAY_PARAM, this.getEndDateDelay());
 		}
 		return properties;
 	}
 	
-	protected void setDateFilterParam(Properties properties, String paramName, int dateType, Date date) {
+        protected void setDateFilterParam(Properties properties, String paramName, int dateType, Date date) {
+		this.setDateFilterParam(properties, paramName, dateType, date, null, null);
+	}
+        
+	protected void setDateFilterParam(Properties properties, String paramName, int dateType, Date date, String delayParamName, Integer delayValue) {
 		if (CURRENT_DATE_FILTER == dateType) {
 			properties.put(paramName, "today");
+			if (null != delayValue) {
+				properties.put(delayParamName, delayValue.toString());
+			}
 		} else if (INSERTED_DATE_FILTER == dateType && null != date) {
 			properties.put(paramName, DateConverter.getFormattedDate(date, EntitySearchFilter.DATE_PATTERN));
 		}
@@ -98,11 +105,34 @@ public class DateAttributeFilterAction extends BaseFilterAction {
 		this._dateEnd = dateEnd;
 	}
 	
+	public Integer getStartDateDelay() {
+		return _startDateDelay;
+	}
+	public void setStartDateDelay(Integer startDateDelay) {
+		this._startDateDelay = startDateDelay;
+	}
+	
+	public Integer getEndDateDelay() {
+		return _endDateDelay;
+	}
+	public void setEndDateDelay(Integer endDateDelay) {
+		this._endDateDelay = endDateDelay;
+	}
+	
+	public Integer getValueDateDelay() {
+		return _valueDateDelay;
+	}
+	public void setValueDateDelay(Integer valueDateDelay) {
+		this._valueDateDelay = valueDateDelay;
+	}
+	
 	private int _dateValueType = -1;
 	private Date _dateValue;
 	private int _dateStartType = -1;
 	private Date _dateStart;
 	private int _dateEndType = -1;
 	private Date _dateEnd;
-	
+	private Integer _startDateDelay;
+	private Integer _endDateDelay;
+	private Integer _valueDateDelay;
 }

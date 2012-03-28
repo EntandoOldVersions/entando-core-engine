@@ -195,6 +195,27 @@ public class FieldSearchFilter implements Serializable {
 		this._allowedValues = allowedValues;
 	}
 	
+	public Integer getStartDateDelay() {
+		return _startDateDelay;
+	}
+	public void setStartDateDelay(Integer startDateDelay) {
+		this._startDateDelay = startDateDelay;
+	}
+
+	public Integer getEndDateDelay() {
+		return _endDateDelay;
+	}
+	public void setEndDateDelay(Integer endDateDelay) {
+		this._endDateDelay = endDateDelay;
+	}
+
+	public Integer getValueDateDelay() {
+		return _valueDateDelay;
+	}
+	public void setValueDateDelay(Integer valueDateDelay) {
+		this._valueDateDelay = valueDateDelay;
+	}
+	
 	private String _key;
 	
 	private Object _value;
@@ -207,6 +228,10 @@ public class FieldSearchFilter implements Serializable {
 	private boolean _nullOption;
 	
 	private List<Object> _allowedValues;
+	
+	private Integer _startDateDelay;
+	private Integer _endDateDelay;
+	private Integer _valueDateDelay;
 	
 	public static final String ASC_ORDER = "ASC";
 	public static final String DESC_ORDER = "DESC";

@@ -1,31 +1,30 @@
 /*
-*
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software.
-* Entando is a free software;
-* you can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-*
-* See the file License for the specific language governing permissions
-* and limitations under the License
-*
-*
-*
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando software.
+ * Entando is a free software;
+ * you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+ *
+ * See the file License for the specific language governing permissions
+ * and limitations under the License
+ *
+ *
+ *
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiError;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
@@ -33,24 +32,22 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.util.EntityAttributeIterator;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
@@ -59,11 +56,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
  * @author E.Santoboni
  */
 public class ApiContentInterface extends AbstractCmsApiInterface {
-    
+
     public List<String> getContents(Properties properties) throws Throwable {
         return this.extractContents(properties);
     }
-    
+
     protected List<String> extractContents(Properties properties) throws Throwable {
         List<String> contentsId = null;
         try {
@@ -78,7 +75,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return contentsId;
     }
-    
+
     protected ApiContentListBean buildSearchBean(Properties properties) throws ApiException, Throwable {
         ApiContentListBean bean = null;
         try {
@@ -134,7 +131,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return render.toString();
     }
-    
+
     public JAXBContent getContent(Properties properties) throws ApiException, Throwable {
         JAXBContent jaxbContent = null;
         String id = properties.getProperty("id");
@@ -157,7 +154,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return jaxbContent;
     }
-    
+
     public String getContentToHtml(Properties properties) throws ApiException, Throwable {
         String render = null;
         String id = properties.getProperty("id");
@@ -237,16 +234,16 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return modelIdInteger;
     }
-    
-    public BaseApiResponse addContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+
+    public StringApiResponse addContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContent.getTypeCode();
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null == masterContentType) {
+            Content prototype = (Content) this.getContentManager().getEntityPrototype(typeCode);
+            if (null == prototype) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist");
             }
-            Content content = (Content) jaxbContent.buildEntity(masterContentType, this.getCategoryManager());
+            Content content = (Content) jaxbContent.buildEntity(prototype, this.getCategoryManager());
             if (null != content.getId() && null != this.getContentManager().loadContentVO(content.getId())) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + content.getId() + "' already exists");
             }
@@ -260,21 +257,21 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return response;
     }
-    
-    public BaseApiResponse updateContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+
+    public StringApiResponse updateContent(JAXBContent jaxbContent, Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContent.getTypeCode();
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null == masterContentType) {
+            Content prototype = (Content) this.getContentManager().getEntityPrototype(typeCode);
+            if (null == prototype) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist");
             }
-            Content content = (Content) jaxbContent.buildEntity(masterContentType, this.getCategoryManager());
+            Content content = (Content) jaxbContent.buildEntity(prototype, this.getCategoryManager());
             Content masterContent = this.getContentManager().loadContent(content.getId(), false);
             if (null == masterContent) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content with code '" + content.getId() + "' does not exist");
             } else if (!masterContent.getMainGroup().equals(content.getMainGroup())) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "Invalid main group " + content.getMainGroup() + " not equals then master " + masterContent.getMainGroup());
             }
             response = this.validateAndSaveContent(content, properties);
@@ -287,19 +284,18 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return response;
     }
-    
-    private BaseApiResponse validateAndSaveContent(Content content, Properties properties) throws ApiException, Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+
+    private StringApiResponse validateAndSaveContent(Content content, Properties properties) throws ApiException, Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
                 user = this.getUserManager().getGuestUser();
             }
             if (!this.getContentAuthorizationHelper().isAuth(user, content)) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "Content groups makes the new content not allowed for user " + user.getUsername());
             }
-            //todo checkRequiredAttribute
             List<ApiError> errors = this.validate(content);
             if (errors.size() > 0) {
                 response.addErrors(errors);
@@ -327,32 +323,18 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     private List<ApiError> validate(Content content) throws ApsSystemException {
         List<ApiError> errors = new ArrayList<ApiError>();
         try {
-            if (null == content.getMainGroup() || null == this.getGroupManager().getGroup(content.getMainGroup())) {
-                errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid main group - " + content.getMainGroup()));
+            if (null == content.getMainGroup()) {
+                errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Main group null"));
             }
-            if (null != content.getGroups()) {
-                Iterator<String> groupsIter = content.getGroups().iterator();
-                while (groupsIter.hasNext()) {
-                    String groupName = groupsIter.next();
-                    if (null == this.getGroupManager().getGroup(groupName)) {
-                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid extra group - " + groupName));
-                    }
-                }
-            }
-            EntityAttributeIterator iterator = new EntityAttributeIterator(content);
-            while (iterator.hasNext()) {
-                AttributeInterface attribute = (AttributeInterface) iterator.next();
-                if (attribute instanceof AbstractResourceAttribute) {
-                    //nothing to do
-                } else if (attribute instanceof LinkAttribute) {
-                    SymbolicLink symbLink = ((LinkAttribute) attribute).getSymbolicLink();
-                    if (null != symbLink) {
-                        if (null != symbLink.getContentDest() && null == this.getContentManager().loadContentVO(symbLink.getContentDest())) {
-                            errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid link to content " + symbLink.getContentDest()));
-                        }
-                        if (null != symbLink.getPageDest() && null == this.getPageManager().getPage(symbLink.getPageDest())) {
-                            errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid link to page " + symbLink.getPageDest()));
-                        }
+            List<FieldError> fieldErrors = content.validate(this.getGroupManager());
+            if (null != fieldErrors) {
+                for (int i = 0; i < fieldErrors.size(); i++) {
+                    FieldError fieldError = fieldErrors.get(i);
+                    if (fieldError instanceof AttributeFieldError) {
+                        AttributeFieldError attributeError = (AttributeFieldError) fieldError;
+                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, attributeError.getFullMessage()));
+                    } else {
+                        errors.add(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, fieldError.getMessage()));
                     }
                 }
             }
@@ -362,9 +344,9 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return errors;
     }
-    
-    public BaseApiResponse deleteContent(Properties properties) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+
+    public StringApiResponse deleteContent(Properties properties) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String id = properties.getProperty("id");
             Content masterContent = this.getContentManager().loadContent(id, false);
@@ -376,7 +358,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                 user = this.getUserManager().getGuestUser();
             }
             if (!this.getContentAuthorizationHelper().isAuth(user, masterContent)) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "Content groups makes the new content not allowed for user " + user.getUsername());
             }
             List<String> references = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(id);
@@ -387,7 +369,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                     ContentRecordVO record = this.getContentManager().loadContentVO(reference);
                     if (null != record) {
                         found = true;
-                        response.addError(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        response.addError(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
                                 "Content " + id + " referenced to content " + record.getId() + " - '" + record.getDescr() + "'"));
                     }
                 }
@@ -415,8 +397,6 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         return response;
     }
     
-    
-    
     protected IContentListHelper getContentListHelper() {
         return _contentListHelper;
     }
@@ -430,38 +410,35 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
     }
-    
+
     protected ICategoryManager getCategoryManager() {
         return _categoryManager;
     }
     public void setCategoryManager(ICategoryManager categoryManager) {
         this._categoryManager = categoryManager;
     }
-    
+
     protected IGroupManager getGroupManager() {
         return _groupManager;
     }
     public void setGroupManager(IGroupManager groupManager) {
         this._groupManager = groupManager;
     }
-    
+
     protected IPageManager getPageManager() {
         return _pageManager;
     }
     public void setPageManager(IPageManager pageManager) {
         this._pageManager = pageManager;
     }
-    
+
     protected IResourceManager getResourceManager() {
         return _resourceManager;
     }
     public void setResourceManager(IResourceManager resourceManager) {
         this._resourceManager = resourceManager;
     }
-    
-    
-    
-    
+
     protected IContentAuthorizationHelper getContentAuthorizationHelper() {
         return _contentAuthorizationHelper;
     }
@@ -514,11 +491,9 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     private IContentListHelper _contentListHelper;
     private IUserManager _userManager;
     private ICategoryManager _categoryManager;
-    
     private IGroupManager _groupManager;
     private IPageManager _pageManager;
     private IResourceManager _resourceManager;
-    
     private IContentAuthorizationHelper _contentAuthorizationHelper;
     private ICmsCacheWrapperManager _cmsCacheWrapperManager;
     private IContentDispenser _contentDispenser;
@@ -526,5 +501,5 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     private String _itemStartElement = "<li>";
     private String _itemEndElement = "</li>";
     private String _itemsEndElement = "</ul>";
-        
+    
 }

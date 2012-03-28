@@ -17,12 +17,14 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.agiletec.apsadmin.system.entity.attribute.manager.TextAttributeManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.util.ICmsAttributeErrorCodes;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -32,8 +34,10 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class ResourceAttributeManager extends TextAttributeManager {
 	
-	@Override
-	protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkSingleAttribute(action, attribute, tracer, entity);
 		int state = this.getState(attribute, tracer);
 		if (state == INCOMPLETE_ATTRIBUTE_STATE) {
@@ -42,19 +46,26 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	@Override
-	protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListCompositeElement(action, attribute, tracer, entity);
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	@Override
-	protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		super.checkMonoListElement(action, attribute, tracer, entity);
 		this.checkResource(action, attribute, tracer, entity);
 	}
 	
-	protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkResource(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
 		int state = this.getState(attribute, tracer);
 		if (state == VALUED_ATTRIBUTE_STATE) {
 			ResourceInterface resource = ((AbstractResourceAttribute) attribute).getResource();
@@ -66,8 +77,10 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		}
 	}
 	
-	@Override
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
+	/**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
 		boolean isTextValued = super.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE;
 		boolean isResourceValued = ((AbstractResourceAttribute) attribute).getResource() != null;
 		if (isResourceValued && isTextValued) return VALUED_ATTRIBUTE_STATE;
@@ -75,7 +88,19 @@ public class ResourceAttributeManager extends TextAttributeManager {
 		return INCOMPLETE_ATTRIBUTE_STATE;
 	}
 	
-	@Override
+    protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
+        String errorCode = attributeFieldError.getErrorCode();
+        String messageKey = null;
+        if (errorCode.equals(ICmsAttributeErrorCodes.INVALID_RESOURCE_GROUPS)) {
+            messageKey = "ResourceAttribute.fieldError.invalidGroup";
+        }
+        if (null != messageKey) {
+            return action.getText(messageKey);
+        } else {
+            return super.getCustomAttributeErrorMessage(attributeFieldError, action);
+        }
+    }
+    
 	protected String getInvalidAttributeMessage() {
 		return "ResourceAttribute.fieldError.invalidResource";
 	}

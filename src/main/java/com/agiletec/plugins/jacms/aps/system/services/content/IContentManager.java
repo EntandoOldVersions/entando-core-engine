@@ -145,8 +145,11 @@ public interface IContentManager extends IEntityManager {
 	 * @return La lista degli id dei contenuti cercati.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
-	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, 
-			Collection<String> userGroupCodes) throws ApsSystemException;
+	public List<String> loadPublicContentsId(String contentType, String[] categories, 
+                        EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+	
+	public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 	
 	/**
 	 * Carica una lista di identificativi di contenuti publici in base ai parametri immessi.
@@ -159,9 +162,12 @@ public interface IContentManager extends IEntityManager {
 	 * @return La lista degli id dei contenuti cercati.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
-	public List<String> loadPublicContentsId(String[] categories, EntitySearchFilter[] filters, 
-			Collection<String> userGroupCodes) throws ApsSystemException;
+	public List<String> loadPublicContentsId(String[] categories, 
+                EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 	
+        public List<String> loadPublicContentsId(String[] categories, boolean orClauseCategoryFilter, 
+                EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+        
 	/**
 	 * Carica una lista di identificativi di contenuti in base ai parametri immessi.
 	 * @param categories La categorie dei contenuti da cercare.
@@ -174,7 +180,7 @@ public interface IContentManager extends IEntityManager {
 	 * anche sui gruppi extra dei contenuti e non esclusivamente sul gruppo proprietario.
 	 * @return La lista degli id dei contenuti cercati.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
-	 * @deprecated From jAPS 2.0 version 2.0.9. Use {@link loadWorkContentsId} or {@link loadPublicContentsId}
+	 * @deprecated From jAPS 2.0 version 2.0.9. Use loadWorkContentsId or loadPublicContentsId
 	 */
 	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes, boolean onlyOwner) throws ApsSystemException;
@@ -182,6 +188,8 @@ public interface IContentManager extends IEntityManager {
 	public List<String> loadWorkContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 	
 	public List<String> loadWorkContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
+	
+	public List<String> loadWorkContentsId(String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException;
 	
 	/**
 	 * Restituisce la lista di tutti identificativi dei contenuti.

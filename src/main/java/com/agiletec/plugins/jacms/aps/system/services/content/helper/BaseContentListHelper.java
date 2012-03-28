@@ -28,12 +28,14 @@ import java.util.Set;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
+import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.user.UserDetails;
+
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -52,7 +54,14 @@ public class BaseContentListHelper implements IContentListHelper {
         return dom.getFilters(contentPrototype, filtersShowletParam, langCode);
     }
     
+    /**
+     * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String contentType, IEntityFilterBean, String) method
+     */
     public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, String langCode) {
+        return this.getFilter(contentType, (IEntityFilterBean) bean, langCode);
+    }
+    
+    public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, String langCode) {
         BaseFilterUtils dom = new BaseFilterUtils();
         Content contentPrototype = this.getContentManager().createContentType(contentType);
         if (null == contentPrototype) {
@@ -84,7 +93,7 @@ public class BaseContentListHelper implements IContentListHelper {
         List<String> contentsId = null;
         try {
             if (null == bean.getContentType()) {
-                throw new ApsSystemException("Tipo contenuto non definito");
+                throw new ApsSystemException("Content type not defined");
             }
             Collection<String> userGroupCodes = this.getAllowedGroups(user);
             contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), bean.getCategories(), bean.getFilters(), userGroupCodes);

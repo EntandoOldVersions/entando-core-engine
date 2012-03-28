@@ -39,6 +39,8 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.event.ReloadingEntitiesReferencesEvent;
 import com.agiletec.aps.system.common.entity.event.ReloadingEntitiesReferencesObserver;
+import com.agiletec.aps.system.common.entity.loader.AttributeDisablingCodesLoader;
+import com.agiletec.aps.system.common.entity.loader.AttributeRolesLoader;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -69,8 +71,9 @@ public abstract class ApsEntityManager extends AbstractService
 	@Override
 	public void init() throws Exception {
 		this._entityDom.setRootElementName(this.getXmlAttributeRootElementName());
+		String entityManagerName = super.getName();
 		this._entityTypes = this._entityTypeFactory.getEntityTypes(this._entityClass, 
-				this.getConfigItemName(), this._entityTypeDom, this._entityDom);
+				this.getConfigItemName(), this._entityTypeDom, entityManagerName, this._entityDom);
 		ApsSystemUtils.getLogger().config(this.getName() + ": inizializated " + this._entityTypes.size() + " entity types");
 	}
 	

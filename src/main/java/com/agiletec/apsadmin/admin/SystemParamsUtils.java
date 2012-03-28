@@ -27,6 +27,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.jdom.output.Format;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -36,91 +37,113 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class SystemParamsUtils {
-	
-	/**
-	 * Return the configuration params contained in the given XML.
-	 * @param xmlParams XML string containing the parameters to fetch.
-	 * @return The resulting parameters map.
-	 * @throws Throwable if errors are detected.
-	 */
-	public static Map<String, String> getParams(String xmlParams) throws Throwable {
-		Map<String, String> params = new HashMap<String, String>();
-		Document doc = decodeDOM(xmlParams);
-		Element element = doc.getRootElement();
-		insertParams(element, params);
-		return params;
-	}
-	
-	private static void insertParams(Element currentElement, Map<String, String> params) {
-		if ("Param".equals(currentElement.getName())) {
-			String key = currentElement.getAttributeValue("name");
-			String value = currentElement.getText();
-			params.put(key, value);
-		}
-		List<Element> elements = currentElement.getChildren();
-		for (int i=0; i<elements.size(); i++) {
-			Element element = elements.get(i);
-			insertParams(element, params);
-		}
-	}
-	
-	/**
-	 * Return the XML of the configuration with updated parameters.
-	 * NOTE: All the values contained in the map but NOT in the given XML are ignored. 
-	 * @param oldXmlParams The old configuration XML.
-	 * @param newSystemParams The map with updated values
-	 * @return String The new system configuration string.
-	 * @throws Throwable if errors are detected.
-	 */
-	public static String getNewXmlParams(String oldXmlParams, Map<String, String> newSystemParams) throws Throwable {
-		Document doc = decodeDOM(oldXmlParams);
-		Element element = doc.getRootElement();
-		Iterator<String> newParamsName = newSystemParams.keySet().iterator();
-		while (newParamsName.hasNext()) {
-			String paramName = (String) newParamsName.next();
-			Element paramElement = searchParamElement(element, paramName);
-			if (null != paramElement) {
-				String value = newSystemParams.get(paramName);
-				paramElement.setText(value);
-			}
-		}
-		return getXMLDocument(doc);
-	}
-	
-	public static String getXMLDocument(Document doc) {
-		XMLOutputter out = new XMLOutputter();
-		String xml = out.outputString(doc);
-		return xml;
-	}
-	
-	private static Element searchParamElement(Element currentElement, String paramName) {
-		String elementName = currentElement.getName();
-		String key = currentElement.getAttributeValue("name");
-		if ("Param".equals(elementName) && paramName.equals(key)) {
-			return currentElement;
-		} else {
-			List<Element> elements = currentElement.getChildren();
-			for (int i=0; i<elements.size(); i++) {
-				Element element = elements.get(i);
-				Element result = searchParamElement(element, paramName);
-				if (null != result) return result; 
-			}
-		}
-		return null;
-	}
-	
-	private static Document decodeDOM(String xmlText) throws ApsSystemException {
-		SAXBuilder builder = new SAXBuilder();
-		builder.setValidation(false);
-		StringReader reader = new StringReader(xmlText);
-		Document doc = null;
-		try {
-			doc = builder.build(reader);
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Errore nel parsing: " + t.getMessage());
-			throw new ApsSystemException("Errore nell'interpretazione dell'xml", t);
-		}
-		return doc;
-	}
-	
+    
+    /**
+     * Return the configuration params contained in the given XML.
+     * @param xmlParams XML string containing the parameters to fetch.
+     * @return The resulting parameters map.
+     * @throws Throwable if errors are detected.
+     */
+    public static Map<String, String> getParams(String xmlParams) throws Throwable {
+        Map<String, String> params = new HashMap<String, String>();
+        Document doc = decodeDOM(xmlParams);
+        Element element = doc.getRootElement();
+        insertParams(element, params);
+        return params;
+    }
+    
+    private static void insertParams(Element currentElement, Map<String, String> params) {
+        if ("Param".equals(currentElement.getName())) {
+            String key = currentElement.getAttributeValue("name");
+            String value = currentElement.getText();
+            params.put(key, value);
+        }
+        List<Element> elements = currentElement.getChildren();
+        for (int i = 0; i < elements.size(); i++) {
+            Element element = elements.get(i);
+            insertParams(element, params);
+        }
+    }
+    
+    /**
+     * Return the XML of the configuration with updated parameters.
+     * NOTE: All the values contained in the map but NOT in the given XML are ignored. 
+     * @param oldXmlParams The old configuration XML.
+     * @param newSystemParams The map with updated values
+     * @return String The new system configuration string.
+     * @throws Throwable if errors are detected.
+     */
+    public static String getNewXmlParams(String oldXmlParams, Map<String, String> newSystemParams) throws Throwable {
+        Document doc = decodeDOM(oldXmlParams);
+        Element element = doc.getRootElement();
+        updateParameters(element, newSystemParams);
+        return getXMLDocument(doc);
+    }
+    
+    private static void updateParameters(Element rootElement, Map<String, String> parameters) {
+        Iterator<String> newParamsName = parameters.keySet().iterator();
+        while (newParamsName.hasNext()) {
+            String paramName = newParamsName.next();
+            Element paramElement = searchParamElement(rootElement, paramName);
+            if (null != paramElement) {
+                String value = parameters.get(paramName);
+                paramElement.setText(value);
+            } else {
+                Element extraParamsElement = rootElement.getChild(EXTRA_PARAMS_ELEMENT);
+                if (null == extraParamsElement) {
+                    extraParamsElement = new Element(EXTRA_PARAMS_ELEMENT);
+                    rootElement.addContent(extraParamsElement);
+                }
+                Element extraParamElement = new Element(PARAM_ELEMENT);
+                extraParamElement.setText(parameters.get(paramName));
+                extraParamElement.setAttribute("name", paramName);
+                extraParamsElement.addContent(extraParamElement);
+            }
+        }
+    }
+    
+    public static String getXMLDocument(Document doc) {
+        XMLOutputter out = new XMLOutputter();
+        Format format = Format.getPrettyFormat();
+        format.setIndent("\t");
+        out.setFormat(format);
+        return out.outputString(doc);
+    }
+    
+    private static Element searchParamElement(Element currentElement, String paramName) {
+        String elementName = currentElement.getName();
+        String key = currentElement.getAttributeValue("name");
+        if (PARAM_ELEMENT.equals(elementName) && paramName.equals(key)) {
+            return currentElement;
+        } else {
+            List<Element> elements = currentElement.getChildren();
+            for (int i = 0; i < elements.size(); i++) {
+                Element element = elements.get(i);
+                Element result = searchParamElement(element, paramName);
+                if (null != result) {
+                    return result;
+                }
+            }
+        }
+        return null;
+    }
+    
+    private static Document decodeDOM(String xmlText) throws ApsSystemException {
+        Document doc = null;
+        try {
+            SAXBuilder builder = new SAXBuilder();
+            builder.setValidation(false);
+            StringReader reader = new StringReader(xmlText);
+            doc = builder.build(reader);
+        } catch (Throwable t) {
+            ApsSystemUtils.getLogger().severe("Error parsing: " + t.getMessage());
+            throw new ApsSystemException("Error parsing document", t);
+        }
+        return doc;
+    }
+    
+    public static final String PARAMS_ELEMENT = "Params";
+    public static final String PARAM_ELEMENT = "Param";
+    public static final String EXTRA_PARAMS_ELEMENT = "ExtraParams";
+    
 }

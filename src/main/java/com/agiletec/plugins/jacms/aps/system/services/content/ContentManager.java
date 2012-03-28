@@ -289,32 +289,10 @@ public class ContentManager extends ApsEntityManager
 	}
 	
 	/**
-	 * Return the unique key used to reference a rendered content which is going to be cached. 
-	 * @param contentId The id of the rendered content.
-	 * @param modelId The ID of the model used to render the content.
-	 * @param langCode The rendering language.
-	 * @return The unique key used by the caching engine.
-	 */
-	public static String getRenderedContentCacheKey(String contentId, long modelId, String langCode) {
-		String key = contentId + "_" + modelId + "_" + langCode;
-		return key;
-	}
-	
-	/**
-	 * Return the unique key used to cache and retrieve the access authorization 
-	 * of a content (stored in the 'ContentAuthorizationInfo' object).
-	 * @param contentId L'identificativo del contenuto.
-	 * @return The unique key used to cache and retrieve the authorizations of a content.
-	 */
-	public static String getContentAuthInfoCacheKey(String contentId) {
-		return contentId + "_AUTH_INFO";
-	}
-	
-	/**
 	 * Return the list of all the content IDs. 
 	 * @return The list of all the content IDs. 
 	 * @throws ApsSystemException In case of error
-	 * @deprecated From jAPS 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
+	 * @deprecated Since jAPS 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
 	 */
 	@Override
 	public List<String> getAllContentsId() throws ApsSystemException {
@@ -405,9 +383,15 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes) throws ApsSystemException {
+		return this.loadPublicContentsId(contentType, categories, false, filters, userGroupCodes);
+	}
+	
+	@Override
+	public List<String> loadPublicContentsId(String contentType, String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
-			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, filters, userGroupCodes);
+			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "loadContentsId");
 			throw new ApsSystemException("Error while loading contents", t);
@@ -416,11 +400,17 @@ public class ContentManager extends ApsEntityManager
 	}
 	
 	@Override
-	public List<String> loadPublicContentsId(String[] categories, EntitySearchFilter[] filters, 
-			Collection<String> userGroupCodes) throws ApsSystemException {
+	public List<String> loadPublicContentsId(String[] categories, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+		return this.loadPublicContentsId(categories, false, filters, userGroupCodes);
+	}
+	
+	@Override
+	public List<String> loadPublicContentsId(String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
-			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(categories, filters, userGroupCodes);
+			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "loadContentsId");
 			throw new ApsSystemException("Error while loading contents", t);
@@ -439,14 +429,20 @@ public class ContentManager extends ApsEntityManager
 	
 	@Override
 	public List<String> loadWorkContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
-		return this.loadWorkContentsId(null, filters, userGroupCodes);
+		return this.loadWorkContentsId(null, false, filters, userGroupCodes);
 	}
 	
 	@Override
 	public List<String> loadWorkContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
+		return this.loadWorkContentsId(categories, false, filters, userGroupCodes);
+	}
+	
+	@Override
+	public List<String> loadWorkContentsId(String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
-			contentsId = this.getWorkContentSearcherDAO().loadContentsId(categories, filters, userGroupCodes);
+			contentsId = this.getWorkContentSearcherDAO().loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "loadWorkContentsId");
 			throw new ApsSystemException("Error while loading work contents", t);

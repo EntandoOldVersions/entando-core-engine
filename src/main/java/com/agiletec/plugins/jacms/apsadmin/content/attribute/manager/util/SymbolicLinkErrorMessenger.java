@@ -32,6 +32,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
  * Classe di utilità per i manager degli attributi in cui negli elementi compositivi 
  * vi può essere in link rappresentato dal proprio link simbolico.
  * @author E.Santoboni
+ * @deprecated Moved validation into general validation of link and hypertext attribute
  */
 public class SymbolicLinkErrorMessenger implements ISymbolicLinkErrorMessenger {
 	

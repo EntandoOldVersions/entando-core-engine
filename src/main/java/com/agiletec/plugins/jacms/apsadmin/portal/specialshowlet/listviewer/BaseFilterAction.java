@@ -78,7 +78,7 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 	public String setFilterOption() {
 		try {
 			int filterOption = this.getFilterOptionId();
-			if (filterOption != VALUE_FILTER_OPTION && filterOption != RANGE_FILTER_OPTION) {
+			if (filterOption != VALUE_FILTER_OPTION && filterOption != RANGE_FILTER_OPTION && filterOption != ABSENCE_FILTER_OPTION) {
 				this.setFilterOptionId(-1);
 			}
 		} catch (Throwable t) {
@@ -106,6 +106,9 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 		properties.put(EntitySearchFilter.FILTER_TYPE_PARAM, String.valueOf(this.isAttributeFilter()));
 		if (null != this.getOrder() && this.getOrder().trim().length()>0) {
 			properties.put(EntitySearchFilter.ORDER_PARAM, this.getOrder());
+		}
+		if (ABSENCE_FILTER_OPTION == this.getFilterOptionId()){
+			properties.put(EntitySearchFilter.NULL_VALUE_PARAM, "true");
 		}
 		return properties;
 	}

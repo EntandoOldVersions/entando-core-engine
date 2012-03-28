@@ -23,6 +23,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
 /**
  * Interfaccia di utilità per le Classi analizzatrici della correttezza di link simbolico.
  * @author E.Santoboni
+ * @deprecated Moved validation into general validation of link and hypertext attribute
  */
 public interface ISymbolicLinkErrorMessenger {
 	

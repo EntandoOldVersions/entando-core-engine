@@ -17,14 +17,9 @@
  */
 package org.entando.entando.plugins.jacms.aps.system.services.api.response;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
-import org.entando.entando.aps.system.services.api.model.ListResponse;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType;
 
 /**
@@ -34,21 +29,7 @@ public class ContentTypeResponseResult extends AbstractApiResponseResult {
     
     @XmlElement(name = "contentType", required = false)
     public JAXBContentType getResult() {
-        if (this.getMainResult() instanceof JAXBContentType) {
-            return (JAXBContentType) this.getMainResult();
-        }
-        return null;
-    }
-    
-    @XmlElement(name = "contentTypes", required = false)
-    public ListResponse getResults() {
-        if (this.getMainResult() instanceof Collection) {
-            List<JAXBContentType> contentTypes = new ArrayList<JAXBContentType>();
-            contentTypes.addAll((Collection<JAXBContentType>) this.getMainResult());
-            ListResponse listResponse = new ListResponse(contentTypes){};
-            return listResponse;
-        }
-        return null;
+        return (JAXBContentType) this.getMainResult();
     }
     
 }

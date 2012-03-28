@@ -19,36 +19,40 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 
 /**
  * Manager class for the 'boolean' attributes.
  * @author E.Santoboni
  */
 public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
-	
-	@Override
-	protected Object getValue(AttributeInterface attribute) {
-		return ((BooleanAttribute) attribute).getBooleanValue();
-	}
-	
-	@Override
-	protected void setValue(AttributeInterface attribute, String value) {
-		if (value != null) {
-			((BooleanAttribute) attribute).setBooleanValue(new Boolean(value));
-		} else {
-			((BooleanAttribute) attribute).setBooleanValue(null);
-		}
-	}
-	
-	@Override
-	protected boolean isValidListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
-	@Override
-	protected boolean isValidMonoListElement(AttributeInterface attribute, AttributeTracer tracer) {
-		return true;
-	}
-	
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected Object getValue(AttributeInterface attribute) {
+        return ((BooleanAttribute) attribute).getBooleanValue();
+    }
+    
+    protected void setValue(AttributeInterface attribute, String value) {
+        if (value != null) {
+            ((BooleanAttribute) attribute).setBooleanValue(new Boolean(value));
+        } else {
+            ((BooleanAttribute) attribute).setBooleanValue(null);
+        }
+    }
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected boolean isValidListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
+        return true;
+    }
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected boolean isValidMonoListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
+        return true;
+    }
+    
 }

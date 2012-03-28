@@ -52,7 +52,7 @@ import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 
@@ -73,7 +73,7 @@ public class ApiRestServer {
     @Path("/apistatus/{resourceName}/{httpMethod}")
     public Object getApiStatus(@PathParam("httpMethod") String httpMethodString, 
             @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
-        BaseApiResponse response = new BaseApiResponse();
+        StringApiResponse response = new StringApiResponse();
         ApiMethod.HttpMethod httpMethod = Enum.valueOf(ApiMethod.HttpMethod.class, httpMethodString.toUpperCase());
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
@@ -86,7 +86,7 @@ public class ApiRestServer {
                 response.setResult(ApiStatus.FREE.toString(), null);
             }
         } catch (ApiException ae) {
-            response = (BaseApiResponse) this.buildErrorResponse(httpMethod, resourceName, ae);
+            response = this.buildErrorResponse(httpMethod, resourceName, ae);
             response.setResult(ApiStatus.INACTIVE.toString(), null);
         } catch (Throwable t) {
             return this.buildErrorResponse(httpMethod, resourceName, t);
@@ -216,11 +216,11 @@ public class ApiRestServer {
         return properties;
     }
     
-    private Object buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
+    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
         ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
-        BaseApiResponse response = new BaseApiResponse();
+        StringApiResponse response = new StringApiResponse();
         if (t instanceof ApiException) {
             response.addErrors(((ApiException) t).getErrors());
         } else {

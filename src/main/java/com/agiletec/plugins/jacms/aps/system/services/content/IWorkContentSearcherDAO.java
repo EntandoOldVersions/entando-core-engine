@@ -40,7 +40,10 @@ public interface IWorkContentSearcherDAO extends IEntitySearcherDAO {
 	 * @return La lista degli id dei contenuti cercati.
 	 */
 	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes);
-	
+        
 	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+	
+	public List<String> loadContentsId(String[] categories, 
+			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 	
 }

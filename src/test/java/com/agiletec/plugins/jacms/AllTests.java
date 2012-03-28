@@ -25,6 +25,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.TestContentDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestGroupUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestPublicContentSearcherDAO;
+import com.agiletec.plugins.jacms.aps.system.services.content.TestValidateContent;
 import com.agiletec.plugins.jacms.aps.system.services.content.authorization.TestContentAuthorization;
 import com.agiletec.plugins.jacms.aps.system.services.content.entity.TestContentEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.TestContentDOM;
@@ -93,6 +94,7 @@ public class AllTests {
 		suite.addTestSuite(TestContentDAO.class);
 		suite.addTestSuite(TestContentManager.class);
 		suite.addTestSuite(TestPublicContentSearcherDAO.class);
+		suite.addTestSuite(TestValidateContent.class);
 		//
 		suite.addTestSuite(TestContentModelDAO.class);
 		suite.addTestSuite(TestContentModelManager.class);

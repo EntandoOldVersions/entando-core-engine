@@ -30,6 +30,8 @@
 		<value><![CDATA[getLastModified(\"<DATE_PATTERN>\")]]></value>
 		<value><![CDATA[getVersion()]]></value>
 		<value><![CDATA[getLastEditor()]]></value>
+		<value><![CDATA[isUserAllowed(\"<PERMISSION_NAME>\")]]></value>
+		<value><![CDATA[getLangCode()]]></value>
 	</util:list>
 	
 	<util:map id="jacmsAllowedPublicAttributeMethods" map-class="java.util.Properties">

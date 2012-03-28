@@ -15,7 +15,7 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.common.entity;
+package com.agiletec.aps.system.common.entity.loader;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -25,6 +25,7 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.util.FileTextReader;
 
 /**

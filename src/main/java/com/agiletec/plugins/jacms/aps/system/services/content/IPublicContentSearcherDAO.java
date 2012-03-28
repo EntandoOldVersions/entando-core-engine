@@ -43,6 +43,9 @@ public interface IPublicContentSearcherDAO extends IEntitySearcherDAO {
 	public List<String> loadPublicContentsId(String[] categories, EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes);
 	
+	public List<String> loadPublicContentsId(String[] categories, 
+			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
+	
 	/**
 	 * Carica una lista di identificativi di contenuti publici in base ai parametri immessi.
 	 * @param contentType Il codice dei tipi di contenuto da cercare.
@@ -56,5 +59,8 @@ public interface IPublicContentSearcherDAO extends IEntitySearcherDAO {
 	 */
 	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, 
 			Collection<String> userGroupCodes);
+	
+	public List<String> loadPublicContentsId(String contentType, 
+			String[] categories, boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes);
 	
 }

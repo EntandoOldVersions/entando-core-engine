@@ -33,11 +33,17 @@ public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implement
 	
 	@Override
 	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
-		return this.loadContentsId(null, filters, userGroupCodes);
+		return this.loadContentsId(null, false, filters, userGroupCodes);
 	}
 	
 	@Override
 	public List<String> loadContentsId(String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
+		return this.loadContentsId(categories, false, filters, userGroupCodes);
+	}
+	
+	@Override
+	public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
+			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
 		List<String> contentsId = new ArrayList<String>();
 		if (userGroupCodes == null || userGroupCodes.size()==0) {
 			return contentsId;
@@ -47,7 +53,7 @@ public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implement
 		ResultSet result = null;
 		try {
 			conn = this.getConnection();
-			stat = this.buildStatement(filters, categories, userGroupCodes, false, conn);
+			stat = this.buildStatement(filters, categories, orClauseCategoryFilter, userGroupCodes, false, conn);
 			result = stat.executeQuery();
 			this.flowResult(contentsId, filters, result);
 		} catch (Throwable t) {

@@ -35,9 +35,21 @@ public interface IEntityTypeDOM {
 	 * @param entityClass The class of the Entity Type.
 	 * @param entityDom The DOM class that creates the XML of the entity instances. 
 	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
+	 * @deprecated Since Entando 2.4.1, use initEntityTypeDOM(String, Class, IApsEntityDOM, String)
 	 */
 	public void initEntityTypeDOM(String xml, Class entityClass, 
 			IApsEntityDOM entityDom) throws ApsSystemException;
+	
+	/**
+	 * Initialization of the DOM class.
+	 * @param xml The configuration XML of the Entity Types available.
+	 * @param entityClass The class of the Entity Type.
+	 * @param entityDom The DOM class that creates the XML of the entity instances. 
+	 * @param entityManagerName The entity manager name
+	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
+	 */
+	public void initEntityTypeDOM(String xml, Class entityClass, 
+			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
 	
 	/**
 	 * Prepare the map with the Attribute Types.

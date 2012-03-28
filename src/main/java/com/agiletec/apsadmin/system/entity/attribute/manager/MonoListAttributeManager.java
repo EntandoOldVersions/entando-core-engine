@@ -17,6 +17,7 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -32,44 +32,53 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class MonoListAttributeManager extends AbstractAttributeManager {
-	
-	@Override
-	protected void checkAttribute(ActionSupport action, AttributeInterface attribute, AttributeTracer tracer, IApsEntity entity) {
-		super.checkAttribute(action, attribute, tracer, entity);
-		this.manageMonoListAttribute(true, false, action, attribute, tracer, null, entity);
-	}
-	
-	@Override
-	protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
-		this.manageMonoListAttribute(false, true, null, attribute, tracer, request, null);
-	}
-	
-	private void manageMonoListAttribute(boolean isCheck, boolean isUpdate, ActionSupport action, 
-			AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request, IApsEntity entity) {
-		List<AttributeInterface> attributes = ((MonoListAttribute) attribute).getAttributes();
-		for (int i=0; i<attributes.size(); i++) {
-			AttributeInterface attributeElement = attributes.get(i);
-			AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
-			elementTracer.setMonoListElement(true);
-			elementTracer.setListIndex(i);
-			AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement.getType());
-			if (elementManager != null) {
-				if (isCheck && !isUpdate) {
-					elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
-				}
-				if (!isCheck && isUpdate) {
-					elementManager.updateAttribute(attributeElement, elementTracer, request);
-				}
-			}
-		}
-	}
-	
-	@Override
-	protected int getState(AttributeInterface attribute, AttributeTracer tracer) {
-		boolean valued = ((MonoListAttribute) attribute).getAttributes().size()>0;
-		if (valued) {
-			return VALUED_ATTRIBUTE_STATE;
-		} else return EMPTY_ATTRIBUTE_STATE;
-	}
-	
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected void checkAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
+        super.checkAttribute(action, attribute, tracer, entity);
+        List<AttributeInterface> attributes = ((MonoListAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            com.agiletec.apsadmin.system.entity.attribute.AttributeTracer elementTracer = (com.agiletec.apsadmin.system.entity.attribute.AttributeTracer) tracer.clone();
+            elementTracer.setMonoListElement(true);
+            elementTracer.setListIndex(i);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
+            if (elementManager != null) {
+                elementManager.checkAttribute(action, attributeElement, elementTracer, entity);
+            }
+        }
+    }
+    
+    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
+        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
+    }
+    
+    protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
+        List<AttributeInterface> attributes = ((MonoListAttribute) attribute).getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+            elementTracer.setMonoListElement(true);
+            elementTracer.setListIndex(i);
+            AbstractAttributeManager elementManager = (AbstractAttributeManager) this.getManager(attributeElement);
+            if (elementManager != null) {
+                elementManager.updateAttribute(attributeElement, elementTracer, request);
+            }
+        }
+    }
+    
+    /**
+     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
+     */
+    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
+        boolean valued = ((MonoListAttribute) attribute).getAttributes().size() > 0;
+        if (valued) {
+            return VALUED_ATTRIBUTE_STATE;
+        } else {
+            return EMPTY_ATTRIBUTE_STATE;
+        }
+    }
+    
 }

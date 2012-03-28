@@ -17,6 +17,14 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -194,6 +202,57 @@ public class ListAttribute extends AbstractListAttribute {
             AttributeInterface attribute = this.addAttribute(this.getDefaultLangCode());
             attribute.valueFrom(jaxbAttributeElement);
         }
+    }
+    
+    public Status getStatus() {
+        boolean valued = true;
+        ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+        List<Lang> langs = langManager.getLangs();
+        for (int i = 0; i < langs.size(); i++) {
+            Lang lang = langs.get(i);
+            List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
+            if (attributeList == null || attributeList.size() == 0) {
+                valued = false;
+                break;
+            }
+        }
+        if (valued) {
+            return Status.VALUED;
+        } else {
+            return Status.EMPTY;
+        }
+    }
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        try {
+            ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+            List<Lang> langs = langManager.getLangs();
+            for (int i = 0; i < langs.size(); i++) {
+                Lang lang = langs.get(i);
+                List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
+                for (int j = 0; j < attributeList.size(); j++) {
+                    AttributeInterface attributeElement = attributeList.get(j);
+                    AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                    elementTracer.setListElement(true);
+                    elementTracer.setListLang(lang);
+                    elementTracer.setListIndex(j);
+                    Status elementStatus = attributeElement.getStatus();
+                    if (!elementStatus.equals(Status.EMPTY)) {
+                        errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
+                    } else {
+                        List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);
+                        if (null != elementErrors) {
+                            errors.addAll(elementErrors);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating list attribute", t);
+        }
+        return errors;
     }
     
     private Map<String, List<AttributeInterface>> _listMap;
