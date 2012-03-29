@@ -12,6 +12,18 @@
     <import resource="classpath:META-INF/cxf/cxf.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
     
+    <jaxrs:server id="ApiRestStatusServer" serviceClass="org.entando.entando.aps.system.services.api.server.ApiRestStatusServer"
+			address="/apistatus">
+        <jaxrs:extensionMappings>
+            <entry key="json" value="application/json" />
+            <entry key="xml" value="application/xml" />
+        </jaxrs:extensionMappings>
+        <jaxrs:providers>
+            <ref bean="jaxbProvider"/>
+            <ref bean="jsonProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+    
     <jaxrs:server id="ApiRestServer" serviceClass="org.entando.entando.aps.system.services.api.server.ApiRestServer"
 			address="/rs">
         <jaxrs:extensionMappings>

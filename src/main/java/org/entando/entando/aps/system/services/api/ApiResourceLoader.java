@@ -70,14 +70,15 @@ public class ApiResourceLoader {
                     Iterator<ApiResource> extractedResourcesIter = extractedResources.values().iterator();
                     while (extractedResourcesIter.hasNext()) {
                         ApiResource apiResource = extractedResourcesIter.next();
-                        if (null != this.getResources().get(apiResource.getResourceName())) {
+                        if (null != this.getResources().get(apiResource.getFullCode())) {
                             String alertMessage = "ALERT: Into definition file '" + path + "' "
-                                    + "there is an API resource '" + apiResource.getResourceName() 
-                                    + "' and there is just one already present - This definition will be ignored!!!";
+                                    + "there is an API with namespace '" + apiResource.getNamespace() 
+									+ "', resource '" + apiResource.getResourceName()
+                                    + "' and there is just one already present - The old definition will be overrided!!!";
                             ApsSystemUtils.getLogger().severe(alertMessage);
-                        } else {
-                            this.getResources().put(apiResource.getResourceName(), apiResource);
-                        }
+                        }// else {
+                        this.getResources().put(apiResource.getFullCode(), apiResource);
+                        //}
                     }
                 }
                 log.info("Loaded Api Resources definition by file " + path);

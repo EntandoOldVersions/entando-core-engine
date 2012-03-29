@@ -140,7 +140,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 masterMethod.setRequiredPermission(null);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateApiStatus", "Error error updating api status : "
+            ApsSystemUtils.logThrowable(t, this, "updateMethodConfig", "Error error updating api status : "
                     + "resource '" + apiMethod.getResourceName() + "' method '" + apiMethod.getHttpMethod() + "' ");
             throw new ApsSystemException("Error updating api status", t);
         }
@@ -162,9 +162,10 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         if (null == apiMethod) {
             throw new ApsSystemException("Null api method");
         }
-        ApiMethod masterMethod = this.getMasterMethod(apiMethod.getHttpMethod(), apiMethod.getResourceName());
+        ApiMethod masterMethod = this.getMasterMethod(apiMethod.getHttpMethod(), apiMethod.getNamespace(), apiMethod.getResourceName());
         if (null == masterMethod) {
-            throw new ApsSystemException("Api resource '" + apiMethod.getResourceName() + "' "
+            throw new ApsSystemException("Api namespace '" + apiMethod.getNamespace() + "' "
+					+ "resource '" + apiMethod.getResourceName() + "' "
                     + "method '" + apiMethod.getHttpMethod() + "' does not exist");
         }
         return masterMethod;
@@ -176,19 +177,24 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     }
     
     public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException {
-        ApiMethod masterMethod = this.getMasterMethod(httpMethod, resourceName);
+        return this.getMethod(ApiMethod.HttpMethod.GET, null, resourceName);
+    }
+    
+    public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException {
+        ApiMethod masterMethod = this.getMasterMethod(httpMethod, namespace, resourceName);
         if (null != masterMethod) {
             return masterMethod.clone();
         }
         return null;
     }
     
-    protected ApiMethod getMasterMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException {
+    protected ApiMethod getMasterMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException {
         try {
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-            ApiResource resource = this.getMasterResources().get(resourceName);
+			String resourceFullCode = this.getResourceFullCode(namespace, resourceName);
+            ApiResource resource = this.getMasterResources().get(resourceFullCode);
             if (null != resource) {
                 return resource.getMethod(httpMethod);
             }
@@ -253,9 +259,9 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             }
             Iterator<String> iterator = this.getMasterResources().keySet().iterator();
             while (iterator.hasNext()) {
-                String resourceName = iterator.next();
-                ApiResource resource = this.getMasterResources().get(resourceName);
-                clonedApiResources.put(resourceName, resource.clone());
+                String resourceFullCode = iterator.next();
+                ApiResource resource = this.getMasterResources().get(resourceFullCode);
+                clonedApiResources.put(resourceFullCode, resource.clone());
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getApiResources", "Error extracting resources");
@@ -263,13 +269,18 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
         return clonedApiResources;
     }
+	
+	public ApiResource getApiResource(String resourceName) throws ApsSystemException {
+		return this.getApiResource(null, resourceName);
+	}
     
-    public ApiResource getApiResource(String resourceName) throws ApsSystemException {
+    public ApiResource getApiResource(String namespace, String resourceName) throws ApsSystemException {
         try {
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-            ApiResource apiResource = this.getMasterResources().get(resourceName);
+			String resourceFullCode = this.getResourceFullCode(namespace, resourceName);
+            ApiResource apiResource = this.getMasterResources().get(resourceFullCode);
             if (null != apiResource) {
                 return apiResource.clone();
             }
@@ -350,7 +361,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 throw new ApsSystemException("Null api service to save");
             }
             ApiMethod master = service.getMaster();
-            if (null == master || null == this.getMethod(master.getHttpMethod(), master.getResourceName())) {
+            if (null == master || null == this.getMethod(master.getHttpMethod(), master.getNamespace(), master.getResourceName())) {
                 throw new ApsSystemException("null or invalid master method of service to save");
             }
             if (null != this.getMasterServices().get(service.getKey())) {
@@ -397,6 +408,10 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             throw new ApsSystemException("Error updating service '" + service.getKey() + "'", t);
         }
     }
+	
+	private String getResourceFullCode(String namespace, String resourceName) {
+		return ApiResource.getFullCode(namespace, resourceName);
+	}
     
     public Map<String, ApiResource> getMasterResources() {
         return _masterResources;
@@ -415,7 +430,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     protected ServletContext getServletContext() {
         return this._servletContext;
     }
-    
     public void setServletContext(ServletContext servletContext) {
         this._servletContext = servletContext;
     }
@@ -426,7 +440,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
         return _locationPatterns;
     }
-
     public void setLocationPatterns(String locationPatterns) {
         this._locationPatterns = locationPatterns;
     }

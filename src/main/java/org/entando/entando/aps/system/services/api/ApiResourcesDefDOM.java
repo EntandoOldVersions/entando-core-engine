@@ -47,7 +47,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ApiResourcesDefDOM {
     
     public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
-        this.validate(xmlText, definitionPath);
+        //this.validate(xmlText, definitionPath);
         ApsSystemUtils.getLogger().info("Loading Resources from file : " + definitionPath);
         this.decodeDOM(xmlText);
     }
@@ -94,6 +94,7 @@ public class ApiResourcesDefDOM {
                     ApiMethod apiMethod = new ApiMethod(methodElement);
                     ApiResource resource = new ApiResource();
                     resource.setResourceName(apiMethod.getResourceName());
+                    resource.setNamespace(apiMethod.getNamespace());
                     resource.setDescription(apiMethod.getDescription());
                     resource.setPluginCode(apiMethod.getPluginCode());
                     resource.setSource(apiMethod.getSource());
@@ -106,6 +107,7 @@ public class ApiResourcesDefDOM {
                 for (int j = 0; j < resourceElements.size(); j++) {
                     Element resourceElement = resourceElements.get(j);
                     String resourceName = resourceElement.getAttributeValue(RESOURCE_ATTRIBUTE_NAME);
+                    String namespace = resourceElement.getAttributeValue(RESOURCE_ATTRIBUTE_NAMESPACE);
                     Element descriptionElement = resourceElement.getChild(RESOURCE_DESCRIPTION_ELEMENT_NAME);
                     String resourceDescription = (null != descriptionElement) ? descriptionElement.getText() : null;
                     Element sourceElement = resourceElement.getChild(ApiResourcesDefDOM.SOURCE_ELEMENT_NAME);
@@ -117,13 +119,14 @@ public class ApiResourcesDefDOM {
                     }
                     ApiResource resource = new ApiResource();
                     resource.setResourceName(resourceName);
+					resource.setNamespace(namespace);
                     resource.setDescription(resourceDescription);
                     resource.setPluginCode(pluginCode);
                     resource.setSource(source);
                     List<Element> resourceMethodElements = resourceElement.getChildren(METHOD_ELEMENT_NAME);
                     for (int k = 0; k < resourceMethodElements.size(); k++) {
                         Element methodElement = resourceMethodElements.get(k);
-                        ApiMethod apiMethod = new ApiMethod(resourceName, source, pluginCode, methodElement);
+                        ApiMethod apiMethod = new ApiMethod(resourceName, namespace, source, pluginCode, methodElement);
                         this.checkMethod(apiMethod, resource);
                     }
                     this.checkResource(resource, apiResources);
@@ -137,13 +140,14 @@ public class ApiResourcesDefDOM {
     
     private void checkResource(ApiResource resource, Map<String, ApiResource> apiResources) {
         try {
-            ApiResource extractedResource = apiResources.get(resource.getResourceName());
+			ApiResource extractedResource = apiResources.get(resource.getFullCode());
             if (null != extractedResource) {
-                String alertMessage = "ALERT: There is more than one API resource '" + resource.getResourceName() + 
+                String alertMessage = "ALERT: There is more than one API with namespace '" + resource.getNamespace() + 
+						"', resource '" + resource.getResourceName() + 
                         "' into the same definitions file - The second definition will be ignored!!!";
                 ApsSystemUtils.getLogger().severe(alertMessage);
             } else {
-                apiResources.put(resource.getResourceName(), resource);
+                apiResources.put(resource.getFullCode(), resource);
             }
         } catch (Exception e) {
             ApsSystemUtils.logThrowable(e, this, "checkResource", "Error checking api resource");
@@ -183,6 +187,7 @@ public class ApiResourcesDefDOM {
     public static final String METHOD_ELEMENT_NAME = "method";
     public static final String RESOURCE_ELEMENT_NAME = "resource";
     public static final String RESOURCE_ATTRIBUTE_NAME = "name";
+	public static final String RESOURCE_ATTRIBUTE_NAMESPACE = "namespace";
     public static final String RESOURCE_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String METHOD_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String ACTIVE_ATTRIBUTE_NAME = "active";

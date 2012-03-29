@@ -53,17 +53,26 @@ public interface IApiCatalogManager {
     
     public Map<String, ApiResource> getApiResources() throws ApsSystemException;
     
-    public ApiResource getApiResource(String resourceName) throws ApsSystemException;
+    /**
+	 * Return an API resource
+	 * @param namespace The namespace.
+	 * @param resourceName The resource name.
+	 * @return The resource.
+	 * @throws ApsSystemException In case of exception.
+	 */
+    public ApiResource getApiResource(String namespace, String resourceName) throws ApsSystemException;
     
     /**
      * Return a GET methods by name.
      * @return a GET methods.
      * @throws ApsSystemException In case of error
-     * @deprecated use getMethod(ApiMethod.HttpMethod, methodName, namespace) method
+     * @deprecated use getMethod(ApiMethod.HttpMethod, resourceName) method
      */
     public ApiMethod getMethod(String resourceName) throws ApsSystemException;
     
     public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException;
+	
+	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException;
     
     public Map<String, ApiService> getApiServices() throws ApsSystemException;
 

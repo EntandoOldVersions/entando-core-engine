@@ -29,7 +29,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface IResponseBuilder {
     
-    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApiException;
+    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException;
     
     @Deprecated
     public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException;

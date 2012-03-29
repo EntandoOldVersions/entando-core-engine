@@ -56,7 +56,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException {
         Object apiResponse = null;
         try {
-            ApiMethod method = this.extractApiMethod(ApiMethod.HttpMethod.GET, resourceName);
+            ApiMethod method = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
             apiResponse = this.createResponse(method, parameters);
         } catch (ApiException e) {
             ApsSystemUtils.logThrowable(e, this, "createResponse", "Error creating response for method GET, resource '" + resourceName + "'");
@@ -154,7 +154,11 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             } else if (!apiMethod.getSource().equalsIgnoreCase("core")) {
                 path.append(apiMethod.getSource() + "/");
             }
-            path.append("aps/get/" + apiMethod.getResourceName() + "/description-item.vm");
+            path.append("aps/get/");
+			if (null != apiMethod.getNamespace()) {
+				path.append(apiMethod.getNamespace() + "/");
+			}
+			path.append(apiMethod.getResourceName() + "/description-item.vm");
             Resource[] resources = ApsWebApplicationUtils.getResources(path.toString(), this.getServletContext());
             if (null != resources && resources.length == 1) {
                 Resource resource = resources[0];
@@ -219,7 +223,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
         Object result = null;
         try {
-            ApiMethod api = this.extractApi(resourceName);
+            ApiMethod api = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
             this.checkParameter(api, parameters);
             Object bean = this.extractBean(api);
             result = this.invokeGetMethod(api, bean, "", parameters, true);
@@ -233,38 +237,36 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return result;
     }
     
-    @Deprecated
-    protected ApiMethod extractApi(String resourceName) throws ApiException {
-        return this.extractApiMethod(ApiMethod.HttpMethod.GET, resourceName);
-    }
-
-    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApiException {
+    public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException {
         ApiMethod api = null;
         try {
-            api = this.getApiCatalogManager().getMethod(httpMethod, resourceName);
+            api = this.getApiCatalogManager().getMethod(httpMethod, namespace, resourceName);
             if (null == api) {
-                throw new ApiException(IApiErrorCodes.API_INVALID, this.buildApiSignature(httpMethod, resourceName) + " does not exists");
+                throw new ApiException(IApiErrorCodes.API_INVALID, this.buildApiSignature(httpMethod, namespace, resourceName) + " does not exists");
             }
             if (!api.isActive()) {
-                throw new ApiException(IApiErrorCodes.API_ACTIVE_FALSE, this.buildApiSignature(httpMethod, resourceName) + " is not active");
+                throw new ApiException(IApiErrorCodes.API_ACTIVE_FALSE, this.buildApiSignature(httpMethod, namespace, resourceName) + " is not active");
             }
         } catch (ApiException ae) {
-            ApsSystemUtils.logThrowable(ae, this, "extractApi", "Error extracting api method " + this.buildApiSignature(httpMethod, resourceName));
+            ApsSystemUtils.logThrowable(ae, this, "extractApi", "Error extracting api method " + this.buildApiSignature(httpMethod, namespace, resourceName));
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "extractApi", "Error extracting api method - " + this.buildApiSignature(httpMethod, resourceName));
-            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(httpMethod, resourceName) + " is not supported");
+            ApsSystemUtils.logThrowable(t, this, "extractApi", "Error extracting api method - " + this.buildApiSignature(httpMethod, namespace, resourceName));
+            throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(httpMethod, namespace, resourceName) + " is not supported");
         }
         return api;
     }
     
     private String buildApiSignature(ApiMethod apiMethod) {
-        return this.buildApiSignature(apiMethod.getHttpMethod(), apiMethod.getResourceName());
+        return this.buildApiSignature(apiMethod.getHttpMethod(), apiMethod.getNamespace(), apiMethod.getResourceName());
     }
     
-    private String buildApiSignature(ApiMethod.HttpMethod httpMethod, String resourceName) {
+    private String buildApiSignature(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("Method '").append(httpMethod.toString()).append("' Resource '").append(resourceName).append("'");
+		if (null != namespace) {
+			buffer.append(" Namespace '").append(namespace).append("'");
+		}
         return buffer.toString();
     }
     

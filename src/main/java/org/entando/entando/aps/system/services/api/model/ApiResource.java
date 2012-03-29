@@ -25,6 +25,7 @@ public class ApiResource {
     public ApiResource clone() {
         ApiResource clone = new ApiResource();
         clone.setDescription(this.getDescription());
+        clone.setNamespace(this.getNamespace());
         clone.setPluginCode(this.getPluginCode());
         clone.setResourceName(this.getResourceName());
         clone.setSource(this.getSource());
@@ -42,13 +43,32 @@ public class ApiResource {
         }
         return clone;
     }
+	
+	public String getFullCode() {
+		return getFullCode(this.getNamespace(), this.getResourceName());
+	}
     
+	public static String getFullCode(String namespace, String resourceName) {
+		StringBuffer buffer = new StringBuffer();
+		if (null != namespace && namespace.trim().length() > 0) {
+			buffer.append(namespace.trim()).append(":");
+		}
+		buffer.append(resourceName.trim());
+		return buffer.toString();
+	}
     
     public String getResourceName() {
         return _resourceName;
     }
     public void setResourceName(String resourceName) {
         this._resourceName = resourceName;
+    }
+    
+    public String getNamespace() {
+        return _namespace;
+    }
+    public void setNamespace(String namespace) {
+        this._namespace = namespace;
     }
     
     public String getDescription() {
@@ -136,6 +156,7 @@ public class ApiResource {
     }
     
     private String _resourceName;
+	private String _namespace;
     private String _description;
     private String _source;
     private String _pluginCode;
