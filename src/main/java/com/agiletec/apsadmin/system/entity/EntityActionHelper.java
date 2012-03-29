@@ -57,12 +57,10 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
             for (int i = 0; i < attributes.size(); i++) {
                 AttributeInterface attribute = attributes.get(i);
                 if (attribute.isActive()) {
-					//String attributeType = attribute.getType();
                     AttributeManagerInterface attributeManager = this.getManager(attribute);
                     if (attributeManager != null) {
                         attributeManager.updateEntityAttribute(attribute, request);
                     }
-					
                 }
             }
         } catch (Throwable t) {
@@ -118,12 +116,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
             return action.getText("EntityAttribute.singleAttribute.errorMessage.prefix", args);
         }
     }
-    /*
-    protected AttributeManagerInterface getManager(String typeCode) {
-        return this.getAttributeManagers().get(typeCode);
-    }
-    */
-	
+    
 	protected AttributeManagerInterface getManager(AttributeInterface attribute) {
 		String managerClassName = attribute.getAttributeManagerClassName();
         try {
