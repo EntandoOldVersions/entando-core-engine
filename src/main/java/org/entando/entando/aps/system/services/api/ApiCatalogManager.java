@@ -193,8 +193,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-			String resourceFullCode = this.getResourceFullCode(namespace, resourceName);
-            ApiResource resource = this.getMasterResources().get(resourceFullCode);
+			String resourceCode = this.getResourceCode(namespace, resourceName);
+            ApiResource resource = this.getMasterResources().get(resourceCode);
             if (null != resource) {
                 return resource.getMethod(httpMethod);
             }
@@ -279,8 +279,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-			String resourceFullCode = this.getResourceFullCode(namespace, resourceName);
-            ApiResource apiResource = this.getMasterResources().get(resourceFullCode);
+			String resourceCode = this.getResourceCode(namespace, resourceName);
+            ApiResource apiResource = this.getMasterResources().get(resourceCode);
             if (null != apiResource) {
                 return apiResource.clone();
             }
@@ -409,8 +409,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
 	
-	private String getResourceFullCode(String namespace, String resourceName) {
-		return ApiResource.getFullCode(namespace, resourceName);
+	private String getResourceCode(String namespace, String resourceName) {
+		return ApiResource.getCode(namespace, resourceName);
 	}
     
     public Map<String, ApiResource> getMasterResources() {

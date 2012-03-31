@@ -44,11 +44,11 @@ public class ApiResource {
         return clone;
     }
 	
-	public String getFullCode() {
-		return getFullCode(this.getNamespace(), this.getResourceName());
+	public String getCode() {
+		return getCode(this.getNamespace(), this.getResourceName());
 	}
     
-	public static String getFullCode(String namespace, String resourceName) {
+	public static String getCode(String namespace, String resourceName) {
 		StringBuffer buffer = new StringBuffer();
 		if (null != namespace && namespace.trim().length() > 0) {
 			buffer.append(namespace.trim()).append(":");

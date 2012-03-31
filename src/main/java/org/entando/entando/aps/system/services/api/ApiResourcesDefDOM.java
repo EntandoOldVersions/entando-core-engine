@@ -140,14 +140,14 @@ public class ApiResourcesDefDOM {
     
     private void checkResource(ApiResource resource, Map<String, ApiResource> apiResources) {
         try {
-			ApiResource extractedResource = apiResources.get(resource.getFullCode());
+			ApiResource extractedResource = apiResources.get(resource.getCode());
             if (null != extractedResource) {
                 String alertMessage = "ALERT: There is more than one API with namespace '" + resource.getNamespace() + 
 						"', resource '" + resource.getResourceName() + 
                         "' into the same definitions file - The second definition will be ignored!!!";
                 ApsSystemUtils.getLogger().severe(alertMessage);
             } else {
-                apiResources.put(resource.getFullCode(), resource);
+                apiResources.put(resource.getCode(), resource);
             }
         } catch (Exception e) {
             ApsSystemUtils.logThrowable(e, this, "checkResource", "Error checking api resource");

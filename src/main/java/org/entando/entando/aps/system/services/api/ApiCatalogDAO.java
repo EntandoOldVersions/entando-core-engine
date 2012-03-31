@@ -122,7 +122,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         try {
             conn = this.getConnection();
             conn.setAutoCommit(false);
-			String resourceCode = ApiResource.getFullCode(method.getNamespace(), method.getResourceName());
+			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
             this.resetApiStatus(resourceCode, method.getHttpMethod(), conn);
             stat = conn.prepareStatement(SAVE_API_STATUS);
             //resource, httpmethod, isactive, authenticationrequired, authorizationrequired
@@ -152,7 +152,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         Map<String, ApiMethod> methodMap = new HashMap<String, ApiMethod>();
         for (int i = 0; i < methods.size(); i++) {
             ApiMethod method = methods.get(i);
-			String resourceCode = ApiResource.getFullCode(method.getNamespace(), method.getResourceName());
+			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
 			methodMap.put(resourceCode, method);
         }
         Map<String, ApiService> services = new HashMap<String, ApiService>();
@@ -219,7 +219,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             stat = conn.prepareStatement(ADD_SERVICE);
             //servicekey, resource, description, parameters, tag, freeparameters, isactive, ispublic
             stat.setString(1, service.getKey());
-			String resourceCode = ApiResource.getFullCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+			String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
 			stat.setString(2, resourceCode);
             stat.setString(3, service.getDescription().toXml());
             stat.setString(4, service.getParameters().toXml());
@@ -254,7 +254,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(UPDATE_SERVICE);
             //SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? WHERE servicekey = ? ";
-            String resourceCode = ApiResource.getFullCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+            String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
 			stat.setString(1, resourceCode);
             stat.setString(2, service.getDescription().toXml());
             stat.setString(3, service.getParameters().toXml());
