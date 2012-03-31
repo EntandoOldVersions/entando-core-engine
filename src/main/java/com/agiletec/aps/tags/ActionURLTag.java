@@ -68,7 +68,12 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 					pageUrl.addParam(name, this.getParameters().get(name));
 				}
 			}
-			this.pageContext.getOut().print(pageUrl.getURL());
+			String path = pageUrl.getURL();
+			if (null != this.getVar()) {
+				this.pageContext.setAttribute(this.getVar(), path);
+			} else {
+				this.pageContext.getOut().print(path);
+			}
 		} catch (IOException e) {
 			ApsSystemUtils.logThrowable(e, this, "doEndTag");
 			throw new JspException("Error closing tag ", e);
@@ -79,7 +84,8 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 	
 	@Override
 	public void release() {
-		this._path = null;
+		this.setPath(null);
+		this.setVar(null);
 		this._parameters = null;
 	}
 	
@@ -90,7 +96,7 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 	public String getPath() {
 		return _path;
 	}
-
+	
 	/**
 	 * Set the path related to the action or the page to invoke.
 	 * @param path The path to invoke
@@ -111,7 +117,15 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 		this._parameters.put(name, value);
 	}
 	
+	public String getVar() {
+		return _var;
+	}
+	public void setVar(String var) {
+		this._var = var;
+	}
+	
 	private String _path;
+	private String _var;
 	
 	private Map<String, String> _parameters;
 	

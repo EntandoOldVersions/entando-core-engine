@@ -170,6 +170,12 @@
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the page-scoped variable where to place the URL.]]></description>
+			<name>var</name>
+			<required>no</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
 	</tag>
 	
 <!-- END OF SYSTEM TAGS -->
