@@ -47,7 +47,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ApiResourcesDefDOM {
     
     public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
-        //this.validate(xmlText, definitionPath);
+        this.validate(xmlText, definitionPath);
         ApsSystemUtils.getLogger().info("Loading Resources from file : " + definitionPath);
         this.decodeDOM(xmlText);
     }
