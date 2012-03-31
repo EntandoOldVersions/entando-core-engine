@@ -26,9 +26,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
-import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
-import org.entando.entando.apsadmin.api.model.ApiSelectItem;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -39,9 +37,9 @@ import com.agiletec.apsadmin.system.BaseAction;
 public abstract class AbstractApiFinderAction extends BaseAction {
     
     public List<List<ApiResource>> getResourceFlavours() {
-        List<String> pluginCodes = new ArrayList<String>();
         List<List<ApiResource>> group = new ArrayList<List<ApiResource>>();
         try {
+			List<String> pluginCodes = new ArrayList<String>();
             Map<String, List<ApiResource>> mapping = this.getResourceFlavoursMapping(pluginCodes);
             this.addResourceGroup("core", mapping, group);
             for (int i = 0; i < pluginCodes.size(); i++) {
@@ -72,16 +70,18 @@ public abstract class AbstractApiFinderAction extends BaseAction {
             Iterator<ApiResource> resourcesIter = masterResources.values().iterator();
             while (resourcesIter.hasNext()) {
                 ApiResource apiResource = resourcesIter.next();
-                List<ApiResource> resources = finalMapping.get(apiResource.getSectionCode());
-                if (null == resources) {
-                    resources = new ArrayList<ApiResource>();
-                    finalMapping.put(apiResource.getSectionCode(), resources);
-                }
-                resources.add(apiResource);
-                String pluginCode = apiResource.getPluginCode();
-                if (null != pluginCode && !pluginCodes.contains(pluginCode)) {
-                    pluginCodes.add(pluginCode);
-                }
+				if (this.includeIntoMapping(apiResource)) {
+					List<ApiResource> resources = finalMapping.get(apiResource.getSectionCode());
+					if (null == resources) {
+						resources = new ArrayList<ApiResource>();
+						finalMapping.put(apiResource.getSectionCode(), resources);
+					}
+					resources.add(apiResource);
+					String pluginCode = apiResource.getPluginCode();
+					if (null != pluginCode && !pluginCodes.contains(pluginCode)) {
+						pluginCodes.add(pluginCode);
+					}
+				}
             }
             Collections.sort(pluginCodes);
         } catch (Throwable t) {
@@ -91,88 +91,10 @@ public abstract class AbstractApiFinderAction extends BaseAction {
         return finalMapping;
     }
     
-    @Deprecated
-    public List<List<ApiSelectItem>> getMethodFlavours() {
-        List<String> pluginCodes = new ArrayList<String>();
-        List<List<ApiSelectItem>> group = new ArrayList<List<ApiSelectItem>>();
-        try {
-            Map<String, List<ApiSelectItem>> mapping = this.getMethodFlavoursMapping(pluginCodes);
-            this.addGroup("core", mapping, group);
-            for (int i = 0; i < pluginCodes.size(); i++) {
-                String pluginCode = pluginCodes.get(i);
-                this.addGroup(pluginCode, mapping, group);
-            }
-            this.addGroup("custom", mapping, group);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMethodFlavours");
-            throw new RuntimeException("Error extracting Flavours methods", t);
-        }
-        return group;
-    }
-    
-    @Deprecated
-    protected Map<String, List<ApiSelectItem>> getMethodFlavoursMapping(List<String> pluginCodes) throws Throwable {
-        Map<String, List<ApiSelectItem>> mapping = new HashMap<String, List<ApiSelectItem>>();
-        try {
-            Map<String, ApiMethod> methodMap = this.getApiCatalogManager().getMethods();
-            List<ApiMethod> methods = new ArrayList<ApiMethod>(methodMap.values());
-            for (int i = 0; i < methods.size(); i++) {
-                ApiMethod method = methods.get(i);
-                if (this.includeIntoMapping(method)) {
-                    String pluginCode = method.getPluginCode();
-                    if (null != pluginCode && pluginCode.trim().length() > 0) {
-                        if (!pluginCodes.contains(pluginCode)) {
-                            pluginCodes.add(pluginCode);
-                        }
-                        this.addMethod(pluginCode, method, mapping);
-                    } else if (method.getSource().equals("core")) {
-                        this.addMethod(method.getSource(), method, mapping);
-                    } else {
-                        this.addMethod("custom", method, mapping);
-                    }
-                }
-            }
-            Collections.sort(pluginCodes);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMethodFlavoursMapping");
-            throw new RuntimeException("Error extracting Flavours mapping", t);
-        }
-        return mapping;
-    }
-
-    protected boolean includeIntoMapping(ApiMethod method) {
+    protected boolean includeIntoMapping(ApiResource apiResource) {
         return true;
     }
-
-    protected void addMethod(String mapCode, ApiMethod method, Map<String, List<ApiSelectItem>> mapping) {
-        List<ApiSelectItem> methods = mapping.get(mapCode);
-        if (null == methods) {
-            methods = new ArrayList<ApiSelectItem>();
-            mapping.put(mapCode, methods);
-        }
-        ApiSelectItem item = new ApiSelectItem(method.getMethodName(), method.getDescription(), mapCode);
-        item.setActiveItem(method.isActive());
-        methods.add(item);
-    }
-
-    protected void addGroup(String code, Map<String, List<ApiSelectItem>> mapping, List<List<ApiSelectItem>> group) {
-        List<ApiSelectItem> singleGroup = mapping.get(code);
-        if (null != singleGroup) {
-            BeanComparator comparator = new BeanComparator("value");
-            Collections.sort(singleGroup, comparator);
-            group.add(singleGroup);
-        }
-    }
-
-    public ApiMethod getMethod(String methodName) {
-        try {
-            return this.getApiCatalogManager().getMethod(methodName);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMethod", "Error extracting method '" + methodName + "'");
-        }
-        return null;
-    }
-    
+	
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;
     }

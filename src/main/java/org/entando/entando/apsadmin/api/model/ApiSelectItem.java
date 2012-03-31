@@ -28,6 +28,14 @@ public class ApiSelectItem extends SelectItem {
 		super(key, value, optgroup);
 	}
 	
+	public String getValue() {
+		String value = super.getValue();
+		if (null == value) {
+			value = this.getKey();
+		}
+		return value;
+	}
+	
 	public boolean isActiveItem() {
 		return _activeItem;
 	}
