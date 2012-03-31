@@ -30,6 +30,7 @@ import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import javax.ws.rs.core.Response;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 
@@ -64,25 +65,23 @@ public class ApiRestStatusServer {
                 response.setResult(ApiStatus.FREE.toString(), null);
             }
         } catch (ApiException ae) {
-            response = this.buildErrorResponse(httpMethod, resourceName, ae);
+            response.addErrors(((ApiException) ae).getErrors());
             response.setResult(ApiStatus.INACTIVE.toString(), null);
         } catch (Throwable t) {
-            return this.buildErrorResponse(httpMethod, resourceName, t);
+            return this.buildErrorResponse(httpMethod, namespace, resourceName, t);
         }
         return response;
     }
     
-    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
-        ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
+    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, 
+			String namespace, String resourceName, Throwable t) {
+		StringBuilder buffer = new StringBuilder();
+		buffer.append("Method '").append(httpMethod).
+				append("' Namespace '").append(namespace).append("' Resource '").append(resourceName).append("'");
+		ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
         StringApiResponse response = new StringApiResponse();
-        if (t instanceof ApiException) {
-            response.addErrors(((ApiException) t).getErrors());
-        } else {
-            ApiError error = new ApiError(IApiErrorCodes.SERVER_ERROR, "Error building response - " + buffer.toString());
-            response.addError(error);
-        }
+        ApiError error = new ApiError(IApiErrorCodes.SERVER_ERROR, "Error building response - " + buffer.toString(), Response.Status.INTERNAL_SERVER_ERROR);
+        response.addError(error);
         response.setResult(IResponseBuilder.FAILURE, null);
         return response;
     }

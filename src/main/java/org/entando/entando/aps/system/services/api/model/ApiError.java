@@ -19,6 +19,9 @@ package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -36,6 +39,12 @@ public class ApiError implements Serializable {
 		this.setMessage(message);
 	}
 	
+	public ApiError(String code, String message, Response.Status status) {
+		this.setCode(code);
+		this.setStatus(status);
+		this.setMessage(message);
+	}
+	
 	public String getCode() {
 		return _code;
 	}
@@ -50,7 +59,16 @@ public class ApiError implements Serializable {
 		this._message = message;
 	}
 	
+	public Status getStatus() {
+		return _status;
+	}
+	protected void setStatus(Status status) {
+		this._status = status;
+	}
+	
 	private String _code;
 	private String _message;
+	
+	private Response.Status _status;
 	
 }

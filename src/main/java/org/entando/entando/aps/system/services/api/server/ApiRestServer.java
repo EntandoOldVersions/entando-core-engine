@@ -40,6 +40,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
@@ -49,6 +50,7 @@ import net.oauth.OAuthMessage;
 import net.oauth.server.OAuthServlet;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
@@ -62,6 +64,8 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
+import org.apache.cxf.jaxrs.impl.ResponseBuilderImpl;
 
 /**
  * @author E.Santoboni
@@ -183,11 +187,11 @@ public class ApiRestServer {
             this.extractOAuthParameters(apiMethod, request, response, properties);
             responseObject = responseBuilder.createResponse(apiMethod, properties);
         } catch (ApiException ae) {
-            return this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
         } catch (Throwable t) {
-            return this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
         }
-        return responseObject;
+        return this.createResponse(responseObject);
     }
     
     protected Object buildPostPutResponse(String langCode, ApiMethod.HttpMethod httpMethod, 
@@ -212,11 +216,11 @@ public class ApiRestServer {
             }
             responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
         } catch (ApiException ae) {
-            return this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
         } catch (Throwable t) {
-            return this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
         }
-        return responseObject;
+        return this.createResponse(responseObject);
     }
     
     protected Properties extractRequestParameters(UriInfo ui) {
@@ -239,14 +243,14 @@ public class ApiRestServer {
     }
     
     private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
         ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
         StringApiResponse response = new StringApiResponse();
         if (t instanceof ApiException) {
             response.addErrors(((ApiException) t).getErrors());
         } else {
-            ApiError error = new ApiError(IApiErrorCodes.SERVER_ERROR, "Error building response - " + buffer.toString());
+            ApiError error = new ApiError(IApiErrorCodes.SERVER_ERROR, "Error building response - " + buffer.toString(), Response.Status.INTERNAL_SERVER_ERROR);
             response.addError(error);
         }
         response.setResult(IResponseBuilder.FAILURE, null);
@@ -280,11 +284,33 @@ public class ApiRestServer {
             }
         }
         if (null == user && (apiMethod.getRequiredAuth() || null != apiMethod.getRequiredPermission())) {
-            throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required");
+            throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, "Authentication Required", Response.Status.UNAUTHORIZED);
         } else if (null != user && null != apiMethod.getRequiredPermission() 
                 && !authorizationManager.isAuthOnPermission(user, apiMethod.getRequiredPermission())) {
-            throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required");
+            throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, "Authorization Required", Response.Status.UNAUTHORIZED);
         }
     }
+	
+	private Response createResponse(Object responseObject) {
+		ResponseBuilderImpl responsex = new ResponseBuilderImpl();
+		responsex.entity(responseObject);
+		if (responseObject instanceof AbstractApiResponse) {
+			Response.Status status = Response.Status.OK;
+			AbstractApiResponse mainResponse = (AbstractApiResponse) responseObject;
+			if (null != mainResponse.getErrors()) {
+				for (int i = 0; i < mainResponse.getErrors().size(); i++) {
+					ApiError error = mainResponse.getErrors().get(i);
+					Response.Status errorStatus = error.getStatus();
+					if (null != errorStatus && status.getStatusCode() < errorStatus.getStatusCode()) {
+						status = errorStatus;
+					}
+				}
+			}
+			responsex.status(status);
+		} else {
+			responsex.status(Response.Status.OK);
+		}
+		return responsex.build();
+	}
     
 }

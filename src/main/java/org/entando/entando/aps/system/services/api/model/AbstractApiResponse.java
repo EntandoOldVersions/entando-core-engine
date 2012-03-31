@@ -18,9 +18,9 @@
 package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
@@ -46,7 +46,7 @@ public abstract class AbstractApiResponse implements Serializable {
     
     public void addError(ApiError error) {
         if (null != error) {
-            this._errors.add(error);
+			this._errors.add(error);
         }
     }
     
@@ -54,7 +54,7 @@ public abstract class AbstractApiResponse implements Serializable {
         if (null == errors) {
             return;
         }
-        this._errors.addAll(errors);
+		this.getErrors().addAll(errors);
     }
     
     public Object getResult() {
@@ -66,5 +66,5 @@ public abstract class AbstractApiResponse implements Serializable {
     
     private List<ApiError> _errors = new ArrayList<ApiError>();
     private Object _result;
-    
+	
 }
