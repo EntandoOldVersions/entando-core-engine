@@ -122,11 +122,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return mapping;
     }
     
-    @Deprecated
-    public void updateApiStatus(ApiMethod apiMethod) throws ApsSystemException {
-        this.updateMethodConfig(apiMethod);
-    }
-    
     public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException {
         try {
             ApiMethod masterMethod = this.checkMethod(apiMethod);
@@ -251,7 +246,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return apiMethods;
     }
     
-    public Map<String, ApiResource> getApiResources() throws ApsSystemException {
+    public Map<String, ApiResource> getResources() throws ApsSystemException {
         Map<String, ApiResource> clonedApiResources = new HashMap<String, ApiResource>();
         try {
             if (null == this.getMasterResources()) {
@@ -270,11 +265,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return clonedApiResources;
     }
 	
-	public ApiResource getApiResource(String resourceName) throws ApsSystemException {
-		return this.getApiResource(null, resourceName);
-	}
-    
-    public ApiResource getApiResource(String namespace, String resourceName) throws ApsSystemException {
+    public ApiResource getResource(String namespace, String resourceName) throws ApsSystemException {
         try {
             if (null == this.getMasterResources()) {
                 this.loadResources();
@@ -308,7 +299,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return service.clone();
     }
     
-    public Map<String, ApiService> getApiServices() throws ApsSystemException {
+    public Map<String, ApiService> getServices() throws ApsSystemException {
         Map<String, ApiService> clonedServices = new HashMap<String, ApiService>();
         try {
             if (null == this.getMasterResources()) {
@@ -331,8 +322,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return clonedServices;
     }
 
-    public Map<String, ApiService> getApiServices(String tag, Boolean myentando) throws ApsSystemException {
-        Map<String, ApiService> services = this.getApiServices();
+    public Map<String, ApiService> getServices(String tag, Boolean myentando) throws ApsSystemException {
+        Map<String, ApiService> services = this.getServices();
         if ((null == tag || tag.trim().length() == 0) && null == myentando) {
             return services;
         }
@@ -384,11 +375,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             ApsSystemUtils.logThrowable(t, this, "deleteService", "Error deleting api service '" + key + "'");
             throw new ApsSystemException("Error deleting service '" + key + "'", t);
         }
-    }
-    
-    @Deprecated
-    public void updateApiServiceStatus(ApiService service) throws ApsSystemException {
-        this.updateService(service);
     }
     
     public void updateService(ApiService service) throws ApsSystemException {

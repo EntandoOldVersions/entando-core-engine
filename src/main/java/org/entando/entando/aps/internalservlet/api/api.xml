@@ -17,11 +17,18 @@
         <action name="detail" class="frontApiResourceAction">
             <result name="input" type="chain">list</result>
             <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/resource-detail.jsp</result>
-            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" >
+                <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
+            </interceptor-ref>
         </action>
         
         <action name="requestSchema" class="frontApiResourceAction" method="generateRequestBodySchema">
-            <result name="input" type="chain">list</result>
+            <result name="input" type="chain">detail</result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
+        </action>
+        
+        <action name="executeRequestSchema" class="frontApiResourceAction" method="executeRequestBodySchema">
+            <result name="input" type="chain">detail</result>
             <result type="stream">
                 <param name="contentType">application/xml</param>
                 <param name="inputName">schemaStream</param>
@@ -32,7 +39,12 @@
         </action>
         
         <action name="responseSchema" class="frontApiResourceAction" method="generateResponseBodySchema">
-            <result name="input" type="chain">list</result>
+            <result name="input" type="chain">detail</result>
+            <interceptor-ref name="entandoFrontEndFreeValidationStack" />
+        </action>
+        
+        <action name="executeResponseSchema" class="frontApiResourceAction" method="executeResponseBodySchema">
+            <result name="input" type="chain">detail</result>
             <result type="stream">
                 <param name="contentType">application/xml</param>
                 <param name="inputName">schemaStream</param>

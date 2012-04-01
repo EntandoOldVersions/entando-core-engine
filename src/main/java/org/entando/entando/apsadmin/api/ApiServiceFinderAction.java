@@ -89,7 +89,7 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction implements I
 	
 	private void buildServiceGroups(Map<String, List<ApiSelectItem>> groups) throws Throwable {
 		try {
-			Map<String, ApiService> serviceMap = this.getApiCatalogManager().getApiServices();
+			Map<String, ApiService> serviceMap = this.getApiCatalogManager().getServices();
 			if (null == serviceMap || serviceMap.size() == 0) return;
 			Iterator<ApiService> services = serviceMap.values().iterator();
 			while (services.hasNext()) {

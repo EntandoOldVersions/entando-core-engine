@@ -139,7 +139,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         try {
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             Content mainContent = this.getPublicContent(id);
-            jaxbContent = new JAXBContent(mainContent, langCode);
+            jaxbContent = this.getJAXBContentInstance(mainContent, langCode);
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
                 user = this.getUserManager().getGuestUser();
@@ -155,6 +155,10 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return jaxbContent;
     }
+	
+	protected JAXBContent getJAXBContentInstance(Content mainContent, String langCode) {
+		return new JAXBContent(mainContent, langCode);
+	}
 
     public String getContentToHtml(Properties properties) throws ApiException, Throwable {
         String render = null;

@@ -11,9 +11,10 @@
     </bean>
     
     <bean id="frontApiResourceAction" scope="prototype" 
-            class="org.entando.entando.apsadmin.api.ApiResourceAction" parent="abstractBaseAction">
+            class="org.entando.entando.aps.internalservlet.api.ApiResourceAction" parent="abstractBaseAction">
         <property name="apiCatalogManager" ref="ApiCatalogManager" />
         <property name="roleManager" ref="RoleManager" />
+		<property name="configManager" ref="BaseConfigManager"/>
     </bean>
     
 </beans>

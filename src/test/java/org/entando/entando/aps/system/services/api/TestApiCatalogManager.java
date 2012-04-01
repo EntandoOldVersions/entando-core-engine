@@ -50,7 +50,7 @@ public class TestApiCatalogManager extends ApiBaseTestCase {
     }
     
     public void testGetServices() throws Throwable {
-    	Map<String, ApiService> services = this.getApiCatalogManager().getApiServices();
+    	Map<String, ApiService> services = this.getApiCatalogManager().getServices();
     	assertNotNull(services);
     	assertTrue(services.size() == 0);
     }

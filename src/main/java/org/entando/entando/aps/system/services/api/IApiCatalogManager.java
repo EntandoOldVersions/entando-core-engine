@@ -51,7 +51,7 @@ public interface IApiCatalogManager {
     
     public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException;
     
-    public Map<String, ApiResource> getApiResources() throws ApsSystemException;
+    public Map<String, ApiResource> getResources() throws ApsSystemException;
     
     /**
 	 * Return an API resource
@@ -60,7 +60,7 @@ public interface IApiCatalogManager {
 	 * @return The resource.
 	 * @throws ApsSystemException In case of exception.
 	 */
-    public ApiResource getApiResource(String namespace, String resourceName) throws ApsSystemException;
+    public ApiResource getResource(String namespace, String resourceName) throws ApsSystemException;
     
     /**
      * Return a GET methods by name.
@@ -74,14 +74,11 @@ public interface IApiCatalogManager {
 	
 	public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException;
     
-    public Map<String, ApiService> getApiServices() throws ApsSystemException;
+    public Map<String, ApiService> getServices() throws ApsSystemException;
 
-    public Map<String, ApiService> getApiServices(String tag, Boolean myentando) throws ApsSystemException;
+    public Map<String, ApiService> getServices(String tag, Boolean myentando) throws ApsSystemException;
 
     public ApiService getApiService(String key) throws ApsSystemException;
-    
-    @Deprecated
-    public void updateApiStatus(ApiMethod apiMethod) throws ApsSystemException;
     
     public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException;
     
@@ -92,8 +89,5 @@ public interface IApiCatalogManager {
     public void deleteService(String key) throws ApsSystemException;
     
     public void updateService(ApiService service) throws ApsSystemException;
-    
-    @Deprecated
-    public void updateApiServiceStatus(ApiService service) throws ApsSystemException;
     
 }

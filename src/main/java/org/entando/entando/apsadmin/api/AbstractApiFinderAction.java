@@ -66,7 +66,7 @@ public abstract class AbstractApiFinderAction extends BaseAction {
     private Map<String, List<ApiResource>> getResourceFlavoursMapping(List<String> pluginCodes) throws Throwable {
         Map<String, List<ApiResource>> finalMapping = new HashMap<String, List<ApiResource>>();
         try {
-            Map<String, ApiResource> masterResources = this.getApiCatalogManager().getApiResources();
+            Map<String, ApiResource> masterResources = this.getApiCatalogManager().getResources();
             Iterator<ApiResource> resourcesIter = masterResources.values().iterator();
             while (resourcesIter.hasNext()) {
                 ApiResource apiResource = resourcesIter.next();
