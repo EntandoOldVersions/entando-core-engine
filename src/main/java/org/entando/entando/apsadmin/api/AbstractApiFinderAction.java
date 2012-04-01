@@ -91,9 +91,7 @@ public abstract class AbstractApiFinderAction extends BaseAction {
         return finalMapping;
     }
     
-    protected boolean includeIntoMapping(ApiResource apiResource) {
-        return true;
-    }
+    protected abstract boolean includeIntoMapping(ApiResource apiResource);
 	
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;

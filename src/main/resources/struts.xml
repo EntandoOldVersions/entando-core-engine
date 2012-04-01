@@ -197,4 +197,6 @@
 	
 	<include file="org/entando/entando/apsadmin/api/api.xml" />
 	
+	<include file="org/entando/entando/aps/internalservlet/api/api.xml" />
+    
 </struts>

@@ -118,6 +118,16 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
         this.setSchemaStream(stream);
         return SUCCESS;
     }
+	
+	public String getSchemaFilePrefix() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getHttpMethod()).append("_");
+		if (null != this.getNamespace()) {
+			builder.append(this.getNamespace()).append("_");
+		}
+		builder.append(this.getResourceName());
+		return builder.toString();
+	}
     
     public String updateMethodStatus() {
         try {

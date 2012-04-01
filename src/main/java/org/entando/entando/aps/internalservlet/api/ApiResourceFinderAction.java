@@ -15,8 +15,10 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.apsadmin.api;
+package org.entando.entando.aps.internalservlet.api;
 
+import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.apsadmin.api.*;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 
 /**
@@ -25,7 +27,12 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 public class ApiResourceFinderAction extends AbstractApiFinderAction implements IApiResourceFinderAction {
     
 	protected boolean includeIntoMapping(ApiResource apiResource) {
-		return true;
+		ApiMethod GETMethod = apiResource.getGetMethod();
+		ApiMethod POSTMethod = apiResource.getPostMethod();
+		ApiMethod PUTMethod = apiResource.getPutMethod();
+		ApiMethod DELETEMethod = apiResource.getDeleteMethod();
+		return (null != GETMethod && GETMethod.isActive()) || (null != POSTMethod && POSTMethod.isActive()) || 
+				(null != PUTMethod && PUTMethod.isActive()) || (null != DELETEMethod && DELETEMethod.isActive());
 	}
 	
 }

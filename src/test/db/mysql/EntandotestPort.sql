@@ -304,6 +304,16 @@ INSERT INTO `EntandotestPort`.`showletcatalog` VALUES  ('90_events','<?xml versi
  ('login_form','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<properties>\n<property key=\"en\">Showlet di Login</property>\n<property key=\"it\">Showlet di Login</property>\n</properties>',NULL,NULL,NULL,NULL,1,NULL),
  ('messages_system','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<properties>\n<property key=\"en\">System Messages</property>\n<property key=\"it\">Messaggi di Sistema</property>\n</properties>',NULL,NULL,NULL,NULL,1,NULL),
  ('search_result','<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<properties>\n<property key=\"en\">Search - Search Result</property>\n<property key=\"it\">Ricerca - Risultati della Ricerca</property>\n</properties>',NULL,'jacms',NULL,NULL,1,NULL);
+INSERT INTO `EntandotestPort`.`showletcatalog` (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando_apis', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">APIs</property>
+<property key="it">APIs</property>
+</properties>
+', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="actionPath">/ExtStr2/do/Front/Api/Resource/list.action</property>
+</properties>
+', 1, 'free');
 CREATE TABLE  `EntandotestPort`.`showletconfig` (
   `pagecode` varchar(30) NOT NULL,
   `framepos` int(11) NOT NULL,
