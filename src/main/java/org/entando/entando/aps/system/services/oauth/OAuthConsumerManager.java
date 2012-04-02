@@ -44,7 +44,12 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.services.user.UserDetails;
+
+import com.agiletec.aps.util.DateConverter;
+import java.util.Date;
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
+import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
 
 /**
  * Manager of consumers, access token (stored in database and in local cache) 
@@ -90,7 +95,7 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
     
     public synchronized OAuthAccessor getAuthorizedAccessor(OAuthMessage requestMessage)
             throws IOException, OAuthProblemException {
-        OAuthAccessor accessor = null;
+        EntandoOAuthAccessor accessor = null;
         String consumerToken = requestMessage.getToken();
         try {
             OAuthConsumer consumer = this.getConsumer(requestMessage);
@@ -101,6 +106,13 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
                     this.getAuthorizedTokensCache().put(consumerToken, accessor);
                 }
             }
+			if (null != accessor) {
+				accessor.setLastAccess(new Date());
+				TokenUpdaterThread thread = new TokenUpdaterThread(consumerToken, this.getTokenTimeValidity(), this.getTokenDAO());
+    			String threadName = "OauthTokenUpdater_" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+    			thread.setName(threadName);
+    			thread.start();
+			}
         } catch (OAuthProblemException t) {
             throw t;
         } catch (IOException io) {
@@ -281,12 +293,22 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         this._consumers = consumers;
     }
     
-    protected Map<String, OAuthAccessor> getAuthorizedTokensCache() {
+    protected Map<String, EntandoOAuthAccessor> getAuthorizedTokensCache() {
         return _authorizedTokensCache;
     }
     protected Map<String, OAuthAccessor> getUnauthorizedTokensCache() {
         return _unauthorizedTokensCache;
     }
+	
+	protected Integer getTokenTimeValidity() {
+		if (null == this._tokenTimeValidity) {
+			return 365;
+		}
+		return _tokenTimeValidity;
+	}
+	public void setTokenTimeValidity(Integer tokenTimeValidity) {
+		this._tokenTimeValidity = tokenTimeValidity;
+	}
     
     protected IOAuthConsumerDAO getConsumerDAO() {
         return _consumerDAO;
@@ -304,9 +326,11 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
     
     private Map<String, OAuthConsumer> _consumers = new HashMap<String, OAuthConsumer>();
     
-    private Map<String, OAuthAccessor> _authorizedTokensCache = new HashMap<String, OAuthAccessor>();
+    private Map<String, EntandoOAuthAccessor> _authorizedTokensCache = new HashMap<String, EntandoOAuthAccessor>();
     private Map<String, OAuthAccessor> _unauthorizedTokensCache = new HashMap<String, OAuthAccessor>();
     
+	private Integer _tokenTimeValidity;
+	
     private IOAuthConsumerDAO _consumerDAO;
     private IOAuthTokenDAO _tokenDAO;
     

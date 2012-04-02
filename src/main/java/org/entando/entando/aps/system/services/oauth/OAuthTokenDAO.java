@@ -18,15 +18,20 @@
 package org.entando.entando.aps.system.services.oauth;
 
 import com.agiletec.aps.system.common.AbstractDAO;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Calendar;
 import java.util.Date;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
+
+import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
 
 /**
  * @author E.Santoboni
@@ -56,10 +61,57 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             closeDaoResources(null, stat, conn);
         }
     }
+	
+	public void refreshAccessTokens(String tokenToUpdate, int tokenTimeValidity) {
+		Connection conn = null;
+        try {
+            conn = this.getConnection();
+            conn.setAutoCommit(false);
+            this.updateAccessTokens(tokenToUpdate, conn);
+			this.deleteOldAccessTokens(tokenTimeValidity, conn);
+            conn.commit();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            this.processDaoException(t, "Error refreshing access tokens", "refreshAccessTokens");
+        } finally {
+            this.closeConnection(conn);
+        }
+	}
     
-    public OAuthAccessor getAccessor(String accessToken, OAuthConsumer consumer) {
+	protected void updateAccessTokens(String tokenToUpdate, Connection conn) {
+        PreparedStatement stat = null;
+        try {
+            stat = conn.prepareStatement(UPDATE_TOKEN);
+            stat.setDate(1, new java.sql.Date(new Date().getTime()));
+			stat.setString(2, tokenToUpdate);
+            stat.executeUpdate();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            this.processDaoException(t, "Error updating an access token", "updateAccessTokens");
+        } finally {
+            this.closeDaoResources(null, stat);
+        }
+	}
+    
+	protected void deleteOldAccessTokens(int tokenTimeValidity, Connection conn) {
+        PreparedStatement stat = null;
+        try {
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.DATE, -tokenTimeValidity);
+            stat = conn.prepareStatement(DELETE_OLD_TOKENS);
+            stat.setDate(1, new java.sql.Date(calendar.getTime().getTime()));
+            stat.executeUpdate();
+        } catch (Throwable t) {
+            this.executeRollback(conn);
+            this.processDaoException(t, "Error deleting old access token", "deleteOldAccessTokens");
+        } finally {
+            this.closeDaoResources(null, stat);
+        }
+	}
+    
+    public EntandoOAuthAccessor getAccessor(String accessToken, OAuthConsumer consumer) {
         Connection conn = null;
-        OAuthAccessor accessor = null;
+        EntandoOAuthAccessor accessor = null;
         PreparedStatement stat = null;
         ResultSet res = null;
         try {
@@ -72,11 +124,13 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             if (res.next()) {
                 String tokensecret = res.getString(1);
                 String username = res.getString(2);
-                accessor = new OAuthAccessor(consumer);
+				Date lastAccess = res.getDate(3);
+                accessor = new EntandoOAuthAccessor(consumer);
                 accessor.accessToken = accessToken;
                 accessor.tokenSecret = tokensecret;
                 accessor.setProperty("user", username);
                 accessor.setProperty("authorized", Boolean.TRUE);
+				accessor.setLastAccess(lastAccess);
             }
         } catch (Throwable t) {
             processDaoException(t, "Error while loading accessor " + accessToken, "getAccessor");
@@ -132,8 +186,14 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             "INSERT INTO api_oauth_tokens (accesstoken, tokensecret, consumerkey, username, lastaccess) " + 
             "VALUES (? , ? , ? , ? , ? )";
     
+    private String UPDATE_TOKEN = 
+            "UPDATE api_oauth_tokens SET lastaccess = ? WHERE accesstoken = ?";
+    
+    private String DELETE_OLD_TOKENS = 
+            "DELETE FROM api_oauth_tokens WHERE lastaccess < ?";
+    
     private String SELECT_TOKEN = 
-            "SELECT tokensecret, username " + 
+            "SELECT tokensecret, username, lastaccess " + 
             "FROM api_oauth_tokens WHERE accesstoken = ? AND consumerkey = ?";
     
     private String SELECT_OCCURRENCES = 
