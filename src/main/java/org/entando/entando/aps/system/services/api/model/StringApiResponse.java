@@ -38,6 +38,10 @@ public class StringApiResponse extends AbstractApiResponse {
         super.setResult(result);
     }
     
+    public void setResult(String result) {
+        super.setResult(result);
+    }
+    
     protected AbstractApiResponseResult createResponseResultInstance() {
         throw new UnsupportedOperationException("Unsupported method");
     }
