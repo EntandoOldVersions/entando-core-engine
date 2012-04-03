@@ -53,8 +53,6 @@ public class RequestValidator extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._errorPageCode = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
-		this._notFoundPageCode = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
 	}
 	
@@ -78,16 +76,14 @@ public class RequestValidator extends AbstractControlService {
 			boolean ok = this.isRightPath(reqCtx);
 			if (ok) {
 				if (null == reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE)) {
-					//VAI ALLA PAGINA DI NOT FOUND
-					retStatus = this.redirect(this._notFoundPageCode, reqCtx);
+					retStatus = this.redirect(this.getNotFoundPageCode(), reqCtx);
 				} else if (null == reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG)) {
-					//VAI ALLA PAGINA DI ERRORE
-					retStatus = this.redirect(this._errorPageCode, reqCtx);
+					retStatus = this.redirect(this.getErrorPageCode(), reqCtx);
 				} else {
 					retStatus = ControllerManager.CONTINUE;
 				}
 			} else {
-				retStatus = this.redirect(this._errorPageCode, reqCtx);
+				retStatus = this.redirect(this.getErrorPageCode(), reqCtx);
 			}
 		} catch (Throwable t) {
 			retStatus = ControllerManager.SYS_ERROR;
@@ -173,20 +169,26 @@ public class RequestValidator extends AbstractControlService {
 		}
 		return page;
 	}
-
+	
 	/**
 	 * Recupera il ServletPath richiesto dal client.
 	 * @param reqCtx Il contesto di richiesta
 	 * @return Il ServletPath
 	 */
 	protected String getResourcePath(RequestContext reqCtx) {
-		String servletPath = reqCtx.getRequest().getServletPath();
-		return servletPath;
+		return reqCtx.getRequest().getServletPath();
 	}
 	
 	protected String getFullResourcePath(RequestContext reqCtx) {
-		String servletPath = this.getResourcePath(reqCtx) + reqCtx.getRequest().getPathInfo();
-		return servletPath;
+		return this.getResourcePath(reqCtx) + reqCtx.getRequest().getPathInfo();
+	}
+	
+	protected String getErrorPageCode() {
+		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
+	}
+	
+	protected String getNotFoundPageCode() {
+		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_NOT_FOUND_PAGE_CODE);
 	}
 	
 	protected ILangManager getLangManager() {
@@ -220,8 +222,5 @@ public class RequestValidator extends AbstractControlService {
 	protected Pattern _pattern = Pattern.compile("^/(\\w+)/(\\w+)\\Q.page\\E");
 	
 	protected Pattern _patternFullPath = Pattern.compile("^/pages/(\\w+)((/\\w+)*)");
-	
-	private  String _notFoundPageCode ;
-	private  String _errorPageCode ;
 	
 }

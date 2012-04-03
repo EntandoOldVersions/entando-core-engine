@@ -36,7 +36,6 @@ public class ErrorManager extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._errorPageCode = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
 		this._log.config(this.getClass().getName() + ": initialized");
 	}
 	
@@ -46,7 +45,7 @@ public class ErrorManager extends AbstractControlService {
 		this._log.finer("Intervention of the error service");
 		try {
 			PageURL url = this.getUrlManager().createURL(reqCtx);
-			url.setPageCode(this._errorPageCode);
+			url.setPageCode(this.getErrorPageCode());
 			String redirUrl = url.getURL();
 			if(_log.isLoggable(Level.FINEST)) {
 				_log.finest("Redirecting to " + redirUrl);
@@ -62,14 +61,16 @@ public class ErrorManager extends AbstractControlService {
 		return retStatus;
 	}
 	
+	protected String getErrorPageCode() {
+		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_ERROR_PAGE_CODE);
+	}
+	
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
 	public void setConfigManager(ConfigInterface configService) {
 		this._configManager = configService;
 	}
-	
-	private  String _errorPageCode ;
 	
 	private ConfigInterface _configManager;
 	
