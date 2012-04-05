@@ -74,7 +74,7 @@ public class PageActionHelper extends TreeNodeBaseActionHelper implements IPageA
 				}
 			}
     	} catch (Throwable t) {
-    		throw new ApsSystemException("Errore in hasReferencingObjects", t);
+    		throw new ApsSystemException("Error extracting Referencing Objects", t);
     	}
     	return references;
     }

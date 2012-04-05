@@ -40,16 +40,16 @@ public class DispatchAction extends BaseAction implements IDispatchAction {
 		super.validate();
 		if (this.hasFieldErrors()) return;
 		Logger log = ApsSystemUtils.getLogger();
-    	log.finest("Richiesta autenticazione user " + this.getUsername() + " - password ******** ");
+    	log.finest("Authentication : user " + this.getUsername() + " - password ******** ");
     	UserDetails user = null;
 		try {
 			user = this.getAuthenticationProvider().getUser(this.getUsername(), this.getPassword());
 		} catch (Throwable t) {
 			log.throwing("LoginAction", "validate", t);
-			throw new RuntimeException("Errore in login utente", t);
+			throw new RuntimeException("Login error : username " + this.getUsername(), t);
 		}
 		if (null == user) {
-        	if(log.isLoggable(Level.FINEST)) {
+        	if (log.isLoggable(Level.FINEST)) {
             	log.finest("Login failed : username " + this.getUsername() + " - password ******** ");
             }
         	this.addActionError(this.getText("error.user.login.loginFailed"));

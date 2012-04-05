@@ -41,7 +41,7 @@ public class BaseCommonAction extends BaseAction implements IBaseCommonAction {
 				this.addFieldError("oldPassword", this.getText("error.user.changePassword.wrongOldPassword"));
 			}
 		} catch (ApsSystemException e) {
-			throw new RuntimeException("Errore in estrazione utente", e);
+			throw new RuntimeException("Error extracting user", e);
 		}
 	}
 	

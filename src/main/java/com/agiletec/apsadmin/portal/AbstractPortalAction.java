@@ -58,7 +58,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 			this.addGroup(STOCK_SHOWLETS_CODE, mapping, group);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getShowletFlavours");
-			throw new RuntimeException("Errore in estrazione gruppi showlet", t);
+			throw new RuntimeException("Error extracting Showlet groups", t);
 		}
 		return group;
 	}

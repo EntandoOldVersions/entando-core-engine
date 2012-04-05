@@ -35,7 +35,7 @@ public class LangFinderAction extends BaseAction implements ILangFinderAction {
 			langs = this.getLangManager().getLangs();
 		} catch(Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getLangs");
-			throw new RuntimeException("Errore in ricerca lingue", t);
+			throw new RuntimeException("Error extracting system lang", t);
 		}
 		return langs;
 	}
@@ -50,7 +50,7 @@ public class LangFinderAction extends BaseAction implements ILangFinderAction {
 			assignableLangs = this.getLangManager().getAssignableLangs();
 		} catch(Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getAssignableLangs");
-			throw new RuntimeException("Errore in lettura lingue assegnabili", t);
+			throw new RuntimeException("Error extracting assignable langs", t);
 		}
 		return assignableLangs;
 	}

@@ -57,7 +57,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 				}
 			} else {
 				ApsSystemUtils.getLogger().finest("pageCode=" + this.getPageCode() 
-						+ ", frame=" + this.getFrame() + ", Showlet vuota da configurare.");
+						+ ", frame=" + this.getFrame() + ", empty showlet to config");
 			}
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "editFrame");
@@ -134,17 +134,17 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		Logger log = ApsSystemUtils.getLogger();
 		IPage page = this.getPage(this.getPageCode());
 		if (!this.isUserAllowed(page)) {
-			log.info("Utente corrente non abilitato all'editazione della pagina richiesta");
+			log.info("Curent user not allowed");
 			this.addActionError(this.getText("error.page.userNotAllowed"));
 			return "pageTree";
 		}
 		if (null == page) {
-			log.info("Codice della pagina nullo");
+			log.info("Null page code");
 			this.addActionError(this.getText("error.page.invalidPageCode"));
 			return "pageTree";
 		}
 		if (this.getFrame() == -1 || this.getFrame() >= page.getShowlets().length) {
-			log.info("Identificativo frame richiesto '" + this.getFrame() + "' non corretto");
+			log.info("Mandatory frame id or invalid - '" + this.getFrame() + "'");
 			this.addActionError(this.getText("error.page.invalidPageFrame"));
 			return "pageTree";
 		}

@@ -104,7 +104,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		if (null != currentLang) {
 			return currentLang;
 		} else {
-			ApsSystemUtils.getLogger().info("Lingua richiesta '" + langCode + "' non definita nel sistema");
+			ApsSystemUtils.getLogger().info("Required Lang '" + langCode + "' invalid");
 			return this.getLangManager().getDefaultLang();
 		}
 	}
