@@ -15,7 +15,7 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.common.entity;
+package com.agiletec.aps.system.common.entity.loader;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -25,17 +25,18 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.common.entity.parse.AttributeRoleDOM;
 import com.agiletec.aps.util.FileTextReader;
 
 /**
- * The Class of the extra attribute roles.
+ * The Class loader of the extra attribute roles.
  * @author E.Santoboni
  */
 public class AttributeRolesLoader {
 	
-	protected Map<String, AttributeRole> extractAttributeRoles(String attributeRolesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
+	public Map<String, AttributeRole> extractAttributeRoles(String attributeRolesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, AttributeRole> attributeRoles = new HashMap<String, AttributeRole>();
 		try {
 			this.setEntityManager(entityManager);
@@ -63,15 +64,15 @@ public class AttributeRolesLoader {
 	private void loadExtraRoles(Map<String, AttributeRole> attributeRoles) {
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-			String[] defNames = factory.getBeanNamesForType(ExtraAttributeRoles.class);
+			String[] defNames = factory.getBeanNamesForType(ExtraAttributeRolesWrapper.class);
 			for (int i=0; i<defNames.length; i++) {
 				try {
 					Object loader = this.getBeanFactory().getBean(defNames[i]);
 					if (loader != null) {
-						((ExtraAttributeRoles) loader).executeLoading(attributeRoles, this.getEntityManager());
+						((ExtraAttributeRolesWrapper) loader).executeLoading(attributeRoles, this.getEntityManager());
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "refresh", "Error extracting attribute support object : bean " + defNames[i]);
+					ApsSystemUtils.logThrowable(t, this, "loadExtraRoles", "Error extracting attribute support object : bean " + defNames[i]);
 				}
 			}
 		} catch (Throwable t) {

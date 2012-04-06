@@ -22,21 +22,25 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * @author E.Santoboni
+ * @deprecated use StringResponse class
  */
 @XmlRootElement(name = "response")
 public class BaseApiResponse extends AbstractApiResponse {
     
     @XmlElement(name = "result", required = false)
     public String getResult() {
-        return this._result;
-    }
-    public void setResult(String result) {
-        this._result = result.toString();
-    }
-    public void setResult(Object result, String html) {
-        this._result = result.toString();
+        if (null != super.getResult()) {
+            return super.getResult().toString();
+        }
+        return null;
     }
     
-    private String _result;
+    public void setResult(Object result, String html) {
+        super.setResult(result);
+    }
+    
+    protected AbstractApiResponseResult createResponseResultInstance() {
+        throw new UnsupportedOperationException("Unsupported method");
+    }
     
 }

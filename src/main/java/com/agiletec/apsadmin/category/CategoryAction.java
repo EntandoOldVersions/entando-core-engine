@@ -163,17 +163,17 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 	protected String chechDelete() {
 		Category currentCategory = this.getCategory(this.getSelectedNode());
 		if (null == currentCategory) {
-			ApsSystemUtils.getLogger().info("E' necessario selezionare un nodo");
+			ApsSystemUtils.getLogger().info("Required a selected node");
 			this.addActionError(this.getText("error.category.selectCategory"));
 			return "categoryTree";
 		}
 		if (currentCategory.getCode().equals(currentCategory.getParentCode())) {
-			ApsSystemUtils.getLogger().info("Non è possibile eliminare la categoria Home");
+			ApsSystemUtils.getLogger().info("Home category not deletable");
 			this.addActionError(this.getText("error.category.homeDelete.notAllowed"));
 			return "categoryTree";
 		}
 		if (currentCategory.getChildren().length != 0) {
-			ApsSystemUtils.getLogger().info("Non è possibile eliminare una categoria con figlie");
+			ApsSystemUtils.getLogger().info("Category with children not deletable");
 			this.addActionError(this.getText("error.category.deleteWithChildren.notAllowed"));
 			return "categoryTree";
         }

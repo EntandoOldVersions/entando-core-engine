@@ -15,14 +15,27 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.apsadmin.api;
+package org.entando.entando.aps.system.services.oauth.model;
+
+import java.util.Date;
+import net.oauth.OAuthConsumer;
 
 /**
  * @author E.Santoboni
- * @deprecated 
  */
-public interface IApiMethodFinderAction {
+public class EntandoOAuthAccessor extends net.oauth.OAuthAccessor {
 	
-	public String updateAllStatus();
+	public EntandoOAuthAccessor(OAuthConsumer consumer) {
+        super(consumer);
+    }
+	
+	public Date getLastAccess() {
+		return _lastAccess;
+	}
+	public void setLastAccess(Date lastAccess) {
+		this._lastAccess = lastAccess;
+	}
+	
+	private Date _lastAccess;
 	
 }

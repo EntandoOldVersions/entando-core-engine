@@ -42,6 +42,7 @@ public interface IContentListFilterAction {
 	
 	public static final int VALUE_FILTER_OPTION = 1;
 	public static final int RANGE_FILTER_OPTION = 2;
+	public static final int ABSENCE_FILTER_OPTION = 3;
 	
 	public static final int NO_DATE_FILTER = 1;
 	public static final int CURRENT_DATE_FILTER = 2;

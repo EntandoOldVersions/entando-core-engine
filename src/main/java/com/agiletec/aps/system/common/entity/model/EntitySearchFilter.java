@@ -165,6 +165,18 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		this.appendParamValue(param, this.getStart(), START_PARAM);
 		this.appendParamValue(param, this.getEnd(), END_PARAM);
 		this.appendParamValue(param, this.getOrder(), ORDER_PARAM);
+		if (null != this.getValueDateDelay()){
+			this.appendParamValue(param, this.getValueDateDelay(), VALUE_DATE_DELAY_PARAM);
+		}
+		if (null != this.getStartDateDelay()){
+			this.appendParamValue(param, this.getStartDateDelay(), START_DATE_DELAY_PARAM);
+		}
+		if (null != this.getEndDateDelay()){
+			this.appendParamValue(param, this.getEndDateDelay(), END_DATE_DELAY_PARAM);
+		}
+		if (this.isNullOption()) {
+			this.appendParamValue(param, this.isNullOption(), NULL_VALUE_PARAM);
+		}
 		return param.toString();
 	}
 	
@@ -220,7 +232,8 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 			if (null == key) return null;
 			boolean isAttributeFilter = Boolean.parseBoolean(props.getProperty(FILTER_TYPE_PARAM));
 			filter = new EntitySearchFilter(key, isAttributeFilter);
-			if (!isAttributeFilter) {
+			boolean isDateAttribute = false;
+                        if (!isAttributeFilter) {
 				String dataType = props.getProperty(DATA_TYPE_PARAM);
 				if (null == dataType) dataType = DATA_TYPE_STRING;
 				setValues(filter, props, dataType);
@@ -230,6 +243,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 					String dataType = null;
 					if (attr instanceof DateAttribute) {
 						dataType = DATA_TYPE_DATE;
+                                                isDateAttribute = true;
 					} else if (attr instanceof ITextAttribute || attr instanceof BooleanAttribute) {
 						dataType = DATA_TYPE_STRING;
 					} else if (attr instanceof NumberAttribute) {
@@ -238,6 +252,16 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 					setValues(filter, props, dataType);
 				} else throw new ApsSystemException("ERROR: Entity type '" + prototype.getTypeCode() 
 						+ "' and attribute '" + key + "' not recognized");
+			}
+			if (isDateAttribute) {
+				String valueDateDelay = props.getProperty(EntitySearchFilter.VALUE_DATE_DELAY_PARAM);
+				filter.setValueDateDelay(null != valueDateDelay ? Integer.valueOf(valueDateDelay) : null);
+				
+				String endDateDelay = props.getProperty(EntitySearchFilter.END_DATE_DELAY_PARAM);
+				filter.setEndDateDelay(null != endDateDelay ? Integer.valueOf(endDateDelay) : null);
+				
+				String startDateDelay = props.getProperty(EntitySearchFilter.START_DATE_DELAY_PARAM);
+				filter.setStartDateDelay(null != startDateDelay ? Integer.valueOf(startDateDelay) : null);
 			}
 			String order = props.getProperty(EntitySearchFilter.ORDER_PARAM);
 			filter.setOrder(order);
@@ -266,9 +290,13 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		} else if (objectAllowedValues != null) {
 			filter.setAllowedValues(objectAllowedValues);
 			filter.setLikeOption(likeOption);
-		} else {
+		} else if ((null != objectStart) || (null != objectEnd)) {
 			filter.setStart(objectStart);
 			filter.setEnd(objectEnd);
+		} else {
+			String nullValue = props.getProperty(NULL_VALUE_PARAM);
+			boolean nullOption = (null != nullValue && nullValue.equalsIgnoreCase("true"));
+			filter.setNullOption(nullOption);
 		}
 		String langCode = props.getProperty(LANG_PARAM);
 		filter.setLangCode(langCode);
@@ -347,11 +375,16 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	public static final String END_PARAM = "end";
 	public static final String ORDER_PARAM = "order";
 	public static final String DATA_TYPE_PARAM = "dataType";
+        public static final String NULL_VALUE_PARAM = "nullValue";
 	
 	public static final String DATA_TYPE_STRING = "string";
 	public static final String DATA_TYPE_DATE = "date";
 	public static final String DATA_TYPE_NUMBER = "number";
 	
 	public static final String DATE_PATTERN = "dd/MM/yyyy";
+	
+	public static final String START_DATE_DELAY_PARAM = "startDateDelay";
+	public static final String END_DATE_DELAY_PARAM = "endDateDelay";
+	public static final String VALUE_DATE_DELAY_PARAM = "valueDateDelay";
 	
 }

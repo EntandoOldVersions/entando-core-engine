@@ -51,7 +51,7 @@ public class ApiServiceInterface {
             String myentandoParamValue = properties.getProperty("myentando");
             Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? new Boolean(myentandoParamValue) : null;
             langCode = (null != langCode && null != this.getLangManager().getLang(langCode)) ? langCode : defaultLangCode;
-            Iterator<ApiService> iter = this.getApiCatalogManager().getApiServices(tagParamValue, myentando).values().iterator();
+            Iterator<ApiService> iter = this.getApiCatalogManager().getServices(tagParamValue, myentando).values().iterator();
             while (iter.hasNext()) {
                 ApiService service = (ApiService) iter.next();
                 if (service.isActive() && service.isPublicService()) {

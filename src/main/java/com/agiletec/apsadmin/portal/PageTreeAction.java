@@ -60,7 +60,6 @@ public class PageTreeAction extends AbstractTreeAction implements IPageTreeActio
 			if (null != check) return check;
 			IPage currentPage = this.getPageManager().getPage(selectedNode);
 			if (!isUserAllowed(currentPage.getParent())) {
-				ApsSystemUtils.getLogger().info("Utente corrente non abilitato a spostare la pagina selezionata");
 				this.addActionError(this.getText("error.page.userNotAllowed"));
 				return SUCCESS;
 			}

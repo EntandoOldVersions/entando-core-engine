@@ -26,17 +26,19 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.ContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
 import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
+import java.util.Collections;
 
 /**
  * Fornisce i contenuti formattati.
@@ -80,7 +82,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	 * @return Le informazioni di autorizzazione sul contenuto.
 	 */
 	protected ContentAuthorizationInfo getAuthorizationInfo(Content content, String contentId) {
-		String authorizationCacheKey = ContentManager.getContentAuthInfoCacheKey(contentId);
+		String authorizationCacheKey = JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX + contentId;
 		ContentAuthorizationInfo authInfo = null;
 		if (null != this.getCacheManager()) {
 			Object authInfoTemp = this.getCacheManager().getFromCache(authorizationCacheKey);
@@ -101,8 +103,9 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			}
 			if (authInfo != null) {
 				if (null != this.getCacheManager()) {
-					String typeGroupId = JacmsSystemConstants.CONTENTS_TYPE_CACHE_GROUP_PREFIX + content.getTypeCode();
-					String[] groups = { typeGroupId };
+					String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId();
+					String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + content.getTypeCode();
+					String[] groups = {contentCacheGroupId, typeCacheGroupId };
 					this.getCacheManager().putInCache(authorizationCacheKey, authInfo, groups);
 				}
 			} else {
@@ -119,7 +122,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
 			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
 			if (authInfo.isUserAllowed(userGroups)) {
-				String cacheKey = ContentManager.getRenderedContentCacheKey(contentId, modelId, langCode);
+				String cacheKey = this.getRenderizationInfoCacheKey(contentId, modelId, langCode, reqCtx);
 				if (null != this.getCacheManager()) {
 					renderInfo = (ContentRenderizationInfo) this.getCacheManager().getFromCache(cacheKey);
 				}
@@ -129,9 +132,10 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 					}
 					String renderedContent = this.buildRenderedContent(contentToRender, modelId, langCode, reqCtx);
 					if (null != renderedContent && renderedContent.trim().length() > 0 && null != this.getCacheManager()) {
-						String modelGroupId = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + modelId;
-						String typeGroupId = JacmsSystemConstants.CONTENTS_TYPE_CACHE_GROUP_PREFIX + authInfo.getContentType();
-						String[] groups = { modelGroupId, typeGroupId };
+						String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + contentToRender.getId();
+						String modelCacheGroupId = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + modelId;
+						String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + authInfo.getContentType();
+						String[] groups = {contentCacheGroupId, modelCacheGroupId, typeCacheGroupId };
 						List<AttributeRole> roles = this.getContentManager().getAttributeRoles();
 						renderInfo = new ContentRenderizationInfo(contentToRender, renderedContent, modelId, langCode, roles);
 						this.getCacheManager().putInCache(cacheKey, renderInfo, groups);
@@ -155,88 +159,6 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 		return renderInfo;
 	}
 	
-	/**
-	 * Restituisce il contenuto renderizzato.
-	 * @param authInfo Le informazioni di autorizzazione sul contenuto.
-	 * @param contentToRender Il contenuto da renderizzare.
-	 * @param contentId L'Identificativo del contenuto da renderizzare. 
-	 * Il parametro viene utilizzato nel caso il parametro contenuto sia nullo.
-	 * @param modelId Identificatore del modello di contenuto.
-	 * @param langCode Codice della lingua di renderizzazione richiesta.
-	 * @param reqCtx Il contesto della richiesta.
-	 * @return Il contenuto renderizzato.
-	 * @deprecated From jAPS 2.0 version 2.0.12, use getRenderizationInfo method
-	 */
-	protected String getRenderedContent(ContentAuthorizationInfo authInfo, 
-			Content contentToRender, String contentId, long modelId, String langCode, RequestContext reqCtx) {
-		String renderedContent = null;
-		try {
-			UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
-			List<Group> userGroups = (null != currentUser) ? this.getAuthorizationManager().getUserGroups(currentUser) : new ArrayList<Group>();
-			//verifica autorizzazione
-			if (authInfo.isUserAllowed(userGroups)) {
-				String cacheKey = ContentManager.getRenderedContentCacheKey(contentId, modelId, langCode);
-				if (null != this.getCacheManager()) {
-					renderedContent = (String) this.getCacheManager().getFromCache(cacheKey);
-				}
-				if (null == renderedContent) {
-					if (contentToRender == null) {
-						contentToRender = this.getPublicContent(contentId);
-					}
-					renderedContent = this.buildRenderedContent(contentToRender, modelId, langCode, reqCtx);
-					if (null != renderedContent && renderedContent.trim().length() > 0 && null != this.getCacheManager()) {
-						String modelGroupId = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + modelId;
-						String typeGroupId = JacmsSystemConstants.CONTENTS_TYPE_CACHE_GROUP_PREFIX + authInfo.getContentType();
-						String[] groups = { modelGroupId, typeGroupId };
-						this.getCacheManager().putInCache(cacheKey, renderedContent, groups);
-					}
-				}
-				if (null == renderedContent) {
-					return "";
-				}
-			} else {
-				renderedContent = "Current user '" + currentUser.getUsername() + "' can't view this content";
-			}
-			renderedContent = _linkResolver.resolveLinks(renderedContent, reqCtx);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
-			return "";
-		}
-		return renderedContent;
-	}
-	
-	/**
-	 * Costruisce il contenuto renderizzato.
-	 * @param authInfo Le informazioni di autorizzazione sul contenuto.
-	 * @param contentToRender Il contenuto da renderizzare.
-	 * @param contentId L'Identificativo del contenuto da renderizzare. 
-	 * Il parametro viene utilizzato nel caso il parametro contenuto sia nullo.
-	 * @param modelId Identificatore del modello di contenuto.
-	 * @param langCode Codice della lingua di renderizzazione richiesta.
-	 * @param reqCtx Il contesto della richiesta.
-	 * @return Il contenuto renderizzato.
-	 * @deprecated From jAPS 2.0 version 2.0.12
-	 */
-	protected String buildRenderedContent(Content contentToRender, String contentId, long modelId, String langCode, RequestContext reqCtx) {
-		String renderedContent = null;
-		boolean ok = false;
-		try {
-			if (contentToRender == null) {
-				contentToRender = this.getPublicContent(contentId);
-			}
-			if (contentToRender != null) {
-				renderedContent = this.getContentRender().render(contentToRender, modelId, langCode, reqCtx);
-				ok = true;
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "getRenderedContent", t);
-		}
-		if (!ok) {
-			ApsSystemUtils.getLogger().warning("The content " + contentId + " can't be rendered");
-		}
-		return renderedContent;
-	}
-
 	protected String buildRenderedContent(Content content, long modelId, String langCode, RequestContext reqCtx) {
 		if (null == content) {
 			ApsSystemUtils.getLogger().warning("Null The content can't be rendered");
@@ -261,6 +183,42 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			return ((ICmsCacheWrapperManager) this.getCacheManager()).getPublicContent(contentId);
 		} else {
 			return this.getContentManager().loadContent(contentId, true);
+		}
+	}
+	
+	protected String getRenderizationInfoCacheKey(String contentId, long modelId, String langCode, RequestContext reqCtx) {
+		StringBuffer key = new StringBuffer();
+		key.append(contentId).append("_").append(modelId).append("_").append(langCode).append("_RENDERED_CONTENT_CacheKey");
+		UserDetails currentUser = (null != reqCtx) ? (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) : null;
+		if (null != currentUser && !currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
+			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(currentUser);
+			if (null != userGroups && !userGroups.isEmpty()) {
+				key.append("_GROUPS:");
+				this.appendAuthCodes(userGroups, key);
+			}
+			List<Role> userRoles = this.getAuthorizationManager().getUserRoles(currentUser);
+			if (null != userRoles && !userRoles.isEmpty()) {
+				key.append("_ROLES:");
+				this.appendAuthCodes(userRoles, key);
+			}
+		}
+		return key.toString();
+	}
+	
+	private void appendAuthCodes(List autorities, StringBuffer key) {
+		List<String> codes = new ArrayList<String>();
+		for (int i = 0; i < autorities.size(); i++) {
+			IApsAuthority auth = (IApsAuthority) autorities.get(i);
+			if (null != auth) {
+				codes.add(auth.getAuthority());
+			}
+		}
+		Collections.sort(codes);
+		for (int i = 0; i < codes.size(); i++) {
+			if (i > 0) {
+				key.append("-");
+			}
+			key.append(codes.get(i));
 		}
 	}
 	

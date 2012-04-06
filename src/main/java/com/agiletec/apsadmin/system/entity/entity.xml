@@ -5,11 +5,11 @@
 
 <struts>
 	
-    <package name="core_do/Entity" namespace="/do/Entity" extends="japs-default">
+    <package name="core_do/Entity" namespace="/do/Entity" extends="entando-default">
 		
 		<action name="viewManagers" class="entityManagersAction">
 			<result type="tiles">admin.entityManagement.viewManagers</result>
-			<interceptor-ref name="japsDefaultStack">
+			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
 				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
@@ -21,19 +21,19 @@
 				<param name="actionName">viewManagers</param>
 				<param name="entityManagerName">${entityManagerName}</param>
 			</result>
-			<interceptor-ref name="japsValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
 		<!-- INIT : objects operation -->
 		
 		<action name="search" class="defaultEntityFinderAction" >
 			<result type="tiles">admin.entityManagement.search</result>
-			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
 		<action name="changeEntityType" class="defaultEntityFinderAction" >
 			<result type="redirectAction">search</result>
-			<interceptor-ref name="japsDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
 		
     </package>

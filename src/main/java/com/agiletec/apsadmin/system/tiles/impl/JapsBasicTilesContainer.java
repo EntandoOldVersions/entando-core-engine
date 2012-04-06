@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2008 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+* Copyright 2012 Entando s.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2008 AgileTec s.r.l. (http://www.agiletec.it) All rights reserved.
+* Copyright 2012 Entando s.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.apsadmin.system.tiles.impl;

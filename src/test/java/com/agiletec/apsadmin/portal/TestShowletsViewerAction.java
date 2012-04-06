@@ -91,8 +91,8 @@ public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
 		}
 		
 		List<SelectItem> stockShowlets = showletFlavours.get(showletFlavours.size()-1);
-		assertEquals(3, stockShowlets.size());
-		SelectItem stockType = stockShowlets.get(2);
+		assertEquals(4, stockShowlets.size());
+		SelectItem stockType = stockShowlets.get(3);
 		assertEquals(AbstractPortalAction.STOCK_SHOWLETS_CODE, stockType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("login_form", stockType.getKey());

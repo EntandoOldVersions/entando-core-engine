@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
@@ -30,18 +31,11 @@ import org.entando.entando.aps.system.services.api.model.ServiceInfo;
 /**
  * @author E.Santoboni
  */
+@XmlSeeAlso({ServiceInfo.class})
 public class ServicesResponseResult extends AbstractApiResponseResult {
     
-    @XmlElement(name = "service", required = false)
-    public ServiceInfo getResult() {
-        if (this.getMainResult() instanceof ServiceInfo) {
-            return (ServiceInfo) this.getMainResult();
-        }
-        return null;
-    }
-    
     @XmlElement(name = "services", required = false)
-    public ListResponse getResults() {
+    public ListResponse getResult() {
         if (this.getMainResult() instanceof Collection) {
             List<ServiceInfo> services = new ArrayList<ServiceInfo>();
             services.addAll((Collection<ServiceInfo>) this.getMainResult());

@@ -158,8 +158,8 @@ public class UserFilterOptionBean {
 			check = (!start.equals(end) && start.intValue() > end.intValue());
 		}
 		if (check) {
-			this.setFormFieldErrors(new HashMap<String, AttributeFieldError>(2));
-			AttributeFieldError error = new AttributeFieldError(this.getAttribute().getName(), formFieldNames[1], AttributeFieldError.INVALID_RANGE_KEY, null);
+			this.setFormFieldErrors(new HashMap<String, AttributeFormFieldError>(2));
+			AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), formFieldNames[1], AttributeFormFieldError.INVALID_RANGE_KEY, null);
 			this.getFormFieldErrors().put(formFieldNames[1], error);
 		}
 	}
@@ -175,7 +175,7 @@ public class UserFilterOptionBean {
 			String attributeType = this.getAttribute().getType();
 			if (attributeType.equals("Date") || attributeType.equals("Number")) {
 				boolean isDateAttribute = attributeType.equals("Date");
-				String rangeField = (i==0) ? AttributeFieldError.FIELD_TYPE_RANGE_START : AttributeFieldError.FIELD_TYPE_RANGE_END;
+				String rangeField = (i==0) ? AttributeFormFieldError.FIELD_TYPE_RANGE_START : AttributeFormFieldError.FIELD_TYPE_RANGE_END;
 				this.checkNoTextAttributeFormValue(isDateAttribute, value, fieldName, rangeField);
 			}
 		}
@@ -187,9 +187,9 @@ public class UserFilterOptionBean {
 		boolean check = (isDateAttribute) ? CheckFormatUtil.isValidDate(value.trim()) : CheckFormatUtil.isValidNumber(value.trim());
 		if (!check) {
 			if (null == this.getFormFieldErrors()) {
-				this.setFormFieldErrors(new HashMap<String, AttributeFieldError>(2));
+				this.setFormFieldErrors(new HashMap<String, AttributeFormFieldError>(2));
 			}
-			AttributeFieldError error = new AttributeFieldError(this.getAttribute().getName(), fieldName, AttributeFieldError.INVALID_FORMAT_KEY, rangeField);
+			AttributeFormFieldError error = new AttributeFormFieldError(this.getAttribute().getName(), fieldName, AttributeFormFieldError.INVALID_FORMAT_KEY, rangeField);
 			this.getFormFieldErrors().put(fieldName, error);
 		}
 	}
@@ -270,10 +270,10 @@ public class UserFilterOptionBean {
 		this._formFieldValues = formFieldValues;
 	}
 	
-	public Map<String, AttributeFieldError> getFormFieldErrors() {
+	public Map<String, AttributeFormFieldError> getFormFieldErrors() {
 		return _formFieldErrors;
 	}
-	public void setFormFieldErrors(Map<String, AttributeFieldError> formFieldErrors) {
+	public void setFormFieldErrors(Map<String, AttributeFormFieldError> formFieldErrors) {
 		this._formFieldErrors = formFieldErrors;
 	}
 	
@@ -286,7 +286,7 @@ public class UserFilterOptionBean {
 	
 	private String[] _formFieldNames;
 	private Map<String, String> _formFieldValues;
-	private Map<String, AttributeFieldError> _formFieldErrors;
+	private Map<String, AttributeFormFieldError> _formFieldErrors;
 	
 	public static final String PARAM_KEY = "key";
 	public static final String PARAM_IS_ATTRIBUTE_FILTER = "attributeFilter";
@@ -297,9 +297,9 @@ public class UserFilterOptionBean {
 	public static final String KEY_FULLTEXT = "fulltext";
 	public static final String KEY_CATEGORY = "category";
 	
-	public class AttributeFieldError {
+	public class AttributeFormFieldError {
 		
-		public AttributeFieldError(String attributeName, String fieldName, String errorKey, String rangeFieldType) {
+		public AttributeFormFieldError(String attributeName, String fieldName, String errorKey, String rangeFieldType) {
 			this._attributeName = attributeName;
 			this._fieldName = fieldName;
 			this._errorKey = errorKey;

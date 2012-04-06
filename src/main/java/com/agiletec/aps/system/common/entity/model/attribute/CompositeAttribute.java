@@ -17,6 +17,9 @@
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -239,6 +242,39 @@ public class CompositeAttribute extends AbstractComplexAttribute {
     
     protected DefaultJAXBAttributeType getJAXBAttributeTypeInstance() {
         return new JAXBCompositeAttributeType();
+    }
+    
+    public Status getStatus() {
+        List<AttributeInterface> attributes = this.getAttributes();
+        for (int i = 0; i < attributes.size(); i++) {
+            AttributeInterface attributeElement = attributes.get(i);
+            Status elementStatus = attributeElement.getStatus();
+            if (!Status.EMPTY.equals(elementStatus)) {
+                return Status.VALUED;
+            }
+        }
+        return Status.EMPTY;
+    }
+    
+    public List<AttributeFieldError> validate(AttributeTracer tracer) {
+        List<AttributeFieldError> errors = super.validate(tracer);
+        try {
+            List<AttributeInterface> attributes = this.getAttributes();
+            for (int i = 0; i < attributes.size(); i++) {
+                AttributeInterface attributeElement = attributes.get(i);
+                AttributeTracer elementTracer = (AttributeTracer) tracer.clone();
+                elementTracer.setCompositeElement(true);
+                elementTracer.setParentAttribute(this);
+                List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);
+                if (null != elementErrors) {
+                    errors.addAll(elementErrors);
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating composite attribute", t);
+        }
+        return errors;
     }
     
     private List<AttributeInterface> _attributeList;

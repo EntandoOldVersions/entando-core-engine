@@ -137,7 +137,9 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			}
 			String[] categories = this.getCategories(bean.getCategories(), config, userFilters);
 			Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
-			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), categories, bean.getFilters(), userGroupCodes);
+			boolean orCategoryFilterClause = this.extractOrCategoryFilterClause(config);
+			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), 
+                                categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
 			if (!isUserFilterExecuted && bean.isCacheable()) {
 				String cacheKey = this.buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
 				this.putListInCache(bean.getContentType(), reqCtx, contentsId, cacheKey);
@@ -147,6 +149,13 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
+	}
+	
+	protected boolean extractOrCategoryFilterClause(ApsProperties config) {
+		if (null == config) return false;
+		String param = config.getProperty(SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER);
+		if (null == param) return false;
+		return Boolean.parseBoolean(param);
 	}
 	
 	protected List<String> executeFullTextSearch(RequestContext reqCtx, 
@@ -222,18 +231,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	
 	protected Collection<String> getAllowedGroups(RequestContext reqCtx) {
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		/*
-		IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, reqCtx.getRequest());
-		List<Group> groups = authManager.getGroupsOfUser(currentUser);
-		Set<String> allowedGroup = new HashSet<String>();
-		Iterator<Group> iter = groups.iterator();
-    	while (iter.hasNext()) {
-    		Group group = iter.next();
-    		allowedGroup.add(group.getName());
-    	}
-		allowedGroup.add(Group.FREE_GROUP_NAME);
-		return allowedGroup;
-		*/
 		return super.getAllowedGroups(currentUser);
 	}
 	
@@ -282,33 +279,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		}
 		return cacheKey.toString();
 	}
-	/*
-	public static String concatStrings(Collection<String> values, String separator) {
-		StringBuffer concatedValues = new StringBuffer();
-		if (null == values) return concatedValues.toString();
-		boolean first = true;
-		Iterator<String> valuesIter = values.iterator();
-		while (valuesIter.hasNext()) {
-			if (!first) {
-				concatedValues.append(separator);
-			}
-			concatedValues.append(valuesIter.next());
-			first = false;
-		}
-		return concatedValues.toString();
-	}
 	
-	public static List<String> splitValues(String concatedValues, String separator) {
-		List<String> values = new ArrayList<String>();
-		if (concatedValues != null && concatedValues.trim().length() > 0) {
-			 String[] codes = concatedValues.split(separator);
-			 for (int i = 0; i < codes.length; i++) {
-				 values.add(codes[i]);
-			}
-		}
-		return values;
-	}
-	*/
 	@Override
 	public List<UserFilterOptionBean> getConfiguredUserFilters(IContentListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
 		List<UserFilterOptionBean> userEntityFilters = null;

@@ -39,9 +39,25 @@ public interface IEntityTypeFactory {
 	 * @param entityDom The DOM class that parses the XML representing the single (implemented) entity.
 	 * @return The map of the Entity Types Prototypes, indexed by code. 
 	 * @throws ApsSystemException If errors occurs during the parsing process of the XML. 
+	 * @deprecated Since Entando 2.4.1, use getEntityTypes(Class, String, IEntityTypeDOM, String, IApsEntityDOM)
 	 */
 	public Map<String, IApsEntity> getEntityTypes(Class entityClass, String configItemName, 
 			IEntityTypeDOM entityTypeDom, IApsEntityDOM entityDom) throws ApsSystemException;
+	
+	/**
+	 * Return the Map of the prototypes of the Entity Types (indexed by their code) that the
+	 * entity service is going to handle.
+	 * The structure of the Entity Types is obtained from a configuration XML.
+	 * @param entityClass The class of the entity. 
+	 * @param configItemName The configuration item where the Entity Types are defined.
+	 * @param entityTypeDom The DOM class that parses the configuration XML.
+	 * @param entityDom The DOM class that parses the XML representing the single (implemented) entity.
+	 * @param entityManagerName The entity manager name
+	 * @return The map of the Entity Types Prototypes, indexed by code. 
+	 * @throws ApsSystemException If errors occurs during the parsing process of the XML. 
+	 */
+	public Map<String, IApsEntity> getEntityTypes(Class entityClass, String configItemName, 
+			IEntityTypeDOM entityTypeDom, String entityManagerName, IApsEntityDOM entityDom) throws ApsSystemException;
 	
 	/**
 	 * Update the Entity Type prototypes in the configuration.

@@ -55,9 +55,9 @@ public class TestResponseBuilder extends ApiBaseTestCase {
     }
     
     public void testInvokeWithErrors_4() throws Throwable {
-    	ApiMethod method = this.getApiCatalogManager().getMethod("getServices");
+    	ApiMethod method = this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, "getServices");
     	method.setStatus(false);
-    	this.getApiCatalogManager().updateApiStatus(method);
+    	this.getApiCatalogManager().updateMethodConfig(method);
     	Properties properties = new Properties();
     	this.testInvokeWithErrors("getServices", properties, IApiErrorCodes.API_ACTIVE_FALSE);
     }

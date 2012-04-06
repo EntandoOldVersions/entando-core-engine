@@ -53,11 +53,11 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
 			}
-			log.info("Configurazione nuova showlet " + this.getShowletTypeCode() + 
-					" - Pagina " + this.getPageCode() + " - Frame " + this.getFrame());
+			log.info("Configurating new Showlet " + this.getShowletTypeCode() + 
+					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
 		} else {
-			log.info("Modifica Configurazione showlet " + showlet.getType().getCode() + 
-					" - Pagina " + this.getPageCode() + " - Frame " + this.getFrame());
+			log.info("Edit Showlet config " + showlet.getType().getCode() + 
+					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
 			showlet = this.createCloneFrom(showlet);
 		}
 		this.setShowlet(showlet);
@@ -66,7 +66,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	
 	protected Showlet createNewShowlet() throws Exception {
 		if (this.getShowletTypeCode() == null || this.getShowletType(this.getShowletTypeCode()) == null) {
-			throw new Exception("ShowletCode assente o non valido : " + this.getShowletTypeCode());
+			throw new Exception("Showlet Code missin or invalid : " + this.getShowletTypeCode());
 		}
 		Showlet showlet = new Showlet();
 		ShowletType type = this.getShowletType(this.getShowletTypeCode());
@@ -92,7 +92,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 			this.checkBaseParams();
 			this.createValuedShowlet();
 			this.getPageManager().joinShowlet(this.getPageCode(), this.getShowlet(), this.getFrame());
-			log.finest("Salvataggio showlet - code = " + this.getShowlet().getType().getCode() + 
+			log.finest("Saving Showlet - code = " + this.getShowlet().getType().getCode() + 
 					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -121,12 +121,12 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	protected String checkBaseParams() {
 		IPage page = this.getPage(this.getPageCode());
 		if (null== page || !this.isUserAllowed(page)) {
-			ApsSystemUtils.getLogger().info("Utente corrente non abilitato all'editazione della pagina richiesta");
+			ApsSystemUtils.getLogger().info("User not allowed");
 			this.addActionError(this.getText("error.page.userNotAllowed"));
 			return "pageTree";
 		}
 		if (this.getFrame() == -1 || this.getFrame()>= page.getShowlets().length) {
-			ApsSystemUtils.getLogger().info("Identificativo frame richiesto '" + this.getFrame() + "' non corretto");
+			ApsSystemUtils.getLogger().info("invalid frame '" + this.getFrame() + "'");
 			this.addActionError(this.getText("error.page.invalidPageFrame"));
 			return "pageTree";
 		}

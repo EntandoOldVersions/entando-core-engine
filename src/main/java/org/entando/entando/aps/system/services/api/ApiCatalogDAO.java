@@ -53,16 +53,16 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             //"SELECT method, isactive FROM apicatalog_status";
             res = stat.executeQuery();
             while (res.next()) {
-                String resourceName = res.getString("resource");
+                String resourceCode = res.getString("resource");
                 String httpMethodString = res.getString("httpmethod");
                 ApiMethod.HttpMethod httpMethod = Enum.valueOf(ApiMethod.HttpMethod.class, httpMethodString.toUpperCase());
                 ApiMethod method = null;
-                ApiResource resource = resources.get(resourceName);
+                ApiResource resource = resources.get(resourceCode);
                 if (null != resource) {
                     method = resource.getMethod(httpMethod);
                 }
                 if (null == method) {
-                    this.resetApiStatus(resourceName, httpMethod, conn);
+                    this.resetApiStatus(resourceCode, httpMethod, conn);
                     continue;
                 }
                 boolean active = (res.getInt("isactive") == 1);
@@ -85,32 +85,32 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
-    public void resetApiStatus(String resourceName, HttpMethod httpMethod) {
+    public void resetApiStatus(String resourceCode, HttpMethod httpMethod) {
         Connection conn = null;
         try {
             conn = this.getConnection();
             conn.setAutoCommit(false);
-            this.resetApiStatus(resourceName, httpMethod, conn);
+            this.resetApiStatus(resourceCode, httpMethod, conn);
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error resetting status : method '"
-                    + resourceName + "' method " + httpMethod.toString(), "resetApiStatus");
+            processDaoException(t, "Error resetting status : resource '"
+                    + resourceCode + "' method " + httpMethod.toString(), "resetApiStatus");
         } finally {
             closeConnection(conn);
         }
     }
 
-    protected void resetApiStatus(String resourceName, HttpMethod httpMethod, Connection conn) {
+    protected void resetApiStatus(String resourceCode, HttpMethod httpMethod, Connection conn) {
         PreparedStatement stat = null;
         try {
             stat = conn.prepareStatement(RESET_API_STATUS);
-            stat.setString(1, resourceName);
+            stat.setString(1, resourceCode);
             stat.setString(2, httpMethod.toString());
             stat.executeUpdate();
         } catch (Throwable t) {
-            processDaoException(t, "Error resetting status : method '"
-                    + resourceName + "' method " + httpMethod.toString(), "resetApiStatus");
+            processDaoException(t, "Error resetting status : resource '"
+                    + resourceCode + "' method " + httpMethod.toString(), "resetApiStatus");
         } finally {
             closeDaoResources(null, stat);
         }
@@ -122,11 +122,12 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         try {
             conn = this.getConnection();
             conn.setAutoCommit(false);
-            this.resetApiStatus(method.getResourceName(), method.getHttpMethod(), conn);
+			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
+            this.resetApiStatus(resourceCode, method.getHttpMethod(), conn);
             stat = conn.prepareStatement(SAVE_API_STATUS);
             //resource, httpmethod, isactive, authenticationrequired, authorizationrequired
             int isActive = (method.isActive()) ? 1 : 0;
-            stat.setString(1, method.getResourceName());
+            stat.setString(1, resourceCode);
             stat.setString(2, method.getHttpMethod().toString());
             stat.setInt(3, isActive);
             int authentication = (method.getRequiredAuth()) ? 1 : 0;
@@ -141,18 +142,18 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(null, stat, conn);
         }
     }
-
+	
     @Deprecated
     public Map<String, ApiService> loadServices(Map<String, ApiMethod> methods) {
         return this.loadServices(new ArrayList<ApiMethod>(methods.values()));
     }
-
+	
     public Map<String, ApiService> loadServices(List<ApiMethod> methods) {
         Map<String, ApiMethod> methodMap = new HashMap<String, ApiMethod>();
         for (int i = 0; i < methods.size(); i++) {
-            ApiMethod apiMethod = methods.get(i);
-            String key = apiMethod.getResourceName();
-            methodMap.put(key, apiMethod);
+            ApiMethod method = methods.get(i);
+			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
+			methodMap.put(resourceCode, method);
         }
         Map<String, ApiService> services = new HashMap<String, ApiService>();
         Connection conn = null;
@@ -175,7 +176,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
         return services;
     }
-
+	
     private void buildService(Map<String, ApiMethod> methods,
             Map<String, ApiService> services, List<String> invalidServices, ResultSet res) {
         String key = null;
@@ -218,7 +219,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             stat = conn.prepareStatement(ADD_SERVICE);
             //servicekey, resource, description, parameters, tag, freeparameters, isactive, ispublic
             stat.setString(1, service.getKey());
-            stat.setString(2, service.getMaster().getResourceName());
+			String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+			stat.setString(2, resourceCode);
             stat.setString(3, service.getDescription().toXml());
             stat.setString(4, service.getParameters().toXml());
             stat.setString(5, service.getTag());
@@ -252,7 +254,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(UPDATE_SERVICE);
             //SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? WHERE servicekey = ? ";
-            stat.setString(1, service.getMaster().getResourceName());
+            String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+			stat.setString(1, resourceCode);
             stat.setString(2, service.getDescription().toXml());
             stat.setString(3, service.getParameters().toXml());
             stat.setString(4, service.getTag());

@@ -25,7 +25,7 @@ import java.util.Properties;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.entando.entando.aps.system.services.api.model.BaseApiResponse;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -36,6 +36,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import javax.ws.rs.core.Response;
 
 /**
  * @author E.Santoboni
@@ -45,10 +46,10 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
     public JAXBContentType getContentType(Properties properties) throws ApiException, Throwable {
         JAXBContentType jaxbContentType = null;
         try {
-            String typeCode = properties.getProperty("contentTypeCode");
+            String typeCode = properties.getProperty("code");
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
             if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
             }
             jaxbContentType = new JAXBContentType(masterContentType);
             jaxbContentType.setDefaultModelId(this.extractModelId(masterContentType.getDefaultModel()));
@@ -73,16 +74,16 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
         return modelId;
     }
     
-    public BaseApiResponse addContentType(JAXBContentType jaxbContentType) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse addContentType(JAXBContentType jaxbContentType) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContentType.getTypeCode();
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
             if (null != masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' already exists");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' already exists", Response.Status.CONFLICT);
             }
             if (typeCode == null || typeCode.length() != 3) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid type code - '" + typeCode + "'");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid type code - '" + typeCode + "'", Response.Status.CONFLICT);
             }
             Map<String, AttributeInterface> attributes = this.getContentManager().getEntityAttributePrototypes();
             Content contentType = (Content) jaxbContentType.buildEntityType(this.getContentManager().getEntityClass(), attributes);
@@ -106,13 +107,13 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
         return response;
     }
     
-    public BaseApiResponse updateContentType(JAXBContentType jaxbContentType) throws Throwable {
-        BaseApiResponse response = new BaseApiResponse();
+    public StringApiResponse updateContentType(JAXBContentType jaxbContentType) throws Throwable {
+        StringApiResponse response = new StringApiResponse();
         try {
             String typeCode = jaxbContentType.getTypeCode();
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
             if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist", Response.Status.CONFLICT);
             }
             Map<String, AttributeInterface> attributes = this.getContentManager().getEntityAttributePrototypes();
             Content contentType = (Content) jaxbContentType.buildEntityType(this.getContentManager().getEntityClass(), attributes);
@@ -136,17 +137,18 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
         return response;
     }
     
-    private boolean checkContentModel(Integer modelId, Content contentType, BaseApiResponse response) {
+    private boolean checkContentModel(Integer modelId, Content contentType, StringApiResponse response) {
         if (null == modelId) return true;
         ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
         if (null == contentModel) {
-            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Content model with id '" + modelId + "' does not exist");
+            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
+					"Content model with id '" + modelId + "' does not exist", Response.Status.ACCEPTED);
             response.addError(error);
             return false;
         }
         if (!contentType.getTypeCode().equals(contentModel.getContentType())) {
-            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Content model with id '" 
-                    + modelId + "' is for contents of type '" + contentModel.getContentType() + "'");
+            ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
+					"Content model with id '" + modelId + "' is for contents of type '" + contentModel.getContentType() + "'", Response.Status.ACCEPTED);
             response.addError(error);
             return false;
         }
@@ -155,15 +157,15 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
     
     public void deleteContentType(Properties properties) throws ApiException, Throwable {
         try {
-            String typeCode = properties.getProperty("contentTypeCode");
+            String typeCode = properties.getProperty("code");
             Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
             if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist", Response.Status.CONFLICT);
             }
             EntitySearchFilter filter = new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, typeCode, false);
             List<String> contentIds = this.getContentManager().searchId(new EntitySearchFilter[]{filter});
             if (null != contentIds && !contentIds.isEmpty()) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type '" + typeCode + "' are used into " + contentIds.size() + " contents");
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type '" + typeCode + "' are used into " + contentIds.size() + " contents", Response.Status.CONFLICT);
             }
             ((IEntityTypesConfigurer) this.getContentManager()).removeEntityPrototype(typeCode);
         } catch (ApiException ae) {

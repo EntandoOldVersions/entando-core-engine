@@ -44,13 +44,13 @@ public class ImageDimensionReader extends AbstractService implements IImageDimen
 		try {
     		String xml = this.getConfigManager().getConfigItem(JacmsSystemConstants.CONFIG_ITEM_IMAGE_DIMENSIONS);
     		if (xml == null) {
-    			throw new ApsSystemException("Item configurazione assente: " + JacmsSystemConstants.CONFIG_ITEM_IMAGE_DIMENSIONS);
+    			throw new ApsSystemException("Missing config Item: " + JacmsSystemConstants.CONFIG_ITEM_IMAGE_DIMENSIONS);
     		}
     		ImageDimensionDOM dimensionDom = new ImageDimensionDOM(xml);
     		this._imageDimensions = dimensionDom.getDimensions();
     	} catch (Throwable t) {
     		ApsSystemUtils.logThrowable(t, this, "init");
-    		throw new ApsSystemException("Errore caricamento dimensioni immagini di resize", t);
+    		throw new ApsSystemException("Error loading dimensions", t);
     	}
 	}
 	

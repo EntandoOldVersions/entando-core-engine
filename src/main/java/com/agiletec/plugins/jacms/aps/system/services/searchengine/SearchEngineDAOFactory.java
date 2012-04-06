@@ -78,11 +78,11 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 		String dirName = this.getIndexDiskRootFolder();
 		if (!dirName.endsWith("/")) dirName += "/";
 		dirName += subDirectory;
-		ApsSystemUtils.getLogger().config("Directory indici: " + dirName);
+		ApsSystemUtils.getLogger().config("Index Directory: " + dirName);
 		File dir = new File(dirName);
 		if (!dir.exists() || !dir.isDirectory()) {
 			dir.mkdirs();
-			ApsSystemUtils.getLogger().config("Creata Directory indici");
+			ApsSystemUtils.getLogger().config("Index Directory created");
 		}
 		if (!dir.canRead() || !dir.canWrite()) {
 			throw new ApsSystemException(dirName + " does not have r/w rights");
@@ -104,7 +104,7 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 				fileToDelete.delete();
 			}
 			dir.delete();
-			ApsSystemUtils.getLogger().config("Cancellata SottoDirectory indici " + subDirectory);
+			ApsSystemUtils.getLogger().config("Deleted subfolder " + subDirectory);
 		}
 	}
 	

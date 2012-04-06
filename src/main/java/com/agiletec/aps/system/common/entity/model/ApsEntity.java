@@ -33,6 +33,7 @@ import org.jdom.Element;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.group.IGroupManager;
 
 /** 
  * This class represents an entity.
@@ -340,6 +341,43 @@ public class ApsEntity implements IApsEntity, Serializable {
     
     public void setEntityDOM(IApsEntityDOM entityDom) {
         this._entityDom = entityDom;
+    }
+    
+    public List<FieldError> validate(IGroupManager groupManager) {
+        List<FieldError> errors = new ArrayList<FieldError>();
+        try {
+            if (null != this.getMainGroup() && null == groupManager.getGroup(this.getMainGroup())) {
+                FieldError error = new FieldError("mainGroup", FieldError.INVALID);
+                error.setMessage("Invalid main group - " + this.getMainGroup());
+                errors.add(error);
+            }
+            if (null != this.getGroups()) {
+                Iterator<String> groupsIter = this.getGroups().iterator();
+                while (groupsIter.hasNext()) {
+                    String groupName = groupsIter.next();
+                    if (null == groupManager.getGroup(groupName)) {
+                        FieldError error = new FieldError("extraGroup", FieldError.INVALID);
+                        error.setMessage("Invalid extra group - " + groupName);
+                        errors.add(error);
+                    }
+                }
+            }
+            if (null != this.getAttributeList()) {
+                List<AttributeInterface> attributes = this.getAttributeList();
+                for (int i = 0; i < attributes.size(); i++) {
+                    AttributeInterface attribute = attributes.get(i);
+                    AttributeTracer tracer = new AttributeTracer();
+                    List<AttributeFieldError> attributeErrors = attribute.validate(tracer);
+                    if (null != attributeErrors) {
+                        errors.addAll(attributeErrors);
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "validate");
+            throw new RuntimeException("Error validating entity");
+        }
+        return errors;
     }
     
     private String _id;

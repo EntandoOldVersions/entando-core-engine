@@ -218,11 +218,11 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
 				IPage page = this.getUpdatedPage();
 				this.getPageManager().updatePage(page);
-				log.finest("Aggiornamento pagina " + page.getCode());
+				log.finest("Updating page " + page.getCode());
 			} else {
 				IPage page = this.buildNewPage();
 				this.getPageManager().addPage(page);
-				log.finest("Aggiunta nuova pagina");
+				log.finest("Adding new page");
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -266,7 +266,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "buildNewPage");
-			throw new ApsSystemException("Errore in costruzione nuova pagina", t);
+			throw new ApsSystemException("Error building new page", t);
 		}
 		return page;
 	}
@@ -291,7 +291,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			page.setExtraGroups(this.getExtraGroups());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getUpdatedPage");
-			throw new ApsSystemException("Errore in aggiornamento pagina", t);
+			throw new ApsSystemException("Error updating page", t);
 		}
 		return page;
 	}

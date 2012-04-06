@@ -36,6 +36,7 @@ public class ApiMethod implements Serializable {
     
     public ApiMethod(Element element) {
         this.setResourceName(element.getAttributeValue(ApiResourcesDefDOM.RESOURCE_ATTRIBUTE_NAME));
+		this.setNamespace(element.getAttributeValue(ApiResourcesDefDOM.RESOURCE_ATTRIBUTE_NAMESPACE));
         Element sourceElement = element.getChild(ApiResourcesDefDOM.SOURCE_ELEMENT_NAME);
         if (null != sourceElement) {
             this.setSource(sourceElement.getText());
@@ -44,8 +45,10 @@ public class ApiMethod implements Serializable {
         this.buildMethod(element);
     }
     
-    public ApiMethod(String resourceName, String source, String pluginCode, Element element) {
+    public ApiMethod(String resourceName, String namespace, 
+			String source, String pluginCode, Element element) {
         this.setResourceName(resourceName);
+		this.setNamespace(namespace);
         this.setSource(source);
         this.setPluginCode(pluginCode);
         this.buildMethod(element);
@@ -106,6 +109,7 @@ public class ApiMethod implements Serializable {
     public ApiMethod clone() {
         ApiMethod clone = new ApiMethod();
         clone.setResourceName(this.getResourceName());
+		clone.setNamespace(this.getNamespace());
         clone.setDefaultStatus(this.getDefaultStatus());
         clone.setStatus(this.getStatus());
         clone.setDescription(this.getDescription());
@@ -161,6 +165,13 @@ public class ApiMethod implements Serializable {
     }
     protected void setHttpMethod(HttpMethod httpMethod) {
         this._httpMethod = httpMethod;
+    }
+    
+    public String getNamespace() {
+        return _namespace;
+    }
+    protected void setNamespace(String namespace) {
+        this._namespace = namespace;
     }
     
     public Boolean getStatus() {
@@ -310,8 +321,8 @@ public class ApiMethod implements Serializable {
     }
     
     private String _resourceName;
-    
     private HttpMethod _httpMethod;
+	private String _namespace;
     
     private Boolean _defaultStatus;
     private Boolean _status;

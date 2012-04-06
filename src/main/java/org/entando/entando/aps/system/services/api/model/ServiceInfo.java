@@ -39,7 +39,7 @@ public class ServiceInfo implements Serializable {
 		this.setKey(key);
 		this.setDescription(description);
 		this.setTag(tag);
-                this.setMyEntando(myEntando);
+		this.setMyEntando(myEntando);
 	}
 	
 	@XmlElement(name = "key")
@@ -65,7 +65,7 @@ public class ServiceInfo implements Serializable {
 	public void setTag(String tag) {
 		this._tag = tag;
 	}
-	
+
 	@XmlElement(name = "parameter", required = true)
 	@XmlElementWrapper(name = "parameters")
 	public List<ServiceParameterInfo> getParameters() {
@@ -77,19 +77,19 @@ public class ServiceInfo implements Serializable {
 		}
 		_parameters.add(parameter);
 	}
-        
-        @XmlElement(name = "myentando")
-        public boolean isMyEntando() {
-            return _myEntando;
-        }
-        protected void setMyEntando(boolean myEntando) {
-            this._myEntando = myEntando;
-        }
+	
+	@XmlElement(name = "myentando")
+	public boolean isMyEntando() {
+		return _myEntando;
+	}
+	protected void setMyEntando(boolean myEntando) {
+		this._myEntando = myEntando;
+	}
 	
 	private String _key;
 	private String _description;
 	private String _tag;
 	private List<ServiceParameterInfo> _parameters = null;
-        private boolean _myEntando;
+	private boolean _myEntando;
 	
 }

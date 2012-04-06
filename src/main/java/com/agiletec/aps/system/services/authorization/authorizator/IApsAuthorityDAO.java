@@ -36,7 +36,7 @@ public interface IApsAuthorityDAO {
 	/**
 	 * Setta una autorizzazione di un utente.
 	 * @param username L'utente al quale associare la autorizzazione.
-	 * @param auths La autorizazzione da associare all'utente.
+	 * @param auth La autorizzazione da associare all'utente.
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	public void setUserAuthorization(String username, IApsAuthority auth) throws ApsSystemException;

@@ -44,10 +44,9 @@ public class RequestAuthorizator extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._loginPageCode = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_LOGIN_PAGE_CODE);
 		this._log.config(this.getClass().getName() + ": initialized");
 	}
-
+	
 	/**
 	 * Verifica che l'utente in sessione sia abilitato all'accesso alla pagina richiesta.
 	 * Se è autorizzato il metodo termina con CONTINUE, altrimenti 
@@ -88,9 +87,9 @@ public class RequestAuthorizator extends AbstractControlService {
 	}
 	
 	protected String getLoginPageCode() {
-		return this._loginPageCode;
+		return this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_LOGIN_PAGE_CODE);
 	}
-
+	
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
@@ -104,8 +103,7 @@ public class RequestAuthorizator extends AbstractControlService {
 	public void setAuthManager(IAuthorizationManager authManager) {
 		this._authManager = authManager;
 	}
-
-	private String _loginPageCode;
+	
 	private IAuthorizationManager _authManager;
 	private ConfigInterface _configManager;
 

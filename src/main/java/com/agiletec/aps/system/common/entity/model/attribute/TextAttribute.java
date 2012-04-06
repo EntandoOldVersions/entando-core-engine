@@ -17,6 +17,9 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,7 +29,13 @@ import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class implements the Text Attribute. It can support multiple languages.
@@ -139,7 +148,7 @@ public class TextAttribute extends AbstractTextAttribute {
         this.addTextElements(attributeElement);
         return attributeElement;
     }
-
+    
     /**
      * Add the elements, related to the texts inserted in the attribute, needed in order
      * to prepare the element to finally insert in the XML of the entity.
@@ -182,6 +191,14 @@ public class TextAttribute extends AbstractTextAttribute {
         Object value = jaxbAttribute.getValue();
         if (null == value) return;
         this.getTextMap().put(this.getDefaultLangCode(), value.toString());
+    }
+    
+    public Status getStatus() {
+        String text = this.getTextMap().get(this.getDefaultLangCode());
+        if (null != text && text.trim().length() > 0) {
+            return Status.VALUED;
+        }
+        return Status.EMPTY;
     }
     
     private Map<String, String> _textMap;

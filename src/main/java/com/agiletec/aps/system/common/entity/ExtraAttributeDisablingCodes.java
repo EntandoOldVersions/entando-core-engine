@@ -17,44 +17,11 @@
  */
 package com.agiletec.aps.system.common.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.common.entity.loader.ExtraAttributeDisablingCodesWrapper;
 
 /**
  * The Class of the extra attribute disabling codes.
  * @author E.Santoboni
+ * @deprecated Since Entando 2.4.1, use ExtraAttributeDisablingCodesWrapper
  */
-public final class ExtraAttributeDisablingCodes extends AbstractExtraAttributeSupportObject {
-	
-	protected void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		if (!((IManager) entityManager).getName().equals(((IManager) this.getEntityManagerDest()).getName())) {
-			return;
-		}
-		try {
-			String xml = super.extractXml();
-			AttributeDisablingCodesDOM dom = new AttributeDisablingCodesDOM();
-			Map<String, String> codeMap = dom.extractDisablingCodes(xml, this.getDefsFilePath());
-			List<String> codes = new ArrayList<String>(codeMap.keySet());
-			for (int i = 0; i < codes.size(); i++) {
-				String code = codes.get(i);
-				if (collectionToFill.containsKey(code)) {
-					ApsSystemUtils.getLogger().severe("You can't override existing disabling code : " + code + 
-							" - " + collectionToFill.get(code));
-				} else {
-					collectionToFill.put(code, codeMap.get(code));
-					ApsSystemUtils.getLogger().info("Added new disabling code : " + code + 
-							" - " + collectionToFill.get(code));
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute disabling codes");
-		}
-	}
-	
-}
+public class ExtraAttributeDisablingCodes extends ExtraAttributeDisablingCodesWrapper {}

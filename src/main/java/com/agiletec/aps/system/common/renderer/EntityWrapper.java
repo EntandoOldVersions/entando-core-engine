@@ -28,6 +28,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttr
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.category.Category;
 
+import org.springframework.beans.factory.BeanFactory;
+
 /**
  * This class represents an entity suitable for the rendering process. This class extends
  * the HashMap object to make the access to the entity objects easier.
@@ -42,6 +44,11 @@ public class EntityWrapper implements Map {
 	public EntityWrapper(IApsEntity entity) {
 		this._entity = entity;
 		this._attributeMap = _entity.getAttributeMap();
+	}
+	
+	public EntityWrapper(IApsEntity entity, BeanFactory beanFactory) {
+		this(entity);
+		this.setBeanFactory(beanFactory);
 	}
 	
 	/**
@@ -173,8 +180,17 @@ public class EntityWrapper implements Map {
 		return _renderingLang;
 	}
 	
+	protected BeanFactory getBeanFactory() {
+		return this._beanFactory;
+	}
+	protected void setBeanFactory(BeanFactory beanFactory) {
+		this._beanFactory = beanFactory;
+	}
+	
 	private IApsEntity _entity;
 	private Map<String, AttributeInterface> _attributeMap;
 	private String _renderingLang;
+	
+	private BeanFactory _beanFactory;
 	
 }

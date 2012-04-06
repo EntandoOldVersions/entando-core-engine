@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -185,20 +186,25 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 				this.addObjectSearchStatementBlock(stat, ++index, allowedValue, filter.isLikeOption());
 			}
 		} else if (filter.getValue() != null) {
-			this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.isLikeOption());
+			this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.getValueDateDelay(), filter.isLikeOption());
 		} else {
 			if (null != filter.getStart()) {
-				this.addObjectSearchStatementBlock(stat, ++index, filter.getStart(), false);
+				this.addObjectSearchStatementBlock(stat, ++index, filter.getStart(), filter.getStartDateDelay(), false);
 			}
 			if (null != filter.getEnd()) {
-				this.addObjectSearchStatementBlock(stat, ++index, filter.getEnd(), false);
+				this.addObjectSearchStatementBlock(stat, ++index, filter.getEnd(), filter.getEndDateDelay(), false);
 			}
 		}
 		return index;
 	}
+        
+        protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
+			Object object, boolean isLikeOption) throws SQLException {
+            this.addObjectSearchStatementBlock(stat, index, object, null, isLikeOption);
+        }
 	
 	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
-			Object object, boolean isLikeOption) throws SQLException {
+			Object object, Integer dateDelay, boolean isLikeOption) throws SQLException {
 		if (object instanceof String) {
 			if (isLikeOption) {
 				stat.setString(index, "%"+((String) object)+"%");
@@ -206,7 +212,13 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 				stat.setString(index, (String) object);
 			}
 		} else if (object instanceof Date) {
-			stat.setDate(index, new java.sql.Date(((Date) object).getTime()));
+                        Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) object);
+			if (dateDelay != null) {
+				calendar.add(Calendar.DATE, dateDelay);
+			}
+			Date data = calendar.getTime();
+			stat.setDate(index, new java.sql.Date(data.getTime()));
 		} else if (object instanceof BigDecimal) {
 			stat.setBigDecimal(index, (BigDecimal) object);
 		} else if (object instanceof Boolean) {

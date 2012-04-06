@@ -54,12 +54,6 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
     }
 	
 	@Override
-	@Deprecated
-	public void updateContent(Content content, HttpServletRequest request) {
-		this.updateEntity(content, request);
-	}
-	
-	@Override
 	public void updateEntity(IApsEntity entity, HttpServletRequest request) {
 		Content content = (Content) entity;
 		try {
@@ -76,21 +70,15 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
             }
         } catch (Throwable t) {
         	ApsSystemUtils.getLogger().throwing("ContentActionHelper", "updateContent", t);
-        	throw new RuntimeException("Errore in updateContent", t);
+        	throw new RuntimeException("Error updating Content", t);
         }
-	}
-	
-	@Override
-	@Deprecated
-	public void scanContent(Content content, ActionSupport action) {
-		this.scanEntity(content, action);
 	}
 	
 	@Override
 	public void scanEntity(IApsEntity entity, ActionSupport action) {
 		Content content = (Content) entity;
 		if (null == content) {
-    		ApsSystemUtils.getLogger().severe("Invocazione di scansione/salvataggio contenuto nullo");
+    		ApsSystemUtils.getLogger().severe("Null Content");
     		return;
     	}
 		String descr = content.getDescr();
@@ -113,7 +101,7 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 			this.scanReferences(content, action);
 			super.scanEntity(content, action);
 		} catch (Throwable t) {
-			throw new RuntimeException("Errore in scansione errori", t);
+			throw new RuntimeException("Error checking entity", t);
 		}
 	}
     
@@ -128,7 +116,7 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 			key = IContentManager.CONTENT_DESCR_FILTER_KEY;
 		} else if (groupBy.equals("created")) {
 			key = IContentManager.CONTENT_CREATION_DATE_FILTER_KEY;
-		} else throw new RuntimeException("FILTRO '" + groupBy + "' NON RICONOSCIUTO");
+		} else throw new RuntimeException("Invalid Filter '" + groupBy + "'");
 		EntitySearchFilter filter = new EntitySearchFilter(key, false);
 		if (null == order || order.trim().length() == 0) {
 			filter.setOrder(EntitySearchFilter.DESC_ORDER);
@@ -178,7 +166,7 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 				}
 			}
     	} catch (Throwable t) {
-    		throw new ApsSystemException("Errore in hasReferencingObject", t);
+    		throw new ApsSystemException("Error in hasReferencingObject method", t);
     	}
     	return references;
     }

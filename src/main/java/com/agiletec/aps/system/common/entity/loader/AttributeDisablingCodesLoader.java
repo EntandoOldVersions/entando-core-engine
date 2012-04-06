@@ -15,7 +15,7 @@
  * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
-package com.agiletec.aps.system.common.entity;
+package com.agiletec.aps.system.common.entity.loader;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -25,6 +25,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -34,7 +35,7 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public final class AttributeDisablingCodesLoader {
 	
-	protected Map<String, String> extractDisablingCodes(String attributeDisablingCodesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
+	public Map<String, String> extractDisablingCodes(String attributeDisablingCodesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, String> disablingCodes = new HashMap<String, String>();
 		try {
 			this.setEntityManager(entityManager);
@@ -62,22 +63,23 @@ public final class AttributeDisablingCodesLoader {
 	private void loadExtraDisablingCodes(Map<String, String> disablingCodes) {
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-			String[] defNames = factory.getBeanNamesForType(ExtraAttributeDisablingCodes.class);
+			String[] defNames = factory.getBeanNamesForType(ExtraAttributeDisablingCodesWrapper.class);
 			for (int i=0; i<defNames.length; i++) {
 				try {
 					Object loader = this.getBeanFactory().getBean(defNames[i]);
 					if (loader != null) {
-						((ExtraAttributeDisablingCodes) loader).executeLoading(disablingCodes, this.getEntityManager());
+						((ExtraAttributeDisablingCodesWrapper) loader).executeLoading(disablingCodes, this.getEntityManager());
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "refresh", "Error extracting attribute support object : bean " + defNames[i]);
+					ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes", 
+							"Error extracting attribute support object : bean " + defNames[i]);
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "refresh", "Error loading attribute support object");
+			ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes", 
+					"Error loading attribute support object");
 		}
 	}
-	
 	
 	private String extractConfigFile(String fileName) throws Throwable {
 		InputStream is = this.getEntityManager().getClass().getResourceAsStream(fileName);

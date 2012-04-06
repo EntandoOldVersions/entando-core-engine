@@ -5,13 +5,18 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	
-	<bean id="jacmsHypertextAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.CmsHypertextAttribute" parent="HypertextAttribute" />
+	<bean id="jacmsHypertextAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.CmsHypertextAttribute" parent="HypertextAttribute" >
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.HypertextAttributeManager" />
+	</bean>
 	
 	<bean id="jacmsLinkAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute" >
 		<property name="type" value="Link" />
 		<property name="handler" >
 			<bean class="com.agiletec.plugins.jacms.aps.system.services.content.parse.extraAttribute.LinkAttributeHandler" />
 		</property>
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.LinkAttributeManager" />
 	</bean>
 	
 	<bean id="jacmsResourceAttributeHandler" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.extraAttribute.ResourceAttributeHandler" >
@@ -21,14 +26,18 @@
 	<bean id="jacmsImageAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ImageAttribute" >
 		<property name="type" value="Image" />
 		<property name="handler" ref="jacmsResourceAttributeHandler" />
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
 	</bean>
 	
 	<bean id="jacmsAttachAttribute" class="com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AttachAttribute" >
 		<property name="type" value="Attach" />
 		<property name="handler" ref="jacmsResourceAttributeHandler" />
+		<property name="attributeManagerClassName" 
+			value="com.agiletec.plugins.jacms.apsadmin.content.attribute.manager.ResourceAttributeManager" />
 	</bean>
 	
-	<bean id="jacmsEntityTypeDom" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentTypeDOM" parent="baseEntityTypeDom" >
+	<bean id="jacmsEntityTypeDom" class="com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentTypeDOM" parent="baseEntityTypeDom" scope="prototype">
 		<property name="attributeTypes">
 		<map merge="true">
 			<entry key="Hypertext"><ref bean="jacmsHypertextAttribute" /></entry>

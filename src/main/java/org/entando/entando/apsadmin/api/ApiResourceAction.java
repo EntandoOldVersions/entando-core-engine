@@ -21,6 +21,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethod.HttpMethod;
@@ -33,9 +37,7 @@ import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.BaseAction;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 import org.apache.commons.beanutils.BeanComparator;
 
 /**
@@ -47,9 +49,10 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
         try {
             super.validate();
             String resourceName = this.getResourceName();
+            String namespace = this.getNamespace();
             if (null == resourceName) {
                 this.addActionError(this.getText("error.resource.invalidName"));
-            } else if (null == this.getApiCatalogManager().getApiResource(resourceName)) {
+            } else if (null == this.getApiCatalogManager().getResource(namespace, resourceName)) {
                 this.addActionError(this.getText("error.resource.invalid", new String[]{resourceName}));
             }
         } catch (Throwable t) {
@@ -115,6 +118,16 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
         this.setSchemaStream(stream);
         return SUCCESS;
     }
+	
+	public String getSchemaFilePrefix() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.getHttpMethod()).append("_");
+		if (null != this.getNamespace()) {
+			builder.append(this.getNamespace()).append("_");
+		}
+		builder.append(this.getResourceName());
+		return builder.toString();
+	}
     
     public String updateMethodStatus() {
         try {
@@ -145,7 +158,7 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     }
     
     private ApiMethod checkAndReturnMethod() throws Throwable {
-        ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+        ApiResource resource = this.getApiCatalogManager().getResource(this.getNamespace(), this.getResourceName());
         ApiMethod method = resource.getMethod(this.getHttpMethod());
         if (null == method) {
             throw new ApsSystemException("Null Method " + this.getHttpMethod() + " for resource " + this.getResourceName());
@@ -155,7 +168,7 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     
     public String updateAllMethodStatus() {
         try {
-            ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+            ApiResource resource = this.getApiCatalogManager().getResource(this.getNamespace(), this.getResourceName());
             String requiredAuthority = this.getRequest().getParameter("methodAuthority");
             String active = this.getRequest().getParameter("active");
             if (null == requiredAuthority) {
@@ -199,7 +212,7 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     
     public String resetAllMethodStatus() {
         try {
-            ApiResource resource = this.getApiCatalogManager().getApiResource(this.getResourceName());
+            ApiResource resource = this.getApiCatalogManager().getResource(this.getNamespace(), this.getResourceName());
             this.resetMethodStatus(resource.getGetMethod());
             this.resetMethodStatus(resource.getPostMethod());
             this.resetMethodStatus(resource.getPutMethod());
@@ -246,10 +259,11 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     
     public ApiResource getApiResource() {
         try {
-            return this.getApiCatalogManager().getApiResource(this.getResourceName());
+            return this.getApiCatalogManager().getResource(this.getNamespace(), this.getResourceName());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiResource", "Error extracting resource '" + this.getResourceName() + "'");
-            throw new RuntimeException("Error extracting resource '" + this.getResourceName() + "'", t);
+            ApsSystemUtils.logThrowable(t, this, "getApiResource", "Error extracting "
+					+ "resource '" + this.getResourceName() + "' namespace'" + this.getNamespace()+ "'");
+            throw new RuntimeException("Error extracting resource '" + this.getResourceName() + "' namespace'" + this.getNamespace()+ "'", t);
         }
     }
     
@@ -259,6 +273,13 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     public void setResourceName(String resourceName) {
         this._resourceName = resourceName;
     }
+	
+	public String getNamespace() {
+		return _namespace;
+	}
+	public void setNamespace(String namespace) {
+		this._namespace = namespace;
+	}
     
     public HttpMethod getHttpMethod() {
         return _httpMethod;
@@ -300,6 +321,7 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     }
     
     private String _resourceName;
+	private String _namespace;
     private ApiMethod.HttpMethod _httpMethod;
     private Boolean _methodStatus;
     

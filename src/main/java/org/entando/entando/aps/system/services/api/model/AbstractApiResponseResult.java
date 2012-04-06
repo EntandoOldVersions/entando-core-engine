@@ -29,12 +29,9 @@ public abstract class AbstractApiResponseResult implements Serializable {
     
     public abstract Object getResult();
     
-    public abstract Object getResults();
-    
     protected Object getMainResult() {
         return this._mainResult;
     }
-    
     public void setMainResult(Object mainResult) {
         this._mainResult = mainResult;
     }

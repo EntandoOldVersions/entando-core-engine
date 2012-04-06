@@ -30,6 +30,7 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.apsadmin.api.model.ApiSelectItem;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
 
 /**
  * @author E.Santoboni
@@ -57,7 +58,7 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction implements I
 				if (activeService != service.isActive() || publicService != service.isPublicService()) {
 					service.setActive(activeService);
 					service.setPublicService(publicService);
-					this.getApiCatalogManager().updateApiServiceStatus(service);
+					this.getApiCatalogManager().updateService(service);
 					this.addActionMessage(this.getText("message.service.status.updated", new String[]{serviceItem.getKey(), serviceItem.getValue()}));
 					ApsSystemUtils.getLogger().info("Updated api service status - Service Key '" + serviceItem.getKey() + "'");
 				}
@@ -88,7 +89,7 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction implements I
 	
 	private void buildServiceGroups(Map<String, List<ApiSelectItem>> groups) throws Throwable {
 		try {
-			Map<String, ApiService> serviceMap = this.getApiCatalogManager().getApiServices();
+			Map<String, ApiService> serviceMap = this.getApiCatalogManager().getServices();
 			if (null == serviceMap || serviceMap.size() == 0) return;
 			Iterator<ApiService> services = serviceMap.values().iterator();
 			while (services.hasNext()) {
@@ -122,10 +123,10 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction implements I
 		group.add(item);
 	}
 	
-	@Override
-	protected boolean includeIntoMapping(ApiMethod method) {
-		return method.isCanSpawnOthers();
-	}
+	protected boolean includeIntoMapping(ApiResource apiResource) {
+		ApiMethod GETMethod = apiResource.getGetMethod();
+        return (null != GETMethod && GETMethod.isCanSpawnOthers());
+    }
 	
 	public String getServiceGroup() {
 		return _serviceGroup;

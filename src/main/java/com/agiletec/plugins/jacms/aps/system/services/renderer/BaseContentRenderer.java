@@ -22,9 +22,17 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.renderer.BaseEntityRenderer;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
+import com.agiletec.aps.system.common.renderer.TextAttributeCharReplaceInfo;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.i18n.I18nManagerWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import java.io.StringWriter;
+import java.util.List;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
 
 /**
  * Servizio di renderizzazione contenuti.
@@ -34,13 +42,40 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 	
 	@Override
 	public String render(Content content, long modelId, String langCode, RequestContext reqCtx) {
-		String contentModel = this.getModelShape(modelId);
-		return super.render(content, contentModel, langCode, true);
+		String renderedEntity = null;
+		List<TextAttributeCharReplaceInfo> conversions = null;
+		try {
+			conversions = this.convertSpecialCharacters(content, langCode);
+			String contentModel = this.getModelShape(modelId);
+			Context velocityContext = new VelocityContext();
+			ContentWrapper contentWrapper = (ContentWrapper) this.getEntityWrapper(content);
+			contentWrapper.setRenderingLang(langCode);
+			contentWrapper.setReqCtx(reqCtx);
+			velocityContext.put(this.getEntityWrapperContextName(), contentWrapper);
+			
+			I18nManagerWrapper i18nWrapper = new I18nManagerWrapper(langCode, this.getI18nManager());
+			velocityContext.put("i18n", i18nWrapper);
+			StringWriter stringWriter = new StringWriter();
+			boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", contentModel);
+			if (!isEvaluated) {
+				throw new ApsSystemException("Error rendering content");
+			}
+			stringWriter.flush();
+			renderedEntity = stringWriter.toString();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "render", "Error rendering content");
+			renderedEntity = "";
+		} finally {
+			if (null != conversions) {
+				this.replaceSpecialCharacters(conversions);
+			}
+		}
+		return renderedEntity;
 	}
 	
 	@Override
 	protected EntityWrapper getEntityWrapper(IApsEntity entity) {
-		return new ContentWrapper((Content)entity);
+		return new ContentWrapper((Content)entity, this.getBeanFactory());
 	}
 	
 	protected String getModelShape(long modelId) {

@@ -85,7 +85,7 @@ public class CategoryActionHelper extends TreeNodeBaseActionHelper implements IC
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "buildNewCategory");
-			throw new ApsSystemException("Errore in creazione nuova categoria", t);
+			throw new ApsSystemException("Error creating new category", t);
 		}
 		return category;
 	}

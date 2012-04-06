@@ -18,9 +18,9 @@
 package org.entando.entando.aps.system.services.api.model;
 
 import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
@@ -29,23 +29,42 @@ import javax.xml.bind.annotation.XmlElementWrapper;
  */
 public abstract class AbstractApiResponse implements Serializable {
     
-    public abstract void setResult(Object result, String html);
+    public void setResult(Object result, String html) {
+        AbstractApiResponseResult responseResult = this.createResponseResultInstance();
+        responseResult.setMainResult(result);
+        responseResult.setHtml(html);
+        this.setResult(responseResult);
+    }
+    
+    protected abstract AbstractApiResponseResult createResponseResultInstance();
+    
+    @XmlElement(name = "error", required = true)
+    @XmlElementWrapper(name = "errors")
+    public List<ApiError> getErrors() {
+        return this._errors;
+    }
     
     public void addError(ApiError error) {
         if (null != error) {
-            this._errors.add(error);
+			this._errors.add(error);
         }
     }
-
+    
     public void addErrors(List<ApiError> errors) {
         if (null == errors) {
             return;
         }
-        this._errors.addAll(errors);
+		this.getErrors().addAll(errors);
     }
     
-    @XmlElement(name = "error", required = true)
-    @XmlElementWrapper(name = "errors")
-    private List<ApiError> _errors = new ArrayList<ApiError>();
+    public Object getResult() {
+        return _result;
+    }
+    protected void setResult(Object result) {
+        this._result = result;
+    }
     
+    private List<ApiError> _errors = new ArrayList<ApiError>();
+    private Object _result;
+	
 }

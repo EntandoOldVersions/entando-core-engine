@@ -155,7 +155,7 @@ public class ApsAdminBaseTestCase extends TestCase {
      */
     protected void setInitParameters(Properties params) {
     	params.setProperty("config", 
-    			"struts-default.xml,struts-plugin.xml,struts.xml,japs-struts-plugin.xml");
+    			"struts-default.xml,struts-plugin.xml,struts.xml,entando-struts-plugin.xml,japs-struts-plugin.xml");
     }
     
     /**
