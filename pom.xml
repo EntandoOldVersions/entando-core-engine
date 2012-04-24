@@ -326,7 +326,6 @@
 				<configuration>
 					<argLine>-Xms512m -Xmx1024m</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
-					<disableXmlReport>true</disableXmlReport>
 					<excludes>
 						<exclude>**/*BaseTestCase*</exclude>
 					</excludes>
