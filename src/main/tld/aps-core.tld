@@ -16,7 +16,7 @@
 		<tag-class>com.agiletec.aps.tags.ExecShowletTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Builds a page generating the output.]]></description>
 		<name>buildPage</name>
@@ -69,7 +69,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Returns the information to display.<br/>
 			This sub-tag must be used <b>only</b> in a page model, in conjunction with 'outputHeadInfo'.]]></description>
@@ -77,10 +77,10 @@
 		<tag-class>com.agiletec.aps.tags.HeadInfoPrinterTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-	
+
 	<tag>
-		<description><![CDATA[Performs the Content Negotiation, trying to serve the specified mimeType with the given charset. 
-			If the mimeType is not accepted by the User Agent it returns the 
+		<description><![CDATA[Performs the Content Negotiation, trying to serve the specified mimeType with the given charset.
+			If the mimeType is not accepted by the User Agent it returns the
 			default text/html.]]></description>
 		<name>contentNegotiation</name>
 		<tag-class>com.agiletec.aps.tags.ContentNegotiationTag</tag-class>
@@ -98,9 +98,9 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 <!-- Tag da usare esclusivamente nelle showlet -->
-	
+
 	<tag>
 		<description><![CDATA[Tag for the "Internal Servlet" functionality.<br/>
 			Publishes a function served by an internal Servlet;
@@ -119,7 +119,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Tag for the "External Framework" showlet.
 			<br/><b>DEPRECATED</b>; use "internalServlet" instead.]]></description>
@@ -127,7 +127,7 @@
 		<tag-class>com.agiletec.aps.tags.ExternalFrameworkTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Declares the information to insert in the header of the HTML page.
 			The information can be passed as an attribute or, in an indirect manner,
@@ -157,7 +157,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Build the URL to call a jsp or a functionality of a servlet defined within the system.<br/>
 			This tag can use the ParameterTag sub-tag to add url parameters.]]></description>
@@ -177,11 +177,11 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 <!-- END OF SYSTEM TAGS -->
 
 <!-- GENERAL USE TAGS-->
-	
+
 	<tag>
 		<description><![CDATA[Generates the complete URL of a portal page.<br/>
 			The URL returned is either returned (and rendered) or placed in the given variable.<br/>
@@ -214,14 +214,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Return the list of the system categories on SelectItem objects.]]></description>
 		<name>categories</name>
 		<tag-class>com.agiletec.aps.tags.CategoriesTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description><![CDATA[The style of the single select item. Currently it can be 'default' (single title node), 
+			<description><![CDATA[The style of the single select item. Currently it can be 'default' (single title node),
 				'full' (title with all parents) or 'prettyFull' (title with all parents in form of '..').
 				The default when none is given is 'default'.]]></description>
 			<name>titleStyle</name>
@@ -244,10 +244,10 @@
 			<description><![CDATA[The root of the categories to show. The default is the system root categories]]></description>
 			<name>root</name>
 			<required>no</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[This is the sub-tag of the "url" tag.<br/>
 			Adds a parameter in the URL query string generated.
@@ -263,7 +263,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Generates through successive iterations the so called "navigation" list.<br/>
 			For every target/page being iterated (inserted in the page context) are made
@@ -286,7 +286,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Returns the requested information held by the current page bean.]]></description>
 		<name>currentPage</name>
@@ -327,10 +327,10 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Returns the information of the specified page.
-			This tag can use the sub-tag "ParameterTag" to add url parameters 
+			This tag can use the sub-tag "ParameterTag" to add url parameters
 			if the info attribute is set to 'url'.]]></description>
 		<name>pageInfo</name>
 		<tag-class>com.agiletec.aps.tags.PageInfoTag</tag-class>
@@ -374,7 +374,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[This tag can be used to parameterise other tags.<br/>
 			The parameter value can be added through the 'value' attribute or the body tag.
@@ -396,7 +396,7 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description>
 			<![CDATA[Returns informations about the showlet where the tag resides.
@@ -443,7 +443,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Return the string associated to the given key in the specified language.
 			This string is either returned (and rendered) or can be optionally placed
@@ -478,7 +478,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[List pager.]]></description>
 		<name>pager</name>
@@ -533,7 +533,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Returns URL of the resources.]]></description>
 		<name>resourceURL</name>
@@ -553,14 +553,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Extension of the ResourceURL tag. It returns the URL of the css files.]]></description>
 		<name>cssURL</name>
 		<tag-class>com.agiletec.aps.tags.CssURLTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Extension of the ResourceURL tag. It returns the URL of the images to display
 			as static content outside the cms.]]></description>
@@ -568,7 +568,7 @@
 		<tag-class>com.agiletec.aps.tags.ImgURLTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
-		
+
 	<tag>
 		<description><![CDATA[Toggles the visibility of the elements contained in its body, depending on user permissions.]]></description>
 		<name>ifauthorized</name>
@@ -593,7 +593,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	
+
 	<tag>
 		<description><![CDATA[Returns the information of the desired system parameter.]]></description>
 		<name>info</name>
@@ -605,7 +605,7 @@
 				"startLang" returns the code of start language of web browsing<br/>
 				"defaultLang" returns the code of default language<br/>
 				"currentLang" returns the code of current language<br/>
-				"langs" returns the list of the languages defined in the system<br/> 
+				"langs" returns the list of the languages defined in the system<br/>
 				"systemParam" returns the value of the system param specified in the "paramName" attribute.]]>
 			</description>
 			<name>key</name>
@@ -632,8 +632,8 @@
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
-	</tag>	
-	
-<!-- GENERAL USE TAG END -->  
+	</tag>
+
+<!-- GENERAL USE TAG END -->
 
 </taglib>
