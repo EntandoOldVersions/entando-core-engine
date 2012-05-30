@@ -103,7 +103,7 @@
 			<interceptor-ref name="entandoValidationStack" />
 		</action>
 
-		<action name="configureMyShortcutAjax" class="myShortcutConfigAction">
+		<action name="configureMyShortcutAjax" class="myShortcutConfigAction" method="joinMyShortcut" >
 			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/template/mainBody-shortcut-configure-result-ajax.jsp</result>
 			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/template/mainBody-shortcut-configure-result-ajax.jsp</result>
 			<interceptor-ref name="entandoValidationStack" />
