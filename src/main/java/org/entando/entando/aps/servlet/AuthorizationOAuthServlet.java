@@ -115,7 +115,7 @@ public class AuthorizationOAuthServlet extends HttpServlet {
                 && accessor.consumer.callbackURL.length() > 0) {
             callback = accessor.consumer.callbackURL;
         }
-       if( "none".equals(callback) || "oob".equals(callback) ) {
+        if( "none".equals(callback) || "oob".equals(callback) ) {
             response.setContentType("text/plain");
             PrintWriter out = response.getWriter();
             out.println("You have successfully authorized '" 
