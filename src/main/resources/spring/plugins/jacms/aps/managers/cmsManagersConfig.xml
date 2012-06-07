@@ -25,6 +25,7 @@
                 </entry>
             </map>
         </property>
+        <property name="imageMagickEnabled"><value>${imagemagick.enabled}</value></property>
     </bean>
     
     <bean id="jacmsContentModelManager" class="com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelManager" 

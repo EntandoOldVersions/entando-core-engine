@@ -56,6 +56,11 @@ public class ResourceManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
+            if (!this.checkConfig()) {
+            
+                throw new RuntimeException("Verify that ImageMagick is correclty installed.");
+                
+            }
     	ApsSystemUtils.getLogger().config(this.getClass().getName() + 
         		": initialized " + this._resourceTypes.size() + " resource types");
 	}
@@ -417,5 +422,51 @@ public class ResourceManager extends AbstractService
     private IResourceDAO _resourceDao;
     
     private ICategoryManager _categoryManager;
+    
+    private boolean checkConfig() {
+        if (this.isImageMagickEnabled()) {
+            String line;
+            Process p;
+            try {
+                p = Runtime.getRuntime().exec(CMD_FOR_THE_CHECK);
+            } catch (IOException ex) {
+                ApsSystemUtils.logThrowable(ex, this, "checkConfig", " Image Magick is enabled but not installed in the OS " + this.isImageMagickEnabled());
+                return false;
+
+}
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            try {
+                while ((line = input.readLine()) != null) {
+                    if (line.contains(STRING_TO_CHECK_ON_OUT)) {
+                        ApsSystemUtils.getLogger().finest(" Image Magick is enabled and installed in the OS " + this.isImageMagickEnabled());
+                        input.close();
+                        return true;
+                    }
+                }
+
+                input.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ApsSystemUtils.getLogger().finest(" Image Magick is enabled but not installed in the OS " + this.isImageMagickEnabled());
+            return false;
+        }
+        ApsSystemUtils.getLogger().finest(" Image Magick is not enabled " + this.isImageMagickEnabled());
+        return true;
+    }
+
+    public void setImageMagickEnabled(boolean imageMagickEnabled) {
+        this._imageMagickEnabled = imageMagickEnabled;
+    }
+    
+    public boolean isImageMagickEnabled() {
+        return _imageMagickEnabled;
+    }
+    
+    private boolean _imageMagickEnabled;
+        
+    private final static String STRING_TO_CHECK_ON_OUT = "ImageMagick";
+    private final static String CMD_FOR_THE_CHECK = "convert -version";
+    
     
 }
