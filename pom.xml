@@ -208,6 +208,16 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin> 
+				<groupId>net.sourceforge.maven-taglib</groupId> 
+				<artifactId>maven-taglib-plugin</artifactId> 
+				<version>2.4</version> 
+				<configuration> 
+					<tldDocDir>target/site/tlddocs</tldDocDir>
+					<srcDir>src/main/tld/</srcDir>
+					<title>Core Engine tag library documentation</title>
+				</configuration>
+			</plugin>			
 		</plugins>
 		<pluginManagement>
 			<plugins>
