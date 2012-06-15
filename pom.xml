@@ -374,9 +374,17 @@
 				<version>2.4</version> 
 				<configuration> 
 					<tldDocDir>${project.reporting.outputDirectory}/tlddocs</tldDocDir>
-					<srcDir>src/main/tld/</srcDir>
+					<srcDir>${project.basedir}/src/main/tld/</srcDir>
 					<title>Core Engine tag library documentation</title>
 				</configuration>
+				<executions>
+					<execution>
+						<phase>site</phase>
+						<goals>
+							<goal>taglibdoc</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>			
 		</plugins>
 		<pluginManagement>
@@ -751,66 +759,66 @@
 			<version>2.2</version>
 			<scope>provided</scope>
 		</dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                    <version>2.5.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-transports-http</artifactId>
-                    <version>2.5.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>jsr311-api</artifactId>
-                    <version>1.1.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-bundle</artifactId>
-                    <version>2.5.1</version>
+				<dependency>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-frontend-jaxws</artifactId>
+					<version>2.5.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-rt-transports-http</artifactId>
+					<version>2.5.1</version>
+				</dependency>
+				<dependency>
+					<groupId>javax.ws.rs</groupId>
+					<artifactId>jsr311-api</artifactId>
+					<version>1.1.1</version>
+				</dependency>
+				<dependency>
+					<groupId>org.apache.cxf</groupId>
+					<artifactId>cxf-bundle</artifactId>
+					<version>2.5.1</version>
 					<exclusions>
 						<exclusion>
 							<groupId>org.eclipse.jetty</groupId>
 							<artifactId>jetty-server</artifactId>
 						</exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-continuation</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-http</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-io</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-util</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-security</artifactId>
-                                                </exclusion>
+												<exclusion>
+														<groupId>org.eclipse.jetty</groupId>
+														<artifactId>jetty-continuation</artifactId>
+												</exclusion>
+												<exclusion>
+														<groupId>org.eclipse.jetty</groupId>
+														<artifactId>jetty-http</artifactId>
+												</exclusion>
+												<exclusion>
+														<groupId>org.eclipse.jetty</groupId>
+														<artifactId>jetty-io</artifactId>
+												</exclusion>
+												<exclusion>
+														<groupId>org.eclipse.jetty</groupId>
+														<artifactId>jetty-util</artifactId>
+												</exclusion>
+												<exclusion>
+														<groupId>org.eclipse.jetty</groupId>
+														<artifactId>jetty-security</artifactId>
+												</exclusion>
 					</exclusions>	
-                </dependency>
-                
-                <dependency>
-                        <groupId>net.oauth.core</groupId>
-                        <artifactId>oauth</artifactId>
-                        <version>20100527</version>
-                        <type>jar</type>
-                </dependency>
-                <dependency>
-                        <groupId>net.oauth.core</groupId>
-                        <artifactId>oauth-provider</artifactId>
-                        <version>20100527</version>
-                        <type>jar</type>
-                </dependency>
-                
+				</dependency>
+				
+				<dependency>
+						<groupId>net.oauth.core</groupId>
+						<artifactId>oauth</artifactId>
+						<version>20100527</version>
+						<type>jar</type>
+				</dependency>
+				<dependency>
+						<groupId>net.oauth.core</groupId>
+						<artifactId>oauth-provider</artifactId>
+						<version>20100527</version>
+						<type>jar</type>
+				</dependency>
+				
 	</dependencies>
 	<reporting>
 		<plugins>
