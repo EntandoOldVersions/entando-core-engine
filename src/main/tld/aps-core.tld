@@ -6,9 +6,9 @@
   <short-name>wp</short-name>
   <uri>/aps-core</uri>
 
-<!-- SPECIAL SYSTEM TAG -->
+<!-- SYSTEM TAGS //start -->
 
-<!-- Tag da usare esclusivamente su "main.jsp" -->
+<!-- Use these tags only within "main.jsp" -->
 
 	<tag>
 		<description><![CDATA[Triggers the preliminary execution of the showlets.<br/>It can be used <b><b>only</b></b> in the main.jsp.]]></description>
@@ -24,7 +24,7 @@
 		<body-content>empty</body-content>
 	</tag>
 
-<!-- Tag da usare esclusivamente sui modelli di pagina -->
+<!-- Use these tags only within page models -->
 
 	<tag>
 		<description><![CDATA[Defines the position of inclusion of a showlet.<br/>
@@ -99,7 +99,7 @@
 		</attribute>
 	</tag>
 
-<!-- Tag da usare esclusivamente nelle showlet -->
+<!-- Showlet Tags -->
 
 	<tag>
 		<description><![CDATA[Tag for the "Internal Servlet" functionality.<br/>
@@ -178,9 +178,9 @@
 		</attribute>
 	</tag>
 
-<!-- END OF SYSTEM TAGS -->
+<!-- SYSTEM TAGS //end -->
 
-<!-- GENERAL USE TAGS-->
+<!-- GENERAL USE TAGS //start -->
 
 	<tag>
 		<description><![CDATA[Generates the complete URL of a portal page.<br/>
@@ -634,6 +634,6 @@
 		</attribute>
 	</tag>
 
-<!-- GENERAL USE TAG END -->
+<!-- GENERAL USE TAGS //end --> 
 
 </taglib>
