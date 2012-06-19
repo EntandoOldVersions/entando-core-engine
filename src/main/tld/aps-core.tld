@@ -488,7 +488,7 @@
 			<description><![CDATA[The maximum value for each object group.]]></description>
 			<name>max</name>
 			<required>no</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 		<description><![CDATA[Name of the list as found in the request.]]></description>
