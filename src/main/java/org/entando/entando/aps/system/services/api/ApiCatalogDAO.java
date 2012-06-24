@@ -40,7 +40,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
-
+	
+	@Override
     public void loadApiStatus(Map<String, ApiResource> resources) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -84,7 +85,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(res, stat, conn);
         }
     }
-
+	
+    @Override
     public void resetApiStatus(String resourceCode, HttpMethod httpMethod) {
         Connection conn = null;
         try {
@@ -100,7 +102,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeConnection(conn);
         }
     }
-
+	
     protected void resetApiStatus(String resourceCode, HttpMethod httpMethod, Connection conn) {
         PreparedStatement stat = null;
         try {
@@ -116,6 +118,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void saveApiStatus(ApiMethod method) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -144,10 +147,12 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
     }
 	
     @Deprecated
+    @Override
     public Map<String, ApiService> loadServices(Map<String, ApiMethod> methods) {
         return this.loadServices(new ArrayList<ApiMethod>(methods.values()));
     }
 	
+    @Override
     public Map<String, ApiService> loadServices(List<ApiMethod> methods) {
         Map<String, ApiMethod> methodMap = new HashMap<String, ApiMethod>();
         for (int i = 0; i < methods.size(); i++) {
@@ -210,6 +215,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void addService(ApiService service) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -246,6 +252,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void updateService(ApiService service) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -282,6 +289,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void deleteService(String key) {
         Connection conn = null;
         PreparedStatement stat = null;
