@@ -32,7 +32,7 @@ public interface IApiCatalogDAO {
     
     public void loadApiStatus(Map<String, ApiResource> resources);
     
-    public void resetApiStatus(String resourceName, ApiMethod.HttpMethod httpMethod);
+    public void resetApiStatus(String resourceCode, ApiMethod.HttpMethod httpMethod);
     
     public void saveApiStatus(ApiMethod method);
     
@@ -42,9 +42,9 @@ public interface IApiCatalogDAO {
     public Map<String, ApiService> loadServices(List<ApiMethod> methods);
     
     public void addService(ApiService service);
-
+	
     public void updateService(ApiService service);
-
+	
     public void deleteService(String key);
     
 }
