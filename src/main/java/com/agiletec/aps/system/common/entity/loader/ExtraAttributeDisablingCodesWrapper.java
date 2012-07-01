@@ -34,7 +34,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeSupportObject {
 	
 	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		if (!((IManager) entityManager).getName().equals(((IManager) this.getEntityManagerDest()).getName())) {
+		String managerName = ((IManager) entityManager).getName();
+		if (!managerName.equals(super.getEntityManagerNameDest())) {
 			return;
 		}
 		try {
