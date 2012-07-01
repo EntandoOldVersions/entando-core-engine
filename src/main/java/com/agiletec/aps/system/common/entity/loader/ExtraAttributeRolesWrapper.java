@@ -35,7 +35,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObject {
 	
 	public void executeLoading(Map<String, AttributeRole> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		if (!((IManager) entityManager).getName().equals(((IManager) this.getEntityManagerDest()).getName())) {
+		String managerName = ((IManager) entityManager).getName();
+		if (!managerName.equals(super.getEntityManagerNameDest())) {
 			return;
 		}
 		AttributeRoleDOM dom = new AttributeRoleDOM();

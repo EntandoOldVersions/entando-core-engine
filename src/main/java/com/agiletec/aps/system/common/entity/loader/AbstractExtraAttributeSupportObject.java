@@ -25,6 +25,7 @@ import javax.servlet.ServletContext;
 import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -60,11 +61,21 @@ public abstract class AbstractExtraAttributeSupportObject implements ServletCont
 		return xml;
 	}
 	
-	protected IEntityManager getEntityManagerDest() {
-		return _entityManagerDest;
-	}
+	/**
+	 * (**DEPRECATED since Entando 3.0.1** Use setEntityManagerNameDest) Set the entity manager destination.
+	 * @param entityManagerDest The entity manager destination.
+	 * @deprecated Since Entando 3.0.1. To avoid circolar references. Use setEntityManagerNameDest
+	 */
 	public void setEntityManagerDest(IEntityManager entityManagerDest) {
-		this._entityManagerDest = entityManagerDest;
+		String name = ((IManager) entityManagerDest).getName();
+		this.setEntityManagerNameDest(name);
+	}
+	
+	protected String getEntityManagerNameDest() {
+		return _entityManagerNameDest;
+	}
+	public void setEntityManagerNameDest(String entityManagerNameDest) {
+		this._entityManagerNameDest = entityManagerNameDest;
 	}
 	
 	protected String getDefsFilePath() {
@@ -79,7 +90,7 @@ public abstract class AbstractExtraAttributeSupportObject implements ServletCont
 		this._servletContext = servletContext;
 	}
 	
-	private IEntityManager _entityManagerDest;
+	private String _entityManagerNameDest;
 	private String _defsFilePath;
 	
 	private ServletContext _servletContext;
