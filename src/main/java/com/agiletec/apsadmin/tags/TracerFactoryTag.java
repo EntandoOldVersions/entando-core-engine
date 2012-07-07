@@ -27,7 +27,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
