@@ -181,6 +181,8 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		this.setModel(pageToEdit.getModel().getCode());
 		this.setShowable(pageToEdit.isShowable());
 		this.setUseExtraTitles(pageToEdit.isUseExtraTitles());
+		this.setCharset(pageToEdit.getCharset());
+		this.setMimeType(pageToEdit.getMimeType());
 	}
 	
 	@Override
@@ -204,6 +206,8 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			this.setShowable(copiedPage.isShowable());
 			this.setUseExtraTitles(copiedPage.isUseExtraTitles());
 			this.setParentPageCode(selectedNode);
+			this.setCharset(copiedPage.getCharset());
+			this.setMimeType(copiedPage.getMimeType());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "paste");
 			return FAILURE;
@@ -264,6 +268,18 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 					this.getHelper().buildCode(page.getTitle(this.getLangManager().getDefaultLang().getCode()), "page", 25);
 				page.setCode(pageCode);
 			}
+			String charset = this.getCharset();
+			if (null != charset && charset.trim().length() > 0) {
+				page.setCharset(charset);
+			} else {
+				page.setCharset(null);
+			}
+			String mimetype = this.getMimeType();
+			if (null != mimetype && mimetype.trim().length() > 0) {
+				page.setMimeType(mimetype);
+			} else {
+				page.setMimeType(null);
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "buildNewPage");
 			throw new ApsSystemException("Error building new page", t);
@@ -289,6 +305,18 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			}
 			page.setTitles(this.getTitles());
 			page.setExtraGroups(this.getExtraGroups());
+			String charset = this.getCharset();
+			if (null != charset && charset.trim().length() > 0) {
+				page.setCharset(charset);
+			} else {
+				page.setCharset(null);
+			}
+			String mimetype = this.getMimeType();
+			if (null != mimetype && mimetype.trim().length() > 0) {
+				page.setMimeType(mimetype);
+			} else {
+				page.setMimeType(null);
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getUpdatedPage");
 			throw new ApsSystemException("Error updating page", t);
@@ -463,6 +491,21 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	public void setStrutsAction(int strutsAction) {
 		this._strutsAction = strutsAction;
 	}
+	
+	public String getCharset() {
+		return _charset;
+	}
+	public void setCharset(String charset) {
+		this._charset = charset;
+	}
+	
+	public String getMimeType() {
+		return _mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this._mimeType = mimeType;
+	}
+	
 	public ApsProperties getTitles() {
 		return _titles;
 	}
@@ -489,6 +532,32 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	}
 	protected void setReferences(Map references) {
 		this._references = references;
+	}
+	
+	public String[] getAllowedCharsets() {
+		if (null == this.getAllowedCharsetsCSV()) {
+			return new String[0];
+		}
+		return this.getAllowedCharsetsCSV().split(",");
+	}
+	protected String getAllowedCharsetsCSV() {
+		return _allowedCharsetsCSV;
+	}
+	public void setAllowedCharsetsCSV(String allowedCharsetsCSV) {
+		this._allowedCharsetsCSV = allowedCharsetsCSV;
+	}
+	
+	public String[] getAllowedMimeTypes() {
+		if (null == this.getAllowedMimeTypesCSV()) {
+			return new String[0];
+		}
+		return this.getAllowedMimeTypesCSV().split(",");
+	}
+	protected String getAllowedMimeTypesCSV() {
+		return _allowedMimeTypesCSV;
+	}
+	public void setAllowedMimeTypesCSV(String allowedMimeTypesCSV) {
+		this._allowedMimeTypesCSV = allowedMimeTypesCSV;
 	}
 	
 	protected IPageActionHelper getHelper() {
@@ -518,11 +587,17 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	private boolean _useExtraTitles;
 	private int _strutsAction;
 	
+	private String _mimeType;
+	private String _charset;
+	
 	private String _nodeToBeDelete;
 	
 	private IPage _pageToShow;
 	
 	private Map _references;
+	
+	private String _allowedMimeTypesCSV;
+	private String _allowedCharsetsCSV;
 	
 	private IPageModelManager _pageModelManager;
 	private IPageActionHelper _helper;

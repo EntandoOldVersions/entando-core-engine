@@ -32,6 +32,8 @@
 			class="com.agiletec.apsadmin.portal.PageAction" parent="abstractPortalAction">
 		<property name="pageModelManager" ref="PageModelManager" />
 		<property name="helper" ref="pageActionHelper" />
+		<property name="allowedMimeTypesCSV"><value>${page.mimeType.allowedValues}</value></property>
+		<property name="allowedCharsetsCSV"><value>${page.charset.allowedValues}</value></property>
 	</bean>
 	
 	<bean id="pageConfigAction" scope="prototype" 

@@ -95,4 +95,16 @@ public interface IPage extends ITreeNode {
 	 */
 	public Showlet[] getShowlets();
 	
+	/**
+	 * Return the mimetype configured for this page.
+	 * @return the mimetype configured for this page.
+	 */
+	public String getMimeType();
+	
+	/**
+	 * Return the charset configured for this page.
+	 * @return the charset configured for this page.
+	 */
+	public String getCharset();
+	
 }
