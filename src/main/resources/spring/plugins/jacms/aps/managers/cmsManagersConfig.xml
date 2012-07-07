@@ -153,7 +153,7 @@
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
     
-    <!-- API -->
+    <!-- APIs -->
     
     <bean id="jacmsApiContentInterface" 
 			class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentInterface" >
@@ -171,6 +171,11 @@
     </bean>
     
     <bean id="jacmsApiContentTypeInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentTypeInterface" >
+        <property name="contentManager" ref="jacmsContentManager" />
+        <property name="contentModelManager" ref="jacmsContentModelManager" />
+    </bean>
+    
+    <bean id="jacmsApiContentModelInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentModelInterface" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
     </bean>

@@ -34,6 +34,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -58,11 +59,9 @@ public class ResourceWardenServlet extends HttpServlet {
 		if (log.isLoggable(Level.FINEST)) {
 			log.finest("Request:" + request.getRequestURI());
 		}
-		
 		//Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
 		String[] uriSegments = request.getRequestURI().split("/");
 		int segments = uriSegments.length;
-		
 		//CONTROLLO ASSOCIAZIONE RISORSA A CONTENUTO
 		int indexGuardian = 0;
 		String checkContentAssociazion = uriSegments[segments-2];
@@ -70,12 +69,12 @@ public class ResourceWardenServlet extends HttpServlet {
 			// LA Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/<REFERENCED_RESOURCE_INDICATOR>/<CONTENT_ID>
 			indexGuardian = 2;
 		}
-		
 		String resId = uriSegments[segments-3-indexGuardian];
-		
 		UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		if (currentUser == null) return;
-		
+		if (currentUser == null) {
+			IUserManager userManager = (IUserManager) ApsWebApplicationUtils.getBean(SystemConstants.USER_MANAGER, request);
+			currentUser = userManager.getGuestUser();
+		}
 		boolean isAuthForProtectedRes = false;
 		if (indexGuardian != 0) {
 			if (this.isAuthOnProtectedRes(currentUser, resId, uriSegments[segments-1], request)) {

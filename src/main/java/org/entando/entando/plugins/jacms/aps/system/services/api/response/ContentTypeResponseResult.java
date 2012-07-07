@@ -27,6 +27,7 @@ import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBConte
  */
 public class ContentTypeResponseResult extends AbstractApiResponseResult {
     
+    @Override
     @XmlElement(name = "contentType", required = false)
     public JAXBContentType getResult() {
         return (JAXBContentType) this.getMainResult();
