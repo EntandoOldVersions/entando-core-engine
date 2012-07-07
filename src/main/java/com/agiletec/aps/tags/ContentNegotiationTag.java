@@ -17,26 +17,31 @@
 */
 package com.agiletec.aps.tags;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * Performs the Content Negotiation.
  * Checks whether the request Mime-type is accepted by the user Agent, eventually declaring it.
  * If the Mime-Type is not accepted by the User Agent then the default text/html is declared.
  * The given charset is appended to the declaration
- * 
  * @author William Ghelfi
  */
 public class ContentNegotiationTag extends TagSupport {
 	
+	@Override
 	public int doStartTag() throws JspException {
 		try {
-			boolean isAcceptedMimeType = isAcceptedMimeType(this.getMimeType());
+			boolean isAcceptedMimeType = this.isAcceptedMimeType();
 			if (!isAcceptedMimeType) {
 				this.setMimeType(ContentNegotiationTag.DEFAULT_MIMETYPE);
 			}
@@ -51,26 +56,41 @@ public class ContentNegotiationTag extends TagSupport {
 	 * Declares the correct contentType as resulted from the Content Negotiation
 	 * @see javax.servlet.jsp.tagext.Tag#doEndTag()
 	 */
+	@Override
 	public int doEndTag() throws JspException {
+		ServletRequest request = this.pageContext.getRequest();
+		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		ServletResponse response = this.pageContext.getResponse();
-		StringBuffer contentType = new StringBuffer(this.getMimeType());
-		contentType.append("; charset=");
-		contentType.append(this.getCharset());
-		response.setContentType(contentType.toString());
+		try {
+			IPage page = null;
+			if (null != reqCtx) {
+				page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+			}
+			StringBuilder contentType = new StringBuilder(this.getMimeType());
+			contentType.append("; charset=");
+			String charset = (null != page && null != page.getCharset() && page.getCharset().trim().length() > 0) ? page.getCharset() : this.getCharset();
+			contentType.append(charset);
+			response.setContentType(contentType.toString());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			throw new JspException("Error detected while setting content type", t);
+		}
 		return EVAL_PAGE;
 	}
 	
+	@Override
 	public void release() {
 		this._mimeType = null;
 		this._charset = null;
 	}
-
+	
 	public String getMimeType() {
 		return _mimeType;
 	}
 	public void setMimeType(String mimeType) {
 		this._mimeType = mimeType;
 	}
+	
 	public String getCharset() {
 		return _charset;
 	}
@@ -78,12 +98,30 @@ public class ContentNegotiationTag extends TagSupport {
 		this._charset = charset;
 	}
 	
-	private boolean isAcceptedMimeType(String mimeType) {
+	private boolean isAcceptedMimeType() throws Throwable {
+		HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
+		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		boolean isAcceptedMimeType = false;
-		HttpServletRequest request =  (HttpServletRequest) this.pageContext.getRequest();
-		String header = request.getHeader("accept");
-		if (null != header) {
-			isAcceptedMimeType = (header.indexOf(mimeType) >= 0);
+		try {
+			String header = request.getHeader("accept");
+			if (null != header) {
+				if (null != reqCtx) {
+					IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+					String customMimeType = (null != page.getMimeType() && page.getMimeType().trim().length() > 0) ? page.getMimeType() : null;
+					if (null != customMimeType) {
+						isAcceptedMimeType = (header.indexOf(page.getMimeType()) >= 0);
+						if (isAcceptedMimeType) {
+							this.setMimeType(page.getMimeType());
+							return true;
+						}
+					}
+				}
+				String mimeType = this.getMimeType();
+				isAcceptedMimeType = (header.indexOf(mimeType) >= 0);
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "isAcceptedMimeType");
+			throw new ApsSystemException("Error detected while verifying mimetype", t);
 		}
 		return isAcceptedMimeType;
 	}
