@@ -162,5 +162,53 @@
 			</relatedShowlet>
 		</method>
     </resource>
+	
+	<resource name="contentModels" namespace="jacms">
+        <description>Returns a list of content models</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Returns a list of content models, composed using the specified filters.</description>
+            <springBean name="jacmsApiContentModelInterface" method="getModels" />
+            <parameters>
+                <parameter key="contentType" required="false">
+					<description>The key of a content type of the models to return (Example: CNG, NEW, EVN...).</description>
+				</parameter>
+            </parameters>
+        </method>
+	</resource>
+	
+    <resource name="contentModel" namespace="jacms">
+        <description>The rappresentation of the content model</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a content model</description>
+            <springBean name="jacmsApiContentModelInterface" method="getModel" />
+            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ContentModelResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the model to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add a content model</description>
+            <springBean name="jacmsApiContentModelInterface" method="addModel" />
+            <expectedType>com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update a content model</description>
+            <springBean name="jacmsApiContentModelInterface" method="updateModel" />
+            <expectedType>com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete a content model</description>
+            <springBean name="jacmsApiContentModelInterface" method="deleteModel" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the type to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
     
 </apiMethodDefinitions>
