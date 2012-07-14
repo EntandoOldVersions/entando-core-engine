@@ -31,19 +31,21 @@ import com.agiletec.aps.system.services.category.Category;
  */
 public class BaseResourceDataBean implements ResourceDataBean {
 	
-	@Override
-	public String getResourceId() {
-		return _resourceId;
-	}
-	public void setResourceId(String resourceId) {
-		this._resourceId = resourceId;
-	}
+	public BaseResourceDataBean() {}
 	
 	public BaseResourceDataBean(File file) {
 		if (null == file) {
 			throw new RuntimeException("Null File");
 		}
 		this.setFile(file);
+	}
+	
+	@Override
+	public String getResourceId() {
+		return _resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this._resourceId = resourceId;
 	}
 	
 	@Override

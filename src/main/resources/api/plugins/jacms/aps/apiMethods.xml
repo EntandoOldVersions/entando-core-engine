@@ -1,4 +1,6 @@
 <apiMethodDefinitions>
+	
+	<!-- ************** CONTENTS (** DEPRECATED METHODS **) ************** -->
     
     <method name="getContents" active="true" canSpawnOthers="true">
         <source pluginCode="jacms">plugins</source>
@@ -45,7 +47,9 @@
             <mapParameter showlet="modelId" method="modelId" />
         </relatedShowlet>
     </method>
-    
+	
+	<!-- ************** CONTENT TYPES ************** -->
+	
     <resource name="contentType" namespace="jacms">
         <description>The rappresentation of the content type</description>
         <source pluginCode="jacms">plugins</source>
@@ -79,6 +83,8 @@
             </parameters>
         </method>
     </resource>
+	
+	<!-- ************** CONTENTS ************** -->
     
     <resource name="content" namespace="jacms">
         <description>The rappresentation of the content</description>
@@ -163,6 +169,8 @@
 		</method>
     </resource>
 	
+	<!-- ************** CONTENT MODELS ************** -->
+	
 	<resource name="contentModels" namespace="jacms">
         <description>Returns a list of content models</description>
         <source pluginCode="jacms">plugins</source>
@@ -210,5 +218,117 @@
             </parameters>
         </method>
     </resource>
+	
+	<!-- ************** IMAGE RESOURCE ************** -->
     
+    <resource name="image" namespace="jacms">
+        <description>The rappresentation of an image resource</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true">
+            <description>Return an image resource</description>
+            <springBean name="jacmsApiResouceInterface" method="getImage" />
+            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ResourceResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the image resource to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Add an image resource</description>
+            <springBean name="jacmsApiResouceInterface" method="addImage" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Update an image resource</description>
+            <springBean name="jacmsApiResouceInterface" method="updateImage" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Delete an image resource</description>
+            <springBean name="jacmsApiResouceInterface" method="deleteImage" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the image resource to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="images" namespace="jacms">
+        <description>Returns a list of id of image resource, composed using the specified filters.</description>
+        <source pluginCode="jacms">plugins</source>
+		<method httpMethod="GET" active="true" canSpawnOthers="true">
+			<springBean name="jacmsApiResouceInterface" method="getImages" />
+			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<parameters>
+				<parameter key="description" required="false">
+					<description>The description (or its part)</description>
+				</parameter>
+				<parameter key="filename" required="false">
+					<description>The filename (or its part)</description>
+				</parameter>
+				<parameter key="category" required="false">
+					<description>The category code</description>
+				</parameter>
+			</parameters>
+		</method>
+    </resource>
+	
+	<!-- ************** IMAGE RESOURCE ************** -->
+	
+    <resource name="document" namespace="jacms">
+        <description>The rappresentation of a document resource</description>
+        <source pluginCode="jacms">plugins</source>
+        <method httpMethod="GET" active="true" canSpawnOthers="true">
+            <description>Return a document resource</description>
+            <springBean name="jacmsApiResouceInterface" method="getDocument" />
+            <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ResourceResponse</responseClass>
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The id of the document resource to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Add a document resource</description>
+            <springBean name="jacmsApiResouceInterface" method="addDocument" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Update a document resource</description>
+            <springBean name="jacmsApiResouceInterface" method="updateDocument" />
+            <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="manageResources">
+            <description>Delete a document resource</description>
+            <springBean name="jacmsApiResouceInterface" method="deleteDocument" />
+            <parameters>
+                <parameter key="id" required="true">
+                    <description>The Id of the document resource to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="documents" namespace="jacms">
+        <description>Returns a list of id of document resource, composed using the specified filters.</description>
+        <source pluginCode="jacms">plugins</source>
+		<method httpMethod="GET" active="true" canSpawnOthers="true">
+			<springBean name="jacmsApiResouceInterface" method="getDocuments" />
+			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<parameters>
+				<parameter key="description" required="false">
+					<description>The description (or its part)</description>
+				</parameter>
+				<parameter key="filename" required="false">
+					<description>The filename (or its part)</description>
+				</parameter>
+				<parameter key="category" required="false">
+					<description>The category code</description>
+				</parameter>
+			</parameters>
+		</method>
+    </resource>
+	
 </apiMethodDefinitions>

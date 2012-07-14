@@ -21,6 +21,8 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
+import java.io.File;
+
 /**
  * Classe astratta di base per l'implementazione 
  * di oggetti Risorsa composti da una singola istanza.
@@ -38,6 +40,17 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	public boolean isMultiInstance() {
     	return false;
     }
+    
+	@Override
+	public File getFile() {
+		ResourceInstance instance = this.getInstance();
+    	String filePath = (this.getDiskFolder() + instance.getFileName());
+		File file = new File(filePath);
+		if (file.exists()) {
+			return file;
+		}
+    	return null;
+	}
     
 	@Override
 	public void deleteResourceInstances() throws ApsSystemException {
