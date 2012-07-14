@@ -155,8 +155,7 @@
     
     <!-- APIs -->
     
-    <bean id="jacmsApiContentInterface" 
-			class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentInterface" >
+    <bean id="jacmsApiContentInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentInterface" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
         <property name="userManager" ref="UserManager" />
@@ -178,6 +177,15 @@
     <bean id="jacmsApiContentModelInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentModelInterface" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
+    </bean>
+    
+    <bean id="jacmsApiResouceInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiResourceInterface" >
+        <property name="userManager" ref="UserManager" />
+		<property name="groupManager" ref="GroupManager" />
+		<property name="categoryManager" ref="CategoryManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
+        <property name="resourceManager" ref="jacmsResourceManager" />
+		<property name="authorizationManager" ref="AuthorizationManager"/>
     </bean>
     
 </beans>

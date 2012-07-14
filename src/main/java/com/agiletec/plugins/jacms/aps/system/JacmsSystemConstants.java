@@ -120,4 +120,8 @@ public class JacmsSystemConstants {
 	
 	public static final String CONTENT_METADATA_DATE_FORMAT = "yyyyMMddHHmmss";
 	
+	public static final String RESOURE_ATTACH_CODE = "Attach";
+	
+	public static final String RESOURE_IMAGE_CODE = "Image";
+	
 }
