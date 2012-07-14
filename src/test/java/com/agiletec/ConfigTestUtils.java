@@ -140,9 +140,9 @@ public class ConfigTestUtils {
 	protected String[] getSpringConfigFilePaths() {
     	String[] filePaths = new String[5];
 		filePaths[0] = "classpath:spring/systemConfig.xml";
-		filePaths[1] = "classpath*:spring/aps/managers/**/**.xml";
+		filePaths[1] = "classpath*:spring/aps/**/**.xml";
 		filePaths[2] = "classpath*:spring/apsadmin/**/**.xml";
-		filePaths[3] = "classpath*:spring/plugins/**/aps/managers/**/**.xml";
+		filePaths[3] = "classpath*:spring/plugins/**/aps/**/**.xml";
 		filePaths[4] = "classpath*:spring/plugins/**/apsadmin/**/**.xml";
 		return filePaths;
     }
