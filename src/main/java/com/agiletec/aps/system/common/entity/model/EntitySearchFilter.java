@@ -35,6 +35,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
+import java.util.*;
 
 /**
  * This class implements a filter to search among entities.
@@ -72,8 +73,19 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	 */
 	public EntitySearchFilter(String key, boolean isAttributeFilter, Object value, boolean useLikeOption) {
 		this(key, isAttributeFilter);
-		this.setValue(value);
-		this.setLikeOption(useLikeOption);
+		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
+			List<Object> allowedValues = new ArrayList<Object>();
+			allowedValues.addAll((Collection) value);
+			this.setAllowedValues(allowedValues);
+			if (allowedValues.get(0) instanceof String) {
+				this.setLikeOption(useLikeOption);			
+			}
+		} else {
+			this.setValue(value);
+			if (value instanceof String) {			
+				this.setLikeOption(useLikeOption);
+			}
+		}
 	}
 	
 	/**
