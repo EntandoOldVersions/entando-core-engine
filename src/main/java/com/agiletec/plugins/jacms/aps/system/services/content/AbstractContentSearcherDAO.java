@@ -76,7 +76,7 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			String[] categories, boolean orClauseCategoryFilter, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(filters, categories, groupsForSelect, selectAll);
+		String query = this.createQueryString(filters, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
 		//System.out.println("QUERY : " + query);
 		PreparedStatement stat = null;
 		try {
