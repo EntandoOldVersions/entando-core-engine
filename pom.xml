@@ -43,10 +43,22 @@
 	</distributionManagement>
 -->
 	<properties>
+		<test.database.driver>org.postgresql.Driver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>5432</test.database.port>
 		<test.database.username>agile</test.database.username>
 		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</test.database.port.url>
+		<test.database.serv.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</test.database.serv.url>
+		<!--
+		<test.database.driver>com.mysql.jdbc.Driver</test.database.driver>
+		<test.database.hostname>localhost</test.database.hostname>
+		<test.database.port>3306</test.database.port>
+		<test.database.username>agile</test.database.username>
+		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
+		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
+		-->
 	</properties>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -167,6 +179,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sql-maven-plugin</artifactId>
@@ -723,6 +736,12 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.18</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

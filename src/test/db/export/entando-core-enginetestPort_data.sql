@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2011-11-10 17:08:28 CET
+-- Started on 2012-08-03 23:29:43 CEST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,8 +13,8 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1823 (class 0 OID 2939579)
--- Dependencies: 1503
+-- TOC entry 1839 (class 0 OID 5616043)
+-- Dependencies: 127
 -- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -90,11 +90,18 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('resCat1', 'Image',
 </properties>
 
 ');
+INSERT INTO categories (catcode, parentcode, titles) VALUES ('general_cat3', 'general', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Category 3</property>
+<property key="it">Categoria 3</property>
+</properties>
+
+');
 
 
 --
--- TOC entry 1824 (class 0 OID 2939585)
--- Dependencies: 1504
+-- TOC entry 1840 (class 0 OID 5616049)
+-- Dependencies: 128
 -- Data for Name: contentmodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -147,8 +154,8 @@ $content.CorpoTesto.getTextAfterImage(0)
 
 
 --
--- TOC entry 1826 (class 0 OID 2939594)
--- Dependencies: 1506
+-- TOC entry 1842 (class 0 OID 5616058)
+-- Dependencies: 130
 -- Data for Name: contents; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -167,11 +174,6 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 ', '20060418142303', '20061221161202', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="EVN192" typecode="EVN" typedescr="Evento"><descr>Evento 2</descr><groups mainGroup="free" /><categories><category id="evento" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo B - Evento 2</text><text lang="en">Title B - Event 2</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>CorpoTesto evento 2</p>]]></hypertext></attribute><attribute name="DataInizio" attributetype="Date"><date>19990414</date></attribute><attribute name="DataFine" attributetype="Date"><date>19990614</date></attribute><attribute name="Foto" attributetype="Image" /><list attributetype="Monolist" name="LinkCorrelati" nestedtype="Link" /></attributes><status>DRAFT</status></content>
 ', 'free', '1.0', 'admin');
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART120', 'ART', 'Contenuto degli amministratori 1', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART120" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 1</descr><groups mainGroup="administrators" /><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori"</text><text lang="en">Title of Administrator''s Content</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.japsportal.org</urldest></link><text lang="it">Pagina Iniziale jAPSPortal</text><text lang="en">jAPSPortal HomePage</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo primo contenuto del gruppo degli Amministratori</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of first Administrators Group''s Content</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090328</date></attribute><attribute name="Numero" attributetype="Number"><number>7</number></attribute></attributes><status>DRAFT</status></content>
-', '20080721125725', '20090221161620', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART120" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 1</descr><groups mainGroup="administrators" /><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori"</text><text lang="en">Title of Administrator''s Content</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.japsportal.org</urldest></link><text lang="it">Pagina Iniziale jAPSPortal</text><text lang="en">jAPSPortal HomePage</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo primo contenuto del gruppo degli Amministratori</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of first Administrators Group''s Content</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090328</date></attribute><attribute name="Numero" attributetype="Number"><number>7</number></attribute></attributes><status>DRAFT</status></content>
-', 'administrators', '1.0', 'admin');
 INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART179', 'ART', 'una descrizione ON LINE', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="ART179" typecode="ART" typedescr="Articolo rassegna stampa"><descr>una descrizione ON LINE</descr><groups mainGroup="free" /><categories><category id="general_cat1" /><category id="general_cat2" /></categories><attributes><attribute name="Titolo" attributetype="Text" /><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext" /><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090716</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>', '20051012105533', '20080210180714', NULL, 'free', '0.1', 'admin');
 INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('RAH1', 'RAH', 'Articolo', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
@@ -185,15 +187,6 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 ', '20060622202051', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="ART1" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Articolo</descr><groups mainGroup="free" /><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Il titolo</text><text lang="en">The title</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Pippo</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Paperino</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Pluto</monotext></attribute></list><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.spiderman.org</urldest></link><text lang="it">Spiderman</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext" /><attribute name="Foto" attributetype="Image"><resource resourcetype="Image" id="44" lang="it" /><text lang="it">Image description</text></attribute><attribute name="Data" attributetype="Date"><date>20040310</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>
 ', 'free', '1.0', 'admin');
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART122', 'ART', 'Contenuto degli amministratori 3', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART122" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 3</descr><groups mainGroup="administrators"><group name="customers" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 3</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo terzo contenuto del gruppo degli Amministratori</p>
-<p>Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo customers.</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of third Administrators Group''s Content</p>
-<p>This content belongs to the Administrators Group was declared visible to customers users.</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date" /><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>
-', '20080721143945', '20090327161636', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART122" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 3</descr><groups mainGroup="administrators"><group name="customers" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 3</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo terzo contenuto del gruppo degli Amministratori</p>
-<p>Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo customers.</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of third Administrators Group''s Content</p>
-<p>This content belongs to the Administrators Group was declared visible to customers users.</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date" /><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>
-', 'administrators', '1.0', 'admin');
 INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('EVN103', 'EVN', 'Contenuto 1 Coach', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="EVN103" typecode="EVN" typedescr="Evento"><descr>Contenuto 1 Coach</descr><groups mainGroup="coach" /><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 1 Coach</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[Corpo Testo Contenuto 1 Coach]]></hypertext></attribute><attribute name="DataInizio" attributetype="Date"><date>19990415</date></attribute><attribute name="DataFine" attributetype="Date"><date>20000414</date></attribute><attribute name="Foto" attributetype="Image" /><list attributetype="Monolist" name="LinkCorrelati" nestedtype="Link" /></attributes><status>DRAFT</status></content>
 ', '20061221165150', '20061223125859', '<?xml version="1.0" encoding="UTF-8"?>
@@ -244,25 +237,15 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 ', '20060418142507', '20061221161128', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="EVN194" typecode="EVN" typedescr="Evento"><descr>Evento 4</descr><groups mainGroup="free" /><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo D - Evento 4</text><text lang="en">Title A - Event 4</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>CorpoTesto&nbsp;Evento 4</p>]]></hypertext></attribute><attribute name="DataInizio" attributetype="Date"><date>20220219</date></attribute><attribute name="DataFine" attributetype="Date"><date>20220419</date></attribute><attribute name="Foto" attributetype="Image" /><list attributetype="Monolist" name="LinkCorrelati" nestedtype="Link"><attribute name="LinkCorrelati" attributetype="Link"><link type="content"><contentdest>ART1</contentdest></link><text lang="it">Link 1</text></attribute><attribute name="LinkCorrelati" attributetype="Link"><link type="page"><pagedest>pagina_11</pagedest></link><text lang="it">Link 2</text></attribute></list></attributes><status>DRAFT</status></content>
 ', 'free', '1.0', 'admin');
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART121', 'ART', 'Contenuto degli amministratori 2', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART121" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 2</descr><groups mainGroup="administrators"><group name="free" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 2</text><text lang="en">Title of Administrator''s Content &lt;2&gt;</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.w3.org/</urldest></link><text lang="it">Pagina Iniziale W3C</text><text lang="en">World Wide Web Consortium - Web Standards</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo secondo contenuto del gruppo degli Amministratori</p>
-<p>Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo del gruppo free.</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of second Administrators Group''s Content</p>
-<p>This content belongs to the Administrators Group was declared visible to guest users.</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090330</date></attribute><attribute name="Numero" attributetype="Number"><number>78</number></attribute></attributes><status>DRAFT</status></content>
-', '20080721143834', '20090318161630', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART121" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 2</descr><groups mainGroup="administrators"><group name="free" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 2</text><text lang="en">Title of Administrator''s Content &lt;2&gt;</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.w3.org/</urldest></link><text lang="it">Pagina Iniziale W3C</text><text lang="en">World Wide Web Consortium - Web Standards</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Testo secondo contenuto del gruppo degli Amministratori</p>
-<p>Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo del gruppo free.</p>]]></hypertext><hypertext lang="en"><![CDATA[<p>Text of second Administrators Group''s Content</p>
-<p>This content belongs to the Administrators Group was declared visible to guest users.</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090330</date></attribute><attribute name="Numero" attributetype="Number"><number>78</number></attribute></attributes><status>DRAFT</status></content>
-', 'administrators', '1.0', 'admin');
 INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART112', 'ART', 'Contenuto 4 Coach', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART112" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 4 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 4 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 4 Coach</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20060213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>
-', '20071216174627', '20071216175041', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART112" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 4 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 4 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 4 Coach</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20060213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status></content>
-', 'coach', '1.0', 'admin');
-INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART111', 'ART', 'Contenuto 3 Coach', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART111" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 3 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 3 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 3 Coach</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20061213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status><version>3.0</version></content>
-', '20071215174627', '20071215175041', '<?xml version="1.0" encoding="UTF-8"?>
-<content id="ART111" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 3 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 3 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 3 Coach</p>]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20061213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status><version>3.0</version></content>
-', 'coach', '3.0', 'admin');
+<content id="ART112" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 4 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories><category id="general_cat2" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 4 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Corpo Testo Contenuto 4 Coach</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20060213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>DRAFT</status><version>2.2</version><lastEditor>admin</lastEditor><created>20071216174627</created><lastModified>20120803224723</lastModified></content>
+', '20071216174627', '20120803224723', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART112" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 4 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 4 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Corpo Testo Contenuto 4 Coach</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20060213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>PUBLIC</status><version>2.0</version><lastEditor>admin</lastEditor><created>20071216174627</created><lastModified>20120803222829</lastModified></content>
+', 'coach', '2.2', 'admin');
 INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART180', 'ART', 'una descrizione', 'READY', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="ART180" typecode="ART" typedescr="Articolo rassegna stampa"><descr>una descrizione</descr><groups mainGroup="free" /><categories><category id="cat1" /><category id="general_cat1" /></categories><attributes><attribute name="Titolo" attributetype="Text" /><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext" /><attribute name="Foto" attributetype="Image"><resource resourcetype="Image" id="44" lang="it" /><text lang="it">Descrizione foto</text></attribute><attribute name="Data" attributetype="Date" /><attribute name="Numero" attributetype="Number" /></attributes><status>READY</status></content>
 ', '20051012105757', '20061221161136', '<?xml version="1.0" encoding="UTF-8"?>
@@ -278,10 +261,73 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 ', '20060418142409', '20061221161125', '<?xml version="1.0" encoding="UTF-8"?>
 <content id="EVN193" typecode="EVN" typedescr="Evento"><descr>Evento 3</descr><groups mainGroup="free" /><categories><category id="evento" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo C - Evento 3</text><text lang="en">Title D - Evento 3</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>CorpoTesto Evento 3</p>]]></hypertext></attribute><attribute name="DataInizio" attributetype="Date"><date>20170412</date></attribute><attribute name="DataFine" attributetype="Date"><date>20170912</date></attribute><attribute name="Foto" attributetype="Image" /><list attributetype="Monolist" name="LinkCorrelati" nestedtype="Link"><attribute name="LinkCorrelati" attributetype="Link"><link type="content"><contentdest>ART1</contentdest></link><text lang="it">Link 1</text></attribute><attribute name="LinkCorrelati" attributetype="Link"><link type="page"><pagedest>pagina_11</pagedest></link><text lang="it">Link 2</text></attribute></list></attributes><status>DRAFT</status></content>
 ', 'free', '1.0', 'admin');
+INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART111', 'ART', 'Contenuto 3 Coach', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART111" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 3 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories><category id="general_cat1" /><category id="general_cat2" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 3 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 3 Coach</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20061213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>PUBLIC</status><version>4.0</version><lastEditor>admin</lastEditor><created>20071215174627</created><lastModified>20120803222621</lastModified></content>
+', '20071215174627', '20120803222621', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART111" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto 3 Coach</descr><groups mainGroup="coach"><group name="customers" /><group name="helpdesk" /></groups><categories><category id="general_cat1" /><category id="general_cat2" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto 3 Coach</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext"><attribute name="Autori" attributetype="Monotext"><monotext>Walter</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Marco</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>Eugenio</monotext></attribute><attribute name="Autori" attributetype="Monotext"><monotext>William</monotext></attribute></list><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>Corpo Testo Contenuto 3 Coach</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20061213</date></attribute><attribute name="Numero" attributetype="Number" /></attributes><status>PUBLIC</status><version>4.0</version><lastEditor>admin</lastEditor><created>20071215174627</created><lastModified>20120803222621</lastModified></content>
+', 'coach', '4.0', 'admin');
+INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART120', 'ART', 'Contenuto degli amministratori 1', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART120" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 1</descr><groups mainGroup="administrators" /><categories><category id="general_cat2" /><category id="general_cat3" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori"</text><text lang="en">Title of Administrator''s Content</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.japsportal.org</urldest></link><text lang="it">Pagina Iniziale jAPSPortal</text><text lang="en">jAPSPortal HomePage</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo primo contenuto del gruppo degli Amministratori</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of first Administrators Group&#39;s Content</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090328</date></attribute><attribute name="Numero" attributetype="Number"><number>7</number></attribute></attributes><status>PUBLIC</status><version>1.0</version><lastEditor>admin</lastEditor><created>20080721125725</created><lastModified>20120803222703</lastModified></content>
+', '20080721125725', '20120803222703', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART120" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 1</descr><groups mainGroup="administrators" /><categories><category id="general_cat2" /><category id="general_cat3" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori"</text><text lang="en">Title of Administrator''s Content</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.japsportal.org</urldest></link><text lang="it">Pagina Iniziale jAPSPortal</text><text lang="en">jAPSPortal HomePage</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo primo contenuto del gruppo degli Amministratori</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of first Administrators Group&#39;s Content</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090328</date></attribute><attribute name="Numero" attributetype="Number"><number>7</number></attribute></attributes><status>PUBLIC</status><version>1.0</version><lastEditor>admin</lastEditor><created>20080721125725</created><lastModified>20120803222703</lastModified></content>
+', 'administrators', '1.0', 'admin');
+INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART121', 'ART', 'Contenuto degli amministratori 2', 'DRAFT', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART121" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 2</descr><groups mainGroup="administrators"><group name="free" /></groups><categories><category id="general_cat3" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 2</text><text lang="en">Title of Administrator''s Content &lt;2&gt;</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.w3.org/</urldest></link><text lang="it">Pagina Iniziale W3C</text><text lang="en">World Wide Web Consortium - Web Standards</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo secondo contenuto del gruppo degli Amministratori</p>
+<p>
+	Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo del gruppo free.</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of second Administrators Group&#39;s Content</p>
+<p>
+	This content belongs to the Administrators Group was declared visible to guest users.</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090330</date></attribute><attribute name="Numero" attributetype="Number"><number>78</number></attribute></attributes><status>DRAFT</status><version>2.1</version><lastEditor>admin</lastEditor><created>20080721143834</created><lastModified>20120803222911</lastModified></content>
+', '20080721143834', '20120803222911', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART121" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 2</descr><groups mainGroup="administrators"><group name="free" /></groups><categories /><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 2</text><text lang="en">Title of Administrator''s Content &lt;2&gt;</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link"><link type="external"><urldest>http://www.w3.org/</urldest></link><text lang="it">Pagina Iniziale W3C</text><text lang="en">World Wide Web Consortium - Web Standards</text></attribute><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo secondo contenuto del gruppo degli Amministratori</p>
+<p>
+	Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo del gruppo free.</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of second Administrators Group&#39;s Content</p>
+<p>
+	This content belongs to the Administrators Group was declared visible to guest users.</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date"><date>20090330</date></attribute><attribute name="Numero" attributetype="Number"><number>78</number></attribute></attributes><status>PUBLIC</status><version>2.0</version><lastEditor>admin</lastEditor><created>20080721143834</created><lastModified>20120803222859</lastModified></content>
+', 'administrators', '2.1', 'admin');
+INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, lastmodified, onlinexml, maingroup, currentversion, lasteditor) VALUES ('ART122', 'ART', 'Contenuto degli amministratori 3', 'PUBLIC', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART122" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 3</descr><groups mainGroup="administrators"><group name="customers" /></groups><categories><category id="general_cat3" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 3</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo terzo contenuto del gruppo degli Amministratori</p>
+<p>
+	Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo customers.</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of third Administrators Group&#39;s Content</p>
+<p>
+	This content belongs to the Administrators Group was declared visible to customers users.</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date" /><attribute name="Numero" attributetype="Number" /></attributes><status>PUBLIC</status><version>1.0</version><lastEditor>admin</lastEditor><created>20080721143945</created><lastModified>20120803222932</lastModified></content>
+', '20080721143945', '20120803222932', '<?xml version="1.0" encoding="UTF-8"?>
+<content id="ART122" typecode="ART" typedescr="Articolo rassegna stampa"><descr>Contenuto degli amministratori 3</descr><groups mainGroup="administrators"><group name="customers" /></groups><categories><category id="general_cat3" /></categories><attributes><attribute name="Titolo" attributetype="Text"><text lang="it">Titolo Contenuto degli "Amministratori" 3</text></attribute><list attributetype="Monolist" name="Autori" nestedtype="Monotext" /><attribute name="VediAnche" attributetype="Link" /><attribute name="CorpoTesto" attributetype="Hypertext"><hypertext lang="it"><![CDATA[<p>
+	Testo terzo contenuto del gruppo degli Amministratori</p>
+<p>
+	Questo contenuto appartiene al Gruppo degli Amministratori ma dichiarato visibile agli utenti del gruppo customers.</p>
+]]></hypertext><hypertext lang="en"><![CDATA[<p>
+	Text of third Administrators Group&#39;s Content</p>
+<p>
+	This content belongs to the Administrators Group was declared visible to customers users.</p>
+]]></hypertext></attribute><attribute name="Foto" attributetype="Image" /><attribute name="Data" attributetype="Date" /><attribute name="Numero" attributetype="Number" /></attributes><status>PUBLIC</status><version>1.0</version><lastEditor>admin</lastEditor><created>20080721143945</created><lastModified>20120803222932</lastModified></content>
+', 'administrators', '1.0', 'admin');
+
 
 --
--- TOC entry 1828 (class 0 OID 2939603)
--- Dependencies: 1508
+-- TOC entry 1844 (class 0 OID 5616067)
+-- Dependencies: 132
 -- Data for Name: localstrings; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -294,8 +340,8 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_TITLE', 
 
 
 --
--- TOC entry 1829 (class 0 OID 2939609)
--- Dependencies: 1509
+-- TOC entry 1845 (class 0 OID 5616073)
+-- Dependencies: 133
 -- Data for Name: pagemodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -350,8 +396,8 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 
 
 --
--- TOC entry 1830 (class 0 OID 2939615)
--- Dependencies: 1510
+-- TOC entry 1846 (class 0 OID 5616079)
+-- Dependencies: 134
 -- Data for Name: pages; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -490,8 +536,8 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 
 --
--- TOC entry 1832 (class 0 OID 2939624)
--- Dependencies: 1512
+-- TOC entry 1848 (class 0 OID 5616088)
+-- Dependencies: 136
 -- Data for Name: resources; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -510,8 +556,8 @@ INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfile
 
 
 --
--- TOC entry 1831 (class 0 OID 2939621)
--- Dependencies: 1511
+-- TOC entry 1847 (class 0 OID 5616085)
+-- Dependencies: 135
 -- Data for Name: resourcerelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -521,8 +567,8 @@ INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'resCat1');
 
 
 --
--- TOC entry 1833 (class 0 OID 2939630)
--- Dependencies: 1513
+-- TOC entry 1849 (class 0 OID 5616094)
+-- Dependencies: 137
 -- Data for Name: showletcatalog; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -625,8 +671,8 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 
 
 --
--- TOC entry 1834 (class 0 OID 2939636)
--- Dependencies: 1514
+-- TOC entry 1850 (class 0 OID 5616100)
+-- Dependencies: 138
 -- Data for Name: showletconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -691,8 +737,8 @@ INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcon
 
 
 --
--- TOC entry 1835 (class 0 OID 2939642)
--- Dependencies: 1515
+-- TOC entry 1851 (class 0 OID 5616106)
+-- Dependencies: 139
 -- Data for Name: sysconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -810,209 +856,228 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 
 
 --
--- TOC entry 1836 (class 0 OID 2939648)
--- Dependencies: 1516
+-- TOC entry 1852 (class 0 OID 5616112)
+-- Dependencies: 140
 -- Data for Name: uniquekeys; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 200);
+INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 321);
 
 
 --
--- TOC entry 1825 (class 0 OID 2939591)
--- Dependencies: 1505
--- Data for Name: contentrelations; Type: TABLE DATA; Schema: public; Owner: agile
---
-
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH1', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH1', NULL, NULL, '7', NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH101', NULL, NULL, NULL, NULL, 'customers');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART187', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART120', NULL, NULL, NULL, NULL, 'administrators');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART1', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART1', NULL, NULL, '44', NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, NULL, 'administrators');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, NULL, 'customers');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART104', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'administrators');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'customers');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'helpdesk');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'customers');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'helpdesk');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, NULL, 'cat1', NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, '44', NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, 'general', NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, 'general_cat1', NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, NULL, 'customers');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, 'ART111', NULL, NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN20', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN192', NULL, NULL, NULL, 'evento', NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN192', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN103', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN23', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN24', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN41', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN21', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN25', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN25', NULL, NULL, NULL, NULL, 'coach');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN191', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', NULL, 'ART1', NULL, NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', 'pagina_11', NULL, NULL, NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, NULL, NULL, 'evento', NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, NULL, NULL, NULL, 'free');
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, 'ART1', NULL, NULL, NULL);
-INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', 'pagina_11', NULL, NULL, NULL, NULL);
-
-
---
--- TOC entry 1827 (class 0 OID 2939600)
--- Dependencies: 1507
+-- TOC entry 1843 (class 0 OID 5616064)
+-- Dependencies: 131
 -- Data for Name: contentsearch; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Numero', NULL, NULL, 78, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'it');
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'en');
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Titolo C - Evento 3', NULL, NULL, 'it');
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Title D - Evento 3', NULL, NULL, 'en');
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12', NULL, NULL);
 INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
+
+--
+-- TOC entry 1841 (class 0 OID 5616055)
+-- Dependencies: 129
+-- Data for Name: contentrelations; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, 'general_cat3', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, 'general', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, NULL, 'administrators');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART122', NULL, NULL, NULL, NULL, 'customers');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH101', NULL, NULL, NULL, NULL, 'customers');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH1', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('RAH1', NULL, NULL, '7', NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART104', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, 'general', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, 'general_cat1', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, NULL, NULL, NULL, 'customers');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART102', NULL, 'ART111', NULL, NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, NULL, 'cat1', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART180', NULL, NULL, '44', NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART1', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART1', NULL, NULL, '44', NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART187', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN25', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN25', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN41', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN103', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, NULL, NULL, 'evento', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', NULL, 'ART1', NULL, NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN193', 'pagina_11', NULL, NULL, NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', NULL, 'ART1', NULL, NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN194', 'pagina_11', NULL, NULL, NULL, NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN191', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN21', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN24', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN23', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN192', NULL, NULL, NULL, 'evento', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN192', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('EVN20', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, 'general', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, 'general_cat1', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, 'general_cat2', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'customers');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART111', NULL, NULL, NULL, NULL, 'helpdesk');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART120', NULL, NULL, NULL, 'general_cat3', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART120', NULL, NULL, NULL, 'general', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART120', NULL, NULL, NULL, 'general_cat2', NULL);
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART120', NULL, NULL, NULL, NULL, 'administrators');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'coach');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'customers');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART112', NULL, NULL, NULL, NULL, 'helpdesk');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'free');
+INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'administrators');
 
 
 --
--- TOC entry 1837 (class 0 OID 2939651)
--- Dependencies: 1517
+-- TOC entry 1853 (class 0 OID 5616115)
+-- Dependencies: 141
 -- Data for Name: workcontentrelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general_cat1');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general_cat2');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general_cat1');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART180', 'cat1');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART180', 'general');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART180', 'general_cat1');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general_cat1');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'evento');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'general');
-INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'general_cat1');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general_cat1');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART179', 'general_cat2');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN193', 'evento');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN193', 'general');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN193', 'general_cat2');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'evento');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('EVN192', 'general_cat1');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART111', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART111', 'general_cat1');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART111', 'general_cat2');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART120', 'general_cat3');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART120', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART120', 'general_cat2');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART121', 'general_cat3');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART121', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART122', 'general_cat3');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART122', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART112', 'general');
+INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART112', 'general_cat2');
 
 
 --
--- TOC entry 1838 (class 0 OID 2939654)
--- Dependencies: 1518
+-- TOC entry 1854 (class 0 OID 5616118)
+-- Dependencies: 142
 -- Data for Name: workcontentsearch; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART179', 'Data', NULL, '2009-07-16', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Numero', NULL, NULL, 78, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART179', 'Data', NULL, '2009-07-16', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'en');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Titolo C - Evento 3', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Title D - Evento 3', NULL, NULL, 'en');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
 
 
--- Completed on 2011-11-10 17:08:28 CET
+-- Completed on 2012-08-03 23:29:43 CEST
 
 --
 -- PostgreSQL database dump complete
