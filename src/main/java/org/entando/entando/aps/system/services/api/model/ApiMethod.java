@@ -317,7 +317,7 @@ public class ApiMethod implements Serializable {
     }
     
     public static enum HttpMethod {
-        GET,PUT,POST,DELETE
+        GET,POST,PUT,DELETE
     }
     
     private String _resourceName;
