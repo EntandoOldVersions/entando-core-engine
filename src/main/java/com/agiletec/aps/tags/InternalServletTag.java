@@ -73,11 +73,19 @@ public class InternalServletTag extends TagSupport {
 		@Override
 		public void addCookie(Cookie cookie) {
 			super.addCookie(cookie);
-			this._cookieToAdd = cookie;
+			int len = (null == this._cookiesToAdd) ? 0 : this._cookiesToAdd.length;
+			Cookie[] newCookiesToAdd = new Cookie[len + 1];
+			if (null != this._cookiesToAdd) {
+				for (int i=0; i < len; i++) {
+					newCookiesToAdd[i] = this._cookiesToAdd[i];
+				}
+			}
+			newCookiesToAdd[len] = cookie;
+			this._cookiesToAdd = newCookiesToAdd;
 		}
 		
-		protected Cookie getCookieToAdd() {
-			return _cookieToAdd;
+		protected Cookie[] getCookiesToAdd() {
+			return _cookiesToAdd;
 		}
 		
 		public boolean isRedirected() {
@@ -96,7 +104,7 @@ public class InternalServletTag extends TagSupport {
 		private String _redirectPath;
 		private CharArrayWriter _output;
 		
-		private Cookie _cookieToAdd;
+		private Cookie[] _cookiesToAdd;
 		
 	}
 	
@@ -136,13 +144,17 @@ public class InternalServletTag extends TagSupport {
 		try {
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			this.includeShowlet(reqCtx, responseWrapper, showlet);
-			if (null != responseWrapper.getCookieToAdd()) {
-				reqCtx.getResponse().addCookie(responseWrapper.getCookieToAdd());
+			Cookie[] cookies = responseWrapper.getCookiesToAdd();
+			if (null != cookies) {
+				for (int i = 0; i < cookies.length; i++) {
+					Cookie cookie = cookies[i];
+					reqCtx.getResponse().addCookie(cookie);
+				}
 			}
 			output = responseWrapper.toString();
 			responseWrapper.getWriter().close();
 		} catch (Throwable t) {
-			String msg = "Errore in preelaborazione showlets";
+			String msg = "Error building showlet output";
 			throw new JspException(msg, t);
 		}
 		return output;
