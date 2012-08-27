@@ -120,7 +120,7 @@ public class FrontServletActionRedirectResult extends ServletRedirectResult impl
             Map.Entry e = (Map.Entry) i.next();
             if (!this.getProhibitedResultParams().contains(e.getKey())) {
                 String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
-                if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
+				if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
                     redirectParams.put(e.getKey().toString(), potentialValue);
                 }
             }
