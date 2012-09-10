@@ -31,6 +31,7 @@ import org.apache.struts2.interceptor.ServletResponseAware;
  */
 public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResourceAction implements ServletResponseAware {
 	
+	@Override
 	public String generateRequestBodySchema() {
 		try {
 			String result = super.generateRequestBodySchema();
@@ -47,6 +48,7 @@ public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResou
 		return super.generateRequestBodySchema();
 	}
 	
+	@Override
 	public String generateResponseBodySchema() {
 		try {
 			String result = super.generateResponseBodySchema();
@@ -84,6 +86,7 @@ public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResou
 	protected HttpServletResponse getResponse() {
 		return _response;
 	}
+	@Override
 	public void setServletResponse(HttpServletResponse response) {
 		this._response = response;
 	}

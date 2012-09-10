@@ -21,27 +21,28 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * @author E.Santoboni
  */
-public class ApiServiceAction extends BaseAction implements IApiServiceAction {
+public class ApiServiceAction extends AbstractApiAction {
 	
 	@Override
 	public void validate() {
@@ -113,8 +114,11 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 			throw new RuntimeException("Error checking parameters", t);
 		}
 	}
-
-	@Override
+	
+	/**
+	 * Create of new api service.
+	 * @return The result code.
+	 */
 	public String newService() {
 		try {
 			if (null != this.getResourceCode()) {
@@ -162,8 +166,12 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	public List<Lang> getSystemLangs() {
 		return this.getLangManager().getLangs();
 	}
-
-	@Override
+	
+	/**
+	 * Copy an exist showlet (physic and with parameters, joined with a exist api method) 
+	 * and value the form of creation of new api service.
+	 * @return The result code.
+	 */
 	public String copyFromShowlet() {
 		try {
 			String check = this.checkMasterMethod(this.getNamespace(), this.getResourceName());
@@ -201,7 +209,7 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		}
 		return SUCCESS;
 	}
-
+	
 	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedShowlet relatedShowlet, Showlet masterShowlet) {
 		ApsProperties showletProperties = (masterShowlet.getType().isLogic())
 				? masterShowlet.getType().getConfig() : masterShowlet.getConfig();
@@ -233,10 +241,13 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		return currentCode;
 	}
 
-	@Override
+	/**
+	 * Edit an exist api service.
+	 * @return The result code.
+	 */
 	public String edit() {
 		try {
-			String check = this.checkService(this.getServiceKey());
+			String check = this.checkService();
 			if (null != check) {
 				return check;
 			}
@@ -255,6 +266,9 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 				this.setFreeParameters(freeParams);
 			}
 			this.setTag(apiService.getTag());
+			this.setRequiredAuth(apiService.getRequiredAuth());
+			this.setRequiredGroup(apiService.getRequiredGroup());
+			this.setRequiredPermission(apiService.getRequiredPermission());
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "edit");
@@ -263,7 +277,10 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		return SUCCESS;
 	}
 
-	@Override
+	/**
+	 * Save an api service.
+	 * @return The result code.
+	 */
 	public String save() {
 		try {
 			String key = this.getServiceKey().trim();
@@ -277,6 +294,13 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 			}
 			ApiService service = new ApiService(key, this.getDescriptions(), masterMethod, this.getApiParameterValues(),
 					freeParams, this.getTag(), this.isPublicService(), this.isActiveService(), this.isMyEntandoService());
+			service.setRequiredAuth(this.getRequiredAuth());
+			if (null != this.getRequiredGroup() && this.getRequiredGroup().trim().length() > 0) {
+				service.setRequiredGroup(this.getRequiredGroup());
+			}
+			if (null != this.getRequiredPermission() && this.getRequiredPermission().trim().length() > 0) {
+				service.setRequiredPermission(this.getRequiredPermission());
+			}
 			this.getApiCatalogManager().saveService(service);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -284,11 +308,14 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		}
 		return SUCCESS;
 	}
-
-	@Override
+	
+	/**
+	 * Start the deletion operations for the given api service.
+	 * @return The result code.
+	 */
 	public String trash() {
 		try {
-			String check = this.checkService(this.getServiceKey());
+			String check = this.checkService();
 			if (null != check) {
 				return check;
 			}
@@ -299,10 +326,13 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		return SUCCESS;
 	}
 
-	@Override
+	/**
+	 * Delete an api service from the system.
+	 * @return The result code.
+	 */
 	public String delete() {
 		try {
-			String check = this.checkService(this.getServiceKey());
+			String check = this.checkService();
 			if (null != check) {
 				return check;
 			}
@@ -337,7 +367,7 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		return null;
 	}
 
-	private String checkService(String serviceKey) throws Throwable {
+	private String checkService() throws Throwable {
 		ApiService apiService = this.getApiCatalogManager().getApiService(this.getServiceKey());
 		if (apiService == null) {
 			this.addActionError(this.getText("error.service.invalid", new String[]{this.getServiceKey()}));
@@ -345,7 +375,22 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 		}
 		return null;
 	}
-
+	
+	/**
+	 * Return the list of system groups.
+	 * @return The list of system groups.
+	 */
+	public List<Group> getGroups() {
+		return this.getGroupManager().getGroups();
+	}
+	
+	public Group getGroup(String name) {
+		return this.getGroupManager().getGroup(name);
+	}
+	public Permission getPermission(String name) {
+		return this.getRoleManager().getPermission(name);
+	}
+	
 	public String getServiceGroup() {
 		return _serviceGroup;
 	}
@@ -415,7 +460,28 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	public void setMyEntandoService(boolean myEntandoService) {
 		this._myEntandoService = myEntandoService;
 	}
-
+	
+    public Boolean getRequiredAuth() {
+		return _requiredAuth;
+    }
+    public void setRequiredAuth(Boolean requiredAuth) {
+        this._requiredAuth = requiredAuth;
+    }
+    
+	public String getRequiredGroup() {
+		return _requiredGroup;
+	}
+	public void setRequiredGroup(String requiredGroup) {
+		this._requiredGroup = requiredGroup;
+	}
+	
+	public String getRequiredPermission() {
+		return _requiredPermission;
+	}
+	public void setRequiredPermission(String requiredPermission) {
+		this._requiredPermission = requiredPermission;
+	}
+	
 	public List<ApiMethodParameter> getApiParameters() {
 		return _apiParameters;
 	}
@@ -464,14 +530,7 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	public void setShowletTypeCode(String showletTypeCode) {
 		this._showletTypeCode = showletTypeCode;
 	}
-
-	protected IApiCatalogManager getApiCatalogManager() {
-		return _apiCatalogManager;
-	}
-	public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
-		this._apiCatalogManager = apiCatalogManager;
-	}
-
+	
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
@@ -484,6 +543,13 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	}
 	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
+	}
+	
+	protected IGroupManager getGroupManager() {
+		return _groupManager;
+	}
+	public void setGroupManager(IGroupManager groupManager) {
+		this._groupManager = groupManager;
 	}
 	
 	private String _serviceGroup;
@@ -499,6 +565,11 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	private boolean _activeService;
 	private boolean _publicService;
 	private boolean _myEntandoService;
+	
+	private Boolean _requiredAuth;
+	private String _requiredPermission;
+	private String _requiredGroup;
+	
 	private List<ApiMethodParameter> _apiParameters;
 	private ApsProperties _apiParameterValues;
 	private List<String> _freeParameters;
@@ -506,8 +577,9 @@ public class ApiServiceAction extends BaseAction implements IApiServiceAction {
 	private String _pageCode;
 	private Integer _framePos;
 	private String _showletTypeCode;
-	private IApiCatalogManager _apiCatalogManager;
+	
 	private IPageManager _pageManager;
 	private IShowletTypeManager _showletTypeManager;
+	private IGroupManager _groupManager;
 	
 }

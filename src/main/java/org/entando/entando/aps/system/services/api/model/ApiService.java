@@ -28,8 +28,8 @@ public class ApiService implements Serializable {
 	
 	protected ApiService() {}
 	
-	public ApiService(String key, ApsProperties description, ApiMethod master, ApsProperties parameters, 
-                        String[] freeParameters, String tag, boolean isPublic, boolean isActive, boolean isMyEntando) {
+	public ApiService(String key, ApsProperties description, ApiMethod master, ApsProperties parameters,
+			String[] freeParameters, String tag, boolean isPublic, boolean isActive, boolean isMyEntando) {
 		this.setKey(key);
 		this.setDescription(description);
 		this.setMaster(master);
@@ -38,7 +38,7 @@ public class ApiService implements Serializable {
 		this.setTag(tag);
 		this.setPublicService(isPublic);
 		this.setActive(isActive);
-                this.setMyEntando(isMyEntando);
+		this.setMyEntando(isMyEntando);
 	}
 	
 	@Override
@@ -55,12 +55,15 @@ public class ApiService implements Serializable {
 		clone.setKey(this.getKey());
 		clone.setMaster(this.getMaster().clone());
 		if (null != this.getParameters()) {
-			clone.setParameters(this.getParameters().clone());	
+			clone.setParameters(this.getParameters().clone());
 		}
 		clone.setTag(this.getTag());
 		clone.setPublicService(this.isPublicService());
 		clone.setActive(this.isActive());
 		clone.setMyEntando(this.isMyEntando());
+		clone.setRequiredAuth(this.getRequiredAuth());
+		clone.setRequiredGroup(this.getRequiredGroup());
+		clone.setRequiredPermission(this.getRequiredPermission());
 		return clone;
 	}
 	
@@ -91,11 +94,16 @@ public class ApiService implements Serializable {
 	protected void setFreeParameters(String[] freeParameters) {
 		this._freeParameters = freeParameters;
 	}
+	
 	public boolean isFreeParameter(String paramName) {
-		if (null == this.getFreeParameters() || null == paramName) return false;
+		if (null == this.getFreeParameters() || null == paramName) {
+			return false;
+		}
 		for (int i = 0; i < this.getFreeParameters().length; i++) {
 			String parameter = this.getFreeParameters()[i];
-			if (parameter.equals(paramName)) return true;
+			if (parameter.equals(paramName)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -127,24 +135,51 @@ public class ApiService implements Serializable {
 	public void setActive(boolean active) {
 		this._active = active;
 	}
-        
-        public boolean isMyEntando() {
-            return _myEntando;
-        }
-        protected void setMyEntando(boolean myEntando) {
-            this._myEntando = myEntando;
-        }
+	
+	public boolean isMyEntando() {
+		return _myEntando;
+	}
+	protected void setMyEntando(boolean myEntando) {
+		this._myEntando = myEntando;
+	}
+	
+    public Boolean getRequiredAuth() {
+		if (null != this.getRequiredGroup() || null != this.getRequiredPermission()) {
+			return true;
+		}
+        if (null == this._requiredAuth) return false;
+        return _requiredAuth;
+    }
+    public void setRequiredAuth(Boolean requiredAuth) {
+        this._requiredAuth = requiredAuth;
+    }
+    
+	public String getRequiredGroup() {
+		return _requiredGroup;
+	}
+	public void setRequiredGroup(String requiredGroup) {
+		this._requiredGroup = requiredGroup;
+	}
+	
+	public String getRequiredPermission() {
+		return _requiredPermission;
+	}
+	public void setRequiredPermission(String requiredPermission) {
+		this._requiredPermission = requiredPermission;
+	}
 	
 	private String _key;
 	private ApsProperties _description;
 	private ApiMethod _master;
 	private ApsProperties _parameters;
 	private String[] _freeParameters;
-	
 	private String _tag;
-	
 	private boolean _publicService;
 	private boolean _active;
-        private boolean _myEntando;
+	private boolean _myEntando;
+	
+	private Boolean _requiredAuth;
+	private String _requiredPermission;
+	private String _requiredGroup;
 	
 }

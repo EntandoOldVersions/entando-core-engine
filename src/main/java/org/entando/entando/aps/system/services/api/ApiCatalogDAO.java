@@ -135,7 +135,11 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             stat.setInt(3, isActive);
             int authentication = (method.getRequiredAuth()) ? 1 : 0;
             stat.setInt(4, authentication);
-            stat.setString(5, method.getRequiredPermission());
+			if (null != method.getRequiredPermission() && method.getRequiredPermission().trim().length() > 0) {
+				stat.setString(5, method.getRequiredPermission());
+			} else {
+				stat.setNull(5, Types.VARCHAR);
+			}
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -206,6 +210,16 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                 boolean isMyEntando = (1 == res.getInt(9)) ? true : false;
                 ApiService apiService = new ApiService(key, description, masterMethod,
                         parameters, freeParameters, tag, isPublic, isActive, isMyEntando);
+				boolean authRequired = (1 == res.getInt(10)) ? true : false;
+				apiService.setRequiredAuth(authRequired);
+				String requiredPermission = res.getString(11);
+				if (null != requiredPermission && requiredPermission.trim().length() > 0) {
+					apiService.setRequiredPermission(requiredPermission);
+				}
+				String requiredGroup = res.getString(12);
+				if (null != requiredGroup && requiredGroup.trim().length() > 0) {
+					apiService.setRequiredGroup(requiredGroup);
+				}
                 services.put(key, apiService);
             } else {
                 invalidServices.add(key);
@@ -223,25 +237,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(ADD_SERVICE);
-            //servicekey, resource, description, parameters, tag, freeparameters, isactive, ispublic
             stat.setString(1, service.getKey());
-			String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
-			stat.setString(2, resourceCode);
-            stat.setString(3, service.getDescription().toXml());
-            stat.setString(4, service.getParameters().toXml());
-            stat.setString(5, service.getTag());
-            if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
-                stat.setNull(6, Types.VARCHAR);
-            } else {
-                ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
-                stat.setString(6, dom.extractXml(service.getFreeParameters()));
-            }
-            int isActive = (service.isActive()) ? 1 : 0;
-            stat.setInt(7, isActive);
-            int isPublic = (service.isPublicService()) ? 1 : 0;
-            stat.setInt(8, isPublic);
-            int isMyEntando = (service.isMyEntando()) ? 1 : 0;
-            stat.setInt(9, isMyEntando);
+			this.valorizeStatement(service, stat, 1);
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -260,25 +257,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(UPDATE_SERVICE);
-            //SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? WHERE servicekey = ? ";
-            String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
-			stat.setString(1, resourceCode);
-            stat.setString(2, service.getDescription().toXml());
-            stat.setString(3, service.getParameters().toXml());
-            stat.setString(4, service.getTag());
-            if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
-                stat.setNull(5, Types.VARCHAR);
-            } else {
-                ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
-                stat.setString(5, dom.extractXml(service.getFreeParameters()));
-            }
-            int isActive = (service.isActive()) ? 1 : 0;
-            stat.setInt(6, isActive);
-            int isPublic = (service.isPublicService()) ? 1 : 0;
-            stat.setInt(7, isPublic);
-            int isMyEntando = (service.isMyEntando()) ? 1 : 0;
-            stat.setInt(8, isMyEntando);
-            stat.setString(9, service.getKey());
+			int index = this.valorizeStatement(service, stat, 0);
+            stat.setString(++index, service.getKey());
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -287,6 +267,39 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         } finally {
             closeDaoResources(null, stat, conn);
         }
+    }
+	
+	private int valorizeStatement(ApiService service, PreparedStatement stat, int index) throws Throwable {
+		String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+		stat.setString(++index, resourceCode);
+		stat.setString(++index, service.getDescription().toXml());
+		stat.setString(++index, service.getParameters().toXml());
+		stat.setString(++index, service.getTag());
+		if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
+			stat.setNull(++index, Types.VARCHAR);
+		} else {
+			ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
+			stat.setString(++index, dom.extractXml(service.getFreeParameters()));
+		}
+		int isActive = (service.isActive()) ? 1 : 0;
+		stat.setInt(++index, isActive);
+		int isPublic = (service.isPublicService()) ? 1 : 0;
+		stat.setInt(++index, isPublic);
+		int isMyEntando = (service.isMyEntando()) ? 1 : 0;
+		stat.setInt(++index, isMyEntando);
+		int authRequired = (service.getRequiredAuth()) ? 1 : 0;
+		stat.setInt(++index, authRequired);
+		if (null != service.getRequiredPermission() && service.getRequiredPermission().trim().length() > 0) {
+			stat.setString(++index, service.getRequiredPermission());
+		} else {
+			stat.setNull(++index, Types.VARCHAR);
+		}
+		if (null != service.getRequiredGroup() && service.getRequiredGroup().trim().length() > 0) {
+			stat.setString(++index, service.getRequiredGroup());
+		} else {
+			stat.setNull(++index, Types.VARCHAR);
+		}
+		return index;
     }
 
     @Override
@@ -320,15 +333,17 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             "DELETE FROM apicatalog_methods WHERE resource = ? AND httpmethod = ?";
     
     private static final String LOAD_SERVICES =
-            "SELECT servicekey, resource, description, parameters, tag, "
-            + "freeparameters, isactive, ispublic, myentando FROM apicatalog_services";
+			"SELECT servicekey, resource, description, parameters, tag, freeparameters, isactive, "
+			+ "ispublic, myentando, authenticationrequired, requiredpermission, requiredgroup FROM apicatalog_services";
     
     private static final String ADD_SERVICE =
-            "INSERT INTO apicatalog_services(servicekey, resource, "
-            + "description, parameters, tag, freeparameters, isactive, ispublic, myentando) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
+            "INSERT INTO apicatalog_services(servicekey, resource, description, parameters, tag, "
+			+ "freeparameters, isactive, ispublic, myentando, authenticationrequired, requiredpermission, requiredgroup) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
     
     private static final String UPDATE_SERVICE =
-            "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? , myentando = ? WHERE servicekey = ? ";
+            "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , "
+			+ "freeparameters = ? , isactive = ? , ispublic = ? , myentando = ? , authenticationrequired = ? , requiredpermission = ? , requiredgroup = ? WHERE servicekey = ? ";
     
     private static final String DELETE_SERVICE =
             "DELETE FROM apicatalog_services WHERE servicekey = ? ";

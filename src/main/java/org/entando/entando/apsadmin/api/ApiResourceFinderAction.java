@@ -22,7 +22,7 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 /**
  * @author E.Santoboni
  */
-public class ApiResourceFinderAction extends AbstractApiFinderAction implements IApiResourceFinderAction {
+public class ApiResourceFinderAction extends AbstractApiFinderAction {
     
 	protected boolean includeIntoMapping(ApiResource apiResource) {
 		return true;

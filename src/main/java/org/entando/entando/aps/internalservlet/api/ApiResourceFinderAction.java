@@ -18,14 +18,16 @@
 package org.entando.entando.aps.internalservlet.api;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.apsadmin.api.*;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
+
+import org.entando.entando.apsadmin.api.AbstractApiFinderAction;
 
 /**
  * @author E.Santoboni
  */
-public class ApiResourceFinderAction extends AbstractApiFinderAction implements IApiResourceFinderAction {
+public class ApiResourceFinderAction extends AbstractApiFinderAction {
     
+	@Override
 	protected boolean includeIntoMapping(ApiResource apiResource) {
 		ApiMethod GETMethod = apiResource.getGetMethod();
 		ApiMethod POSTMethod = apiResource.getPostMethod();
