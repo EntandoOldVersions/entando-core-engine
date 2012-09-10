@@ -35,9 +35,8 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 /**
  * @author E.Santoboni
  */
-public class ApiServiceFinderAction extends AbstractApiFinderAction implements IApiServiceFinderAction {
+public class ApiServiceFinderAction extends AbstractApiFinderAction {
 	
-	@Override
 	public String updateAllStatusOfGroup() {
 		try {
 			if (this.getServiceGroup() == null) {

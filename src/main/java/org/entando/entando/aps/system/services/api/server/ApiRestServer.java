@@ -187,9 +187,9 @@ public class ApiRestServer {
             this.extractOAuthParameters(apiMethod, request, response, properties);
             responseObject = responseBuilder.createResponse(apiMethod, properties);
         } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
         } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
         }
         return this.createResponse(responseObject);
     }
@@ -216,9 +216,9 @@ public class ApiRestServer {
             }
             responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
         } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
         } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
         }
         return this.createResponse(responseObject);
     }
@@ -242,9 +242,12 @@ public class ApiRestServer {
         return properties;
     }
     
-    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
+    protected StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName, Throwable t) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
+		if (null != namespace) {
+			buffer.append(" Namespace '").append(namespace).append("'");
+		}
         ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
         StringApiResponse response = new StringApiResponse();
         if (t instanceof ApiException) {
@@ -291,7 +294,7 @@ public class ApiRestServer {
         }
     }
 	
-	private Response createResponse(Object responseObject) {
+	protected Response createResponse(Object responseObject) {
 		ResponseBuilderImpl responsex = new ResponseBuilderImpl();
 		responsex.entity(responseObject);
 		if (responseObject instanceof AbstractApiResponse) {

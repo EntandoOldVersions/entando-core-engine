@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethod.HttpMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
@@ -33,18 +31,14 @@ import org.entando.entando.apsadmin.api.helper.SchemaGeneratorActionHelper;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.role.IRoleManager;
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
-import com.agiletec.apsadmin.system.BaseAction;
-
-import org.apache.commons.beanutils.BeanComparator;
 
 /**
  * @author E.Santoboni
  */
-public class ApiResourceAction extends BaseAction implements IApiResourceAction {
+public class ApiResourceAction extends AbstractApiAction {
     
+	@Override
     public void validate() {
         try {
             super.validate();
@@ -238,22 +232,11 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     }
     
     public List<SelectItem> getMethodAuthorityOptions() {
-        List<SelectItem> items = new ArrayList<SelectItem>();
-        try {
-            items.add(new SelectItem("", this.getText("label.none")));
-            items.add(new SelectItem("0", this.getText("label.method.authority.autenticationRequired")));
-            List<Permission> permissions = new ArrayList<Permission>();
-            permissions.addAll(this.getRoleManager().getPermissions());
-            BeanComparator comparator = new BeanComparator("description");
-            Collections.sort(permissions, comparator);
-            for (int i = 0; i < permissions.size(); i++) {
-                Permission permission = permissions.get(i);
-                items.add(new SelectItem(permission.getName(), 
-                        this.getText("label.method.authority.permission") + " " + permission.getDescription()));
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMethodAuthorityOptions", "Error extracting autority options");
-        }
+        List<SelectItem> masterList = super.getPermissionAutorityOptions();
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		items.add(new SelectItem("", this.getText("label.none")));
+		items.add(new SelectItem("0", this.getText("label.api.authority.autenticationRequired")));
+		items.addAll(masterList);
         return items;
     }
     
@@ -302,20 +285,6 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
         this._schemaStream = schemaStream;
     }
     
-    protected IApiCatalogManager getApiCatalogManager() {
-        return _apiCatalogManager;
-    }
-    public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
-        this._apiCatalogManager = apiCatalogManager;
-    }
-    
-    protected IRoleManager getRoleManager() {
-        return _roleManager;
-    }
-    public void setRoleManager(IRoleManager roleManager) {
-        this._roleManager = roleManager;
-    }
-    
     protected SchemaGeneratorActionHelper getSchemaGeneratorHelper() {
         return new SchemaGeneratorActionHelper();
     }
@@ -326,8 +295,5 @@ public class ApiResourceAction extends BaseAction implements IApiResourceAction 
     private Boolean _methodStatus;
     
     private InputStream _schemaStream;
-    
-    private IApiCatalogManager _apiCatalogManager;
-    private IRoleManager _roleManager;
     
 }

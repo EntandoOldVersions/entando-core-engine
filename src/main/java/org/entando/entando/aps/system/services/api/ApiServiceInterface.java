@@ -17,12 +17,7 @@
 */
 package org.entando.entando.aps.system.services.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -34,8 +29,12 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
+
+import javax.ws.rs.core.Response;
 
 /**
  * @author E.Santoboni
@@ -51,10 +50,11 @@ public class ApiServiceInterface {
             String myentandoParamValue = properties.getProperty("myentando");
             Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? new Boolean(myentandoParamValue) : null;
             langCode = (null != langCode && null != this.getLangManager().getLang(langCode)) ? langCode : defaultLangCode;
-            Iterator<ApiService> iter = this.getApiCatalogManager().getServices(tagParamValue, myentando).values().iterator();
+			Map<String, ApiService> masterServices = this.getApiCatalogManager().getServices(tagParamValue, myentando);
+            Iterator<ApiService> iter = masterServices.values().iterator();
             while (iter.hasNext()) {
                 ApiService service = (ApiService) iter.next();
-                if (service.isActive() && service.isPublicService()) {
+                if (service.isActive() && service.isPublicService() && this.checkServiceAuthorization(service, properties, false)) {
                     ServiceInfo smallService = this.createServiceInfo(service, langCode, defaultLangCode);
                     services.add(smallService);
                 }
@@ -105,6 +105,7 @@ public class ApiServiceInterface {
             if (!service.isActive()) {
                 throw new ApiException(IApiErrorCodes.API_SERVICE_ACTIVE_FALSE, "Service '" + key + "' is not active");
             }
+			this.checkServiceAuthorization(service, properties, true);
             Properties serviceParameters = new Properties();
             serviceParameters.putAll(service.getParameters());
             Iterator<Object> paramIter = properties.keySet().iterator();
@@ -124,21 +125,51 @@ public class ApiServiceInterface {
         }
         return response;
     }
-
+	
+	protected boolean checkServiceAuthorization(ApiService service, Properties properties, boolean throwApiException) throws ApiException, Throwable {
+		if (!service.getRequiredAuth()) return true;
+		try {
+			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
+            if (null == user) {
+                throw new ApiException(IApiErrorCodes.API_AUTHENTICATION_REQUIRED, 
+						"Authentication is mandatory for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
+            }
+			if ((null != service.getRequiredGroup() && !this.getAuthorizationManager().isAuthOnGroup(user, service.getRequiredGroup())) 
+					|| (null != service.getRequiredPermission() && !this.getAuthorizationManager().isAuthOnPermission(user, service.getRequiredPermission()))) {
+				throw new ApiException(IApiErrorCodes.API_AUTHORIZATION_REQUIRED, 
+						"Permission denied for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
+			}
+		} catch (ApiException ae) {
+			if (throwApiException) throw ae;
+			return false;
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "checkServiceAuthorization", "Error checking auth for service - key '" + service.getKey() + "'");
+            throw t;
+		}
+		return true;
+	}
+	
+	protected IAuthorizationManager getAuthorizationManager() {
+		return _authorizationManager;
+	}
+	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
+		this._authorizationManager = authorizationManager;
+	}
+	
     protected IApiCatalogManager getApiCatalogManager() {
         return _apiCatalogManager;
     }
     public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
         this._apiCatalogManager = apiCatalogManager;
     }
-
+	
     protected ILangManager getLangManager() {
         return _langManager;
     }
     public void setLangManager(ILangManager langManager) {
         this._langManager = langManager;
     }
-
+	
     protected IResponseBuilder getResponseBuilder() {
         return _responseBuilder;
     }
@@ -146,6 +177,7 @@ public class ApiServiceInterface {
         this._responseBuilder = responseBuilder;
     }
     
+	private IAuthorizationManager _authorizationManager;
     private IApiCatalogManager _apiCatalogManager;
     private ILangManager _langManager;
     private IResponseBuilder _responseBuilder;

@@ -19,4 +19,20 @@
 		</field-validator>
     </field>
     
+    <field name="requiredPermission">
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(null != requiredPermission 
+				&& requiredPermission.trim().length() > 0 && null == getPermission(requiredPermission))]]></param>
+			<message key="error.api.service.invalidRequiredPermission" />
+		</field-validator>
+    </field>
+    
+    <field name="requiredGroup">
+        <field-validator type="fieldexpression" short-circuit="true">
+			<param name="expression"><![CDATA[!(null != requiredGroup 
+				&& requiredGroup.trim().length() > 0 && null == getGroup(requiredGroup))]]></param>
+			<message key="error.api.service.invalidRequiredGroup" />
+		</field-validator>
+    </field>
+    
 </validators>

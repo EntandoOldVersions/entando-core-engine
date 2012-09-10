@@ -65,7 +65,7 @@ CREATE TABLE apicatalog_methods (
     httpmethod character varying(6) NOT NULL,
     isactive smallint,
     authenticationrequired smallint,
-    authorizationrequired character varying(100)
+    authorizationrequired character varying(30)
 );
 
 
@@ -84,7 +84,10 @@ CREATE TABLE apicatalog_services (
     freeparameters character varying,
     isactive smallint NOT NULL,
     ispublic smallint NOT NULL,
-    myentando smallint NOT NULL
+    myentando smallint NOT NULL,
+    authenticationrequired smallint,
+    requiredpermission character varying(30),
+    requiredgroup character varying(20)
 );
 
 
@@ -312,6 +315,37 @@ ALTER TABLE ONLY authusers
 
 ALTER TABLE ONLY authusershortcuts
     ADD CONSTRAINT authusershortcuts_pkey PRIMARY KEY (username);
+
+
+--
+-- TOC entry 1797 (class 2606 OID 83634)
+-- Dependencies: 136 136
+-- Name: apicatalog_methods_authorizationrequired_fkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY apicatalog_methods
+  ADD CONSTRAINT apicatalog_methods_authorizationrequired_fkey FOREIGN KEY (authorizationrequired) REFERENCES authpermissions (permissionname) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 1797 (class 2606 OID 83634)
+-- Dependencies: 136 136
+-- Name: apicatalog_services_requiredpermission_fkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY apicatalog_services
+  ADD CONSTRAINT apicatalog_services_requiredpermission_fkey FOREIGN KEY (requiredpermission) REFERENCES authpermissions (permissionname) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+--
+-- TOC entry 1797 (class 2606 OID 83634)
+-- Dependencies: 136 136
+-- Name: apicatalog_services_requiredgroup_fkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY apicatalog_services
+  ADD CONSTRAINT apicatalog_services_requiredgroup_fkey FOREIGN KEY (requiredgroup) REFERENCES authgroups (groupname) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
 
 
 --

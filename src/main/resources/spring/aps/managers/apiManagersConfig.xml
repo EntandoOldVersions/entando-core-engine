@@ -29,6 +29,7 @@
         <property name="apiCatalogManager" ref="ApiCatalogManager" />
         <property name="langManager" ref="LangManager" />
         <property name="responseBuilder" ref="ApiResponseBuilder" />
+		<property name="authorizationManager" ref="AuthorizationManager" />
     </bean>
     
     <bean id="OAuthConsumerManager" class="org.entando.entando.aps.system.services.oauth.OAuthConsumerManager" 
