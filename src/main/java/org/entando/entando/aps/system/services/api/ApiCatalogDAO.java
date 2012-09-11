@@ -76,6 +76,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                 } else {
                     method.setRequiredPermission(null);
                 }
+				boolean hidden = (res.getInt("ishidden") == 1);
+                method.setHidden(hidden);
             }
             conn.commit();
         } catch (Throwable t) {
@@ -117,7 +119,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(null, stat);
         }
     }
-
+	
     @Override
     public void saveApiStatus(ApiMethod method) {
         Connection conn = null;
@@ -128,18 +130,19 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
 			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
             this.resetApiStatus(resourceCode, method.getHttpMethod(), conn);
             stat = conn.prepareStatement(SAVE_API_STATUS);
-            //resource, httpmethod, isactive, authenticationrequired, authorizationrequired
             int isActive = (method.isActive()) ? 1 : 0;
             stat.setString(1, resourceCode);
             stat.setString(2, method.getHttpMethod().toString());
             stat.setInt(3, isActive);
             int authentication = (method.getRequiredAuth()) ? 1 : 0;
             stat.setInt(4, authentication);
-			if (null != method.getRequiredPermission() && method.getRequiredPermission().trim().length() > 0) {
+            if (null != method.getRequiredPermission() && method.getRequiredPermission().trim().length() > 0) {
 				stat.setString(5, method.getRequiredPermission());
 			} else {
 				stat.setNull(5, Types.VARCHAR);
 			}
+			int isHidden = (null != method.getHidden() && method.getHidden()) ? 1 : 0;
+			stat.setInt(6, isHidden);
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -173,8 +176,6 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             stat = conn.createStatement();
             res = stat.executeQuery(LOAD_SERVICES);
-            //servicekey, parentapi, description, parameters, 
-            //tag, freeparameters, isactive, ispublic
             while (res.next()) {
                 this.buildService(methodMap, services, invalidServices, res);
             }
@@ -206,10 +207,10 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                     freeParameters = dom.extractFreeParameters();
                 }
                 boolean isActive = (1 == res.getInt(7)) ? true : false;
-                boolean isPublic = (1 == res.getInt(8)) ? true : false;
+                boolean isHidden = (1 == res.getInt(8)) ? true : false;
                 boolean isMyEntando = (1 == res.getInt(9)) ? true : false;
                 ApiService apiService = new ApiService(key, description, masterMethod,
-                        parameters, freeParameters, tag, isPublic, isActive, isMyEntando);
+                        parameters, freeParameters, tag, !isHidden, isActive, isMyEntando);
 				boolean authRequired = (1 == res.getInt(10)) ? true : false;
 				apiService.setRequiredAuth(authRequired);
 				String requiredPermission = res.getString(11);
@@ -283,8 +284,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
 		}
 		int isActive = (service.isActive()) ? 1 : 0;
 		stat.setInt(++index, isActive);
-		int isPublic = (service.isPublicService()) ? 1 : 0;
-		stat.setInt(++index, isPublic);
+		int isHidden = (service.isHidden()) ? 1 : 0;
+		stat.setInt(++index, isHidden);
 		int isMyEntando = (service.isMyEntando()) ? 1 : 0;
 		stat.setInt(++index, isMyEntando);
 		int authRequired = (service.getRequiredAuth()) ? 1 : 0;
@@ -322,28 +323,28 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
     }
     
     private static final String LOAD_API_STATUS =
-            "SELECT resource, httpmethod, isactive, authenticationrequired, authorizationrequired "
+            "SELECT resource, httpmethod, isactive, authenticationrequired, authorizationrequired, ishidden "
             + "FROM apicatalog_methods";
     
     private static final String SAVE_API_STATUS =
             "INSERT INTO apicatalog_methods(resource, httpmethod, isactive, "
-            + "authenticationrequired, authorizationrequired) VALUES (?, ?, ?, ?, ?)";
+            + "authenticationrequired, authorizationrequired, ishidden) VALUES (?, ?, ?, ?, ?, ?)";
     
     private static final String RESET_API_STATUS =
             "DELETE FROM apicatalog_methods WHERE resource = ? AND httpmethod = ?";
     
     private static final String LOAD_SERVICES =
 			"SELECT servicekey, resource, description, parameters, tag, freeparameters, isactive, "
-			+ "ispublic, myentando, authenticationrequired, requiredpermission, requiredgroup FROM apicatalog_services";
+			+ "ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup FROM apicatalog_services";
     
     private static final String ADD_SERVICE =
             "INSERT INTO apicatalog_services(servicekey, resource, description, parameters, tag, "
-			+ "freeparameters, isactive, ispublic, myentando, authenticationrequired, requiredpermission, requiredgroup) "
+			+ "freeparameters, isactive, ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup) "
 			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
     
     private static final String UPDATE_SERVICE =
             "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , "
-			+ "freeparameters = ? , isactive = ? , ispublic = ? , myentando = ? , authenticationrequired = ? , requiredpermission = ? , requiredgroup = ? WHERE servicekey = ? ";
+			+ "freeparameters = ? , isactive = ? , ishidden = ? , myentando = ? , authenticationrequired = ? , requiredpermission = ? , requiredgroup = ? WHERE servicekey = ? ";
     
     private static final String DELETE_SERVICE =
             "DELETE FROM apicatalog_services WHERE servicekey = ? ";

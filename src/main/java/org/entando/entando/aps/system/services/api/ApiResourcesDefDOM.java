@@ -191,6 +191,7 @@ public class ApiResourcesDefDOM {
     public static final String RESOURCE_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String METHOD_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String ACTIVE_ATTRIBUTE_NAME = "active";
+    public static final String HIDDEN_ATTRIBUTE_NAME = "hidden";
     public static final String CAN_SPAWN_OTHER_ATTRIBUTE_NAME = "canSpawnOthers";
     public static final String SOURCE_ELEMENT_NAME = "source";
     public static final String PLUGIN_CODE_ATTRIBUTE_NAME = "pluginCode";

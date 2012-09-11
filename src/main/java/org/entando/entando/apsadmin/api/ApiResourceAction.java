@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethod.HttpMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
@@ -31,7 +33,12 @@ import org.entando.entando.apsadmin.api.helper.SchemaGeneratorActionHelper;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.role.IRoleManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.system.BaseAction;
+
+import org.apache.commons.beanutils.BeanComparator;
 
 /**
  * @author E.Santoboni
@@ -128,11 +135,12 @@ public class ApiResourceAction extends AbstractApiAction {
             ApiMethod method = this.checkAndReturnMethod();
             String requiredAuthority = this.getRequest().getParameter(method.getHttpMethod().toString() + "_methodAuthority");
             String active = this.getRequest().getParameter(method.getHttpMethod().toString() + "_active");
+            String hidden = this.getRequest().getParameter(method.getHttpMethod().toString() + "_hidden");
             if (null == requiredAuthority) {
                 //TODO MANAGE
                 return SUCCESS;
             }
-            this.updateMethodStatus(method, requiredAuthority, active);
+            this.updateMethodStatus(method, requiredAuthority, active, hidden);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status");
             return FAILURE;
@@ -165,14 +173,15 @@ public class ApiResourceAction extends AbstractApiAction {
             ApiResource resource = this.getApiCatalogManager().getResource(this.getNamespace(), this.getResourceName());
             String requiredAuthority = this.getRequest().getParameter("methodAuthority");
             String active = this.getRequest().getParameter("active");
+            String hidden = this.getRequest().getParameter("hidden");
             if (null == requiredAuthority) {
                 //TODO MANAGE
                 return SUCCESS;
             }
-            this.updateMethodStatus(resource.getGetMethod(), requiredAuthority, active);
-            this.updateMethodStatus(resource.getPostMethod(), requiredAuthority, active);
-            this.updateMethodStatus(resource.getPutMethod(), requiredAuthority, active);
-            this.updateMethodStatus(resource.getDeleteMethod(), requiredAuthority, active);
+            this.updateMethodStatus(resource.getGetMethod(), requiredAuthority, active, hidden);
+            this.updateMethodStatus(resource.getPostMethod(), requiredAuthority, active, hidden);
+            this.updateMethodStatus(resource.getPutMethod(), requiredAuthority, active, hidden);
+            this.updateMethodStatus(resource.getDeleteMethod(), requiredAuthority, active, hidden);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "updateAllMethodStatus", "Error updating all method status");
             return FAILURE;
@@ -180,7 +189,7 @@ public class ApiResourceAction extends AbstractApiAction {
         return SUCCESS;
     }
     
-    private void updateMethodStatus(ApiMethod method, String requiredAuthority, String active) {
+    private void updateMethodStatus(ApiMethod method, String requiredAuthority, String active, String hidden) {
         if (null == method) return;
         try {
             if (null != requiredAuthority && requiredAuthority.equals("0")) {
@@ -194,6 +203,7 @@ public class ApiResourceAction extends AbstractApiAction {
                 method.setRequiredPermission(null);
             }
             method.setStatus(active != null);
+            method.setHidden(hidden != null);
             this.getApiCatalogManager().updateMethodConfig(method);
             String[] args = {method.getHttpMethod().toString()};
             this.addActionMessage(this.getText("message.resource.method.configUpdated", args));

@@ -68,7 +68,9 @@ public class ApiMethod implements Serializable {
             }
             this.setDefaultStatus(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.ACTIVE_ATTRIBUTE_NAME)));
             this.setStatus(this.getDefaultStatus());
-            this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
+			this.setDefaultHidden(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.HIDDEN_ATTRIBUTE_NAME)));
+            this.setHidden(this.getDefaultHidden());
+			this.setCanSpawnOthers(Boolean.parseBoolean(element.getAttributeValue(ApiResourcesDefDOM.CAN_SPAWN_OTHER_ATTRIBUTE_NAME)));
             this.setDescription(element.getChildText(ApiResourcesDefDOM.METHOD_DESCRIPTION_ELEMENT_NAME));
             Element springBeanElement = element.getChild(ApiResourcesDefDOM.SPRING_BEAN_ELEMENT_NAME);
             this.setSpringBean(springBeanElement.getAttributeValue(ApiResourcesDefDOM.SPRING_BEAN_NAME_ATTRIBUTE_NAME));
@@ -112,6 +114,8 @@ public class ApiMethod implements Serializable {
 		clone.setNamespace(this.getNamespace());
         clone.setDefaultStatus(this.getDefaultStatus());
         clone.setStatus(this.getStatus());
+        clone.setDefaultHidden(this.getDefaultHidden());
+        clone.setHidden(this.getHidden());
         clone.setDescription(this.getDescription());
         if (null != this.getParameters()) {
             List<ApiMethodParameter> clonedParameters = new ArrayList<ApiMethodParameter>();
@@ -151,6 +155,7 @@ public class ApiMethod implements Serializable {
         this.setRequiredAuth(this.getDefaultRequiredAuth());
         this.setRequiredPermission(this.getDefaultRequiredPermission());
         this.setStatus(this.getDefaultStatus());
+		this.setHidden(this.getDefaultHidden());
     }
     
     public String getResourceName() {
@@ -180,13 +185,29 @@ public class ApiMethod implements Serializable {
     public void setStatus(Boolean status) {
         this._status = status;
     }
-    
+	
     public Boolean getDefaultStatus() {
+		if (null == this._defaultStatus) return false;
         return _defaultStatus;
     }
     protected void setDefaultStatus(Boolean defaultStatus) {
         this._defaultStatus = defaultStatus;
     }
+    
+	public Boolean getHidden() {
+		return _hidden;
+	}
+	public void setHidden(Boolean hidden) {
+		this._hidden = hidden;
+	}
+    
+	public Boolean getDefaultHidden() {
+		if (null == this._defaultHidden) return false;
+		return _defaultHidden;
+	}
+	public void setDefaultHidden(Boolean defaultHidden) {
+		this._defaultHidden = defaultHidden;
+	}
     
     public Class getExpectedType() {
         return _expectedType;
@@ -326,6 +347,8 @@ public class ApiMethod implements Serializable {
     
     private Boolean _defaultStatus;
     private Boolean _status;
+	private Boolean _defaultHidden;
+	private Boolean _hidden;
     
     private Boolean _defaultRequiredAuth;
     private String _defaultRequiredPermission;
