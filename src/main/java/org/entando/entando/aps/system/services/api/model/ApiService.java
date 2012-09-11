@@ -25,9 +25,9 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public class ApiService implements Serializable {
-	
+
 	protected ApiService() {}
-	
+
 	public ApiService(String key, ApsProperties description, ApiMethod master, ApsProperties parameters,
 			String[] freeParameters, String tag, boolean isPublic, boolean isActive, boolean isMyEntando) {
 		this.setKey(key);
@@ -36,7 +36,7 @@ public class ApiService implements Serializable {
 		this.setParameters(parameters);
 		this.setFreeParameters(freeParameters);
 		this.setTag(tag);
-		this.setPublicService(isPublic);
+		this.setHidden(!isPublic);
 		this.setActive(isActive);
 		this.setMyEntando(isMyEntando);
 	}
@@ -66,7 +66,7 @@ public class ApiService implements Serializable {
 		clone.setRequiredPermission(this.getRequiredPermission());
 		return clone;
 	}
-	
+
 	public String getKey() {
 		return _key;
 	}
@@ -122,11 +122,20 @@ public class ApiService implements Serializable {
 		this._tag = tag;
 	}
 	
+	@Deprecated
 	public boolean isPublicService() {
-		return _publicService;
+		return !this.isHidden();
 	}
+	@Deprecated
 	public void setPublicService(boolean publicService) {
-		this._publicService = publicService;
+		this.setHidden(!publicService);
+	}
+	
+	public boolean isHidden() {
+		return _hidden;
+	}
+	public void setHidden(boolean hidden) {
+		this._hidden = hidden;
 	}
 	
 	public boolean isActive() {
@@ -174,7 +183,7 @@ public class ApiService implements Serializable {
 	private ApsProperties _parameters;
 	private String[] _freeParameters;
 	private String _tag;
-	private boolean _publicService;
+	private boolean _hidden;
 	private boolean _active;
 	private boolean _myEntando;
 	

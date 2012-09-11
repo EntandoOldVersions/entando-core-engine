@@ -64,6 +64,7 @@ CREATE TABLE apicatalog_methods (
     resource character varying(100) NOT NULL,
     httpmethod character varying(6) NOT NULL,
     isactive smallint,
+	ishidden smallint NOT NULL,
     authenticationrequired smallint,
     authorizationrequired character varying(30)
 );
@@ -83,7 +84,7 @@ CREATE TABLE apicatalog_services (
     tag character varying(100),
     freeparameters character varying,
     isactive smallint NOT NULL,
-    ispublic smallint NOT NULL,
+    ishidden smallint NOT NULL,
     myentando smallint NOT NULL,
     authenticationrequired smallint,
     requiredpermission character varying(30),

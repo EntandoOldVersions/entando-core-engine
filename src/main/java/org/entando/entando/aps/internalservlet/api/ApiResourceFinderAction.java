@@ -33,8 +33,11 @@ public class ApiResourceFinderAction extends AbstractApiFinderAction {
 		ApiMethod POSTMethod = apiResource.getPostMethod();
 		ApiMethod PUTMethod = apiResource.getPutMethod();
 		ApiMethod DELETEMethod = apiResource.getDeleteMethod();
-		return (null != GETMethod && GETMethod.isActive()) || (null != POSTMethod && POSTMethod.isActive()) || 
-				(null != PUTMethod && PUTMethod.isActive()) || (null != DELETEMethod && DELETEMethod.isActive());
+		return (this.isVisible(GETMethod) || this.isVisible(POSTMethod) || this.isVisible(PUTMethod) || this.isVisible(DELETEMethod));
+	}
+	
+	private boolean isVisible(ApiMethod method) {
+		return (null != method && method.isActive() && !method.getHidden());
 	}
 	
 }

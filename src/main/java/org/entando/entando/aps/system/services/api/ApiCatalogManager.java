@@ -132,6 +132,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             ApiMethod masterMethod = this.checkMethod(apiMethod);
             this.getApiCatalogDAO().saveApiStatus(apiMethod);
             masterMethod.setStatus(apiMethod.getStatus());
+			masterMethod.setHidden(apiMethod.getHidden());
             masterMethod.setRequiredAuth(apiMethod.getRequiredAuth());
             String requiredPermission = apiMethod.getRequiredPermission();
             if (null != requiredPermission && requiredPermission.trim().length() > 0) {
