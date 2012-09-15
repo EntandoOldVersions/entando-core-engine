@@ -63,7 +63,7 @@ CREATE TABLE api_oauth_tokens (
 CREATE TABLE apicatalog_methods (
     resource character varying(100) NOT NULL,
     httpmethod character varying(6) NOT NULL,
-    isactive smallint,
+    isactive smallint NOT NULL,
 	ishidden smallint NOT NULL,
     authenticationrequired smallint,
     authorizationrequired character varying(30)
