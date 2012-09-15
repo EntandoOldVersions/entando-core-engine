@@ -85,7 +85,7 @@ DROP TABLE IF EXISTS `apicatalog_methods`;
 CREATE TABLE `apicatalog_methods` (
   `resource` varchar(100) NOT NULL,
   `httpmethod` varchar(6) NOT NULL,
-  `isactive` tinyint(4) DEFAULT NULL,
+  `isactive` tinyint(4) NOT NULL,
   `ishidden` tinyint(4) NOT NULL,
   `authenticationrequired` tinyint(4) DEFAULT NULL,
   `authorizationrequired` varchar(100) DEFAULT NULL,

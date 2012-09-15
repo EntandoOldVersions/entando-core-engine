@@ -28,13 +28,13 @@
 	<bean id="jacmsAttachResource" class="com.agiletec.plugins.jacms.aps.system.services.resource.model.AttachResource" parent="jacmsAbstractResource" >
 		<property name="type" value="Attach" />
 		<property name="folder" value="cms/documents" />
-		<property name="allowedExtensions" value="pdf,xls,doc,ppt,txt,rtf,sxw,sxc,odt,ods,odp,tar,gz,zip,rar,flv,swf,avi,wmv,ogg,mp3,wav,ogm,mov,iso,nrg," />
+		<property name="allowedExtensions"><value>${jacms.attachResource.allowedExtensions}</value></property>
 	</bean>
 	
 	<bean id="jacmsImageResource" class="com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource" parent="jacmsAbstractResource" >
 		<property name="type" value="Image" />
 		<property name="folder" value="cms/images" />
-		<property name="allowedExtensions" value="jpg,jpeg,png" />
+		<property name="allowedExtensions"><value>${jacms.imageResource.allowedExtensions}</value></property>
 		<property name="imageDimensionReader" ref="jacmsImageDimensionReader" />
 		<property name="imageResizerClasses">
 		<map>
