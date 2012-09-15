@@ -7,16 +7,6 @@
 	
 	<bean id="jacmsContentActionHelper" parent="entityActionHelper" 
 			class="com.agiletec.plugins.jacms.apsadmin.content.helper.ContentActionHelper" >
-		<!--
-		<property name="extraAttributeManagers">
-			<map>
-				<entry key="Link"><ref bean="jacmsLinkAttributeManager" /></entry>
-				<entry key="Hypertext"><ref bean="jacmsHypertextAttributeManager" /></entry>
-				<entry key="Image"><ref bean="jacmsResourceAttributeManager" /></entry>
-				<entry key="Attach"><ref bean="jacmsResourceAttributeManager" /></entry>
-			</map>
-		</property>
-		-->
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="pageManager" ref="PageManager" />
 		<property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
