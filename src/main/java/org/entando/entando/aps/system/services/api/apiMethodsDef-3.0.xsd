@@ -37,6 +37,7 @@
       </xs:sequence>
       <xs:attribute name="active" use="required" type="xs:boolean"/>
       <xs:attribute name="canSpawnOthers" type="xs:boolean"/>
+      <xs:attribute name="hidden" type="xs:boolean"/>
       <xs:attribute name="httpMethod" type="xs:NCName"/>
       <xs:attribute name="name" type="xs:NCName"/>
       <xs:attribute name="namespace" type="xs:NCName"/>

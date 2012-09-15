@@ -1,35 +1,41 @@
 <apiMethodDefinitions>
     
-    <method name="getServices" active="true" canSpawnOthers="false">
+	<resource name="getServices">
+		<description>The services configured in this instance of Entando.</description>
         <source>core</source>
-        <description>Returns the services configured in this instance of Entando.</description>
-        <springBean name="ApiServiceInterface" method="getServices" />
-        <responseClass>org.entando.entando.aps.system.services.api.response.ServicesResponse</responseClass>
-        <parameters>
-            <parameter key="tag" required="false">
-                <description>The tag (or part thereof) of the services to return.</description>
-            </parameter>
-            <parameter key="myentando" required="false">
-                <description>Filters the services based on compatibility with MyEntando. Entries true or false</description>
-            </parameter>
-        </parameters>
-    </method>
+        <method httpMethod="GET" active="true" canSpawnOthers="false">
+            <description>Returns the services configured in this instance of Entando.</description>
+			<springBean name="ApiServiceInterface" method="getServices" />
+			<responseClass>org.entando.entando.aps.system.services.api.response.ServicesResponse</responseClass>
+			<parameters>
+				<parameter key="tag" required="false">
+					<description>The tag (or part thereof) of the services to return.</description>
+				</parameter>
+				<parameter key="myentando" required="false">
+					<description>Filters the services based on compatibility with MyEntando. Entries true or false</description>
+				</parameter>
+			</parameters>
+        </method>
+    </resource>
     
-    <method name="getService" active="true" canSpawnOthers="false">
+    <resource name="getService">
+		<description>A service configured in this instance of Entando.</description>
         <source>core</source>
-        <description>Returns one of the services configured in this instance of Entando.</description>
-        <springBean name="ApiServiceInterface" method="getService" />
-        <parameters>
-            <parameter key="key" required="true">
-                <description>The unique key of the wanted service.</description>
-            </parameter>
-        </parameters>
-    </method>
+        <method httpMethod="GET" active="true" canSpawnOthers="false">
+            <description>Returns one of the services configured in this instance of Entando.</description>
+			<springBean name="ApiServiceInterface" method="getService" />
+			<parameters>
+				<parameter key="key" required="true">
+					<description>The unique key of the wanted service.</description>
+				</parameter>
+			</parameters>
+        </method>
+    </resource>
     
     <resource name="myOAuthAccessToken">
         <description>My OAuth Access Token</description>
         <source>core</source>
-        <method httpMethod="DELETE" active="true" requiredAuth="true">
+        <method httpMethod="DELETE" active="true" requiredAuth="true" hidden="true">
             <description>Delete his Access Token</description>
             <springBean name="OAuthConsumerManager" method="deleteMyAccessToken" />
             <parameters>
@@ -37,7 +43,6 @@
             </parameters>
         </method>
     </resource>
-    
     
     <!--
     <resource name="entandoEntity">
