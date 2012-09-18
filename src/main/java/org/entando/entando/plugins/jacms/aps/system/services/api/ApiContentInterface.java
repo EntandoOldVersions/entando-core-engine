@@ -51,6 +51,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+
 import javax.ws.rs.core.Response;
 
 /**
@@ -103,7 +104,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     }
 
     public String getContentsToHtml(Properties properties) throws Throwable {
-        StringBuffer render = new StringBuffer();
+        StringBuilder render = new StringBuilder();
         try {
             String modelId = properties.getProperty("modelId");
             if (null == modelId || modelId.trim().length() == 0) {
@@ -178,7 +179,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContent");
+            ApsSystemUtils.logThrowable(t, this, "getContentToHtml");
             throw new ApsSystemException("Error into API method", t);
         }
         return render;
