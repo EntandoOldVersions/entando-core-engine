@@ -33,7 +33,6 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
@@ -237,7 +236,7 @@ public class ApiServiceAction extends AbstractApiAction {
 		do {
 			index++;
 			currentCode = masterMethodName + "_" + index;
-		} while (null != this.getApiCatalogManager().getApiService(currentCode));
+		} while (null != this.getApiService(currentCode));
 		return currentCode;
 	}
 
@@ -251,13 +250,13 @@ public class ApiServiceAction extends AbstractApiAction {
 			if (null != check) {
 				return check;
 			}
-			ApiService apiService = this.getApiCatalogManager().getApiService(this.getServiceKey());
+			ApiService apiService = this.getApiService(this.getServiceKey());
 			this.setApiParameters(apiService.getMaster().getParameters());
 			this.setResourceName(apiService.getMaster().getResourceName());
 			this.setNamespace(apiService.getMaster().getNamespace());
 			this.setApiParameterValues(apiService.getParameters());
 			this.setDescriptions(apiService.getDescription());
-			this.setPublicService(apiService.isPublicService());
+			this.setPublicService(!apiService.isHidden());
 			this.setActiveService(apiService.isActive());
 			this.setMyEntandoService(apiService.isMyEntando());
 			this.setServiceKey(apiService.getKey());
@@ -366,9 +365,21 @@ public class ApiServiceAction extends AbstractApiAction {
 		}
 		return null;
 	}
-
-	private String checkService() throws Throwable {
-		ApiService apiService = this.getApiCatalogManager().getApiService(this.getServiceKey());
+	
+    public String generateResponseBodySchema() {
+        try {
+            String result = this.checkService();
+			if (null != result) return result;
+			ApiService apiService = this.getApiService(this.getServiceKey());
+            return super.generateResponseBodySchema(apiService.getMaster());
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
+            return FAILURE;
+        }
+    }
+	
+	protected String checkService() throws Throwable {
+		ApiService apiService = this.getApiService(this.getServiceKey());
 		if (apiService == null) {
 			this.addActionError(this.getText("error.service.invalid", new String[]{this.getServiceKey()}));
 			return INPUT;
@@ -386,9 +397,6 @@ public class ApiServiceAction extends AbstractApiAction {
 	
 	public Group getGroup(String name) {
 		return this.getGroupManager().getGroup(name);
-	}
-	public Permission getPermission(String name) {
-		return this.getRoleManager().getPermission(name);
 	}
 	
 	public String getServiceGroup() {

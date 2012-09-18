@@ -54,16 +54,16 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 				ApiService service = this.getApiCatalogManager().getApiService(serviceItem.getKey());
 				boolean activeService = (this.getRequest().getParameter(service.getKey() + "_active") != null);
 				boolean publicService = (this.getRequest().getParameter(service.getKey() + "_public") != null);
-				if (activeService != service.isActive() || publicService != service.isPublicService()) {
+				if (activeService != service.isActive() || publicService != !service.isHidden()) {
 					service.setActive(activeService);
-					service.setPublicService(publicService);
+					service.setHidden(!publicService);
 					this.getApiCatalogManager().updateService(service);
 					this.addActionMessage(this.getText("message.service.status.updated", new String[]{serviceItem.getKey(), serviceItem.getValue()}));
 					ApsSystemUtils.getLogger().info("Updated api service status - Service Key '" + serviceItem.getKey() + "'");
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateAllStatus");
+			ApsSystemUtils.logThrowable(t, this, "updateAllStatusOfGroup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -89,24 +89,30 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 	private void buildServiceGroups(Map<String, List<ApiSelectItem>> groups) throws Throwable {
 		try {
 			Map<String, ApiService> serviceMap = this.getApiCatalogManager().getServices();
-			if (null == serviceMap || serviceMap.size() == 0) return;
+			if (null == serviceMap || serviceMap.isEmpty()) return;
 			Iterator<ApiService> services = serviceMap.values().iterator();
 			while (services.hasNext()) {
 				ApiService apiService = services.next();
-				ApiMethod masterMethod = apiService.getMaster();
-				String pluginCode = masterMethod.getPluginCode();
-				if (null != pluginCode && pluginCode.trim().length() > 0) {
-					this.addService(pluginCode, apiService, groups);
-				} else if (masterMethod.getSource().equals("core")) {
-					this.addService(masterMethod.getSource(), apiService, groups);
-				} else {
-					this.addService("custom", apiService, groups);
+				if (this.includeServiceIntoMapping(apiService)) {
+					ApiMethod masterMethod = apiService.getMaster();
+					String pluginCode = masterMethod.getPluginCode();
+					if (null != pluginCode && pluginCode.trim().length() > 0) {
+						this.addService(pluginCode, apiService, groups);
+					} else if (masterMethod.getSource().equals("core")) {
+						this.addService(masterMethod.getSource(), apiService, groups);
+					} else {
+						this.addService("custom", apiService, groups);
+					}
 				}
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "buildServiceGroups");
 			throw t;
 		}
+	}
+	
+	protected boolean includeServiceIntoMapping(ApiService apiService) {
+		return true;
 	}
 	
 	private void addService(String groupCode, ApiService apiService, Map<String, List<ApiSelectItem>> groups) {
@@ -118,10 +124,11 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 		String description = super.getTitle(apiService.getKey(), apiService.getDescription());
 		ApiSelectItem item = new ApiSelectItem(apiService.getKey(), description, groupCode);
 		item.setActiveItem(apiService.isActive());
-		item.setPublicItem(apiService.isPublicService());
+		item.setPublicItem(!apiService.isHidden());
 		group.add(item);
 	}
 	
+	@Override
 	protected boolean includeIntoMapping(ApiResource apiResource) {
 		ApiMethod GETMethod = apiResource.getGetMethod();
         return (null != GETMethod && GETMethod.isCanSpawnOthers());
