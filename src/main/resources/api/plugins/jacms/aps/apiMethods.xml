@@ -2,7 +2,7 @@
 	
 	<!-- ************** CONTENTS (** DEPRECATED METHODS **) ************** START -->
     
-	<resource name="getContents" namespace="jacms">
+	<resource name="getContents">
 		<description>Returns a list of public contents, composed using the specified filters.</description>
         <source pluginCode="jacms">plugins</source>
 		<method httpMethod="GET" active="true" canSpawnOthers="true" hidden="true">
@@ -26,7 +26,7 @@
 		</method>
 	</resource>
     
-	<resource name="getContent" namespace="jacms">
+	<resource name="getContent">
 		<description>Returns a public content.</description>
         <source pluginCode="jacms">plugins</source>
 		<method httpMethod="GET" active="true" canSpawnOthers="true" hidden="true">
@@ -274,47 +274,47 @@
 		</method>
     </resource>
 	
-	<!-- ************** IMAGE RESOURCE ************** -->
+	<!-- ************** ATTACHMENT RESOURCE ************** -->
 	
     <resource name="attachment" namespace="jacms">
-        <description>The rappresentation of a document resource</description>
+        <description>The rappresentation of an attachment resource</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true" canSpawnOthers="true">
-            <description>Return a document resource</description>
-            <springBean name="jacmsApiResouceInterface" method="getDocument" />
+            <description>Return an attachment resource</description>
+            <springBean name="jacmsApiResouceInterface" method="getAttachment" />
             <responseClass>org.entando.entando.plugins.jacms.aps.system.services.api.response.ResourceResponse</responseClass>
             <parameters>
                 <parameter key="id" required="true">
-                    <description>The id of the document resource to return</description>
+                    <description>The id of the attachment resource to return</description>
                 </parameter>
             </parameters>
         </method>
         <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="manageResources">
-            <description>Add a document resource</description>
-            <springBean name="jacmsApiResouceInterface" method="addDocument" />
+            <description>Add an attachment resource</description>
+            <springBean name="jacmsApiResouceInterface" method="addAttachment" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
         </method>
         <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="manageResources">
-            <description>Update a document resource</description>
-            <springBean name="jacmsApiResouceInterface" method="updateDocument" />
+            <description>Update an attachment resource</description>
+            <springBean name="jacmsApiResouceInterface" method="updateAttachment" />
             <expectedType>org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBResource</expectedType>
         </method>
         <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="manageResources">
-            <description>Delete a document resource</description>
-            <springBean name="jacmsApiResouceInterface" method="deleteDocument" />
+            <description>Delete an attachment resource</description>
+            <springBean name="jacmsApiResouceInterface" method="deleteAttachment" />
             <parameters>
                 <parameter key="id" required="true">
-                    <description>The Id of the document resource to delete</description>
+                    <description>The Id of the attachment resource to delete</description>
                 </parameter>
             </parameters>
         </method>
     </resource>
     
     <resource name="attachments" namespace="jacms">
-        <description>Returns a list of id of document resource, composed using the specified filters.</description>
+        <description>Returns a list of id of attachment resource, composed using the specified filters.</description>
         <source pluginCode="jacms">plugins</source>
 		<method httpMethod="GET" active="true" canSpawnOthers="true">
-			<springBean name="jacmsApiResouceInterface" method="getDocuments" />
+			<springBean name="jacmsApiResouceInterface" method="getAttachments" />
 			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
 			<parameters>
 				<parameter key="description" required="false">
