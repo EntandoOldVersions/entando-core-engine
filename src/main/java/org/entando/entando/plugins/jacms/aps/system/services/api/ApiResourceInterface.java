@@ -59,7 +59,7 @@ public class ApiResourceInterface {
         return this.getResources(properties);
     }
 	
-	public List<String> getDocuments(Properties properties) throws Throwable {
+	public List<String> getAttachments(Properties properties) throws Throwable {
 		properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.getResources(properties);
     }
@@ -111,7 +111,7 @@ public class ApiResourceInterface {
         return this.getResource(properties);
     }
 	
-	public JAXBResource getDocument(Properties properties) throws Throwable {
+	public JAXBResource getAttachment(Properties properties) throws Throwable {
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.getResource(properties);
     }
@@ -151,7 +151,7 @@ public class ApiResourceInterface {
         return this.addResource(jaxbResource, properties);
     }
 	
-	public StringApiResponse addDocument(JAXBResource jaxbResource, Properties properties) throws Throwable {
+	public StringApiResponse addAttachment(JAXBResource jaxbResource, Properties properties) throws Throwable {
 		this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.addResource(jaxbResource, properties);
@@ -182,7 +182,7 @@ public class ApiResourceInterface {
 		return this.updateResource(jaxbResource, properties);
     }
 	
-	public StringApiResponse updateDocument(JAXBResource jaxbResource, Properties properties) throws Throwable {
+	public StringApiResponse updateAttachment(JAXBResource jaxbResource, Properties properties) throws Throwable {
 		this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.updateResource(jaxbResource, properties);
@@ -302,7 +302,7 @@ public class ApiResourceInterface {
 	 * @param properties The properties of the DELETE method call.
 	 * @throws Throwable Il case of error.
 	 */
-	public StringApiResponse deleteDocument(Properties properties) throws Throwable {
+	public StringApiResponse deleteAttachment(Properties properties) throws Throwable {
 		return this.deleteResource(properties, JacmsSystemConstants.RESOURE_ATTACH_CODE);
 	}
 	
