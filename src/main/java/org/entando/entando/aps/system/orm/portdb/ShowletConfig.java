@@ -8,7 +8,7 @@ package org.entando.entando.aps.system.orm.portdb;
  *
  * @author eu
  */
-public class Showletconfig {
+public class ShowletConfig {
 	
 }
 /*

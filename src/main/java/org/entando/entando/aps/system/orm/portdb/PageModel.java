@@ -11,10 +11,10 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Pagemodels.COLUMN_NAME)
-public class Pagemodels {
+@DatabaseTable(tableName = PageModel.TABLE_NAME)
+public class PageModel {
 	
-	public Pagemodels() {}
+	public PageModel() {}
 	
 	@DatabaseField(columnName = "code", 
 			dataType = DataType.STRING, 
@@ -39,7 +39,7 @@ public class Pagemodels {
 			canBeNull = true)
 	private String _pluginCode;
 	
-	public static final String COLUMN_NAME = "pagemodels_xxx";
+	public static final String TABLE_NAME = "pagemodels_xxx";
 	
 }
 /*

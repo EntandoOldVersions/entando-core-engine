@@ -29,10 +29,19 @@
 	
 	<util:list id="entandoPortTableClasses">
 		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Categories</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contentmodels</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contents</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contentsearch</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Category</value>
+		<value>org.entando.entando.aps.system.orm.portdb.ContentModel</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Content</value>
+		<value>org.entando.entando.aps.system.orm.portdb.ContentSearch</value>
+		<value>org.entando.entando.aps.system.orm.portdb.LocalString</value>
+		<value>org.entando.entando.aps.system.orm.portdb.PageModel</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Page</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Resource</value>
+		<value>org.entando.entando.aps.system.orm.portdb.ResourceRelation</value>
+		<!--
+		<value>org.entando.entando.aps.system.orm.portdb.ShowletCatalog</value>
+		<value>org.entando.entando.aps.system.orm.portdb.ShowletConfig</value>
+		-->
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">

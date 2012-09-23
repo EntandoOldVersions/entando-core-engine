@@ -7,16 +7,17 @@ package org.entando.entando.aps.system.orm.portdb;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbCreatorManager;
 
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Contentsearch.COLUMN_NAME)
-public class Localstrings implements ExtendedColumnDefinition {
+@DatabaseTable(tableName = LocalString.TABLE_NAME)
+public class LocalString implements ExtendedColumnDefinition {
 	
-	public Localstrings() {}
+	public LocalString() {}
 	
 	@DatabaseField(columnName = "keycode", 
 			dataType = DataType.STRING, 
@@ -37,10 +38,10 @@ public class Localstrings implements ExtendedColumnDefinition {
 	
 	@Override
 	public String[] extensions(IDbCreatorManager.DatabaseType type) {
-		return new String[]{"ALTER TABLE " + COLUMN_NAME + " ADD CONSTRAINT " + COLUMN_NAME + "_pkey PRIMARY KEY(keycode , langcode )"};
+		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(keycode , langcode )"};
 	}
 	
-	public static final String COLUMN_NAME = "localstrings_xxx";
+	public static final String TABLE_NAME = "localstrings";
 	
 }
 /*

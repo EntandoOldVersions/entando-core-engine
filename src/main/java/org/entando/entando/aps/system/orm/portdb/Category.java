@@ -11,10 +11,10 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Categories.COLUMN_NAME)
-public class Categories {
+@DatabaseTable(tableName = Category.TABLE_NAME)
+public class Category {
 
-	public Categories() {}
+	public Category() {}
 	
 	@DatabaseField(columnName = "catcode", 
 			dataType = DataType.STRING, 
@@ -34,7 +34,7 @@ public class Categories {
 			canBeNull = false)
 	private String _titles;
 	
-	public static final String COLUMN_NAME = "categories_xxx";
+	public static final String TABLE_NAME = "categories_xxx";
 	
 }
 /*

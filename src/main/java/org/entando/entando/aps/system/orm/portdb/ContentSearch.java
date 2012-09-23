@@ -14,15 +14,15 @@ import org.entando.entando.aps.system.orm.IDbCreatorManager;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Contentsearch.COLUMN_NAME)
-public class Contentsearch implements ExtendedColumnDefinition {
+@DatabaseTable(tableName = ContentSearch.TABLE_NAME)
+public class ContentSearch implements ExtendedColumnDefinition {
 	
-	public Contentsearch() {}
+	public ContentSearch() {}
 	
 	@DatabaseField(foreign = true, columnName = "contentid", 
 			width = 16, 
 			canBeNull = false)
-	private Contents _contentId;
+	private Content _contentId;
 	
 	@DatabaseField(columnName = "attrname", 
 			dataType = DataType.STRING, 
@@ -53,18 +53,18 @@ public class Contentsearch implements ExtendedColumnDefinition {
 	
 	@Override
 	public String[] extensions(IDbCreatorManager.DatabaseType type) {
-		if (type.equals(IDbCreatorManager.DatabaseType.MYSQL)) {
-			return new String[]{"ALTER TABLE `"+COLUMN_NAME+"` "
-					+ "ADD CONSTRAINT "+COLUMN_NAME+"_contentid_fkey FOREIGN KEY (contentid) "
-					+ "REFERENCES `"+Contents.COLUMN_NAME+"` (contentid)"};
-		} else {
-			return new String[]{"ALTER TABLE "+COLUMN_NAME+" "
-					+ "ADD CONSTRAINT "+COLUMN_NAME+"_contentid_fkey FOREIGN KEY (contentid) "
-					+ "REFERENCES "+Contents.COLUMN_NAME+" (contentid)"};
+		String tableName = TABLE_NAME;
+		String contentTableName = Content.TABLE_NAME;
+		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + TABLE_NAME + "`";
+			contentTableName = "`" + Content.TABLE_NAME + "`";
 		}
+		return new String[]{"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_contentid_fkey FOREIGN KEY (contentid) "
+				+ "REFERENCES " + contentTableName + " (contentid)"};
 	}
 	
-	public static final String COLUMN_NAME = "contentsearch_xxx";
+	public static final String TABLE_NAME = "contentsearch_xxx";
 	
 }
 /*

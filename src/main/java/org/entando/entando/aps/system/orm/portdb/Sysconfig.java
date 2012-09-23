@@ -13,7 +13,7 @@ import org.entando.entando.aps.system.orm.IDbCreatorManager;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Sysconfig.COLUMN_NAME)
+@DatabaseTable(tableName = Sysconfig.TABLE_NAME)
 public class Sysconfig implements ExtendedColumnDefinition {
 	
 	public Sysconfig() {}
@@ -43,10 +43,10 @@ public class Sysconfig implements ExtendedColumnDefinition {
 	
 	@Override
 	public String[] extensions(IDbCreatorManager.DatabaseType type) {
-		return new String[]{"ALTER TABLE " + COLUMN_NAME + " ADD CONSTRAINT " + COLUMN_NAME + "_pkey PRIMARY KEY(version , item )"};
+		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(version , item )"};
 	}
 	
-	public static final String COLUMN_NAME = "sysconfig_xxx";
+	public static final String TABLE_NAME = "sysconfig_xxx";
 	
 }
 

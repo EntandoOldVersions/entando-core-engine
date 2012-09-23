@@ -11,10 +11,10 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Contents.COLUMN_NAME)
-public class Contents {
+@DatabaseTable(tableName = Content.TABLE_NAME)
+public class Content {
 	
-	public Contents() {}
+	public Content() {}
 	
 	@DatabaseField(columnName = "contentid", 
 			dataType = DataType.STRING, 
@@ -79,7 +79,7 @@ public class Contents {
 			canBeNull = true)
 	private String _lastEditor;
 	
-	public static final String COLUMN_NAME = "contents_xxx";
+	public static final String TABLE_NAME = "contents_xxx";
 	
 }
 /*

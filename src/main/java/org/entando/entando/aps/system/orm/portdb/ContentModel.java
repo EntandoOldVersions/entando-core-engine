@@ -11,10 +11,10 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = Contentmodels.COLUMN_NAME)
-public class Contentmodels {
+@DatabaseTable(tableName = ContentModel.TABLE_NAME)
+public class ContentModel {
 	
-	public Contentmodels() {}
+	public ContentModel() {}
 	
 	@DatabaseField(columnName = "modelid", 
 			dataType = DataType.INTEGER, 
@@ -44,7 +44,7 @@ public class Contentmodels {
 			canBeNull = false)
 	private String _styleSheet;
 	
-	public static final String COLUMN_NAME = "contentmodels_xxx";
+	public static final String TABLE_NAME = "contentmodels_xxx";
 	
 }
 /*

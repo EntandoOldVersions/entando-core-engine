@@ -5,9 +5,9 @@
 package org.entando.entando.aps.system.orm.portdb;
 
 /**
- * @author eu
+ * @author E.Santoboni
  */
-public class Contentrelations {
+public class ContentRelation {
 	
 }
 /*
