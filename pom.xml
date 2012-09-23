@@ -3,8 +3,8 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.1-EEE-SNAPSHOT</version>
-	<name>E³ - Entando Enterprise Edition: Core Engine</name>
+	<version>3.0.1-OLI-SNAPSHOT</version>
+	<name>Entando: Core Engine - OrmLITE</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
 	<licenses>
@@ -54,10 +54,19 @@
 		<test.database.driver>com.mysql.jdbc.Driver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>3306</test.database.port>
-		<test.database.username>agile</test.database.username>
+		<test.database.username>root</test.database.username>
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
 		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
+		-->
+		<!--
+		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
+		<test.database.hostname>localhost</test.database.hostname>
+		<test.database.port>1527</test.database.port>
+		<test.database.username></test.database.username>
+		<test.database.password></test.database.password>
+		<test.database.port.url>jdbc:derby:${project.artifactId}testPort;create=true</test.database.port.url>
+		<test.database.serv.url>jdbc:derby:${project.artifactId}testServ;create=true</test.database.serv.url>
 		-->
 		<spring.version>3.0.6.RELEASE</spring.version>
 		<struts2.version>2.3.4.1</struts2.version>
@@ -191,6 +200,11 @@
 						<groupId>postgresql</groupId>
 						<artifactId>postgresql</artifactId>
 						<version>9.1-901.jdbc4</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.derby</groupId>
+						<artifactId>derby</artifactId>
+						<version>10.8.2.2</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -740,6 +754,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.8.2.2</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2</version>
@@ -803,6 +822,24 @@
 			<version>20100527</version>
 			<type>jar</type>
 		</dependency>
+		
+		
+		
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-core</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-jdbc</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
+		
+		
+		
 	</dependencies>
 	<reporting>
 		<plugins>

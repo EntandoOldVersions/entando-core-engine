@@ -17,7 +17,7 @@
 	
 	<property name="mysql.hostname" value="localhost" />
 	<property name="mysql.port" value="3306" />
-	<property name="mysql.username" value="agile" />
+	<property name="mysql.username" value="root" />
 	<property name="mysql.password" value="agile" />
 	
 	<!-- Properties definitions for Windows machines START -->

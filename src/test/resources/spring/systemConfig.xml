@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xmlns:context="http://www.springframework.org/schema/context"
-		xmlns:tx="http://www.springframework.org/schema/tx"
 		xmlns:jee="http://www.springframework.org/schema/jee"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
-				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
-				http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
-				http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.0.xsd" >
+		xmlns:util="http://www.springframework.org/schema/util"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 	
 	<context:property-placeholder location="target/test/conf/systemParams.properties"/>
 	
@@ -23,6 +23,34 @@
 			<entry key="logLevel"><jee:jndi-lookup jndi-name="java:comp/env/logLevel" /></entry>
 			<entry key="logFileSize"><jee:jndi-lookup jndi-name="java:comp/env/logFileSize" /></entry>
 			<entry key="logFilesCount"><jee:jndi-lookup jndi-name="java:comp/env/logFilesCount" /></entry>
+		</map>
+		</property>
+	</bean>
+	
+	<util:list id="entandoPortTableClasses">
+		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Categories</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Contentmodels</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Contents</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Contentsearch</value>
+	</util:list>
+	
+	<util:list id="entandoServTableClasses">
+		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
+	</util:list>
+	
+	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 
+			parent="abstractService" >
+		<property name="tableMapping">
+		<map>
+			<entry key="portDataSource"><ref bean="entandoPortTableClasses" /></entry>
+			<entry key="servDataSource"><ref bean="entandoServTableClasses" /></entry>
+		</map>
+		</property>
+		<property name="sqlResources">
+		<map>
+			<entry key="portDataSource"><value>${db.port.script}</value></entry>
+			<entry key="servDataSource"><value>${db.serv.script}</value></entry>
 		</map>
 		</property>
 	</bean>
