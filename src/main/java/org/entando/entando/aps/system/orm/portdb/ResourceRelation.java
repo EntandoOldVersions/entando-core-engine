@@ -6,6 +6,7 @@ package org.entando.entando.aps.system.orm.portdb;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbCreatorManager;
 

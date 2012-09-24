@@ -43,7 +43,7 @@ public class TestCategoryManager extends BaseTestCase {
     	assertNotNull(category);
     	assertEquals(category.getTitle(), "Animali");
     }
-    /*
+    
     public void testAddCategory() throws Throwable {
     	Category cat = this.createCategory();
     	try {
@@ -103,7 +103,7 @@ public class TestCategoryManager extends BaseTestCase {
     	cat.setTitles(titles);
     	return cat;
     }
-    */
+    
     private void init() throws Exception {
     	try {
     		_categoryManager = (ICategoryManager) this.getService(SystemConstants.CATEGORY_MANAGER);

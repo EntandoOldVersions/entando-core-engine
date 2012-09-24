@@ -11,6 +11,10 @@ import com.agiletec.aps.util.FileTextReader;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.db.DerbyClientServerDatabaseType;
+import com.j256.ormlite.db.MysqlDatabaseType;
+import com.j256.ormlite.db.OracleDatabaseType;
+import com.j256.ormlite.db.PostgresDatabaseType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
@@ -49,6 +53,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		if (!this.isCheckOnStartup()) return;
 		System.err.println("****************INITTTTTTTTT*********** ");
 		ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
 		String[] dataSourceNames = factory.getBeanNamesForType(BasicDataSource.class);
@@ -117,14 +122,23 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		int globalResult = 0;
 		ConnectionSource connectionSource = null;
 		try {
+			DatabaseType type = this.getType(databaseName);
 			String url = dataSource.getUrl(); //this.invokeGetMethod("getUrl", dataSource);
 			String username = dataSource.getUsername(); //this.invokeGetMethod("getUsername", dataSource);
 			String password = dataSource.getPassword(); //this.invokeGetMethod("getPassword", dataSource);
 			// create our data-source for the database
-			if (username == null || username.trim().length() == 0) {
-				connectionSource = new JdbcConnectionSource(url);//(DATABASE_URL);
+			if (type.equals(DatabaseType.DERBY)) {
+				connectionSource = new JdbcConnectionSource(url, new DerbyClientServerDatabaseType());//(DATABASE_URL);
 			} else {
-				connectionSource = new JdbcConnectionSource(url, username, password);//(DATABASE_URL);
+				com.j256.ormlite.db.DatabaseType dataType = null;
+				if (type.equals(DatabaseType.POSTGRESQL)) {
+					dataType = new PostgresDatabaseType();
+				} else if (type.equals(DatabaseType.MYSQL)) {
+					dataType = new MysqlDatabaseType();
+				} else if (type.equals(DatabaseType.ORACLE)) {
+					dataType = new OracleDatabaseType();
+				}
+				connectionSource = new JdbcConnectionSource(url, username, password, dataType);//(DATABASE_URL);
 			}
 			globalResult = this.setupDatabase(databaseName, connectionSource);
 		} catch (Throwable t) {
@@ -198,7 +212,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 				}
 			}
 		} catch (SQLException t) {
-			t.printStackTrace();
+			//t.printStackTrace();
 			System.out.println("Table creation not allowed - " + logTableName + " - " + t.getMessage());
 			ApsSystemUtils.getLogger().info("Table creation not allowed - " + t.getMessage());
 		} catch (Throwable t) {
