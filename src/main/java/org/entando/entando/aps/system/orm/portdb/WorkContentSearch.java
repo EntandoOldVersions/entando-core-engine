@@ -7,19 +7,17 @@ package org.entando.entando.aps.system.orm.portdb;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
 import java.util.Date;
-
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbCreatorManager;
 
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = ContentSearch.TABLE_NAME)
-public class ContentSearch implements ExtendedColumnDefinition {
+@DatabaseTable(tableName = WorkContentSearch.TABLE_NAME)
+public class WorkContentSearch implements ExtendedColumnDefinition {
 	
-	public ContentSearch() {}
+	public WorkContentSearch() {}
 	
 	@DatabaseField(foreign = true, columnName = "contentid", 
 			width = 16, 
@@ -66,19 +64,19 @@ public class ContentSearch implements ExtendedColumnDefinition {
 				+ "REFERENCES " + contentTableName + " (contentid)"};
 	}
 	
-	public static final String TABLE_NAME = "contentsearch";
+	public static final String TABLE_NAME = "workcontentsearch";
 	
 }
 /*
-CREATE TABLE contentsearch
+CREATE TABLE workcontentsearch
 (
-  contentid character varying(16) NOT NULL,
+  contentid character varying(16),
   attrname character varying(30) NOT NULL,
   textvalue character varying(255),
   datevalue date,
   numvalue integer,
   langcode character varying(2),
-  CONSTRAINT contentsearch_contentid_fkey FOREIGN KEY (contentid)
+  CONSTRAINT workcontentsearch_contentid_fkey FOREIGN KEY (contentid)
       REFERENCES contents (contentid) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )

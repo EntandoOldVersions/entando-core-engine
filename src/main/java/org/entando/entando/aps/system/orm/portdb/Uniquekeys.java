@@ -4,11 +4,29 @@
  */
 package org.entando.entando.aps.system.orm.portdb;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
- *
- * @author eu
+ * @author E.Santoboni
  */
+@DatabaseTable(tableName = Uniquekeys.TABLE_NAME)
 public class Uniquekeys {
+	
+	public Uniquekeys() {}
+	
+	@DatabaseField(columnName = "id", 
+			dataType = DataType.INTEGER, 
+			canBeNull = false, id = true)
+	private int _id;
+	
+	@DatabaseField(columnName = "keyvalue", 
+			dataType = DataType.INTEGER, 
+			canBeNull = false)
+	private int _keyValue;
+	
+	public static final String TABLE_NAME = "uniquekeys";
 	
 }
 /*

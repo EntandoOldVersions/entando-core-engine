@@ -34,7 +34,7 @@ public class Category {
 			canBeNull = false)
 	private String _titles;
 	
-	public static final String TABLE_NAME = "categories_xxx";
+	public static final String TABLE_NAME = "categories";
 	
 }
 /*

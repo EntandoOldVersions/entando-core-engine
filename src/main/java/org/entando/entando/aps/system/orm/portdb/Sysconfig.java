@@ -46,7 +46,7 @@ public class Sysconfig implements ExtendedColumnDefinition {
 		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(version , item )"};
 	}
 	
-	public static final String TABLE_NAME = "sysconfig_xxx";
+	public static final String TABLE_NAME = "sysconfig";
 	
 }
 

@@ -36,9 +36,7 @@ public class Page implements ExtendedColumnDefinition {
 			canBeNull = false)
 	private int _position;
 	
-	@DatabaseField(columnName = "modelcode", 
-			foreign = true, 
-			dataType = DataType.STRING, 
+	@DatabaseField(foreign = true, columnName = "modelcode", 
 			width = 40, 
 			canBeNull = false)
 	private PageModel _model;
@@ -57,7 +55,7 @@ public class Page implements ExtendedColumnDefinition {
 	@DatabaseField(columnName = "showinmenu", 
 			dataType = DataType.SHORT, 
 			canBeNull = false)
-	private int _showInMenu;
+	private short _showInMenu;
 	
 	@DatabaseField(columnName = "extraconfig", 
 			dataType = DataType.LONG_STRING)
@@ -76,7 +74,7 @@ public class Page implements ExtendedColumnDefinition {
 				+ "REFERENCES " + pageModelTableName + " (code)"};
 	}
 	
-	public static final String TABLE_NAME = "page_xxx";
+	public static final String TABLE_NAME = "pages";
 	
 }
 /*

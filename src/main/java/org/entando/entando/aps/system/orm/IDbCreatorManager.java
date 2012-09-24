@@ -9,6 +9,6 @@ package org.entando.entando.aps.system.orm;
  */
 public interface IDbCreatorManager {
 	
-	public enum DatabaseType {POSTGRESQL, MYSQL, ORACLE}
+	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE}
 	
 }

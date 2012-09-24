@@ -34,17 +34,15 @@ public class ContentModel {
 	private String _description;
 	
 	@DatabaseField(columnName = "model", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
+			dataType = DataType.LONG_STRING)
 	private String _model;
 	
 	@DatabaseField(columnName = "stylesheet", 
 			dataType = DataType.STRING, 
-			width = 50, 
-			canBeNull = false)
+			width = 50)
 	private String _styleSheet;
 	
-	public static final String TABLE_NAME = "contentmodels_xxx";
+	public static final String TABLE_NAME = "contentmodels";
 	
 }
 /*

@@ -45,7 +45,7 @@ public class ResourceRelation implements ExtendedColumnDefinition {
 				+ "REFERENCES " + resourceTableName + " (resid)"};
 	}
 	
-	public static final String TABLE_NAME = "resourcerelations_xxx";
+	public static final String TABLE_NAME = "resourcerelations";
 	
 }
 /*

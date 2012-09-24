@@ -4,10 +4,78 @@
  */
 package org.entando.entando.aps.system.orm.portdb;
 
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
+import org.entando.entando.aps.system.orm.IDbCreatorManager;
+
 /**
  * @author E.Santoboni
  */
-public class ContentRelation {
+@DatabaseTable(tableName = ContentRelation.TABLE_NAME)
+public class ContentRelation implements ExtendedColumnDefinition {
+	
+	public ContentRelation() {}
+	
+	@DatabaseField(foreign = true, columnName = "contentid", 
+			width = 16, 
+			canBeNull = false)
+	private Content _content;
+	
+	@DatabaseField(foreign = true, columnName = "refpage", 
+			width = 30)
+	private Page _page;
+	
+	@DatabaseField(foreign = true, columnName = "refcontent", 
+			width = 16)
+	private Content _refContent;
+	
+	@DatabaseField(foreign = true, columnName = "refresource", 
+			width = 16)
+	private Resource _resource;
+	
+	@DatabaseField(foreign = true, columnName = "refcategory", 
+			width = 30)
+	private Category _category;
+	
+	@DatabaseField(columnName = "refgroup", 
+			dataType = DataType.STRING, 
+			width = 20)
+	private String _group;
+	
+	@Override
+	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+		String tableName = TABLE_NAME;
+		String contentTableName = Content.TABLE_NAME;
+		String pageTableName = Page.TABLE_NAME;
+		String resourceTableName = Resource.TABLE_NAME;
+		String categoryTableName = Category.TABLE_NAME;
+		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + TABLE_NAME + "`";
+			contentTableName = "`" + contentTableName + "`";
+			pageTableName = "`" + pageTableName + "`";
+			resourceTableName = "`" + resourceTableName + "`";
+			categoryTableName = "`" + categoryTableName + "`";
+		}
+		return new String[]{"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_contentid_fkey FOREIGN KEY (contentid) "
+				+ "REFERENCES " + contentTableName + " (contentid)",
+				"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcategory_fkey FOREIGN KEY (refcategory) "
+				+ "REFERENCES " + categoryTableName + " (catcode)",
+				"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcontent_fkey FOREIGN KEY (refcontent) "
+				+ "REFERENCES " + contentTableName + " (contentid)",
+				"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refpage_fkey FOREIGN KEY (refpage) "
+				+ "REFERENCES " + pageTableName + " (code)",
+				"ALTER TABLE " + tableName + " " 
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refresource_fkey FOREIGN KEY (refresource) "
+				+ "REFERENCES " + resourceTableName + " (resid)"};
+	}
+	
+	public static final String TABLE_NAME = "contentrelations";
 	
 }
 /*

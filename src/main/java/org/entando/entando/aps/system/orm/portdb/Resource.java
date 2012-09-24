@@ -50,7 +50,7 @@ public class Resource {
 			canBeNull = false)
 	private String _masterFileName;
 	
-	public static final String TABLE_NAME = "resources_xxx";
+	public static final String TABLE_NAME = "resources";
 	
 }
 /*

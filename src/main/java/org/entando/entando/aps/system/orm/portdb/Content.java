@@ -79,7 +79,7 @@ public class Content {
 			canBeNull = true)
 	private String _lastEditor;
 	
-	public static final String TABLE_NAME = "contents_xxx";
+	public static final String TABLE_NAME = "contents";
 	
 }
 /*

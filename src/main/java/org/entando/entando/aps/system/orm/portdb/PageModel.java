@@ -39,7 +39,7 @@ public class PageModel {
 			canBeNull = true)
 	private String _pluginCode;
 	
-	public static final String TABLE_NAME = "pagemodels_xxx";
+	public static final String TABLE_NAME = "pagemodels";
 	
 }
 /*
