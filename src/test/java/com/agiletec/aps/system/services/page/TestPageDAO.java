@@ -163,6 +163,7 @@ public class TestPageDAO extends BaseTestCase {
 		Page parentPage = new Page();
 		parentPage.setCode("service");
 		page.setParent(parentPage);
+		page.setParentCode("service");
 		PageModel pageModel = new PageModel();
 		pageModel.setCode("service");
 		page.setModel(pageModel);

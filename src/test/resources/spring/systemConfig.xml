@@ -34,20 +34,31 @@
 		<value>org.entando.entando.aps.system.orm.portdb.Content</value>
 		<value>org.entando.entando.aps.system.orm.portdb.LocalString</value>
 		<value>org.entando.entando.aps.system.orm.portdb.PageModel</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Page</value><!-- XXX -->
+		<value>org.entando.entando.aps.system.orm.portdb.Page</value>
 		<value>org.entando.entando.aps.system.orm.portdb.Resource</value>
 		<value>org.entando.entando.aps.system.orm.portdb.ResourceRelation</value>
 		<value>org.entando.entando.aps.system.orm.portdb.ShowletCatalog</value>
-		<value>org.entando.entando.aps.system.orm.portdb.ShowletConfig</value><!-- XXX -->
-		<value>org.entando.entando.aps.system.orm.portdb.Uniquekeys</value><!-- XXX -->
-		<value>org.entando.entando.aps.system.orm.portdb.ContentRelation</value><!-- XXX -->
+		<value>org.entando.entando.aps.system.orm.portdb.ShowletConfig</value>
+		<value>org.entando.entando.aps.system.orm.portdb.Uniquekeys</value>
+		<value>org.entando.entando.aps.system.orm.portdb.ContentRelation</value>
 		<value>org.entando.entando.aps.system.orm.portdb.ContentSearch</value>
-		<value>org.entando.entando.aps.system.orm.portdb.WorkContentRelation</value><!-- XXX -->
+		<value>org.entando.entando.aps.system.orm.portdb.WorkContentRelation</value>
 		<value>org.entando.entando.aps.system.orm.portdb.WorkContentSearch</value>
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">
-		<!-- <value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value> -->
+		<value>org.entando.entando.aps.system.orm.servdb.Group</value>
+		<value>org.entando.entando.aps.system.orm.servdb.Permission</value>
+		<value>org.entando.entando.aps.system.orm.servdb.Role</value>
+		<value>org.entando.entando.aps.system.orm.servdb.RolePermissionReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.User</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserGroupReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserRoleReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserShortcut</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthConsumer</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthToken</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogMethod</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogService</value>
 	</util:list>
 	
 	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 

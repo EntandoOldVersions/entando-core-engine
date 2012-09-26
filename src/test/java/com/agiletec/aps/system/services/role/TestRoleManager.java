@@ -113,6 +113,7 @@ public class TestRoleManager extends BaseTestCase {
 	private void deleteRoleAndPermission() throws Throwable {
 		Role role = new Role();
 		role.setName("temp");
+		role.setDescription("temp description");
 		this._roleManager.updateRole(role);
 		this._roleManager.removeRole(role);
 		this._roleManager.removePermission("temp");

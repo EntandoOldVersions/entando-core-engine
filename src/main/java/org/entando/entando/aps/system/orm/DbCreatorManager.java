@@ -47,20 +47,20 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		//	DataSource dataSource = this.getDataSources().get(i);
 		//	this.doMain(dataSource);
 		//}
-		System.err.println("INIT###############################################à");
+		//System.out.println("INIT###############################################");
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
 	}
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!this.isCheckOnStartup()) return;
-		System.err.println("****************INITTTTTTTTT*********** ");
+		//System.out.println("****************INITTTTTTTTT*********** ");
 		ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
 		String[] dataSourceNames = factory.getBeanNamesForType(BasicDataSource.class);
 		for (int i = 0; i < dataSourceNames.length; i++) {
 			BasicDataSource dataSource = (BasicDataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
 			int result = this.initDatabase(dataSourceNames[i], dataSource);
-			System.err.println("****************aaaaaaaaa*********** " + result);
+			//System.out.println("****************aaaaaaaaa*********** " + result);
 			if (result == 1) {
 				this.valueDatabase(dataSourceNames[i], dataSource);
 			}
@@ -164,21 +164,21 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		try {
 			List<String> tableClassNames = this.getTableMapping().get(databaseName);
 			if (null == tableClassNames || tableClassNames.isEmpty()) {
-				ApsSystemUtils.getLogger().severe("No Tables defined for db - " + databaseName);
+				ApsSystemUtils.getLogger().info("No Tables defined for db - " + databaseName);
 				return 0;
 			}
 			globalResult = 1;
 			for (int i = 0; i < tableClassNames.size(); i++) {
 				String tableClassName = tableClassNames.get(i);
-				System.out.println("************** CLASSE " + tableClassName + " *********************");
+				//System.out.println("************** CLASSE " + tableClassName + " *********************");
 				int result = 0;
 				try {
 					Class tableClass = Class.forName(tableClassName);
 					result = this.createTable(databaseName, tableClass, connectionSource);
 				} catch (Throwable t) {
-					System.out.println("ERRORE CREAZIONE TABELLA " + tableClassName);
+					//System.out.println("Inpossibile CREAZIONE TABELLA " + tableClassName);
 					//t.printStackTrace();
-					ApsSystemUtils.logThrowable(t, this, "setupDatabase");
+					ApsSystemUtils.getLogger().info("Inpossibile CREAZIONE TABELLA " + tableClassName + " - " + t.getMessage());
 				}
 				if (result == 0) globalResult = 0;
 			}
@@ -193,11 +193,11 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		DatabaseType type = this.getType(databaseName);
 		int result = 0;
 		String logTableName = databaseName.toLowerCase() + "/" + tableClass.getSimpleName().toLowerCase();
-		System.out.println("CREAZIONE TABELLA " + logTableName);
+		//System.out.println("CREAZIONE TABELLA " + logTableName);
 		try {
 			result = TableUtils.createTableIfNotExists(connectionSource, tableClass);
 			if (result > 0) {
-				System.out.println("Created table - " + logTableName);
+				//System.out.println("Created table - " + logTableName);
 				ApsSystemUtils.getLogger().info("Created table - " + logTableName);
 				Object tableModel = tableClass.newInstance();
 				if (tableModel instanceof ExtendedColumnDefinition) {
@@ -213,7 +213,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			}
 		} catch (SQLException t) {
 			//t.printStackTrace();
-			System.out.println("Table creation not allowed - " + logTableName + " - " + t.getMessage());
+			//System.out.println("Table creation not allowed - " + logTableName + " - " + t.getMessage());
 			ApsSystemUtils.getLogger().info("Table creation not allowed - " + t.getMessage());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error creating table " + logTableName);
@@ -260,7 +260,6 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return _sqlResources;
 	}
 	public void setSqlResources(Map<String, Resource[]> sqlResources) {
-		System.out.println(sqlResources);
 		this._sqlResources = sqlResources;
 	}
 	

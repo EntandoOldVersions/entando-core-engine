@@ -47,7 +47,18 @@
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">
-		<!-- <value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value> -->
+		<value>org.entando.entando.aps.system.orm.servdb.Group</value>
+		<value>org.entando.entando.aps.system.orm.servdb.Permission</value>
+		<value>org.entando.entando.aps.system.orm.servdb.Role</value>
+		<value>org.entando.entando.aps.system.orm.servdb.RolePermissionReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.User</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserGroupReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserRoleReference</value>
+		<value>org.entando.entando.aps.system.orm.servdb.UserShortcut</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthConsumer</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthToken</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogMethod</value>
+		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogService</value>
 	</util:list>
 	
 	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 
