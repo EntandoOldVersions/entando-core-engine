@@ -19,7 +19,10 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -60,7 +63,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		for (int i = 0; i < dataSourceNames.length; i++) {
 			BasicDataSource dataSource = (BasicDataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
 			int result = this.initDatabase(dataSourceNames[i], dataSource);
-			//System.out.println("****************aaaaaaaaa*********** " + result);
+			System.out.println("****************aaaaaaaaa*********** " + result);
 			if (result == 1) {
 				this.valueDatabase(dataSourceNames[i], dataSource);
 			}
@@ -86,15 +89,22 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
         PreparedStatement stat = null;
 		ResultSet res = null;
 		try {
-			InputStream is = resource.getInputStream();
-			if (null == is) {
+			String script = this.readFile(resource);
+            if (null == script) {
 				return;
 			}
-            String script = FileTextReader.getText(is);
+            String[] lines = readLines(script);
+            if (lines.length == 0) return;
+			String[] queries = extractQueries(lines);
+			if (queries.length == 0) return;
 			conn = dataSource.getConnection();
             conn.setAutoCommit(false);
-            stat = conn.prepareStatement(script);
-			stat.execute();
+			for (int i = 0; i < queries.length; i++) {
+				System.out.println(queries[i]);
+				System.out.println("******************");
+				stat = conn.prepareStatement(queries[i]);
+				stat.execute();
+			}
 			conn.commit();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + databaseName);
@@ -117,6 +127,86 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			}
 		}
 	}
+	
+	//*************************************
+	
+	private String readFile(Resource resource) throws Throwable {
+		InputStream is = null;
+		String text = null;
+		try {
+			is = resource.getInputStream();
+			if (null == is) {
+				return null;
+			}
+			text = FileTextReader.getText(is);
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (null != is) is.close();
+		}
+		return text;
+	}
+	
+	private String[] readLines(String text) throws Throwable {
+		InputStream is = null;
+		String[] lines = new String[0];
+		try {
+			is = new ByteArrayInputStream(text.getBytes());
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String strLine;
+			// Read File Line By Line
+			while ((strLine = br.readLine()) != null) {
+				// Print the content on the console
+				lines = addChild(lines, strLine);
+				//System.out.println(strLine);
+				//System.out.println("------------------------------------------------------");
+			}
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (null != is) is.close();
+		}
+		return lines;
+	}
+	
+	public String[] extractQueries(String[] lines) {
+		String[] queries = new String[0];
+		StringBuffer builder = new StringBuffer();
+		int length = lines.length;
+		String lastValuedLine = null;
+		for (int i = 0; i < lines.length; i++) {
+			String line = lines[i];
+			builder.append(line);
+			if (line.trim().length() > 0) lastValuedLine = line;
+			if ((i+1) < length 
+					&& lines[i+1].toLowerCase().trim().startsWith("insert into") 
+					&& (null != lastValuedLine && lastValuedLine.toLowerCase().trim().endsWith(");"))) {
+				String query = builder.toString().trim();
+				query = query.substring(0, query.length()-1);
+				queries = addChild(queries, query);
+				lastValuedLine = null;
+				builder.delete(0, builder.length());
+			} else {
+				//if (lines[i].trim().length() > 0) prev = lines[i];
+				builder.append("\n");
+			}
+		}
+		return queries;
+	}
+	
+	public String[] addChild(String[] lines, String newLine) {
+		int len = lines.length;
+		String[] newChildren = new String[len + 1];
+		for (int i = 0; i < len; i++) {
+			newChildren[i] = lines[i];
+		}
+		newChildren[len] = newLine;
+		return newChildren;
+	}
+	
+	//******************************************************
 	
 	private int initDatabase(String databaseName, BasicDataSource dataSource) throws ApsSystemException {
 		int globalResult = 0;
@@ -175,6 +265,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 				try {
 					Class tableClass = Class.forName(tableClassName);
 					result = this.createTable(databaseName, tableClass, connectionSource);
+					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);
 				} catch (Throwable t) {
 					//System.out.println("Inpossibile CREAZIONE TABELLA " + tableClassName);
 					//t.printStackTrace();
@@ -195,7 +286,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		String logTableName = databaseName.toLowerCase() + "/" + tableClass.getSimpleName().toLowerCase();
 		//System.out.println("CREAZIONE TABELLA " + logTableName);
 		try {
-			result = TableUtils.createTableIfNotExists(connectionSource, tableClass);
+			result = TableUtils.createTable(connectionSource, tableClass);
 			if (result > 0) {
 				//System.out.println("Created table - " + logTableName);
 				ApsSystemUtils.getLogger().info("Created table - " + logTableName);

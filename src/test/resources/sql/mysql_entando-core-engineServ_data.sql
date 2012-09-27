@@ -89,4 +89,3 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<shortcuts>
 	<box pos="6">core.tools.setting</box>
 	<box pos="7">core.tools.entities</box>
 </shortcuts>');
-
