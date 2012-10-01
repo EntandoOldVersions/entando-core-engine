@@ -16,10 +16,7 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,6 +30,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.entando.entando.aps.system.orm.util.ApsDerbyEmbeddedDatabaseType;
+import org.entando.entando.aps.system.orm.util.QueryExtractor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
@@ -55,58 +53,46 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		if (!this.isCheckOnStartup()) return;
-		//System.out.println("****************INITTTTTTTTT*********** ");
-		ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
-		String[] dataSourceNames = factory.getBeanNamesForType(BasicDataSource.class);
-		for (int i = 0; i < dataSourceNames.length; i++) {
-			BasicDataSource dataSource = (BasicDataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
-			int result = this.initDatabase(dataSourceNames[i], dataSource);
-			System.out.println("****************aaaaaaaaa*********** " + result);
-			if (result == 1) {
-				this.valueDatabase(dataSourceNames[i], dataSource);
+		try {
+			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
+			String[] dataSourceNames = factory.getBeanNamesForType(BasicDataSource.class);
+			for (int i = 0; i < dataSourceNames.length; i++) {
+				BasicDataSource dataSource = (BasicDataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
+				int result = this.initDatabase(dataSourceNames[i], dataSource);
+				if (result == 1) {
+					this.valueDatabase(dataSourceNames[i], dataSource);
+				}
 			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "afterPropertiesSet");
 		}
 	}
 	
 	private void valueDatabase(String databaseName, BasicDataSource dataSource) throws ApsSystemException {
-		DatabaseType type = this.getType(databaseName);
-		Resource[] resources = this.getSqlResources().get(databaseName);
-		Resource resource = null;
-		for (int i = 0; i < resources.length; i++) {
-            String name = resources[i].getFilename();
-			if (name.toUpperCase().startsWith(type.toString().toUpperCase())) {
-				resource = resources[i];
-				break;
-			}
-		}
+		Resource resource = this.getSqlResources().get(databaseName);
 		if (null == resource) {
-			ApsSystemUtils.getLogger().severe("No sql script for db " + databaseName);
+			ApsSystemUtils.getLogger().severe("No resource script for db " + databaseName);
 			return;
 		}
 		try {
 			String script = this.readFile(resource);
             if (null == script) {
+				ApsSystemUtils.getLogger().severe("No sql script for db " + databaseName);
 				return;
 			}
-            String[] lines = readLines(script);
-            if (lines.length == 0) return;
-			String[] queries = extractQueries(lines);
-			if (queries.length == 0) return;
-			/*
-			if (type.equals(DatabaseType.DERBY)) {
-				String[] schemaQueries = new String[] {"SET SCHEMA \"" + dataSource.getUsername().toUpperCase() + "\""};
-				this.executeQueries(dataSource, schemaQueries);
-				System.out.println("************** ESEGUITO *********************");
+            String[] queries = QueryExtractor.extractQueries(script);
+			if (null == queries || queries.length == 0) {
+				ApsSystemUtils.getLogger().severe("Script file for db " + databaseName + " void");
+				return;
 			}
-			*/
-			this.executeQueries(dataSource, queries);
+			this.executeQueries(dataSource, queries, true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + databaseName);
 			throw new ApsSystemException("Error executing script into db " + databaseName, t);
 		}
 	}
 	
-	private void executeQueries(BasicDataSource dataSource, String[] queries) throws ApsSystemException {
+	private void executeQueries(BasicDataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
 		if (queries.length == 0) return;
 		Connection conn = null;
         PreparedStatement stat = null;
@@ -115,14 +101,14 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			conn = dataSource.getConnection();
             conn.setAutoCommit(false);
 			for (int i = 0; i < queries.length; i++) {
-				//System.out.println(queries[i]);
-				//System.out.println("******************");
 				stat = conn.prepareStatement(queries[i]);
 				stat.execute();
 			}
 			conn.commit();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + dataSource.getUrl());
+			if (traceException) {
+				ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + dataSource.getUrl());
+			}
 			throw new ApsSystemException("Error executing script into db " + dataSource.getUrl(), t);
 		} finally {
 			try {
@@ -143,8 +129,6 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		}
 	}
 	
-	//*************************************
-	
 	private String readFile(Resource resource) throws Throwable {
 		InputStream is = null;
 		String text = null;
@@ -154,117 +138,28 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 				return null;
 			}
 			text = FileTextReader.getText(is);
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "readFile", "Error reading resource");
+			throw new ApsSystemException("Error reading resource", t);
 		} finally {
 			if (null != is) is.close();
 		}
 		return text;
 	}
 	
-	private String[] readLines(String text) throws Throwable {
-		InputStream is = null;
-		String[] lines = new String[0];
-		try {
-			is = new ByteArrayInputStream(text.getBytes());
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			String strLine;
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				// Print the content on the console
-				lines = addChild(lines, strLine);
-				//System.out.println(strLine);
-				//System.out.println("------------------------------------------------------");
-			}
-		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			if (null != is) is.close();
-		}
-		return lines;
-	}
-	
-	public String[] extractQueries(String[] lines) {
-		String[] queries = new String[0];
-		StringBuilder builder = new StringBuilder();
-		int length = lines.length;
-		String lastValuedLine = null;
-		for (int i = 0; i < lines.length; i++) {
-			String line = lines[i];
-			builder.append(line);
-			if (line.trim().length() > 0) lastValuedLine = line;
-			if ((i+1) < length 
-					&& lines[i+1].toLowerCase().trim().startsWith("insert into") 
-					&& (null != lastValuedLine && lastValuedLine.toLowerCase().trim().endsWith(");"))) {
-				String query = this.purgeQuery(builder);
-				queries = this.addChild(queries, query);
-				lastValuedLine = null;
-			} else {
-				//if (lines[i].trim().length() > 0) prev = lines[i];
-				builder.append("\n");
-			}
-		}
-		String query = this.purgeQuery(builder);
-		queries = this.addChild(queries, query);
-		return queries;
-	}
-	
-	private String purgeQuery(StringBuilder builder) {
-		String query = builder.toString().trim();
-		query = query.substring(0, query.length()-1);//cut ";"
-		//query = this.insertQuotes(query);//inser quotes for column names into statement
-		builder.delete(0, builder.length());
-		return query;
-	}
-	
-	private String insertQuotes(String query) {
-		int start = query.indexOf("(");
-		int end = query.indexOf(")");
-		String section = query.substring(start+1, end);
-		//System.out.println(section);
-		String[] fields = section.split(",");
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < fields.length; i++) {
-			if (i > 0) buffer.append(", ");
-			String field = fields[i].trim();
-			field = field.replaceAll("\"", "");
-			buffer.append("\"").append(field.trim()).append("\"");
-		}
-		//System.out.println(buffer.toString());
-		String newQuery = query.replaceFirst(section, buffer.toString());
-		//System.out.println(newQuery);
-		// TODO Auto-generated method stub
-		return newQuery;
-	}
-	
-	public String[] addChild(String[] lines, String newLine) {
-		int len = lines.length;
-		String[] newChildren = new String[len + 1];
-		for (int i = 0; i < len; i++) {
-			newChildren[i] = lines[i];
-		}
-		newChildren[len] = newLine;
-		return newChildren;
-	}
-	
-	//******************************************************
-	
 	private int initDatabase(String databaseName, BasicDataSource dataSource) throws ApsSystemException {
 		int globalResult = 0;
 		ConnectionSource connectionSource = null;
 		try {
 			DatabaseType type = this.getType(databaseName);
-			String url = dataSource.getUrl(); //this.invokeGetMethod("getUrl", dataSource);
-			String username = dataSource.getUsername(); //this.invokeGetMethod("getUsername", dataSource);
-			String password = dataSource.getPassword(); //this.invokeGetMethod("getPassword", dataSource);
-			// create our data-source for the database
+			String url = dataSource.getUrl();
+			String username = dataSource.getUsername();
+			String password = dataSource.getPassword();
 			com.j256.ormlite.db.DatabaseType dataType = null;
 			//System.out.println("AAAAAAaaaaaaaaaaAAAAAAAAAAa " + type);
 			if (type.equals(DatabaseType.DERBY)) {
 				dataType = new ApsDerbyEmbeddedDatabaseType();
-				System.out.println("ESCAPE " + ((DerbyEmbeddedDatabaseType) dataType).isEntityNamesMustBeUpCase());
+				//System.out.println("ESCAPE " + ((DerbyEmbeddedDatabaseType) dataType).isEntityNamesMustBeUpCase());
 				url = url + ";user=" + username + ";password=" + password;//;user=XXX;password=YYY';
 				//dataType.setDriver(new org.apache.derby.jdbc.EmbeddedDriver());
 				connectionSource = new JdbcConnectionSource(url, dataType);
@@ -280,31 +175,25 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			}
 			globalResult = this.setupDatabase(databaseName, dataSource, connectionSource);
 		} catch (Throwable t) {
-			throw new ApsSystemException("Error", t);
+			ApsSystemUtils.logThrowable(t, this, "initDatabase", "Error inizializating db " + databaseName);
 		} finally {
 			// destroy the data source which should close underlying connections
 			if (connectionSource != null) {
 				try {
 					connectionSource.close();
-				} catch (SQLException ex) {
-					Logger.getLogger(DbCreatorManager.class.getName()).log(Level.SEVERE, null, ex);
-				}
+				} catch (SQLException ex) {}
 			}
 		}
 		return globalResult;
 	}
 	
-	/**
-	 * Setup our database and DAOs
-	 */
 	private int setupDatabase(String databaseName, BasicDataSource dataSource, ConnectionSource connectionSource) throws ApsSystemException {
 		int globalResult = 0;
 		try {
 			DatabaseType type = this.getType(databaseName);
 			if (type.equals(DatabaseType.DERBY)) {
-				String[] queries = new String[] {"CREATE SCHEMA " + dataSource.getUsername().toUpperCase(), "SET SCHEMA \"" + dataSource.getUsername().toUpperCase() + "\""};
-				this.executeQueries(dataSource, queries);
-				System.out.println("************** ESEGUITO *********************");
+				int result = this.initDerbySchema(dataSource);
+				if (result == 0) return 0;
 			}
 			List<String> tableClassNames = this.getTableMapping().get(databaseName);
 			if (null == tableClassNames || tableClassNames.isEmpty()) {
@@ -323,7 +212,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 				} catch (Throwable t) {
 					//System.out.println("Inpossibile CREAZIONE TABELLA " + tableClassName);
 					//t.printStackTrace();
-					ApsSystemUtils.getLogger().info("Inpossibile CREAZIONE TABELLA " + tableClassName + " - " + t.getMessage());
+					ApsSystemUtils.getLogger().info("Error creating table " + tableClassName + " - " + t.getMessage());
 				}
 				if (result == 0) globalResult = 0;
 			}
@@ -332,6 +221,24 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			throw new ApsSystemException("Error on setup Database", t);
 		}
 		return globalResult;
+	}
+	
+	private int initDerbySchema(BasicDataSource dataSource) throws ApsSystemException {
+		try {
+			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + dataSource.getUsername().toUpperCase()};
+			this.executeQueries(dataSource, queryCreateSchema, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
+			return 0;
+		}
+		try {
+			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + dataSource.getUsername().toUpperCase() + "\""};
+			this.executeQueries(dataSource, initSchemaQuery, true);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
+			throw new ApsSystemException("Error initializating Derby Schema", t);
+		}
+		return 1;
 	}
 	
 	private int createTable(String databaseName, Class tableClass, ConnectionSource connectionSource) throws ApsSystemException {
@@ -360,7 +267,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		} catch (SQLException t) {
 			//t.printStackTrace();
 			//System.out.println("Table creation not allowed - " + logTableName + " - " + t.getMessage());
-			ApsSystemUtils.getLogger().info("Table creation not allowed - " + t.getNextException().getMessage());
+			ApsSystemUtils.getLogger().info("Table creation not allowed - " + t.getMessage());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error creating table " + logTableName);
 			throw new ApsSystemException("Error creating table " + logTableName, t);
@@ -402,10 +309,10 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		this._tableMapping = tableMapping;
 	}
 	
-	protected Map<String, Resource[]> getSqlResources() {
+	protected Map<String, Resource> getSqlResources() {
 		return _sqlResources;
 	}
-	public void setSqlResources(Map<String, Resource[]> sqlResources) {
+	public void setSqlResources(Map<String, Resource> sqlResources) {
 		this._sqlResources = sqlResources;
 	}
 	
@@ -413,6 +320,6 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 	
 	private Map<String, String> _databaseTypes;
 	private Map<String, List<String>> _tableMapping;
-	private Map<String, Resource[]> _sqlResources;
+	private Map<String, Resource> _sqlResources;
 	
 }

@@ -20,7 +20,7 @@ public class RolePermissionReference implements ExtendedColumnDefinition {
 	
 	@DatabaseField(columnName = "rolename", 
 			foreign = true,
-			width = 30, 
+			width = 20, 
 			canBeNull = false)
 	private Role _role;
 	
@@ -54,7 +54,7 @@ public class RolePermissionReference implements ExtendedColumnDefinition {
 /*
 CREATE TABLE authrolepermissions
 (
-  rolename character varying(30) NOT NULL,
+  rolename character varying(20) NOT NULL,
   permissionname character varying(30) NOT NULL,
   CONSTRAINT authrolepermissions_pkey PRIMARY KEY (rolename , permissionname ),
   CONSTRAINT authrolepermissions_permissionname_fkey FOREIGN KEY (permissionname)
