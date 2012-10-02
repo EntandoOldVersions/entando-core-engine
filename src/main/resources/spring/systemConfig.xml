@@ -75,6 +75,13 @@
 			<entry key="servDataSource"><value>${db.serv.script}</value></entry>
 		</map>
 		</property>
+		<property name="databaseTypes">
+		<map>
+			<entry key="portDataSource"><value>${db.port.type}</value></entry>
+			<entry key="servDataSource"><value>${db.serv.type}</value></entry>
+		</map>
+		</property>
+		<property name="checkOnStartup"><value>${db.statup.startup.check}</value></property>
 	</bean>
 	
 </beans>
