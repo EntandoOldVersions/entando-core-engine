@@ -17,6 +17,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,10 +26,8 @@ import java.sql.SQLException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.sql.DataSource;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.entando.entando.aps.system.orm.util.ApsDerbyEmbeddedDatabaseType;
 import org.entando.entando.aps.system.orm.util.QueryExtractor;
 import org.springframework.beans.factory.InitializingBean;
@@ -55,9 +54,9 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		if (!this.isCheckOnStartup()) return;
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
-			String[] dataSourceNames = factory.getBeanNamesForType(BasicDataSource.class);
+			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
-				BasicDataSource dataSource = (BasicDataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
+				DataSource dataSource = (DataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
 				int result = this.initDatabase(dataSourceNames[i], dataSource);
 				if (result == 1) {
 					this.valueDatabase(dataSourceNames[i], dataSource);
@@ -68,7 +67,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		}
 	}
 	
-	private void valueDatabase(String databaseName, BasicDataSource dataSource) throws ApsSystemException {
+	private void valueDatabase(String databaseName, DataSource dataSource) throws ApsSystemException {
 		Resource resource = this.getSqlResources().get(databaseName);
 		if (null == resource) {
 			ApsSystemUtils.getLogger().severe("No resource script for db " + databaseName);
@@ -92,7 +91,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		}
 	}
 	
-	private void executeQueries(BasicDataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
+	private void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
 		if (queries.length == 0) return;
 		Connection conn = null;
         PreparedStatement stat = null;
@@ -107,9 +106,9 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 			conn.commit();
 		} catch (Throwable t) {
 			if (traceException) {
-				ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + dataSource.getUrl());
+				ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + dataSource);
 			}
-			throw new ApsSystemException("Error executing script into db " + dataSource.getUrl(), t);
+			throw new ApsSystemException("Error executing script into db " + dataSource, t);
 		} finally {
 			try {
 				if (res != null) res.close();
@@ -147,14 +146,19 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return text;
 	}
 	
-	private int initDatabase(String databaseName, BasicDataSource dataSource) throws ApsSystemException {
+	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
+		Method method = dataSource.getClass().getDeclaredMethod(methodName);
+		return (String) method.invoke(dataSource);
+	}
+	
+	private int initDatabase(String databaseName, DataSource dataSource) throws ApsSystemException {
 		int globalResult = 0;
 		ConnectionSource connectionSource = null;
 		try {
 			DatabaseType type = this.getType(databaseName);
-			String url = dataSource.getUrl();
-			String username = dataSource.getUsername();
-			String password = dataSource.getPassword();
+			String url = /*dataSource.getUrl();*/this.invokeGetMethod("getUrl", dataSource);
+			String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
+			String password = /*dataSource.getPassword();*/this.invokeGetMethod("getPassword", dataSource);
 			com.j256.ormlite.db.DatabaseType dataType = null;
 			//System.out.println("AAAAAAaaaaaaaaaaAAAAAAAAAAa " + type);
 			if (type.equals(DatabaseType.DERBY)) {
@@ -187,7 +191,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return globalResult;
 	}
 	
-	private int setupDatabase(String databaseName, BasicDataSource dataSource, ConnectionSource connectionSource) throws ApsSystemException {
+	private int setupDatabase(String databaseName, DataSource dataSource, ConnectionSource connectionSource) throws ApsSystemException {
 		int globalResult = 0;
 		try {
 			DatabaseType type = this.getType(databaseName);
@@ -223,16 +227,17 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return globalResult;
 	}
 	
-	private int initDerbySchema(BasicDataSource dataSource) throws ApsSystemException {
+	private int initDerbySchema(DataSource dataSource) throws Throwable {
+		String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
 		try {
-			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + dataSource.getUsername().toUpperCase()};
+			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + username.toUpperCase()};
 			this.executeQueries(dataSource, queryCreateSchema, false);
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
 			return 0;
 		}
 		try {
-			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + dataSource.getUsername().toUpperCase() + "\""};
+			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + username.toUpperCase() + "\""};
 			this.executeQueries(dataSource, initSchemaQuery, true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
