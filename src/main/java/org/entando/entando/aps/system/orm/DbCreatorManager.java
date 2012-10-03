@@ -23,9 +23,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.orm.util.ApsDerbyEmbeddedDatabaseType;
@@ -37,7 +39,7 @@ import org.springframework.core.io.Resource;
 /**
  * @author E.Santoboni
  */
-public class DbCreatorManager extends AbstractService implements InitializingBean, IDbCreatorManager {
+public class DbCreatorManager extends AbstractService implements /*InitializingBean, */IDbCreatorManager {
 	
 	@Override
 	public void init() throws Exception {
@@ -46,12 +48,15 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		//	this.doMain(dataSource);
 		//}
 		//System.out.println("INIT###############################################");
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
-	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if (!this.isCheckOnStartup()) return;
+		//ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
+		//}
+		
+		//@Override
+		//public void afterPropertiesSet() throws Exception {
+		if (!this.isCheckOnStartup()) {
+			ApsSystemUtils.getLogger().config(this.getClass().getName() + ": short init executed");
+			return;
+		}
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
 			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
@@ -65,6 +70,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "afterPropertiesSet");
 		}
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
 	}
 	
 	private void valueDatabase(String databaseName, DataSource dataSource) throws ApsSystemException {
@@ -155,7 +161,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		int globalResult = 0;
 		ConnectionSource connectionSource = null;
 		try {
-			DatabaseType type = this.getType(databaseName);
+			DatabaseType type = this.getType(dataSource);
 			String url = /*dataSource.getUrl();*/this.invokeGetMethod("getUrl", dataSource);
 			String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
 			String password = /*dataSource.getPassword();*/this.invokeGetMethod("getPassword", dataSource);
@@ -194,7 +200,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 	private int setupDatabase(String databaseName, DataSource dataSource, ConnectionSource connectionSource) throws ApsSystemException {
 		int globalResult = 0;
 		try {
-			DatabaseType type = this.getType(databaseName);
+			DatabaseType type = this.getType(dataSource);
 			if (type.equals(DatabaseType.DERBY)) {
 				int result = this.initDerbySchema(dataSource);
 				if (result == 0) return 0;
@@ -211,7 +217,7 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 				int result = 0;
 				try {
 					Class tableClass = Class.forName(tableClassName);
-					result = this.createTable(databaseName, tableClass, connectionSource);
+					result = this.createTable(databaseName, type, tableClass, connectionSource);
 					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);
 				} catch (Throwable t) {
 					//System.out.println("Inpossibile CREAZIONE TABELLA " + tableClassName);
@@ -246,8 +252,8 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return 1;
 	}
 	
-	private int createTable(String databaseName, Class tableClass, ConnectionSource connectionSource) throws ApsSystemException {
-		DatabaseType type = this.getType(databaseName);
+	private int createTable(String databaseName, DatabaseType type, 
+			Class tableClass, ConnectionSource connectionSource) throws ApsSystemException {
 		int result = 0;
 		String logTableName = databaseName.toLowerCase() + "/" + tableClass.getSimpleName().toLowerCase();
 		//System.out.println("CREAZIONE TABELLA " + logTableName);
@@ -280,24 +286,45 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 		return result;
 	}
 	
-	protected DatabaseType getType(String databaseName) {
-		String typeString = this.getDatabaseTypes().get(databaseName);
-		if (null == typeString) return DatabaseType.DERBY;
+	protected DatabaseType getType(DataSource dataSource) {
 		DatabaseType type = null;
+		String typeString = null;
 		try {
+			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
+			//System.out.println(driverClassName);
+			Iterator<Object> typesIter = this.getDatabaseTypeDrivers().keySet().iterator();
+			while (typesIter.hasNext()) {
+				String typeCode = (String) typesIter.next();
+				List<String> driverClassNames = (List<String>) this.getDatabaseTypeDrivers().get(typeCode);
+				if (null != driverClassNames && driverClassNames.contains(driverClassName)) {
+					typeString = typeCode;
+					break;
+				}
+			}
+			if (null == typeString) return DatabaseType.DERBY;
 			type = Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
-		} catch (Exception e) {
-			ApsSystemUtils.getLogger().severe("Invalid type for db " + databaseName + " - '" + typeString + "'");
+			//System.out.println(type);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
 			type = DatabaseType.DERBY;
 		}
 		return type;
 	}
 	
+	/*
 	protected Map<String, String> getDatabaseTypes() {
 		return _databaseTypes;
 	}
 	public void setDatabaseTypes(Map<String, String> databaseTypes) {
 		this._databaseTypes = databaseTypes;
+	}
+	*/
+	
+	protected Properties getDatabaseTypeDrivers() {
+		return _databaseTypeDrivers;
+	}
+	public void setDatabaseTypeDrivers(Properties databaseTypeDrivers) {
+		this._databaseTypeDrivers = databaseTypeDrivers;
 	}
 	
 	protected boolean isCheckOnStartup() {
@@ -323,7 +350,8 @@ public class DbCreatorManager extends AbstractService implements InitializingBea
 	
 	private boolean _checkOnStartup;
 	
-	private Map<String, String> _databaseTypes;
+	//private Map<String, String> _databaseTypes;
+	private Properties _databaseTypeDrivers;
 	private Map<String, List<String>> _tableMapping;
 	private Map<String, Resource> _sqlResources;
 	

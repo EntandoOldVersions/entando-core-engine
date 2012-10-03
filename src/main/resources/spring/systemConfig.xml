@@ -61,6 +61,34 @@
 		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogService</value>
 	</util:list>
 	
+	<util:map id="databaseTypeDrivers" map-class="java.util.Properties" value-type="java.util.List">
+		<entry>
+			<key><value>DERBY</value></key>
+			<list>
+				<value>org.apache.derby.jdbc.EmbeddedDriver</value>
+				<value>org.apache.derby.jdbc.ClientDriver</value>
+			</list>
+		</entry>
+		<entry>
+			<key><value>POSTGRESQL</value></key>
+			<list>
+				<value>org.postgresql.Driver</value>
+			</list>
+		</entry>
+		<entry>
+			<key><value>MYSQL</value></key>
+			<list>
+				<value>com.mysql.jdbc.Driver</value>
+			</list>
+		</entry>
+		<entry>
+			<key><value>ORACLE</value></key>
+			<list>
+				<value>oracle.jdbc.OracleDriver</value>
+			</list>
+		</entry>
+	</util:map>
+	
 	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 
 			parent="abstractService" >
 		<property name="tableMapping">
@@ -75,12 +103,15 @@
 			<entry key="servDataSource"><value>${db.serv.script}</value></entry>
 		</map>
 		</property>
+		<!--
 		<property name="databaseTypes">
 		<map>
 			<entry key="portDataSource"><value>${db.port.type}</value></entry>
 			<entry key="servDataSource"><value>${db.serv.type}</value></entry>
 		</map>
 		</property>
+		-->
+		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="checkOnStartup"><value>${db.statup.startup.check}</value></property>
 	</bean>
 	
