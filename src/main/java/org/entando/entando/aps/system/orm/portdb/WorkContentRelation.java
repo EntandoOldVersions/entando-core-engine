@@ -20,11 +20,11 @@ public class WorkContentRelation implements ExtendedColumnDefinition {
 	
 	@DatabaseField(foreign = true, columnName = "contentid", 
 			width = 16, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private Content _content;
 	
 	@DatabaseField(foreign = true, columnName = "refcategory", 
-			width = 30)
+			width = 30, index = true)
 	private Category _category;
 	
 	@Override

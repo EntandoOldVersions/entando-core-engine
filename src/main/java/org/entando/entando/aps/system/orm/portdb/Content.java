@@ -25,7 +25,7 @@ public class Content {
 	@DatabaseField(columnName = "contenttype", 
 			dataType = DataType.STRING, 
 			width = 30, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private String _contentType;
 	
 	@DatabaseField(columnName = "descr", 
@@ -36,7 +36,7 @@ public class Content {
 	@DatabaseField(columnName = "status", 
 			dataType = DataType.STRING, 
 			width = 12, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private String _status;
 	
 	@DatabaseField(columnName = "workxml", 
@@ -53,7 +53,7 @@ public class Content {
 	@DatabaseField(columnName = "lastmodified", 
 			dataType = DataType.STRING, 
 			width = 20, 
-			canBeNull = true)
+			canBeNull = true, index = true)
 	private String _lastModified;
 	
 	@DatabaseField(columnName = "onlinexml", 
@@ -64,7 +64,7 @@ public class Content {
 	@DatabaseField(columnName = "maingroup", 
 			dataType = DataType.STRING, 
 			width = 20, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private String _mainGroup;
 	
 	@DatabaseField(columnName = "currentversion", 

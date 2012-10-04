@@ -23,13 +23,13 @@ public class WorkContentSearch implements ExtendedColumnDefinition {
 	
 	@DatabaseField(foreign = true, columnName = "contentid", 
 			width = 16, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private Content _contentId;
 	
 	@DatabaseField(columnName = "attrname", 
 			dataType = DataType.STRING, 
 			width = 30, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private String _attributeName;
 	
 	@DatabaseField(columnName = "textvalue", 

@@ -21,7 +21,7 @@ public class ContentRelation implements ExtendedColumnDefinition {
 	
 	@DatabaseField(foreign = true, columnName = "contentid", 
 			width = 16, 
-			canBeNull = false)
+			canBeNull = false, index = true)
 	private Content _content;
 	
 	@DatabaseField(foreign = true, columnName = "refpage", 
@@ -37,12 +37,12 @@ public class ContentRelation implements ExtendedColumnDefinition {
 	private Resource _resource;
 	
 	@DatabaseField(foreign = true, columnName = "refcategory", 
-			width = 30)
+			width = 30, index = true)
 	private Category _category;
 	
 	@DatabaseField(columnName = "refgroup", 
 			dataType = DataType.STRING, 
-			width = 20)
+			width = 20, index = true)
 	private String _group;
 	
 	@Override
