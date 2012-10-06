@@ -45,16 +45,15 @@
 	<properties>
 		<!--
 		<test.database.driver>org.postgresql.Driver</test.database.driver>
-		<test.database.type>postgresql</test.database.type>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>5432</test.database.port>
 		<test.database.username>agile</test.database.username>
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</test.database.port.url>
 		<test.database.serv.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</test.database.serv.url>
-		
+		-->
+		<!--
 		<test.database.driver>com.mysql.jdbc.Driver</test.database.driver>
-		<test.database.type>mysql</test.database.type>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>3306</test.database.port>
 		<test.database.username>root</test.database.username>
@@ -62,14 +61,15 @@
 		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
 		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
 		-->
+		
 		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
-		<!-- <test.database.type>derby</test.database.type> -->
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>1527</test.database.port>
 		<test.database.username>agile</test.database.username>
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:derby:${project.artifactId}testPort;create=true</test.database.port.url>
 		<test.database.serv.url>jdbc:derby:${project.artifactId}testServ;create=true</test.database.serv.url>
+		
 		<spring.version>3.0.6.RELEASE</spring.version>
 		<struts2.version>2.3.4.1</struts2.version>
 	</properties>

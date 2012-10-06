@@ -9,6 +9,6 @@ package org.entando.entando.aps.system.orm;
  */
 public interface ExtendedColumnDefinition {
 	
-	public String[] extensions(IDbCreatorManager.DatabaseType type);
+	public String[] extensions(IDbInstallerManager.DatabaseType type);
 	
 }

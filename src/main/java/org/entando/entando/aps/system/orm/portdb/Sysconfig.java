@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -43,7 +43,7 @@ public class Sysconfig implements ExtendedColumnDefinition {
 	private String _config;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " + TABLE_NAME + "_pkey PRIMARY KEY(version , item )"};
 	}
 	

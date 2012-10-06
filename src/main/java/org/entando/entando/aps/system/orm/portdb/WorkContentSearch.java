@@ -11,7 +11,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.util.Date;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -54,11 +54,11 @@ public class WorkContentSearch implements ExtendedColumnDefinition {
 	private String _langCode;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String contentTableName = Content.TABLE_NAME;
-		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + TABLE_NAME + "`";
+		if (IDbInstallerManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + tableName + "`";
 			contentTableName = "`" + Content.TABLE_NAME + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 

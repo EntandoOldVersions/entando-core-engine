@@ -8,7 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -31,12 +31,12 @@ public class RolePermissionReference implements ExtendedColumnDefinition {
 	private Permission _permission;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String roleTableName = Role.TABLE_NAME;
 		String permissionableName = Permission.TABLE_NAME;
-		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + TABLE_NAME + "`";
+		if (IDbInstallerManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + tableName + "`";
 			roleTableName = "`" + roleTableName + "`";
 			permissionableName = "`" + permissionableName + "`";
 		}

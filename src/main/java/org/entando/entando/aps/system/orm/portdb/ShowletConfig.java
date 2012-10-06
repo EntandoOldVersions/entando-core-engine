@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -44,12 +44,12 @@ public class ShowletConfig implements ExtendedColumnDefinition {
 	private String _publishedContent;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String pageTableName = Page.TABLE_NAME;
 		String showletCatalogTableName = ShowletCatalog.TABLE_NAME;
-		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + TABLE_NAME + "`";
+		if (IDbInstallerManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + tableName + "`";
 			pageTableName = "`" + pageTableName + "`";
 			showletCatalogTableName = "`" + showletCatalogTableName + "`";
 		}

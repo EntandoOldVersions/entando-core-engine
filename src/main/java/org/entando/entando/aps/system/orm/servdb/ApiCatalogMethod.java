@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -50,11 +50,11 @@ public class ApiCatalogMethod implements ExtendedColumnDefinition {
 	private Permission _authorizationRequired;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String permissionsTableName = Permission.TABLE_NAME;
-		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
-			tableName = "`" + TABLE_NAME + "`";
+		if (IDbInstallerManager.DatabaseType.MYSQL.equals(type)) {
+			tableName = "`" + tableName + "`";
 			permissionsTableName = "`" + permissionsTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " 

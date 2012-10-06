@@ -7,7 +7,7 @@ package org.entando.entando.aps.system.orm;
 /**
  * @author E.Santoboni
  */
-public interface IDbCreatorManager {
+public interface IDbInstallerManager {
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE}
 	

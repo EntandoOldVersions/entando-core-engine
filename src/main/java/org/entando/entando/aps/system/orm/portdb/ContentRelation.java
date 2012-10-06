@@ -9,7 +9,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.orm.IDbCreatorManager;
+import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**
  * @author E.Santoboni
@@ -46,13 +46,13 @@ public class ContentRelation implements ExtendedColumnDefinition {
 	private String _group;
 	
 	@Override
-	public String[] extensions(IDbCreatorManager.DatabaseType type) {
+	public String[] extensions(IDbInstallerManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String contentTableName = Content.TABLE_NAME;
 		String pageTableName = Page.TABLE_NAME;
 		String resourceTableName = Resource.TABLE_NAME;
 		String categoryTableName = Category.TABLE_NAME;
-		if (IDbCreatorManager.DatabaseType.MYSQL.equals(type)) {
+		if (IDbInstallerManager.DatabaseType.MYSQL.equals(type)) {
 			tableName = "`" + TABLE_NAME + "`";
 			contentTableName = "`" + contentTableName + "`";
 			pageTableName = "`" + pageTableName + "`";

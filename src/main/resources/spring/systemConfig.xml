@@ -89,7 +89,7 @@
 		</entry>
 	</util:map>
 	
-	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 
+	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
 			parent="abstractService" >
 		<property name="tableMapping">
 		<map>
@@ -103,16 +103,9 @@
 			<entry key="servDataSource"><value>${db.serv.script}</value></entry>
 		</map>
 		</property>
-		<!--
-		<property name="databaseTypes">
-		<map>
-			<entry key="portDataSource"><value>${db.port.type}</value></entry>
-			<entry key="servDataSource"><value>${db.serv.type}</value></entry>
-		</map>
-		</property>
-		-->
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="checkOnStartup"><value>${db.statup.startup.check}</value></property>
+		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
 	</bean>
 	
 </beans>
