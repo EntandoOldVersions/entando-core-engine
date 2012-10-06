@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.entando.entando.aps.system.orm.portdb;
+package org.entando.entando.plugins.jacms.aps.system.orm.portdb;
 
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;

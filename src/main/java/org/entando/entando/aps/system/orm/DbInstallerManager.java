@@ -42,7 +42,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 		//	DataSource dataSource = this.getDataSources().get(i);
 		//	this.doMain(dataSource);
 		//}
-		System.out.println("INIT###############################################");
+		//System.out.println("INIT###############################################");
 		//ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
 		//}
 		
@@ -53,6 +53,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 			return;
 		}
 		InstallationReport report = this.extractReport();
+		//System.out.println("report " + report);
 		this.initMasterDatabases(report);
 		this.initComponents(report);
 		this.updateReport(report);
@@ -66,6 +67,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 			DataSource dataSource = (DataSource) super.getBeanFactory().getBean("portDataSource");
 			dao.setDataSource(dataSource);
 			String xml = dao.loadReport(this.getConfigVersion());
+			//System.out.println("********* xmlReport " + xml);
 			report = new InstallationReport(xml);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "extractReport");
@@ -87,24 +89,30 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 	}
 	
 	private void initMasterDatabases(InstallationReport report) {
+		//System.out.println("********* initMasterDatabases ");
 		if (report.isInstallationDone("entandoCore")) {
 			ApsSystemUtils.getLogger().info("Core Component installation Already DONE!");
 			return;
 		}
+		//System.out.println("********* initMasterDatabases avviato ");
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
 			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
+				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
 				DataSource dataSource = (DataSource) super.getBeanFactory().getBean(dataSourceNames[i]);
+				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + dataSource);
 				int result = this.initDatabase(dataSourceNames[i], dataSource);
 				if (result == 1) {
 					Resource resource = this.getSqlResources().get(dataSourceNames[i]);
 					this.valueDatabase(resource, dataSourceNames[i], dataSource);
 				}
 			}
+			//System.out.println("Core Component installation DONE!");
 			report.addReport("entandoCore", new Date());
 			ApsSystemUtils.getLogger().info("Core Component installation DONE!");
 		} catch (Throwable t) {
+			//t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "initMasterDatabases");
 		}
 	}
@@ -114,52 +122,55 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();
 			String[] componentBeansNames = factory.getBeanNamesForType(EntandoComponentConfiguration.class);
 			if (null == componentBeansNames || componentBeansNames.length == 0) return;
-			List<EntandoComponentConfiguration> addOnBeans = new ArrayList<EntandoComponentConfiguration>();
+			List<EntandoComponentConfiguration> componentBeans = new ArrayList<EntandoComponentConfiguration>();
 			for (int i = 0; i < componentBeansNames.length; i++) {
+				//System.out.println("* " + componentBeansNames[i] + " *");
 				EntandoComponentConfiguration componentConfiguration = (EntandoComponentConfiguration) super.getBeanFactory().getBean(componentBeansNames[i]);
-				if (null != componentConfiguration) addOnBeans.add(componentConfiguration);
+				if (null != componentConfiguration) componentBeans.add(componentConfiguration);
 			}
-			Collections.sort(addOnBeans);
+			Collections.sort(componentBeans);
 			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
-			for (int i = 0; i < addOnBeans.size(); i++) {
-				EntandoComponentConfiguration addOnConfiguration = addOnBeans.get(i);
-				this.initAddOnPlugin(addOnConfiguration, dataSourceNames, report);
+			for (int i = 0; i < componentBeans.size(); i++) {
+				EntandoComponentConfiguration componentConfiguration = componentBeans.get(i);
+				this.initComponent(componentConfiguration, dataSourceNames, report);
 			}
 		} catch (Throwable t) {
-			t.printStackTrace();
+			//t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "initComponents");
 		}
 	}
 	
-	private void initAddOnPlugin(EntandoComponentConfiguration addOnConfiguration, 
+	private void initComponent(EntandoComponentConfiguration componentConfiguration, 
 			String[] dataSourceNames, InstallationReport report) {
-		if (report.isInstallationDone(addOnConfiguration.getCode())) {
-			ApsSystemUtils.getLogger().info("'" + addOnConfiguration.getCode() 
+		if (report.isInstallationDone(componentConfiguration.getCode())) {
+			ApsSystemUtils.getLogger().info("'" + componentConfiguration.getCode() 
 					+ "' Component installation Already DONE!");
 			return;
 		}
 		try {
-			System.out.println("*************************** " + addOnConfiguration.getCode());
+			//System.out.println("*************************** " + componentConfiguration.getCode());
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				DataSource dataSource = (DataSource) super.getBeanFactory().getBean(dataSourceNames[j]);
-				if (null != addOnConfiguration.getTableMapping()) {
-					List<String> tableClassNames = addOnConfiguration.getTableMapping().get(dataSourceNames[j]);
-					if (null != tableClassNames && tableClassNames.isEmpty()) {
-						this.createPluginTables(dataSourceNames[j], tableClassNames, dataSource);
+				if (null != componentConfiguration.getTableMapping()) {
+					//System.out.println("********* table mapping ");
+					List<String> tableClassNames = componentConfiguration.getTableMapping().get(dataSourceNames[j]);
+					//System.out.println("*********  datasource " + dataSourceNames[j] + " - tableClassNames " + tableClassNames);
+					if (null != tableClassNames && !tableClassNames.isEmpty()) {
+						this.createComponentTables(dataSourceNames[j], tableClassNames, dataSource);
 					}
 				}
-				if (null != addOnConfiguration.getSqlResources()) {
-					Resource resource = addOnConfiguration.getSqlResources().get(dataSourceNames[j]);//this.getSqlResources().get(dataSourceNames[i]);
+				if (null != componentConfiguration.getSqlResources()) {
+					Resource resource = componentConfiguration.getSqlResources().get(dataSourceNames[j]);//this.getSqlResources().get(dataSourceNames[i]);
 					this.valueDatabase(resource, dataSourceNames[j], dataSource);
 				}
 			}
-			report.addReport(addOnConfiguration.getCode(), new Date());
-			ApsSystemUtils.getLogger().info("'" + addOnConfiguration.getCode() 
+			report.addReport(componentConfiguration.getCode(), new Date());
+			ApsSystemUtils.getLogger().info("'" + componentConfiguration.getCode() 
 					+ "' Component installation DONE!");
 		} catch (Throwable t) {
-			t.printStackTrace();
+			//t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "initAddOnPlugin", 
-					"Errot initializating AddOn/plugin " + addOnConfiguration.getCode());
+					"Errot initializating AddOn/plugin " + componentConfiguration.getCode());
 		}
 	}
 	
@@ -188,14 +199,15 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 		return globalResult;
 	}
 	
-	private int createPluginTables(String databaseName, List<String> tableClassNames, DataSource dataSource) throws ApsSystemException {
+	private int createComponentTables(String databaseName, List<String> tableClassNames, DataSource dataSource) throws ApsSystemException {
 		int globalResult = 0;
 		ConnectionSource connectionSource = null;
 		try {
 			connectionSource = this.createConnectionSource(databaseName, dataSource);
 			this.createTables(databaseName, dataSource, tableClassNames, connectionSource);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createPluginTables", "Error creating plugin tables into db " + databaseName);
+			ApsSystemUtils.logThrowable(t, this, "createComponentTables", "Error creating component tables into db " + databaseName);
+			throw new ApsSystemException("Error creating component tables to db " + databaseName, t);
 		} finally {
 			// destroy the data source which should close underlying connections
 			if (connectionSource != null) {
@@ -214,6 +226,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 			String url = /*dataSource.getUrl();*/this.invokeGetMethod("getUrl", dataSource);
 			String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
 			String password = /*dataSource.getPassword();*/this.invokeGetMethod("getPassword", dataSource);
+			//System.out.println(url + " - " + username + " - " + password);
 			com.j256.ormlite.db.DatabaseType dataType = null;
 			//System.out.println("AAAAAAaaaaaaaaaaAAAAAAAAAAa " + type);
 			if (type.equals(DatabaseType.DERBY)) {
@@ -243,6 +256,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 		int globalResult = 0;
 		try {
 			DatabaseType type = this.getType(dataSource);
+			//System.out.println("DB TYPE " + type);
 			if (type.equals(DatabaseType.DERBY)) {
 				int result = this.initDerbySchema(dataSource);
 				if (result == 0) return 0;
@@ -275,9 +289,11 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 					result = this.createTable(databaseName, type, tableClass, connectionSource);
 					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);
 				} catch (Throwable t) {
-					//System.out.println("Inpossibile CREAZIONE TABELLA " + tableClassName);
+					//System.out.println("Impossibile CREARE TABELLA " + tableClassName);
 					//t.printStackTrace();
-					ApsSystemUtils.getLogger().info("Error creating table " + databaseName + "/" + tableClassName + " - " + t.getMessage());
+					ApsSystemUtils.logThrowable(t, this, "createTables", 
+							"Error creating table " + databaseName + "/" + tableClassName + " - " + t.getMessage());
+					//ApsSystemUtils.getLogger().info("Error creating table " + databaseName + "/" + tableClassName + " - " + t.getMessage());
 				}
 				if (result == 0) globalResult = 0;
 			}
@@ -346,18 +362,18 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 	*/
 	private void valueDatabase(Resource resource, String databaseName, DataSource dataSource) throws ApsSystemException {
 		if (null == resource) {
-			ApsSystemUtils.getLogger().severe("No resource script for db " + databaseName);
+			ApsSystemUtils.getLogger().info("No resource script for db " + databaseName);
 			return;
 		}
 		try {
 			String script = this.readFile(resource);
-            if (null == script) {
-				ApsSystemUtils.getLogger().severe("No sql script for db " + databaseName);
+            if (null == script || script.trim().length() == 0) {
+				ApsSystemUtils.getLogger().info("No sql script for db " + databaseName);
 				return;
 			}
             String[] queries = QueryExtractor.extractQueries(script);
 			if (null == queries || queries.length == 0) {
-				ApsSystemUtils.getLogger().severe("Script file for db " + databaseName + " void");
+				ApsSystemUtils.getLogger().info("Script file for db " + databaseName + " void");
 				return;
 			}
 			this.executeQueries(dataSource, queries, true);
@@ -426,6 +442,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 		DatabaseType type = null;
 		String typeString = null;
 		try {
+			//System.out.println(((BasicDataSource) dataSource).getDriverClassName());
 			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
 			//System.out.println(driverClassName);
 			Iterator<Object> typesIter = this.getDatabaseTypeDrivers().keySet().iterator();
@@ -434,6 +451,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 				List<String> driverClassNames = (List<String>) this.getDatabaseTypeDrivers().get(typeCode);
 				if (null != driverClassNames && driverClassNames.contains(driverClassName)) {
 					typeString = typeCode;
+					//System.out.println(typeCode);
 					break;
 				}
 			}

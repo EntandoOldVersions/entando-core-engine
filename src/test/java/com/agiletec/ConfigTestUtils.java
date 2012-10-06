@@ -126,6 +126,7 @@ public class ConfigTestUtils {
 			ds.setPassword(password);
 			ds.setMaxActive(8);
 			ds.setMaxIdle(4);
+			ds.setDriverClassName(className);
 			builder.bind("java:comp/env/jdbc/" + beanName, ds);
 		} catch (Throwable t) {
 			throw new RuntimeException("Error on creation datasource '" + beanName + "'", t);

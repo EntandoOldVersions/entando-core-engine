@@ -46,12 +46,9 @@ public class EntandoComponentConfiguration implements Comparable<EntandoComponen
 	public int compareTo(EntandoComponentConfiguration other) {
 		List<String> deps = this.getDependencies();
 		List<String> otherDeps = other.getDependencies();
-		if (null == deps || null == otherDeps || deps.isEmpty() || otherDeps.isEmpty()) {
-			return 0;
-		}
-		if (otherDeps.contains(this.getCode())) {
+		if (null != otherDeps && otherDeps.contains(this.getCode())) {
 			return -1;
-		} else if (deps.contains(other.getCode())) {
+		} else if (null != deps && deps.contains(other.getCode())) {
 			return 1;
 		}
 		return 0;
