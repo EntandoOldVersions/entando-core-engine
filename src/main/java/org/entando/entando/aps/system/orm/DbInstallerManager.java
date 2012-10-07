@@ -94,6 +94,7 @@ public class DbInstallerManager extends AbstractService implements /*Initializin
 			ApsSystemUtils.getLogger().info("Core Component installation Already DONE!");
 			return;
 		}
+		//NON é NECESSARIO FARE VERIFICHE IN QUANTO SI FERMA ALLA PRIMA TABELLA PRESENTE
 		//System.out.println("********* initMasterDatabases avviato ");
 		try {
 			ListableBeanFactory factory = (ListableBeanFactory) super.getBeanFactory();

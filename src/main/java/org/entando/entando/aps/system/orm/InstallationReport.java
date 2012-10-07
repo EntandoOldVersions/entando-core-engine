@@ -73,6 +73,14 @@ public class InstallationReport {
 		return false;
 	}
 	
+	public SingleReport getReport(String component) {
+		for (int i = 0; i < this.getReports().size(); i++) {
+			SingleReport singleReport = this.getReports().get(i);
+			if (singleReport.getComponent().equals(component)) return singleReport;
+		}
+		return null;
+	}
+	
 	public List<SingleReport> getReports() {
 		return _reports;
 	}
