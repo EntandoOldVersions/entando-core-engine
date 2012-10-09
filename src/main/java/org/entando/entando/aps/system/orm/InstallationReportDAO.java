@@ -17,6 +17,7 @@
 */
 package org.entando.entando.aps.system.orm;
 
+import org.entando.entando.aps.system.orm.model.InstallationReport;
 import com.agiletec.aps.system.ApsSystemUtils;
 
 import java.sql.Connection;
@@ -31,20 +32,27 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class InstallationReportDAO extends AbstractDAO {
 	
-	public String loadReport(String version) {
+	public InstallationReport loadReport(String version) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
-		String value = null;
+		InstallationReport report = null;
 		try {
 			conn = this.getConnection();
 			stat = conn.prepareStatement(VERSION_ITEM);
 			stat.setString(1, version);
 			stat.setString(2, REPORT_CONFIG_ITEM);
 			res = stat.executeQuery();
-			res.next();
-			value = res.getString(1);
+			if (res.next()) {
+				String xml = res.getString(1);
+				report = new InstallationReport(xml);
+			} else {
+				//PORTING
+				report = InstallationReport.getPortingInstance();
+			}
 		} catch (SQLException sqle) {
+			//sqle.printStackTrace();
+			//NOT_AVAILABLE
 			ApsSystemUtils.getLogger().info("Report not available - " + sqle.getMessage());
 			return null;
 		} catch (Throwable t) {
@@ -52,7 +60,7 @@ public class InstallationReportDAO extends AbstractDAO {
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
-		return value;
+		return report;
 	}
 	
 	/**
@@ -72,6 +80,9 @@ public class InstallationReportDAO extends AbstractDAO {
 			stat.setString(1, version);
 			stat.setString(2, REPORT_CONFIG_ITEM);
 			stat.setString(3, "The component installation report");
+			System.out.println("**************************************+");
+			System.out.println(config);
+			System.out.println("**************************************+");
 			stat.setString(4, config);
 			stat.executeUpdate();
 			conn.commit();

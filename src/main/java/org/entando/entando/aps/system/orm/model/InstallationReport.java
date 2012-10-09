@@ -2,10 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.entando.entando.aps.system.orm;
+package org.entando.entando.aps.system.orm.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.util.DateConverter;
 
 import java.io.StringReader;
 
@@ -24,8 +23,15 @@ import org.jdom.output.XMLOutputter;
  */
 public class InstallationReport {
 	
+	private InstallationReport(Status status) {
+		this.setStatus(status);
+	}
+	
 	public InstallationReport(String xmlText) {
-		if (null == xmlText || xmlText.trim().length() == 0) return;
+		if (null == xmlText || xmlText.trim().length() == 0) {
+			this.setStatus(Status.PORTING);
+			return;
+		}
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
 		StringReader reader = new StringReader(xmlText);
@@ -35,8 +41,13 @@ public class InstallationReport {
 			List<Element> elements = rootElement.getChildren("report");
 			for (int i = 0; i < elements.size(); i++) {
 				Element element = elements.get(i);
-				SingleReport report = new SingleReport(element);
+				ComponentReport report = new ComponentReport(element);
 				this.getReports().add(report);
+			}
+			String statusString = rootElement.getAttributeValue("status");
+			if (null != statusString && statusString.trim().length() > 0) {
+				InstallationReport.Status status = Enum.valueOf(InstallationReport.Status.class, statusString.toUpperCase());
+				this.setStatus(status);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().severe("Error parsing Report: " + t.getMessage());
@@ -44,89 +55,72 @@ public class InstallationReport {
 		}
 	}
 	
+	public static InstallationReport getInstance() {
+		return new InstallationReport(Status.INIT);
+	}
+	
+	public static InstallationReport getPortingInstance() {
+		return new InstallationReport(Status.PORTING);
+	}
+	
 	public void addReport(String component, Date date) {
-		SingleReport report = new SingleReport(component, date);
+		ComponentReport report = new ComponentReport(component, date, this.getStatus());
+		this.getReports().add(report);
+	}
+	
+	public void addReport(ComponentReport report) {
 		this.getReports().add(report);
 	}
 	
 	public String toXml() {
 		Document doc = new Document();
 		Element rootElement = new Element("reports");
+		if (null != this.getStatus()) {
+			rootElement.setAttribute("status", this.getStatus().toString());
+		}
 		for (int i = 0; i < this.getReports().size(); i++) {
-			SingleReport singleReport = this.getReports().get(i);
+			ComponentReport singleReport = this.getReports().get(i);
 			Element element = singleReport.toJdomElement();
 			rootElement.addContent(element);
 		}
 		doc.setRootElement(rootElement);
 		XMLOutputter out = new XMLOutputter();
 		Format format = Format.getPrettyFormat();
-		format.setIndent("");
+		format.setIndent("\t");
 		out.setFormat(format);
 		return out.outputString(doc);
 	}
 	
 	public boolean isInstallationDone(String component) {
 		for (int i = 0; i < this.getReports().size(); i++) {
-			SingleReport singleReport = this.getReports().get(i);
+			ComponentReport singleReport = this.getReports().get(i);
 			if (singleReport.getComponent().equals(component)) return true;
 		}
 		return false;
 	}
 	
-	public SingleReport getReport(String component) {
+	public ComponentReport getComponentReport(String component) {
 		for (int i = 0; i < this.getReports().size(); i++) {
-			SingleReport singleReport = this.getReports().get(i);
+			ComponentReport singleReport = this.getReports().get(i);
 			if (singleReport.getComponent().equals(component)) return singleReport;
 		}
 		return null;
 	}
 	
-	public List<SingleReport> getReports() {
+	public Status getStatus() {
+		return _status;
+	}
+	public void setStatus(Status status) {
+		this._status = status;
+	}
+	
+	public List<ComponentReport> getReports() {
 		return _reports;
 	}
 	
-	private List<SingleReport> _reports = new ArrayList<SingleReport>();
+	private Status _status;
+	private List<ComponentReport> _reports = new ArrayList<ComponentReport>();
 	
-	public class SingleReport {
-		
-		protected SingleReport(String component, Date date) {
-			this.setComponent(component);
-			this.setDate(date);
-		}
-		
-		protected SingleReport(Element element) {
-			String component = element.getAttributeValue("component");
-			String dateString = element.getAttributeValue("date");
-			Date date = DateConverter.parseDate(dateString, "yyyy-MM-dd hh:mm");
-			this.setComponent(component);
-			this.setDate(date);
-		}
-		
-		protected Element toJdomElement() {
-			Element element = new Element("report");
-			element.setAttribute("component", this.getComponent());
-			String dateString = DateConverter.getFormattedDate(this.getDate(), "yyyy-MM-dd hh:mm");
-			element.setAttribute("date", dateString);
-			return element;
-		}
-		
-		public String getComponent() {
-			return _component;
-		}
-		protected void setComponent(String component) {
-			this._component = component;
-		}
-		
-		public Date getDate() {
-			return _date;
-		}
-		protected void setDate(Date date) {
-			this._date = date;
-		}
-		
-		private String _component;
-		private Date _date;
-		
-	}
+	public enum Status {OK, PORTING, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT}
 	
 }

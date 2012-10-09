@@ -28,11 +28,20 @@ public class EntandoComponentConfiguration implements Comparable<EntandoComponen
 		this._dependencies = dependencies;
 	}
 	
-	public Map<String, Resource> getSqlResources() {
-		return _sqlResources;
+	public Map<String, Resource> getDefaultSqlResources() {
+		return _defaultSqlResources;
 	}
+	public void setDefaultSqlResources(Map<String, Resource> defaultSqlResources) {
+		this._defaultSqlResources = defaultSqlResources;
+	}
+	
+	@Deprecated
+	public Map<String, Resource> getSqlResources() {
+		return this.getDefaultSqlResources();
+	}
+	@Deprecated
 	public void setSqlResources(Map<String, Resource> sqlResources) {
-		this._sqlResources = sqlResources;
+		this.setDefaultSqlResources(sqlResources);
 	}
 	
 	public Map<String, List<String>> getTableMapping() {
@@ -57,6 +66,6 @@ public class EntandoComponentConfiguration implements Comparable<EntandoComponen
 	private String _code;
 	private List<String> _dependencies;
 	private Map<String, List<String>> _tableMapping;
-	private Map<String, Resource> _sqlResources;
+	private Map<String, Resource> _defaultSqlResources;
 	
 }

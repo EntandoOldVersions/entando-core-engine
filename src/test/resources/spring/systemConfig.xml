@@ -97,14 +97,14 @@
 	</util:map>
 	
 	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
-			parent="abstractService" >
+			init-method="init">
 		<property name="tableMapping">
 		<map>
 			<entry key="portDataSource"><ref bean="entandoPortTableClasses" /></entry>
 			<entry key="servDataSource"><ref bean="entandoServTableClasses" /></entry>
 		</map>
 		</property>
-		<property name="sqlResources">
+		<property name="defaultSqlResources">
 		<map>
 			<entry key="portDataSource"><value>classpath:sql/entandoPort_data_${db.script.default.marker}.sql</value></entry>
 			<entry key="servDataSource"><value>classpath:sql/entandoServ_data_${db.script.default.marker}.sql</value></entry>
