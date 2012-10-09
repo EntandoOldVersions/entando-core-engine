@@ -57,3 +57,15 @@ INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SE
 
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARAM_DEFAULT_VALUE', 'it', 'Default');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARAM_DEFAULT_VALUE', 'en', 'Default');
+
+--------------------
+
+ALTER TABLE contentsearch ALTER COLUMN datevalue TYPE timestamp without time zone;
+
+ALTER TABLE workcontentsearch ALTER COLUMN datevalue TYPE timestamp without time zone;
+
+
+
+
+
+

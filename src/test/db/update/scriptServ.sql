@@ -28,5 +28,14 @@ UPDATE apicatalog_services SET ishidden = 0 WHERE ispublic = 1;
 ALTER TABLE apicatalog_methods ALTER ishidden SET NOT NULL;
 ALTER TABLE apicatalog_services DROP COLUMN ispublic;
 
+------
 
+ALTER TABLE api_oauth_consumers ALTER COLUMN expirationdate TYPE timestamp without time zone;
+
+ALTER TABLE api_oauth_tokens ALTER COLUMN accesstoken TYPE character varying(100);
+ALTER TABLE api_oauth_tokens ALTER COLUMN lastaccess TYPE timestamp without time zone;
+
+ALTER TABLE authusers ALTER COLUMN registrationdate TYPE timestamp without time zone;
+ALTER TABLE authusers ALTER COLUMN lastaccess TYPE timestamp without time zone;
+ALTER TABLE authusers ALTER COLUMN lastpasswordchange TYPE timestamp without time zone;
 
