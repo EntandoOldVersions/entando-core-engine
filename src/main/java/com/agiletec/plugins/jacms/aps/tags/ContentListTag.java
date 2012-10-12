@@ -28,6 +28,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Showlet;
@@ -67,7 +68,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			if (null != this.getUserFilterOptions() && null != this.getUserFilterOptionsVar()) {
 				this.pageContext.setAttribute(this.getUserFilterOptionsVar(), this.getUserFilterOptions());
 			}
-			List<String> contents = helper.getContentsId(this, reqCtx);
+			List<String> contents = this.getContentsId(helper, reqCtx);
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doEndTag");
@@ -75,6 +76,31 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		}
 		this.release();
 		return EVAL_PAGE;
+	}
+	
+	protected List<String> getContentsId(IContentListHelper helper, RequestContext reqCtx) throws ApsSystemException {
+		List<String> contents = null;
+		try {
+			contents = helper.getContentsId(this, reqCtx);
+			Showlet currentShowlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Integer maxElements = null;
+			if (null != currentShowlet.getConfig()) {
+				ApsProperties properties = currentShowlet.getConfig();
+				String maxElementsString = properties.getProperty("maxElements");
+				try {
+					maxElements = Integer.parseInt(maxElementsString);
+				} catch (Exception e) {
+					//nothing to catch
+				}	
+			}
+			if (null != maxElements && contents != null && contents.size() > maxElements) {
+				contents = contents.subList(0, maxElements);
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getContentsId");
+			throw new ApsSystemException("Error extracting content ids", t);
+		}
+		return contents;
 	}
 	
 	private void extractExtraShowletParameters(RequestContext reqCtx) {
