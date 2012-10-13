@@ -17,7 +17,8 @@ import java.io.InputStreamReader;
 public class QueryExtractor {
 	
 	public static String[] extractQueries(String script) throws Throwable {
-		String[] lines = readLines(script);
+		if (null == script || script.trim().length() == 0) return null;
+		String[] lines = readLines(script.trim());
         if (lines.length == 0) return null;
 		return extractQueries(lines);
 	}

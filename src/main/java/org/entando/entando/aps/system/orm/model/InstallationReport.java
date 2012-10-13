@@ -63,9 +63,10 @@ public class InstallationReport {
 		return new InstallationReport(Status.PORTING);
 	}
 	
-	public void addReport(String component, Date date) {
-		ComponentReport report = new ComponentReport(component, date, this.getStatus());
+	public ComponentReport addReport(String component) {
+		ComponentReport report = new ComponentReport(component, new Date(), this.getStatus());
 		this.getReports().add(report);
+		return report;
 	}
 	
 	public void addReport(ComponentReport report) {
@@ -99,10 +100,13 @@ public class InstallationReport {
 		return false;
 	}
 	
-	public ComponentReport getComponentReport(String component) {
+	public ComponentReport getComponentReport(String component, boolean addIfNotExist) {
 		for (int i = 0; i < this.getReports().size(); i++) {
 			ComponentReport singleReport = this.getReports().get(i);
 			if (singleReport.getComponent().equals(component)) return singleReport;
+		}
+		if (addIfNotExist) {
+			return this.addReport(component);
 		}
 		return null;
 	}

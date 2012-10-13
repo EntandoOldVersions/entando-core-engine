@@ -4,35 +4,22 @@
  */
 package org.entando.entando.aps.system.orm;
 
-import org.entando.entando.aps.system.orm.model.InstallationReport;
+import org.entando.entando.aps.system.orm.util.DataInstallerDAO;
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.DaoManager;
-import com.j256.ormlite.db.*;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
-import com.j256.ormlite.table.TableUtils;
-
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.orm.model.ComponentReport;
 import org.entando.entando.aps.system.orm.model.DataReport;
+import org.entando.entando.aps.system.orm.model.InstallationReport;
 import org.entando.entando.aps.system.orm.model.SchemaReport;
+import org.entando.entando.aps.system.orm.util.TableFactory;
 
-import org.entando.entando.aps.system.orm.util.ApsDerbyEmbeddedDatabaseType;
-import org.entando.entando.aps.system.orm.util.QueryExtractor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -49,30 +36,79 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			ApsSystemUtils.getLogger().config(this.getClass().getName() + ": short init executed");
 			return;
 		}
-		//cerca nel db locale
+		//ESTRAE REGISTRO... 
+		//SE IL REGISTRO é IN STATO INIT, VERIFICA LA PRESENZA DI RISORSE SQL - da quello capisce il da farsi
+		/*
+		 * POSSIBILI STATI DI USCITA - 
+		 **************************************
+		 ** "INIT" - PRIMA INSTALLAZIONE
+		 * Fa un ciclo dei componenti ed installa "db core", "dati core di default", 
+		 * e per ciascun componente "db" e "dati di default"
+		 * (registro da creare ex novo)
+		 **************************************
+		 ** "OK" - INSTALLAZIONI PRECEDENTI CON SUCCESSO
+		 * Fa un ciclo dei componenti ed installa, per ciascun componente non presente nel registro, 
+		 * "db" e "dati di default"
+		 * (registro da aggiornare)
+		 **************************************
+		 ** "PORTING" - Inizializzazione vecchia installazione ( <= 3.0.0 )
+		 * fa un ciclo dei componenti e marchia tutto come installato
+		 * (SI PRESUPPONE CHE CHI FA IL PORTING ABBIA TUTTO A POSTO)
+		 **************************************
+		 ** "RESTORE" - Creazione nuovo db da istanza
+		 * Fa un ciclo dei componenti ed installa "db core" e per ciascun componente "db".
+		 * I dati vengono recuperati dalle risorse SQL di backup.
+		 * (registro da creare ex novo)
+		 **************************************
+		 ** "INCOMPLETE" - situazione precedente inconsistente
+		 * Fa un ciclo dei componenti e verifica l'installazione dei singoli componenti, 
+		 * sulla base della definizione nel registro e del singolo componente (ignora eventuali risorse sql da verificare)
+		 * (registro da aggiornare)
+		 **************************************
+		*/
+		//ESTRAZIONE LISTA COMPONENTI
+		//CREAZIONE DB CORE (sulla base dello stato nel registro)
+		//CREAZIONE DB COMPONENTI (sulla base dello stato nel registro)
+		// -> In caso di RESTORE, eseguue tutte le query nell'ordine definito dai componenti
+		// -> in altri casi, esegue il restore (sulla base dello stato nel registro)
+		
+		// ----------------------------------------------------
+		
 		InstallationReport report = this.extractReport();
 		if (null == report) {
+			
 			//non c'è db locale installato, cerca nei backup locali
 			//TODO DA FARE
+			
 			//non c'è... fa l'inizzializazione es novo
 			report = InstallationReport.getInstance();
 		}
 		try {
-			System.out.println("report " + report.getStatus());
 			this.initMasterDatabases(report);
-			this.initComponents(report);
-			//se è porting, fai il restore dei backup
-			
-			report.setStatus(InstallationReport.Status.OK);
+			List<EntandoComponentConfiguration> components = this.extractComponents();
+			for (int i = 0; i < components.size(); i++) {
+				EntandoComponentConfiguration entandoComponentConfiguration = components.get(i);
+				this.initComponentDatabases(entandoComponentConfiguration, report);
+			}
+			this.initMasterDefaultResource(report);
+			for (int i = 0; i < components.size(); i++) {
+				EntandoComponentConfiguration entandoComponentConfiguration = components.get(i);
+				this.initComponentDefaultResources(entandoComponentConfiguration, report);
+			}
+			if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
+				//FAI RESTORE
+			}
 		} catch (Throwable t) {
 			report.setStatus(InstallationReport.Status.INCOMPLETE);
 			throw new Exception("Error while initializating Db Installer", t);
 		} finally {
+			//Solo se CI SONO STATE MODIFICHE?
 			this.updateReport(report);
 		}
-		
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
 	}
+	
+	//-------------------- REPORT -------- START
 	
 	private InstallationReport extractReport() throws ApsSystemException {
 		InstallationReport report = null;
@@ -103,113 +139,83 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		}
 	}
 	
+	//-------------------- REPORT -------- END
+	
 	private void initMasterDatabases(InstallationReport report) throws ApsSystemException {
 		//System.out.println("********* initMasterDatabases ");
 		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
-			ApsSystemUtils.getLogger().info("Core Component - PORTING");
-			System.out.println("Core Component - PORTING!");
-			report.addReport("entandoCore", new Date());
+			ApsSystemUtils.getLogger().info("Core Component TABLES - Already installed/verified/present!");
+			System.out.println("Core Component TABLES - Already installed/verified/present!");
+			report.addReport("entandoCore");
 			//this.updateReport(report);
 			return;
-		} 
-		ComponentReport coreComponentReport = report.getComponentReport("entandoCore");
-		if (null == coreComponentReport) {
-			coreComponentReport = ComponentReport.getInstance("entandoCore");
-			report.addReport(coreComponentReport);
 		}
-		if (coreComponentReport.getStatus().equals(InstallationReport.Status.PORTING) || 
-				coreComponentReport.getStatus().equals(InstallationReport.Status.OK)) {
-			ApsSystemUtils.getLogger().info("Core Component - Already installed/verified!");
-			System.out.println("Core Component - Already installed/verified!");
+		ComponentReport componentReport = report.getComponentReport("entandoCore", true);
+		SchemaReport schemaReport = componentReport.getSchemaReport();
+		/*
+		if (componentReport.getStatus().equals(InstallationReport.Status.OK) 
+				|| schemaReport.getStatus().equals(InstallationReport.Status.OK)) {
+			ApsSystemUtils.getLogger().info("Core Schema Component - Already installed/verified!");
+			System.out.println("Core Schema Component - Already installed/verified!");
 			return;
 		}
-		//NON é NECESSARIO FARE VERIFICHE IN QUANTO SI FERMA ALLA PRIMA TABELLA PRESENTE
-		//System.out.println("********* initMasterDatabases avviato ");
-		Map<String, InstallationReport.Status> schemaStatus = new HashMap<String, InstallationReport.Status>();
-		Map<String, InstallationReport.Status> dataStatus = new HashMap<String, InstallationReport.Status>();
-		int dataSourceNumber = 0;
+		*/
+		//TODO COMMENTATO PER DARE LA POSSIBILITA' DI INIZIALIZZAZIONE DI NUOVI DATASOURCE
 		try {
-			ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
-			dataSourceNumber = dataSourceNames.length;
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			Map<String, InstallationReport.Status> databasesStatus = schemaReport.getDatabaseStatus();
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
-				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + dataSource);
-				int result = this.initDatabase(dataSourceName, dataSource);
-				schemaStatus.put(dataSourceName, InstallationReport.Status.OK);
-				if (result == 1 && !report.getStatus().equals(InstallationReport.Status.RESTORE)) {
-					Resource resource = this.getDefaultSqlResources().get(dataSourceName);
-					String script = this.readFile(resource);
-					this.valueDatabase(script, dataSourceName, dataSource, null, null);
-					dataStatus.put(dataSourceName, InstallationReport.Status.OK);
+				InstallationReport.Status status = databasesStatus.get(dataSourceName);
+				if (status != null && status.equals(InstallationReport.Status.OK)) {
+					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already installed/verified/present!");
+				} else if (status == null || !status.equals(InstallationReport.Status.OK)) {
+					//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
+					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+					//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + dataSource);
+					databasesStatus.put(dataSourceName, InstallationReport.Status.INCOMPLETE);
+					this.initMasterDatabase(dataSourceName, dataSource, schemaReport);
+					databasesStatus.put(dataSourceName, InstallationReport.Status.OK);
 				}
 			}
-			//System.out.println("Core Component installation DONE!");
-			coreComponentReport.setStatus(InstallationReport.Status.OK);
-			//report.addReport("entandoCore", new Date(), InstallationReport.Status.OK);
-			//this.updateReport(report);
-			ApsSystemUtils.getLogger().info("Core Component installation DONE!");
+			schemaReport.setStatus(InstallationReport.Status.OK);
+			ApsSystemUtils.getLogger().info("Core Schema Component installation DONE!");
 		} catch (Throwable t) {
-			coreComponentReport.setStatus(InstallationReport.Status.INCOMPLETE);
-			//t.printStackTrace();
+			schemaReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initMasterDatabases");
 			throw new ApsSystemException("Error initializating master databases", t);
-		} finally {
-			coreComponentReport.getSchemaReport().getDatabaseStatus().putAll(schemaStatus);
-			if (schemaStatus.size() == dataSourceNumber) {
-				coreComponentReport.getSchemaReport().setStatus(InstallationReport.Status.OK);
-			} else {
-				coreComponentReport.getSchemaReport().setStatus(InstallationReport.Status.INCOMPLETE);
-			}
-			coreComponentReport.getDataReport().getDatabaseStatus().putAll(dataStatus);
-			if (dataStatus.size() == dataSourceNumber) {
-				coreComponentReport.getDataReport().setStatus(InstallationReport.Status.OK);
-			} else {
-				coreComponentReport.getDataReport().setStatus(InstallationReport.Status.INCOMPLETE);
-			}
 		}
 	}
 	
-	private void initComponents(InstallationReport report) throws ApsSystemException {
+	private void initMasterDatabase(String databaseName, DataSource dataSource, SchemaReport schemaReport) throws ApsSystemException {
 		try {
-			ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-			String[] componentBeansNames = factory.getBeanNamesForType(EntandoComponentConfiguration.class);
-			if (null == componentBeansNames || componentBeansNames.length == 0) return;
-			List<EntandoComponentConfiguration> componentBeans = new ArrayList<EntandoComponentConfiguration>();
-			for (int i = 0; i < componentBeansNames.length; i++) {
-				//System.out.println("* " + componentBeansNames[i] + " *");
-				EntandoComponentConfiguration componentConfiguration = (EntandoComponentConfiguration) this.getBeanFactory().getBean(componentBeansNames[i]);
-				if (null != componentConfiguration) componentBeans.add(componentConfiguration);
+			DatabaseType type = this.getType(dataSource);
+			if (type.equals(DatabaseType.DERBY)) {
+				this.initDerbySchema(dataSource);
 			}
-			Collections.sort(componentBeans);
-			String[] dataSourceNames = factory.getBeanNamesForType(DataSource.class);
-			for (int i = 0; i < componentBeans.size(); i++) {
-				EntandoComponentConfiguration componentConfiguration = componentBeans.get(i);
-				this.initComponent(componentConfiguration, dataSourceNames, report);
+			List<String> tableClassNames = this.getTableMapping().get(databaseName);
+			if (null == tableClassNames || tableClassNames.isEmpty()) {
+				ApsSystemUtils.getLogger().info("No Master Tables defined for db - " + databaseName);
+				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
+			} else {
+				this.createTables(databaseName, tableClassNames, dataSource, schemaReport);
 			}
 		} catch (Throwable t) {
-			//t.printStackTrace();
-			ApsSystemUtils.logThrowable(t, this, "initComponents");
-			throw new ApsSystemException("Error initializating components", t);
+			schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
+			ApsSystemUtils.logThrowable(t, this, "initMasterDatabase", "Error inizializating db " + databaseName);
+			throw new ApsSystemException("Error creating master tables to db " + databaseName, t);
 		}
 	}
 	
-	private void initComponent(EntandoComponentConfiguration componentConfiguration, 
-			String[] dataSourceNames, InstallationReport report) throws ApsSystemException {
-		String logPrefix = "Component " + componentConfiguration.getCode();
+	private void initComponentDatabases(EntandoComponentConfiguration componentConfiguration, InstallationReport report) throws ApsSystemException {
+		String logPrefix = "Component '" + componentConfiguration.getCode() + "' SCHEMA";
 		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
 			System.out.println(logPrefix + " - PORTING!!");
 			ApsSystemUtils.getLogger().info(logPrefix + " - PORTING!!");
-			report.addReport(componentConfiguration.getCode(), new Date());
+			report.addReport(componentConfiguration.getCode());
 			return;
 		} 
-		ComponentReport componentReport = report.getComponentReport(componentConfiguration.getCode());
-		if (null == componentReport) {
-			componentReport = ComponentReport.getInstance(componentConfiguration.getCode());
-			report.addReport(componentReport);
-		}
+		ComponentReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
 		if (componentReport.getStatus().equals(InstallationReport.Status.PORTING) || 
 				componentReport.getStatus().equals(InstallationReport.Status.OK)) {
 			ApsSystemUtils.getLogger().info(logPrefix + " - Already installed/verified!");
@@ -217,6 +223,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			return;
 		}
 		try {
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
 			SchemaReport schemaReport = componentReport.getSchemaReport();
 			String logTablePrefix = logPrefix + " TABLES";
@@ -240,8 +247,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					List<String> tableClassNames = tableMapping.get(dataSourceName);
 					if (null != tableClassNames && !tableClassNames.isEmpty()) {
 						System.out.println(logDbTablePrefix + " - INSTALLATION STARTED!");
-						this.createComponentTables(dataSourceName, 
-								tableClassNames, dataSource, schemaReport);
+						this.createTables(dataSourceName, tableClassNames, dataSource, schemaReport);
 						System.out.println(logDbTablePrefix + " - INSTALLATION DONE! - installated tables " + schemaReport.getDatabaseTables().get(dataSourceName));
 						schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
 					} else {
@@ -257,46 +263,11 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					schemaReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
 				}
 			}
-			Map<String, Resource> defaultSqlResources = componentConfiguration.getDefaultSqlResources();
-			String logDataPrefix = "Component " + componentReport.getComponent() + " DATA";
-			DataReport dataReport = componentReport.getDataReport();
-			if (null != defaultSqlResources && !defaultSqlResources.isEmpty()) {
-				System.out.println(logDataPrefix + " - INIT!!!");
-				for (int j = 0; j < dataSourceNames.length; j++) {
-					String dataSourceName = dataSourceNames[j];
-					String logDbDataPrefix = logDataPrefix + " / Datasource " + dataSourceName;
-					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-					InstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-					if (null != dataStatus && (dataStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
-							dataStatus.equals(InstallationReport.Status.RESTORE) || 
-							dataStatus.equals(InstallationReport.Status.OK))) {
-						System.out.println(logDbDataPrefix + " - Already installed/verified!");
-						continue;
-					}
-					Resource resource = defaultSqlResources.get(dataSourceName);
-					String script = this.readFile(resource);
-					if (null != script && script.trim().length() > 0) {
-						System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
-						this.valueDatabase(script, dataSourceName, dataSource, report, dataReport);
-						System.out.println(logDbDataPrefix + " - Installation DONE!!!");
-						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
-					} else {
-						System.out.println(logDbDataPrefix + " - NOT AVAILABLE!");
-						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
-					}
-				}
-				System.out.println(logDataPrefix + " - Installation DONE!!!");
-				dataReport.setStatus(InstallationReport.Status.OK);
-			} else {
-				System.out.println(logDataPrefix + " - NOT AVAILABLE!");
-				if (!dataReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
-					dataReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
-				}
-			}
-			System.out.println("Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
-			componentReport.setStatus(InstallationReport.Status.OK);
+			
+			System.out.println("SCHEMA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
+			//componentReport.setStatus(InstallationReport.Status.OK);
 			//report.addReport(componentConfiguration.getCode(), new Date(), InstallationReport.Status.OK);
-			ApsSystemUtils.getLogger().info("'" + componentConfiguration.getCode() 
+			ApsSystemUtils.getLogger().info("SCHEMA '" + componentConfiguration.getCode() 
 					+ "' Component installation DONE!");
 		} catch (Throwable t) {
 			componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
@@ -306,323 +277,36 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		}
 	}
 	
-	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
-		Method method = dataSource.getClass().getDeclaredMethod(methodName);
-		return (String) method.invoke(dataSource);
-	}
-	
-	private int initDatabase(String databaseName, DataSource dataSource) throws ApsSystemException {
-		int globalResult = 0;
-		ConnectionSource connectionSource = null;
-		try {
-			connectionSource = this.createConnectionSource(databaseName, dataSource);
-			globalResult = this.setupDatabase(databaseName, dataSource, connectionSource);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initDatabase", "Error inizializating db " + databaseName);
-			throw new ApsSystemException("Error creating component tables to db " + databaseName, t);
-		} finally {
-			if (connectionSource != null) {
-				try {
-					connectionSource.close();
-				} catch (SQLException ex) {}
-			}
-		}
-		return globalResult;
-	}
-	
-	private int setupDatabase(String databaseName, DataSource dataSource, ConnectionSource connectionSource) throws ApsSystemException {
-		int globalResult = 0;
-		try {
-			DatabaseType type = this.getType(dataSource);
-			//System.out.println("DB TYPE " + type);
-			if (type.equals(DatabaseType.DERBY)) {
-				int result = this.initDerbySchema(dataSource);
-				if (result == 0) return 0;
-			}
-			List<String> tableClassNames = this.getTableMapping().get(databaseName);
-			if (null == tableClassNames || tableClassNames.isEmpty()) {
-				ApsSystemUtils.getLogger().info("No Tables defined for db - " + databaseName);
-				return 0;
-			}
-			globalResult = this.createTables(databaseName, dataSource, tableClassNames, connectionSource, null);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error on setup Database");
-			throw new ApsSystemException("Error on setup Database", t);
-		}
-		return globalResult;
-	}
-	
-	private void createComponentTables(String databaseName, List<String> tableClassNames, 
+	private void createTables(String databaseName, List<String> tableClassNames, 
 			DataSource dataSource, SchemaReport schemaReport) throws ApsSystemException {
-		InstallationReport.Status schemaStatus = schemaReport.getDatabaseStatus().get(databaseName);
-		if (null != schemaStatus && (databaseName.equals(InstallationReport.Status.OK)
-				|| databaseName.equals(InstallationReport.Status.PORTING))) {
-			return;
-		}
-		ConnectionSource connectionSource = null;
 		try {
-			connectionSource = this.createConnectionSource(databaseName, dataSource);
-			this.createTables(databaseName, dataSource, tableClassNames, connectionSource, schemaReport);
+			DatabaseType type = this.getType(dataSource);
+			TableFactory tableFactory = new TableFactory(databaseName, dataSource, type);
+			tableFactory.createTables(tableClassNames, schemaReport);
 		} catch (Throwable t) {
-			schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
 			//this.updateReport(report);
-			ApsSystemUtils.logThrowable(t, this, "createComponentTables", "Error creating component tables into db " + databaseName);
-			throw new ApsSystemException("Error creating component tables to db " + databaseName, t);
-		} finally {
-			if (connectionSource != null) {
-				try {
-					connectionSource.close();
-				} catch (SQLException ex) {}
-			}
+			ApsSystemUtils.logThrowable(t, this, "createTables", "Error creating tables into db " + databaseName);
+			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
 	
-	private ConnectionSource createConnectionSource(String databaseName, DataSource dataSource) throws ApsSystemException {
-		ConnectionSource connectionSource = null;
+	private List<EntandoComponentConfiguration> extractComponents() throws ApsSystemException {
+		List<EntandoComponentConfiguration> componentBeans = new ArrayList<EntandoComponentConfiguration>();
 		try {
-			DatabaseType type = this.getType(dataSource);
-			String url = /*dataSource.getUrl();*/this.invokeGetMethod("getUrl", dataSource);
-			String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
-			String password = /*dataSource.getPassword();*/this.invokeGetMethod("getPassword", dataSource);
-			//System.out.println(url + " - " + username + " - " + password);
-			com.j256.ormlite.db.DatabaseType dataType = null;
-			//System.out.println("AAAAAAaaaaaaaaaaAAAAAAAAAAa " + type);
-			if (type.equals(DatabaseType.DERBY)) {
-				dataType = new ApsDerbyEmbeddedDatabaseType();
-				//System.out.println("ESCAPE " + ((DerbyEmbeddedDatabaseType) dataType).isEntityNamesMustBeUpCase());
-				url = url + ";user=" + username + ";password=" + password;//;user=XXX;password=YYY';
-				//dataType.setDriver(new org.apache.derby.jdbc.EmbeddedDriver());
-				connectionSource = new JdbcConnectionSource(url, dataType);
-			} else {
-				if (type.equals(DatabaseType.POSTGRESQL)) {
-					dataType = new PostgresDatabaseType();
-				} else if (type.equals(DatabaseType.MYSQL)) {
-					dataType = new MysqlDatabaseType();
-				} else if (type.equals(DatabaseType.ORACLE)) {
-					dataType = new OracleDatabaseType();
-				}
-				connectionSource = new JdbcConnectionSource(url, username, password, dataType);
+			String[] componentBeansNames = this.extractBeanNames(EntandoComponentConfiguration.class);
+			if (null == componentBeansNames || componentBeansNames.length == 0) return componentBeans;
+			for (int i = 0; i < componentBeansNames.length; i++) {
+				//System.out.println("* " + componentBeansNames[i] + " *");
+				EntandoComponentConfiguration componentConfiguration = (EntandoComponentConfiguration) this.getBeanFactory().getBean(componentBeansNames[i]);
+				if (null != componentConfiguration) componentBeans.add(componentConfiguration);
 			}
+			Collections.sort(componentBeans);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createConnectionSource", "Error creating connectionSource to db " + databaseName);
-			throw new ApsSystemException("Error creating connectionSource to db " + databaseName, t);
-		}
-		return connectionSource;
-	}
-	
-	private int createTables(String databaseName, DataSource dataSource, List<String> tableClassNames, 
-			ConnectionSource connectionSource, SchemaReport schemaReport) throws ApsSystemException {
-		int globalResult = 0;
-		List<String> tables = null;
-		try {
-			if (null != schemaReport) {
-				//TABELLE DI COMPONENTI 
-				tables = schemaReport.getDatabaseTables().get(databaseName);
-				//System.out.println("INSTALLED TABLES - " + tables);
-				/*
-				if (null == tables) {
-					tables = new ArrayList<String>();
-					schemaReport.getDatabaseTables().put(databaseName, tables);
-				}
-				*/
-			}// else {
-			//	System.out.println("SCHEMA REPORT NULL - databaseName " + databaseName);
-			//}
-			DatabaseType type = this.getType(dataSource);
-			globalResult = 1;
-			for (int i = 0; i < tableClassNames.size(); i++) {
-				String tableClassName = tableClassNames.get(i);
-				if (null != tables && tables.contains(tableClassName)) {
-					continue;
-				}
-				//System.out.println("************** CLASSE " + tableClassName + " *********************");
-				int result = 0;
-				try {
-					System.out.println("TABLE '" + tableClassName + "' - INSTALLATION");
-					Class tableClass = Class.forName(tableClassName);
-					result = this.createTable(databaseName, type, tableClass, connectionSource);
-					if (null != tables && !tables.contains(tableClassName)) {
-						tables.add(tableClassName);
-						System.out.println("TABLE '" + tableClassName + "' installed");
-						//this.updateReport(report);
-					}
-					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);
-				} catch (Throwable t) {
-					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
-					//System.out.println("Impossibile CREARE TABELLA " + tableClassName);
-					//t.printStackTrace();
-					String message = "Error creating table " + databaseName + "/" + tableClassName + " - " + t.getMessage();
-					ApsSystemUtils.logThrowable(t, this, "createTables", message);
-					throw new ApsSystemException(message, t);
-				}
-				if (result == 0) globalResult = 0;
-			}
-		} catch (Throwable t) {
-			schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
-			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error on setup Database - " + databaseName);
-			throw new ApsSystemException("Error on setup Database", t);
-		}
-		return globalResult;
-	}
-	
-	private int initDerbySchema(DataSource dataSource) throws Throwable {
-		String username = /*dataSource.getUsername();*/this.invokeGetMethod("getUsername", dataSource);
-		try {
-			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + username.toUpperCase()};
-			this.executeQueries(dataSource, queryCreateSchema, false);
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
-			return 0;
-		}
-		try {
-			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + username.toUpperCase() + "\""};
-			this.executeQueries(dataSource, initSchemaQuery, true);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
-			throw new ApsSystemException("Error initializating Derby Schema", t);
-		}
-		return 1;
-	}
-	
-	private int createTable(String databaseName, DatabaseType type, 
-			Class tableClass, ConnectionSource connectionSource) throws Throwable {
-		int result = 0;
-		String logTableName = databaseName + "/" + tableClass.getSimpleName().toLowerCase();
-		//System.out.println("CREAZIONE TABELLA " + logTableName);
-		try {
-			result = TableUtils.createTable(connectionSource, tableClass);
-			if (result > 0) {
-				//System.out.println("Created table - " + logTableName);
-				ApsSystemUtils.getLogger().info("Created table - " + logTableName);
-				Object tableModel = tableClass.newInstance();
-				if (tableModel instanceof ExtendedColumnDefinition) {
-					String[] extensions = ((ExtendedColumnDefinition) tableModel).extensions(type);
-					if (null != extensions && extensions.length > 0) {
-						Dao dao = DaoManager.createDao(connectionSource, tableClass);
-						for (int i = 0; i < extensions.length; i++) {
-							String query = extensions[i];
-							dao.executeRaw(query);
-						}
-					}
-				}
-			}
-		//} catch (SQLException t) {
 			//t.printStackTrace();
-			//System.out.println("Table creation not allowed - " + logTableName + " - " + t.getMessage());
-		//	ApsSystemUtils.getLogger().info("Table creation not allowed - " + t.getMessage());
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error creating table " + logTableName + " - " + t.getMessage());
-			if (result > 0) {
-				TableUtils.dropTable(connectionSource, tableClass, true);
-			}
-			throw new ApsSystemException("Error creating table " + logTableName, t);
+			ApsSystemUtils.logThrowable(t, this, "extractComponents");
+			throw new ApsSystemException("Error extracting components", t);
 		}
-		return result;
-	}
-	/*
-	private void valueDatabase(String databaseName, DataSource dataSource) throws ApsSystemException {
-		
-	}
-	*/
-	private void valueDatabase(String script, String databaseName, 
-			DataSource dataSource, InstallationReport report, DataReport schemaReport) throws ApsSystemException {
-		/*
-		if (null == resource) {
-			ApsSystemUtils.getLogger().info("No resource script for db " + databaseName);
-			if (null != report) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-				//this.updateReport(report);
-			}
-			return;
-		}
-		*/
-		try {
-            if (null == script || script.trim().length() == 0) {
-				ApsSystemUtils.getLogger().info("No sql script for db " + databaseName);
-				if (null != report) {
-					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-					//this.updateReport(report);
-				}
-				return;
-			}
-            String[] queries = QueryExtractor.extractQueries(script);
-			if (null == queries || queries.length == 0) {
-				ApsSystemUtils.getLogger().info("Script file for db " + databaseName + " void");
-				if (null != report) {
-					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-					//this.updateReport(report);
-				}
-				return;
-			}
-			this.executeQueries(dataSource, queries, true);
-			if (null != report) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.OK);
-				//this.updateReport(report);
-			}
-		} catch (Throwable t) {
-			if (null != report) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
-				//this.updateReport(report);
-			}
-			ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + databaseName);
-			throw new ApsSystemException("Error executing script into db " + databaseName, t);
-		}
-	}
-	
-	private String readFile(Resource resource) throws Throwable {
-		if (resource == null) return null;
-		InputStream is = null;
-		String text = null;
-		try {
-			is = resource.getInputStream();
-			if (null == is) {
-				return null;
-			}
-			text = FileTextReader.getText(is);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "readFile", "Error reading resource");
-			throw new ApsSystemException("Error reading resource", t);
-		} finally {
-			if (null != is) is.close();
-		}
-		return text;
-	}
-	
-	private void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
-		if (queries.length == 0) return;
-		Connection conn = null;
-        PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			conn = dataSource.getConnection();
-            conn.setAutoCommit(false);
-			for (int i = 0; i < queries.length; i++) {
-				stat = conn.prepareStatement(queries[i]);
-				stat.execute();
-			}
-			conn.commit();
-		} catch (Throwable t) {
-			if (traceException) {
-				ApsSystemUtils.logThrowable(t, this, "valueDatabase", "Error executing script into db " + dataSource);
-			}
-			throw new ApsSystemException("Error executing script into db " + dataSource, t);
-		} finally {
-			try {
-				if (res != null) res.close();
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the resultset");
-			}
-			try {
-				if (stat != null) stat.close();
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the statement");
-			}
-			try {
-				if (conn != null) conn.close();
-			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "closeDaoStatement", "Error closing the connection");
-			}
-		}
+		return componentBeans;
 	}
 	
 	protected DatabaseType getType(DataSource dataSource) {
@@ -652,14 +336,166 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		return type;
 	}
 	
-	/*
-	protected Map<String, String> getDatabaseTypes() {
-		return _databaseTypes;
+	private void initDerbySchema(DataSource dataSource) throws Throwable {
+		String username = this.invokeGetMethod("getUsername", dataSource);
+		try {
+			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + username.toUpperCase()};
+			DataInstallerDAO.executeQueries(dataSource, queryCreateSchema, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
+			throw new ApsSystemException("Error creating derby schema", t);
+		}
+		try {
+			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + username.toUpperCase() + "\""};
+			DataInstallerDAO.executeQueries(dataSource, initSchemaQuery, true);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
+			throw new ApsSystemException("Error initializating Derby Schema", t);
+		}
 	}
-	public void setDatabaseTypes(Map<String, String> databaseTypes) {
-		this._databaseTypes = databaseTypes;
+	
+	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
+		Method method = dataSource.getClass().getDeclaredMethod(methodName);
+		return (String) method.invoke(dataSource);
 	}
-	*/
+	
+	//---------------- DATA ------------------- START
+	
+	
+	private void initMasterDefaultResource(InstallationReport report) throws ApsSystemException {
+		ComponentReport coreComponentReport = report.getComponentReport("entandoCore", false);
+		if (coreComponentReport.getStatus().equals(InstallationReport.Status.OK) || 
+				coreComponentReport.getStatus().equals(InstallationReport.Status.RESTORE)) {
+			ApsSystemUtils.getLogger().info("Core Component RESOURCES - Already installed/verified/present!");
+			System.out.println("Core Component RESOURCES - Already installed/verified/present!");
+			return;
+		}
+		DataReport dataReport = coreComponentReport.getDataReport();
+		try {
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			for (int i = 0; i < dataSourceNames.length; i++) {
+				String dataSourceName = dataSourceNames[i];
+				if (coreComponentReport.getStatus().equals(InstallationReport.Status.PORTING)) {
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
+				}
+				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
+				
+				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + dataSource);
+				Resource resource = this.getDefaultSqlResources().get(dataSourceName);
+				String script = this.readFile(resource);
+				if (null != script && script.trim().length() != 0) {
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.INCOMPLETE);
+					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+					DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, null);
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
+				} else {
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
+				}
+			}
+			dataReport.setStatus(InstallationReport.Status.OK);
+			//System.out.println("Core Component installation DONE!");
+			coreComponentReport.setStatus(InstallationReport.Status.OK);
+			//report.addReport("entandoCore", new Date(), InstallationReport.Status.OK);
+			//this.updateReport(report);
+			ApsSystemUtils.getLogger().info("Core Component DATA installation DONE!");
+		} catch (Throwable t) {
+			coreComponentReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//t.printStackTrace();
+			ApsSystemUtils.logThrowable(t, this, "initMasterDefaultResource");
+			throw new ApsSystemException("Error initializating master DefaultResource", t);
+		}
+	}
+	
+	private void initComponentDefaultResources(EntandoComponentConfiguration componentConfiguration, 
+			InstallationReport report) throws ApsSystemException {
+		String logPrefix = "Component '" + componentConfiguration.getCode() + "' DATA";
+		ComponentReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
+		if (componentReport.getStatus().equals(InstallationReport.Status.OK) || 
+				componentReport.getStatus().equals(InstallationReport.Status.RESTORE)) {
+			ApsSystemUtils.getLogger().info(logPrefix + " - Already installed/verified/present!");
+			System.out.println(logPrefix + " - Already installed/verified/present!");
+			return;
+		}
+		DataReport dataReport = componentReport.getDataReport();
+		try {
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			Map<String, Resource> defaultSqlResources = componentConfiguration.getDefaultSqlResources();
+			String logDataPrefix = "Component " + componentReport.getComponent() + " DATA";
+			if (null != defaultSqlResources && !defaultSqlResources.isEmpty()) {
+				System.out.println(logDataPrefix + " - INIT!!!");
+				for (int j = 0; j < dataSourceNames.length; j++) {
+					String dataSourceName = dataSourceNames[j];
+					String logDbDataPrefix = logDataPrefix + " / Datasource " + dataSourceName;
+					if (componentReport.getStatus().equals(InstallationReport.Status.PORTING)) {
+						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
+						continue;
+					}
+					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+					InstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
+					if (null != dataStatus && (dataStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
+							dataStatus.equals(InstallationReport.Status.RESTORE) || 
+							dataStatus.equals(InstallationReport.Status.OK))) {
+						System.out.println(logDbDataPrefix + " - Already installed/verified!");
+						continue;
+					}
+					Resource resource = defaultSqlResources.get(dataSourceName);
+					String script = this.readFile(resource);
+					if (null != script && script.trim().length() > 0) {
+						System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
+						DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, dataReport);
+						System.out.println(logDbDataPrefix + " - Installation DONE!!!");
+						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
+					} else {
+						System.out.println(logDbDataPrefix + " - NOT AVAILABLE!");
+						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
+					}
+				}
+				System.out.println(logDataPrefix + " - Installation DONE!!!");
+				dataReport.setStatus(InstallationReport.Status.OK);
+			} else {
+				System.out.println(logDataPrefix + " - NOT AVAILABLE!");
+				if (!dataReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
+					dataReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
+				}
+			}
+			dataReport.setStatus(InstallationReport.Status.OK);
+			System.out.println("DATA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
+			componentReport.setStatus(InstallationReport.Status.OK);
+			//report.addReport(componentConfiguration.getCode(), new Date(), InstallationReport.Status.OK);
+			ApsSystemUtils.getLogger().info("DATA '" + componentConfiguration.getCode() 
+					+ "' Component installation DONE!");
+		} catch (Throwable t) {
+			dataReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			ApsSystemUtils.logThrowable(t, this, "initComponent", 
+					"Error initializating component " + componentConfiguration.getCode());
+			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
+		}
+	}
+	
+	private String readFile(Resource resource) throws Throwable {
+		if (resource == null) return null;
+		InputStream is = null;
+		String text = null;
+		try {
+			is = resource.getInputStream();
+			if (null == is) {
+				return null;
+			}
+			text = FileTextReader.getText(is);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "readFile", "Error reading resource");
+			throw new ApsSystemException("Error reading resource", t);
+		} finally {
+			if (null != is) is.close();
+		}
+		return text;
+	}
+	
+	private String[] extractBeanNames(Class beanClass) {
+		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
+		return factory.getBeanNamesForType(beanClass);
+	}
 	
 	protected boolean isCheckOnStartup() {
 		return _checkOnStartup;
@@ -706,7 +542,6 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	private boolean _checkOnStartup;
 	private String _configVersion;
-	//private Map<String, String> _databaseTypes;
 	private Properties _databaseTypeDrivers;
 	private Map<String, List<String>> _tableMapping;
 	private Map<String, Resource> _defaultSqlResources;
