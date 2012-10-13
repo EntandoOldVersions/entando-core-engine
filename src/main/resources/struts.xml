@@ -176,13 +176,14 @@
 		</interceptors>
 	</package>
 	
-	<include file="com/agiletec/apsadmin/admin/baseAdmin.xml"/>
-	<include file="com/agiletec/apsadmin/admin/lang/lang.xml"/>
-	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml"/>
+	<include file="com/agiletec/apsadmin/admin/baseAdmin.xml" />
+	<include file="com/agiletec/apsadmin/admin/lang/lang.xml" />
+	<include file="org/entando/entando/apsadmin/admin/database.xml" />
+	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml" />
     
-	<include file="com/agiletec/apsadmin/common/common.xml"/>
+	<include file="com/agiletec/apsadmin/common/common.xml" />
     
-	<include file="com/agiletec/apsadmin/category/category.xml"/>
+	<include file="com/agiletec/apsadmin/category/category.xml" />
     
 	<include file="com/agiletec/apsadmin/portal/page.xml" />
 	<include file="com/agiletec/apsadmin/portal/specialshowlet/specialShowlet.xml" />

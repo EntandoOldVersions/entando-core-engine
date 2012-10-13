@@ -82,7 +82,7 @@
 		</entry>
 	</util:map>
 	
-	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
+	<bean id="DbInstallerManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
 			init-method="init">
 		<property name="tableMapping">
 		<map>

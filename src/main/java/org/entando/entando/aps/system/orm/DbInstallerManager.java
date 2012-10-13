@@ -465,6 +465,12 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	//---------------- DATA ------------------- END
 	
+	@Override
+	public void createBackup() throws ApsSystemException {
+		//TODO
+		System.out.println("BACKUP DONE");
+	}
+	
 	private String[] extractBeanNames(Class beanClass) {
 		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
 		return factory.getBeanNamesForType(beanClass);

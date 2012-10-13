@@ -11,7 +11,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public interface IDbInstallerManager {
 	
-	//public void createBackup() throws ApsSystemException;
+	public void createBackup() throws ApsSystemException;
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE}
 	

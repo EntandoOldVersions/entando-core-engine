@@ -11,4 +11,9 @@
 		<property name="pageManager" ref="PageManager" />
 	</bean>
 	
+	<bean id="databaseAdminAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.admin.DatabaseAction" parent="abstractBaseAction" >
+		<property name="dbInstallerManager" ref="DbInstallerManager"/>
+	</bean>
+	
 </beans>
