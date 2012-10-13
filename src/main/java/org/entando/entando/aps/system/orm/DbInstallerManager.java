@@ -81,7 +81,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			//TODO DA FARE
 			
 			//non c'è... fa l'inizzializazione es novo
-			report = InstallationReport.getPortingInstance();
+			report = InstallationReport.getInstance();
 		}
 		try {
 			this.initMasterDatabases(report);
@@ -169,13 +169,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
 				if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
-					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already present! " + report.getStatus() + " - db " + dataSourceName);
+					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already present! db " + dataSourceName);
 					databasesStatus.put(dataSourceName, InstallationReport.Status.PORTING);
 					continue;
 				}
 				InstallationReport.Status status = databasesStatus.get(dataSourceName);
-				if (status != null && status.equals(InstallationReport.Status.OK)) {
-					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already installed/verified! " + status + " - db " + dataSourceName);
+				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + status);
+				if (status != null && (status.equals(InstallationReport.Status.OK) || status.equals(InstallationReport.Status.PORTING))) {
+					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already installed/verified! db " + dataSourceName);
 				} else if (status == null || !status.equals(InstallationReport.Status.OK)) {
 					//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
 					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
