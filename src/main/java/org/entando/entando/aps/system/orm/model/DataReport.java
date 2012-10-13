@@ -12,19 +12,10 @@ import org.jdom.Element;
  * @author E.Santoboni
  */
 public class DataReport extends AbstractReport {
-	/*
-	protected DataReport() {
-		this.setStatus(InstallationReport.Status.INIT);
-	}
-	*/
-	protected DataReport(InstallationReport.Status status) {
-		this.setStatus(status);
-	}
+	
+	protected DataReport() {}
 	
 	protected DataReport(Element element) {
-		String statusString = element.getAttributeValue("status");
-		InstallationReport.Status status = Enum.valueOf(InstallationReport.Status.class, statusString.toUpperCase());
-		this.setStatus(status);
 		List<Element> databaseElements = element.getChildren("database");
 		for (int i = 0; i < databaseElements.size(); i++) {
 			Element databaseElement = databaseElements.get(i);

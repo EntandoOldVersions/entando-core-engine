@@ -31,26 +31,12 @@
 	<util:list id="entandoPortTableClasses">
 		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
 		<value>org.entando.entando.aps.system.orm.portdb.Category</value>
-		<!--
-		<value>org.entando.entando.aps.system.orm.portdb.ContentModel</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Content</value>
-		-->
 		<value>org.entando.entando.aps.system.orm.portdb.LocalString</value>
 		<value>org.entando.entando.aps.system.orm.portdb.PageModel</value>
 		<value>org.entando.entando.aps.system.orm.portdb.Page</value>
-		<!--
-		<value>org.entando.entando.aps.system.orm.portdb.Resource</value>
-		<value>org.entando.entando.aps.system.orm.portdb.ResourceRelation</value>
-		-->
 		<value>org.entando.entando.aps.system.orm.portdb.ShowletCatalog</value>
 		<value>org.entando.entando.aps.system.orm.portdb.ShowletConfig</value>
 		<value>org.entando.entando.aps.system.orm.portdb.Uniquekeys</value>
-		<!--
-		<value>org.entando.entando.aps.system.orm.portdb.ContentRelation</value>
-		<value>org.entando.entando.aps.system.orm.portdb.ContentSearch</value>
-		<value>org.entando.entando.aps.system.orm.portdb.WorkContentRelation</value>
-		<value>org.entando.entando.aps.system.orm.portdb.WorkContentSearch</value>
-		-->
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">
@@ -111,7 +97,7 @@
 		</map>
 		</property>
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
-		<property name="checkOnStartup"><value>${db.statup.startup.check}</value></property>
+		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
 	</bean>
 	

@@ -9,7 +9,6 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import java.io.StringReader;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.jdom.Document;
@@ -64,7 +63,7 @@ public class InstallationReport {
 	}
 	
 	public ComponentReport addReport(String component) {
-		ComponentReport report = new ComponentReport(component, new Date(), this.getStatus());
+		ComponentReport report = ComponentReport.getInstance(component);//new ComponentReport(component, new Date(), this.getStatus());
 		this.getReports().add(report);
 		return report;
 	}
@@ -76,9 +75,16 @@ public class InstallationReport {
 	public String toXml() {
 		Document doc = new Document();
 		Element rootElement = new Element("reports");
-		if (null != this.getStatus()) {
-			rootElement.setAttribute("status", this.getStatus().toString());
+		
+		Status status = Status.OK;
+		for (int i = 0; i < this.getReports().size(); i++) {
+			ComponentReport componentReport = this.getReports().get(i);
+			if (!componentReport.getStatus().equals(Status.OK)) {
+				status = componentReport.getStatus();
+				break;
+			} 
 		}
+		rootElement.setAttribute("status", status.toString());
 		for (int i = 0; i < this.getReports().size(); i++) {
 			ComponentReport singleReport = this.getReports().get(i);
 			Element element = singleReport.toJdomElement();

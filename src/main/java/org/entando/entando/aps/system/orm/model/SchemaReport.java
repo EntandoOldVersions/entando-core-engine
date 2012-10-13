@@ -5,35 +5,17 @@
 package org.entando.entando.aps.system.orm.model;
 
 import java.util.*;
-import org.entando.entando.aps.system.orm.model.InstallationReport.Status;
+
 import org.jdom.Element;
 
 /**
  * @author E.Santoboni
  */
 public class SchemaReport extends AbstractReport {
-	/*
-	protected SchemaReport() {
-		this.setStatus(Status.INIT);
-	}
-	*/
-	protected SchemaReport(Status status) {
-		this.setStatus(status);
-	}
 	
-	/*
-	<schema status="">
-		<database name="........" status=".....">
-			<table name="...." status="OK">
-		</database>
-		<database name="........" status="NOT_AVAILABLE" />
-	</schema>
-		*/
-
+	protected SchemaReport() {}
+	
 	protected SchemaReport(Element element) {
-		String statusString = element.getAttributeValue("status");
-		InstallationReport.Status status = Enum.valueOf(InstallationReport.Status.class, statusString.toUpperCase());
-		this.setStatus(status);
 		List<Element> databaseElements = element.getChildren("database");
 		for (int i = 0; i < databaseElements.size(); i++) {
 			Element databaseElement = databaseElements.get(i);
@@ -76,40 +58,11 @@ public class SchemaReport extends AbstractReport {
 		}
 		return element;
 	}
-	/*
-	public static SchemaReport getInstance() {
-		SchemaReport report = new SchemaReport();
-
-		return report;
-	}
-	*/
-	/*
-	public Status getStatus() {
-		return _status;
-	}
-	public void setStatus(Status status) {
-		this._status = status;
-	}
-
-	public Map<String, Status> getDatabaseStatus() {
-		return _databaseStatus;
-	}
-	*/
-	/*
-	public void setDatabaseStatus(Map<String, Status> databaseStatus) {
-		this._databaseStatus = databaseStatus;
-	}
-	*/
+	
 	public Map<String, List<String>> getDatabaseTables() {
 		return _databaseTables;
 	}
-	/*
-	public void setDatabaseTables(Map<String, List<String>> databaseTables) {
-		this._databaseTables = databaseTables;
-	}
-	*/
-	//private InstallationReport.Status _status;
-	//private Map<String, InstallationReport.Status> _databaseStatus = new HashMap<String, InstallationReport.Status>();
+	
 	private Map<String, List<String>> _databaseTables = new HashMap<String, List<String>>();
 	
 }

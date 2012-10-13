@@ -81,7 +81,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			//TODO DA FARE
 			
 			//non c'è... fa l'inizzializazione es novo
-			report = InstallationReport.getInstance();
+			report = InstallationReport.getPortingInstance();
 		}
 		try {
 			this.initMasterDatabases(report);
@@ -143,6 +143,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	private void initMasterDatabases(InstallationReport report) throws ApsSystemException {
 		//System.out.println("********* initMasterDatabases ");
+		/*
 		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
 			ApsSystemUtils.getLogger().info("Core Component TABLES - Already installed/verified/present!");
 			System.out.println("Core Component TABLES - Already installed/verified/present!");
@@ -150,6 +151,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			//this.updateReport(report);
 			return;
 		}
+		*/
 		ComponentReport componentReport = report.getComponentReport("entandoCore", true);
 		SchemaReport schemaReport = componentReport.getSchemaReport();
 		/*
@@ -166,9 +168,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			Map<String, InstallationReport.Status> databasesStatus = schemaReport.getDatabaseStatus();
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
+				if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
+					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already present! " + report.getStatus() + " - db " + dataSourceName);
+					databasesStatus.put(dataSourceName, InstallationReport.Status.PORTING);
+					continue;
+				}
 				InstallationReport.Status status = databasesStatus.get(dataSourceName);
 				if (status != null && status.equals(InstallationReport.Status.OK)) {
-					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already installed/verified/present!");
+					System.out.println("'" +dataSourceName+ "' Core Component TABLES - Already installed/verified! " + status + " - db " + dataSourceName);
 				} else if (status == null || !status.equals(InstallationReport.Status.OK)) {
 					//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
 					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
@@ -178,10 +185,10 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					databasesStatus.put(dataSourceName, InstallationReport.Status.OK);
 				}
 			}
-			schemaReport.setStatus(InstallationReport.Status.OK);
+			//schemaReport.setStatus(InstallationReport.Status.OK);
 			ApsSystemUtils.getLogger().info("Core Schema Component installation DONE!");
 		} catch (Throwable t) {
-			schemaReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//schemaReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initMasterDatabases");
 			throw new ApsSystemException("Error initializating master databases", t);
 		}
@@ -209,12 +216,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	private void initComponentDatabases(EntandoComponentConfiguration componentConfiguration, InstallationReport report) throws ApsSystemException {
 		String logPrefix = "Component '" + componentConfiguration.getCode() + "' SCHEMA";
+		/*
 		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
 			System.out.println(logPrefix + " - PORTING!!");
 			ApsSystemUtils.getLogger().info(logPrefix + " - PORTING!!");
 			report.addReport(componentConfiguration.getCode());
 			return;
-		} 
+		}
+		*/
 		ComponentReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
 		if (componentReport.getStatus().equals(InstallationReport.Status.PORTING) || 
 				componentReport.getStatus().equals(InstallationReport.Status.OK)) {
@@ -227,42 +236,48 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
 			SchemaReport schemaReport = componentReport.getSchemaReport();
 			String logTablePrefix = logPrefix + " TABLES";
-			if (null != tableMapping && !tableMapping.isEmpty()) {
-				System.out.println(logTablePrefix + " - Installation STARTED!!!");
-				for (int j = 0; j < dataSourceNames.length; j++) {
-					String dataSourceName = dataSourceNames[j];
-					String logDbTablePrefix = logTablePrefix + " / Datasource " + dataSourceName;
-					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-					InstallationReport.Status schemaStatus = schemaReport.getDatabaseStatus().get(dataSourceName);
-					System.out.println(logDbTablePrefix + " - INIT!!!");
-					if (null != schemaStatus && (schemaStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
-							schemaStatus.equals(InstallationReport.Status.PORTING) || // FORSE NON PUO' ESSERE POSSIBILE
-							schemaStatus.equals(InstallationReport.Status.OK))) {
-						System.out.println(logDbTablePrefix + " - Already installed/verified!");
-						continue;
-					}
-					if (null == schemaReport.getDatabaseTables().get(dataSourceName)) {
-						schemaReport.getDatabaseTables().put(dataSourceName, new ArrayList<String>());
-					}
-					List<String> tableClassNames = tableMapping.get(dataSourceName);
-					if (null != tableClassNames && !tableClassNames.isEmpty()) {
-						System.out.println(logDbTablePrefix + " - INSTALLATION STARTED!");
-						this.createTables(dataSourceName, tableClassNames, dataSource, schemaReport);
-						System.out.println(logDbTablePrefix + " - INSTALLATION DONE! - installated tables " + schemaReport.getDatabaseTables().get(dataSourceName));
-						schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
-					} else {
-						System.out.println(logDbTablePrefix + " - NOT AVAILABLE!");
-						schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
-					}
+			//if (null != tableMapping && !tableMapping.isEmpty()) {
+			System.out.println(logTablePrefix + " - Installation STARTED!!!");
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				String logDbTablePrefix = logTablePrefix + " / Datasource " + dataSourceName;
+				List<String> tableClassNames = (null != tableMapping) ? tableMapping.get(dataSourceName) : null;
+				if (null == tableClassNames || tableClassNames.isEmpty()) {
+					System.out.println(logDbTablePrefix + " - NOT AVAILABLE!");
+					schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
+					continue;
 				}
-				System.out.println(logTablePrefix + " - Installation DONE!!!");
-				schemaReport.setStatus(InstallationReport.Status.OK);
-			} else {
-				System.out.println(logTablePrefix + " - NOT AVAILABLE!");
-				if (!schemaReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
-					schemaReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
+				if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
+					schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
+					String message = logTablePrefix + "- Already present! " + InstallationReport.Status.PORTING + " - db " + dataSourceName;
+					ApsSystemUtils.getLogger().info(message);
+					System.out.println(message);
+					continue;
 				}
+				InstallationReport.Status schemaStatus = schemaReport.getDatabaseStatus().get(dataSourceName);
+				System.out.println(logDbTablePrefix + " - INIT!!!");
+				if (null != schemaStatus && (schemaStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
+						schemaStatus.equals(InstallationReport.Status.OK))) {
+					System.out.println(logDbTablePrefix + "- Already installed/verified! " + InstallationReport.Status.PORTING + " - db " + dataSourceName);
+					continue;
+				}
+				if (null == schemaReport.getDatabaseTables().get(dataSourceName)) {
+					schemaReport.getDatabaseTables().put(dataSourceName, new ArrayList<String>());
+				}
+				System.out.println(logDbTablePrefix + " - INSTALLATION STARTED!");
+				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				this.createTables(dataSourceName, tableClassNames, dataSource, schemaReport);
+				System.out.println(logDbTablePrefix + " - INSTALLATION DONE! - installated tables " + schemaReport.getDatabaseTables().get(dataSourceName));
+				schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
 			}
+			System.out.println(logTablePrefix + " - Installation DONE!!!");
+				//schemaReport.setStatus(InstallationReport.Status.OK);
+			//} else {
+			//	System.out.println(logTablePrefix + " - NOT AVAILABLE!");
+			//	if (!schemaReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
+			//		schemaReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
+			//	}
+			//}
 			
 			System.out.println("SCHEMA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
 			//componentReport.setStatus(InstallationReport.Status.OK);
@@ -270,7 +285,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			ApsSystemUtils.getLogger().info("SCHEMA '" + componentConfiguration.getCode() 
 					+ "' Component installation DONE!");
 		} catch (Throwable t) {
-			componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initComponent", 
 					"Error initializating component " + componentConfiguration.getCode());
 			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
@@ -366,8 +381,9 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		ComponentReport coreComponentReport = report.getComponentReport("entandoCore", false);
 		if (coreComponentReport.getStatus().equals(InstallationReport.Status.OK) || 
 				coreComponentReport.getStatus().equals(InstallationReport.Status.RESTORE)) {
-			ApsSystemUtils.getLogger().info("Core Component RESOURCES - Already installed/verified/present!");
-			System.out.println("Core Component RESOURCES - Already installed/verified/present!");
+			String message = "Core Component RESOURCES - Already installed/verified/present! " + coreComponentReport.getStatus();
+			ApsSystemUtils.getLogger().info(message);
+			System.out.println(message);
 			return;
 		}
 		DataReport dataReport = coreComponentReport.getDataReport();
@@ -375,8 +391,12 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				if (coreComponentReport.getStatus().equals(InstallationReport.Status.PORTING)) {
+				if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
+					String message = "Core Component RESOURCES - Already present! " + InstallationReport.Status.PORTING + " - db " + dataSourceName;
+					ApsSystemUtils.getLogger().info(message);
+					System.out.println(message);
+					continue;
 				}
 				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
 				
@@ -392,14 +412,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
 				}
 			}
-			dataReport.setStatus(InstallationReport.Status.OK);
+			//dataReport.setStatus(InstallationReport.Status.OK);
 			//System.out.println("Core Component installation DONE!");
-			coreComponentReport.setStatus(InstallationReport.Status.OK);
+			//coreComponentReport.setStatus(InstallationReport.Status.OK);
 			//report.addReport("entandoCore", new Date(), InstallationReport.Status.OK);
 			//this.updateReport(report);
 			ApsSystemUtils.getLogger().info("Core Component DATA installation DONE!");
 		} catch (Throwable t) {
-			coreComponentReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//coreComponentReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			//t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "initMasterDefaultResource");
 			throw new ApsSystemException("Error initializating master DefaultResource", t);
@@ -421,52 +441,52 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			Map<String, Resource> defaultSqlResources = componentConfiguration.getDefaultSqlResources();
 			String logDataPrefix = "Component " + componentReport.getComponent() + " DATA";
-			if (null != defaultSqlResources && !defaultSqlResources.isEmpty()) {
-				System.out.println(logDataPrefix + " - INIT!!!");
-				for (int j = 0; j < dataSourceNames.length; j++) {
-					String dataSourceName = dataSourceNames[j];
-					String logDbDataPrefix = logDataPrefix + " / Datasource " + dataSourceName;
-					if (componentReport.getStatus().equals(InstallationReport.Status.PORTING)) {
-						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
-						continue;
-					}
-					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-					InstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-					if (null != dataStatus && (dataStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
-							dataStatus.equals(InstallationReport.Status.RESTORE) || 
-							dataStatus.equals(InstallationReport.Status.OK))) {
-						System.out.println(logDbDataPrefix + " - Already installed/verified!");
-						continue;
-					}
-					Resource resource = defaultSqlResources.get(dataSourceName);
-					String script = this.readFile(resource);
-					if (null != script && script.trim().length() > 0) {
-						System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
-						DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, dataReport);
-						System.out.println(logDbDataPrefix + " - Installation DONE!!!");
-						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
-					} else {
-						System.out.println(logDbDataPrefix + " - NOT AVAILABLE!");
-						dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
-					}
+			//if (null != defaultSqlResources && !defaultSqlResources.isEmpty()) {
+			System.out.println(logDataPrefix + " - INIT!!!");
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				String logDbDataPrefix = logDataPrefix + " / Datasource " + dataSourceName;
+				if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.PORTING);
+					continue;
 				}
-				System.out.println(logDataPrefix + " - Installation DONE!!!");
-				dataReport.setStatus(InstallationReport.Status.OK);
-			} else {
-				System.out.println(logDataPrefix + " - NOT AVAILABLE!");
-				if (!dataReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
-					dataReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
+				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				InstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
+				if (null != dataStatus && (dataStatus.equals(InstallationReport.Status.NOT_AVAILABLE) || 
+						dataStatus.equals(InstallationReport.Status.RESTORE) || 
+						dataStatus.equals(InstallationReport.Status.OK))) {
+					System.out.println(logDbDataPrefix + " - Already installed/verified!");
+					continue;
+				}
+				Resource resource = (null != defaultSqlResources) ? defaultSqlResources.get(dataSourceName) : null;
+				String script = this.readFile(resource);
+				if (null != script && script.trim().length() > 0) {
+					System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
+					DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, dataReport);
+					System.out.println(logDbDataPrefix + " - Installation DONE!!!");
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
+				} else {
+					System.out.println(logDbDataPrefix + " - NOT AVAILABLE!");
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
 				}
 			}
-			dataReport.setStatus(InstallationReport.Status.OK);
+			System.out.println(logDataPrefix + " - Installation DONE!!!");
+			//dataReport.setStatus(InstallationReport.Status.OK);
+			//} else {
+			//	System.out.println(logDataPrefix + " - NOT AVAILABLE!");
+			//	if (!dataReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
+			//		dataReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
+			//	}
+			//}
+			//dataReport.setStatus(InstallationReport.Status.OK);
 			System.out.println("DATA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
-			componentReport.setStatus(InstallationReport.Status.OK);
+			//componentReport.setStatus(InstallationReport.Status.OK);
 			//report.addReport(componentConfiguration.getCode(), new Date(), InstallationReport.Status.OK);
 			ApsSystemUtils.getLogger().info("DATA '" + componentConfiguration.getCode() 
 					+ "' Component installation DONE!");
 		} catch (Throwable t) {
-			dataReport.setStatus(InstallationReport.Status.INCOMPLETE);
-			componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//dataReport.setStatus(InstallationReport.Status.INCOMPLETE);
+			//componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initComponent", 
 					"Error initializating component " + componentConfiguration.getCode());
 			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);

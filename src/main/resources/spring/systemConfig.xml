@@ -96,7 +96,7 @@
 		</map>
 		</property>
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
-		<property name="checkOnStartup"><value>${db.statup.startup.check}</value></property>
+		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
 	</bean>
 	
