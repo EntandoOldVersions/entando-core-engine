@@ -4,10 +4,14 @@
  */
 package org.entando.entando.aps.system.orm;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+
 /**
  * @author E.Santoboni
  */
 public interface IDbInstallerManager {
+	
+	//public void createBackup() throws ApsSystemException;
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE}
 	

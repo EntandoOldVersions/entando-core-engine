@@ -52,7 +52,6 @@ public class SchemaReport extends AbstractReport {
 				String table = tables.get(i);
 				Element tableElement = new Element("table");
 				tableElement.setAttribute("name", table);
-				tableElement.setAttribute("status", "OK");
 				dbElement.addContent(tableElement);
 			}
 		}

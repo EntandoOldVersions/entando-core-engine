@@ -142,16 +142,6 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	//-------------------- REPORT -------- END
 	
 	private void initMasterDatabases(InstallationReport report) throws ApsSystemException {
-		//System.out.println("********* initMasterDatabases ");
-		/*
-		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
-			ApsSystemUtils.getLogger().info("Core Component TABLES - Already installed/verified/present!");
-			System.out.println("Core Component TABLES - Already installed/verified/present!");
-			report.addReport("entandoCore");
-			//this.updateReport(report);
-			return;
-		}
-		*/
 		ComponentReport componentReport = report.getComponentReport("entandoCore", true);
 		SchemaReport schemaReport = componentReport.getSchemaReport();
 		/*
@@ -217,14 +207,6 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	private void initComponentDatabases(EntandoComponentConfiguration componentConfiguration, InstallationReport report) throws ApsSystemException {
 		String logPrefix = "Component '" + componentConfiguration.getCode() + "' SCHEMA";
-		/*
-		if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
-			System.out.println(logPrefix + " - PORTING!!");
-			ApsSystemUtils.getLogger().info(logPrefix + " - PORTING!!");
-			report.addReport(componentConfiguration.getCode());
-			return;
-		}
-		*/
 		ComponentReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
 		if (componentReport.getStatus().equals(InstallationReport.Status.PORTING) || 
 				componentReport.getStatus().equals(InstallationReport.Status.OK)) {
@@ -272,19 +254,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				schemaReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
 			}
 			System.out.println(logTablePrefix + " - Installation DONE!!!");
-				//schemaReport.setStatus(InstallationReport.Status.OK);
-			//} else {
-			//	System.out.println(logTablePrefix + " - NOT AVAILABLE!");
-			//	if (!schemaReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
-			//		schemaReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
-			//	}
-			//}
-			
-			System.out.println("SCHEMA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
-			//componentReport.setStatus(InstallationReport.Status.OK);
-			//report.addReport(componentConfiguration.getCode(), new Date(), InstallationReport.Status.OK);
-			ApsSystemUtils.getLogger().info("SCHEMA '" + componentConfiguration.getCode() 
-					+ "' Component installation DONE!");
+			ApsSystemUtils.getLogger().info(logTablePrefix + " - Installation DONE!");
 		} catch (Throwable t) {
 			//componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initComponent", 
@@ -413,15 +383,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
 				}
 			}
-			//dataReport.setStatus(InstallationReport.Status.OK);
-			//System.out.println("Core Component installation DONE!");
-			//coreComponentReport.setStatus(InstallationReport.Status.OK);
-			//report.addReport("entandoCore", new Date(), InstallationReport.Status.OK);
-			//this.updateReport(report);
 			ApsSystemUtils.getLogger().info("Core Component DATA installation DONE!");
 		} catch (Throwable t) {
-			//coreComponentReport.setStatus(InstallationReport.Status.INCOMPLETE);
-			//t.printStackTrace();
 			ApsSystemUtils.logThrowable(t, this, "initMasterDefaultResource");
 			throw new ApsSystemException("Error initializating master DefaultResource", t);
 		}
@@ -463,6 +426,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				String script = this.readFile(resource);
 				if (null != script && script.trim().length() > 0) {
 					System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
+					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.INCOMPLETE);
 					DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, dataReport);
 					System.out.println(logDbDataPrefix + " - Installation DONE!!!");
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
@@ -471,23 +435,9 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
 				}
 			}
-			System.out.println(logDataPrefix + " - Installation DONE!!!");
-			//dataReport.setStatus(InstallationReport.Status.OK);
-			//} else {
-			//	System.out.println(logDataPrefix + " - NOT AVAILABLE!");
-			//	if (!dataReport.getStatus().equals(InstallationReport.Status.NOT_AVAILABLE)) {
-			//		dataReport.setStatus(InstallationReport.Status.NOT_AVAILABLE);
-			//	}
-			//}
-			//dataReport.setStatus(InstallationReport.Status.OK);
-			System.out.println("DATA Component " + componentReport.getComponent() + " - INSTALLATION DONE!!!");
-			//componentReport.setStatus(InstallationReport.Status.OK);
-			//report.addReport(componentConfiguration.getCode(), new Date(), InstallationReport.Status.OK);
-			ApsSystemUtils.getLogger().info("DATA '" + componentConfiguration.getCode() 
-					+ "' Component installation DONE!");
+			System.out.println(logDataPrefix + " - INSTALLATION DONE!!!");
+			ApsSystemUtils.getLogger().info(logDataPrefix + "' Component installation DONE!");
 		} catch (Throwable t) {
-			//dataReport.setStatus(InstallationReport.Status.INCOMPLETE);
-			//componentReport.setStatus(InstallationReport.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "initComponent", 
 					"Error initializating component " + componentConfiguration.getCode());
 			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
@@ -512,6 +462,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		}
 		return text;
 	}
+	
+	//---------------- DATA ------------------- END
 	
 	private String[] extractBeanNames(Class beanClass) {
 		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
