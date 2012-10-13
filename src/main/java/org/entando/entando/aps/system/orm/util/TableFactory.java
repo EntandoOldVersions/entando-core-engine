@@ -15,7 +15,9 @@ import com.j256.ormlite.db.OracleDatabaseType;
 import com.j256.ormlite.db.PostgresDatabaseType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
+import java.lang.annotation.Annotation;
 
 import java.lang.reflect.Method;
 
@@ -104,17 +106,19 @@ public class TableFactory {
 			}
 			for (int i = 0; i < tableClassNames.size(); i++) {
 				String tableClassName = tableClassNames.get(i);
-				if (tables.contains(tableClassName)) {
+				Class tableClass = Class.forName(tableClassName);
+				DatabaseTable tableAnnotation = (DatabaseTable) tableClass.getAnnotation(DatabaseTable.class);
+				String tableName = tableAnnotation.tableName();
+				if (tables.contains(tableName)) {
 					continue;
 				}
 				//System.out.println("************** CLASSE " + tableClassName + " *********************");
 				try {
-					System.out.println("TABLE '" + tableClassName + "' - INSTALLATION");
-					Class tableClass = Class.forName(tableClassName);
+					System.out.println("TABLE '" + tableName + "' - INSTALLATION");
 					this.createTable(tableClass, connectionSource);
-					if (!tables.contains(tableClassName)) {
-						tables.add(tableClassName);
-						System.out.println("TABLE '" + tableClassName + "' installed");
+					if (!tables.contains(tableName)) {
+						tables.add(tableName);
+						System.out.println("TABLE '" + tableName + "' installed");
 						//this.updateReport(report);
 					}
 					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);

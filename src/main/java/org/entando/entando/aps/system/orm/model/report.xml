@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <reports status="OK">
-	<report component="entandoCore" date="2012-10-08 11:23" status="OK">
+	<report component="entandoCore" date="2012-10-13 16:41:40" status="OK">
 		<schema status="OK">
-			<database name="portDataSource" status="OK">
 			<database name="servDataSource" status="OK">
+				<table name="authgroups" status="OK" />
+				<table name="authpermissions" status="OK" />
+				<table name="authroles" status="OK" />
+				<table name="authrolepermissions" status="OK" />
+				<table name="authusers" status="OK" />
+				<table name="authusergroups" status="OK" />
+				<table name="authuserroles" status="OK" />
+				<table name="authusershortcuts" status="OK" />
+				<table name="api_oauth_consumers" status="OK" />
+				<table name="api_oauth_tokens" status="OK" />
+				<table name="apicatalog_methods" status="OK" />
+				<table name="apicatalog_services" status="OK" />
+			</database>
+			<database name="portDataSource" status="OK">
+				<table name="sysconfig" status="OK" />
+				<table name="categories" status="OK" />
+				<table name="localstrings" status="OK" />
+				<table name="pagemodels" status="OK" />
+				<table name="pages" status="OK" />
+				<table name="showletcatalog" status="OK" />
+				<table name="showletconfig" status="OK" />
+				<table name="uniquekeys" status="OK" />
+			</database>
 		</schema>
-		<data status="OK" >
-			<database name="portDataSource" status="OK">
-			<database name="servDataSource" status="OK">
+		<data status="OK">
+			<database name="servDataSource" status="OK" />
+			<database name="portDataSource" status="OK" />
 		</data>
 	</report>
-	<report component="jacms" date="2012-10-08 11:24" status="OK">
+	<report component="jacms" date="2012-10-13 16:41:55" status="OK">
 		<schema status="OK">
 			<database name="servDataSource" status="NOT_AVAILABLE" />
 			<database name="portDataSource" status="OK">
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.ContentModel" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.Content" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.Resource" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.ResourceRelation" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.ContentRelation" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.ContentSearch" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.WorkContentRelation" status="OK" />
-				<table name="org.entando.entando.plugins.jacms.aps.system.orm.portdb.WorkContentSearch" status="OK" />
+				<table name="contentmodels" status="OK" />
+				<table name="contents" status="OK" />
+				<table name="resources" status="OK" />
+				<table name="resourcerelations" status="OK" />
+				<table name="contentrelations" status="OK" />
+				<table name="contentsearch" status="OK" />
+				<table name="workcontentrelations" status="OK" />
+				<table name="workcontentsearch" status="OK" />
 			</database>
 		</schema>
 		<data status="OK">
@@ -29,23 +51,38 @@
 			<database name="portDataSource" status="OK" />
 		</data>
 	</report>
-	<report component="jpmail" date="2012-10-08 11:24" status="OK">
-		<schema status="NOT_AVAILABLE" />
+	<report component="jpmail" date="2012-10-13 16:41:58" status="OK">
+		<schema status="OK">
+			<database name="servDataSource" status="NOT_AVAILABLE" />
+			<database name="portDataSource" status="NOT_AVAILABLE" />
+		</schema>
 		<data status="OK">
 			<database name="servDataSource" status="NOT_AVAILABLE" />
 			<database name="portDataSource" status="OK" />
 		</data>
 	</report>
-	<report component="jpuserprofile" date="2012-10-08 11:24" status="OK">
+	<report component="jpuserprofile" date="2012-10-13 16:41:58" status="OK">
 		<schema status="OK">
 			<database name="servDataSource" status="OK">
-				<table name="org.entando.entando.plugins.jpuserprofile.aps.system.orm.servdb.UserProfile" status="OK" />
-				<table name="org.entando.entando.plugins.jpuserprofile.aps.system.orm.servdb.UserProfileSearch" status="OK" />
+				<table name="jpuserprofile_authuserprofiles" status="OK" />
+				<table name="jpuserprofile_profilesearch" status="OK" />
 			</database>
 			<database name="portDataSource" status="NOT_AVAILABLE" />
 		</schema>
 		<data status="OK">
 			<database name="servDataSource" status="OK" />
+			<database name="portDataSource" status="OK" />
+		</data>
+	</report>
+	<report component="jpuserreg" date="2012-10-13 16:41:59" status="OK">
+		<schema status="OK">
+			<database name="servDataSource" status="OK">
+				<table name="jpuserreg_activationtokens" status="OK" />
+			</database>
+			<database name="portDataSource" status="NOT_AVAILABLE" />
+		</schema>
+		<data status="OK">
+			<database name="servDataSource" status="NOT_AVAILABLE" />
 			<database name="portDataSource" status="OK" />
 		</data>
 	</report>
