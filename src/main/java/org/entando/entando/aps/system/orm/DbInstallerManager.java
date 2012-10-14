@@ -317,13 +317,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				}
 			}
 			if (null == typeString) {
-				throw new ApsSystemException("Type not recognized for Driver '" + driverClassName + "' - "
+				ApsSystemUtils.getLogger().severe("Type not recognized for Driver '" + driverClassName + "' - "
 						+ "Recognized types '" + DatabaseType.values() + "'");
+				return DatabaseType.UNKNOWN;
 			}
 			return Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
-			throw new ApsSystemException("Invalid type for db - '" + typeString + "' - ", t);
+			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
 		}
 	}
 	
@@ -476,8 +477,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			List<EntandoComponentConfiguration> components = this.extractComponents();
 			for (int i = 0; i < components.size(); i++) {
 				EntandoComponentConfiguration componentConfiguration = components.get(i);
-				Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
-				this.createBackup(tableMapping);
+				this.createBackup(componentConfiguration.getTableMapping());
 			}
 			this.createBackup(this.getTableMapping());
 		} catch (Throwable t) {
@@ -516,8 +516,12 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		InputStream is = null;
 		try {
 			String script = TableDataUtils.dumpTable(dataSource, tableName);
-			String dirName = "";//"/home/eu/Scrivania/backup/";
-			File dir = new File(dirName);
+			StringBuilder dirName = new StringBuilder(this.getProtectedBaseDiskRoot());
+			if (!dirName.toString().endsWith("\\") && !dirName.toString().endsWith("/")) {
+				dirName.append(File.separator);
+			}
+			dirName.append("databaseBackup").append(File.separator).append(dataSourceName).append(File.separator);
+			File dir = new File(dirName.toString());
 			if (!dir.exists() || !dir.isDirectory()) {
 				dir.mkdirs();
 			}
@@ -586,6 +590,13 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		this._defaultSqlResources = defaultSqlResources;
 	}
 	
+	protected String getProtectedBaseDiskRoot() {
+		return _protectedBaseDiskRoot;
+	}
+	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
+		this._protectedBaseDiskRoot = protBaseDiskRoot;
+	}
+	
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
 	}
@@ -599,6 +610,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	private Properties _databaseTypeDrivers;
 	private Map<String, List<String>> _tableMapping;
 	private Map<String, Resource> _defaultSqlResources;
+	
+	private String _protectedBaseDiskRoot;
 	
 	private BeanFactory _beanFactory;
 	

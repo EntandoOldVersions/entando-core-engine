@@ -103,6 +103,7 @@
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
+		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
 	</bean>
 	
 </beans>

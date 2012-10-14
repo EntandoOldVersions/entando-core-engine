@@ -68,20 +68,20 @@ public class TableFactory {
 			String username = this.invokeGetMethod("getUsername", dataSource);
 			String password = this.invokeGetMethod("getPassword", dataSource);
 			com.j256.ormlite.db.DatabaseType dataType = null;
-			if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.DERBY)) {
+			if (type.equals(IDbInstallerManager.DatabaseType.DERBY)) {
 				dataType = new ApsDerbyEmbeddedDatabaseType();
 				url = url + ";user=" + username + ";password=" + password;
 				connectionSource = new JdbcConnectionSource(url, dataType);
 			} else {
-				if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.POSTGRESQL)) {
+				if (type.equals(IDbInstallerManager.DatabaseType.POSTGRESQL)) {
 					dataType = new PostgresDatabaseType();
-				} else if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.MYSQL)) {
+				} else if (type.equals(IDbInstallerManager.DatabaseType.MYSQL)) {
 					dataType = new MysqlDatabaseType();
-				} else if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.ORACLE)) {
+				} else if (type.equals(IDbInstallerManager.DatabaseType.ORACLE)) {
 					dataType = new OracleDatabaseType();
-				} else if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.SQLSERVER)) {
+				} else if (type.equals(IDbInstallerManager.DatabaseType.SQLSERVER)) {
 					dataType = new SqlServerDatabaseType();
-				}
+				} 
 				connectionSource = new JdbcConnectionSource(url, username, password, dataType);
 			}
 		} catch (Throwable t) {
