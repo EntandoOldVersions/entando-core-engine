@@ -78,6 +78,12 @@
 				<value>oracle.jdbc.OracleDriver</value>
 			</list>
 		</entry>
+		<entry>
+			<key><value>SQLSERVER</value></key>
+			<list>
+				<value>com.microsoft.sqlserver.jdbc.SQLServerDriver</value>
+			</list>
+		</entry>
 	</util:map>
 	
 	<bean id="DbInstallerManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 

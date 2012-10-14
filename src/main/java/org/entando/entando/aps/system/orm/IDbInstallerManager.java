@@ -13,6 +13,6 @@ public interface IDbInstallerManager {
 	
 	public void createBackup() throws ApsSystemException;
 	
-	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE}
+	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER}
 	
 }

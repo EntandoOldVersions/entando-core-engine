@@ -4,10 +4,15 @@
  */
 package org.entando.entando.aps.system.orm;
 
-import org.entando.entando.aps.system.orm.util.DataInstallerDAO;
+import org.entando.entando.aps.system.orm.util.TableDataUtils;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 
@@ -295,8 +300,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		return componentBeans;
 	}
 	
-	protected DatabaseType getType(DataSource dataSource) {
-		DatabaseType type = null;
+	protected DatabaseType getType(DataSource dataSource) throws ApsSystemException {
 		String typeString = null;
 		try {
 			//System.out.println(((BasicDataSource) dataSource).getDriverClassName());
@@ -312,28 +316,29 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					break;
 				}
 			}
-			if (null == typeString) return DatabaseType.DERBY;
-			type = Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
-			//System.out.println(type);
+			if (null == typeString) {
+				throw new ApsSystemException("Type not recognized for Driver '" + driverClassName + "' - "
+						+ "Recognized types '" + DatabaseType.values() + "'");
+			}
+			return Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
-			type = DatabaseType.DERBY;
+			throw new ApsSystemException("Invalid type for db - '" + typeString + "' - ", t);
 		}
-		return type;
 	}
 	
 	private void initDerbySchema(DataSource dataSource) throws Throwable {
 		String username = this.invokeGetMethod("getUsername", dataSource);
 		try {
 			String[] queryCreateSchema = new String[] {"CREATE SCHEMA " + username.toUpperCase()};
-			DataInstallerDAO.executeQueries(dataSource, queryCreateSchema, false);
+			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
 			throw new ApsSystemException("Error creating derby schema", t);
 		}
 		try {
 			String[] initSchemaQuery = new String[] {"SET SCHEMA \"" + username.toUpperCase() + "\""};
-			DataInstallerDAO.executeQueries(dataSource, initSchemaQuery, true);
+			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
 			throw new ApsSystemException("Error initializating Derby Schema", t);
@@ -377,7 +382,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				if (null != script && script.trim().length() != 0) {
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.INCOMPLETE);
 					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-					DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, null);
+					TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
 				} else {
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.NOT_AVAILABLE);
@@ -427,7 +432,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				if (null != script && script.trim().length() > 0) {
 					System.out.println(logDbDataPrefix + " - Installation STARTED!!!");
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.INCOMPLETE);
-					DataInstallerDAO.valueDatabase(script, dataSourceName, dataSource, dataReport);
+					TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
 					System.out.println(logDbDataPrefix + " - Installation DONE!!!");
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.OK);
 				} else {
@@ -467,8 +472,78 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	@Override
 	public void createBackup() throws ApsSystemException {
-		//TODO
-		System.out.println("BACKUP DONE");
+		try {
+			List<EntandoComponentConfiguration> components = this.extractComponents();
+			for (int i = 0; i < components.size(); i++) {
+				EntandoComponentConfiguration componentConfiguration = components.get(i);
+				Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
+				this.createBackup(tableMapping);
+			}
+			this.createBackup(this.getTableMapping());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "createBackup");
+			throw new ApsSystemException("Error while creating backup", t);
+		}
+	}
+	
+	private void createBackup(Map<String, List<String>> tableMapping) throws ApsSystemException {
+		if (null == tableMapping || tableMapping.isEmpty()) return;
+		try {
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				List<String> tableClassNames = tableMapping.get(dataSourceName);
+				if (null == tableClassNames || tableClassNames.isEmpty()) continue;
+				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				for (int k = 0; k < tableClassNames.size(); k++) {
+					String tableClassName = tableClassNames.get(k);
+					Class tableClass = Class.forName(tableClassName);
+					String tableName = TableFactory.getTableName(tableClass);
+					TableDumperFactoryThread thread = new TableDumperFactoryThread(tableName, dataSourceName, dataSource, this);
+					String threadName = "TableDumper_" + tableName + "_" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+					thread.setName(threadName);
+					thread.start();
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "createBackup");
+			throw new ApsSystemException("Error while creating backup", t);
+		}
+	}
+	
+	protected void dumpTableData(String tableName, String dataSourceName, DataSource dataSource) {
+		FileOutputStream outStream = null;
+		InputStream is = null;
+		try {
+			String script = TableDataUtils.dumpTable(dataSource, tableName);
+			String dirName = "";//"/home/eu/Scrivania/backup/";
+			File dir = new File(dirName);
+			if (!dir.exists() || !dir.isDirectory()) {
+				dir.mkdirs();
+			}
+			String filePath = dirName + tableName + ".sql";
+			is = new ByteArrayInputStream(script.getBytes());
+			byte[] buffer = new byte[1024];
+            int length = -1;
+            outStream = new FileOutputStream(filePath);
+            while ((length = is.read(buffer)) != -1) {
+                outStream.write(buffer, 0, length);
+                outStream.flush();
+            }
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "dumpTableData");
+		} finally {
+			try {
+				if (null != outStream) outStream.close();
+			} catch (Throwable t) {
+				throw new RuntimeException("Error while closing OutputStream ", t);
+			}
+			try {
+				if (null != is) is.close();
+			} catch (Throwable t) {
+				throw new RuntimeException("Error while closing InputStream ", t);
+			}
+		}
 	}
 	
 	private String[] extractBeanNames(Class beanClass) {

@@ -13,11 +13,11 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.db.MysqlDatabaseType;
 import com.j256.ormlite.db.OracleDatabaseType;
 import com.j256.ormlite.db.PostgresDatabaseType;
+import com.j256.ormlite.db.SqlServerDatabaseType;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
-import java.lang.annotation.Annotation;
 
 import java.lang.reflect.Method;
 
@@ -31,7 +31,7 @@ import org.entando.entando.aps.system.orm.model.InstallationReport;
 import org.entando.entando.aps.system.orm.model.SchemaReport;
 
 /**
- * @author eu
+ * @author E.Santoboni
  */
 public class TableFactory {
 	
@@ -79,6 +79,8 @@ public class TableFactory {
 					dataType = new MysqlDatabaseType();
 				} else if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.ORACLE)) {
 					dataType = new OracleDatabaseType();
+				} else if (type.equals(org.entando.entando.aps.system.orm.IDbInstallerManager.DatabaseType.SQLSERVER)) {
+					dataType = new SqlServerDatabaseType();
 				}
 				connectionSource = new JdbcConnectionSource(url, username, password, dataType);
 			}
@@ -107,8 +109,7 @@ public class TableFactory {
 			for (int i = 0; i < tableClassNames.size(); i++) {
 				String tableClassName = tableClassNames.get(i);
 				Class tableClass = Class.forName(tableClassName);
-				DatabaseTable tableAnnotation = (DatabaseTable) tableClass.getAnnotation(DatabaseTable.class);
-				String tableName = tableAnnotation.tableName();
+				String tableName = getTableName(tableClass);
 				if (tables.contains(tableName)) {
 					continue;
 				}
@@ -168,6 +169,11 @@ public class TableFactory {
 			}
 			throw new ApsSystemException("Error creating table " + logTableName, t);
 		}
+	}
+	
+	public static String getTableName(Class tableClass) {
+		DatabaseTable tableAnnotation = (DatabaseTable) tableClass.getAnnotation(DatabaseTable.class);
+		return tableAnnotation.tableName();
 	}
 	
 	protected DataSource getDataSource() {
