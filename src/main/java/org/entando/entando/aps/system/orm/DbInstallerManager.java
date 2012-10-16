@@ -83,10 +83,12 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		if (null == report) {
 			
 			//non c'è db locale installato, cerca nei backup locali
-			//TODO DA FARE
-			
-			//non c'è... fa l'inizzializazione es novo
+			//SE NON c'è cerca il default dump
 			report = InstallationReport.getInstance();
+			Map<String, Resource> defaultSqlDump = this.getDefaultSqlDump();
+			if (null != defaultSqlDump && defaultSqlDump.size() > 0) {
+				report.setStatus(InstallationReport.Status.RESTORE);
+			}
 		}
 		try {
 			this.initMasterDatabases(report);
@@ -100,8 +102,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				EntandoComponentConfiguration entandoComponentConfiguration = components.get(i);
 				this.initComponentDefaultResources(entandoComponentConfiguration, report);
 			}
-			if (report.getStatus().equals(InstallationReport.Status.PORTING)) {
-				//FAI RESTORE
+			if (report.getStatus().equals(InstallationReport.Status.RESTORE)) {
+				this.restoreDefaultDump();
 			}
 		} catch (Throwable t) {
 			report.setStatus(InstallationReport.Status.INCOMPLETE);
@@ -196,7 +198,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			if (type.equals(DatabaseType.DERBY)) {
 				this.initDerbySchema(dataSource);
 			}
-			List<String> tableClassNames = this.getTableMapping().get(databaseName);
+			List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
 			if (null == tableClassNames || tableClassNames.isEmpty()) {
 				ApsSystemUtils.getLogger().info("No Master Tables defined for db - " + databaseName);
 				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
@@ -378,7 +380,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i]);
 				
 				//System.out.println("********* initMasterDatabases - DATASOURCE " + dataSourceNames[i] + " - " + dataSource);
-				Resource resource = this.getDefaultSqlResources().get(dataSourceName);
+				Resource resource = this.getEntandoDefaultSqlResources().get(dataSourceName);
 				String script = this.readFile(resource);
 				if (null != script && script.trim().length() != 0) {
 					dataReport.getDatabaseStatus().put(dataSourceName, InstallationReport.Status.INCOMPLETE);
@@ -445,8 +447,29 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			ApsSystemUtils.getLogger().info(logDataPrefix + "' Component installation DONE!");
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initComponent", 
-					"Error initializating component " + componentConfiguration.getCode());
-			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
+					"Error restoring default resources of component " + componentConfiguration.getCode());
+			throw new ApsSystemException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
+		}
+	}
+	
+	private void restoreDefaultDump() throws ApsSystemException {
+		try {
+			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
+			Map<String, Resource> defaultDump = this.getDefaultSqlDump();
+			if (null == defaultDump || defaultDump.isEmpty()) return; 
+			for (int j = 0; j < dataSourceNames.length; j++) {
+				String dataSourceName = dataSourceNames[j];
+				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				Resource resource = (null != defaultDump) ? defaultDump.get(dataSourceName) : null;
+				String script = this.readFile(resource);
+				if (null != script && script.trim().length() > 0) {
+					TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "restoreDefaultDump", 
+					"Error restoring default Dump");
+			throw new ApsSystemException("Error restoring default Dump", t);
 		}
 	}
 	
@@ -479,7 +502,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				EntandoComponentConfiguration componentConfiguration = components.get(i);
 				this.createBackup(componentConfiguration.getTableMapping());
 			}
-			this.createBackup(this.getTableMapping());
+			this.createBackup(this.getEntandoTableMapping());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
@@ -576,18 +599,25 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		this._databaseTypeDrivers = databaseTypeDrivers;
 	}
 	
-	protected Map<String, List<String>> getTableMapping() {
-		return _tableMapping;
+	protected Map<String, List<String>> getEntandoTableMapping() {
+		return _entandoTableMapping;
 	}
-	public void setTableMapping(Map<String, List<String>> tableMapping) {
-		this._tableMapping = tableMapping;
+	public void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
+		this._entandoTableMapping = entandoTableMapping;
 	}
 	
-	protected Map<String, Resource> getDefaultSqlResources() {
-		return _defaultSqlResources;
+	protected Map<String, Resource> getEntandoDefaultSqlResources() {
+		return _entandoDefaultSqlResources;
 	}
-	public void setDefaultSqlResources(Map<String, Resource> defaultSqlResources) {
-		this._defaultSqlResources = defaultSqlResources;
+	public void setEntandoDefaultSqlResources(Map<String, Resource> entandoDefaultSqlResources) {
+		this._entandoDefaultSqlResources = entandoDefaultSqlResources;
+	}
+	
+	protected Map<String, Resource> getDefaultSqlDump() {
+		return _defaultSqlDump;
+	}
+	public void setDefaultSqlDump(Map<String, Resource> defaultSqlDump) {
+		this._defaultSqlDump = defaultSqlDump;
 	}
 	
 	protected String getProtectedBaseDiskRoot() {
@@ -608,8 +638,9 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	private boolean _checkOnStartup;
 	private String _configVersion;
 	private Properties _databaseTypeDrivers;
-	private Map<String, List<String>> _tableMapping;
-	private Map<String, Resource> _defaultSqlResources;
+	private Map<String, List<String>> _entandoTableMapping;
+	private Map<String, Resource> _entandoDefaultSqlResources;
+	private Map<String, Resource> _defaultSqlDump;
 	
 	private String _protectedBaseDiskRoot;
 	

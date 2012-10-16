@@ -21,22 +21,11 @@ public class TableDataUtils {
 	
 	public static void valueDatabase(String script, String databaseName, 
 			DataSource dataSource, DataReport schemaReport) throws ApsSystemException {
-		/*
-		if (null == resource) {
-			ApsSystemUtils.getLogger().info("No resource script for db " + databaseName);
-			if (null != report) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-				//this.updateReport(report);
-			}
-			return;
-		}
-		*/
 		try {
             if (null == script || script.trim().length() == 0) {
 				ApsSystemUtils.getLogger().info("No sql script for db " + databaseName);
 				if (null != schemaReport) {
 					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-					//this.updateReport(report);
 				}
 				return;
 			}
@@ -45,19 +34,16 @@ public class TableDataUtils {
 				ApsSystemUtils.getLogger().info("Script file for db " + databaseName + " void");
 				if (null != schemaReport) {
 					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-					//this.updateReport(report);
 				}
 				return;
 			}
 			executeQueries(dataSource, queries, true);
 			if (null != schemaReport) {
 				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.OK);
-				//this.updateReport(report);
 			}
 		} catch (Throwable t) {
 			if (null != schemaReport) {
 				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
-				//this.updateReport(report);
 			}
 			ApsSystemUtils.logThrowable(t, TableDataUtils.class, "valueDatabase", "Error executing script into db " + databaseName);
 			throw new ApsSystemException("Error executing script into db " + databaseName, t);

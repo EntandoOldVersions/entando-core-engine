@@ -86,20 +86,24 @@
 		</entry>
 	</util:map>
 	
+	<util:map id="DefaultSqlDump" map-class="java.util.Properties" >
+	</util:map>
+	
 	<bean id="DbInstallerManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
 			init-method="init">
-		<property name="tableMapping">
+		<property name="entandoTableMapping">
 		<map>
 			<entry key="portDataSource"><ref bean="entandoPortTableClasses" /></entry>
 			<entry key="servDataSource"><ref bean="entandoServTableClasses" /></entry>
 		</map>
 		</property>
-		<property name="defaultSqlResources">
+		<property name="entandoDefaultSqlResources">
 		<map>
 			<entry key="portDataSource"><value>classpath:sql/entandoPort_data_${db.script.default.marker}.sql</value></entry>
 			<entry key="servDataSource"><value>classpath:sql/entandoServ_data_${db.script.default.marker}.sql</value></entry>
 		</map>
 		</property>
+		<property name="defaultSqlDump" ref="DefaultSqlDump" />
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
