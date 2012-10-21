@@ -7,6 +7,7 @@ package org.entando.entando.apsadmin.admin;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import org.entando.entando.aps.system.orm.IDbInstallerManager;
+import org.entando.entando.aps.system.orm.model.report.DatabaseDump;
 
 /**
  * @author E.Santoboni
@@ -21,6 +22,19 @@ public class DatabaseAction extends BaseAction {
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	public DatabaseDump getLastDumpReport() {
+		try {
+			return this.getDbInstallerManager().getLastDumpReport();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "executeBackup");
+			throw new RuntimeException("Error extracting last report", t);
+		}
+	}
+	
+	public int getManagerStatus() {
+		return this.getDbInstallerManager().getStatus();
 	}
 	
 	protected IDbInstallerManager getDbInstallerManager() {

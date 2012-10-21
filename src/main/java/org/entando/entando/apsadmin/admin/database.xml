@@ -7,11 +7,16 @@
     
     <package name="core_do/Admin/Database" namespace="/do/Admin/Database" extends="entando-default">
         
+        <action name="entry" class="databaseAdminAction">
+            <result type="tiles">admin.database.entry</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+        
         <action name="executeBackup" class="databaseAdminAction" method="executeBackup">
-            <result type="tiles">admin.database.backup.done</result>
+            <result type="tiles">admin.database.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
     </package>
-    
+	
 </struts>

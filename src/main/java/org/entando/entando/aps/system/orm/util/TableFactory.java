@@ -25,10 +25,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
+import org.entando.entando.aps.system.orm.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbInstallerManager;
-import org.entando.entando.aps.system.orm.model.InstallationReport;
-import org.entando.entando.aps.system.orm.model.SchemaReport;
+import org.entando.entando.aps.system.orm.model.report.SystemInstallation;
+import org.entando.entando.aps.system.orm.model.report.DatabaseInstallation;
 
 /**
  * @author E.Santoboni
@@ -41,13 +41,12 @@ public class TableFactory {
 		this.setType(type);
 	}
 	
-	public void createTables(List<String> tableClassNames, SchemaReport schemaReport) throws ApsSystemException {
+	public void createTables(List<String> tableClassNames, DatabaseInstallation schemaReport) throws ApsSystemException {
 		ConnectionSource connectionSource = null;
 		try {
 			connectionSource = this.createConnectionSource();
 			this.createTables(tableClassNames, connectionSource, schemaReport);
 		} catch (Throwable t) {
-			//this.updateReport(report);
 			ApsSystemUtils.logThrowable(t, this, "createTables", "Error creating tables into db " + this.getDatabaseName());
 			throw new ApsSystemException("Error creating tables to db " + this.getDatabaseName(), t);
 		} finally {
@@ -97,11 +96,9 @@ public class TableFactory {
 	}
 	
 	private void createTables(List<String> tableClassNames, 
-			ConnectionSource connectionSource, SchemaReport schemaReport) throws ApsSystemException {
-		List<String> tables = null;
+			ConnectionSource connectionSource, DatabaseInstallation schemaReport) throws ApsSystemException {
 		try {
-			//TABELLE DI COMPONENTI 
-			tables = schemaReport.getDatabaseTables().get(this.getDatabaseName());
+			List<String> tables = schemaReport.getDatabaseTables().get(this.getDatabaseName());
 			if (null == tables) {
 				tables = new ArrayList<String>();
 				schemaReport.getDatabaseTables().put(this.getDatabaseName(), tables);
@@ -113,27 +110,22 @@ public class TableFactory {
 				if (tables.contains(tableName)) {
 					continue;
 				}
-				//System.out.println("************** CLASSE " + tableClassName + " *********************");
 				try {
-					System.out.println("TABLE '" + tableName + "' - INSTALLATION");
+					System.out.print("TABLE '" + tableName + "' - Installation... ");
 					this.createTable(tableClass, connectionSource);
-					if (!tables.contains(tableName)) {
-						tables.add(tableName);
-						System.out.println("TABLE '" + tableName + "' installed");
-						//this.updateReport(report);
-					}
-					//System.out.println("risultato CREAZIONE TABELLA " + tableClassName + " - " + result);
+					//if (!tables.contains(tableName)) {
+					tables.add(tableName);
+					System.out.println("DONE!!!");
+					//}
 				} catch (Throwable t) {
-					schemaReport.getDatabaseStatus().put(this.getDatabaseName(), InstallationReport.Status.INCOMPLETE);
-					//System.out.println("Impossibile CREARE TABELLA " + tableClassName);
-					//t.printStackTrace();
+					schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallation.Status.INCOMPLETE);
 					String message = "Error creating table " + this.getDatabaseName() + "/" + tableClassName + " - " + t.getMessage();
 					ApsSystemUtils.logThrowable(t, this, "createTables", message);
 					throw new ApsSystemException(message, t);
 				}
 			}
 		} catch (Throwable t) {
-			schemaReport.getDatabaseStatus().put(this.getDatabaseName(), InstallationReport.Status.INCOMPLETE);
+			schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallation.Status.INCOMPLETE);
 			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error on setup Database - " + this.getDatabaseName());
 			throw new ApsSystemException("Error on setup Database", t);
 		}
@@ -142,11 +134,9 @@ public class TableFactory {
 	private void createTable(Class tableClass, ConnectionSource connectionSource) throws Throwable {
 		int result = 0;
 		String logTableName = this.getDatabaseName() + "/" + tableClass.getSimpleName().toLowerCase();
-		//System.out.println("CREAZIONE TABELLA " + logTableName);
 		try {
 			result = TableUtils.createTable(connectionSource, tableClass);
 			if (result > 0) {
-				//System.out.println("Created table - " + logTableName);
 				ApsSystemUtils.getLogger().info("Created table - " + logTableName);
 				Object tableModel = tableClass.newInstance();
 				if (tableModel instanceof ExtendedColumnDefinition) {

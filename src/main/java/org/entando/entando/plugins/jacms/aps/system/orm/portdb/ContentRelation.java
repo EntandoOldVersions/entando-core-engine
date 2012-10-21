@@ -8,10 +8,10 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
+import org.entando.entando.aps.system.orm.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbInstallerManager;
-import org.entando.entando.aps.system.orm.portdb.Category;
-import org.entando.entando.aps.system.orm.portdb.Page;
+import org.entando.entando.aps.system.orm.model.portdb.Category;
+import org.entando.entando.aps.system.orm.model.portdb.Page;
 
 /**
  * @author E.Santoboni

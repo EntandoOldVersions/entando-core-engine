@@ -11,8 +11,9 @@ import java.sql.*;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.orm.model.DataReport;
-import org.entando.entando.aps.system.orm.model.InstallationReport;
+import org.entando.entando.aps.system.orm.model.report.DataInstallation;
+import org.entando.entando.aps.system.orm.model.report.SystemInstallation;
+import org.entando.entando.aps.system.orm.model.TableDumpResult;
 
 /**
  * @author E.Santoboni
@@ -20,30 +21,23 @@ import org.entando.entando.aps.system.orm.model.InstallationReport;
 public class TableDataUtils {
 	
 	public static void valueDatabase(String script, String databaseName, 
-			DataSource dataSource, DataReport schemaReport) throws ApsSystemException {
+			DataSource dataSource, DataInstallation schemaReport) throws ApsSystemException {
 		try {
-            if (null == script || script.trim().length() == 0) {
-				ApsSystemUtils.getLogger().info("No sql script for db " + databaseName);
-				if (null != schemaReport) {
-					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
-				}
-				return;
-			}
-            String[] queries = QueryExtractor.extractQueries(script);
+            String[] queries = (null != script) ? QueryExtractor.extractQueries(script) : null;
 			if (null == queries || queries.length == 0) {
 				ApsSystemUtils.getLogger().info("Script file for db " + databaseName + " void");
 				if (null != schemaReport) {
-					schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.NOT_AVAILABLE);
+					schemaReport.getDatabaseStatus().put(databaseName, SystemInstallation.Status.NOT_AVAILABLE);
 				}
 				return;
 			}
 			executeQueries(dataSource, queries, true);
 			if (null != schemaReport) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.OK);
+				schemaReport.getDatabaseStatus().put(databaseName, SystemInstallation.Status.OK);
 			}
 		} catch (Throwable t) {
 			if (null != schemaReport) {
-				schemaReport.getDatabaseStatus().put(databaseName, InstallationReport.Status.INCOMPLETE);
+				schemaReport.getDatabaseStatus().put(databaseName, SystemInstallation.Status.INCOMPLETE);
 			}
 			ApsSystemUtils.logThrowable(t, TableDataUtils.class, "valueDatabase", "Error executing script into db " + databaseName);
 			throw new ApsSystemException("Error executing script into db " + databaseName, t);
@@ -51,23 +45,25 @@ public class TableDataUtils {
 	}
 	
 	public static void executeQueries(DataSource dataSource, String[] queries, boolean traceException) throws ApsSystemException {
-		if (queries.length == 0) return;
+		if (null == queries || queries.length == 0) return;
 		Connection conn = null;
         PreparedStatement stat = null;
+		String currentQuery = null;
 		try {
 			conn = dataSource.getConnection();
             conn.setAutoCommit(false);
 			for (int i = 0; i < queries.length; i++) {
-				stat = conn.prepareStatement(queries[i]);
+				currentQuery = queries[i];
+				stat = conn.prepareStatement(currentQuery);
 				stat.execute();
 			}
 			conn.commit();
 		} catch (Throwable t) {
+			String errorMessage = "Error executing script - QUERY:\n" + currentQuery;
 			if (traceException) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"executeQueries", "Error executing script into db " + dataSource);
+				ApsSystemUtils.logThrowable(t, TableDataUtils.class, "executeQueries", errorMessage);
 			}
-			throw new ApsSystemException("Error executing script into db " + dataSource, t);
+			throw new ApsSystemException(errorMessage, t);
 		} finally {
 			try {
 				if (stat != null) stat.close();
@@ -84,40 +80,53 @@ public class TableDataUtils {
 		}
 	}
 	
-	public static String dumpTable(DataSource dataSource, String tableName) throws ApsSystemException {
-		StringBuilder result = new StringBuilder();
+	public static TableDumpResult dumpTable(DataSource dataSource, String tableName) throws ApsSystemException {
+		TableDumpResult report = new TableDumpResult(tableName);
+		StringBuilder sqlDump = new StringBuilder();
 		StringBuilder scriptPrefix = new StringBuilder("INSERT INTO ").append(tableName).append(" (");
 		Connection conn = null;
         PreparedStatement stat = null;
 		ResultSet res = null;
+		long start = System.currentTimeMillis();
 		try {
 			conn = dataSource.getConnection();
 			stat = conn.prepareStatement("SELECT * FROM " + tableName);
 			res = stat.executeQuery();
 			ResultSetMetaData metaData = res.getMetaData();
             int columnCount = metaData.getColumnCount();
+			int[] types = new int[columnCount];
 			for (int i = 0; i < columnCount; i++) {
 				if (i>0) scriptPrefix.append(", ");
-				scriptPrefix.append(metaData.getColumnName(i+1));
+				int indexColumn = i+1;
+				types[i] = metaData.getColumnType(indexColumn);
+				scriptPrefix.append(metaData.getColumnName(indexColumn).toLowerCase());
 			}
 			scriptPrefix.append(") VALUES (");
+			int rows = 0;
 			while (res.next()) {
-                result.append(scriptPrefix);
+                sqlDump.append(scriptPrefix);
                 for (int i=0; i<columnCount; i++) {
                     if (i > 0) {
-                        result.append(", ");
+                        sqlDump.append(", ");
                     }
                     Object value = res.getObject(i+1);
                     if (value == null) {
-                        result.append("NULL");
+                        sqlDump.append("NULL");
                     } else {
                         String outputValue = value.toString();
-                        outputValue = outputValue.replaceAll("'","\\''");
-                        result.append("'").append(outputValue).append("'");
+						outputValue = outputValue.replaceAll("'","\\''");
+						if (isDataNeedsQuotes(types[i])) {
+							sqlDump.append("'").append(outputValue).append("'");
+						} else {
+							sqlDump.append(outputValue);
+						}
                     }
                 }
-                result.append(");\n");
+                sqlDump.append(");\n");
+				rows++;
             }
+			report.setSqlDump(sqlDump.toString());
+			report.setRows(rows);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 					"dumpTable", "Error creating backup");
@@ -142,7 +151,25 @@ public class TableDataUtils {
 						"dumpTable", "Error closing the connection");
 			}
 		}
-		return result.toString();
+		long time = System.currentTimeMillis() - start;
+		report.setRequiredTime(time);
+		return report;
+	}
+	
+	private static boolean isDataNeedsQuotes(int type) {
+		switch (type) {
+            case Types.BIGINT: return false;
+            case Types.BOOLEAN: return false;
+            case Types.DECIMAL: return false;
+            case Types.DOUBLE: return false;
+            case Types.FLOAT: return false;
+            case Types.INTEGER: return false;
+            case Types.NUMERIC: return false;
+            case Types.REAL: return false;
+            case Types.SMALLINT: return false;
+            case Types.TINYINT: return false;
+            default: return true;
+        }
 	}
 	
 }

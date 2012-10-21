@@ -27,29 +27,29 @@
 	</bean>
 	
 	<util:list id="entandoPortTableClasses">
-		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Category</value>
-		<value>org.entando.entando.aps.system.orm.portdb.LocalString</value>
-		<value>org.entando.entando.aps.system.orm.portdb.PageModel</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Page</value>
-		<value>org.entando.entando.aps.system.orm.portdb.ShowletCatalog</value>
-		<value>org.entando.entando.aps.system.orm.portdb.ShowletConfig</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Uniquekeys</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.Sysconfig</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.Category</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.LocalString</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.PageModel</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.Page</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.ShowletCatalog</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.ShowletConfig</value>
+		<value>org.entando.entando.aps.system.orm.model.portdb.Uniquekeys</value>
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">
-		<value>org.entando.entando.aps.system.orm.servdb.Group</value>
-		<value>org.entando.entando.aps.system.orm.servdb.Permission</value>
-		<value>org.entando.entando.aps.system.orm.servdb.Role</value>
-		<value>org.entando.entando.aps.system.orm.servdb.RolePermissionReference</value>
-		<value>org.entando.entando.aps.system.orm.servdb.User</value>
-		<value>org.entando.entando.aps.system.orm.servdb.UserGroupReference</value>
-		<value>org.entando.entando.aps.system.orm.servdb.UserRoleReference</value>
-		<value>org.entando.entando.aps.system.orm.servdb.UserShortcut</value>
-		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthConsumer</value>
-		<value>org.entando.entando.aps.system.orm.servdb.ApiOAuthToken</value>
-		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogMethod</value>
-		<value>org.entando.entando.aps.system.orm.servdb.ApiCatalogService</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.Group</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.Permission</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.Role</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.RolePermissionReference</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.User</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.UserGroupReference</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.UserRoleReference</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.UserShortcut</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.ApiOAuthConsumer</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.ApiOAuthToken</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.ApiCatalogMethod</value>
+		<value>org.entando.entando.aps.system.orm.model.servdb.ApiCatalogService</value>
 	</util:list>
 	
 	<util:map id="databaseTypeDrivers" map-class="java.util.Properties" value-type="java.util.List">

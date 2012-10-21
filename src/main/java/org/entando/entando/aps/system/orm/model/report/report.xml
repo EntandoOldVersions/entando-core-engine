@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<reports status="OK">
+	<creation>2012-10-17 22:17:02</creation>
+	<lastupdate>2012-10-17 22:26:09</lastupdate>
+	<components>
+		<component name="entandoCore" date="2012-10-17 22:17:02" status="OK">
+			<schema status="OK">
+				<datasource name="servDataSource" status="OK">
+					<table name="authgroups" />
+					<table name="authpermissions" />
+					<table name="authroles" />
+					<table name="authrolepermissions" />
+					<table name="authusers" />
+					<table name="authusergroups" />
+					<table name="authuserroles" />
+					<table name="authusershortcuts" />
+					<table name="api_oauth_consumers" />
+					<table name="api_oauth_tokens" />
+					<table name="apicatalog_methods" />
+					<table name="apicatalog_services" />
+				</datasource>
+				<datasource name="portDataSource" status="OK">
+					<table name="sysconfig" />
+					<table name="categories" />
+					<table name="localstrings" />
+					<table name="pagemodels" />
+					<table name="pages" />
+					<table name="showletcatalog" />
+					<table name="showletconfig" />
+					<table name="uniquekeys" />
+				</datasource>
+			</schema>
+			<data status="OK">
+				<datasource name="servDataSource" status="RESTORE" />
+				<datasource name="portDataSource" status="RESTORE" />
+			</data>
+		</component>
+		<component name="jacms" date="2012-10-17 22:17:18" status="OK">
+			<schema status="OK">
+				<datasource name="servDataSource" status="NOT_AVAILABLE" />
+				<datasource name="portDataSource" status="OK">
+					<table name="contentmodels" />
+					<table name="contents" />
+					<table name="resources" />
+					<table name="resourcerelations" />
+					<table name="contentrelations" />
+					<table name="contentsearch" />
+					<table name="workcontentrelations" />
+					<table name="workcontentsearch" />
+				</datasource>
+			</schema>
+			<data status="OK">
+				<datasource name="servDataSource" status="RESTORE" />
+				<datasource name="portDataSource" status="RESTORE" />
+			</data>
+		</component>
+		<component name="jpmail" date="2012-10-17 22:26:08" status="OK">
+			<schema status="OK">
+				<datasource name="servDataSource" status="NOT_AVAILABLE" />
+				<datasource name="portDataSource" status="NOT_AVAILABLE" />
+			</schema>
+			<data status="OK">
+				<datasource name="servDataSource" status="NOT_AVAILABLE" />
+				<datasource name="portDataSource" status="OK" />
+			</data>
+		</component>
+		<component name="jpuserprofile" date="2012-10-17 22:26:08" status="OK">
+			<schema status="OK">
+				<datasource name="servDataSource" status="OK">
+					<table name="jpuserprofile_authuserprofiles" />
+					<table name="jpuserprofile_profilesearch" />
+				</datasource>
+				<datasource name="portDataSource" status="NOT_AVAILABLE" />
+			</schema>
+			<data status="OK">
+				<datasource name="servDataSource" status="OK" />
+				<datasource name="portDataSource" status="OK" />
+			</data>
+		</component>
+	</components>
+</reports>

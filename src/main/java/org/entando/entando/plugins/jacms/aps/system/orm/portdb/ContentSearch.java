@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-import org.entando.entando.aps.system.orm.ExtendedColumnDefinition;
+import org.entando.entando.aps.system.orm.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.orm.IDbInstallerManager;
 
 /**

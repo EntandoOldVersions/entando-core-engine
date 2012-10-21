@@ -25,7 +25,7 @@
 			<entry key="portDataSource"><ref bean="jacmsPortTableClasses" /></entry>
 		</map>
 		</property>
-		<property name="sqlResources">
+		<property name="defaultSqlResources">
 		<map>
 			<entry key="portDataSource"><value>classpath:sql/plugins/jacms/port_data_${db.script.default.marker}.sql</value></entry>
 		</map>
