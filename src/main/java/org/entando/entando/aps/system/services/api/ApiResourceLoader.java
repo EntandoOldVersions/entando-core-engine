@@ -71,11 +71,11 @@ public class ApiResourceLoader {
                     while (extractedResourcesIter.hasNext()) {
                         ApiResource apiResource = extractedResourcesIter.next();
                         if (null != this.getResources().get(apiResource.getCode())) {
-                            String alertMessage = "ALERT: Into definition file '" + path + "' "
+                            String alertMessage = "Into definition file '" + path + "' "
                                     + "there is an API with namespace '" + apiResource.getNamespace() 
 									+ "', resource '" + apiResource.getResourceName()
                                     + "' and there is just one already present - The old definition will be overrided!!!";
-                            ApsSystemUtils.getLogger().severe(alertMessage);
+                            ApsSystemUtils.getLogger().info(alertMessage);
                         }// else {
                         this.getResources().put(apiResource.getCode(), apiResource);
                         //}
