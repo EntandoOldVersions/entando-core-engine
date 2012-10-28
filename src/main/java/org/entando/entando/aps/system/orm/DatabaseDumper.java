@@ -6,19 +6,16 @@ package org.entando.entando.aps.system.orm;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.DateConverter;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 import javax.sql.DataSource;
-import org.entando.entando.aps.system.orm.model.report.DatabaseDump;
+import org.entando.entando.aps.system.orm.model.DatabaseDumpReport;
 
 import org.entando.entando.aps.system.orm.model.TableDumpResult;
+import org.entando.entando.aps.system.orm.model.SystemInstallationReport;
 import org.entando.entando.aps.system.orm.util.TableDataUtils;
 import org.entando.entando.aps.system.orm.util.TableFactory;
 
@@ -30,19 +27,21 @@ import org.springframework.beans.factory.ListableBeanFactory;
  */
 public class DatabaseDumper {
 	
-	protected DatabaseDumper(String localBackupFolder, Map<String, List<String>> entandoTableMapping, 
-			List<EntandoComponentConfiguration> components, BeanFactory beanFactory, DbInstallerManager manager) {
+	protected DatabaseDumper(String localBackupsFolder, SystemInstallationReport installationReport, 
+			Map<String, List<String>> entandoTableMapping, List<EntandoComponentConfiguration> components, BeanFactory beanFactory/*, DbInstallerManager manager*/) {
 		this.setBeanFactory(beanFactory);
 		this.setComponents(components);
 		this.setEntandoTableMapping(entandoTableMapping);
-		this.setLocalBackupFolder(localBackupFolder);
-		this.setManager(manager);
+		this.setLocalBackupsFolder(localBackupsFolder);
+		this.setReport(new DatabaseDumpReport(installationReport));
 	}
 	
 	protected void createBackup() throws ApsSystemException {
 		try {
-			this.getManager().setStatus(DbInstallerManager.STATUS_DUMPIMG_IN_PROGRESS);
 			long start = System.currentTimeMillis();
+			String subFolder = DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+			this.setBackupSubFolder(subFolder);
+			this.getReport().setSubFolderName(subFolder);
 			List<EntandoComponentConfiguration> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				EntandoComponentConfiguration componentConfiguration = components.get(i);
@@ -52,13 +51,15 @@ public class DatabaseDumper {
 			long time = System.currentTimeMillis() - start;
 			this.getReport().setRequiredTime(time);
 			this.getReport().setDate(new Date());
+			StringBuilder reportFolder = new StringBuilder(this.getLocalBackupsFolder());
+			if (null != this.getBackupSubFolder()) {
+				reportFolder.append(this.getBackupSubFolder()).append(File.separator);
+			}
 			this.save(DbInstallerManager.DUMP_REPORT_FILE_NAME, 
-					this.getLocalBackupFolder(), this.getReport().toXml());
+					reportFolder.toString(), this.getReport().toXml());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
-		} finally {
-			this.getManager().setStatus(DbInstallerManager.STATUS_READY);
 		}
 	}
 	
@@ -88,7 +89,10 @@ public class DatabaseDumper {
 		try {
 			TableDumpResult tableDumpResult = TableDataUtils.dumpTable(dataSource, tableName);
 			this.getReport().addTableReport(dataSourceName, tableDumpResult);
-			StringBuilder dirName = new StringBuilder(this.getLocalBackupFolder());
+			StringBuilder dirName = new StringBuilder(this.getLocalBackupsFolder());
+			if (null != this.getBackupSubFolder()) {
+				dirName.append(this.getBackupSubFolder()).append(File.separator);
+			}
 			dirName.append(dataSourceName).append(File.separator);
 			this.save(tableName + ".sql", dirName.toString(), tableDumpResult.getSqlDump());
 		} catch (Throwable t) {
@@ -142,11 +146,18 @@ public class DatabaseDumper {
 		this._beanFactory = beanFactory;
 	}
 	
-	protected String getLocalBackupFolder() {
-		return _localBackupFolder;
+	protected String getLocalBackupsFolder() {
+		return _localBackupsFolder;
 	}
-	protected void setLocalBackupFolder(String localBackupFolder) {
-		this._localBackupFolder = localBackupFolder;
+	protected void setLocalBackupsFolder(String localBackupsFolder) {
+		this._localBackupsFolder = localBackupsFolder;
+	}
+	
+	protected String getBackupSubFolder() {
+		return _backupSubFolder;
+	}
+	protected void setBackupSubFolder(String backupSubFolder) {
+		this._backupSubFolder = backupSubFolder;
 	}
 	
 	protected Map<String, List<String>> getEntandoTableMapping() {
@@ -163,26 +174,19 @@ public class DatabaseDumper {
 		this._components = components;
 	}
 	
-	protected DatabaseDump getReport() {
+	protected DatabaseDumpReport getReport() {
 		return _report;
 	}
-	protected void setReport(DatabaseDump report) {
+	protected void setReport(DatabaseDumpReport report) {
 		this._report = report;
 	}
 	
-	protected DbInstallerManager getManager() {
-		return _manager;
-	}
-	protected void setManager(DbInstallerManager manager) {
-		this._manager = manager;
-	}
+	private String _localBackupsFolder;
+	private String _backupSubFolder;
 	
-	private String _localBackupFolder;
 	private BeanFactory _beanFactory;
 	private Map<String, List<String>> _entandoTableMapping;
 	private List<EntandoComponentConfiguration> _components;
-	private DbInstallerManager _manager;
-	
-	private DatabaseDump _report = new DatabaseDump();
+	private DatabaseDumpReport _report;
 	
 }

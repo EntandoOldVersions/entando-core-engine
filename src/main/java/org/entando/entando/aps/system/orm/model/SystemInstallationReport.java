@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.entando.entando.aps.system.orm.model.report;
+package org.entando.entando.aps.system.orm.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.DateConverter;
@@ -22,14 +22,14 @@ import org.jdom.output.XMLOutputter;
 /**
  * @author E.Santoboni
  */
-public class SystemInstallation {
+public class SystemInstallationReport {
 	
-	private SystemInstallation(Status status) {
+	private SystemInstallationReport(Status status) {
 		this.setStatus(status);
 		this.setCreation(new Date());
 	}
 	
-	public SystemInstallation(String xmlText) {
+	public SystemInstallationReport(String xmlText) {
 		if (null == xmlText || xmlText.trim().length() == 0) {
 			this.setStatus(Status.PORTING);
 			return;
@@ -42,7 +42,7 @@ public class SystemInstallation {
 			Element rootElement = doc.getRootElement();
 			String statusString = rootElement.getAttributeValue(STATUS_ATTRIBUTE);
 			if (null != statusString && statusString.trim().length() > 0) {
-				SystemInstallation.Status status = Enum.valueOf(SystemInstallation.Status.class, statusString.toUpperCase());
+				SystemInstallationReport.Status status = Enum.valueOf(SystemInstallationReport.Status.class, statusString.toUpperCase());
 				this.setStatus(status);
 			}
 			Element creationElement = rootElement.getChild(CREATION_ELEMENT);
@@ -60,7 +60,7 @@ public class SystemInstallation {
 			List<Element> elements = componentsElement.getChildren(COMPONENT_ELEMENT);
 			for (int i = 0; i < elements.size(); i++) {
 				Element element = elements.get(i);
-				ComponentInstallation report = new ComponentInstallation(element);
+				ComponentInstallationReport report = new ComponentInstallationReport(element);
 				this.getReports().add(report);
 			}
 		} catch (Throwable t) {
@@ -69,21 +69,21 @@ public class SystemInstallation {
 		}
 	}
 	
-	public static SystemInstallation getInstance() {
-		return new SystemInstallation(Status.INIT);
+	public static SystemInstallationReport getInstance() {
+		return new SystemInstallationReport(Status.INIT);
 	}
 	
-	public static SystemInstallation getPortingInstance() {
-		return new SystemInstallation(Status.PORTING);
+	public static SystemInstallationReport getPortingInstance() {
+		return new SystemInstallationReport(Status.PORTING);
 	}
 	
-	public ComponentInstallation addReport(String component) {
-		ComponentInstallation report = ComponentInstallation.getInstance(component);//new ComponentReport(component, new Date(), this.getStatus());
+	public ComponentInstallationReport addReport(String component) {
+		ComponentInstallationReport report = ComponentInstallationReport.getInstance(component);//new ComponentReport(component, new Date(), this.getStatus());
 		this.getReports().add(report);
 		return report;
 	}
 	
-	public void addReport(ComponentInstallation report) {
+	public void addReport(ComponentInstallationReport report) {
 		this.getReports().add(report);
 	}
 	
@@ -92,7 +92,7 @@ public class SystemInstallation {
 		Element rootElement = new Element(ROOT_ELEMENT);
 		Status status = Status.OK;
 		for (int i = 0; i < this.getReports().size(); i++) {
-			ComponentInstallation componentReport = this.getReports().get(i);
+			ComponentInstallationReport componentReport = this.getReports().get(i);
 			if (!componentReport.getStatus().equals(Status.OK)) {
 				status = componentReport.getStatus();
 				break;
@@ -111,7 +111,7 @@ public class SystemInstallation {
 		Element componentsElement = new Element(COMPONENTS_ELEMENT);
 		rootElement.addContent(componentsElement);
 		for (int i = 0; i < this.getReports().size(); i++) {
-			ComponentInstallation singleReport = this.getReports().get(i);
+			ComponentInstallationReport singleReport = this.getReports().get(i);
 			Element componentElement = singleReport.toJdomElement();
 			componentsElement.addContent(componentElement);
 		}
@@ -123,9 +123,9 @@ public class SystemInstallation {
 		return out.outputString(doc);
 	}
 	
-	public ComponentInstallation getComponentReport(String componentName, boolean addIfNotExist) {
+	public ComponentInstallationReport getComponentReport(String componentName, boolean addIfNotExist) {
 		for (int i = 0; i < this.getReports().size(); i++) {
-			ComponentInstallation singleReport = this.getReports().get(i);
+			ComponentInstallationReport singleReport = this.getReports().get(i);
 			if (singleReport.getComponentName().equals(componentName)) return singleReport;
 		}
 		if (addIfNotExist) {
@@ -163,7 +163,7 @@ public class SystemInstallation {
 		this._updated = true;
 	}
 	
-	public List<ComponentInstallation> getReports() {
+	public List<ComponentInstallationReport> getReports() {
 		return _reports;
 	}
 	
@@ -171,7 +171,7 @@ public class SystemInstallation {
 	private Date _lastUpdate;
 	private Status _status;
 	private boolean _updated;
-	private List<ComponentInstallation> _reports = new ArrayList<ComponentInstallation>();
+	private List<ComponentInstallationReport> _reports = new ArrayList<ComponentInstallationReport>();
 	
 	public enum Status {OK, PORTING, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT}
 	

@@ -74,28 +74,8 @@ public class QueryExtractor {
 		builder.delete(0, builder.length());
 		return query;
 	}
-	/*
-	private String insertQuotes(String query) {
-		int start = query.indexOf("(");
-		int end = query.indexOf(")");
-		String section = query.substring(start+1, end);
-		//System.out.println(section);
-		String[] fields = section.split(",");
-		StringBuilder buffer = new StringBuilder();
-		for (int i = 0; i < fields.length; i++) {
-			if (i > 0) buffer.append(", ");
-			String field = fields[i].trim();
-			field = field.replaceAll("\"", "");
-			buffer.append("\"").append(field.trim()).append("\"");
-		}
-		//System.out.println(buffer.toString());
-		String newQuery = query.replaceFirst(section, buffer.toString());
-		//System.out.println(newQuery);
-		// TODO Auto-generated method stub
-		return newQuery;
-	}
-	*/
-	public static String[] addChild(String[] lines, String newLine) {
+	
+	private static String[] addChild(String[] lines, String newLine) {
 		int len = lines.length;
 		String[] newChildren = new String[len + 1];
 		for (int i = 0; i < len; i++) {

@@ -17,7 +17,7 @@
 */
 package org.entando.entando.aps.system.orm;
 
-import org.entando.entando.aps.system.orm.model.report.SystemInstallation;
+import org.entando.entando.aps.system.orm.model.SystemInstallationReport;
 import com.agiletec.aps.system.ApsSystemUtils;
 
 import java.sql.Connection;
@@ -32,23 +32,23 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class InstallationReportDAO extends AbstractDAO {
 	
-	public SystemInstallation loadReport(String version) {
+	public SystemInstallationReport loadReport(String version) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
-		SystemInstallation report = null;
+		SystemInstallationReport report = null;
 		try {
 			conn = this.getConnection();
 			stat = conn.prepareStatement(VERSION_ITEM);
 			stat.setString(1, version);
-			stat.setString(2, REPORT_CONFIG_ITEM);
+			stat.setString(2, IDbInstallerManager.REPORT_CONFIG_ITEM);
 			res = stat.executeQuery();
 			if (res.next()) {
 				String xml = res.getString(1);
-				report = new SystemInstallation(xml);
+				report = new SystemInstallationReport(xml);
 			} else {
 				//PORTING
-				report = SystemInstallation.getPortingInstance();
+				report = SystemInstallationReport.getPortingInstance();
 			}
 		} catch (SQLException sqle) {
 			//NOT_AVAILABLE
@@ -62,12 +62,6 @@ public class InstallationReportDAO extends AbstractDAO {
 		return report;
 	}
 	
-	/**
-	 * Aggiorna un'item di configurazione nel db.
-	 * @param itemName Il nome dell'item da aggiornare.
-	 * @param config La nuova configurazione.
-	 * @param version La versione da aggiornare.
-	 */
 	public void saveConfigItem(String config, String version) {
 		Connection conn = null;
 		PreparedStatement stat = null;
@@ -77,7 +71,7 @@ public class InstallationReportDAO extends AbstractDAO {
 			this.deleteItem(version, conn);
 			stat = conn.prepareStatement(ADD_ITEM);
 			stat.setString(1, version);
-			stat.setString(2, REPORT_CONFIG_ITEM);
+			stat.setString(2, IDbInstallerManager.REPORT_CONFIG_ITEM);
 			stat.setString(3, "The component installation report");
 			stat.setString(4, config);
 			stat.executeUpdate();
@@ -97,7 +91,7 @@ public class InstallationReportDAO extends AbstractDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(DELETE_ITEM);
-			stat.setString(1, REPORT_CONFIG_ITEM);
+			stat.setString(1, IDbInstallerManager.REPORT_CONFIG_ITEM);
 			stat.setString(2, version);
 			stat.executeUpdate();
 			conn.commit();
@@ -117,7 +111,5 @@ public class InstallationReportDAO extends AbstractDAO {
 	
 	private static final String ADD_ITEM = 
 		"INSERT INTO sysconfig(version, item, descr, config) VALUES (?, ?, ?, ?)";
-	
-	public static final String REPORT_CONFIG_ITEM = "entandoComponentsReport";
 	
 }

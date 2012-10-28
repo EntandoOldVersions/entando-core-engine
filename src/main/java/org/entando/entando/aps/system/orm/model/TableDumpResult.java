@@ -4,12 +4,10 @@
  */
 package org.entando.entando.aps.system.orm.model;
 
-import org.entando.entando.aps.system.orm.model.report.TableDump;
-
 /**
  * @author E.Santoboni
  */
-public class TableDumpResult extends TableDump {
+public class TableDumpResult extends TableDumpReport {
 	
 	public TableDumpResult(String tableName) {
 		super(tableName);
