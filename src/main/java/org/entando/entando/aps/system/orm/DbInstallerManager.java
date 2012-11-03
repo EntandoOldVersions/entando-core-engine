@@ -230,6 +230,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 					schemaReport.getDatabaseTables().put(dataSourceName, new ArrayList<String>());
 				}
 				System.out.println(logDbTablePrefix + " - Installation Started... ");
+				schemaReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 				this.createTables(dataSourceName, tableClassNames, dataSource, schemaReport);
 				//System.out.println(logDbTablePrefix + " - INSTALLATION DONE! - installated tables " + schemaReport.getDatabaseTables().get(dataSourceName));
