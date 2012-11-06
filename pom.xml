@@ -3,8 +3,8 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.1-EU-SNAPSHOT</version>
-	<name>Entando EU Evolution: Core Engine</name>
+	<version>experiment-components</version>
+	<name>Entando: Core Engine - Experiment Components</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
 	<licenses>
