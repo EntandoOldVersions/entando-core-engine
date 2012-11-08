@@ -23,10 +23,11 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
 
@@ -34,7 +35,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilter
  * ContentListTag" sub-tag, it creates a custom user filter to restrict the result of the content search by front-end user.
  * @author E.Santoboni
  */
-public class ContentListUserFilterOptionTag extends TagSupport implements IContentListFilterBean {
+public class ContentListUserFilterOptionTag extends TagSupport implements IEntityFilterBean {
 	
 	public ContentListUserFilterOptionTag() {
 		super();
@@ -48,14 +49,14 @@ public class ContentListUserFilterOptionTag extends TagSupport implements IConte
 		try {
 			if (!this.isRightKey()) {
 				String message = "";
-				for (int i=0; i < IContentListHelper.allowedMetadataUserFilterOptionKeys.length; i++) {
+				for (int i=0; i < IContentListShowletHelper.allowedMetadataUserFilterOptionKeys.length; i++) {
 					if (i!=0) message.concat(",");
-					message.concat(IContentListHelper.allowedMetadataUserFilterOptionKeys[i]);
+					message.concat(IContentListShowletHelper.allowedMetadataUserFilterOptionKeys[i]);
 				}
 				throw new RuntimeException("The key '" + this.getKey() + "' is unknown; " +
 						"Please use a valid one - " + message);
 			}
-			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			IContentListShowletHelper helper = (IContentListShowletHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			IContentListTagBean parent = (IContentListTagBean) findAncestorWithClass(this, IContentListTagBean.class);
 			String contentType = parent.getContentType();
 			UserFilterOptionBean filter = helper.getUserFilterOption(contentType, this, reqCtx);
@@ -73,8 +74,8 @@ public class ContentListUserFilterOptionTag extends TagSupport implements IConte
 		if (this.isAttributeFilter()) {
 			return true;
 		} else {
-			for (int i = 0; i < IContentListHelper.allowedMetadataUserFilterOptionKeys.length; i++) {
-				if (IContentListHelper.allowedMetadataUserFilterOptionKeys[i].equals(this.getKey())) return true;
+			for (int i = 0; i < IContentListShowletHelper.allowedMetadataUserFilterOptionKeys.length; i++) {
+				if (IContentListShowletHelper.allowedMetadataUserFilterOptionKeys[i].equals(this.getKey())) return true;
 			}
 		}
 		return false;
