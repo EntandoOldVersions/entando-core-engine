@@ -36,7 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
@@ -70,7 +70,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 	}
 
 	protected void validateTitle() {
-		String titleParamPrefix = IContentListHelper.SHOWLET_PARAM_TITLE + "_";
+		String titleParamPrefix = IContentListShowletHelper.SHOWLET_PARAM_TITLE + "_";
 		if (this.isMultilanguageParamValued(titleParamPrefix)) {
 			Lang defaultLang = this.getLangManager().getDefaultLang();
 			String defaultTitleParam = titleParamPrefix + defaultLang.getCode();
@@ -83,12 +83,12 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 	}
 
 	protected void validateLink() {
-		String pageLink = this.getShowlet().getConfig().getProperty(IContentListHelper.SHOWLET_PARAM_PAGE_LINK);
+		String pageLink = this.getShowlet().getConfig().getProperty(IContentListShowletHelper.SHOWLET_PARAM_PAGE_LINK);
 		boolean existsPageLink = pageLink != null && this.getPage(pageLink) != null;
-		String linkDescrParamPrefix = IContentListHelper.SHOWLET_PARAM_PAGE_LINK_DESCR + "_";
+		String linkDescrParamPrefix = IContentListShowletHelper.SHOWLET_PARAM_PAGE_LINK_DESCR + "_";
 		if (existsPageLink || this.isMultilanguageParamValued(linkDescrParamPrefix)) {
 			if (!existsPageLink) {
-				this.addFieldError(IContentListHelper.SHOWLET_PARAM_PAGE_LINK, this.getText("error.showlet.listViewer.pageLink.required"));
+				this.addFieldError(IContentListShowletHelper.SHOWLET_PARAM_PAGE_LINK, this.getText("error.showlet.listViewer.pageLink.required"));
 			}
 			Lang defaultLang = this.getLangManager().getDefaultLang();
 			String defaultLinkDescrParam = linkDescrParamPrefix + defaultLang.getCode();
@@ -131,7 +131,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 	public String configContentType() {
 		try {
 			Showlet showlet = super.createNewShowlet();
-			showlet.getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_CONTENT_TYPE, this.getContentType());
+			showlet.getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_CONTENT_TYPE, this.getContentType());
 			this.setShowlet(showlet);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "init");
@@ -174,8 +174,8 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 			} else {
 				categoryCodes.remove(category);
 			}
-			String categories = ContentListHelper.concatStrings(categoryCodes, IContentListHelper.CATEGORIES_SEPARATOR);
-			this.getShowlet().getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_CATEGORIES, categories);
+			String categories = ContentListHelper.concatStrings(categoryCodes, IContentListShowletHelper.CATEGORIES_SEPARATOR);
+			this.getShowlet().getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_CATEGORIES, categories);
 		} catch (Throwable t) {
 			String marker = (add) ? "adding" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "addRemoveCategory", "Error " + marker + " category : '" + this.getCategoryCode() + "'");
@@ -189,7 +189,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 		try {
 			types.add(new SelectItem(UserFilterOptionBean.KEY_FULLTEXT, this.getText("label.fulltext")));
 			types.add(new SelectItem(UserFilterOptionBean.KEY_CATEGORY, this.getText("label.category")));
-			String contentType = this.getShowlet().getConfig().getProperty(IContentListHelper.SHOWLET_PARAM_CONTENT_TYPE);
+			String contentType = this.getShowlet().getConfig().getProperty(IContentListShowletHelper.SHOWLET_PARAM_CONTENT_TYPE);
 			Content prototype = this.getContentManager().createContentType(contentType);
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
@@ -210,7 +210,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 		try {
 			types.add(new SelectItem(IContentListFilterAction.METADATA_KEY_PREFIX + IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, this.getText("label.creationDate")));
 			types.add(new SelectItem(IContentListFilterAction.METADATA_KEY_PREFIX + IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, this.getText("label.lastModifyDate")));
-			String contentType = this.getShowlet().getConfig().getProperty(IContentListHelper.SHOWLET_PARAM_CONTENT_TYPE);
+			String contentType = this.getShowlet().getConfig().getProperty(IContentListShowletHelper.SHOWLET_PARAM_CONTENT_TYPE);
 			Content prototype = this.getContentManager().createContentType(contentType);
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
@@ -246,7 +246,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 				userFiltersProperties.add(newUserFilter);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addUserFilter");
 			return FAILURE;
@@ -313,7 +313,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 				userFiltersProperties.remove(filterIndex);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "removeMoveUserFilter", "Error " + marker + " userFilter");
@@ -329,7 +329,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 			List<Properties> properties = this.getFiltersProperties();
 			properties.add(this.getNewFilter());
 			String newShowletParam = FilterUtils.getShowletParam(properties);
-			this.getShowlet().getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addFilter");
 			return FAILURE;
@@ -369,7 +369,7 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 				userFiltersProperties.remove(filterIndex);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "removeMoveFilter", "Error " + marker + " filter");
@@ -394,26 +394,26 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 
 	private void extractFiltersProperties(ApsProperties config) {
 		if (null == config) return;
-		String filters = config.getProperty(IContentListHelper.SHOWLET_PARAM_FILTERS);
+		String filters = config.getProperty(IContentListShowletHelper.SHOWLET_PARAM_FILTERS);
 		List<Properties> properties = FilterUtils.getFiltersProperties(filters);
 		this.setFiltersProperties(properties);
 	}
 
 	private void extractUserFiltersProperties(ApsProperties config) {
 		if (null == config) return;
-		String filters = config.getProperty(IContentListHelper.SHOWLET_PARAM_USER_FILTERS);
+		String filters = config.getProperty(IContentListShowletHelper.SHOWLET_PARAM_USER_FILTERS);
 		List<Properties> properties = FilterUtils.getFiltersProperties(filters);
 		this.setUserFiltersProperties(properties);
 	}
 
 	protected void extractCategories(ApsProperties config) {
 		if (null == config) return;
-		String categories = config.getProperty(IContentListHelper.SHOWLET_PARAM_CATEGORIES);
+		String categories = config.getProperty(IContentListShowletHelper.SHOWLET_PARAM_CATEGORIES);
 		if (null != categories) {
-			List<String> categoryCodes = ContentListHelper.splitValues(categories, IContentListHelper.CATEGORIES_SEPARATOR);
+			List<String> categoryCodes = ContentListHelper.splitValues(categories, IContentListShowletHelper.CATEGORIES_SEPARATOR);
 			this.setCategoryCodes(categoryCodes);
 		}
-		String category = config.getProperty(IContentListHelper.SHOWLET_PARAM_CATEGORY);
+		String category = config.getProperty(IContentListShowletHelper.SHOWLET_PARAM_CATEGORY);
 		if (null != category) {
 			if (null == this.getCategoryCodes()) {
 				this.setCategoryCodes(new ArrayList<String>());
@@ -421,8 +421,8 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 			this.getCategoryCodes().add(category);
 		}
 		if (null != this.getCategoryCodes() && this.getCategoryCodes().size() > 0) {
-			categories = ContentListHelper.concatStrings(this.getCategoryCodes(), IContentListHelper.CATEGORIES_SEPARATOR);
-			config.setProperty(IContentListHelper.SHOWLET_PARAM_CATEGORIES, categories);
+			categories = ContentListHelper.concatStrings(this.getCategoryCodes(), IContentListShowletHelper.CATEGORIES_SEPARATOR);
+			config.setProperty(IContentListShowletHelper.SHOWLET_PARAM_CATEGORIES, categories);
 		}
 	}
 

@@ -99,7 +99,10 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			}
 			int isLocked = res.getInt(7);
 			showletType.setLocked(isLocked == 1);
-			showletType.setMainGroup(res.getString(8));
+			String mainGroup = res.getString(8);
+			if (null != mainGroup && mainGroup.trim().length() > 0) {
+				showletType.setMainGroup(mainGroup.trim());
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet",
 					"Error parsing the Showlet Type '" + code + "'");

@@ -27,7 +27,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 /**
  * Provides utility methods for content filters.
  * @author E.Santoboni
- * @deprecated use {@link FilterUtils} methods
+ * @deprecated From Entando 2.0 version 2.4.1. Use {@link FilterUtils} methods
  */
 public class EntitySearchFilterDOM {
 	
