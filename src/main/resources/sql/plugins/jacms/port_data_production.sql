@@ -3,12 +3,8 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 <property key="en">Contents - Publish a Content</property>
 <property key="it">Contenuti - Pubblica un Contenuto</property>
 </properties>', '<config>
-	<parameter name="contentId">
-		Content ID
-	</parameter>
-	<parameter name="modelId">
-		Content Model ID
-	</parameter>
+	<parameter name="contentId">Content ID</parameter>
+	<parameter name="modelId">Content Model ID</parameter>
 	<action name="viewerConfig"/>
 </config>', 'jacms', NULL, NULL, 1, NULL);
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('search_result', '<?xml version="1.0" encoding="UTF-8"?>
@@ -26,8 +22,9 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 	<parameter name="userFilters">Front-End user filter options</parameter>
 	<parameter name="category">Content Category **deprecated**</parameter>
 	<parameter name="categories">Content Category codes (comma separeted)</parameter>
-    <parameter name="orClauseCategoryFilter" />
+	<parameter name="orClauseCategoryFilter" />
 	<parameter name="maxElemForItem">Contents for each page</parameter>
+	<parameter name="maxElements">Number of contents</parameter>
 	<parameter name="filters" />
 	<parameter name="title_{lang}">Showlet Title in lang {lang}</parameter>
 	<parameter name="pageLink">The code of the Page to link</parameter>
