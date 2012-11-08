@@ -34,9 +34,10 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
 
@@ -61,7 +62,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			IContentListShowletHelper helper = (IContentListShowletHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			List<UserFilterOptionBean> defaultUserFilterOptions = helper.getConfiguredUserFilters(this, reqCtx);
 			this.addUserFilterOptions(defaultUserFilterOptions);
 			this.extractExtraShowletParameters(reqCtx);
@@ -78,7 +79,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		return EVAL_PAGE;
 	}
 	
-	protected List<String> getContentsId(IContentListHelper helper, RequestContext reqCtx) throws ApsSystemException {
+	protected List<String> getContentsId(IContentListShowletHelper helper, RequestContext reqCtx) throws ApsSystemException {
 		List<String> contents = null;
 		try {
 			contents = helper.getContentsId(this, reqCtx);
@@ -109,8 +110,8 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			ApsProperties config = showlet.getConfig();
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
-				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
-				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
+				this.addMultilanguageShowletParameter(config, IContentListShowletHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
+				this.addMultilanguageShowletParameter(config, IContentListShowletHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
 				if (null != this.getPageLinkVar()) {
 					String pageLink = config.getProperty(ContentListHelper.SHOWLET_PARAM_PAGE_LINK);
 					if (null != pageLink) {

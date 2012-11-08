@@ -30,6 +30,7 @@ import org.apache.commons.collections.ListUtils;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
@@ -49,7 +50,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.Filte
  * Classe helper per la showlet di erogazione contenuti in lista.
  * @author E.Santoboni
  */
-public class ContentListHelper extends BaseContentListHelper implements IContentListHelper {
+public class ContentListHelper extends BaseContentListHelper implements IContentListShowletHelper {
 	
 	@Override
 	public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, RequestContext reqCtx) {
@@ -57,14 +58,30 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return super.getFilters(contentType, filtersShowletParam, currentLang.getCode());
 	}
 	
+	/**
+     * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String, IEntityFilterBean, RequestContext) method
+     */
 	@Override
 	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
+		return this.getFilter(contentType, (IEntityFilterBean) bean, reqCtx);
+	}
+	
+	@Override
+	public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, RequestContext reqCtx) {
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 		return super.getFilter(contentType, bean, currentLang.getCode());
 	}
 	
+	/**
+     * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilterOption(String, IEntityFilterBean, RequestContext) method
+     */
 	@Override
 	public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx) {
+		return this.getUserFilterOption(contentType, (IEntityFilterBean) bean, reqCtx);
+	}
+	
+	@Override
+	public UserFilterOptionBean getUserFilterOption(String contentType, IEntityFilterBean bean, RequestContext reqCtx) {
 		FilterUtils dom = new FilterUtils();
 		return dom.getUserFilter(contentType, bean, this.getContentManager(), reqCtx);
 	}

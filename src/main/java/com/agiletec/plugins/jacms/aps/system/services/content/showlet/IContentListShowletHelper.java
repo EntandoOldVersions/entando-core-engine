@@ -20,6 +20,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 import java.util.List;
 
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -30,7 +31,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
  * La classe è a servizio sia delle funzioni dell'area di amministrazione che di font-end.
  * @author E.Santoboni
  */
-public interface IContentListHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper {
+public interface IContentListShowletHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper {
 	
 	/**
 	 * Ricerca la lista dei contenuti in base alla posizione della showlet nella pagina.
@@ -72,10 +73,18 @@ public interface IContentListHelper extends com.agiletec.plugins.jacms.aps.syste
 	 * @param bean Il contenitore delle informazioni sul filtro da costruire.
 	 * @param reqCtx Il contesto della richiesta corrente.
 	 * @return Il nuovo filtro costruito in base ai parametri specificati.
+	 * @deprecated From Entando 3.0 version 3.0.1. Use getFilter(String, IEntityFilterBean, RequestContext) method
 	 */
 	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
 	
+	public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, RequestContext reqCtx);
+	
+	/**
+	 * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilterOption(String, IEntityFilterBean, RequestContext) method
+	 */
 	public UserFilterOptionBean getUserFilterOption(String contentType, IContentListFilterBean bean, RequestContext reqCtx);
+	
+	public UserFilterOptionBean getUserFilterOption(String contentType, IEntityFilterBean bean, RequestContext reqCtx);
 	
 	/**
 	 * Restituisce il parametro da inserire nella configurazione della showlet.

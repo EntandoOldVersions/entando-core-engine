@@ -45,6 +45,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  */
 public class BaseContentListHelper implements IContentListHelper {
     
+	@Override
     public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, String langCode) {
         Content contentPrototype = this.getContentManager().createContentType(contentType);
         if (null == filtersShowletParam || filtersShowletParam.trim().length() == 0 || null == contentPrototype) {
@@ -57,10 +58,12 @@ public class BaseContentListHelper implements IContentListHelper {
     /**
      * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String contentType, IEntityFilterBean, String) method
      */
+	@Override
     public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, String langCode) {
         return this.getFilter(contentType, (IEntityFilterBean) bean, langCode);
     }
     
+	@Override
     public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, String langCode) {
         BaseFilterUtils dom = new BaseFilterUtils();
         Content contentPrototype = this.getContentManager().createContentType(contentType);
@@ -70,11 +73,13 @@ public class BaseContentListHelper implements IContentListHelper {
         return dom.getFilter(contentPrototype, bean, langCode);
     }
     
+	@Override
     public String getFilterParam(EntitySearchFilter[] filters) {
         BaseFilterUtils dom = new BaseFilterUtils();
         return dom.getFilterParam(filters);
     }
     
+	@Override
     public List<String> getContentsId(IContentListBean bean, UserDetails user) throws Throwable {
         List<String> contentsId = null;
         try {
@@ -148,7 +153,7 @@ public class BaseContentListHelper implements IContentListHelper {
     }
 
     protected String buildCacheKey(IContentListBean bean, Collection<String> userGroupCodes) {
-        StringBuffer cacheKey = new StringBuffer();
+        StringBuilder cacheKey = new StringBuilder();
         if (null != bean.getListName()) {
             cacheKey.append("LISTNAME_").append(bean.getListName());
         }
@@ -188,7 +193,7 @@ public class BaseContentListHelper implements IContentListHelper {
     }
 
     public static String concatStrings(Collection<String> values, String separator) {
-        StringBuffer concatedValues = new StringBuffer();
+        StringBuilder concatedValues = new StringBuilder();
         if (null == values) {
             return concatedValues.toString();
         }
