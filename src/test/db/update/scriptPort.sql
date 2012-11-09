@@ -4,6 +4,7 @@ UPDATE showletcatalog SET parameters = '<config>
 	<parameter name="userFilters">Front-End user filter options</parameter>
 	<parameter name="category">Content Category **deprecated**</parameter>
 	<parameter name="categories">Content Category codes (comma separeted)</parameter>
+	<parameter name="orClauseCategoryFilter" />
 	<parameter name="maxElemForItem">Contents for each page</parameter>
 	<parameter name="maxElements">Number of contents</parameter>
 	<parameter name="filters" />
