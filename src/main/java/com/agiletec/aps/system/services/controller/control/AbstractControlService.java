@@ -27,6 +27,8 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Classe di utilità che implementa un metodo per impostare una redirezione ed
@@ -43,20 +45,30 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 	 * Può essere una delle costanti definite in ControllerManager.
 	 */
 	protected int redirect(String redirDestPage, RequestContext reqCtx) {
+		return this.redirect(redirDestPage, null, reqCtx);
+	}
+	
+	protected int redirect(String redirDestPage, Map<String, String> params, RequestContext reqCtx) {
 		int retStatus;
 		try {
 			String redirPar = this.getParameter(RequestContext.PAR_REDIRECT_FLAG, reqCtx);
 			if (redirPar == null || "".equals(redirPar)) {
 				PageURL url = this.getUrlManager().createURL(reqCtx);
 				url.setPageCode(redirDestPage);
-				url.addParam(RequestContext.PAR_REDIRECT_FLAG, "1");
-				String redirUrl = url.getURL();
-				if (_log.isLoggable(Level.FINEST)) {
-					_log.finest("Redirecting to " + redirUrl);
+				if (null != params && !params.isEmpty()) {
+					Iterator<String> iter = params.keySet().iterator();
+					while (iter.hasNext()) {
+						String key = iter.next();
+						url.addParam(key, params.get(key));
+					}
 				}
-				reqCtx.clearError();
-				reqCtx.addExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL, redirUrl);
-				retStatus = ControllerManager.REDIRECT;
+				url.addParam(RequestContext.PAR_REDIRECT_FLAG, "1");
+				url.setEscapeAmp(false);
+				String redirUrl = url.getURL();
+				if (this._log.isLoggable(Level.FINEST)) {
+					this._log.finest("Redirecting to " + redirUrl);
+				}
+				return this.redirectUrl(redirUrl, reqCtx);
 			} else {
 				reqCtx.setHTTPError(HttpServletResponse.SC_BAD_REQUEST);
 				retStatus = ControllerManager.ERROR;
@@ -65,6 +77,20 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to page " + redirDestPage);
+		}
+		return retStatus;
+	}
+	
+	protected int redirectUrl(String urlDest, RequestContext reqCtx) {
+		int retStatus;
+		try {
+			reqCtx.clearError();
+			reqCtx.addExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL, urlDest);
+			retStatus = ControllerManager.REDIRECT;
+		} catch (Throwable t) {
+			retStatus = ControllerManager.SYS_ERROR;
+			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to url " + urlDest);
 		}
 		return retStatus;
 	}

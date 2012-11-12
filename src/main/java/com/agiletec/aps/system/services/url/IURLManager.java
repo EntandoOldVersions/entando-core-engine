@@ -57,4 +57,6 @@ public interface IURLManager {
 	 */
 	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params);
 	
+	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp);
+	
 }

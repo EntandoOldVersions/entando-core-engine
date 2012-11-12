@@ -31,6 +31,8 @@ import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 
+import java.net.URLDecoder;
+
 /**
  * Sottoservizio di controllo esecutore dell'autenticazione.
  * @author 
@@ -54,6 +56,7 @@ public class Authenticator extends AbstractControlService {
      * @param status Lo stato di uscita del servizio precedente
      * @return Lo stato di uscita
      */
+	@Override
     public int service(RequestContext reqCtx, int status) {
     	if (_log.isLoggable(Level.FINEST)) {
     		_log.finest("Invocata " + this.getClass().getName());
@@ -64,25 +67,32 @@ public class Authenticator extends AbstractControlService {
         }
         try {
             HttpServletRequest req = reqCtx.getRequest();
-            String userName = req.getParameter("username");
+            String username = req.getParameter("username");
             String password = req.getParameter("password");
             HttpSession session = req.getSession();
             //Punto 1
-            if (userName != null && password != null) {
-            	_log.finest("user " + userName + " - password ******** ");
-                UserDetails user = this.getAuthenticationProvider().getUser(userName, password);
+            if (username != null && password != null) {
+				String returnUrl = req.getParameter("returnUrl");
+				returnUrl = (null != returnUrl && returnUrl.trim().length() > 0) ? returnUrl : null;
+            	this._log.finest("user " + username + " - password ******** ");
+                UserDetails user = this.getAuthenticationProvider().getUser(username, password);
                 if (user != null) {
                 	if (!user.isAccountNotExpired()) {
                 		req.setAttribute("accountExpired", new Boolean(true));
                 	} else {
                 		session.setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
-                		_log.finest("New user: " + user.getUsername());
+                		this._log.finest("New user: " + user.getUsername());
+						if (null != returnUrl) {
+							return super.redirectUrl(URLDecoder.decode(returnUrl, "ISO-8859-1"), reqCtx);
+						}
                 	}
                 } else {
                 	req.setAttribute("wrongAccountCredential", new Boolean(true));
+					if (null != returnUrl) {
+						req.setAttribute("returnUrl", returnUrl);
+					}
                 }
             }
-            
             //Punto 2
             if (session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER) == null) {
             	UserDetails guestUser = this.getUserManager().getGuestUser();

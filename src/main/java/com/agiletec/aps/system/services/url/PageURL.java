@@ -34,12 +34,12 @@ import com.agiletec.aps.system.services.page.IPage;
  * @author
  */
 public class PageURL {
-
+	
 	/**
 	 * Costruttore utilizzato dalla factory di questa classe 
 	 * (IURLManager). Non deve essere utilizzato direttamente.
-	 * @param urlManager
-	 * @param reqCtx
+	 * @param urlManager The Url Manager
+	 * @param reqCtx The Request Context
 	 */
 	public PageURL(IURLManager urlManager, RequestContext reqCtx) {
 		this._urlManager = urlManager;
@@ -141,11 +141,20 @@ public class PageURL {
 			}
 		}
 	}
-
+	
+	public boolean isEscapeAmp() {
+		return _escapeAmp;
+	}
+	public void setEscapeAmp(boolean escapeAmp) {
+		this._escapeAmp = escapeAmp;
+	}
+	
 	private IURLManager _urlManager;
 	private RequestContext _reqCtx;
 	private String _pageCode;
 	private String _langCode;
 	private Map _params;
+	
+	private boolean _escapeAmp = true;
 	
 }
