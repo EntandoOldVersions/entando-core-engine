@@ -17,6 +17,9 @@ UPDATE showletcatalog SET parameters = '<config>
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_NO_SERVICES', 'it', 'Nessun Servizio API disponibile');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_NO_SERVICES', 'en', 'No API Service availables');
 
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_NO_SERVICES', 'it', 'Nessun Servizio API disponibile');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_NO_SERVICES', 'en', 'No API Service availables');
+
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_GOTO_SERVICE_LIST', 'it', 'Lista Servizi API');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_GOTO_SERVICE_LIST', 'en', 'API Service List');
 
