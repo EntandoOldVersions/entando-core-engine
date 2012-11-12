@@ -85,7 +85,7 @@ public class URLManager extends AbstractURLManager {
 		if (page == null) {
 			page = this.getPageManager().getRoot();
 		}
-		String url = this.createUrl(page, lang, pageUrl.getParams());
+		String url = this.createUrl(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp());
 		if (null != reqCtx) {
 			HttpServletResponse resp = reqCtx.getResponse();
 			String encUrl = resp.encodeURL(url.toString());  
@@ -104,7 +104,12 @@ public class URLManager extends AbstractURLManager {
 	 */
 	@Override
 	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params) {
-		StringBuffer url = new StringBuffer();
+		return this.createUrl(requiredPage, requiredLang, params, true);
+	}
+	
+	@Override
+	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp) {
+		StringBuilder url = new StringBuilder();
 		url.append(this.getConfigManager().getParam(SystemConstants.PAR_APPL_BASE_URL));
 		if (!this.isUrlStyleBreadcrumbs()) {
 			url.append(requiredLang.getCode()).append('/');
@@ -115,7 +120,7 @@ public class URLManager extends AbstractURLManager {
 			StringBuffer fullPath = PageUtils.getFullPath(requiredPage, "/");
 			url.append(fullPath.append("/"));
 		}
-		String queryString = this.createQueryString(params);
+		String queryString = this.createQueryString(params, escapeAmp);
 		url.append(queryString);
 		return url.toString();
 	}
