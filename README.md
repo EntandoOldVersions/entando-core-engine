@@ -1,4 +1,4 @@
-```
+```sql
 UPDATE showletcatalog SET parameters = '<config>
   <parameter name="contentType">Content Type (mandatory)</parameter>
 	<parameter name="modelId">Content Model</parameter>
@@ -85,7 +85,7 @@ ALTER TABLE contentsearch ALTER COLUMN datevalue TYPE timestamp without time zon
 ALTER TABLE workcontentsearch ALTER COLUMN datevalue TYPE timestamp without time zone;
 ```
 
-```
+```sql
 ALTER TABLE apicatalog_methods ALTER authorizationrequired TYPE character varying(30);
 ALTER TABLE apicatalog_methods
   ADD CONSTRAINT apicatalog_methods_authorizationrequired_fkey FOREIGN KEY (authorizationrequired)
