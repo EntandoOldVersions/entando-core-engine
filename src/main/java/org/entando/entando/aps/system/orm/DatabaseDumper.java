@@ -41,7 +41,7 @@ import org.springframework.beans.factory.ListableBeanFactory;
 public class DatabaseDumper {
 	
 	protected DatabaseDumper(String localBackupsFolder, SystemInstallationReport installationReport, 
-			Map<String, List<String>> entandoTableMapping, List<EntandoComponentConfiguration> components, BeanFactory beanFactory/*, DbInstallerManager manager*/) {
+			Map<String, List<String>> entandoTableMapping, List<EntandoComponentConfiguration> components, BeanFactory beanFactory) {
 		this.setBeanFactory(beanFactory);
 		this.setComponents(components);
 		this.setEntandoTableMapping(entandoTableMapping);
@@ -49,10 +49,11 @@ public class DatabaseDumper {
 		this.setReport(new DatabaseDumpReport(installationReport));
 	}
 	
-	protected void createBackup() throws ApsSystemException {
+	protected void createBackup(IDbInstallerManager.Environment environment) throws ApsSystemException {
 		try {
 			long start = System.currentTimeMillis();
-			String subFolder = DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+			String subFolder = (IDbInstallerManager.Environment.develop.equals(environment)) ? 
+					environment.toString() : DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
 			this.setBackupSubFolder(subFolder);
 			this.getReport().setSubFolderName(subFolder);
 			List<EntandoComponentConfiguration> components = this.getComponents();

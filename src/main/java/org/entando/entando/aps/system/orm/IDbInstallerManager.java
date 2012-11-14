@@ -44,6 +44,8 @@ public interface IDbInstallerManager {
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}
 	
+	public enum Environment {test, develop, production}
+	
 	public static final String DUMP_REPORT_FILE_NAME = "dumpReport.xml";
 	
 	public static final String REPORT_CONFIG_ITEM = "entandoComponentsReport";
