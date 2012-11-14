@@ -57,16 +57,18 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		SystemInstallationReport report = this.extractReport();
 		if (null == report) {
 			report = SystemInstallationReport.getInstance();
-			//non c'è db locale installato, cerca nei backup locali
-			DatabaseDumpReport lastDumpReport = this.getLastDumpReport();
-			if (null != lastDumpReport) {
-				lastLocalBackupFolder = lastDumpReport.getSubFolderName();
-				report.setStatus(SystemInstallationReport.Status.RESTORE);
-			} else {
-				//SE NON c'è cerca il default dump
-				Map<String, Resource> defaultSqlDump = this.getDefaultSqlDump();
-				if (null != defaultSqlDump && defaultSqlDump.size() > 0) {
+			if (!Environment.test.equals(this.getEnvironment())) {
+				//non c'è db locale installato, cerca nei backup locali
+				DatabaseDumpReport lastDumpReport = this.getLastDumpReport();
+				if (null != lastDumpReport) {
+					lastLocalBackupFolder = lastDumpReport.getSubFolderName();
 					report.setStatus(SystemInstallationReport.Status.RESTORE);
+				} else {
+					//SE NON c'è cerca il default dump
+					Map<String, Resource> defaultSqlDump = this.getDefaultSqlDump();
+					if (null != defaultSqlDump && defaultSqlDump.size() > 0) {
+						report.setStatus(SystemInstallationReport.Status.RESTORE);
+					}
 				}
 			}
 		}
@@ -92,6 +94,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		} catch (Throwable t) {
 			report.setUpdated();
 			report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
+			ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
 		} finally {
 			if (report.isUpdated()) {
@@ -182,8 +185,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	
 	private void initMasterDatabase(String databaseName, DataSource dataSource, DatabaseInstallationReport schemaReport) throws ApsSystemException {
 		try {
-			IDbInstallerManager.DatabaseType type = this.getType(dataSource);
-			if (type.equals(IDbInstallerManager.DatabaseType.DERBY)) {
+			DatabaseType type = this.getType(dataSource);
+			if (type.equals(DatabaseType.DERBY)) {
 				this.initDerbySchema(dataSource);
 			}
 			List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
@@ -263,7 +266,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	private void createTables(String databaseName, List<String> tableClassNames, 
 			DataSource dataSource, DatabaseInstallationReport schemaReport) throws ApsSystemException {
 		try {
-			IDbInstallerManager.DatabaseType type = this.getType(dataSource);
+			DatabaseType type = this.getType(dataSource);
 			TableFactory tableFactory = new TableFactory(databaseName, dataSource, type);
 			tableFactory.createTables(tableClassNames, schemaReport);
 		} catch (Throwable t) {
@@ -276,10 +279,14 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		List<EntandoComponentConfiguration> componentBeans = new ArrayList<EntandoComponentConfiguration>();
 		try {
 			String[] componentBeansNames = this.extractBeanNames(EntandoComponentConfiguration.class);
-			if (null == componentBeansNames || componentBeansNames.length == 0) return componentBeans;
+			if (null == componentBeansNames || componentBeansNames.length == 0) {
+				return componentBeans;
+			}
 			for (int i = 0; i < componentBeansNames.length; i++) {
 				EntandoComponentConfiguration componentConfiguration = (EntandoComponentConfiguration) this.getBeanFactory().getBean(componentBeansNames[i]);
-				if (null != componentConfiguration) componentBeans.add(componentConfiguration);
+				if (null != componentConfiguration) {
+					componentBeans.add(componentConfiguration);
+				}
 			}
 			Collections.sort(componentBeans);
 		} catch (Throwable t) {
@@ -289,7 +296,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		return componentBeans;
 	}
 	
-	protected IDbInstallerManager.DatabaseType getType(DataSource dataSource) throws ApsSystemException {
+	protected DatabaseType getType(DataSource dataSource) throws ApsSystemException {
 		String typeString = null;
 		try {
 			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
@@ -304,10 +311,10 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			}
 			if (null == typeString) {
 				ApsSystemUtils.getLogger().severe("Type not recognized for Driver '" + driverClassName + "' - "
-						+ "Recognized types '" + IDbInstallerManager.DatabaseType.values() + "'");
-				return IDbInstallerManager.DatabaseType.UNKNOWN;
+						+ "Recognized types '" + DatabaseType.values() + "'");
+				return DatabaseType.UNKNOWN;
 			}
-			return Enum.valueOf(IDbInstallerManager.DatabaseType.class, typeString.toUpperCase());
+			return Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
 		} catch (Throwable t) {
 			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
 			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
@@ -506,7 +513,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 			this.setStatus(DbInstallerManager.STATUS_DUMPIMG_IN_PROGRESS);
 			DatabaseDumper dumper = new DatabaseDumper(this.getLocalBackupsFolder(), this.extractReport(), 
 					this.getEntandoTableMapping(), this.extractComponents(), this.getBeanFactory());
-			dumper.createBackup();
+			dumper.createBackup(this.getEnvironment());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "executeBackup");
 			throw new ApsSystemException("Error while creating backup", t);
@@ -542,6 +549,9 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	}
 	
 	protected DatabaseDumpReport getLastDumpReport() throws ApsSystemException {
+		if (Environment.develop.equals(this.getEnvironment())) {
+			return this.getBackupReport(this.getEnvironment().toString());
+		}
 		List<DatabaseDumpReport> reports = this.getBackupReports();
 		if (null == reports || reports.isEmpty()) {
 			return null;
@@ -594,7 +604,7 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 				return false;
 			}
 		}
-		File reportFile = new File(this.getLocalBackupsFolder() + subFolderName + File.separator + IDbInstallerManager.DUMP_REPORT_FILE_NAME);
+		File reportFile = new File(this.getLocalBackupsFolder() + subFolderName + File.separator + DUMP_REPORT_FILE_NAME);
 		if (!reportFile.exists()) {
 			return false;
 		}
@@ -737,6 +747,13 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
 	
+	public Environment getEnvironment() {
+		return _environment;
+	}
+	public void setEnvironment(Environment environment) {
+		this._environment = environment;
+	}
+	
 	@Override
 	public int getStatus() {
 		return _status;
@@ -759,6 +776,8 @@ public class DbInstallerManager implements BeanFactoryAware, IDbInstallerManager
 	private Map<String, List<String>> _entandoTableMapping;
 	private Map<String, Resource> _entandoDefaultSqlResources;
 	private Map<String, Resource> _defaultSqlDump;
+	
+	private Environment _environment = Environment.production;
 	
 	private int _status;
 	
