@@ -46,6 +46,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceHandler;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servizio gestore tipi di risorse (immagini, audio, video, etc..).
@@ -56,6 +61,11 @@ public class ResourceManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
+            if (!this.checkConfig()) {
+            
+                throw new RuntimeException("Verify that ImageMagick is correclty installed.");
+                
+            }
     	ApsSystemUtils.getLogger().config(this.getClass().getName() + 
         		": initialized " + this._resourceTypes.size() + " resource types");
 	}
@@ -390,6 +400,7 @@ public class ResourceManager extends AbstractService
     
     /**
      * Setta il dao in uso al manager.
+     *
      * @param resourceDao Il dao in uso al manager.
      */
 	public void setResourceDAO(IResourceDAO resourceDao) {
@@ -403,6 +414,7 @@ public class ResourceManager extends AbstractService
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
+
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
@@ -417,5 +429,51 @@ public class ResourceManager extends AbstractService
     private IResourceDAO _resourceDao;
     
     private ICategoryManager _categoryManager;
+    
+    private boolean checkConfig() {
+        if (this.isImageMagickEnabled()) {
+            String line;
+            Process p;
+            try {
+                p = Runtime.getRuntime().exec(CMD_FOR_THE_CHECK);
+            } catch (IOException ex) {
+                ApsSystemUtils.logThrowable(ex, this, "checkConfig", " Image Magick is enabled but not installed in the OS " + this.isImageMagickEnabled());
+                return false;
+
+}
+            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            try {
+                while ((line = input.readLine()) != null) {
+                    if (line.contains(STRING_TO_CHECK_ON_OUT)) {
+                        ApsSystemUtils.getLogger().finest(" Image Magick is enabled and installed in the OS " + this.isImageMagickEnabled());
+                        input.close();
+                        return true;
+                    }
+                }
+
+                input.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ResourceManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ApsSystemUtils.getLogger().finest(" Image Magick is enabled but not installed in the OS " + this.isImageMagickEnabled());
+            return false;
+        }
+        ApsSystemUtils.getLogger().finest(" Image Magick is not enabled " + this.isImageMagickEnabled());
+        return true;
+    }
+
+    public void setImageMagickEnabled(boolean imageMagickEnabled) {
+        this._imageMagickEnabled = imageMagickEnabled;
+    }
+    
+    public boolean isImageMagickEnabled() {
+        return _imageMagickEnabled;
+    }
+    
+    private boolean _imageMagickEnabled;
+        
+    private final static String STRING_TO_CHECK_ON_OUT = "ImageMagick";
+    private final static String CMD_FOR_THE_CHECK = "convert -version";
+    
     
 }
