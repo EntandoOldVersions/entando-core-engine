@@ -13,7 +13,7 @@
 	
 	<bean id="databaseAdminAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.admin.DatabaseAction" parent="abstractBaseAction" >
-		<property name="dbInstallerManager" ref="DbInstallerManager"/>
+		<property name="databaseManager" ref="DatabaseManager"/>
 	</bean>
 	
 </beans>

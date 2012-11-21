@@ -26,30 +26,34 @@
 		</property>
 	</bean>
 	
+	<bean id="ComponentManager" class="org.entando.entando.aps.system.init.ComponentManager" 
+		  init-method="init">
+	</bean>
+	
 	<util:list id="entandoPortTableClasses">
-		<value>org.entando.entando.aps.system.orm.model.portdb.Sysconfig</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.Category</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.LocalString</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.PageModel</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.Page</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.ShowletCatalog</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.ShowletConfig</value>
-		<value>org.entando.entando.aps.system.orm.model.portdb.Uniquekeys</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.Sysconfig</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.Category</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.LocalString</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.PageModel</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.Page</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.ShowletCatalog</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.ShowletConfig</value>
+		<value>org.entando.entando.aps.system.init.model.portdb.Uniquekeys</value>
 	</util:list>
 	
 	<util:list id="entandoServTableClasses">
-		<value>org.entando.entando.aps.system.orm.model.servdb.Group</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.Permission</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.Role</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.RolePermissionReference</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.User</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.UserGroupReference</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.UserRoleReference</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.UserShortcut</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.ApiOAuthConsumer</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.ApiOAuthToken</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.ApiCatalogMethod</value>
-		<value>org.entando.entando.aps.system.orm.model.servdb.ApiCatalogService</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.Group</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.Permission</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.Role</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.RolePermissionReference</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.User</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserGroupReference</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserRoleReference</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserShortcut</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.ApiOAuthConsumer</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</value>
 	</util:list>
 	
 	<util:map id="databaseTypeDrivers" map-class="java.util.Properties" value-type="java.util.List">
@@ -89,8 +93,14 @@
 	<util:map id="DefaultSqlDump" map-class="java.util.Properties" >
 	</util:map>
 	
-	<bean id="DbInstallerManager" class="org.entando.entando.aps.system.orm.DbInstallerManager" 
-			init-method="init">
+	<bean id="abstractInitializerManager" class="org.entando.entando.aps.system.init.AbstractInitializerManager" 
+			abstract="true" init-method="init">
+		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
+		<property name="componentManager" ref="ComponentManager" />
+	</bean>
+	
+	<bean id="DatabaseManager" class="org.entando.entando.aps.system.init.DatabaseManager" 
+			parent="abstractInitializerManager">
 		<property name="entandoTableMapping">
 		<map>
 			<entry key="portDataSource"><ref bean="entandoPortTableClasses" /></entry>
@@ -99,16 +109,28 @@
 		</property>
 		<property name="entandoDefaultSqlResources">
 		<map>
-			<entry key="portDataSource"><value>classpath:sql/entandoPort_data_${db.script.default.marker}.sql</value></entry>
-			<entry key="servDataSource"><value>classpath:sql/entandoServ_data_${db.script.default.marker}.sql</value></entry>
+			<entry key="portDataSource"><value>classpath:sql/entandoPort_data_production.sql</value></entry>
+			<entry key="servDataSource"><value>classpath:sql/entandoServ_data_production.sql</value></entry>
+		</map>
+		</property>
+		<property name="testSqlResources">
+		<map>
+			<entry key="portDataSource"><value>classpath:sql/entandoPort_data_test.sql</value></entry>
+			<entry key="servDataSource"><value>classpath:sql/entandoServ_data_test.sql</value></entry>
 		</map>
 		</property>
 		<property name="defaultSqlDump" ref="DefaultSqlDump" />
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
-		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="environment"><value>${db.environment}</value></property>
-		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
 		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
 	</bean>
+	
+	<bean id="InitializerManager" class="org.entando.entando.aps.system.init.InitializerManager" 
+			parent="abstractInitializerManager">
+		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
+		<property name="databaseManager" ref="DatabaseManager" />
+	</bean>
+	
+	<bean class="org.entando.entando.aps.system.init.SystemPostProcessor" />
 	
 </beans>
