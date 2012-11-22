@@ -67,3 +67,6 @@ INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('SEARCH', 'it',
 
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'en', 'No result found. Broaden your search and try again!');
 INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'it', 'Nessun risultato trovato. Imposta dei parametri meno stringenti e prova ancora!');
+
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('EDIT_THIS_CONTENT', 'en', 'Edit');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('EDIT_THIS_CONTENT', 'it', 'Modifica');
