@@ -61,3 +61,9 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'imag
 </Dimensions>
 ');
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'subIndexDir', 'Name of the sub-directory containing content indexing files', 'index');
+
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('SEARCH', 'en', 'Search');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('SEARCH', 'it', 'Cerca');
+
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'en', 'No result found. Broaden your search and try again!');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('LIST_VIEWER_EMPTY', 'it', 'Nessun risultato trovato. Imposta dei parametri meno stringenti e prova ancora!');
