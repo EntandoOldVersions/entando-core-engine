@@ -3,7 +3,7 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>experiment-bundles_with_bootstrap</version>
+	<version>experiment-bundles_with_bootstrap-SNAPSHOT</version>
 	<name>Entando: Core Engine - Experiment Components</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
