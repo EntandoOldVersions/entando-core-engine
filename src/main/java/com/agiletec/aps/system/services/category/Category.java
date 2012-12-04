@@ -73,7 +73,7 @@ public class Category extends TreeNode implements Comparable {
 	 */
 	public String getTitle() {
 		String title = null;
-		if (this._renderingLang != null) {
+		if (this._renderingLang != null && null != this.getTitles().get(this._renderingLang)) {
 			title = (String) this.getTitles().get(this._renderingLang);
 		} else {
 			title = (String) this.getTitles().get(this._defaultLang);
@@ -83,6 +83,7 @@ public class Category extends TreeNode implements Comparable {
 		}
 		return title;
 	}
+	
 	
 	/**
 	 * Restituisce il titolo (comprensivo delle progenitrici) della 
