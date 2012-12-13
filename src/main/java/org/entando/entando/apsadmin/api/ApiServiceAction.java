@@ -256,7 +256,7 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setNamespace(apiService.getMaster().getNamespace());
 			this.setApiParameterValues(apiService.getParameters());
 			this.setDescriptions(apiService.getDescription());
-			this.setPublicService(!apiService.isHidden());
+			this.setHiddenService(apiService.isHidden());
 			this.setActiveService(apiService.isActive());
 			this.setMyEntandoService(apiService.isMyEntando());
 			this.setServiceKey(apiService.getKey());
@@ -292,7 +292,7 @@ public class ApiServiceAction extends AbstractApiAction {
 				}
 			}
 			ApiService service = new ApiService(key, this.getDescriptions(), masterMethod, this.getApiParameterValues(),
-					freeParams, this.getTag(), this.isPublicService(), this.isActiveService(), this.isMyEntandoService());
+					freeParams, this.getTag(), !this.isHiddenService(), this.isActiveService(), this.isMyEntandoService());
 			service.setRequiredAuth(this.getRequiredAuth());
 			if (null != this.getRequiredGroup() && this.getRequiredGroup().trim().length() > 0) {
 				service.setRequiredGroup(this.getRequiredGroup());
@@ -454,14 +454,14 @@ public class ApiServiceAction extends AbstractApiAction {
 	public void setActiveService(boolean activeService) {
 		this._activeService = activeService;
 	}
-
-	public boolean isPublicService() {
-		return _publicService;
+	
+	public boolean isHiddenService() {
+		return _hiddenService;
 	}
-	public void setPublicService(boolean publicService) {
-		this._publicService = publicService;
+	public void setHiddenService(boolean hiddenService) {
+		this._hiddenService = hiddenService;
 	}
-
+	
 	public boolean isMyEntandoService() {
 		return _myEntandoService;
 	}
@@ -571,7 +571,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	private String _serviceKey;
 	private ApsProperties _descriptions;
 	private boolean _activeService;
-	private boolean _publicService;
+	private boolean _hiddenService;
 	private boolean _myEntandoService;
 	
 	private Boolean _requiredAuth;
