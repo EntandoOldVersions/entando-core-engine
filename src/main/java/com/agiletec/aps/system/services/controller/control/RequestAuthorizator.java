@@ -86,7 +86,7 @@ public class RequestAuthorizator extends AbstractControlService {
 					targetUrl.append("?").append(queryString);
 				}
 				Map<String, String> params = new HashMap<String, String>();
-				params.put("returnUrl", URLEncoder.encode(targetUrl.toString(), "ISO-8859-1"));
+				params.put("returnUrl", URLEncoder.encode(targetUrl.toString(), "UTF-8"));
 				retStatus = this.redirect(this.getLoginPageCode(), params, reqCtx);
 			}
 		} catch (Throwable t) {
