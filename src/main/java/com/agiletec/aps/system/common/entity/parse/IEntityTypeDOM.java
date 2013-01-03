@@ -72,4 +72,9 @@ public interface IEntityTypeDOM {
 	
 	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException;
 	
+	public String getXml(IApsEntity entityType) throws ApsSystemException;
+	
+	public IApsEntity extractEntityType(String xml, Class entityClass, 
+			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
+	
 }
