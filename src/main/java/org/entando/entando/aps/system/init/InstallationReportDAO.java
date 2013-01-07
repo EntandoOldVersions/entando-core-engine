@@ -44,17 +44,14 @@ public class InstallationReportDAO extends AbstractDAO {
 			stat.setString(2, InitializerManager.REPORT_CONFIG_ITEM);
 			res = stat.executeQuery();
 			if (res.next()) {
-				System.out.println("C'é il registro");
 				String xml = res.getString(1);
 				report = new SystemInstallationReport(xml);
 			} else {
-				System.out.println("PORTING????");
 				//PORTING
 				report = SystemInstallationReport.getPortingInstance();
 			}
 		} catch (SQLException sqle) {
 			//NOT_AVAILABLE
-			System.out.println("NOT_AVAILABLE");
 			ApsSystemUtils.getLogger().info("Report not available - " + sqle.getMessage());
 			return null;
 		} catch (Throwable t) {

@@ -17,6 +17,7 @@
 */
 package org.entando.entando.aps.system.init;
 
+import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
@@ -49,10 +50,10 @@ public class DatabaseDumper {
 		this.setReport(new DatabaseDumpReport(installationReport));
 	}
 	
-	protected void createBackup(IDatabaseManager.Environment environment) throws ApsSystemException {
+	protected void createBackup(AbstractInitializerManager.Environment environment) throws ApsSystemException {
 		try {
 			long start = System.currentTimeMillis();
-			String subFolder = (IDatabaseManager.Environment.develop.equals(environment)) ? 
+			String subFolder = (AbstractInitializerManager.Environment.develop.equals(environment)) ? 
 					environment.toString() : DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
 			this.setBackupSubFolder(subFolder);
 			this.getReport().setSubFolderName(subFolder);

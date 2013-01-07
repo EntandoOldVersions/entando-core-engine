@@ -34,6 +34,7 @@
 				<datasource name="servDataSource" status="RESTORE" />
 				<datasource name="portDataSource" status="RESTORE" />
 			</data>
+			<postProcess status="NOT_AVAILABLE" />
 		</component>
 		<component name="jacms" date="2012-10-17 22:17:18" status="OK">
 			<schema status="OK">
@@ -53,6 +54,7 @@
 				<datasource name="servDataSource" status="RESTORE" />
 				<datasource name="portDataSource" status="RESTORE" />
 			</data>
+			<postProcess status="NOT_AVAILABLE" />
 		</component>
 		<component name="jpmail" date="2012-10-17 22:26:08" status="OK">
 			<schema status="OK">
@@ -63,6 +65,7 @@
 				<datasource name="servDataSource" status="NOT_AVAILABLE" />
 				<datasource name="portDataSource" status="OK" />
 			</data>
+			<postProcess status="NOT_AVAILABLE" />
 		</component>
 		<component name="jpuserprofile" date="2012-10-17 22:26:08" status="OK">
 			<schema status="OK">
@@ -76,6 +79,7 @@
 				<datasource name="servDataSource" status="OK" />
 				<datasource name="portDataSource" status="OK" />
 			</data>
+			<postProcess status="NOT_AVAILABLE" />
 		</component>
 	</components>
 </reports>

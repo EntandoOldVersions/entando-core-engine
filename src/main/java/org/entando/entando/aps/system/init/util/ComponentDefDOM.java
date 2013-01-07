@@ -23,11 +23,8 @@ import org.jdom.input.SAXBuilder;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import org.entando.entando.aps.system.init.Component;
-import org.entando.entando.aps.system.init.ComponentEnvinroment;
+import java.util.Map;
+import org.entando.entando.aps.system.init.model.Component;
 import org.jdom.Element;
 
 /**
@@ -35,7 +32,7 @@ import org.jdom.Element;
  */
 public class ComponentDefDOM {
     
-    public ComponentDefDOM(String xmlText, String path) throws ApsSystemException {
+    protected ComponentDefDOM(String xmlText, String path) throws ApsSystemException {
         //this.validate(xmlText, definitionPath);
         ApsSystemUtils.getLogger().info("Loading Component from file : " + path);
         this.decodeDOM(xmlText);
@@ -73,76 +70,17 @@ public class ComponentDefDOM {
         }
     }
     */
-    public Component getComponent() {
-        Component component = new Component();
+    protected Component getComponent(Map<String, String> postProcessClasses) {
+        Component component = null;
         try {
             Element rootElement = this._doc.getRootElement();
-			String code = rootElement.getChildText("code");
-			component.setCode(code);
-			Element dependenciesElement = rootElement.getChild("dependencies");
-			if (null != dependenciesElement) {
-				List<Element> dependenciesElementd = dependenciesElement.getChildren("code");
-				for (int i = 0; i < dependenciesElementd.size(); i++) {
-					Element element = dependenciesElementd.get(i);
-					component.addDependency(element.getText());
-				}
-			}
-			Element installationElement = rootElement.getChild("installation");
-			if (null != installationElement) {
-				Element tableMappingElement = installationElement.getChild("tableMapping");
-				this.extractTableMapping(tableMappingElement, component);
-				
-				List<Element> enviromentElements = installationElement.getChildren("environment");
-				if (enviromentElements.size() > 0) {
-					component.setEnvironments(new HashMap<String, ComponentEnvinroment>());
-				}
-				for (int i = 0; i < enviromentElements.size(); i++) {
-					Element environmentElement = enviromentElements.get(i);
-					this.extractEnvinroment(environmentElement, component);
-				}
-				//TODO COMPLETE WITH post Process
-			}
+			component = new Component(rootElement, postProcessClasses);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getComponent", "Error loading component");
         }
         return component;
     }
 	
-	private void extractTableMapping(Element tableMappingElement, Component component) {
-		if (null != tableMappingElement) {
-			component.setTableMapping(new HashMap<String, List<String>>());
-			List<Element> datasourceElements = tableMappingElement.getChildren("datasource");
-			for (int i = 0; i < datasourceElements.size(); i++) {
-				Element datasourceElement = datasourceElements.get(i);
-				String datasourceName = datasourceElement.getAttributeValue("name");
-				List<String> tableMapping = new ArrayList<String>();
-				List<Element> tableClasses = datasourceElement.getChildren("class");
-				for (int j = 0; j < tableClasses.size(); j++) {
-					tableMapping.add(tableClasses.get(j).getText());
-				}
-				if (tableMapping.size() > 0) {
-					component.getTableMapping().put(datasourceName, tableMapping);
-				}
-			}
-		}
-	}
-	
-	private void extractEnvinroment(Element environmentElement, Component component) {
-		String environmentCode = environmentElement.getAttributeValue("code");
-		ComponentEnvinroment envinroment = new ComponentEnvinroment(environmentCode);
-		Element defaultSqlResourcesElement = environmentElement.getChild("defaultSqlResources");
-		if (null != defaultSqlResourcesElement) {
-			List<Element> datasourceElements = defaultSqlResourcesElement.getChildren("datasource");
-			for (int j = 0; j < datasourceElements.size(); j++) {
-				Element datasourceElement = datasourceElements.get(j);
-				String datasourceName = datasourceElement.getAttributeValue("name");
-				String path = datasourceElement.getText().trim();
-				envinroment.getDefaultSqlResourcesPaths().put(datasourceName, path);
-			}
-		}
-		component.getEnvironments().put(environmentCode, envinroment);
-	}
-    
     private void decodeDOM(String xmlText) throws ApsSystemException {
         SAXBuilder builder = new SAXBuilder();
         builder.setValidation(false);
