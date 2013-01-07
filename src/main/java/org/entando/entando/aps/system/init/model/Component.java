@@ -53,9 +53,7 @@ public class Component implements Comparable<Component> {
 					Element environmentElement = enviromentElements.get(i);
 					ComponentEnvinroment envinroment = 
 							new ComponentEnvinroment(environmentElement, postProcessClasses);
-					//this.extractEnvinroment(environmentElement);
 					this.getEnvironments().put(envinroment.getCode(), envinroment);
-					//TODO COMPLETE WITH post Process
 				}
 			}
         } catch (Throwable t) {

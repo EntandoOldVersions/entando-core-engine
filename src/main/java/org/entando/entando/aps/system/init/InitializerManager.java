@@ -20,12 +20,12 @@ package org.entando.entando.aps.system.init;
 import org.entando.entando.aps.system.init.model.ComponentEnvinroment;
 import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
+import org.entando.entando.aps.system.init.model.IPostProcess;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.springframework.beans.BeansException;
@@ -60,7 +60,6 @@ public class InitializerManager extends AbstractInitializerManager {
 		if (!this.isCheckOnStartup()) {
 			return;
 		}
-		System.out.println("*******************************");
 		SystemInstallationReport report = null;
 		try {
 			report = this.extractReport();
@@ -75,7 +74,7 @@ public class InitializerManager extends AbstractInitializerManager {
 				ComponentEnvinroment componentEnvinroment = (null != component.getEnvironments()) ? 
 						component.getEnvironments().get(this.getEnvironment().toString()) :
 						null;
-				List<IPostProcessor> postProcesses = (null != componentEnvinroment) ? componentEnvinroment.getPostProcesses() : null;
+				List<IPostProcess> postProcesses = (null != componentEnvinroment) ? componentEnvinroment.getPostProcesses() : null;
 				if (null != postProcesses && !postProcesses.isEmpty()) {
 					//TODO
 					componentReport.setPostProcessStatus(SystemInstallationReport.Status.OK);
@@ -92,8 +91,6 @@ public class InitializerManager extends AbstractInitializerManager {
 				this.saveReport(report);
 			}
 		}
-		System.out.println("POST PROCESS");
-		System.out.println("*******************************");
 	}
 	
 	//-------------------- REPORT -------- START

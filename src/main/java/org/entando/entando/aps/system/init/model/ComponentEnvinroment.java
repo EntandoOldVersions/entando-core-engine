@@ -19,10 +19,12 @@ package org.entando.entando.aps.system.init.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.entando.entando.aps.system.init.IPostProcessor;
+
 import org.jdom.Element;
 
 import org.springframework.core.io.Resource;
@@ -47,9 +49,40 @@ public class ComponentEnvinroment {
 					this.getDefaultSqlResourcesPaths().put(datasourceName, path);
 				}
 			}
+			Element postProcessesElement = environmentElement.getChild("postProcesses");
+			if (null != postProcessesElement) {
+				List<Element> postProcessElements = postProcessesElement.getChildren();
+				if (null != postProcessElements && !postProcessElements.isEmpty()) {
+					for (int i = 0; i < postProcessElements.size(); i++) {
+						Element postProcessElement = postProcessElements.get(i);
+						this.createPostProcess(postProcessElement, postProcessClasses);
+					}
+				}
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "ComponentEnvinroment");
 			throw new ApsSystemException("Error creating ComponentEnvinroment", t);
+		}
+	}
+	
+	private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses) throws ApsSystemException {
+		try {
+			String name = postProcessElement.getName();
+			String className = postProcessClasses.get(name);
+			if (null != className) {
+				Class postProcessClass = Class.forName(className);
+				IPostProcess postProcess = (IPostProcess) postProcessClass.newInstance();
+				postProcess.createConfig(postProcessElement);
+				if (null == this.getPostProcesses()) {
+					this.setPostProcesses(new ArrayList<IPostProcess>());
+				}
+				this.getPostProcesses().add(postProcess);
+			} else {
+				ApsSystemUtils.getLogger().severe("Null post process class for process name '" + name + "'");
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "createPostProcess");
+			throw new ApsSystemException("Error creating Post Process", t);
 		}
 	}
 	
@@ -76,16 +109,16 @@ public class ComponentEnvinroment {
 		this._defaultSqlResourcesPaths = defaultSqlResourcesPaths;
 	}
 	
-	public List<IPostProcessor> getPostProcesses() {
+	public List<IPostProcess> getPostProcesses() {
 		return _postProcesses;
 	}
-	protected void setPostProcesses(List<IPostProcessor> postProcesses) {
+	protected void setPostProcesses(List<IPostProcess> postProcesses) {
 		this._postProcesses = postProcesses;
 	}
 	
 	private String _code;
 	private Map<String, String> _defaultSqlResourcesPaths = new HashMap<String, String>();
 	
-	private List<IPostProcessor> _postProcesses;
+	private List<IPostProcess> _postProcesses;
 	
 }

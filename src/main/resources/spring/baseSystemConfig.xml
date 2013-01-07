@@ -30,7 +30,7 @@
 			init-method="init">
 		<property name="postProcessClasses">
 		<map>
-			<entry key="selfRestCall"><value>org.entando.entando.aps.system.init.SelfRestCallPostProcess</value></entry>
+			<entry key="selfRestCall"><value>org.entando.entando.aps.system.init.model.SelfRestCallPostProcess</value></entry>
 		</map>
 		</property>
 	</bean>
