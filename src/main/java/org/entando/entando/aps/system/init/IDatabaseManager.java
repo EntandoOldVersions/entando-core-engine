@@ -46,6 +46,4 @@ public interface IDatabaseManager {
 	
 	public static final String DUMP_REPORT_FILE_NAME = "dumpReport.xml";
 	
-	public enum Environment {test, develop, production}
-	
 }

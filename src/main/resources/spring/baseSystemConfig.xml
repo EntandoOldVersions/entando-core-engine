@@ -27,7 +27,12 @@
 	</bean>
 	
 	<bean id="ComponentManager" class="org.entando.entando.aps.system.init.ComponentManager" 
-		  init-method="init">
+			init-method="init">
+		<property name="postProcessClasses">
+		<map>
+			<entry key="selfRestCall"><value>org.entando.entando.aps.system.init.SelfRestCallPostProcess</value></entry>
+		</map>
+		</property>
 	</bean>
 	
 	<util:list id="entandoPortTableClasses">
@@ -96,6 +101,7 @@
 	<bean id="abstractInitializerManager" class="org.entando.entando.aps.system.init.AbstractInitializerManager" 
 			abstract="true" init-method="init">
 		<property name="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></property>
+		<property name="environment"><value>${db.environment}</value></property>
 		<property name="componentManager" ref="ComponentManager" />
 	</bean>
 	
@@ -121,14 +127,20 @@
 		</property>
 		<property name="defaultSqlDump" ref="DefaultSqlDump" />
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
-		<property name="environment"><value>${db.environment}</value></property>
 		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
 	</bean>
+	
+	<bean id="SelfRestCaller" class="org.entando.entando.aps.system.init.SelfRestCaller" />
 	
 	<bean id="InitializerManager" class="org.entando.entando.aps.system.init.InitializerManager" 
 			parent="abstractInitializerManager">
 		<property name="checkOnStartup"><value>${db.startup.check}</value></property>
 		<property name="databaseManager" ref="DatabaseManager" />
+		<property name="postProcessors">
+		<map>
+			<entry key="selfRestCall"><ref bean="SelfRestCaller" /></entry>
+		</map>
+		</property>
 	</bean>
 	
 	<bean class="org.entando.entando.aps.system.init.SystemPostProcessor" />

@@ -17,6 +17,8 @@
 */
 package org.entando.entando.aps.system.init;
 
+import org.entando.entando.aps.system.init.model.ComponentEnvinroment;
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.DatabaseDumpReport;
@@ -51,7 +53,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	}
 	
 	@Override
-	public void installDatabase(SystemInstallationReport report) throws Exception {
+	public SystemInstallationReport installDatabase(SystemInstallationReport report) throws Exception {
 		String lastLocalBackupFolder = null;
 		if (null == report) {
 			report = SystemInstallationReport.getInstance();
@@ -94,9 +96,10 @@ public class DatabaseManager extends AbstractInitializerManager
 				report.setUpdated();
 				report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
 			}
-			ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
+			ApsSystemUtils.logThrowable(t, this, "installDatabase", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
 		}
+		return report;
 	}
 	
 	private void initMasterDatabases(SystemInstallationReport report) throws ApsSystemException {
@@ -709,13 +712,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
 	
-	public Environment getEnvironment() {
-		return _environment;
-	}
-	public void setEnvironment(Environment environment) {
-		this._environment = environment;
-	}
-	
 	@Override
 	public int getStatus() {
 		return _status;
@@ -736,8 +732,6 @@ public class DatabaseManager extends AbstractInitializerManager
 	private Map<String, Resource> _entandoDefaultSqlResources;
 	private Map<String, Resource> _testSqlResources;
 	private Map<String, Resource> _defaultSqlDump;
-	
-	private Environment _environment = Environment.production;
 	
 	private int _status;
 	

@@ -17,10 +17,12 @@
 */
 package org.entando.entando.aps.system.init;
 
+import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.aps.system.init.util.ComponentLoader;
 
@@ -36,7 +38,8 @@ public class ComponentManager implements IComponentManager {
 	
     protected void loadComponents() throws ApsSystemException {
         try {
-			ComponentLoader loader = new ComponentLoader(this.getLocationPatterns());
+			ComponentLoader loader = 
+					new ComponentLoader(this.getLocationPatterns(), this.getPostProcessClasses());
 			this.setComponents(loader.getComponents());
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadComponents", "Error loading components definitions");
@@ -66,9 +69,17 @@ public class ComponentManager implements IComponentManager {
 		this._components = components;
 	}
 	
+	protected Map<String, String> getPostProcessClasses() {
+		return _postProcessClasses;
+	}
+	public void setPostProcessClasses(Map<String, String> postProcessClasses) {
+		this._postProcessClasses = postProcessClasses;
+	}
+	
 	private String _locationPatterns;
 	
 	private List<Component> _components;
+	private Map<String, String> _postProcessClasses;
 	
 	public static final String DEFAULT_LOCATION_PATTERN = "classpath*:component/**/**component.xml";
 }

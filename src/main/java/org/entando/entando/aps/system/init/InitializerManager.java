@@ -17,12 +17,19 @@
 */
 package org.entando.entando.aps.system.init;
 
+import org.entando.entando.aps.system.init.model.ComponentEnvinroment;
+import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.List;
+import java.util.Map;
 
 import javax.sql.DataSource;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.FatalBeanException;
 
 /**
  * @author E.Santoboni
@@ -30,7 +37,6 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 public class InitializerManager extends AbstractInitializerManager {
 	
 	public void init() throws Exception {
-		System.out.println(this.getClass() + " - INIT");
 		if (!this.isCheckOnStartup()) {
 			ApsSystemUtils.getLogger().config(this.getClass().getName() + ": short init executed");
 			return;
@@ -38,7 +44,7 @@ public class InitializerManager extends AbstractInitializerManager {
 		SystemInstallationReport report = null;
 		try {
 			report = this.extractReport();
-			((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report);
+			report = ((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
@@ -50,15 +56,49 @@ public class InitializerManager extends AbstractInitializerManager {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
 	}
 	
-	protected void executePostInitProcesses() {
+	protected void executePostInitProcesses() throws BeansException {
+		if (!this.isCheckOnStartup()) {
+			return;
+		}
 		System.out.println("*******************************");
+		SystemInstallationReport report = null;
+		try {
+			report = this.extractReport();
+			List<Component> components = this.getComponentManager().getCurrentComponents();
+			for (int i = 0; i < components.size(); i++) {
+				Component component = components.get(i);
+				ComponentInstallationReport componentReport = report.getComponentReport(component.getCode(), false);
+				SystemInstallationReport.Status postProcessStatus = componentReport.getPostProcessStatus();
+				if (!postProcessStatus.equals(SystemInstallationReport.Status.INIT)) {
+					continue;
+				}
+				ComponentEnvinroment componentEnvinroment = (null != component.getEnvironments()) ? 
+						component.getEnvironments().get(this.getEnvironment().toString()) :
+						null;
+				List<IPostProcessor> postProcesses = (null != componentEnvinroment) ? componentEnvinroment.getPostProcesses() : null;
+				if (null != postProcesses && !postProcesses.isEmpty()) {
+					//TODO
+					componentReport.setPostProcessStatus(SystemInstallationReport.Status.OK);
+				} else {
+					componentReport.setPostProcessStatus(SystemInstallationReport.Status.NOT_AVAILABLE);
+				}
+				report.setUpdated();
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "executePostInitProcesses", "Error while executing post processes");
+			throw new FatalBeanException("Error while executing post processes", t);
+		} finally {
+			if (null != report && report.isUpdated()) {
+				this.saveReport(report);
+			}
+		}
 		System.out.println("POST PROCESS");
 		System.out.println("*******************************");
 	}
 	
 	//-------------------- REPORT -------- START
 	
-	private void saveReport(SystemInstallationReport report) throws ApsSystemException {
+	private void saveReport(SystemInstallationReport report) throws BeansException {
 		if (null == report || report.getReports().isEmpty()) {
 			return;
 		}
@@ -68,8 +108,8 @@ public class InitializerManager extends AbstractInitializerManager {
 			dao.setDataSource(dataSource);
 			dao.saveConfigItem(report.toXml(), this.getConfigVersion());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateReport");
-			throw new ApsSystemException("Error updating report", t);
+			ApsSystemUtils.logThrowable(t, this, "saveReport");
+			throw new FatalBeanException("Error saving report", t);
 		}
 	}
 	
@@ -78,6 +118,13 @@ public class InitializerManager extends AbstractInitializerManager {
 	}
 	public void setCheckOnStartup(boolean checkOnStartup) {
 		this._checkOnStartup = checkOnStartup;
+	}
+	
+	public Map<String, IPostProcessor> getPostProcessors() {
+		return _postProcessors;
+	}
+	public void setPostProcessors(Map<String, IPostProcessor> postProcessors) {
+		this._postProcessors = postProcessors;
 	}
 	
 	protected IComponentManager getComponentManager() {
@@ -95,6 +142,8 @@ public class InitializerManager extends AbstractInitializerManager {
 	}
 	
 	private boolean _checkOnStartup;
+	
+	private Map<String, IPostProcessor> _postProcessors;
 	
 	private IComponentManager _componentManager;
 	private IDatabaseManager _databaseManager;

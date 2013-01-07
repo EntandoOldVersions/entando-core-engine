@@ -24,9 +24,10 @@ import com.agiletec.aps.util.FileTextReader;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.entando.entando.aps.system.init.Component;
+import org.entando.entando.aps.system.init.model.Component;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -36,12 +37,12 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  */
 public class ComponentLoader {
 	
-	public ComponentLoader(String locationPatterns) throws ApsSystemException {
+	public ComponentLoader(String locationPatterns, Map<String, String> postProcessClasses) throws ApsSystemException {
         try {
             StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
             while (tokenizer.hasMoreTokens()) {
                 String locationPattern = tokenizer.nextToken().trim();
-                this.loadComponent(locationPattern);
+                this.loadComponent(locationPattern, postProcessClasses);
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "ComponentLoader", "Error loading component definitions");
@@ -49,7 +50,7 @@ public class ComponentLoader {
         }
     }
     
-    private void loadComponent(String locationPattern) throws Throwable {
+    private void loadComponent(String locationPattern, Map<String, String> postProcessClasses) throws Throwable {
 		PathMatchingResourcePatternResolver resolver = 
 					new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
@@ -62,7 +63,10 @@ public class ComponentLoader {
                 is = resource.getInputStream();
                 String xml = FileTextReader.getText(is);
                 dom = new ComponentDefDOM(xml, path);
-				this.getComponents().add(dom.getComponent());
+				Component component = dom.getComponent(postProcessClasses);
+				if (null != component) {
+					this.getComponents().add(component);
+				}
             } catch (Throwable t) {
                 ApsSystemUtils.logThrowable(t, this, "ComponentLoader", 
                         "Error loading Component definition by location Pattern '" + path + "'");

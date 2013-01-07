@@ -20,6 +20,7 @@ package org.entando.entando.aps.system.init.model;
 import com.agiletec.aps.util.DateConverter;
 
 import java.util.Date;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 
 import org.jdom.Element;
 
@@ -44,6 +45,15 @@ public class ComponentInstallationReport {
 		if (null != dataElement) {
 			this.setDataReport(new DataInstallationReport(dataElement));
 		}
+		Element postProcessElement = element.getChild(SystemInstallationReport.COMPONENT_POST_PROCESS_ELEMENT);
+		if (null != postProcessElement) {
+			String postProcessStatusString = postProcessElement.getAttributeValue(SystemInstallationReport.STATUS_ATTRIBUTE);
+			if (null != postProcessStatusString) {
+				SystemInstallationReport.Status postProcessStatus = 
+						Enum.valueOf(SystemInstallationReport.Status.class, postProcessStatusString.toUpperCase());
+				this.setPostProcessStatus(postProcessStatus);
+			}
+		}
 	}
 	
 	public static ComponentInstallationReport getInstance(String componentName) {
@@ -67,6 +77,11 @@ public class ComponentInstallationReport {
 		element.addContent(schemaElement);
 		Element dataElement = this.getDataReport().toJdomElement();
 		element.addContent(dataElement);
+		if (null != this.getPostProcessStatus()) {
+			Element postProcessElement = new Element(SystemInstallationReport.COMPONENT_POST_PROCESS_ELEMENT);
+			postProcessElement.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getPostProcessStatus().toString());
+			element.addContent(postProcessElement);
+		}
 		return element;
 	}
 	
@@ -74,10 +89,13 @@ public class ComponentInstallationReport {
 		SystemInstallationReport.Status schemaStatus = this.getSchemaReport().getStatus();
 		SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
 		SystemInstallationReport.Status incomplete = SystemInstallationReport.Status.INCOMPLETE;
+		SystemInstallationReport.Status notAvailable = SystemInstallationReport.Status.NOT_AVAILABLE;
 		SystemInstallationReport.Status ok = SystemInstallationReport.Status.OK;
-		if (schemaStatus.equals(incomplete) || dataStatus.equals(incomplete)) {
+		SystemInstallationReport.Status postProcessStatus = (null != this.getPostProcessStatus()) ? this.getPostProcessStatus() : notAvailable;
+		boolean postProcessOk = (postProcessStatus.equals(ok) || postProcessStatus.equals(notAvailable));
+		if (schemaStatus.equals(incomplete) || dataStatus.equals(incomplete) || !postProcessOk) {
 			return SystemInstallationReport.Status.INCOMPLETE;
-		} else if (schemaStatus.equals(ok) && dataStatus.equals(ok)) {
+		} else if (schemaStatus.equals(ok) && dataStatus.equals(ok) && postProcessOk) {
 			return SystemInstallationReport.Status.OK;
 		} else {
 			return SystemInstallationReport.Status.INIT;
@@ -98,6 +116,16 @@ public class ComponentInstallationReport {
 		this._date = date;
 	}
 	
+	public Status getPostProcessStatus() {
+		if ("entandoCore".equals(this.getComponentName())) {
+			return Status.NOT_AVAILABLE;
+		}
+		return _postProcessStatus;
+	}
+	public void setPostProcessStatus(Status postProcessStatus) {
+		this._postProcessStatus = postProcessStatus;
+	}
+	
 	public DatabaseInstallationReport getSchemaReport() {
 		return _schemaReport;
 	}
@@ -114,6 +142,7 @@ public class ComponentInstallationReport {
 	
 	private String _componentName;
 	private Date _date;
+	private SystemInstallationReport.Status _postProcessStatus = SystemInstallationReport.Status.INIT;
 	
 	private DatabaseInstallationReport _schemaReport;
 	private DataInstallationReport _dataReport;

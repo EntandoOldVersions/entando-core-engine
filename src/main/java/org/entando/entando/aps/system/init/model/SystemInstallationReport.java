@@ -93,6 +93,7 @@ public class SystemInstallationReport {
 	public ComponentInstallationReport addReport(String component) {
 		ComponentInstallationReport report = ComponentInstallationReport.getInstance(component);//new ComponentReport(component, new Date(), this.getStatus());
 		this.getReports().add(report);
+		this.setUpdated();
 		return report;
 	}
 	
@@ -193,6 +194,7 @@ public class SystemInstallationReport {
 	protected static final String LAST_UPDATE_ELEMENT = "lastupdate";
 	protected static final String COMPONENTS_ELEMENT = "components";
 	protected static final String COMPONENT_ELEMENT = "component";
+	protected static final String COMPONENT_POST_PROCESS_ELEMENT = "postProcess";
 	protected static final String NAME_ATTRIBUTE = "name";
 	protected static final String DATE_ATTRIBUTE = "date";
 	protected static final String DATA_ELEMENT = "data";

@@ -1,7 +1,20 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando software.
+* Entando is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.aps.system.init;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -13,7 +26,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
- * @author eu
+ * @author E.Santoboni
  */
 public abstract class AbstractInitializerManager implements BeanFactoryAware {
 	
@@ -38,6 +51,13 @@ public abstract class AbstractInitializerManager implements BeanFactoryAware {
 		this._configVersion = configVersion;
 	}
 	
+	protected Environment getEnvironment() {
+		return _environment;
+	}
+	public void setEnvironment(Environment environment) {
+		this._environment = environment;
+	}
+	
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
 	}
@@ -47,6 +67,10 @@ public abstract class AbstractInitializerManager implements BeanFactoryAware {
 	}
 	
 	private String _configVersion;
+	private Environment _environment = Environment.production;
+	
 	private BeanFactory _beanFactory;
+	
+	public enum Environment {test, develop, production}
 	
 }

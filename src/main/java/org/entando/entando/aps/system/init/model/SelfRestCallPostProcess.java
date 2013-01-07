@@ -15,17 +15,16 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.init;
-
-import org.entando.entando.aps.system.init.model.Component;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.List;
+package org.entando.entando.aps.system.init.model;
 
 /**
  * @author E.Santoboni
  */
-public interface IComponentManager {
+public class SelfRestCallPostProcess implements IPostProcess {
 	
-	public List<Component> getCurrentComponents() throws ApsSystemException;
+	@Override
+	public String getCode() {
+		return "selfRestCall";
+	}
 	
 }
