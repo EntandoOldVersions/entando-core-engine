@@ -26,6 +26,6 @@ public interface IPostProcess {
 	
 	public String getCode();
 	
-	public void createConfig(Element element);
+	public void createConfig(Element element, String componentConfigPath);
 	
 }

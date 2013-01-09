@@ -58,7 +58,7 @@ public class ComponentLoader {
 		for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
             InputStream is = null;
-            String path = resource.getURI().getPath();
+            String path = resource.getURL().getPath();
             try {
                 is = resource.getInputStream();
                 String xml = FileTextReader.getText(is);

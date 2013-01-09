@@ -18,6 +18,7 @@
 package org.entando.entando.aps.system.init.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.util.FileTextReader;
 import java.util.List;
 import java.util.Properties;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
@@ -67,7 +68,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 	}
 	
 	@Override
-	public void createConfig(Element element) {
+	public void createConfig(Element element, String componentConfigPath) {
 		try {
 			this.setLangCode(element.getAttributeValue("langCode"));
 			this.setNamespace(element.getAttributeValue("namespace"));
@@ -109,7 +110,21 @@ public class SelfRestCallPostProcess implements IPostProcess {
 					}
 				}
 			}
-			System.out.println("AAAAAAAAAAAAAAAAAAAAAA");
+			Element contentBodyElement = element.getChild("contentBody");
+			if (null != contentBodyElement) {
+				String text = contentBodyElement.getText();
+				if (null == text || text.trim().length() == 0) {
+					String filename = contentBodyElement.getAttributeValue("file");
+					if (null != filename) {
+						int index = componentConfigPath.lastIndexOf("/");
+						String path = componentConfigPath.substring(0, index+1) + filename;
+						text = FileTextReader.getText(path);
+					}
+				}
+				if (null != text) {
+					this.setContentBody(text);
+				}
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createConfig");
 			throw new RuntimeException("Error creating Self rest call", t);

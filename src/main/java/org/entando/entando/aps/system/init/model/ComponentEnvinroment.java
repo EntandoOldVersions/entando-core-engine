@@ -35,7 +35,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  */
 public class ComponentEnvinroment {
 	
-	public ComponentEnvinroment(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
+	public ComponentEnvinroment(Element environmentElement, Map<String, String> postProcessClasses, String configPath) throws Throwable {
 		try {
 			String environmentCode = environmentElement.getAttributeValue("code");
 			this.setCode(environmentCode);
@@ -45,8 +45,8 @@ public class ComponentEnvinroment {
 				for (int j = 0; j < datasourceElements.size(); j++) {
 					Element datasourceElement = datasourceElements.get(j);
 					String datasourceName = datasourceElement.getAttributeValue("name");
-					String path = datasourceElement.getText().trim();
-					this.getDefaultSqlResourcesPaths().put(datasourceName, path);
+					String sqlResourcePath = datasourceElement.getText().trim();
+					this.getDefaultSqlResourcesPaths().put(datasourceName, sqlResourcePath);
 				}
 			}
 			Element postProcessesElement = environmentElement.getChild("postProcesses");
@@ -55,7 +55,7 @@ public class ComponentEnvinroment {
 				if (null != postProcessElements && !postProcessElements.isEmpty()) {
 					for (int i = 0; i < postProcessElements.size(); i++) {
 						Element postProcessElement = postProcessElements.get(i);
-						this.createPostProcess(postProcessElement, postProcessClasses);
+						this.createPostProcess(postProcessElement, postProcessClasses, configPath);
 					}
 				}
 			}
@@ -65,14 +65,14 @@ public class ComponentEnvinroment {
 		}
 	}
 	
-	private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses) throws ApsSystemException {
+	private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses, String configPath) throws ApsSystemException {
 		try {
 			String name = postProcessElement.getName();
 			String className = postProcessClasses.get(name);
 			if (null != className) {
 				Class postProcessClass = Class.forName(className);
 				IPostProcess postProcess = (IPostProcess) postProcessClass.newInstance();
-				postProcess.createConfig(postProcessElement);
+				postProcess.createConfig(postProcessElement, configPath);
 				if (null == this.getPostProcesses()) {
 					this.setPostProcesses(new ArrayList<IPostProcess>());
 				}
