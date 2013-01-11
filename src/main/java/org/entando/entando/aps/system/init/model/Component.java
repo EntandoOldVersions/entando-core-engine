@@ -29,7 +29,7 @@ import org.jdom.Element;
  */
 public class Component implements Comparable<Component> {
 	
-	public Component(Element rootElement, Map<String, String> postProcessClasses, String configPath) throws Throwable {
+	public Component(Element rootElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {
 			String code = rootElement.getChildText("code");
 			this.setCode(code);
@@ -52,7 +52,7 @@ public class Component implements Comparable<Component> {
 				for (int i = 0; i < enviromentElements.size(); i++) {
 					Element environmentElement = enviromentElements.get(i);
 					ComponentEnvinroment envinroment = 
-							new ComponentEnvinroment(environmentElement, postProcessClasses, configPath);
+							new ComponentEnvinroment(environmentElement, postProcessClasses);
 					this.getEnvironments().put(envinroment.getCode(), envinroment);
 				}
 			}

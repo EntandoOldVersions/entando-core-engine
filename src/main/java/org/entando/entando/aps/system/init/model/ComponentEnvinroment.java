@@ -35,7 +35,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  */
 public class ComponentEnvinroment {
 	
-	public ComponentEnvinroment(Element environmentElement, Map<String, String> postProcessClasses, String configPath) throws Throwable {
+	public ComponentEnvinroment(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {
 			String environmentCode = environmentElement.getAttributeValue("code");
 			this.setCode(environmentCode);
@@ -55,7 +55,7 @@ public class ComponentEnvinroment {
 				if (null != postProcessElements && !postProcessElements.isEmpty()) {
 					for (int i = 0; i < postProcessElements.size(); i++) {
 						Element postProcessElement = postProcessElements.get(i);
-						this.createPostProcess(postProcessElement, postProcessClasses, configPath);
+						this.createPostProcess(postProcessElement, postProcessClasses);
 					}
 				}
 			}
@@ -65,14 +65,14 @@ public class ComponentEnvinroment {
 		}
 	}
 	
-	private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses, String configPath) throws ApsSystemException {
+	private void createPostProcess(Element postProcessElement, Map<String, String> postProcessClasses) throws ApsSystemException {
 		try {
 			String name = postProcessElement.getName();
 			String className = postProcessClasses.get(name);
 			if (null != className) {
 				Class postProcessClass = Class.forName(className);
 				IPostProcess postProcess = (IPostProcess) postProcessClass.newInstance();
-				postProcess.createConfig(postProcessElement, configPath);
+				postProcess.createConfig(postProcessElement);
 				if (null == this.getPostProcesses()) {
 					this.setPostProcesses(new ArrayList<IPostProcess>());
 				}

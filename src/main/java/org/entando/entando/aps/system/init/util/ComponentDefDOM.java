@@ -35,7 +35,6 @@ public class ComponentDefDOM {
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
         //this.validate(xmlText, definitionPath);
         ApsSystemUtils.getLogger().info("Loading Component from file : " + configPath);
-		this.setConfigPath(configPath);
         this.decodeDOM(xmlText);
     }
     /*
@@ -75,7 +74,7 @@ public class ComponentDefDOM {
         Component component = null;
         try {
             Element rootElement = this._doc.getRootElement();
-			component = new Component(rootElement, postProcessClasses, this.getConfigPath());
+			component = new Component(rootElement, postProcessClasses);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getComponent", "Error loading component");
         }
@@ -94,14 +93,6 @@ public class ComponentDefDOM {
         }
     }
 	
-	protected String getConfigPath() {
-		return _configPath;
-	}
-	protected void setConfigPath(String configPath) {
-		this._configPath = configPath;
-	}
-	
     private Document _doc;
-	private String _configPath;
     
 }
