@@ -27,8 +27,6 @@ public class SystemPostProcessor implements BeanPostProcessor {
 	
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		//throw new UnsupportedOperationException("Not supported yet.");
-		//System.out.println(this.getClass() + " - postProcessBeforeInitialization - " + bean + " - " + beanName);
 		//Nothing to do
 		return bean;
 	}
@@ -38,8 +36,6 @@ public class SystemPostProcessor implements BeanPostProcessor {
 		if (bean instanceof InitializerManager) {
 			((InitializerManager) bean).executePostInitProcesses();
 		}
-		//throw new UnsupportedOperationException("Not supported yet.");
-		//System.out.println(this.getClass() + " - postProcessAfterInitialization - " + bean + " - " + beanName);
 		return bean;
 	}
 	
