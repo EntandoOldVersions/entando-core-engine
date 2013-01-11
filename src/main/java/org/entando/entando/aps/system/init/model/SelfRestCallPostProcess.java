@@ -19,10 +19,18 @@ package org.entando.entando.aps.system.init.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.FileTextReader;
+
+import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
+import javax.ws.rs.core.MediaType;
+
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
+
 import org.jdom.Element;
+
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * @author E.Santoboni
@@ -30,36 +38,30 @@ import org.jdom.Element;
 public class SelfRestCallPostProcess implements IPostProcess {
 	
 	/*
-		<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
-					  method="POST" expected="202" printresponse="true" >
-			<query>
-				<!--
-				<parameter name="param1" value="param1Value" />
-				<parameter name="param2" value="param2Value" />
-				<parameter name="param3" value="param3Value" />
-				-->
-			</query>
-			<headers>
-				<header name="Content-Type" value="application/xml" />
-			</headers>
-			<contentBody file="ANN.xml" />
-		</selfRestCall>
-		<!--
-		<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
-					  method="POST" expected="202" printresponse="true" >
-			<query>
-				<parameter name="param1" value="param1Value" />
-				<parameter name="param2" value="param2Value" />
-				<parameter name="param3" value="param3Value" />
-			</query>
-			<headers>
-				<header name="Content-Type" value="application/xml" />
-			</headers>
-			<contentBody>
-				RequestBody.....
-			</contentBody>
-		</selfRestCall>
-		-->
+	<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
+			method="POST" expected="202" printresponse="true" >
+		<query>
+			<!--
+			<parameter name="param1" value="param1Value" />
+			<parameter name="param2" value="param2Value" />
+			<parameter name="param3" value="param3Value" />
+			-->
+		</query>
+		<contentBody content-type="application/xml" path="classpath:component/plugins/jacms/postprocess/ANN.xml" />
+	</selfRestCall>
+	<!--
+	<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
+				  method="POST" expected="202" printresponse="true" >
+		<query>
+			<parameter name="param1" value="param1Value" />
+			<parameter name="param2" value="param2Value" />
+			<parameter name="param3" value="param3Value" />
+		</query>
+		<contentBody content-type="application/xml">
+			RequestBody.....
+		</contentBody>
+	</selfRestCall>
+	-->
 	*/
 	
 	@Override
@@ -68,7 +70,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 	}
 	
 	@Override
-	public void createConfig(Element element, String componentConfigPath) {
+	public void createConfig(Element element) {
 		try {
 			this.setLangCode(element.getAttributeValue("langCode"));
 			this.setNamespace(element.getAttributeValue("namespace"));
@@ -86,18 +88,6 @@ public class SelfRestCallPostProcess implements IPostProcess {
 				} catch (Exception e) {}
 			}
 			this.setPrintResponse(Boolean.parseBoolean(element.getAttributeValue("printresponse")));
-			Element headerParametersElement = element.getChild("headers");
-			if (null != headerParametersElement) {
-				List<Element> headerParameterElements = headerParametersElement.getChildren("header");
-				for (int i = 0; i < headerParameterElements.size(); i++) {
-					Element headerParameterElement = headerParameterElements.get(i);
-					String value = headerParameterElement.getAttributeValue("value");
-					String name = headerParameterElement.getAttributeValue("name");
-					if (null != name && null != value) {
-						this.getHeaderParameters().put(name, value);
-					}
-				}
-			}
 			Element parametersElement = element.getChild("query");
 			if (null != parametersElement) {
 				List<Element> parameterElements = parametersElement.getChildren("parameter");
@@ -112,13 +102,26 @@ public class SelfRestCallPostProcess implements IPostProcess {
 			}
 			Element contentBodyElement = element.getChild("contentBody");
 			if (null != contentBodyElement) {
+				String contentTypeString = element.getAttributeValue("content-type");
+				this.setContentType(MediaType.valueOf(contentTypeString));
 				String text = contentBodyElement.getText();
 				if (null == text || text.trim().length() == 0) {
-					String filename = contentBodyElement.getAttributeValue("file");
-					if (null != filename) {
-						int index = componentConfigPath.lastIndexOf("/");
-						String path = componentConfigPath.substring(0, index+1) + filename;
-						text = FileTextReader.getText(path);
+					String path = contentBodyElement.getAttributeValue("path");
+					if (null != path) {
+						InputStream is = null;
+						PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+						Resource resource = resolver.getResource(path);
+						try {
+							is = resource.getInputStream();
+							text = FileTextReader.getText(is);
+						} catch (Throwable t) {
+							ApsSystemUtils.logThrowable(t, this, "createConfig", 
+									"Error loading contentBody from file '" + path + "'");
+						} finally {
+							if (null != is) {
+								is.close();
+							}
+						}
 					}
 				}
 				if (null != text) {
@@ -180,11 +183,11 @@ public class SelfRestCallPostProcess implements IPostProcess {
 		this._queryParameters = queryParameters;
 	}
 	
-	public Properties getHeaderParameters() {
-		return _headerParameters;
+	public MediaType getContentType() {
+		return _contentType;
 	}
-	public void setHeaderParameters(Properties headerParameters) {
-		this._headerParameters = headerParameters;
+	public void setContentType(MediaType contentType) {
+		this._contentType = contentType;
 	}
 	
 	public String getContentBody() {
@@ -201,7 +204,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 	private Integer _expectedResult;
 	private boolean _printResponse;
 	private Properties _queryParameters = new Properties();
-	private Properties _headerParameters = new Properties();
+	private MediaType _contentType;
 	private String _contentBody;
 	
 }
