@@ -23,6 +23,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
+import com.agiletec.aps.system.services.user.UserDetails;
 import java.io.StringWriter;
 
 import java.util.Properties;
@@ -51,20 +52,10 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 		}
 		SelfRestCallPostProcess selfRestCall = (SelfRestCallPostProcess) postProcess;
 		IResponseBuilder responseBuilder = this.getResponseBuilder();
-		ILangManager langManager = this.getLangManager();
         try {
 			Object result = null;
-			//ApiMethod.HttpMethod method = selfRestCall.getMethod();
 			ApiMethod method = responseBuilder.extractApiMethod(selfRestCall.getMethod(), selfRestCall.getNamespace(), selfRestCall.getResourceName());
-			String langCode = selfRestCall.getLangCode();
-			if (null == langCode || null == langManager.getLang(langCode)) {
-				langCode = langManager.getDefaultLang().getCode();
-			}
-			Properties properties = new Properties();
-			if (null != selfRestCall.getQueryParameters()) {
-				properties.putAll(selfRestCall.getQueryParameters());
-			}
-            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
+			Properties properties = this.extractParameters(selfRestCall);
 			if (method.getHttpMethod().equals(ApiMethod.HttpMethod.GET) || method.getHttpMethod().equals(ApiMethod.HttpMethod.DELETE)) {
 				result = responseBuilder.createResponse(method, properties);
 			} else {
@@ -77,6 +68,31 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 			throw new ApsSystemException("Error invoking api method", t);
         }
 		return 1;
+	}
+	
+	protected Properties extractParameters(SelfRestCallPostProcess selfRestCall) throws ApsSystemException {
+		Properties properties = new Properties();
+		try {
+			ILangManager langManager = this.getLangManager();
+			String langCode = selfRestCall.getLangCode();
+			if (null == langCode || null == langManager.getLang(langCode)) {
+				langCode = langManager.getDefaultLang().getCode();
+			}
+			if (null != selfRestCall.getQueryParameters()) {
+				properties.putAll(selfRestCall.getQueryParameters());
+			}
+            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
+            UserDetails user = this.getAuthenticationProvider().getUser(SystemConstants.ADMIN_USER_NAME);
+            if (null != user) {
+                properties.put(SystemConstants.API_USER_PARAMETER, user);
+            } else {
+				ApsSystemUtils.getLogger().severe("Admin user missing");
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "extractParameters", "Error extracting parameters");
+			throw new ApsSystemException("Error extracting parameters", t);
+		}
+		return properties;
 	}
 	
 	private void printResponse(Object result, ApiMethod method, boolean printResponse) throws Throwable {
@@ -99,10 +115,6 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 	
 	protected IResponseBuilder getResponseBuilder() {
 		return (IResponseBuilder) this.getBeanFactory().getBean(SystemConstants.API_RESPONSE_BUILDER);
-	}
-	
-	protected ConfigInterface getConfigManager() {
-		return (ConfigInterface) this.getBeanFactory().getBean(SystemConstants.BASE_CONFIG_MANAGER);
 	}
 	
 	protected ILangManager getLangManager() {

@@ -102,7 +102,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 			}
 			Element contentBodyElement = element.getChild("contentBody");
 			if (null != contentBodyElement) {
-				String contentTypeString = element.getAttributeValue("content-type");
+				String contentTypeString = contentBodyElement.getAttributeValue("content-type");
 				this.setContentType(MediaType.valueOf(contentTypeString));
 				String text = contentBodyElement.getText();
 				if (null == text || text.trim().length() == 0) {
