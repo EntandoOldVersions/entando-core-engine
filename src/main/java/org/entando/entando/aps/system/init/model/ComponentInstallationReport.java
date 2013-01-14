@@ -93,9 +93,11 @@ public class ComponentInstallationReport {
 		SystemInstallationReport.Status ok = SystemInstallationReport.Status.OK;
 		SystemInstallationReport.Status postProcessStatus = (null != this.getPostProcessStatus()) ? this.getPostProcessStatus() : notAvailable;
 		boolean postProcessOk = (postProcessStatus.equals(ok) || postProcessStatus.equals(notAvailable));
-		if (schemaStatus.equals(incomplete) || dataStatus.equals(incomplete) || !postProcessOk) {
+		if (schemaStatus.equals(incomplete) || dataStatus.equals(incomplete) || 
+				(!postProcessOk && !postProcessStatus.equals(SystemInstallationReport.Status.NOT_AVAILABLE))) {
 			return SystemInstallationReport.Status.INCOMPLETE;
-		} else if (schemaStatus.equals(ok) && dataStatus.equals(ok) && postProcessOk) {
+		} else if (schemaStatus.equals(ok) && dataStatus.equals(ok) && 
+				(postProcessOk || postProcessStatus.equals(SystemInstallationReport.Status.NOT_AVAILABLE))) {
 			return SystemInstallationReport.Status.OK;
 		} else {
 			return SystemInstallationReport.Status.INIT;
