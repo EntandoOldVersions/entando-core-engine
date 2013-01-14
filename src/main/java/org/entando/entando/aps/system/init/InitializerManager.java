@@ -72,11 +72,14 @@ public class InitializerManager extends AbstractInitializerManager {
 				if (!postProcessStatus.equals(SystemInstallationReport.Status.INIT)) {
 					continue;
 				}
+				String compEnvKey = (AbstractInitializerManager.Environment.test.equals(this.getEnvironment())) 
+						? AbstractInitializerManager.Environment.test.toString() : AbstractInitializerManager.Environment.production.toString();
 				ComponentEnvinroment componentEnvinroment = (null != component.getEnvironments()) ? 
-						component.getEnvironments().get(this.getEnvironment().toString()) :
+						component.getEnvironments().get(compEnvKey) :
 						null;
 				List<IPostProcess> postProcesses = (null != componentEnvinroment) ? componentEnvinroment.getPostProcesses() : null;
-				this.executePostProcesses(postProcesses);
+				postProcessStatus = this.executePostProcesses(postProcesses);
+				componentReport.setPostProcessStatus(postProcessStatus);
 				report.setUpdated();
 			}
 		} catch (Throwable t) {
