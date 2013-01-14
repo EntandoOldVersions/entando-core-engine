@@ -47,13 +47,13 @@ public class Component implements Comparable<Component> {
 				this.extractTableMapping(tableMappingElement);
 				List<Element> enviromentElements = installationElement.getChildren("environment");
 				if (enviromentElements.size() > 0) {
-					this.setEnvironments(new HashMap<String, ComponentEnvinroment>());
+					this.setEnvironments(new HashMap<String, ComponentEnvironment>());
 				}
 				for (int i = 0; i < enviromentElements.size(); i++) {
 					Element environmentElement = enviromentElements.get(i);
-					ComponentEnvinroment envinroment = 
-							new ComponentEnvinroment(environmentElement, postProcessClasses);
-					this.getEnvironments().put(envinroment.getCode(), envinroment);
+					ComponentEnvironment environment = 
+							new ComponentEnvironment(environmentElement, postProcessClasses);
+					this.getEnvironments().put(environment.getCode(), environment);
 				}
 			}
         } catch (Throwable t) {
@@ -119,10 +119,10 @@ public class Component implements Comparable<Component> {
 		this._tableMapping = tableMapping;
 	}
 	
-	public Map<String, ComponentEnvinroment> getEnvironments() {
+	public Map<String, ComponentEnvironment> getEnvironments() {
 		return _environments;
 	}
-	protected void setEnvironments(Map<String, ComponentEnvinroment> environments) {
+	protected void setEnvironments(Map<String, ComponentEnvironment> environments) {
 		this._environments = environments;
 	}
 	
@@ -143,6 +143,6 @@ public class Component implements Comparable<Component> {
 	private List<String> _dependencies;
 	private Map<String, List<String>> _tableMapping;
 	
-	private Map<String, ComponentEnvinroment> _environments;
+	private Map<String, ComponentEnvironment> _environments;
 	
 }

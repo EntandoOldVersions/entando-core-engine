@@ -17,7 +17,7 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.ComponentEnvinroment;
+import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -393,11 +393,11 @@ public class DatabaseManager extends AbstractInitializerManager
 					System.out.println(logDbDataPrefix + " - Already installed/verified!");
 					continue;
 				}
-				Map<String, ComponentEnvinroment> envinroments = componentConfiguration.getEnvironments();
+				Map<String, ComponentEnvironment> environments = componentConfiguration.getEnvironments();
 				String compEnvKey = (Environment.test.equals(this.getEnvironment())) 
 						? Environment.test.toString() : Environment.production.toString();
-				ComponentEnvinroment componentEnvinroment = (null != envinroments) ? envinroments.get(compEnvKey) : null;
-				Resource resource = (null != componentEnvinroment) ? componentEnvinroment.getSqlResources(dataSourceName) : null;
+				ComponentEnvironment componentEnvironment = (null != environments) ? environments.get(compEnvKey) : null;
+				Resource resource = (null != componentEnvironment) ? componentEnvironment.getSqlResources(dataSourceName) : null;
 				String script = (null != resource) ? this.readFile(resource) : null;
 				if (null != script && script.trim().length() > 0) {
 					System.out.print(logDbDataPrefix + " - Installation started... ");

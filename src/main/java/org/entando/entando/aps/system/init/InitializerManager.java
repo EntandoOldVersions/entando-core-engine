@@ -17,7 +17,7 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.ComponentEnvinroment;
+import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -74,10 +74,10 @@ public class InitializerManager extends AbstractInitializerManager {
 				}
 				String compEnvKey = (AbstractInitializerManager.Environment.test.equals(this.getEnvironment())) 
 						? AbstractInitializerManager.Environment.test.toString() : AbstractInitializerManager.Environment.production.toString();
-				ComponentEnvinroment componentEnvinroment = (null != component.getEnvironments()) ? 
+				ComponentEnvironment componentEnvironment = (null != component.getEnvironments()) ? 
 						component.getEnvironments().get(compEnvKey) :
 						null;
-				List<IPostProcess> postProcesses = (null != componentEnvinroment) ? componentEnvinroment.getPostProcesses() : null;
+				List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
 				postProcessStatus = this.executePostProcesses(postProcesses);
 				componentReport.setPostProcessStatus(postProcessStatus);
 				report.setUpdated();

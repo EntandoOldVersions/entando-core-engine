@@ -33,9 +33,9 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 /**
  * @author E.Santoboni
  */
-public class ComponentEnvinroment {
+public class ComponentEnvironment {
 	
-	public ComponentEnvinroment(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
+	public ComponentEnvironment(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {
 			String environmentCode = environmentElement.getAttributeValue("code");
 			this.setCode(environmentCode);
@@ -60,8 +60,8 @@ public class ComponentEnvinroment {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "ComponentEnvinroment");
-			throw new ApsSystemException("Error creating ComponentEnvinroment", t);
+			ApsSystemUtils.logThrowable(t, this, "ComponentEnvironment");
+			throw new ApsSystemException("Error creating ComponentEnvironment", t);
 		}
 	}
 	
