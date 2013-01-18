@@ -41,7 +41,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.entando.entando.aps.system.init.model.DatabaseInstallationReport;
+import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 
 /**
  * @author E.Santoboni
@@ -54,7 +54,7 @@ public class TableFactory {
 		this.setType(type);
 	}
 	
-	public void createTables(List<String> tableClassNames, DatabaseInstallationReport schemaReport) throws ApsSystemException {
+	public void createTables(List<String> tableClassNames, DataSourceInstallationReport schemaReport) throws ApsSystemException {
 		ConnectionSource connectionSource = null;
 		try {
 			connectionSource = this.createConnectionSource();
@@ -109,12 +109,12 @@ public class TableFactory {
 	}
 	
 	private void createTables(List<String> tableClassNames, 
-			ConnectionSource connectionSource, DatabaseInstallationReport schemaReport) throws ApsSystemException {
+			ConnectionSource connectionSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
 		try {
-			List<String> tables = schemaReport.getDatabaseTables().get(this.getDatabaseName());
+			List<String> tables = schemaReport.getDataSourceTables().get(this.getDatabaseName());
 			if (null == tables) {
 				tables = new ArrayList<String>();
-				schemaReport.getDatabaseTables().put(this.getDatabaseName(), tables);
+				schemaReport.getDataSourceTables().put(this.getDatabaseName(), tables);
 			}
 			for (int i = 0; i < tableClassNames.size(); i++) {
 				String tableClassName = tableClassNames.get(i);

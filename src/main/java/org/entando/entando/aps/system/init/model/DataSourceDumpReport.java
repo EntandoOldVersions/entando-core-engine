@@ -37,9 +37,9 @@ import org.jdom.output.XMLOutputter;
 /**
  * @author E.Santoboni
  */
-public class DatabaseDumpReport {
+public class DataSourceDumpReport {
 	
-	public DatabaseDumpReport(SystemInstallationReport installationReport) {
+	public DataSourceDumpReport(SystemInstallationReport installationReport) {
 		List<ComponentInstallationReport> componentInstallationReports = installationReport.getReports();
 		for (int i = 0; i < componentInstallationReports.size(); i++) {
 			ComponentInstallationReport component = componentInstallationReports.get(i);
@@ -47,7 +47,7 @@ public class DatabaseDumpReport {
 		}
 	}
 	
-	public DatabaseDumpReport(String xmlText) {
+	public DataSourceDumpReport(String xmlText) {
 		if (null == xmlText || xmlText.trim().length() == 0) {
 			return;
 		}

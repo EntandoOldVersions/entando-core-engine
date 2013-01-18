@@ -1,20 +1,20 @@
 /*
-*
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando software.
-* Entando is a free software; 
-* you can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando software.
+ * Entando is a free software; 
+ * you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.aps.system.init.model;
 
 import java.util.*;
@@ -24,11 +24,12 @@ import org.jdom.Element;
 /**
  * @author E.Santoboni
  */
-public class DatabaseInstallationReport extends AbstractReport {
-	
-	protected DatabaseInstallationReport() {}
-	
-	protected DatabaseInstallationReport(Element element) {
+public class DataSourceInstallationReport extends AbstractReport {
+
+	protected DataSourceInstallationReport() {
+	}
+
+	protected DataSourceInstallationReport(Element element) {
 		List<Element> databaseElements = element.getChildren(SystemInstallationReport.DATASOURCE_ELEMENT);
 		for (int i = 0; i < databaseElements.size(); i++) {
 			Element databaseElement = databaseElements.get(i);
@@ -42,10 +43,10 @@ public class DatabaseInstallationReport extends AbstractReport {
 				Element databaseTableElement = databaseTableElements.get(j);
 				tables.add(databaseTableElement.getAttributeValue(SystemInstallationReport.NAME_ATTRIBUTE));
 			}
-			this.getDatabaseTables().put(dbName, tables);
+			this.getDataSourceTables().put(dbName, tables);
 		}
 	}
-	
+
 	protected Element toJdomElement() {
 		Element element = new Element(SystemInstallationReport.SCHEMA_ELEMENT);
 		element.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getStatus().toString());
@@ -56,8 +57,10 @@ public class DatabaseInstallationReport extends AbstractReport {
 			dbElement.setAttribute(SystemInstallationReport.NAME_ATTRIBUTE, dbName);
 			dbElement.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getDatabaseStatus().get(dbName).toString());
 			element.addContent(dbElement);
-			List<String> tables = this.getDatabaseTables().get(dbName);
-			if (null == tables) continue;
+			List<String> tables = this.getDataSourceTables().get(dbName);
+			if (null == tables) {
+				continue;
+			}
 			for (int i = 0; i < tables.size(); i++) {
 				String table = tables.get(i);
 				Element tableElement = new Element(SystemInstallationReport.TABLE_ELEMENT);
@@ -67,11 +70,9 @@ public class DatabaseInstallationReport extends AbstractReport {
 		}
 		return element;
 	}
-	
-	public Map<String, List<String>> getDatabaseTables() {
-		return _databaseTables;
+
+	public Map<String, List<String>> getDataSourceTables() {
+		return _dataSourceTables;
 	}
-	
-	private Map<String, List<String>> _databaseTables = new HashMap<String, List<String>>();
-	
+	private Map<String, List<String>> _dataSourceTables = new HashMap<String, List<String>>();
 }

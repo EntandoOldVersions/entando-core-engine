@@ -21,7 +21,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.entando.entando.aps.system.init.model.DatabaseDumpReport;
+import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
 /**
  * @author E.Santoboni
@@ -38,9 +38,9 @@ public interface IDatabaseManager {
 	
 	public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException;
 	
-	public DatabaseDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
+	public DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
 	
-	public List<DatabaseDumpReport> getBackupReports() throws ApsSystemException;
+	public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException;
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}
 	

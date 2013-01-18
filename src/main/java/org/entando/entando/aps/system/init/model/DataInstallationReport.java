@@ -19,6 +19,7 @@ package org.entando.entando.aps.system.init.model;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.jdom.Element;
 
@@ -52,6 +53,23 @@ public class DataInstallationReport extends AbstractReport {
 			element.addContent(dbElement);
 		}
 		return element;
+	}
+	
+	/**
+	 * Check if the data is already present before the process of the component.
+	 * The typical cases are data restore from dump and porting.
+	 * @return true if the data is already present before the process of the component.
+	 */
+	public boolean isDataAlreadyPresent() {
+		Iterator<SystemInstallationReport.Status> iter = super.getDatabaseStatus().values().iterator();
+		while (iter.hasNext()) {
+			SystemInstallationReport.Status status = iter.next();
+			if (!status.equals(SystemInstallationReport.Status.PORTING) 
+					&& !status.equals(SystemInstallationReport.Status.RESTORE)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 }

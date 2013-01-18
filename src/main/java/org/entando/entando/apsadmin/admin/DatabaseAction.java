@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.DatabaseDumpReport;
+import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
 /**
  * @author E.Santoboni
@@ -32,7 +32,7 @@ public class DatabaseAction extends BaseAction {
 		return SUCCESS;
 	}
 	
-	public List<DatabaseDumpReport> getDumpReports() {
+	public List<DataSourceDumpReport> getDumpReports() {
 		try {
 			return this.getDatabaseManager().getBackupReports();
 		} catch (Throwable t) {
@@ -41,7 +41,7 @@ public class DatabaseAction extends BaseAction {
 		}
 	}
 	
-	public DatabaseDumpReport getDumpReport(String subFolderName) {
+	public DataSourceDumpReport getDumpReport(String subFolderName) {
 		try {
 			return this.getDatabaseManager().getBackupReport(subFolderName);
 		} catch (Throwable t) {

@@ -26,7 +26,7 @@ import java.io.*;
 import java.util.*;
 
 import javax.sql.DataSource;
-import org.entando.entando.aps.system.init.model.DatabaseDumpReport;
+import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
 import org.entando.entando.aps.system.init.model.TableDumpResult;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
@@ -47,7 +47,7 @@ public class DatabaseDumper {
 		this.setComponents(components);
 		this.setEntandoTableMapping(entandoTableMapping);
 		this.setLocalBackupsFolder(localBackupsFolder);
-		this.setReport(new DatabaseDumpReport(installationReport));
+		this.setReport(new DataSourceDumpReport(installationReport));
 	}
 	
 	protected void createBackup(AbstractInitializerManager.Environment environment) throws ApsSystemException {
@@ -189,10 +189,10 @@ public class DatabaseDumper {
 		this._components = components;
 	}
 	
-	protected DatabaseDumpReport getReport() {
+	protected DataSourceDumpReport getReport() {
 		return _report;
 	}
-	protected void setReport(DatabaseDumpReport report) {
+	protected void setReport(DataSourceDumpReport report) {
 		this._report = report;
 	}
 	
@@ -202,6 +202,6 @@ public class DatabaseDumper {
 	private BeanFactory _beanFactory;
 	private Map<String, List<String>> _entandoTableMapping;
 	private List<Component> _components;
-	private DatabaseDumpReport _report;
+	private DataSourceDumpReport _report;
 	
 }

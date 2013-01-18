@@ -39,7 +39,7 @@ public class ComponentInstallationReport {
 		this.setDate(date);
 		Element schemaElement = element.getChild(SystemInstallationReport.SCHEMA_ELEMENT);
 		if (null != schemaElement) {
-			this.setSchemaReport(new DatabaseInstallationReport(schemaElement));
+			this.setDataSourceReport(new DataSourceInstallationReport(schemaElement));
 		}
 		Element dataElement = element.getChild(SystemInstallationReport.DATA_ELEMENT);
 		if (null != dataElement) {
@@ -60,7 +60,7 @@ public class ComponentInstallationReport {
 		ComponentInstallationReport report = new ComponentInstallationReport();
 		report.setDate(new Date());
 		report.setComponentName(componentName);
-		report.setSchemaReport(new DatabaseInstallationReport());
+		report.setDataSourceReport(new DataSourceInstallationReport());
 		report.setDataReport(new DataInstallationReport());
 		return report;
 	}
@@ -73,7 +73,7 @@ public class ComponentInstallationReport {
 		if (null != this.getStatus()) {
 			element.setAttribute(SystemInstallationReport.STATUS_ATTRIBUTE, this.getStatus().toString());
 		}
-		Element schemaElement = this.getSchemaReport().toJdomElement();
+		Element schemaElement = this.getDataSourceReport().toJdomElement();
 		element.addContent(schemaElement);
 		Element dataElement = this.getDataReport().toJdomElement();
 		element.addContent(dataElement);
@@ -86,7 +86,7 @@ public class ComponentInstallationReport {
 	}
 	
 	public SystemInstallationReport.Status getStatus() {
-		SystemInstallationReport.Status schemaStatus = this.getSchemaReport().getStatus();
+		SystemInstallationReport.Status schemaStatus = this.getDataSourceReport().getStatus();
 		SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
 		SystemInstallationReport.Status incomplete = SystemInstallationReport.Status.INCOMPLETE;
 		SystemInstallationReport.Status notAvailable = SystemInstallationReport.Status.NOT_AVAILABLE;
@@ -102,6 +102,13 @@ public class ComponentInstallationReport {
 		} else {
 			return SystemInstallationReport.Status.INIT;
 		}
+	}
+	
+	public boolean isPostProcessExecutionRequired() {
+		SystemInstallationReport.Status dataSourceStatus = this.getDataSourceReport().getStatus();
+		SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
+		SystemInstallationReport.Status ok = SystemInstallationReport.Status.OK;
+		return (dataSourceStatus.equals(ok) && dataStatus.equals(ok) && !this.getDataReport().isDataAlreadyPresent());
 	}
 	
 	public String getComponentName() {
@@ -128,11 +135,11 @@ public class ComponentInstallationReport {
 		this._postProcessStatus = postProcessStatus;
 	}
 	
-	public DatabaseInstallationReport getSchemaReport() {
-		return _schemaReport;
+	public DataSourceInstallationReport getDataSourceReport() {
+		return _dataSourceReport;
 	}
-	private void setSchemaReport(DatabaseInstallationReport schemaReport) {
-		this._schemaReport = schemaReport;
+	private void setDataSourceReport(DataSourceInstallationReport schemaReport) {
+		this._dataSourceReport = schemaReport;
 	}
 	
 	public DataInstallationReport getDataReport() {
@@ -146,7 +153,7 @@ public class ComponentInstallationReport {
 	private Date _date;
 	private SystemInstallationReport.Status _postProcessStatus = SystemInstallationReport.Status.INIT;
 	
-	private DatabaseInstallationReport _schemaReport;
+	private DataSourceInstallationReport _dataSourceReport;
 	private DataInstallationReport _dataReport;
 	
 }

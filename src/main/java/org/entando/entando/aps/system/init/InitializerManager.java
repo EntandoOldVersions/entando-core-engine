@@ -17,7 +17,6 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -25,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.IPostProcess;
+import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.springframework.beans.BeansException;
@@ -78,7 +79,14 @@ public class InitializerManager extends AbstractInitializerManager {
 						component.getEnvironments().get(compEnvKey) :
 						null;
 				List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
-				postProcessStatus = this.executePostProcesses(postProcesses);
+				if (null == postProcesses || postProcesses.isEmpty()) {
+					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
+				} else if (!componentReport.isPostProcessExecutionRequired()) {
+					//Porting or restore
+					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
+				} else {
+					postProcessStatus = this.executePostProcesses(postProcesses);
+				}
 				componentReport.setPostProcessStatus(postProcessStatus);
 				report.setUpdated();
 			}
@@ -105,6 +113,10 @@ public class InitializerManager extends AbstractInitializerManager {
 				} else {
 					ApsSystemUtils.getLogger().severe("Missing Post Processor for process '" + postProcess.getCode() + "'");
 				}
+			} catch (InvalidPostProcessResultException t) {
+				ApsSystemUtils.logThrowable(t, this, "executePostProcess", 
+						"Error while executing post process of index " + i + " - " + t.getMessage());
+				return SystemInstallationReport.Status.INCOMPLETE;
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, this, "executePostProcesses", "Error while executing post process - index " + i);
 				return SystemInstallationReport.Status.INCOMPLETE;
