@@ -59,9 +59,9 @@ public class ShowletCatalog {
 	private String _defaultConfig;
 	
 	@DatabaseField(columnName = "locked", 
-			dataType = DataType.INTEGER, 
+			dataType = DataType.SHORT, 
 			canBeNull = false)
-	private int _locked;
+	private short _locked;
 	
 	@DatabaseField(columnName = "maingroup", 
 			dataType = DataType.STRING, 
