@@ -31,6 +31,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.IManager;
+import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Classe di utilità.
@@ -122,8 +123,7 @@ public class ApsWebApplicationUtils {
 	}
 	
 	private static WebApplicationContext getWebApplicationContext(ServletContext svCtx) {
-		WebApplicationContext wac = WebApplicationContextUtils.getWebApplicationContext(svCtx);
-		return wac;
+		return WebApplicationContextUtils.getWebApplicationContext(svCtx);
 	}
 	
 	private static AbstractService getService(String serviceName, WebApplicationContext wac) {
@@ -136,9 +136,18 @@ public class ApsWebApplicationUtils {
 	 * @throws Throwable In caso di errori in fase di aggiornamento del sistema.
 	 */
 	public static void executeSystemRefresh(HttpServletRequest request) throws Throwable {
-		IManager configManager = (IManager) getBean(SystemConstants.BASE_CONFIG_MANAGER, request);
-		configManager.refresh();
 		WebApplicationContext wac = getWebApplicationContext(request);
+		executeSystemRefresh(wac);
+	}
+	
+	public static void executeSystemRefresh(ServletContext svCtx) throws Throwable {
+		WebApplicationContext wac = getWebApplicationContext(svCtx);
+		executeSystemRefresh(wac);
+	}
+	
+	private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
+		IManager configManager = (IManager) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
+		configManager.refresh();
 		String[] defNames = wac.getBeanNamesForType(IManager.class);
 		for (int i=0; i<defNames.length; i++) {
 			Object bean = null;

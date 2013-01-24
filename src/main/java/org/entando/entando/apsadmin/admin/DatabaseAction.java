@@ -1,15 +1,35 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando software.
+* Entando is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.apsadmin.admin;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
+import com.j256.ormlite.table.DatabaseTable;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import org.entando.entando.aps.system.init.IComponentManager;
 
 import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
 /**
@@ -48,6 +68,16 @@ public class DatabaseAction extends BaseAction {
 			ApsSystemUtils.logThrowable(t, this, "getDumpReport");
 			throw new RuntimeException("Error extracting report of subfolder " + subFolderName, t);
 		}
+	}
+	
+	public String redirectRestoreIntro() {
+		try {
+			//TODO VALIDATE
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "redirectRestoreIntro");
+			return FAILURE;
+		}
+		return SUCCESS;
 	}
 	
 	public String restoreBackup() {
@@ -101,6 +131,61 @@ public class DatabaseAction extends BaseAction {
 		return this.getDatabaseManager().getStatus();
 	}
 	
+	public Map<String, List<String>> getEntandoTableMapping() {
+		return this.getDatabaseManager().getEntandoTableMapping();
+	}
+	
+	public List<Component> getCurrentComponents() {
+		List<Component> components = null;
+		try {
+			components = this.getComponentManager().getCurrentComponents();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getCurrentComponents");
+			throw new RuntimeException("Error extracting current components", t);
+		}
+		return components;
+	}
+	
+	public List<String> getTableNames(List<String> tableClassNames) {
+		if (null == tableClassNames || tableClassNames.isEmpty()) {
+			return null;
+		}
+		List<String> tableNames = new ArrayList<String>();
+		try {
+			for (int i = 0; i < tableClassNames.size(); i++) {
+				String tableClassName = tableClassNames.get(i);
+				Class tableClass = Class.forName(tableClassName);
+				DatabaseTable tableAnnotation = (DatabaseTable) tableClass.getAnnotation(DatabaseTable.class);
+				tableNames.add(tableAnnotation.tableName());
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getTableNames");
+			throw new RuntimeException("Error extracting table names", t);
+		}
+		return tableNames;
+	}
+	
+	public boolean checkRestore(List<Component> currentComponents, DataSourceDumpReport report) {
+		List<String> codes = new ArrayList<String>();
+		codes.add("entandoCore");
+		for (int i = 0; i < currentComponents.size(); i++) {
+			Component component = currentComponents.get(i);
+			codes.add(component.getCode());
+		}
+		List<ComponentInstallationReport> reports = report.getComponentsHistory();
+		if (reports.size() != codes.size()) {
+			return false;
+		}
+		for (int i = 0; i < reports.size(); i++) {
+			ComponentInstallationReport componentReport = reports.get(i);
+			if (!codes.contains(componentReport.getComponentName())) {
+				System.out.println(componentReport.getComponentName() + " missing");
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public String getSubFolderName() {
 		return _subFolderName;
 	}
@@ -136,11 +221,19 @@ public class DatabaseAction extends BaseAction {
 		this._databaseManager = databaseManager;
 	}
 	
+	protected IComponentManager getComponentManager() {
+		return _componentManager;
+	}
+	public void setComponentManager(IComponentManager componentManager) {
+		this._componentManager = componentManager;
+	}
+	
 	private String _subFolderName;
 	
 	private String _tableName;
 	private String _dataSourceName;
 	private InputStream _inputStream;
 	private IDatabaseManager _databaseManager;
+	private IComponentManager _componentManager;
 	
 }

@@ -14,6 +14,7 @@
 	<bean id="databaseAdminAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.admin.DatabaseAction" parent="abstractBaseAction" >
 		<property name="databaseManager" ref="DatabaseManager"/>
+		<property name="componentManager" ref="ComponentManager" />
 	</bean>
 	
 </beans>

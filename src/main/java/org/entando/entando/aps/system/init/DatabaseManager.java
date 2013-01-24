@@ -27,6 +27,7 @@ import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -34,6 +35,7 @@ import java.io.*;
 import java.lang.reflect.Method;
 
 import java.util.*;
+import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import org.apache.commons.beanutils.BeanComparator;
 
@@ -41,12 +43,13 @@ import org.entando.entando.aps.system.init.util.TableFactory;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * @author E.Santoboni
  */
 public class DatabaseManager extends AbstractInitializerManager
-		implements IDatabaseManager, IDatabaseInstallerManager {
+		implements IDatabaseManager, IDatabaseInstallerManager, ServletContextAware {
 
 	public void init() throws Exception {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
@@ -618,14 +621,19 @@ public class DatabaseManager extends AbstractInitializerManager
 				ApsSystemUtils.getLogger().severe("backup not available - subfolder '" + subFolderName + "'");
 				return false;
 			}
+			//TODO future improvement - execute 'lifeline' backup
 			List<Component> components = this.getComponentManager().getCurrentComponents();
 			DatabaseRestorer restorer = new DatabaseRestorer(this.getLocalBackupsFolder(), subFolderName,
 					this.getEntandoTableMapping(), components, this.getBeanFactory());
 			restorer.dropAndRestoreBackup();
+			ApsWebApplicationUtils.executeSystemRefresh(this.getServletContext());
 			return true;
 		} catch (Throwable t) {
+			//TODO future improvement - restore 'lifeline' backup
 			ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
 			throw new ApsSystemException("Error while restoring backup - subfolder " + subFolderName, t);
+		} finally {
+			//TODO future improvement - delete 'lifeline' backup
 		}
 	}
 
@@ -684,15 +692,14 @@ public class DatabaseManager extends AbstractInitializerManager
 	protected Properties getDatabaseTypeDrivers() {
 		return _databaseTypeDrivers;
 	}
-
 	public void setDatabaseTypeDrivers(Properties databaseTypeDrivers) {
 		this._databaseTypeDrivers = databaseTypeDrivers;
 	}
-
-	protected Map<String, List<String>> getEntandoTableMapping() {
+	
+	@Override
+	public Map<String, List<String>> getEntandoTableMapping() {
 		return _entandoTableMapping;
 	}
-
 	public void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
 		this._entandoTableMapping = entandoTableMapping;
 	}
@@ -700,7 +707,6 @@ public class DatabaseManager extends AbstractInitializerManager
 	protected Map<String, Resource> getEntandoDefaultSqlResources() {
 		return _entandoDefaultSqlResources;
 	}
-
 	public void setEntandoDefaultSqlResources(Map<String, Resource> entandoDefaultSqlResources) {
 		this._entandoDefaultSqlResources = entandoDefaultSqlResources;
 	}
@@ -708,43 +714,47 @@ public class DatabaseManager extends AbstractInitializerManager
 	protected Map<String, Resource> getTestSqlResources() {
 		return _testSqlResources;
 	}
-
 	public void setTestSqlResources(Map<String, Resource> testSqlResources) {
 		this._testSqlResources = testSqlResources;
 	}
-
+	
 	protected Map<String, Resource> getDefaultSqlDump() {
 		return _defaultSqlDump;
 	}
-
 	public void setDefaultSqlDump(Map<String, Resource> defaultSqlDump) {
 		this._defaultSqlDump = defaultSqlDump;
 	}
-
+	
 	protected String getProtectedBaseDiskRoot() {
 		return _protectedBaseDiskRoot;
 	}
-
 	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
 		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
-
+	
 	@Override
 	public int getStatus() {
 		return _status;
 	}
-
 	protected void setStatus(int status) {
 		this._status = status;
 	}
-
+	
 	protected IComponentManager getComponentManager() {
 		return _componentManager;
 	}
-
 	public void setComponentManager(IComponentManager componentManager) {
 		this._componentManager = componentManager;
 	}
+	
+	protected ServletContext getServletContext() {
+		return _servletContext;
+	}
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		this._servletContext = servletContext;
+	}
+	
 	private Properties _databaseTypeDrivers;
 	private Map<String, List<String>> _entandoTableMapping;
 	private Map<String, Resource> _entandoDefaultSqlResources;
@@ -755,4 +765,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	private IComponentManager _componentManager;
 	public static final int STATUS_READY = 0;
 	public static final int STATUS_DUMPIMG_IN_PROGRESS = 1;
+	
+	private ServletContext _servletContext;
+	
 }

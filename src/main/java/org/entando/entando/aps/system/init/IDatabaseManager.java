@@ -20,6 +20,7 @@ package org.entando.entando.aps.system.init;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 
@@ -41,6 +42,8 @@ public interface IDatabaseManager {
 	public DataSourceDumpReport getBackupReport(String subFolderName) throws ApsSystemException;
 	
 	public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException;
+	
+	public Map<String, List<String>> getEntandoTableMapping();
 	
 	public enum DatabaseType {DERBY, POSTGRESQL, MYSQL, ORACLE, SQLSERVER, UNKNOWN}
 	

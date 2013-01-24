@@ -33,6 +33,8 @@ public class Component implements Comparable<Component> {
 		try {
 			String code = rootElement.getChildText("code");
 			this.setCode(code);
+			String description = rootElement.getChildText("description");
+			this.setDescription(description);
 			Element dependenciesElement = rootElement.getChild("dependencies");
 			if (null != dependenciesElement) {
 				List<Element> dependenciesElementd = dependenciesElement.getChildren("code");

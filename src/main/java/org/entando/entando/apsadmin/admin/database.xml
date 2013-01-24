@@ -12,6 +12,11 @@
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
+        <action name="backupIntro" class="databaseAdminAction">
+            <result type="tiles">admin.database.backup.intro</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+		
         <action name="executeBackup" class="databaseAdminAction" method="executeBackup">
             <result type="tiles">admin.database.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
@@ -19,6 +24,11 @@
 		
         <action name="entryBackupDetails" class="databaseAdminAction" method="entryBackupDetails">
             <result type="tiles">admin.database.backup.details</result>
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+		
+        <action name="restoreIntro" class="databaseAdminAction" method="redirectRestoreIntro">
+            <result type="tiles">admin.database.restore.intro</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
 		
