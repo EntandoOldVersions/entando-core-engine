@@ -36,10 +36,6 @@ import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
  */
 public class DatabaseAction extends BaseAction {
 	
-	public String entryBackupDetails() {
-		return SUCCESS;
-	}
-	
 	public String executeBackup() {
 		try {
 			this.getDatabaseManager().createBackup();
@@ -69,9 +65,20 @@ public class DatabaseAction extends BaseAction {
 		}
 	}
 	
+	public String entryBackupDetails() {
+		String check = this.checkBackupCode(this.getSubFolderName());
+		if (null != check) {
+			return check;
+		}
+		return SUCCESS;
+	}
+	
 	public String redirectRestoreIntro() {
 		try {
-			//TODO VALIDATE
+			String check = this.checkBackupCode(this.getSubFolderName());
+			if (null != check) {
+				return check;
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "redirectRestoreIntro");
 			return FAILURE;
@@ -81,10 +88,12 @@ public class DatabaseAction extends BaseAction {
 	
 	public String restoreBackup() {
 		try {
-			//TODO VALIDATE
+			String check = this.checkBackupCode(this.getSubFolderName());
+			if (null != check) {
+				return check;
+			}
 			this.getDatabaseManager().dropAndRestoreBackup(this.getSubFolderName());
-			//RELOAD CONFIGURATION
-			//TODO MESSAGE
+			this.addActionMessage(this.getText("message.restore.done"));
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreBackup");
 			return FAILURE;
@@ -94,7 +103,10 @@ public class DatabaseAction extends BaseAction {
 	
 	public String extractTableDump() {
 		try {
-			//TODO VALIDATE
+			String check = this.checkBackupCode(this.getSubFolderName());
+			if (null != check) {
+				return check;
+			}
 			InputStream stream = this.getDatabaseManager().getTableDump(this.getTableName(), this.getDataSourceName(), this.getSubFolderName());
 			this.setInputStream(stream);
 		} catch (Throwable t) {
@@ -106,7 +118,10 @@ public class DatabaseAction extends BaseAction {
 	
 	public String trashBackup() {
 		try {
-			//TODO VALIDATE
+			String check = this.checkBackupCode(this.getSubFolderName());
+			if (null != check) {
+				return check;
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "trashBackup");
 			return FAILURE;
@@ -116,14 +131,30 @@ public class DatabaseAction extends BaseAction {
 	
 	public String deleteBackup() {
 		try {
-			//TODO VALIDATE
+			String check = this.checkBackupCode(this.getSubFolderName());
+			if (null != check) {
+				return check;
+			}
 			this.getDatabaseManager().deleteBackup(this.getSubFolderName());
-			//TODO MESSAGE
+			String[] args = {this.getSubFolderName()};
+			this.addActionMessage(this.getText("message.backup.deleteDone", args));
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteBackup");
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	protected String checkBackupCode(String backupCode) {
+		if (null == backupCode) {
+			this.addFieldError("subFolderName", this.getText("error.backup.nullCode"));
+			return INPUT;
+		} else if (null == this.getDumpReport(backupCode)) {
+			String[] args = {backupCode};
+			this.addFieldError("subFolderName", this.getText("error.backup.invalidCode", args));
+			return INPUT;
+		}
+		return null;
 	}
 	
 	public int getManagerStatus() {
