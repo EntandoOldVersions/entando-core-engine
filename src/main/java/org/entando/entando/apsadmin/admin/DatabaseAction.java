@@ -18,7 +18,6 @@
 package org.entando.entando.apsadmin.admin;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.j256.ormlite.table.DatabaseTable;
 import java.io.InputStream;
@@ -178,8 +177,8 @@ public class DatabaseAction extends BaseAction {
 		}
 		for (int i = 0; i < reports.size(); i++) {
 			ComponentInstallationReport componentReport = reports.get(i);
-			if (!codes.contains(componentReport.getComponentName())) {
-				System.out.println(componentReport.getComponentName() + " missing");
+			if (!codes.contains(componentReport.getComponentCode())) {
+				System.out.println(componentReport.getComponentCode() + " missing");
 				return false;
 			}
 		}

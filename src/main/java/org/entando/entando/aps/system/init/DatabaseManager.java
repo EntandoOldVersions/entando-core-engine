@@ -376,7 +376,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		DataInstallationReport dataReport = componentReport.getDataReport();
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
-			String logDataPrefix = "Component " + componentReport.getComponentName() + " DATA";
+			String logDataPrefix = "Component " + componentReport.getComponentCode() + " DATA";
 			//System.out.println(logDataPrefix + " - INIT!!!");
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				String dataSourceName = dataSourceNames[j];
@@ -468,7 +468,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 		return text;
 	}
-
+	
 	//---------------- DATA ------------------- END
 	@Override
 	public void createBackup() throws ApsSystemException {
@@ -485,7 +485,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
-
+	
 	protected void executeBackup() throws ApsSystemException {
 		try {
 			this.setStatus(DatabaseManager.STATUS_DUMPIMG_IN_PROGRESS);

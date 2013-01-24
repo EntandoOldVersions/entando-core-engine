@@ -32,8 +32,8 @@ public class ComponentInstallationReport {
 	private ComponentInstallationReport() {}
 	
 	protected ComponentInstallationReport(Element element) {
-		String componentName = element.getAttributeValue(SystemInstallationReport.NAME_ATTRIBUTE);
-		this.setComponentName(componentName);
+		String componentCode = element.getAttributeValue(SystemInstallationReport.CODE_ATTRIBUTE);
+		this.setComponentCode(componentCode);
 		String dateString = element.getAttributeValue(SystemInstallationReport.DATE_ATTRIBUTE);
 		Date date = DateConverter.parseDate(dateString, SystemInstallationReport.DATE_FORMAT);
 		this.setDate(date);
@@ -56,10 +56,10 @@ public class ComponentInstallationReport {
 		}
 	}
 	
-	public static ComponentInstallationReport getInstance(String componentName) {
+	public static ComponentInstallationReport getInstance(String componentCode) {
 		ComponentInstallationReport report = new ComponentInstallationReport();
 		report.setDate(new Date());
-		report.setComponentName(componentName);
+		report.setComponentCode(componentCode);
 		report.setDataSourceReport(new DataSourceInstallationReport());
 		report.setDataReport(new DataInstallationReport());
 		return report;
@@ -67,7 +67,7 @@ public class ComponentInstallationReport {
 	
 	protected Element toJdomElement() {
 		Element element = new Element(SystemInstallationReport.COMPONENT_ELEMENT);
-		element.setAttribute(SystemInstallationReport.NAME_ATTRIBUTE, this.getComponentName());
+		element.setAttribute(SystemInstallationReport.CODE_ATTRIBUTE, this.getComponentCode());
 		String dateString = DateConverter.getFormattedDate(this.getDate(), SystemInstallationReport.DATE_FORMAT);
 		element.setAttribute(SystemInstallationReport.DATE_ATTRIBUTE, dateString);
 		if (null != this.getStatus()) {
@@ -111,11 +111,11 @@ public class ComponentInstallationReport {
 		return (dataSourceStatus.equals(ok) && dataStatus.equals(ok) && !this.getDataReport().isDataAlreadyPresent());
 	}
 	
-	public String getComponentName() {
-		return _componentName;
+	public String getComponentCode() {
+		return _componentCode;
 	}
-	protected void setComponentName(String componentName) {
-		this._componentName = componentName;
+	public void setComponentCode(String componentCode) {
+		this._componentCode = componentCode;
 	}
 	
 	public Date getDate() {
@@ -126,7 +126,7 @@ public class ComponentInstallationReport {
 	}
 	
 	public Status getPostProcessStatus() {
-		if ("entandoCore".equals(this.getComponentName())) {
+		if ("entandoCore".equals(this.getComponentCode())) {
 			return Status.NOT_AVAILABLE;
 		}
 		return _postProcessStatus;
@@ -149,7 +149,7 @@ public class ComponentInstallationReport {
 		this._dataReport = dataReport;
 	}
 	
-	private String _componentName;
+	private String _componentCode;
 	private Date _date;
 	private SystemInstallationReport.Status _postProcessStatus = SystemInstallationReport.Status.INIT;
 	
