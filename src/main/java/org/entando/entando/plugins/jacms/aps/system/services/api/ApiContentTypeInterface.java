@@ -17,51 +17,42 @@
 */
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
-import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType;
-import java.util.List;
-import java.util.Map;
+import com.agiletec.aps.system.common.entity.IEntityManager;
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+
 import java.util.Properties;
 
+import javax.ws.rs.core.Response;
+
+import org.entando.entando.aps.system.common.entity.api.ApiEntityTypeInterface;
+import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
-import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
-import javax.ws.rs.core.Response;
+import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContentType;
 
 /**
  * @author E.Santoboni
  */
-public class ApiContentTypeInterface extends AbstractCmsApiInterface {
+public class ApiContentTypeInterface extends ApiEntityTypeInterface {
     
     public JAXBContentType getContentType(Properties properties) throws ApiException, Throwable {
-        JAXBContentType jaxbContentType = null;
-        try {
-            String typeCode = properties.getProperty("code");
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
-            }
-            jaxbContentType = new JAXBContentType(masterContentType);
-            jaxbContentType.setDefaultModelId(this.extractModelId(masterContentType.getDefaultModel()));
-            jaxbContentType.setListModelId(this.extractModelId(masterContentType.getListModel()));
-        } catch (ApiException ae) {
-            throw ae;
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContentType");
-            throw new ApsSystemException("Error extracting content type", t);
-        }
-        return jaxbContentType;
+        return (JAXBContentType) super.getEntityType(properties);
     }
+	
+	@Override
+	protected JAXBEntityType createJAXBEntityType(IApsEntity masterEntityType) {
+		Content masterContentType = (Content) masterEntityType;
+		JAXBContentType jaxbContentType = new JAXBContentType(masterContentType);
+		jaxbContentType.setDefaultModelId(this.extractModelId(masterContentType.getDefaultModel()));
+		jaxbContentType.setListModelId(this.extractModelId(masterContentType.getListModel()));
+		return jaxbContentType;
+	}
     
     private Integer extractModelId(String stringModelId) {
         if (null == stringModelId) return null;
@@ -75,70 +66,45 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
     }
     
     public StringApiResponse addContentType(JAXBContentType jaxbContentType) throws Throwable {
-        StringApiResponse response = new StringApiResponse();
-        try {
-            String typeCode = jaxbContentType.getTypeCode();
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null != masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' already exists", Response.Status.CONFLICT);
-            }
-            if (typeCode == null || typeCode.length() != 3) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid type code - '" + typeCode + "'", Response.Status.CONFLICT);
-            }
-            Map<String, AttributeInterface> attributes = this.getContentManager().getEntityAttributePrototypes();
-            Content contentType = (Content) jaxbContentType.buildEntityType(this.getContentManager().getEntityClass(), attributes);
-            boolean defaultModelCheck = this.checkContentModel(jaxbContentType.getDefaultModelId(), contentType, response);
-            if (defaultModelCheck) {
-                contentType.setDefaultModel(String.valueOf(jaxbContentType.getDefaultModelId()));
-            }
-            boolean listModelCheck = this.checkContentModel(jaxbContentType.getListModelId(), contentType, response);
-            if (listModelCheck) {
-                contentType.setListModel(String.valueOf(jaxbContentType.getListModelId()));
-            }
-            ((IEntityTypesConfigurer) this.getContentManager()).addEntityPrototype(contentType);
-            response.setResult(IResponseBuilder.SUCCESS, null);
-        } catch (ApiException ae) {
-            response.addErrors(ae.getErrors());
-            response.setResult(IResponseBuilder.FAILURE, null);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addContentType");
-            throw new ApsSystemException("Error adding content type", t);
-        }
-        return response;
+        return super.addEntityType(jaxbContentType);
     }
-    
+	
+	@Override
+	protected void checkNewEntityType(JAXBEntityType jaxbEntityType, IApsEntity newEntityType, StringApiResponse response) throws ApiException, Throwable {
+		JAXBContentType jaxbContentType = (JAXBContentType) jaxbEntityType;
+		Content contentType = (Content) newEntityType;
+		boolean defaultModelCheck = this.checkContentModel(jaxbContentType.getDefaultModelId(), contentType, response);
+		if (defaultModelCheck) {
+			contentType.setDefaultModel(String.valueOf(jaxbContentType.getDefaultModelId()));
+		}
+		boolean listModelCheck = this.checkContentModel(jaxbContentType.getListModelId(), contentType, response);
+		if (listModelCheck) {
+			contentType.setListModel(String.valueOf(jaxbContentType.getListModelId()));
+		}
+	}
+	
     public StringApiResponse updateContentType(JAXBContentType jaxbContentType) throws Throwable {
-        StringApiResponse response = new StringApiResponse();
-        try {
-            String typeCode = jaxbContentType.getTypeCode();
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist", Response.Status.CONFLICT);
-            }
-            Map<String, AttributeInterface> attributes = this.getContentManager().getEntityAttributePrototypes();
-            Content contentType = (Content) jaxbContentType.buildEntityType(this.getContentManager().getEntityClass(), attributes);
-            boolean defaultModelCheck = this.checkContentModel(jaxbContentType.getDefaultModelId(), contentType, response);
-            if (defaultModelCheck) {
-                contentType.setDefaultModel(String.valueOf(jaxbContentType.getDefaultModelId()));
-            }
-            boolean listModelCheck = this.checkContentModel(jaxbContentType.getListModelId(), contentType, response);
-            if (listModelCheck) {
-                contentType.setListModel(String.valueOf(jaxbContentType.getListModelId()));
-            }
-            ((IEntityTypesConfigurer) this.getContentManager()).updateEntityPrototype(contentType);
-            response.setResult(IResponseBuilder.SUCCESS, null);
-        } catch (ApiException ae) {
-            response.addErrors(ae.getErrors());
-            response.setResult(IResponseBuilder.FAILURE, null);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateContentType");
-            throw new ApsSystemException("Error updating content type", t);
-        }
-        return response;
+        return super.updateEntityType(jaxbContentType);
     }
+	
+	@Override
+	protected void checkEntityTypeToUpdate(JAXBEntityType jaxbEntityType, IApsEntity entityTypeToUpdate, StringApiResponse response) throws ApiException, Throwable {
+		JAXBContentType jaxbContentType = (JAXBContentType) jaxbEntityType;
+		Content contentType = (Content) entityTypeToUpdate;
+		boolean defaultModelCheck = this.checkContentModel(jaxbContentType.getDefaultModelId(), contentType, response);
+		if (defaultModelCheck) {
+			contentType.setDefaultModel(String.valueOf(jaxbContentType.getDefaultModelId()));
+		}
+		boolean listModelCheck = this.checkContentModel(jaxbContentType.getListModelId(), contentType, response);
+		if (listModelCheck) {
+			contentType.setListModel(String.valueOf(jaxbContentType.getListModelId()));
+		}
+	}
     
     private boolean checkContentModel(Integer modelId, Content contentType, StringApiResponse response) {
-        if (null == modelId) return true;
+        if (null == modelId) {
+			return true;
+		}
         ContentModel contentModel = this.getContentModelManager().getContentModel(modelId);
         if (null == contentModel) {
             ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
@@ -156,24 +122,39 @@ public class ApiContentTypeInterface extends AbstractCmsApiInterface {
     }
     
     public void deleteContentType(Properties properties) throws ApiException, Throwable {
-        try {
-            String typeCode = properties.getProperty("code");
-            Content masterContentType = (Content) this.getContentManager().getEntityPrototype(typeCode);
-            if (null == masterContentType) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type with code '" + typeCode + "' doesn't exist", Response.Status.CONFLICT);
-            }
-            EntitySearchFilter filter = new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, typeCode, false);
-            List<String> contentIds = this.getContentManager().searchId(new EntitySearchFilter[]{filter});
-            if (null != contentIds && !contentIds.isEmpty()) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Content type '" + typeCode + "' are used into " + contentIds.size() + " contents", Response.Status.CONFLICT);
-            }
-            ((IEntityTypesConfigurer) this.getContentManager()).removeEntityPrototype(typeCode);
-        } catch (ApiException ae) {
-            throw ae;
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteContentType");
-            throw new ApsSystemException("Error deleting content type", t);
-        }
+        super.deleteEntityType(properties);
+    }
+	
+	@Override
+	protected String getTypeLabel() {
+		return "Content type";
+	}
+	
+	@Override
+	protected String getTypeCodeParamName() {
+		return "code";
+	}
+	
+	@Override
+	protected IEntityManager getEntityManager() {
+		return this.getContentManager();
+	}
+    
+    protected IContentManager getContentManager() {
+        return _contentManager;
+    }
+    public void setContentManager(IContentManager contentManager) {
+        this._contentManager = contentManager;
     }
     
+    protected IContentModelManager getContentModelManager() {
+        return _contentModelManager;
+    }
+    public void setContentModelManager(IContentModelManager contentModelManager) {
+        this._contentModelManager = contentModelManager;
+    }
+    
+    private IContentManager _contentManager;
+    private IContentModelManager _contentModelManager;
+	
 }
