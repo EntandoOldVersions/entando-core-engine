@@ -82,6 +82,17 @@ public class SystemInstallationReport {
 		}
 	}
 	
+	public static boolean isSafeStatus(Status status) {
+		if (null == status) {
+			return false;
+		}
+		return (status.equals(SystemInstallationReport.Status.OK) || 
+				status.equals(SystemInstallationReport.Status.PORTING) || 
+				status.equals(SystemInstallationReport.Status.RESTORE) || 
+				status.equals(SystemInstallationReport.Status.NOT_AVAILABLE) || 
+				status.equals(SystemInstallationReport.Status.SKIPPED));
+	}
+	
 	public static SystemInstallationReport getInstance() {
 		return new SystemInstallationReport(Status.INIT);
 	}
@@ -189,7 +200,7 @@ public class SystemInstallationReport {
 	private boolean _updated;
 	private List<ComponentInstallationReport> _reports = new ArrayList<ComponentInstallationReport>();
 	
-	public enum Status {OK, PORTING, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT}
+	public enum Status {OK, PORTING, SKIPPED, RESTORE, INCOMPLETE, NOT_AVAILABLE, INIT}
 	
 	protected static final String ROOT_ELEMENT = "reports";
 	protected static final String CREATION_ELEMENT = "creation";

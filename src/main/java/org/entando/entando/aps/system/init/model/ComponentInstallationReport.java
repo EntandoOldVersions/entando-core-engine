@@ -88,16 +88,14 @@ public class ComponentInstallationReport {
 	public SystemInstallationReport.Status getStatus() {
 		SystemInstallationReport.Status schemaStatus = this.getDataSourceReport().getStatus();
 		SystemInstallationReport.Status dataStatus = this.getDataReport().getStatus();
-		SystemInstallationReport.Status incomplete = SystemInstallationReport.Status.INCOMPLETE;
-		SystemInstallationReport.Status notAvailable = SystemInstallationReport.Status.NOT_AVAILABLE;
-		SystemInstallationReport.Status ok = SystemInstallationReport.Status.OK;
-		SystemInstallationReport.Status postProcessStatus = (null != this.getPostProcessStatus()) ? this.getPostProcessStatus() : notAvailable;
-		boolean postProcessOk = (postProcessStatus.equals(ok) || postProcessStatus.equals(notAvailable));
-		if (schemaStatus.equals(incomplete) || dataStatus.equals(incomplete) || 
-				(!postProcessOk && !postProcessStatus.equals(SystemInstallationReport.Status.NOT_AVAILABLE))) {
+		boolean isSchemaStatusSafe = SystemInstallationReport.isSafeStatus(schemaStatus);
+		boolean isDataStatusSafe = SystemInstallationReport.isSafeStatus(dataStatus);
+		SystemInstallationReport.Status postProcessStatus = this.getPostProcessStatus();
+		boolean isPostProcessStatusSafe = SystemInstallationReport.isSafeStatus(postProcessStatus);
+		if (!isSchemaStatusSafe || !isDataStatusSafe || 
+				(!isPostProcessStatusSafe && !postProcessStatus.equals(SystemInstallationReport.Status.INIT))) {
 			return SystemInstallationReport.Status.INCOMPLETE;
-		} else if (schemaStatus.equals(ok) && dataStatus.equals(ok) && 
-				(postProcessOk || postProcessStatus.equals(SystemInstallationReport.Status.NOT_AVAILABLE))) {
+		} else if (isSchemaStatusSafe && isDataStatusSafe && isPostProcessStatusSafe) {
 			return SystemInstallationReport.Status.OK;
 		} else {
 			return SystemInstallationReport.Status.INIT;

@@ -39,14 +39,10 @@ import org.springframework.beans.FatalBeanException;
 public class InitializerManager extends AbstractInitializerManager {
 	
 	public void init() throws Exception {
-		if (!this.isCheckOnStartup()) {
-			ApsSystemUtils.getLogger().config(this.getClass().getName() + ": short init executed");
-			return;
-		}
 		SystemInstallationReport report = null;
 		try {
 			report = this.extractReport();
-			report = ((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report);
+			report = ((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report, this.isCheckOnStartup());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
@@ -55,13 +51,11 @@ public class InitializerManager extends AbstractInitializerManager {
 				this.saveReport(report);
 			}
 		}
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
+		ApsSystemUtils.getLogger().config(this.getClass().getName() 
+				+ ": initializated - Check on startup " + this.isCheckOnStartup());
 	}
 	
 	public void executePostInitProcesses() throws BeansException {
-		if (!this.isCheckOnStartup()) {
-			return;
-		}
 		SystemInstallationReport report = null;
 		try {
 			report = this.extractReport();
@@ -81,7 +75,9 @@ public class InitializerManager extends AbstractInitializerManager {
 				List<IPostProcess> postProcesses = (null != componentEnvironment) ? componentEnvironment.getPostProcesses() : null;
 				if (null == postProcesses || postProcesses.isEmpty()) {
 					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
-				} else if (!componentReport.isPostProcessExecutionRequired()) {
+				} else if (!this.isCheckOnStartup()) {
+					postProcessStatus = SystemInstallationReport.Status.SKIPPED;
+				} if (!componentReport.isPostProcessExecutionRequired()) {
 					//Porting or restore
 					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
 				} else {

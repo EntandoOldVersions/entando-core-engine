@@ -24,6 +24,6 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
  */
 public interface IDatabaseInstallerManager {
 	
-	public SystemInstallationReport installDatabase(SystemInstallationReport report) throws Exception;
+	public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStartup) throws Exception;
 	
 }
