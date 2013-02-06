@@ -254,11 +254,11 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
 						"Content type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
             }
             Content content = (Content) jaxbContent.buildEntity(prototype, this.getCategoryManager());
-            if (null != content.getId() && null != this.getContentManager().loadContentVO(content.getId())) {
+            if (null != content.getId()) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
-						"Content with code '" + content.getId() + "' already exists", Response.Status.CONFLICT);
+						"You cannot specify Content Id", Response.Status.CONFLICT);
             }
-            response = this.validateAndSaveContent(content, properties);
+			response = this.validateAndSaveContent(content, properties);
         } catch (ApiException ae) {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
