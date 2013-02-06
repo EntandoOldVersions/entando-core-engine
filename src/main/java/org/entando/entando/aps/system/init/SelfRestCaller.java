@@ -23,6 +23,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.FileTextReader;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 import java.util.Properties;
@@ -42,6 +44,8 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * @author E.Santoboni
@@ -62,7 +66,8 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 			if (method.getHttpMethod().equals(ApiMethod.HttpMethod.GET) || method.getHttpMethod().equals(ApiMethod.HttpMethod.DELETE)) {
 				result = responseBuilder.createResponse(method, properties);
 			} else {
-				Object bodyObject = UnmarshalUtils.unmarshal(method, selfRestCall.getContentBody(), selfRestCall.getContentType());
+				String contentBody = this.getContentBody(selfRestCall);
+				Object bodyObject = UnmarshalUtils.unmarshal(method, contentBody, selfRestCall.getContentType());
 				result = responseBuilder.createResponse(method, bodyObject, properties);
 			}
 			Response.Status responseStatus = this.extractResponseStatusCode(result);
@@ -102,6 +107,29 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 			throw new ApsSystemException("Error extracting parameters", t);
 		}
 		return properties;
+	}
+	
+	private String getContentBody(SelfRestCallPostProcess selfRestCall) throws Throwable {
+		String contentBody = selfRestCall.getContentBody();
+		if ((null == contentBody || contentBody.trim().length() > 0) && null != selfRestCall.getContentBodyPath()) {
+			String path = selfRestCall.getContentBodyPath();
+			InputStream is = null;
+			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+			Resource resource = resolver.getResource(path);
+			try {
+				is = resource.getInputStream();
+				contentBody = FileTextReader.getText(is);
+			} catch (Throwable t) {
+				ApsSystemUtils.logThrowable(t, this, "getContentBody", 
+						"Error loading contentBody from file '" + path + "'");
+				throw t;
+			} finally {
+				if (null != is) {
+					is.close();
+				}
+			}
+		}
+		return contentBody;
 	}
 	
 	private void printResponse(SelfRestCallPostProcess selfRestCall, Object result, 
