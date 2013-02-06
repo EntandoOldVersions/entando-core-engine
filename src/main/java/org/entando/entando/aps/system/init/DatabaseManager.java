@@ -54,7 +54,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void init() throws Exception {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
 	}
-
+	
 	@Override
 	public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStatup) throws Exception {
 		String lastLocalBackupFolder = null;
@@ -87,7 +87,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				Component entandoComponentConfiguration = components.get(i);
 				this.initComponentDefaultResources(entandoComponentConfiguration, report, checkOnStatup);
 			}
-			if (!checkOnStatup && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
+			if (checkOnStatup && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
 				if (null != lastLocalBackupFolder) {
 					this.restoreBackup(lastLocalBackupFolder);
 				} else {
@@ -122,10 +122,12 @@ public class DatabaseManager extends AbstractInitializerManager
 			System.out.println(logPrefix + "Starting installation");
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
-				if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-						|| report.getStatus().equals(SystemInstallationReport.Status.RESTORE))  && checkOnStatup) {
+				if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
 					System.out.println(logPrefix + " - Already present! db " + dataSourceName);
-					databasesStatus.put(dataSourceName, report.getStatus());
+					SystemInstallationReport.Status status = (checkOnStatup) 
+							? report.getStatus() 
+							: SystemInstallationReport.Status.SKIPPED;
+					databasesStatus.put(dataSourceName, status);
 					report.setUpdated();
 					continue;
 				}
@@ -200,10 +202,11 @@ public class DatabaseManager extends AbstractInitializerManager
 					report.setUpdated();
 					continue;
 				}
-				if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-						|| report.getStatus().equals(SystemInstallationReport.Status.RESTORE))  && checkOnStatup) {
-					//Porting process
-					dataSourceReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
+				if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
+					SystemInstallationReport.Status status = (checkOnStatup) 
+							? report.getStatus() 
+							: SystemInstallationReport.Status.SKIPPED;
+					dataSourceReport.getDatabaseStatus().put(dataSourceName, status);
 					ApsSystemUtils.getLogger().info(logPrefix + "✔  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
 					System.out.println(logPrefix + "✔  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
 					continue;
