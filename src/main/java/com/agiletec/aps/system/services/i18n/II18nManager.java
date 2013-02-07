@@ -38,6 +38,8 @@ public interface II18nManager {
 	 */
 	public String getLabel(String key, String langCode) throws ApsSystemException;
 	
+	public ApsProperties getLabelGroup(String key) throws ApsSystemException;
+	
 	/**
 	 * Add a group of labels on db.
 	 * @param key The key of the labels.
