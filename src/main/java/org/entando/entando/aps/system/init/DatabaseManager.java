@@ -50,11 +50,11 @@ import org.springframework.web.context.ServletContextAware;
  */
 public class DatabaseManager extends AbstractInitializerManager
 		implements IDatabaseManager, IDatabaseInstallerManager, ServletContextAware {
-	
+
 	public void init() throws Exception {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
 	}
-	
+
 	@Override
 	public SystemInstallationReport installDatabase(SystemInstallationReport report, boolean checkOnStatup) throws Exception {
 		String lastLocalBackupFolder = null;
@@ -124,8 +124,8 @@ public class DatabaseManager extends AbstractInitializerManager
 				String dataSourceName = dataSourceNames[i];
 				if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
 					System.out.println(logPrefix + " - Already present! db " + dataSourceName);
-					SystemInstallationReport.Status status = (checkOnStatup) 
-							? report.getStatus() 
+					SystemInstallationReport.Status status = (checkOnStatup)
+							? report.getStatus()
 							: SystemInstallationReport.Status.SKIPPED;
 					databasesStatus.put(dataSourceName, status);
 					report.setUpdated();
@@ -203,8 +203,8 @@ public class DatabaseManager extends AbstractInitializerManager
 					continue;
 				}
 				if (report.getStatus().equals(SystemInstallationReport.Status.PORTING)) {
-					SystemInstallationReport.Status status = (checkOnStatup) 
-							? report.getStatus() 
+					SystemInstallationReport.Status status = (checkOnStatup)
+							? report.getStatus()
 							: SystemInstallationReport.Status.SKIPPED;
 					dataSourceReport.getDatabaseStatus().put(dataSourceName, status);
 					ApsSystemUtils.getLogger().info(logPrefix + "✔  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
@@ -254,7 +254,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
-	
+
 	protected DatabaseType getType(DataSource dataSource) throws ApsSystemException {
 		String typeString = null;
 		try {
@@ -693,14 +693,14 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 		return null;
 	}
-	
+
 	protected Properties getDatabaseTypeDrivers() {
 		return _databaseTypeDrivers;
 	}
 	public void setDatabaseTypeDrivers(Properties databaseTypeDrivers) {
 		this._databaseTypeDrivers = databaseTypeDrivers;
 	}
-	
+
 	@Override
 	public Map<String, List<String>> getEntandoTableMapping() {
 		return _entandoTableMapping;
@@ -708,35 +708,35 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
 		this._entandoTableMapping = entandoTableMapping;
 	}
-	
+
 	protected Map<String, Resource> getEntandoDefaultSqlResources() {
 		return _entandoDefaultSqlResources;
 	}
 	public void setEntandoDefaultSqlResources(Map<String, Resource> entandoDefaultSqlResources) {
 		this._entandoDefaultSqlResources = entandoDefaultSqlResources;
 	}
-	
+
 	protected Map<String, Resource> getTestSqlResources() {
 		return _testSqlResources;
 	}
 	public void setTestSqlResources(Map<String, Resource> testSqlResources) {
 		this._testSqlResources = testSqlResources;
 	}
-	
+
 	protected Map<String, Resource> getDefaultSqlDump() {
 		return _defaultSqlDump;
 	}
 	public void setDefaultSqlDump(Map<String, Resource> defaultSqlDump) {
 		this._defaultSqlDump = defaultSqlDump;
 	}
-	
+
 	protected String getProtectedBaseDiskRoot() {
 		return _protectedBaseDiskRoot;
 	}
 	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
 		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
-	
+
 	@Override
 	public int getStatus() {
 		return _status;
@@ -744,14 +744,14 @@ public class DatabaseManager extends AbstractInitializerManager
 	protected void setStatus(int status) {
 		this._status = status;
 	}
-	
+
 	protected IComponentManager getComponentManager() {
 		return _componentManager;
 	}
 	public void setComponentManager(IComponentManager componentManager) {
 		this._componentManager = componentManager;
 	}
-	
+
 	protected ServletContext getServletContext() {
 		return _servletContext;
 	}
@@ -759,7 +759,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setServletContext(ServletContext servletContext) {
 		this._servletContext = servletContext;
 	}
-	
+
 	private Properties _databaseTypeDrivers;
 	private Map<String, List<String>> _entandoTableMapping;
 	private Map<String, Resource> _entandoDefaultSqlResources;
@@ -771,5 +771,5 @@ public class DatabaseManager extends AbstractInitializerManager
 	public static final int STATUS_READY = 0;
 	public static final int STATUS_DUMPIMG_IN_PROGRESS = 1;
 	private ServletContext _servletContext;
-	
+
 }
