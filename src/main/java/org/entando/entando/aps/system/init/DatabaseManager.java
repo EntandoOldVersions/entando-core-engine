@@ -344,18 +344,17 @@ public class DatabaseManager extends AbstractInitializerManager
 				String script = this.readFile(resource);
 				if (null != script && script.trim().length() != 0) {
 					if (checkOnStatup) {
-						System.out.print("logDbDataPrefix" + " - Installation started... ");
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 						DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
-						System.out.println("DONE!!!");
+						System.out.println("|   ( ok )  " + dataSourceName);
 					} else {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
 					}
 					report.setUpdated();
 				} else {
-					System.out.println("logDbDataPrefix" + " - NOT AVAILABLE!");
+					System.out.println(logPrefix + "( !! )  skipping " + dataSourceName + ": not available");
 					dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
 					report.setUpdated();
 				}
@@ -408,17 +407,16 @@ public class DatabaseManager extends AbstractInitializerManager
 				String script = (null != resource) ? this.readFile(resource) : null;
 				if (null != script && script.trim().length() > 0) {
 					if (checkOnStatup) {
-						System.out.print("logDbDataPrefix" + " - Installation started... ");
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
-						System.out.println("DONE!!!");
+						System.out.println("|   ( ok )  " + dataSourceName);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
 					} else {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.SKIPPED);
 					}
 					report.setUpdated();
 				} else {
-					System.out.println("logDbDataPrefix" + " - NOT AVAILABLE!");
+					System.out.println(logPrefix + "( !! )  skipping " + dataSourceName + ": not available");
 					dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.NOT_AVAILABLE);
 					report.setUpdated();
 				}
