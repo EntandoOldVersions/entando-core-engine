@@ -111,7 +111,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 	
 	private String getContentBody(SelfRestCallPostProcess selfRestCall) throws Throwable {
 		String contentBody = selfRestCall.getContentBody();
-		if ((null == contentBody || contentBody.trim().length() > 0) && null != selfRestCall.getContentBodyPath()) {
+		if ((null == contentBody || contentBody.trim().length() == 0) && null != selfRestCall.getContentBodyPath()) {
 			String path = selfRestCall.getContentBodyPath();
 			InputStream is = null;
 			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
