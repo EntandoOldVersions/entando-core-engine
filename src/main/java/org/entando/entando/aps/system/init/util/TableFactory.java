@@ -124,7 +124,7 @@ public class TableFactory {
           continue;
         }
         try {
-          System.out.println("|   ✔  " + this.getDatabaseName() + "." + tableName);
+          System.out.println("|   ( ok )  " + this.getDatabaseName() + "." + tableName);
           this.createTable(tableClass, connectionSource);
           //if (!tables.contains(tableName)) {
           tables.add(tableName);
