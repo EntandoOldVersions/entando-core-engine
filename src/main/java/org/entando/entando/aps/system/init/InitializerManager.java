@@ -77,7 +77,7 @@ public class InitializerManager extends AbstractInitializerManager {
 					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
 				} else if (!this.isCheckOnStartup()) {
 					postProcessStatus = SystemInstallationReport.Status.SKIPPED;
-				} if (!componentReport.isPostProcessExecutionRequired()) {
+				} else if (!componentReport.isPostProcessExecutionRequired()) {
 					//Porting or restore
 					postProcessStatus = SystemInstallationReport.Status.NOT_AVAILABLE;
 				} else {

@@ -18,6 +18,7 @@
 package org.entando.entando.apsadmin.api;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -89,12 +90,13 @@ public class ApiServiceAction extends AbstractApiAction {
 			throw new RuntimeException("Error checking service key", t);
 		}
 	}
-
+	
 	private void checkParameters() {
 		try {
 			this.setApiParameterValues(new ApsProperties());
 			ApiMethod masterMethod = this.getMethod(this.getNamespace(), this.getResourceName());
 			List<ApiMethodParameter> apiParameters = masterMethod.getParameters();
+			this.extractFreeParameters(apiParameters);
 			this.setApiParameters(apiParameters);
 			for (int i = 0; i < apiParameters.size(); i++) {
 				ApiMethodParameter apiParameter = apiParameters.get(i);
@@ -111,6 +113,20 @@ public class ApiServiceAction extends AbstractApiAction {
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "checkParameters");
 			throw new RuntimeException("Error checking parameters", t);
+		}
+	}
+	
+	private void extractFreeParameters(List<ApiMethodParameter> apiParameters) {
+		if (null == apiParameters) {
+			return;
+		}
+		for (int i = 0; i < apiParameters.size(); i++) {
+			ApiMethodParameter apiMethodParameter = apiParameters.get(i);
+			String requestParamName = "freeParameter_" + apiMethodParameter.getKey();
+			String value = this.getRequest().getParameter(requestParamName);
+			if (null != value && Boolean.parseBoolean(value)) {
+				this.getFreeParameters().add(apiMethodParameter.getKey());
+			}
 		}
 	}
 	
@@ -580,7 +596,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	
 	private List<ApiMethodParameter> _apiParameters;
 	private ApsProperties _apiParameterValues;
-	private List<String> _freeParameters;
+	private List<String> _freeParameters = new ArrayList<String>();
 	private String _tag;
 	private String _pageCode;
 	private Integer _framePos;
