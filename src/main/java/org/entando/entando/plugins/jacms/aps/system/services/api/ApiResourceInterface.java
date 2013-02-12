@@ -38,6 +38,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -166,7 +168,15 @@ public class ApiResourceInterface {
 				return response;
 			}
 			BaseResourceDataBean bean = jaxbResource.createBataBean(this.getCategoryManager());
-			bean.setResourceId(null);
+			String id = bean.getResourceId();
+			if (null != id && id.trim().length() > 0) {
+				Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
+				Matcher matcher = pattern.matcher(id);
+				if (!matcher.matches()) {
+					throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, 
+						"The resourceId can contain only alphabetic characters", Response.Status.CONFLICT);
+				}
+			}
 			this.getResourceManager().addResource(bean);
 			response.setResult(IResponseBuilder.SUCCESS);
         } catch (Throwable t) {
