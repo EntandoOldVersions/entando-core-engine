@@ -118,7 +118,7 @@ public class ResourceManager extends AbstractService
     }
 	
 	private void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
-		if (null == id || id.trim().length() > 0) {
+		if (null == id || id.trim().length() == 0) {
 			IKeyGeneratorManager keyGenerator = 
 					(IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
 			int newId = keyGenerator.getUniqueKeyCurrentValue();
