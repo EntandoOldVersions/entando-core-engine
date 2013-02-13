@@ -159,7 +159,7 @@ public class ApiResourceInterface {
         return this.addResource(jaxbResource, properties);
     }
 	
-	public StringApiResponse addResource(JAXBResource jaxbResource, Properties properties) throws Throwable {
+	public StringApiResponse addResource(JAXBResource jaxbResource, Properties properties) throws ApiException, Throwable {
         StringApiResponse response = new StringApiResponse();
 		try {
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
@@ -179,6 +179,8 @@ public class ApiResourceInterface {
 			}
 			this.getResourceManager().addResource(bean);
 			response.setResult(IResponseBuilder.SUCCESS);
+        } catch (ApiException ae) {
+            throw ae;
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "addResource");
             throw new ApsSystemException("Error into API method", t);
