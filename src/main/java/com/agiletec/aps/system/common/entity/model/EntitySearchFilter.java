@@ -328,12 +328,16 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 				}
 			}
 		}
-		if (null == values || values.size() == 0) return null;
+		if (null == values || values.isEmpty()) {
+			return null;
+		}
 		return values;
 	}
 	
 	private static Object getDataObject(String stringValue, String dataType) {
-		if (null == stringValue) return null;
+		if (null == stringValue) {
+			return null;
+		}
 		Object object = null;
 		if (dataType.equals(DATA_TYPE_DATE)) {
 			object = buildDate(stringValue);
@@ -387,7 +391,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	public static final String END_PARAM = "end";
 	public static final String ORDER_PARAM = "order";
 	public static final String DATA_TYPE_PARAM = "dataType";
-        public static final String NULL_VALUE_PARAM = "nullValue";
+    public static final String NULL_VALUE_PARAM = "nullValue";
 	
 	public static final String DATA_TYPE_STRING = "string";
 	public static final String DATA_TYPE_DATE = "date";

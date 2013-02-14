@@ -31,8 +31,8 @@ import org.springframework.core.io.Resource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Shortcut Loader Class.
@@ -40,12 +40,12 @@ import com.agiletec.aps.util.FileTextReader;
  */
 public class ApiResourceLoader {
     
-    protected ApiResourceLoader(String locationPatterns, ServletContext servletContext) throws ApsSystemException {
+    protected ApiResourceLoader(String locationPatterns) throws ApsSystemException {
         try {
             StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
             while (tokenizer.hasMoreTokens()) {
                 String locationPattern = tokenizer.nextToken().trim();
-                this.loadApiResources(locationPattern, servletContext);
+                this.loadApiResources(locationPattern);
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
@@ -53,9 +53,10 @@ public class ApiResourceLoader {
         }
     }
     
-    private void loadApiResources(String locationPattern, ServletContext servletContext) throws Exception {
+    private void loadApiResources(String locationPattern) throws Exception {
         Logger log = ApsSystemUtils.getLogger();
-        Resource[] resources = ApsWebApplicationUtils.getResources(locationPattern, servletContext);
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		Resource[] resources = resolver.getResources(locationPattern);
         ApiResourcesDefDOM dom = null;
         for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
@@ -71,14 +72,13 @@ public class ApiResourceLoader {
                     while (extractedResourcesIter.hasNext()) {
                         ApiResource apiResource = extractedResourcesIter.next();
                         if (null != this.getResources().get(apiResource.getCode())) {
-                            String alertMessage = "ALERT: Into definition file '" + path + "' "
+                            String alertMessage = "Into definition file '" + path + "' "
                                     + "there is an API with namespace '" + apiResource.getNamespace() 
 									+ "', resource '" + apiResource.getResourceName()
                                     + "' and there is just one already present - The old definition will be overrided!!!";
-                            ApsSystemUtils.getLogger().severe(alertMessage);
-                        }// else {
+                            ApsSystemUtils.getLogger().info(alertMessage);
+                        }
                         this.getResources().put(apiResource.getCode(), apiResource);
-                        //}
                     }
                 }
                 log.info("Loaded Api Resources definition by file " + path);

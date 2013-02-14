@@ -13,4 +13,12 @@
 			class="com.agiletec.apsadmin.admin.lang.LangFinderAction" parent="abstractBaseAction" >
 	</bean>
 	
+	<bean id="localeStringAction" scope="prototype" class="com.agiletec.apsadmin.admin.localestring.LocaleStringAction" parent="abstractBaseAction" >
+		<property name="i18nManager" ref="I18nManager" />
+	</bean>
+	
+	<bean id="localeStringFinderAction" scope="prototype" class="com.agiletec.apsadmin.admin.localestring.LocaleStringFinderAction" parent="abstractBaseAction" >
+		<property name="i18nManager" ref="I18nManager" />
+	</bean>
+	
 </beans>

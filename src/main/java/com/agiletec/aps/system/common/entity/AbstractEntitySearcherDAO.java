@@ -253,17 +253,17 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			query.append("* ");
 		} else {
 			query.append(this.getEntityMasterTableIdFieldName());
-			if (this.isForceTextCaseSearch() && filters != null) {
-				String searchTableName = this.getEntitySearchTableName();
-				for (int i=0; i<filters.length; i++) {
-					EntitySearchFilter filter = filters[i];
-					if (!filter.isAttributeFilter() && filter.isLikeOption()) {
-						query.append(", ").append(masterTableName).append(".").append(this.getTableFieldName(filters[i].getKey()));
-					} else if (filter.isAttributeFilter() && filter.isLikeOption()) {
-						String columnName = this.getAttributeFieldColunm(filter);
-						query.append(", ").append(searchTableName).append(i).append(".").append(columnName);
-						query.append(" AS ").append(columnName).append(i).append(" ");
-					}
+		}
+		if (this.isForceTextCaseSearch() && filters != null) {
+			String searchTableName = this.getEntitySearchTableName();
+			for (int i=0; i<filters.length; i++) {
+				EntitySearchFilter filter = filters[i];
+				if (!filter.isAttributeFilter() && filter.isLikeOption()) {
+					query.append(", ").append(masterTableName).append(".").append(this.getTableFieldName(filters[i].getKey()));
+				} else if (filter.isAttributeFilter() && filter.isLikeOption()) {
+					String columnName = this.getAttributeFieldColunm(filter);
+					query.append(", ").append(searchTableName).append(i).append(".").append(columnName);
+					query.append(" AS ").append(columnName).append(i).append(" ");
 				}
 			}
 		}

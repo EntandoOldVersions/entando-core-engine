@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2012-08-03 23:29:42 CEST
+-- Started on 2012-09-28 22:14:53 CEST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -22,24 +22,24 @@ SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
-SET default_with_oids = true;
+SET default_with_oids = false;
 
 --
--- TOC entry 127 (class 1259 OID 5616043)
--- Dependencies: 6
+-- TOC entry 128 (class 1259 OID 6028658)
+-- Dependencies: 3
 -- Name: categories; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE categories (
     catcode character varying(30) NOT NULL,
     parentcode character varying(30) NOT NULL,
-    titles character varying NOT NULL
+    titles text NOT NULL
 );
 
 
 --
--- TOC entry 128 (class 1259 OID 5616049)
--- Dependencies: 6
+-- TOC entry 129 (class 1259 OID 6028666)
+-- Dependencies: 3
 -- Name: contentmodels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -47,14 +47,14 @@ CREATE TABLE contentmodels (
     modelid integer NOT NULL,
     contenttype character varying(30) NOT NULL,
     descr character varying(50) NOT NULL,
-    model character varying,
+    model text,
     stylesheet character varying(50)
 );
 
 
 --
--- TOC entry 129 (class 1259 OID 5616055)
--- Dependencies: 6
+-- TOC entry 139 (class 1259 OID 6028763)
+-- Dependencies: 3
 -- Name: contentrelations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -69,20 +69,20 @@ CREATE TABLE contentrelations (
 
 
 --
--- TOC entry 130 (class 1259 OID 5616058)
--- Dependencies: 6
+-- TOC entry 130 (class 1259 OID 6028674)
+-- Dependencies: 3
 -- Name: contents; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE contents (
     contentid character varying(16) NOT NULL,
     contenttype character varying(30) NOT NULL,
-    descr character varying(260) NOT NULL,
+    descr character varying(255) NOT NULL,
     status character varying(12) NOT NULL,
-    workxml character varying NOT NULL,
+    workxml text NOT NULL,
     created character varying(20),
     lastmodified character varying(20),
-    onlinexml character varying,
+    onlinexml text,
     maingroup character varying(20) NOT NULL,
     currentversion character varying(7) NOT NULL,
     lasteditor character varying(40)
@@ -90,8 +90,8 @@ CREATE TABLE contents (
 
 
 --
--- TOC entry 131 (class 1259 OID 5616064)
--- Dependencies: 6
+-- TOC entry 140 (class 1259 OID 6028791)
+-- Dependencies: 3
 -- Name: contentsearch; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -99,106 +99,106 @@ CREATE TABLE contentsearch (
     contentid character varying(16) NOT NULL,
     attrname character varying(30) NOT NULL,
     textvalue character varying(255),
-    datevalue date,
+    datevalue timestamp without time zone,
     numvalue integer,
-    langcode character varying(2)
+    langcode character varying(3)
 );
 
 
 --
--- TOC entry 132 (class 1259 OID 5616067)
--- Dependencies: 6
+-- TOC entry 131 (class 1259 OID 6028682)
+-- Dependencies: 3
 -- Name: localstrings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE localstrings (
     keycode character varying(50) NOT NULL,
     langcode character varying(2) NOT NULL,
-    stringvalue character varying NOT NULL
+    stringvalue text NOT NULL
 );
 
 
 --
--- TOC entry 133 (class 1259 OID 5616073)
--- Dependencies: 6
+-- TOC entry 132 (class 1259 OID 6028690)
+-- Dependencies: 3
 -- Name: pagemodels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE pagemodels (
     code character varying(40) NOT NULL,
     descr character varying(50) NOT NULL,
-    frames character varying,
+    frames text,
     plugincode character varying(30)
 );
 
 
 --
--- TOC entry 134 (class 1259 OID 5616079)
--- Dependencies: 6
+-- TOC entry 133 (class 1259 OID 6028698)
+-- Dependencies: 3
 -- Name: pages; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE pages (
     code character varying(30) NOT NULL,
-    parentcode character varying(30),
+    parentcode character varying(30) NOT NULL,
     pos integer NOT NULL,
     modelcode character varying(40) NOT NULL,
-    titles character varying,
+    titles text NOT NULL,
     groupcode character varying(30) NOT NULL,
     showinmenu smallint NOT NULL,
-    extraconfig character varying
+    extraconfig text
 );
 
 
 --
--- TOC entry 135 (class 1259 OID 5616085)
--- Dependencies: 6
+-- TOC entry 135 (class 1259 OID 6028719)
+-- Dependencies: 3
 -- Name: resourcerelations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE resourcerelations (
     resid character varying(16) NOT NULL,
-    refcategory character varying(30)
+    refcategory character varying(30) NOT NULL
 );
 
 
 --
--- TOC entry 136 (class 1259 OID 5616088)
--- Dependencies: 6
+-- TOC entry 134 (class 1259 OID 6028711)
+-- Dependencies: 3
 -- Name: resources; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE resources (
     resid character varying(16) NOT NULL,
     restype character varying(30) NOT NULL,
-    descr character varying(260) NOT NULL,
+    descr character varying(255) NOT NULL,
     maingroup character varying(20) NOT NULL,
-    resourcexml character varying NOT NULL,
+    resourcexml text NOT NULL,
     masterfilename character varying(100) NOT NULL
 );
 
 
 --
--- TOC entry 137 (class 1259 OID 5616094)
--- Dependencies: 6
+-- TOC entry 136 (class 1259 OID 6028732)
+-- Dependencies: 3
 -- Name: showletcatalog; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE showletcatalog (
     code character varying(40) NOT NULL,
-    titles character varying NOT NULL,
-    parameters character varying,
+    titles text NOT NULL,
+    parameters text,
     plugincode character varying(30),
     parenttypecode character varying(40),
-    defaultconfig character varying,
-    locked smallint NOT NULL,
+    defaultconfig text,
+    locked integer NOT NULL,
     maingroup character varying(20)
 );
 
 
 --
--- TOC entry 138 (class 1259 OID 5616100)
--- Dependencies: 6
+-- TOC entry 137 (class 1259 OID 6028740)
+-- Dependencies: 3
 -- Name: showletconfig; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -206,28 +206,28 @@ CREATE TABLE showletconfig (
     pagecode character varying(30) NOT NULL,
     framepos integer NOT NULL,
     showletcode character varying(40) NOT NULL,
-    config character varying,
+    config text,
     publishedcontent character varying(30)
 );
 
 
 --
--- TOC entry 139 (class 1259 OID 5616106)
--- Dependencies: 6
+-- TOC entry 127 (class 1259 OID 6028650)
+-- Dependencies: 3
 -- Name: sysconfig; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE sysconfig (
     version character varying(10) NOT NULL,
     item character varying(40) NOT NULL,
-    descr character varying(100),
-    config character varying
+    descr character varying(100) NOT NULL,
+    config text NOT NULL
 );
 
 
 --
--- TOC entry 140 (class 1259 OID 5616112)
--- Dependencies: 6
+-- TOC entry 138 (class 1259 OID 6028758)
+-- Dependencies: 3
 -- Name: uniquekeys; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -238,8 +238,8 @@ CREATE TABLE uniquekeys (
 
 
 --
--- TOC entry 141 (class 1259 OID 5616115)
--- Dependencies: 6
+-- TOC entry 141 (class 1259 OID 6028799)
+-- Dependencies: 3
 -- Name: workcontentrelations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -250,24 +250,24 @@ CREATE TABLE workcontentrelations (
 
 
 --
--- TOC entry 142 (class 1259 OID 5616118)
--- Dependencies: 6
+-- TOC entry 142 (class 1259 OID 6028807)
+-- Dependencies: 3
 -- Name: workcontentsearch; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE workcontentsearch (
-    contentid character varying(16),
+    contentid character varying(16) NOT NULL,
     attrname character varying(30) NOT NULL,
     textvalue character varying(255),
-    datevalue date,
+    datevalue timestamp without time zone,
     numvalue integer,
-    langcode character varying(2)
+    langcode character varying(3)
 );
 
 
 --
--- TOC entry 1802 (class 2606 OID 5616122)
--- Dependencies: 127 127
+-- TOC entry 1804 (class 2606 OID 6028665)
+-- Dependencies: 128 128
 -- Name: categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -276,8 +276,8 @@ ALTER TABLE ONLY categories
 
 
 --
--- TOC entry 1804 (class 2606 OID 5616124)
--- Dependencies: 128 128
+-- TOC entry 1806 (class 2606 OID 6028673)
+-- Dependencies: 129 129
 -- Name: contentmodels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -286,7 +286,7 @@ ALTER TABLE ONLY contentmodels
 
 
 --
--- TOC entry 1808 (class 2606 OID 5616126)
+-- TOC entry 1808 (class 2606 OID 6028681)
 -- Dependencies: 130 130
 -- Name: contents_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
@@ -296,8 +296,8 @@ ALTER TABLE ONLY contents
 
 
 --
--- TOC entry 1811 (class 2606 OID 5616128)
--- Dependencies: 132 132 132
+-- TOC entry 1810 (class 2606 OID 6028689)
+-- Dependencies: 131 131 131
 -- Name: localstrings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -306,8 +306,8 @@ ALTER TABLE ONLY localstrings
 
 
 --
--- TOC entry 1813 (class 2606 OID 5616130)
--- Dependencies: 133 133
+-- TOC entry 1812 (class 2606 OID 6028697)
+-- Dependencies: 132 132
 -- Name: pagemodels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -316,8 +316,8 @@ ALTER TABLE ONLY pagemodels
 
 
 --
--- TOC entry 1815 (class 2606 OID 5616132)
--- Dependencies: 134 134
+-- TOC entry 1814 (class 2606 OID 6028705)
+-- Dependencies: 133 133
 -- Name: pages_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -326,8 +326,8 @@ ALTER TABLE ONLY pages
 
 
 --
--- TOC entry 1817 (class 2606 OID 5616134)
--- Dependencies: 136 136
+-- TOC entry 1816 (class 2606 OID 6028718)
+-- Dependencies: 134 134
 -- Name: resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -336,8 +336,8 @@ ALTER TABLE ONLY resources
 
 
 --
--- TOC entry 1819 (class 2606 OID 5616136)
--- Dependencies: 137 137
+-- TOC entry 1818 (class 2606 OID 6028739)
+-- Dependencies: 136 136
 -- Name: showletcatalog_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -346,8 +346,8 @@ ALTER TABLE ONLY showletcatalog
 
 
 --
--- TOC entry 1821 (class 2606 OID 5616138)
--- Dependencies: 138 138 138
+-- TOC entry 1820 (class 2606 OID 6028747)
+-- Dependencies: 137 137 137
 -- Name: showletconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -356,18 +356,18 @@ ALTER TABLE ONLY showletconfig
 
 
 --
--- TOC entry 1823 (class 2606 OID 5616140)
--- Dependencies: 139 139 139
--- Name: system_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- TOC entry 1802 (class 2606 OID 6028657)
+-- Dependencies: 127 127 127
+-- Name: sysconfig_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY sysconfig
-    ADD CONSTRAINT system_pkey PRIMARY KEY (version, item);
+    ADD CONSTRAINT sysconfig_pkey PRIMARY KEY (version, item);
 
 
 --
--- TOC entry 1825 (class 2606 OID 5616142)
--- Dependencies: 140 140
+-- TOC entry 1822 (class 2606 OID 6028762)
+-- Dependencies: 138 138
 -- Name: uniquekeys_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -376,35 +376,8 @@ ALTER TABLE ONLY uniquekeys
 
 
 --
--- TOC entry 1805 (class 1259 OID 5616143)
--- Dependencies: 129 129 129
--- Name: contentrelations_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX contentrelations_idx ON contentrelations USING btree (contentid, refcategory, refgroup);
-
-
---
--- TOC entry 1806 (class 1259 OID 5616144)
--- Dependencies: 130 130
--- Name: contents_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX contents_idx ON contents USING btree (contenttype, maingroup);
-
-
---
--- TOC entry 1809 (class 1259 OID 5616145)
--- Dependencies: 131 131
--- Name: contentsearch_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX contentsearch_idx ON contentsearch USING btree (contentid, attrname);
-
-
---
--- TOC entry 1826 (class 2606 OID 5616146)
--- Dependencies: 129 1807 130
+-- TOC entry 1828 (class 2606 OID 6028766)
+-- Dependencies: 1807 139 130
 -- Name: contentrelations_contentid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -413,8 +386,8 @@ ALTER TABLE ONLY contentrelations
 
 
 --
--- TOC entry 1827 (class 2606 OID 5616151)
--- Dependencies: 127 129 1801
+-- TOC entry 1829 (class 2606 OID 6028771)
+-- Dependencies: 139 1803 128
 -- Name: contentrelations_refcategory_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -423,8 +396,8 @@ ALTER TABLE ONLY contentrelations
 
 
 --
--- TOC entry 1828 (class 2606 OID 5616156)
--- Dependencies: 129 130 1807
+-- TOC entry 1830 (class 2606 OID 6028776)
+-- Dependencies: 139 130 1807
 -- Name: contentrelations_refcontent_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -433,8 +406,8 @@ ALTER TABLE ONLY contentrelations
 
 
 --
--- TOC entry 1829 (class 2606 OID 5616161)
--- Dependencies: 134 129 1814
+-- TOC entry 1831 (class 2606 OID 6028781)
+-- Dependencies: 133 1813 139
 -- Name: contentrelations_refpage_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -443,8 +416,8 @@ ALTER TABLE ONLY contentrelations
 
 
 --
--- TOC entry 1830 (class 2606 OID 5616166)
--- Dependencies: 136 129 1816
+-- TOC entry 1832 (class 2606 OID 6028786)
+-- Dependencies: 1815 139 134
 -- Name: contentrelations_refresource_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -453,8 +426,8 @@ ALTER TABLE ONLY contentrelations
 
 
 --
--- TOC entry 1831 (class 2606 OID 5616171)
--- Dependencies: 131 1807 130
+-- TOC entry 1833 (class 2606 OID 6028794)
+-- Dependencies: 140 1807 130
 -- Name: contentsearch_contentid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -463,8 +436,8 @@ ALTER TABLE ONLY contentsearch
 
 
 --
--- TOC entry 1832 (class 2606 OID 5616176)
--- Dependencies: 134 133 1812
+-- TOC entry 1823 (class 2606 OID 6028706)
+-- Dependencies: 1811 133 132
 -- Name: pages_modelcode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -473,8 +446,8 @@ ALTER TABLE ONLY pages
 
 
 --
--- TOC entry 1833 (class 2606 OID 5616181)
--- Dependencies: 135 127 1801
+-- TOC entry 1824 (class 2606 OID 6028722)
+-- Dependencies: 135 1803 128
 -- Name: resourcerelations_refcategory_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -483,8 +456,8 @@ ALTER TABLE ONLY resourcerelations
 
 
 --
--- TOC entry 1834 (class 2606 OID 5616186)
--- Dependencies: 136 1816 135
+-- TOC entry 1825 (class 2606 OID 6028727)
+-- Dependencies: 135 134 1815
 -- Name: resourcerelations_resid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -493,8 +466,8 @@ ALTER TABLE ONLY resourcerelations
 
 
 --
--- TOC entry 1835 (class 2606 OID 5616191)
--- Dependencies: 134 138 1814
+-- TOC entry 1826 (class 2606 OID 6028748)
+-- Dependencies: 1813 137 133
 -- Name: showletconfig_pagecode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -503,8 +476,8 @@ ALTER TABLE ONLY showletconfig
 
 
 --
--- TOC entry 1836 (class 2606 OID 5616196)
--- Dependencies: 138 1818 137
+-- TOC entry 1827 (class 2606 OID 6028753)
+-- Dependencies: 137 136 1817
 -- Name: showletconfig_showletcode_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -513,8 +486,8 @@ ALTER TABLE ONLY showletconfig
 
 
 --
--- TOC entry 1837 (class 2606 OID 5616201)
--- Dependencies: 1807 141 130
+-- TOC entry 1834 (class 2606 OID 6028802)
+-- Dependencies: 1807 130 141
 -- Name: workcontentrelations_contentid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -523,8 +496,8 @@ ALTER TABLE ONLY workcontentrelations
 
 
 --
--- TOC entry 1838 (class 2606 OID 5616206)
--- Dependencies: 1807 142 130
+-- TOC entry 1835 (class 2606 OID 6028810)
+-- Dependencies: 142 130 1807
 -- Name: workcontentsearch_contentid_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -533,8 +506,8 @@ ALTER TABLE ONLY workcontentsearch
 
 
 --
--- TOC entry 1843 (class 0 OID 0)
--- Dependencies: 6
+-- TOC entry 1840 (class 0 OID 0)
+-- Dependencies: 3
 -- Name: public; Type: ACL; Schema: -; Owner: -
 --
 
@@ -544,7 +517,7 @@ GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2012-08-03 23:29:42 CEST
+-- Completed on 2012-09-28 22:14:53 CEST
 
 --
 -- PostgreSQL database dump complete

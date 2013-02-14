@@ -1,15 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.1-SNAPSHOT</version>
-	<name>Entando: Core Engine</name>
+	<version>experiment-components-SNAPSHOT</version>
+	<name>Entando: Core Engine - Experiment Components</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
 	<licenses>
@@ -19,11 +14,6 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<scm>
-		<connection>scm:git:git://github.com/entando/entando-core-engine.git</connection>
-		<developerConnection>scm:git:git@github.com:entando/entando-core-engine.git</developerConnection>
-		<url>https://github.com/entando/entando-core-engine</url>
-	</scm>	
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
@@ -53,6 +43,7 @@
 	</distributionManagement>
 -->
 	<properties>
+		<!--
 		<test.database.driver>org.postgresql.Driver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>5432</test.database.port>
@@ -60,15 +51,25 @@
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</test.database.port.url>
 		<test.database.serv.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</test.database.serv.url>
+		-->
 		<!--
 		<test.database.driver>com.mysql.jdbc.Driver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>3306</test.database.port>
-		<test.database.username>agile</test.database.username>
+		<test.database.username>root</test.database.username>
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
 		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
 		-->
+		
+		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
+		<test.database.hostname>localhost</test.database.hostname>
+		<test.database.port>1527</test.database.port>
+		<test.database.username>agile</test.database.username>
+		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:derby:${project.artifactId}testPort;create=true</test.database.port.url>
+		<test.database.serv.url>jdbc:derby:${project.artifactId}testServ;create=true</test.database.serv.url>
+		
 		<spring.version>3.0.6.RELEASE</spring.version>
 		<struts2.version>2.3.4.1</struts2.version>
 	</properties>
@@ -169,6 +170,7 @@
 							</resources>
 						</configuration>
 					</execution>
+					<!-- 
 					<execution>
 						<id>preprocess-db-resources</id>
 						<phase>process-test-resources</phase>
@@ -189,9 +191,10 @@
 							</resources>
 						</configuration>
 					</execution>
+					-->
 				</executions>
 			</plugin>
-			
+			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>sql-maven-plugin</artifactId>
@@ -201,6 +204,11 @@
 						<groupId>postgresql</groupId>
 						<artifactId>postgresql</artifactId>
 						<version>9.1-901.jdbc4</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.derby</groupId>
+						<artifactId>derby</artifactId>
+						<version>10.8.2.2</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -324,6 +332,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -731,6 +740,7 @@
 			<version>1.2.0</version>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -741,14 +751,27 @@
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.18</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.8.2.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>10.8.2.2</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -813,6 +836,24 @@
 			<version>20100527</version>
 			<type>jar</type>
 		</dependency>
+		
+		
+		
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-core</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-jdbc</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
+		
+		
+		
 	</dependencies>
 	<reporting>
 		<plugins>

@@ -32,12 +32,14 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public abstract class AbstractListAttribute extends AbstractComplexAttribute 
 		implements ListAttributeInterface {
     
+    @Override
     public Object getAttributePrototype() {
         ListAttributeInterface clone = (ListAttributeInterface) super.getAttributePrototype();
         clone.setNestedAttributeType(this.getNestedAttributeType());
         return clone;
     }
     
+	@Override
     public void setComplexAttributeConfig(Element attributeElement, Map<String, AttributeInterface> attrTypes) throws ApsSystemException {
         Element nestedTypeRootElement = attributeElement.getChild("nestedtype");
         if (null == nestedTypeRootElement) {
@@ -60,6 +62,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         if (!nestedType.isSimple()) {
             ((AbstractComplexAttribute) nestedType).setComplexAttributeConfig(nestedTypeAttributeElement, attrTypes);
         }
+		nestedType.setName(super.getName());
         this.setNestedAttributeType(nestedType);
     }
     
@@ -79,6 +82,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         this.setNestedAttributeType(nestedType);
     }
     
+    @Override
     public Element getJDOMConfigElement() {
         Element configElement = super.getJDOMConfigElement();
         Element nestedTypeRootElement = new Element("nestedtype");
@@ -88,6 +92,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         return configElement;
     }
     
+    @Override
     protected String getTypeConfigElementName() {
         return "list";
     }
@@ -97,6 +102,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
      * the list of attributes.
      * @param attribute The prototype attribute.
      */
+    @Override
     public void setNestedAttributeType(AttributeInterface attribute) {
         this._nestedType = attribute;
     }
@@ -115,6 +121,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
      * held in this class.
      * @return The code of the Attribute Type.
      */
+    @Override
     public String getNestedAttributeTypeCode() {
         return this.getNestedAttributeType().getType();
     }
@@ -127,6 +134,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
      * as such.
      * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getIndexingType()
      */
+    @Override
     public String getIndexingType() {
         return IndexableAttributeInterface.INDEXING_TYPE_NONE;
     }
@@ -138,12 +146,14 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
      * @return Return always false.
      * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearcheable()
      */
+    @Override
     public boolean isSearcheable() {
         return false;
     }
     
+    @Override
     public JAXBListAttribute getJAXBAttribute(String langCode) {
-        if (null == this.getAttributes() || this.getAttributes().size() == 0) {
+        if (null == this.getAttributes() || this.getAttributes().isEmpty()) {
             return null;
         }
         JAXBListAttribute jaxrAttribute = new JAXBListAttribute();
@@ -153,6 +163,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         return jaxrAttribute;
     }
     
+    @Override
     public JAXBListAttributeType getJAXBAttributeType() {
         JAXBListAttributeType jaxbAttribute = (JAXBListAttributeType) super.getJAXBAttributeType();
         AttributeInterface nestedType = this.getNestedAttributeType();
@@ -162,6 +173,7 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
         return jaxbAttribute;
     }
     
+    @Override
     protected DefaultJAXBAttributeType getJAXBAttributeTypeInstance() {
         return new JAXBListAttributeType();
     }
