@@ -53,7 +53,7 @@ public class ResourceRelation implements ExtendedColumnDefinition {
 			resourceTableName = "`" + resourceTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcategory_fkey FOREIGN KEY (refcategory) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcat_fkey FOREIGN KEY (refcategory) "
 				+ "REFERENCES " + categoryTableName + " (catcode)", 
 			"ALTER TABLE " + tableName + " " 
 				+ "ADD CONSTRAINT " + TABLE_NAME + "_resid_fkey FOREIGN KEY (resid) "

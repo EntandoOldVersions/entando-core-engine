@@ -100,10 +100,10 @@ public class ApiCatalogService implements ExtendedColumnDefinition {
 			groupsTableName = "`" + groupsTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_requiredgroup_fkey FOREIGN KEY (requiredgroup) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_gr_fkey FOREIGN KEY (requiredgroup) "
 				+ "REFERENCES " + groupsTableName + " (groupname)", 
 			"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_requiredpermission_fkey FOREIGN KEY (requiredpermission) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_perm_fkey FOREIGN KEY (requiredpermission) "
 				+ "REFERENCES " + permissionsTableName + " (permissionname)"};
 	}
 	

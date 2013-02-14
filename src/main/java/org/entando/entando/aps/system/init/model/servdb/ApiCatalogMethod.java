@@ -70,10 +70,14 @@ public class ApiCatalogMethod implements ExtendedColumnDefinition {
 			tableName = "`" + tableName + "`";
 			permissionsTableName = "`" + permissionsTableName + "`";
 		}
+		String primaryKeysSection = "resource , httpmethod";
+		if (IDatabaseManager.DatabaseType.ORACLE.equals(type)) {
+			primaryKeysSection = "\"RESOURCE\" , httpmethod";
+		}
 		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " 
-				+ TABLE_NAME + "_pkey PRIMARY KEY(resource , httpmethod)", 
+				+ TABLE_NAME + "_pkey PRIMARY KEY(" + primaryKeysSection + ")", 
 			"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_authorizationrequired_fkey FOREIGN KEY (authorizationrequired) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_auth_fkey FOREIGN KEY (authorizationrequired) "
 				+ "REFERENCES " + permissionsTableName + " (permissionname)"};
 	}
 	

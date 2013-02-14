@@ -54,10 +54,10 @@ public class RolePermissionReference implements ExtendedColumnDefinition {
 			permissionableName = "`" + permissionableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_permissionname_fkey FOREIGN KEY (permissionname) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_perm_fkey FOREIGN KEY (permissionname) "
 				+ "REFERENCES " + permissionableName + " (permissionname)", 
 			"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_rolename_fkey FOREIGN KEY (rolename) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_role_fkey FOREIGN KEY (rolename) "
 				+ "REFERENCES " + roleTableName + " (rolename)"};
 	}
 	

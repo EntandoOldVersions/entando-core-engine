@@ -75,19 +75,19 @@ public class ContentRelation implements ExtendedColumnDefinition {
 			categoryTableName = "`" + categoryTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_contentid_fkey FOREIGN KEY (contentid) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_contid_fkey FOREIGN KEY (contentid) "
 				+ "REFERENCES " + contentTableName + " (contentid)",
 				"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcategory_fkey FOREIGN KEY (refcategory) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcat_fkey FOREIGN KEY (refcategory) "
 				+ "REFERENCES " + categoryTableName + " (catcode)",
 				"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcontent_fkey FOREIGN KEY (refcontent) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refcont_fkey FOREIGN KEY (refcontent) "
 				+ "REFERENCES " + contentTableName + " (contentid)",
 				"ALTER TABLE " + tableName + " " 
 				+ "ADD CONSTRAINT " + TABLE_NAME + "_refpage_fkey FOREIGN KEY (refpage) "
 				+ "REFERENCES " + pageTableName + " (code)",
 				"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_refresource_fkey FOREIGN KEY (refresource) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_refres_fkey FOREIGN KEY (refresource) "
 				+ "REFERENCES " + resourceTableName + " (resid)"};
 	}
 	

@@ -53,7 +53,7 @@ public class UserGroupReference implements ExtendedColumnDefinition {
 			groupTableName = "`" + groupTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_groupname_fkey FOREIGN KEY (groupname) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_group_fkey FOREIGN KEY (groupname) "
 				+ "REFERENCES " + groupTableName + " (groupname)"};
 	}
 	

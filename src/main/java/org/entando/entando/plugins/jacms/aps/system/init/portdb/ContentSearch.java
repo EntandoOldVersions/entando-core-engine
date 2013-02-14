@@ -75,7 +75,7 @@ public class ContentSearch implements ExtendedColumnDefinition {
 			contentTableName = "`" + contentTableName + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_contentid_fkey FOREIGN KEY (contentid) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_contid_fkey FOREIGN KEY (contentid) "
 				+ "REFERENCES " + contentTableName + " (contentid)"};
 	}
 	

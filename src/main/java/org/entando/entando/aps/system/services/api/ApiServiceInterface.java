@@ -111,9 +111,10 @@ public class ApiServiceInterface {
             Iterator<Object> paramIter = properties.keySet().iterator();
             List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
             while (paramIter.hasNext()) {
-                String paramName = (String) paramIter.next();
-                if (reservedParameters.contains(paramName) || service.isFreeParameter(paramName)) {
-                    serviceParameters.put(paramName, properties.getProperty(paramName));
+                Object paramName = paramIter.next();
+				String paramNameString = paramName.toString();
+                if (reservedParameters.contains(paramNameString) || service.isFreeParameter(paramNameString)) {
+                    serviceParameters.put(paramNameString, properties.get(paramName));
                 }
             }
             response = this.getResponseBuilder().createResponse(service.getMaster(), serviceParameters);
