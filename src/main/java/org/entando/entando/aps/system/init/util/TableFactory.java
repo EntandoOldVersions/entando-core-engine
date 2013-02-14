@@ -90,7 +90,7 @@ public class TableFactory {
         } else if (type.equals(IDatabaseManager.DatabaseType.MYSQL)) {
           dataType = new MysqlDatabaseType();
         } else if (type.equals(IDatabaseManager.DatabaseType.ORACLE)) {
-          dataType = new OracleDatabaseType();
+          dataType = new ApsOracleDatabaseType();
         } else if (type.equals(IDatabaseManager.DatabaseType.SQLSERVER)) {
           dataType = new SqlServerDatabaseType();
         }
