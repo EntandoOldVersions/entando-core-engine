@@ -60,7 +60,8 @@
 				<param name="actionName">entryContent</param>
 				<param name="anchorDest">${entryContentAnchorDest}</param>
 			</result>
-			<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
+			<!-- <interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref> --><!-- maximun Size = 10 Mb -->
+			<interceptor-ref name="apsFileUpload" />
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
 		</action>
 

@@ -84,7 +84,7 @@
 		<entry>
 			<key><value>ORACLE</value></key>
 			<list>
-				<value>oracle.jdbc.OracleDriver</value>
+				<value>oracle.jdbc.driver.OracleDriver</value>
 			</list>
 		</entry>
 		<entry>

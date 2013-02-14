@@ -46,6 +46,8 @@ public interface SystemConstants {
      * su disco per le risorse su file
      */
     public static final String PAR_RESOURCES_DISK_ROOT = "resourceDiskRootFolder";
+	
+	public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
     
     /**
      * Nome parametro extra per requestContext: lingua corrente

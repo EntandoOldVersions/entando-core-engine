@@ -22,6 +22,7 @@
 			<interceptor name="backofficeRequestAuth" class="com.agiletec.apsadmin.system.InterceptorMadMax2nd" />
 			<interceptor name="apsActionParams" class="com.agiletec.apsadmin.system.ApsActionParamsInterceptor" />
 			<interceptor name="chain" class="com.agiletec.apsadmin.system.ChainingInterceptor" />
+    		<interceptor name="apsFileUpload" class="com.agiletec.apsadmin.system.ApsFileUploadInterceptor" />
     		
 			<interceptor-stack name="entandoFreeStack">
 				<interceptor-ref name="exception"/>

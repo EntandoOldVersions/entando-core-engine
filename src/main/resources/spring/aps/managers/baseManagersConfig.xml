@@ -21,6 +21,7 @@
 		<property name="systemParams">
 		<map>
 			<entry key="version"><value>${version}</value></entry>
+			<entry key="fileUploadMaxSize"><value>${file.upload.maxSize}</value></entry>
 			<entry key="configVersion"><jee:jndi-lookup jndi-name="java:comp/env/configVersion" /></entry>
 			<entry key="applicationBaseURL"><jee:jndi-lookup jndi-name="java:comp/env/applicationBaseURL" /></entry>
 			<entry key="resourceRootURL"><jee:jndi-lookup jndi-name="java:comp/env/resourceRootURL" /></entry>
@@ -33,35 +34,7 @@
 			</bean>
 		</property>
 	</bean>
-	<!--
-	<util:list id="entandoPortTableClasses">
-		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Categories</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contentmodels</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contents</value>
-		<value>org.entando.entando.aps.system.orm.portdb.Contentsearch</value>
-	</util:list>
 	
-	<util:list id="entandoServTableClasses">
-		<value>org.entando.entando.aps.system.orm.portdb.Sysconfig</value>
-	</util:list>
-	
-	<bean id="dbCreatorManager" class="org.entando.entando.aps.system.orm.DbCreatorManager" 
-			parent="abstractService" >
-		<property name="tableMapping">
-		<map>
-			<entry key="portDataSource"><ref bean="entandoPortTableClasses" /></entry>
-			<entry key="servDataSource"><ref bean="entandoServTableClasses" /></entry>
-		</map>
-		</property>
-		<property name="sqlResources">
-		<map>
-			<entry key="portDataSource"><value>${db.port.script}</value></entry>
-			<entry key="servDataSource"><value>${db.serv.script}</value></entry>
-		</map>
-		</property>
-	</bean>
-	-->
 	<bean id="abstractApsAutorityManager" abstract="true" class="com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityManager" 
 			parent="abstractService" >
 		<property name="userManager" ref="UserManager" />
