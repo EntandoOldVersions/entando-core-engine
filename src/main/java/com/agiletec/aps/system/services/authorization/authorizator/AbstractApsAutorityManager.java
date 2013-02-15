@@ -35,11 +35,13 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 	
 	@Override
 	public List<UserDetails> getUsersByAuthority(IApsAuthority authority) throws ApsSystemException {
-		List<UserDetails> users = null;
+		if (!this.checkAuthority(authority)) {
+			return null;
+		}
+		List<UserDetails> users = new ArrayList<UserDetails>();
 		try {
 			List<String> usernames = this.getUsernamesByAuthority(authority);
 			if (null != usernames && !usernames.isEmpty()) {
-				users = new ArrayList<UserDetails>(usernames.size());
 				for (int i=0; i<usernames.size(); i++) {
 					String username = usernames.get(i);
 					UserDetails user = this.getUserManager().getUser(username);
