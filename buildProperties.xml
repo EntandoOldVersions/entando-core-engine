@@ -40,7 +40,7 @@
 	
 	<!-- Properties definitions for *nix machines START -->
 	<property name="tomcat.home.path" value="/opt/tomcat6" />
-	<property name="postgres.bin.path" location="/opt/PostgreSQL/8.3/bin" />
+	<property name="postgres.bin.path" location="/usr/bin" />
 	<property name="postgres.bin.dump" value="pg_dump" />
 	<property name="postgres.bin.psql" value="psql" />
 	<property name="postgres.bin.restore" value="pg_restore" />
