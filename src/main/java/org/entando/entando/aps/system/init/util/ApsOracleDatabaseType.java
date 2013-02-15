@@ -46,7 +46,7 @@ public class ApsOracleDatabaseType extends OracleDatabaseType {
 	
 	@Override
 	protected void appendDateType(StringBuilder sb, int fieldWidth) {
-		sb.append("TIMESTAMP(0)");
+		sb.append("TIMESTAMP(2)");
 	}
 	
 }
