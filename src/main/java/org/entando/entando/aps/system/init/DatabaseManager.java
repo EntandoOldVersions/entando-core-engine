@@ -88,6 +88,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				this.initComponentDefaultResources(entandoComponentConfiguration, report, checkOnStatup);
 			}
 			if (checkOnStatup && report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) {
+				//ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH:MI:SS.FF'
 				if (null != lastLocalBackupFolder) {
 					this.restoreBackup(lastLocalBackupFolder);
 				} else {
@@ -254,7 +255,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
-
+	
 	protected DatabaseType getType(DataSource dataSource) throws ApsSystemException {
 		String typeString = null;
 		try {
@@ -279,7 +280,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
 		}
 	}
-
+	
 	private void initDerbySchema(DataSource dataSource) throws Throwable {
 		String username = this.invokeGetMethod("getUsername", dataSource);
 		try {
@@ -297,7 +298,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error initializating Derby Schema", t);
 		}
 	}
-
+	
 	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
 		Method method = dataSource.getClass().getDeclaredMethod(methodName);
 		return (String) method.invoke(dataSource);
@@ -346,6 +347,7 @@ public class DatabaseManager extends AbstractInitializerManager
 					if (checkOnStatup) {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 						DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+						this.initOracleSchema(dataSource);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
 						System.out.println("|   ( ok )  " + dataSourceName);
@@ -384,7 +386,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				String dataSourceName = dataSourceNames[j];
-				String logDbDataPrefix = "logDataPrefix" + " / Datasource " + dataSourceName;
+				//String logDbDataPrefix = "logDataPrefix" + " / Datasource " + dataSourceName;
 				if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
 						|| report.getStatus().equals(SystemInstallationReport.Status.RESTORE))  && checkOnStatup) {
 					dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
@@ -408,6 +410,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				if (null != script && script.trim().length() > 0) {
 					if (checkOnStatup) {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
+						this.initOracleSchema(dataSource);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
 						System.out.println("|   ( ok )  " + dataSourceName);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
@@ -429,7 +432,21 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
 		}
 	}
-
+	
+	private void initOracleSchema(DataSource dataSource) throws Throwable {
+		DatabaseType type = this.getType(dataSource);
+		try {
+			if (!type.equals(DatabaseType.ORACLE)) {
+				return;
+			}
+			String[] queryTimestampFormat = new String[]{"ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"};
+			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
+			throw new ApsSystemException("Error initializing oracle schema", t);
+		}
+	}
+	
 	private void restoreDefaultDump() throws ApsSystemException {
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
@@ -443,6 +460,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				Resource resource = (null != defaultDump) ? defaultDump.get(dataSourceName) : null;
 				String script = this.readFile(resource);
 				if (null != script && script.trim().length() > 0) {
+					this.initOracleSchema(dataSource);
 					TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 				}
 			}
@@ -614,8 +632,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			if (null != is) {
 				try {
 					is.close();
-				} catch (IOException ex) {
-				}
+				} catch (IOException ex) {}
 			}
 		}
 		return report;

@@ -19,6 +19,7 @@ package org.entando.entando.aps.system.init.util;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.DateConverter;
 
 import java.sql.*;
 import javax.sql.DataSource;
@@ -127,7 +128,7 @@ public class TableDataUtils {
                     if (i > 0) {
                         sqlDump.append(", ");
                     }
-                    Object value = res.getObject(i+1);
+                    Object value = getColumnValue(res, i, types); //res.getObject(i+1);
                     if (value == null) {
                         sqlDump.append("NULL");
                     } else {
@@ -172,6 +173,118 @@ public class TableDataUtils {
 		long time = System.currentTimeMillis() - start;
 		report.setRequiredTime(time);
 		return report;
+	}
+	
+	private static Object getColumnValue(ResultSet res, int columnIndex, int[] columnTypes) throws SQLException {
+		int type = columnTypes[columnIndex];
+		int resIndex = columnIndex + 1;
+		switch (type) {
+            //case Types.ARRAY:
+			//	return ....;
+            case Types.BIGINT:
+				return res.getInt(resIndex);
+            //case Types.BINARY: 
+			//	return ....;
+            //case Types.BIT:
+			//	return ....;
+            case Types.BLOB:
+				return res.getBlob(resIndex);
+            case Types.BOOLEAN: 
+				Boolean bool = res.getBoolean(resIndex);
+				if (null == bool) {
+					return null;
+				}
+				return (bool) ? 1 : 0;
+            case Types.CHAR:
+				return res.getString(resIndex);
+            case Types.CLOB:
+				return res.getString(resIndex);
+            //case Types.DATALINK: 
+			//	return ....;
+            case Types.DATE:
+				Date date = res.getDate(resIndex);
+				return getDateAsString(date);
+            case Types.DECIMAL:
+				return res.getBigDecimal(resIndex);
+            //case Types.DISTINCT: 
+			//	return ....;
+            case Types.DOUBLE: 
+				return res.getInt(resIndex);
+            case Types.FLOAT: 
+				return res.getBigDecimal(resIndex);
+            case Types.INTEGER: 
+				return res.getInt(resIndex);
+            //case Types.JAVA_OBJECT: 
+			//	return ....;
+            case Types.LONGNVARCHAR: 
+				return res.getString(resIndex);
+            //case Types.LONGVARBINARY: 
+			//	return ....;
+            case Types.LONGVARCHAR: 
+				return res.getString(resIndex);
+            //case Types.NCHAR: 
+			//	return ....;
+            case Types.NCLOB: 
+				return res.getString(resIndex);
+            //case Types.NULL: 
+			//	return ....;
+            //case Types.NUMERIC: 
+			//	return ....;
+            case Types.NVARCHAR: 
+				return res.getString(resIndex);
+            //case Types.OTHER: 
+			//	return ....;
+            //case Types.REAL: 
+			//	return ....;
+            //case Types.REF: 
+			//	return ....;
+            //case Types.ROWID: 
+			//	return ....;
+            case Types.SMALLINT:
+				return res.getInt(resIndex);
+            //case Types.SQLXML:
+			//	return ....;
+            //case Types.STRUCT:
+			//	return ....;
+            case Types.TIME:
+				Time time = res.getTime(resIndex);
+				return getTimeAsString(time);
+            case Types.TIMESTAMP:
+				Timestamp timestamp = res.getTimestamp(resIndex);
+				return getTimestampAsString(timestamp);
+            case Types.TINYINT:
+				return res.getInt(resIndex);
+            //case Types.VARBINARY:
+			//	return ....;
+            case Types.VARCHAR:
+				return res.getString(resIndex);
+            default:
+				return res.getObject(resIndex);
+        }
+		//return null;
+	}
+	
+	private static String getDateAsString(Date date) {
+		if (null == date) {
+			return null;
+		}
+		return DateConverter.getFormattedDate(date, "yyyy-MM-dd HH:mm:ss");
+	}
+	
+	private static String getTimeAsString(Time time) {
+		if (null == time) {
+			return null;
+		}
+		Date date = new Date(time.getTime());
+		return getDateAsString(date);
+	}
+	
+	private static String getTimestampAsString(Timestamp time) {
+		if (null == time) {
+			return null;
+		}
+		Date date = new Date(time.getTime());
+		return getDateAsString(date);
 	}
 	
 	private static boolean isDataNeedsQuotes(int type) {
