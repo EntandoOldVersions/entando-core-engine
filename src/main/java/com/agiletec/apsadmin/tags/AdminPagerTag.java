@@ -17,6 +17,7 @@
 */
 package com.agiletec.apsadmin.tags;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import java.util.Collection;
 
 import javax.servlet.ServletRequest;
@@ -37,34 +38,39 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class AdminPagerTag extends StrutsBodyTagSupport {
 	
+	@Override
 	public int doStartTag() throws JspException {
-		Object source = this.findValue(_sourceAttr);
+		Object source = this.findValue(this.getSource());
 		ServletRequest request =  this.pageContext.getRequest();
-		
 		ValueStack stack = this.getStack();
 		ComponentPagerVO compPagerVo = new ComponentPagerVO(stack);
 		try {
-			AdminPagerTagHelper helper = new AdminPagerTagHelper();
+			AdminPagerTagHelper helper = this.getPagerHelper();
 			IPagerVO pagerVo = helper.getPagerVO((Collection)source, 
-					this.getPagerId(), this._countAttr, this.isAdvanced(), this.getOffset(), request);
+					this.getPagerId(), this.getCount(), this.isAdvanced(), this.getOffset(), request);
 			compPagerVo.initPager(pagerVo);
 			stack.getContext().put(this.getObjectName(), compPagerVo);
 			stack.setValue("#attr['" + this.getObjectName() + "']", compPagerVo, false);
 		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error creating the pager", t);
 		}
-		
-		_subsetIteratorFilter = new SubsetIteratorFilter();
-		_subsetIteratorFilter.setCount(this._countAttr);
-		_subsetIteratorFilter.setDecider(null);
-		_subsetIteratorFilter.setSource(source);
-		_subsetIteratorFilter.setStart(compPagerVo.getBegin());
-		_subsetIteratorFilter.execute();
-		this.getStack().push(_subsetIteratorFilter);
+		SubsetIteratorFilter subsetIteratorFilter = new SubsetIteratorFilter();
+		subsetIteratorFilter.setCount(this.getCount());
+		subsetIteratorFilter.setDecider(null);
+		subsetIteratorFilter.setSource(source);
+		subsetIteratorFilter.setStart(compPagerVo.getBegin());
+		subsetIteratorFilter.execute();
+		this.setSubsetIteratorFilter(subsetIteratorFilter);
+		this.getStack().push(subsetIteratorFilter);
 		if (getId() != null) {
-			pageContext.setAttribute(getId(), _subsetIteratorFilter);
+			pageContext.setAttribute(getId(), subsetIteratorFilter);
 		}
 		return EVAL_BODY_INCLUDE;
+	}
+	
+	protected AdminPagerTagHelper getPagerHelper() {
+		return new AdminPagerTagHelper();
 	}
 	
 	public String getPagerId() {
@@ -77,17 +83,31 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		this.getStack().pop();
-		_subsetIteratorFilter = null;
+		this.setSubsetIteratorFilter(null);
 		return EVAL_PAGE;
 	}
-
+	
+	public int getCount() {
+		return _count;
+	}
 	public void setCount(int count) {
-		_countAttr = count;
+		this._count = count;
+	}
+	
+	public String getSource() {
+		return _source;
 	}
 	public void setSource(String source) {
-		_sourceAttr = source;
+		this._source = source;
 	}
-
+	
+	public SubsetIteratorFilter getSubsetIteratorFilter() {
+		return _subsetIteratorFilter;
+	}
+	public void setSubsetIteratorFilter(SubsetIteratorFilter subsetIteratorFilter) {
+		this._subsetIteratorFilter = subsetIteratorFilter;
+	}
+	
 	protected String getObjectName() {
 		return _objectName;
 	}
@@ -111,8 +131,8 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 	
 	private String _pagerId;
 	
-	private int _countAttr;
-	private String _sourceAttr;
+	private int _count;
+	private String _source;
 
 	private SubsetIteratorFilter _subsetIteratorFilter = null;
 

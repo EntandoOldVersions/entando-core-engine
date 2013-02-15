@@ -48,13 +48,13 @@ public class ApiServiceInterface {
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
             String tagParamValue = properties.getProperty("tag");
             String myentandoParamValue = properties.getProperty("myentando");
-            Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? new Boolean(myentandoParamValue) : null;
+            Boolean myentando = (null != myentandoParamValue && myentandoParamValue.trim().length() > 0) ? Boolean.valueOf(myentandoParamValue) : null;
             langCode = (null != langCode && null != this.getLangManager().getLang(langCode)) ? langCode : defaultLangCode;
 			Map<String, ApiService> masterServices = this.getApiCatalogManager().getServices(tagParamValue, myentando);
             Iterator<ApiService> iter = masterServices.values().iterator();
             while (iter.hasNext()) {
                 ApiService service = (ApiService) iter.next();
-                if (service.isActive() && service.isPublicService() && this.checkServiceAuthorization(service, properties, false)) {
+                if (service.isActive() && !service.isHidden() && this.checkServiceAuthorization(service, properties, false)) {
                     ServiceInfo smallService = this.createServiceInfo(service, langCode, defaultLangCode);
                     services.add(smallService);
                 }
@@ -111,9 +111,10 @@ public class ApiServiceInterface {
             Iterator<Object> paramIter = properties.keySet().iterator();
             List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
             while (paramIter.hasNext()) {
-                String paramName = (String) paramIter.next();
-                if (reservedParameters.contains(paramName) || service.isFreeParameter(paramName)) {
-                    serviceParameters.put(paramName, properties.getProperty(paramName));
+                Object paramName = paramIter.next();
+				String paramNameString = paramName.toString();
+                if (reservedParameters.contains(paramNameString) || service.isFreeParameter(paramNameString)) {
+                    serviceParameters.put(paramNameString, properties.get(paramName));
                 }
             }
             response = this.getResponseBuilder().createResponse(service.getMaster(), serviceParameters);
@@ -127,7 +128,9 @@ public class ApiServiceInterface {
     }
 	
 	protected boolean checkServiceAuthorization(ApiService service, Properties properties, boolean throwApiException) throws ApiException, Throwable {
-		if (!service.getRequiredAuth()) return true;
+		if (!service.getRequiredAuth()) {
+			return true;
+		}
 		try {
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
@@ -140,7 +143,9 @@ public class ApiServiceInterface {
 						"Permission denied for service '" + service.getKey() + "'", Response.Status.UNAUTHORIZED);
 			}
 		} catch (ApiException ae) {
-			if (throwApiException) throw ae;
+			if (throwApiException) {
+				throw ae;
+			}
 			return false;
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "checkServiceAuthorization", "Error checking auth for service - key '" + service.getKey() + "'");

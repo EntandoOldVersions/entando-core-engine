@@ -42,8 +42,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
@@ -55,17 +53,18 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import org.apache.cxf.jaxrs.impl.ResponseBuilderImpl;
+import org.entando.entando.aps.system.services.api.UnmarshalUtils;
 
 /**
  * @author E.Santoboni
@@ -181,7 +180,11 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Properties properties = this.extractRequestParameters(ui);
+			if (null == langManager.getLang(langCode)) {
+				langCode = langManager.getDefaultLang().getCode();
+			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
@@ -199,21 +202,15 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Properties properties = this.extractRequestParameters(ui);
+            if (null == langManager.getLang(langCode)) {
+				langCode = langManager.getDefaultLang().getCode();
+			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
-            Class expectedType = apiMethod.getExpectedType();
-            Object bodyObject = null;
-            if (MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
-                JSONProvider jsonProvider = new JSONProvider();
-                bodyObject = jsonProvider.readFrom(expectedType, expectedType.getGenericSuperclass(), 
-                        expectedType.getAnnotations(), mediaType, null, request.getInputStream());
-            } else {
-                JAXBContext context = JAXBContext.newInstance(expectedType);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                bodyObject = (Object) unmarshaller.unmarshal(request.getInputStream());
-            }
+			Object bodyObject = UnmarshalUtils.unmarshal(apiMethod, request, mediaType);
             responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
         } catch (ApiException ae) {
             responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);

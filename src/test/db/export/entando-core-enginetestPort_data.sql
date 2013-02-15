@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2012-08-03 23:29:43 CEST
+-- Started on 2012-09-28 22:14:54 CEST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,8 +13,8 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1839 (class 0 OID 5616043)
--- Dependencies: 127
+-- TOC entry 1837 (class 0 OID 6028658)
+-- Dependencies: 128
 -- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -100,8 +100,8 @@ INSERT INTO categories (catcode, parentcode, titles) VALUES ('general_cat3', 'ge
 
 
 --
--- TOC entry 1840 (class 0 OID 5616049)
--- Dependencies: 128
+-- TOC entry 1838 (class 0 OID 6028666)
+-- Dependencies: 129
 -- Data for Name: contentmodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -154,7 +154,7 @@ $content.CorpoTesto.getTextAfterImage(0)
 
 
 --
--- TOC entry 1842 (class 0 OID 5616058)
+-- TOC entry 1839 (class 0 OID 6028674)
 -- Dependencies: 130
 -- Data for Name: contents; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -326,8 +326,8 @@ INSERT INTO contents (contentid, contenttype, descr, status, workxml, created, l
 
 
 --
--- TOC entry 1844 (class 0 OID 5616067)
--- Dependencies: 132
+-- TOC entry 1840 (class 0 OID 6028682)
+-- Dependencies: 131
 -- Data for Name: localstrings; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -340,8 +340,8 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_TITLE', 
 
 
 --
--- TOC entry 1845 (class 0 OID 5616073)
--- Dependencies: 133
+-- TOC entry 1841 (class 0 OID 6028690)
+-- Dependencies: 132
 -- Data for Name: pagemodels; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -396,8 +396,8 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 
 
 --
--- TOC entry 1846 (class 0 OID 5616079)
--- Dependencies: 134
+-- TOC entry 1842 (class 0 OID 6028698)
+-- Dependencies: 133
 -- Data for Name: pages; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -536,8 +536,8 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 
 --
--- TOC entry 1848 (class 0 OID 5616088)
--- Dependencies: 136
+-- TOC entry 1843 (class 0 OID 6028711)
+-- Dependencies: 134
 -- Data for Name: resources; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -556,7 +556,7 @@ INSERT INTO resources (resid, restype, descr, maingroup, resourcexml, masterfile
 
 
 --
--- TOC entry 1847 (class 0 OID 5616085)
+-- TOC entry 1844 (class 0 OID 6028719)
 -- Dependencies: 135
 -- Data for Name: resourcerelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -567,8 +567,8 @@ INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'resCat1');
 
 
 --
--- TOC entry 1849 (class 0 OID 5616094)
--- Dependencies: 137
+-- TOC entry 1845 (class 0 OID 6028732)
+-- Dependencies: 136
 -- Data for Name: showletcatalog; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -671,8 +671,8 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 
 
 --
--- TOC entry 1850 (class 0 OID 5616100)
--- Dependencies: 138
+-- TOC entry 1846 (class 0 OID 6028740)
+-- Dependencies: 137
 -- Data for Name: showletconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -737,8 +737,8 @@ INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcon
 
 
 --
--- TOC entry 1851 (class 0 OID 5616106)
--- Dependencies: 139
+-- TOC entry 1836 (class 0 OID 6028650)
+-- Dependencies: 127
 -- Data for Name: sysconfig; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -856,76 +856,15 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 
 
 --
--- TOC entry 1852 (class 0 OID 5616112)
--- Dependencies: 140
+-- TOC entry 1847 (class 0 OID 6028758)
+-- Dependencies: 138
 -- Data for Name: uniquekeys; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 321);
-
 
 --
--- TOC entry 1843 (class 0 OID 5616064)
--- Dependencies: 131
--- Data for Name: contentsearch; Type: TABLE DATA; Schema: public; Owner: agile
---
-
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Numero', NULL, NULL, 78, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Titolo C - Evento 3', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Title D - Evento 3', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28', NULL, NULL);
-INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
-
---
--- TOC entry 1841 (class 0 OID 5616055)
--- Dependencies: 129
+-- TOC entry 1848 (class 0 OID 6028763)
+-- Dependencies: 139
 -- Data for Name: contentrelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -981,9 +920,71 @@ INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refca
 INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'free');
 INSERT INTO contentrelations (contentid, refpage, refcontent, refresource, refcategory, refgroup) VALUES ('ART121', NULL, NULL, NULL, NULL, 'administrators');
 
+INSERT INTO uniquekeys (id, keyvalue) VALUES (1, 321);
+
 
 --
--- TOC entry 1853 (class 0 OID 5616115)
+-- TOC entry 1849 (class 0 OID 6028791)
+-- Dependencies: 140
+-- Data for Name: contentsearch; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Numero', NULL, NULL, 78, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Titolo C - Evento 3', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Title D - Evento 3', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28 00:00:00', NULL, NULL);
+INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
+
+
+--
+-- TOC entry 1850 (class 0 OID 6028799)
 -- Dependencies: 141
 -- Data for Name: workcontentrelations; Type: TABLE DATA; Schema: public; Owner: agile
 --
@@ -1017,67 +1018,67 @@ INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART112', 'gen
 
 
 --
--- TOC entry 1854 (class 0 OID 5616118)
+-- TOC entry 1851 (class 0 OID 6028807)
 -- Dependencies: 142
 -- Data for Name: workcontentsearch; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART111', 'Data', NULL, '2006-12-13 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Data', NULL, '2009-03-28 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART120', 'Numero', NULL, NULL, 7, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Data', NULL, '2009-03-30 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART121', 'Numero', NULL, NULL, 78, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART179', 'Data', NULL, '2009-07-16', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART112', 'Data', NULL, '2006-02-13 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART104', 'Data', NULL, '2007-01-04 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART1', 'Data', NULL, '2004-03-10 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('ART179', 'Data', NULL, '2009-07-16 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'Titolo', 'TEATRO DELLE MERAVIGLIE', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataInizio', NULL, '2007-12-12 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN25', 'DataFine', NULL, '2007-12-22 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'Titolo', 'Sagra della ciliegia', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataInizio', NULL, '2008-01-06 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN41', 'DataFine', NULL, '2008-01-24 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'Titolo', 'Titolo Contenuto 1 Coach', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataInizio', NULL, '1999-04-15 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN103', 'DataFine', NULL, '2000-04-14 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Titolo C - Evento 3', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'Titolo', 'Title D - Evento 3', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataInizio', NULL, '2017-04-12 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN193', 'DataFine', NULL, '2017-09-12 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Titolo D - Evento 4', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'Titolo', 'Title A - Event 4', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataInizio', NULL, '2022-02-19 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN194', 'DataFine', NULL, '2022-04-19 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Titolo A - Evento 1', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'Titolo', 'Title C - Event 1', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataInizio', NULL, '1996-04-17 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN191', 'DataFine', NULL, '1996-06-17 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'Titolo', 'Mostra delle fragole', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataInizio', NULL, '2006-01-13 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN21', 'DataFine', NULL, '2006-03-04 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'Titolo', 'Castello dei bambini', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataInizio', NULL, '2009-03-18 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN24', 'DataFine', NULL, '2009-03-26 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'Titolo', 'Collezione Ingri', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataInizio', NULL, '2008-02-13 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN23', 'DataFine', NULL, '2008-02-22 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Titolo B - Evento 2', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'Titolo', 'Title B - Event 2', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataInizio', NULL, '1999-04-14 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN192', 'DataFine', NULL, '1999-06-14 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'it');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13', NULL, NULL);
-INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13 00:00:00', NULL, NULL);
+INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20 00:00:00', NULL, NULL);
 
 
--- Completed on 2012-08-03 23:29:43 CEST
+-- Completed on 2012-09-28 22:14:54 CEST
 
 --
 -- PostgreSQL database dump complete

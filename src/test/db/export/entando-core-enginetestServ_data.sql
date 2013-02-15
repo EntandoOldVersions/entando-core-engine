@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Started on 2012-02-25 14:30:53 CET
+-- Started on 2012-09-28 22:14:55 CEST
 
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -13,40 +13,40 @@ SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
 --
--- TOC entry 1816 (class 0 OID 83959)
--- Dependencies: 137
+-- TOC entry 1811 (class 0 OID 6028873)
+-- Dependencies: 135
 -- Data for Name: api_oauth_consumers; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
 --
--- TOC entry 1817 (class 0 OID 83967)
--- Dependencies: 138
+-- TOC entry 1812 (class 0 OID 6028881)
+-- Dependencies: 136
 -- Data for Name: api_oauth_tokens; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
 --
--- TOC entry 1807 (class 0 OID 83585)
--- Dependencies: 128
+-- TOC entry 1813 (class 0 OID 6028886)
+-- Dependencies: 137
 -- Data for Name: apicatalog_methods; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
 --
--- TOC entry 1806 (class 0 OID 83579)
--- Dependencies: 127
+-- TOC entry 1814 (class 0 OID 6028896)
+-- Dependencies: 138
 -- Data for Name: apicatalog_services; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
 
 
 --
--- TOC entry 1808 (class 0 OID 83588)
--- Dependencies: 129
+-- TOC entry 1803 (class 0 OID 6028816)
+-- Dependencies: 127
 -- Data for Name: authgroups; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -59,20 +59,8 @@ INSERT INTO authgroups (groupname, descr) VALUES ('management', 'Management');
 
 
 --
--- TOC entry 1811 (class 0 OID 83597)
--- Dependencies: 132
--- Data for Name: authroles; Type: TABLE DATA; Schema: public; Owner: agile
---
-
-INSERT INTO authroles (rolename, descr) VALUES ('admin', 'Tutte le funzioni');
-INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Gestore di Contenuti e Risorse');
-INSERT INTO authroles (rolename, descr) VALUES ('supervisor', 'Supervisore di Contenuti');
-INSERT INTO authroles (rolename, descr) VALUES ('pageManager', 'Gestore di Pagine');
-
-
---
--- TOC entry 1809 (class 0 OID 83591)
--- Dependencies: 130
+-- TOC entry 1804 (class 0 OID 6028821)
+-- Dependencies: 128
 -- Data for Name: authpermissions; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -86,8 +74,8 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('manageCategories', 
 
 
 --
--- TOC entry 1810 (class 0 OID 83594)
--- Dependencies: 131
+-- TOC entry 1806 (class 0 OID 6028831)
+-- Dependencies: 130
 -- Data for Name: authrolepermissions; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -103,8 +91,20 @@ INSERT INTO authrolepermissions (rolename, permissionname) VALUES ('editor', 'ma
 
 
 --
--- TOC entry 1812 (class 0 OID 83600)
--- Dependencies: 133
+-- TOC entry 1805 (class 0 OID 6028826)
+-- Dependencies: 129
+-- Data for Name: authroles; Type: TABLE DATA; Schema: public; Owner: agile
+--
+
+INSERT INTO authroles (rolename, descr) VALUES ('admin', 'Tutte le funzioni');
+INSERT INTO authroles (rolename, descr) VALUES ('editor', 'Gestore di Contenuti e Risorse');
+INSERT INTO authroles (rolename, descr) VALUES ('supervisor', 'Supervisore di Contenuti');
+INSERT INTO authroles (rolename, descr) VALUES ('pageManager', 'Gestore di Pagine');
+
+
+--
+-- TOC entry 1808 (class 0 OID 6028849)
+-- Dependencies: 132
 -- Data for Name: authusergroups; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -122,8 +122,8 @@ INSERT INTO authusergroups (username, groupname) VALUES ('admin', 'administrator
 
 
 --
--- TOC entry 1813 (class 0 OID 83603)
--- Dependencies: 134
+-- TOC entry 1809 (class 0 OID 6028857)
+-- Dependencies: 133
 -- Data for Name: authuserroles; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -138,24 +138,24 @@ INSERT INTO authuserroles (username, rolename) VALUES ('pageManagerCustomers', '
 
 
 --
--- TOC entry 1814 (class 0 OID 83606)
--- Dependencies: 135
+-- TOC entry 1807 (class 0 OID 6028844)
+-- Dependencies: 131
 -- Data for Name: authusers; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('supervisorCoach', 'supervisorCoach', '2008-09-25', '2009-01-30', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('mainEditor', 'mainEditor', '2008-09-25', '2009-01-30', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('pageManagerCoach', 'pageManagerCoach', '2008-09-25', '2009-01-30', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('supervisorCustomers', 'supervisorCustomers', '2008-09-25', '2009-01-30', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('pageManagerCustomers', 'pageManagerCustomers', '2008-09-25', '2009-01-30', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCustomers', 'editorCustomers', '2008-09-25', '2009-07-02', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCoach', 'editorCoach', '2008-09-25', '2009-07-02', NULL, 1);
-INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', 'admin', '2008-09-25', '2009-12-16', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('supervisorCoach', 'supervisorCoach', '2008-09-25 00:00:00', '2009-01-30 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('mainEditor', 'mainEditor', '2008-09-25 00:00:00', '2009-01-30 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('pageManagerCoach', 'pageManagerCoach', '2008-09-25 00:00:00', '2009-01-30 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('supervisorCustomers', 'supervisorCustomers', '2008-09-25 00:00:00', '2009-01-30 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('pageManagerCustomers', 'pageManagerCustomers', '2008-09-25 00:00:00', '2009-01-30 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCustomers', 'editorCustomers', '2008-09-25 00:00:00', '2009-07-02 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('editorCoach', 'editorCoach', '2008-09-25 00:00:00', '2009-07-02 00:00:00', NULL, 1);
+INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpasswordchange, active) VALUES ('admin', 'admin', '2008-09-25 00:00:00', '2009-12-16 00:00:00', NULL, 1);
 
 
 --
--- TOC entry 1815 (class 0 OID 83609)
--- Dependencies: 136
+-- TOC entry 1810 (class 0 OID 6028865)
+-- Dependencies: 134
 -- Data for Name: authusershortcuts; Type: TABLE DATA; Schema: public; Owner: agile
 --
 
@@ -171,7 +171,7 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<shortcuts>
 </shortcuts>');
 
 
--- Completed on 2012-02-25 14:30:53 CET
+-- Completed on 2012-09-28 22:14:55 CEST
 
 --
 -- PostgreSQL database dump complete

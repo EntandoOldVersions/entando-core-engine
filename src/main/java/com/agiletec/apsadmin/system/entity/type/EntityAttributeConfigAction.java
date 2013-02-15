@@ -48,8 +48,9 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 	public void validate() {
 		super.validate();
 		IApsEntity entityType = this.getEntityType();
-		if (this.getStrutsAction() == ApsAdminSystemConstants.ADD && null != entityType.getAttribute(this.getAttributeName())) {
-			String[] args = {this.getAttributeName()};
+		String attributeName = this.getAttributeName().trim();
+		if (this.getStrutsAction() == ApsAdminSystemConstants.ADD && null != entityType.getAttribute(attributeName)) {
+			String[] args = {attributeName};
 			this.addFieldError("attributeName", this.getText("error.entity.attribute.name.already.exists", args));
 		}
 		AttributeInterface attributePrototype = this.getAttributePrototype(this.getAttributeTypeCode());
@@ -182,7 +183,7 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 		}
 		return SUCCESS;
 	}
-
+	
 	@Override
 	public String saveAttribute() {
 		AttributeInterface attribute = null;
@@ -191,11 +192,13 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				attribute = (AttributeInterface) this.getEntityType().getAttribute(this.getAttributeName());
 			} else {
 				attribute = this.getAttributePrototype(this.getAttributeTypeCode());
-				attribute.setName(this.getAttributeName());
+				attribute.setName(this.getAttributeName().trim());
 				this.getEntityType().addAttribute(attribute);
 			}
 			String resultCode = this.fillAttributeFields(attribute);
-			if (null != resultCode) return resultCode;
+			if (null != resultCode) {
+				return resultCode;
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "saveAttribute");
 			return FAILURE;

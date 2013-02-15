@@ -43,6 +43,8 @@ public interface IApsAuthorityManager {
 	 */
 	public List<UserDetails> getUsersByAuthority(IApsAuthority authority) throws ApsSystemException;
 	
+	public List<String> getUsernamesByAuthority(IApsAuthority authority) throws ApsSystemException;
+	
 	/**
 	 * Setta le autorizzazioni di un utente.
 	 * Il metodo effettua un'aggiunta dele autorizzazioni specificate a quelle già associate all'utente, ma 
@@ -76,6 +78,8 @@ public interface IApsAuthorityManager {
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	public List<IApsAuthority> getAuthorizationsByUser(UserDetails user) throws ApsSystemException;
+	
+	public List<IApsAuthority> getAuthorizationsByUser(String username) throws ApsSystemException;
 	
 	/**
 	 * Restituisce una autorizzazione in base al nome.

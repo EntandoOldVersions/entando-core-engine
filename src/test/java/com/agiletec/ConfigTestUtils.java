@@ -126,6 +126,7 @@ public class ConfigTestUtils {
 			ds.setPassword(password);
 			ds.setMaxActive(8);
 			ds.setMaxIdle(4);
+			ds.setDriverClassName(className);
 			builder.bind("java:comp/env/jdbc/" + beanName, ds);
 		} catch (Throwable t) {
 			throw new RuntimeException("Error on creation datasource '" + beanName + "'", t);
@@ -138,12 +139,13 @@ public class ConfigTestUtils {
 	 * @return L'insieme dei file di configurazione definiti nel sistema.
 	 */
 	protected String[] getSpringConfigFilePaths() {
-    	String[] filePaths = new String[5];
-		filePaths[0] = "classpath:spring/systemConfig.xml";
-		filePaths[1] = "classpath*:spring/aps/**/**.xml";
-		filePaths[2] = "classpath*:spring/apsadmin/**/**.xml";
-		filePaths[3] = "classpath*:spring/plugins/**/aps/**/**.xml";
-		filePaths[4] = "classpath*:spring/plugins/**/apsadmin/**/**.xml";
+    	String[] filePaths = new String[6];
+		filePaths[0] = "classpath:spring/propertyPlaceholder.xml";
+		filePaths[1] = "classpath:spring/baseSystemConfig.xml";
+		filePaths[2] = "classpath*:spring/aps/**/**.xml";
+		filePaths[3] = "classpath*:spring/apsadmin/**/**.xml";
+		filePaths[4] = "classpath*:spring/plugins/**/aps/**/**.xml";
+		filePaths[5] = "classpath*:spring/plugins/**/apsadmin/**/**.xml";
 		return filePaths;
     }
 	

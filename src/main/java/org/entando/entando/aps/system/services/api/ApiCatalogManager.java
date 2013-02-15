@@ -23,13 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -38,7 +35,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 /**
  * @author E.Santoboni
  */
-public class ApiCatalogManager extends AbstractService implements IApiCatalogManager, ServletContextAware {
+public class ApiCatalogManager extends AbstractService implements IApiCatalogManager {
     
 	@Override
     public void init() throws Exception {
@@ -54,7 +51,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     
     protected void loadResources() throws ApsSystemException {
         try {
-            ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns(), this.getServletContext());
+            ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns());
             Map<String, ApiResource> resources = loader.getResources();
             this.setMasterResources(resources);
             ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized Api Methods");
@@ -430,14 +427,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         this._masterServices = masterServices;
     }
     
-    protected ServletContext getServletContext() {
-        return this._servletContext;
-    }
-    @Override
-    public void setServletContext(ServletContext servletContext) {
-        this._servletContext = servletContext;
-    }
-
     protected String getLocationPatterns() {
         if (null == this._locationPatterns) {
             return DEFAULT_LOCATION_PATTERN;
@@ -458,7 +447,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     private Map<String, ApiResource> _masterResources;
     
     private Map<String, ApiService> _masterServices;
-    private ServletContext _servletContext;
     private String _locationPatterns;
     private IApiCatalogDAO _apiCatalogDAO;
     public static final String DEFAULT_LOCATION_PATTERN = "classpath*:/api/**/aps/apiMethods.xml";

@@ -31,6 +31,7 @@ import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
+import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -53,6 +54,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
      * @param resource La risorsa da associare all'attributo.
      * @param langCode il codice della lingua.
      */
+	@Override
     public void setResource(ResourceInterface resource, String langCode) {
         if (null == langCode) {
             langCode = this.getDefaultLangCode();
@@ -69,6 +71,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
      * @param langCode il codice della lingua.
      * @return la risorsa associata all'attributo.
      */
+	@Override
     public ResourceInterface getResource(String langCode) {
         return (ResourceInterface) this.getResources().get(langCode);
     }
@@ -77,6 +80,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
      * Restituisce la risorsa associata all'attributo.
      * @return la risorsa associata all'attributo.
      */
+	@Override
     public ResourceInterface getResource() {
         ResourceInterface res = this.getResource(this.getRenderingLang());
         if (null == res) {
@@ -91,14 +95,17 @@ public abstract class AbstractResourceAttribute extends TextAttribute
      * @return Restituisce sempre false
      * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearcheable()
      */
+	@Override
     public boolean isSearcheable() {
         return false;
     }
     
+	@Override
     public boolean isSearchableOptionSupported() {
         return false;
     }
     
+	@Override
     public Element getJDOMElement() {
         Element attributeElement = new Element("attribute");
         attributeElement.setAttribute("name", this.getName());
@@ -119,7 +126,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         super.addTextElements(attributeElement);
         return attributeElement;
     }
-
+	
     /**
      * Appende, nella stringa rappresentante l'url della risorsa interna ad un entità, 
      * il riferimento al entità padre con la sintassi 
@@ -145,6 +152,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return basePath;
     }
     
+	@Override
     public List<CmsAttributeReference> getReferences(List<Lang> systemLangs) {
         List<CmsAttributeReference> refs = new ArrayList<CmsAttributeReference>();
         for (int i = 0; i < systemLangs.size(); i++) {
@@ -158,35 +166,57 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return refs;
     }
     
+	@Override
     public Object getValue() {
-        if (null == this.getResources() || this.getResources().size() == 0) {
+        if (null == this.getResources() || this.getResources().isEmpty()) {
             return null;
         }
         return this;
     }
     
+	@Override
     protected JAXBResourceValue getJAXBValue(String langCode) {
-        Object text = super.getJAXBValue(langCode);
-        JAXBResourceValue value = new JAXBResourceValue();
-        value.setText(text);
-        if (null == langCode) {
-            langCode = this.getDefaultLangCode();
-        }
-        this.setRenderingLang(langCode);
-        String path = this.getDefaultPath();
-        value.setPath(path);
-        ResourceInterface resource = this.getResource();
-        if (null != resource) {
-            value.setResourceId(resource.getId());
-        }
+		JAXBResourceValue value = new JAXBResourceValue();
+		try {
+			Object text = super.getJAXBValue(langCode);
+			value.setText(text);
+			if (null == langCode) {
+				langCode = this.getDefaultLangCode();
+			}
+			this.setRenderingLang(langCode);
+			String path = this.getDefaultPath();
+			value.setPath(path);
+			ResourceInterface resource = this.getResource();
+			if (null != resource) {
+				value.setResourceId(resource.getId());
+				StringBuilder restResourcePath = new StringBuilder();
+				restResourcePath.append(this.getConfigManager().getParam("applicationBaseURL"));
+				restResourcePath.append("api/rs/").append(langCode).append("/jacms/");
+				if (this.getType().equals(JacmsSystemConstants.RESOURE_ATTACH_CODE)) {
+					restResourcePath.append("attachment");
+				} else {
+					restResourcePath.append("image");
+				}
+				restResourcePath.append("?id=").append(resource.getId());
+				value.setRestResourcePath(restResourcePath.toString());
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getJAXBValue");
+			throw new RuntimeException("Error creating jaxb response", t);
+		}
         return value;
     }
     
+	@Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         JAXBResourceValue value = (JAXBResourceValue) jaxbAttribute.getValue();
-        if (null == value) return;
+        if (null == value) {
+			return;
+		}
         Object resourceId = value.getResourceId();
-        if (null == resourceId) return;
+        if (null == resourceId) {
+			return;
+		}
         try {
             IResourceManager resourceManager = this.getResourceManager();
             ResourceInterface resource = resourceManager.loadResource(resourceId.toString());
@@ -194,18 +224,25 @@ public abstract class AbstractResourceAttribute extends TextAttribute
                 this.setResource(resource, this.getDefaultLangCode());
             }
             Object text = value.getText();
-            if (null == text) return;
+            if (null == text) {
+				return;
+			}
             this.getTextMap().put(this.getDefaultLangCode(), text.toString());
         } catch (Exception e) {
             ApsSystemUtils.logThrowable(e, this, "valueFrom", "Error extracting resource from jaxbAttribute");
         }
     }
     
+	@Override
     public Status getStatus() {
         Status textStatus = super.getStatus();
         Status resourceStatus = (null != this.getResource()) ? Status.VALUED : Status.EMPTY;
-        if (!textStatus.equals(resourceStatus)) return Status.INCOMPLETE;
-        if (textStatus.equals(resourceStatus) && textStatus.equals(Status.VALUED)) return Status.VALUED;
+        if (!textStatus.equals(resourceStatus)) {
+			return Status.INCOMPLETE;
+		}
+        if (textStatus.equals(resourceStatus) && textStatus.equals(Status.VALUED)) {
+			return Status.VALUED;
+		}
         return Status.EMPTY;
     }
     
@@ -215,20 +252,29 @@ public abstract class AbstractResourceAttribute extends TextAttribute
         return this._resources;
     }
     
+    protected ConfigInterface getConfigManager() {
+        return (ConfigInterface) this.getBeanFactory().getBean(SystemConstants.BASE_CONFIG_MANAGER);
+    }
+    
     protected IResourceManager getResourceManager() {
         return (IResourceManager) this.getBeanFactory().getBean(JacmsSystemConstants.RESOURCE_MANAGER);
     }
     
+	@Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {
-            if (null == this.getResources()) return errors;
+            if (null == this.getResources()) {
+				return errors;
+			}
             ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);
                 ResourceInterface resource = this.getResource(lang.getCode());
-                if (null == resource) continue;
+                if (null == resource) {
+					continue;
+				}
                 AttributeTracer resourceTracer = (AttributeTracer) tracer.clone();
                 resourceTracer.setLang(lang);
                 String resourceMainGroup = resource.getMainGroup();

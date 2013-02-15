@@ -72,6 +72,15 @@ public class I18nManager extends AbstractService implements II18nManager {
 		}
 		return label;
 	}
+	
+	@Override
+	public ApsProperties getLabelGroup(String key) throws ApsSystemException {
+		ApsProperties labelsProp = (ApsProperties) this._labelGroups.get(key);
+		if (null == labelsProp) {
+			return null;
+		}
+		return labelsProp.clone();
+	}
 
 	/**
 	 * Add a group of labels on db.
