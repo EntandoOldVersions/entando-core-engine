@@ -23,9 +23,12 @@ import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.init.model.Component;
 
@@ -55,6 +58,8 @@ public class ComponentLoader {
 					new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
 		ComponentDefDOM dom = null;
+		Logger logger = ApsSystemUtils.getLogger();
+		Set<String> codes = new HashSet<String>();
 		for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
             InputStream is = null;
@@ -65,7 +70,12 @@ public class ComponentLoader {
                 dom = new ComponentDefDOM(xml, path);
 				Component component = dom.getComponent(postProcessClasses);
 				if (null != component) {
-					this.getComponents().add(component);
+					if (codes.add(component.getCode())) {
+						logger.info("Component '" + component.getCode() + "' loaded");
+						this.getComponents().add(component);
+					} else {
+						logger.info("Component '" + component.getCode() + "' already loaded");
+					}
 				}
             } catch (Throwable t) {
                 ApsSystemUtils.logThrowable(t, this, "ComponentLoader", 
