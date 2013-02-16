@@ -365,7 +365,7 @@ public class TestContentManager extends BaseTestCase {
     
     public void testGetContentTypes() {
     	Map<String, SmallContentType> smallContentTypes = _contentManager.getSmallContentTypesMap();
-    	assertEquals(3, smallContentTypes.size());
+    	assertEquals(4, smallContentTypes.size());
     }
     
     public void testCreateContent() {

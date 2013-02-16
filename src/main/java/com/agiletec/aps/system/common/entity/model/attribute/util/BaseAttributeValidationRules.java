@@ -33,6 +33,7 @@ import java.util.ArrayList;
  */
 public class BaseAttributeValidationRules implements IAttributeValidationRules {
     
+    @Override 
     public IAttributeValidationRules clone() {
         BaseAttributeValidationRules clone = null;
         try {
@@ -50,6 +51,7 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         return clone;
     }
     
+    @Override 
     public Element getJDOMConfigElement() {
         Element configElement = null;
         try {
@@ -79,6 +81,7 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
     }
     
+    @Override 
     public void setConfig(Element attributeElement) {
         Element validationElement = attributeElement.getChild(VALIDATIONS_ELEMENT_NAME);
         if (null != validationElement) {
@@ -103,19 +106,22 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         }
         return null;
     }
-
+	
     protected boolean isEmpty() {
         return (!this.isRequired() && null == this.getOgnlValidationRule());
     }
-    
+	
+	@Override 
     public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = new ArrayList<AttributeFieldError>();
-        if (this.isEmpty()) return errors;
+        if (this.isEmpty()) {
+			return errors;
+		}
         try {
             if (this.isRequired() && attribute.getStatus().equals(AttributeInterface.Status.EMPTY)) {
-                AttributeTracer defaultLangTracer = (AttributeTracer) tracer.clone();
-                defaultLangTracer.setLang(langManager.getDefaultLang());
-                errors.add(new AttributeFieldError(attribute, FieldError.MANDATORY, defaultLangTracer));
+                AttributeTracer tracerClone = tracer.clone();
+                tracerClone.setLang(langManager.getDefaultLang());
+                errors.add(new AttributeFieldError(attribute, FieldError.MANDATORY, tracerClone));
             }
             OgnlValidationRule ognlValidationRule = this.getOgnlValidationRule();
             if (null != ognlValidationRule) {
@@ -131,18 +137,20 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         return errors;
     }
     
-    
-    
+    @Override 
     public boolean isRequired() {
         return this._required;
     }
+    @Override 
     public void setRequired(boolean required) {
         this._required = required;
     }
     
+    @Override 
     public OgnlValidationRule getOgnlValidationRule() {
         return _ognlValidationRule;
     }
+    @Override 
     public void setOgnlValidationRule(OgnlValidationRule ognlValidationRule) {
         this._ognlValidationRule = ognlValidationRule;
     }

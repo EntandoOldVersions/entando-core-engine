@@ -30,7 +30,8 @@ import com.agiletec.aps.system.services.lang.Lang;
  */
 public class AttributeTracer {
     
-    public Object clone() {
+	@Override
+    public AttributeTracer clone() {
         AttributeTracer clone = null;
         try {
             Class attributeClass = Class.forName(this.getClass().getName());
@@ -43,7 +44,7 @@ public class AttributeTracer {
             clone.setParentAttribute(this._parentAttribute);
             clone.setLang(this._lang);
         } catch (Exception e) {
-            throw new RuntimeException("Error coloning Attribute tracer", e);
+            throw new RuntimeException("Error cloning Attribute tracer", e);
         }
         return clone;
     }
@@ -78,7 +79,7 @@ public class AttributeTracer {
      * @return the name of the field associated to the attribute. 
      */
     public String getFormFieldName(AttributeInterface attribute) {
-        StringBuffer formFieldName = new StringBuffer();
+        StringBuilder formFieldName = new StringBuilder();
         String langModule = "";
         if (null != this.getLang() && attribute.isMultilingual()) {
             langModule = this.getLang().getCode() + "_";
@@ -98,9 +99,18 @@ public class AttributeTracer {
         }
         return formFieldName.toString();
     }
+	
+	public String getMonolistElementFieldName(AttributeInterface attribute) {
+		if (!this.isMonoListElement()) {
+			return null;
+		}
+		StringBuilder fieldName = new StringBuilder();
+		fieldName.append(attribute.getName()).append("_").append(this.getListIndex());
+		return fieldName.toString();
+	}
     
     public String getPositionMessage(AttributeInterface attribute) {
-        StringBuffer buffer = new StringBuffer("Attribute ");
+        StringBuilder buffer = new StringBuilder("Attribute ");
         if (this.isMonoListElement()) {
             if (this.isCompositeElement()) {
                 buffer.append(this.getParentAttribute().getName())

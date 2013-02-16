@@ -76,6 +76,9 @@ import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttribut
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityManagersAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityTypeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.user.group.TestTrashReferencedGroup;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateDateAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateMonotextAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
 
 public class AllTests {
 	
@@ -132,6 +135,9 @@ public class AllTests {
 		suite.addTestSuite(TestContentModelAction.class);
 		suite.addTestSuite(TestContentModelFinderAction.class);
 		suite.addTestSuite(TestContentAction.class);
+		suite.addTestSuite(TestValidateDateAttribute.class);
+		suite.addTestSuite(TestValidateMonotextAttribute.class);
+		suite.addTestSuite(TestValidateTextAttribute.class);
 		suite.addTestSuite(TestContentAdminAction.class);
 		suite.addTestSuite(TestContentFinderAction.class);
 		suite.addTestSuite(TestContentGroupAction.class);

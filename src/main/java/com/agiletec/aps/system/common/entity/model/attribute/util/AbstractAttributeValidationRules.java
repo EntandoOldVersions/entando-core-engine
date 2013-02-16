@@ -36,7 +36,6 @@ public abstract class AbstractAttributeValidationRules extends BaseAttributeVali
 		return clone;
 	}
 	
-	
 	protected void insertJDOMConfigElement(String conditionRuleCode, 
 			String attributeName, String toStringValue, Element configElement) {
 		if ((toStringValue != null  && toStringValue.trim().length() > 0) || (attributeName != null && attributeName.trim().length() > 0)) {
