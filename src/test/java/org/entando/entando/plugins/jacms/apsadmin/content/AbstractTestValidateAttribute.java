@@ -67,7 +67,7 @@ public abstract class AbstractTestValidateAttribute extends AbstractBaseTestCont
 	
 	protected void checkFieldErrors(int singleFieldErrors, String formFieldName) {
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
-		System.out.println(fieldErrors);
+		//System.out.println(fieldErrors);
 		if (0 == singleFieldErrors) {
 			assertEquals(1, fieldErrors.size());
 		} else {
@@ -79,7 +79,7 @@ public abstract class AbstractTestValidateAttribute extends AbstractBaseTestCont
 			assertNull(titleFieldErrors);
 		} else {
 			assertNotNull(titleFieldErrors);
-			System.out.println(titleFieldErrors);
+			//System.out.println(titleFieldErrors);
 			assertEquals(singleFieldErrors, titleFieldErrors.size());
 		}
 	}

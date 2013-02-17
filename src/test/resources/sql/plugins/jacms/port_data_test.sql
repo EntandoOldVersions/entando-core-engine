@@ -394,6 +394,46 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 			<attribute name="Attach" attributetype="Attach" />
 			<attribute name="Boolean" attributetype="Boolean" />
 			<attribute name="CheckBox" attributetype="CheckBox" />
+			<attribute name="Date" attributetype="Date" />
+			<attribute name="Date2" attributetype="Date">
+				<validations>
+					<rangestart attribute="Date" />
+					<rangeend>25/11/2010</rangeend>
+				</validations>
+			</attribute>
+			<attribute name="Enumerator" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
+			<attribute name="Hypertext" attributetype="Hypertext" />
+			<attribute name="Image" attributetype="Image" />
+			<attribute name="Link" attributetype="Link" />
+			<attribute name="Longtext" attributetype="Longtext" />
+			<attribute name="Monotext" attributetype="Monotext" />
+			<attribute name="Monotext2" attributetype="Monotext">
+				<validations>
+					<minlength>15</minlength>
+					<maxlength>30</maxlength>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+			</attribute>
+			<attribute name="Number" attributetype="Number" />
+			<attribute name="Number2" attributetype="Number">
+				<validations>
+					<rangestart>50</rangestart>
+					<rangeend>300</rangeend>
+				</validations>
+			</attribute>
+			<attribute name="Text" attributetype="Text">
+				<roles>
+					<role>jacms:title</role>
+				</roles>
+			</attribute>
+			<attribute name="Text2" attributetype="Text">
+				<validations>
+					<minlength>15</minlength>
+					<maxlength>30</maxlength>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+			</attribute>
+			<attribute name="ThreeState" attributetype="ThreeState" />
 			<attribute name="Composite" attributetype="Composite">
 				<attributes>
 					<attribute name="Attach" attributetype="Attach" />
@@ -411,22 +451,19 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="Link" attributetype="Link" />
 					<attribute name="Longtext" attributetype="Longtext" />
 					<attribute name="Monotext" attributetype="Monotext" />
-					<attribute name="Number" attributetype="Number" />
+					<attribute name="Number" attributetype="Number">
+						<validations>
+							<expression evalOnValuedAttribute="true">
+								<ognlexpression><![CDATA[#entity.getAttribute(''Number'').value == null || (#entity.getAttribute(''Number'').value != null && value > #entity.getAttribute(''Number'').value)]]></ognlexpression>
+								<errormessage><![CDATA[Value has to be upper then ''Number'' attribute]]></errormessage>
+								<helpmessage><![CDATA[If ''Number'' valued attribute, Value has to be upper]]></helpmessage>
+							</expression>
+						</validations>
+					</attribute>
 					<attribute name="Text" attributetype="Text" />
 					<attribute name="ThreeState" attributetype="ThreeState" />
 				</attributes>
 			</attribute>
-			<attribute name="Date" attributetype="Date" />
-			<attribute name="Date2" attributetype="Date">
-				<validations>
-					<rangestart attribute="Date" />
-					<rangeend>25/11/2010</rangeend>
-				</validations>
-			</attribute>
-			<attribute name="Enumerator" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
-			<attribute name="Hypertext" attributetype="Hypertext" />
-			<attribute name="Image" attributetype="Image" />
-			<attribute name="Link" attributetype="Link" />
 			<list name="ListBoolea" attributetype="List">
 				<nestedtype>
 					<attribute name="ListBoolea" attributetype="Boolean" />
@@ -462,7 +499,6 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="List3" attributetype="ThreeState" />
 				</nestedtype>
 			</list>
-			<attribute name="Longtext" attributetype="Longtext" />
 			<list name="MonoLAtta" attributetype="Monolist">
 				<nestedtype>
 					<attribute name="MonoLAtta" attributetype="Attach" />
@@ -497,7 +533,12 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 							<attribute name="Link" attributetype="Link" />
 							<attribute name="Longtext" attributetype="Longtext" />
 							<attribute name="Monotext" attributetype="Monotext" />
-							<attribute name="Number" attributetype="Number" />
+							<attribute name="Number" attributetype="Number" >
+								<validations>
+									<rangeend attribute="Number" />
+									<rangestart>25</rangestart>
+								</validations>
+							</attribute>
 							<attribute name="Text" attributetype="Text" />
 							<attribute name="ThreeState" attributetype="ThreeState" />
 						</attributes>
@@ -554,28 +595,6 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="MonoL3stat" attributetype="ThreeState" />
 				</nestedtype>
 			</list>
-			<attribute name="Monotext" attributetype="Monotext" />
-			<attribute name="Monotext2" attributetype="Monotext">
-				<validations>
-					<minlength>15</minlength>
-					<maxlength>30</maxlength>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="Number" attributetype="Number" />
-			<attribute name="Text" attributetype="Text">
-				<roles>
-					<role>jacms:title</role>
-				</roles>
-			</attribute>
-			<attribute name="Text2" attributetype="Text">
-				<validations>
-					<minlength>15</minlength>
-					<maxlength>30</maxlength>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="ThreeState" attributetype="ThreeState" />
 			<attribute name="MARKER" attributetype="Monotext">
 				<validations>
 					<required>true</required>

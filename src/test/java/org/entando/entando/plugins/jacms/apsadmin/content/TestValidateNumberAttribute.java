@@ -28,22 +28,22 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
+public class TestValidateNumberAttribute extends AbstractTestValidateAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
-			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Date");
-			String formFieldName = tracer.getFormFieldName(dateAttribute);
-
+			AttributeInterface numberAttribute = (AttributeInterface) content.getAttribute("Number");
+			String formFieldName = tracer.getFormFieldName(numberAttribute);
+			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "dateValue");
+			this.addParameter(formFieldName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
-
+			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "25/07/2012");
+			this.addParameter(formFieldName, "41");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 		} catch (Throwable t) {
@@ -56,23 +56,23 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
-			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Date2");
+			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Number2");
 			String formFieldName = tracer.getFormFieldName(dateAttribute);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "10/10/2011");//validation: end range 25/11/2010
+			this.addParameter(formFieldName, "1011");//validation: end range 300
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "10/10/2009");//validation: end range 25/11/2010
+			this.addParameter(formFieldName, "25");//validation: end start 50
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(1, formFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formFieldName, "250");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
-			
-			this.initSaveContentAction();
-			this.addParameter("Date", "10/12/2009");//validation: start range attribute "Date"
-			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(1, formFieldName);
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;
@@ -83,7 +83,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
-			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLDate");
+			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLNumb");
 			AttributeInterface attribute = monolist.addAttribute();
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
@@ -91,26 +91,26 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			tracer.setMonoListElement(true);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLDate_0", formFieldName);
+			assertEquals("MonoLNumb_0", formFieldName);
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "dateValue");
+			this.addParameter(formFieldName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "11/07/1982");
+			this.addParameter(formFieldName, "98");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
 			AttributeInterface attribute2 = monolist.addAttribute();
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
-			assertEquals("MonoLDate_1", formFieldName2);
+			assertEquals("MonoLNumb_1", formFieldName2);
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
@@ -118,7 +118,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
-			this.addParameter(formFieldName2, "18/04/1971");
+			this.addParameter(formFieldName2, "71");
 			this.checkFieldErrors(1, formFieldName2);
 			
 		} catch (Throwable t) {
@@ -131,7 +131,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracerIT = this.getTracer();
-			ListAttribute list = (ListAttribute) content.getAttribute("ListDate");
+			ListAttribute list = (ListAttribute) content.getAttribute("ListNumber");
 			AttributeInterface attributeIT = list.addAttribute("it");
 			assertEquals(0, list.getAttributeList("en").size());
 			assertEquals(1, list.getAttributeList("it").size());
@@ -141,7 +141,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			tracerIT.setListElement(true);
 			
 			String formFieldItName = tracerIT.getFormFieldName(attributeIT);
-			assertEquals("it_ListDate_0", formFieldItName);
+			assertEquals("it_ListNumber_0", formFieldItName);
 			
 			AttributeTracer tracerEN = tracerIT.clone();
 			tracerEN.setLang(this.getLangManager().getLang("en"));
@@ -152,39 +152,39 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			this.checkFieldErrors(1, formFieldItName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldItName, "ListDateElement0Value");
+			this.addParameter(formFieldItName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldItName, "26/11/2007");
+			this.addParameter(formFieldItName, "27");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
 			
 			AttributeInterface attribute2 = list.addAttribute("it");
 			tracerIT.setListIndex(list.getAttributes().size() - 1);
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
-			assertEquals("it_ListDate_1", formFieldItName);
+			assertEquals("it_ListNumber_1", formFieldItName);
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldItName, "26/11/2007");
+			this.addParameter(formFieldItName, "26");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
 			
 			AttributeInterface attributeEN = list.addAttribute("en");
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
-			assertEquals("en_ListDate_0", formFieldEnName);
+			assertEquals("en_ListNumber_0", formFieldEnName);
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldEnName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldEnName, "06/07/1987");
+			this.addParameter(formFieldEnName, "57");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldEnName);
 			
@@ -199,37 +199,41 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
-			AttributeInterface attribute = compositeAttribute.getAttribute("Date");
+			AttributeInterface attribute = compositeAttribute.getAttribute("Number");
 			
 			tracer.setCompositeElement(true);
 			tracer.setParentAttribute(compositeAttribute);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("Composite_Date", formFieldName);
+			assertEquals("Composite_Number", formFieldName);
 			
 			this.initSaveContentAction();
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "wrongDateValue");
+			this.addParameter(formFieldName, "wrongNumberValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
-			this.addParameter(formFieldName, "10/10/2011");//validation: end range 10/10/2010
-			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(1, formFieldName);
+			//OGNL VALIDATION - evalOnValuedAttribute="true"
+			//#entity.getAttribute(''Number'').value == null || (#entity.getAttribute(''Number'').value != null && value > #entity.getAttribute(''Number'').value)
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "10/10/2008");//validation: end range 10/10/2010
+			this.addParameter(formFieldName, "58");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter("Date", "10/10/2009");//validation: start range attribute "Date"
+			this.addParameter("Number", "100");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formFieldName, "101");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formFieldName);
+			
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;
@@ -242,7 +246,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
-			AttributeInterface attribute = compositeElement.getAttribute("Date");
+			AttributeInterface attribute = compositeElement.getAttribute("Number");
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
@@ -251,7 +255,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			tracer.setParentAttribute(compositeElement);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLCom_Date_0", formFieldName);
+			assertEquals("MonoLCom_Number_0", formFieldName);
 			
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
 			assertEquals("MonoLCom_0", monolistElementName);
@@ -261,25 +265,29 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 			this.checkFieldErrors(1, monolistElementName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "wrongDateValue");
+			this.addParameter(formFieldName, "wrongNumberValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "24/10/1961");//validation: start range 10/10/1971
+			this.addParameter(formFieldName, "10");//validation: start range 25
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter(formFieldName, "10/10/2008");//validation: start range 10/10/1971
+			this.addParameter(formFieldName, "50");//validation: start range 25
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction();
-			this.addParameter("Date", "10/10/1999");//validation: end range attribute "Date"
+			this.addParameter("Number", "40");//validation: end range attribute "Number"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
+			this.initSaveContentAction();
+			this.addParameter(formFieldName, "35");//validation: end range attribute "Number"
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formFieldName);
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;
