@@ -272,7 +272,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			for (int i=0; i<filters.length; i++) {
 				EntitySearchFilter filter = filters[i];
 				if (!filter.isAttributeFilter() && filter.isLikeOption()) {
-					String tableFieldName = this.getTableFieldName(filters[i].getKey());
+					String tableFieldName = this.getTableFieldName(filter.getKey());
 					//check for id column already present
 					if (!tableFieldName.equals(this.getMasterTableIdFieldName())) {
 						query.append(", ").append(masterTableName).append(".").append(tableFieldName);

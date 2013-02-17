@@ -31,11 +31,12 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
+import java.sql.Array;
 
 /**
  * @author E.Santoboni
  */
-public abstract class AbstractTestValidateAttribute extends AbstractBaseTestContentAction {
+public abstract class AbstractTestContentAttribute extends AbstractBaseTestContentAction {
 	
 	protected ILangManager getLangManager() {
 		return (ILangManager) super.getService(SystemConstants.LANGUAGE_MANAGER);
@@ -85,9 +86,11 @@ public abstract class AbstractTestValidateAttribute extends AbstractBaseTestCont
 	}
 	
 	protected void deleteTestContent() throws Throwable {
-		EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, TEST_CONTENT_DESCRIPTION, true);
+		EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, TEST_CONTENT_DESCRIPTION, false);
 		EntitySearchFilter[] filters = {filter};
-		List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
+		List<String> groupCodes = new ArrayList<String>();
+		groupCodes.add(Group.ADMINS_GROUP_NAME);
+		List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, groupCodes);
 		for (int i=0; i<contentIds.size(); i++) {
 			String contentId = (String) contentIds.get(i);
 			Content content = this.getContentManager().loadContent(contentId, false);
@@ -96,6 +99,6 @@ public abstract class AbstractTestValidateAttribute extends AbstractBaseTestCont
 	}
 	
 	protected static final String TEST_CONTENT_TYPE_CODE = "ALL";
-	protected static final String TEST_CONTENT_DESCRIPTION = "*** CONTENT TEST DESCRIPTION ***";
+	protected static final String TEST_CONTENT_DESCRIPTION = "CONTENT TEST DESCRIPTION";
 	
 }

@@ -494,9 +494,9 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="ListNumber" attributetype="Number" />
 				</nestedtype>
 			</list>
-			<list name="List3" attributetype="List">
+			<list name="List3Stat" attributetype="List">
 				<nestedtype>
-					<attribute name="List3" attributetype="ThreeState" />
+					<attribute name="List3Stat" attributetype="ThreeState" />
 				</nestedtype>
 			</list>
 			<list name="MonoLAtta" attributetype="Monolist">
@@ -519,8 +519,6 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="MonoLCom" attributetype="Composite">
 						<attributes>
 							<attribute name="Attach" attributetype="Attach" />
-							<attribute name="Boolean" attributetype="Boolean" />
-							<attribute name="CheckBox" attributetype="CheckBox" />
 							<attribute name="Date" attributetype="Date" >
 								<validations>
 									<rangeend attribute="Date" />
@@ -540,6 +538,16 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 								</validations>
 							</attribute>
 							<attribute name="Text" attributetype="Text" />
+						</attributes>
+					</attribute>
+				</nestedtype>
+			</list>
+			<list name="MonoLCom2" attributetype="Monolist">
+				<nestedtype>
+					<attribute name="MonoLCom2" attributetype="Composite">
+						<attributes>
+							<attribute name="Boolean" attributetype="Boolean" />
+							<attribute name="CheckBox" attributetype="CheckBox" />
 							<attribute name="ThreeState" attributetype="ThreeState" />
 						</attributes>
 					</attribute>
