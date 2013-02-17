@@ -29,4 +29,9 @@ public class ApsDerbyEmbeddedDatabaseType extends DerbyEmbeddedDatabaseType {
 		sb.append(" ").append(name.toUpperCase()).append(" ");
 	}
 	
+	@Override
+	protected void appendCharType(StringBuilder sb, int fieldWidth) {
+		sb.append("VARCHAR(1)");
+	}
+	
 }
