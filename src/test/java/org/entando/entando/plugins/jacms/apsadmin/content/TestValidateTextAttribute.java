@@ -19,6 +19,7 @@ package org.entando.entando.plugins.jacms.apsadmin.content;
 
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
@@ -26,7 +27,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestValidateTextAttribute extends AbstractTestValidateAttribute {
+public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
@@ -227,6 +228,96 @@ public class TestValidateTextAttribute extends AbstractTestValidateAttribute {
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, monolistElementName2);
 			
+		} catch (Throwable t) {
+			this.deleteTestContent();
+			throw t;
+		}
+	}
+	
+	public void testValidate_CompositeElement() throws Throwable {
+		try {
+			Content content = this.executeCreateNewContent();
+			AttributeTracer tracerIT = this.getTracer();
+			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
+			AttributeInterface attribute = compositeAttribute.getAttribute("Text");
+			
+			tracerIT.setCompositeElement(true);
+			tracerIT.setParentAttribute(compositeAttribute);
+			
+			String formITFieldName = tracerIT.getFormFieldName(attribute);
+			assertEquals("it_Composite_Text", formITFieldName);
+			
+			AttributeTracer tracerEN = tracerIT.clone();
+			tracerEN.setLang(this.getLangManager().getLang("en"));
+			String formENFieldName = tracerEN.getFormFieldName(attribute);
+			assertEquals("en_Composite_Text", formENFieldName);
+			
+			this.initSaveContentAction();
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formITFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formITFieldName, "itValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formITFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formITFieldName, "");
+			this.addParameter(formENFieldName, "enValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formITFieldName);
+			
+		} catch (Throwable t) {
+			this.deleteTestContent();
+			throw t;
+		}
+	}
+	
+	public void testValidate_MonolistCompositeElement() throws Throwable {
+		try {
+			Content content = this.executeCreateNewContent();
+			AttributeTracer tracerIT = this.getTracer();
+			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
+			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
+			AttributeInterface attribute = compositeElement.getAttribute("Text");
+			
+			tracerIT.setListIndex(monolist.getAttributes().size() - 1);
+			tracerIT.setListLang(this.getLangManager().getDefaultLang());
+			tracerIT.setMonoListElement(true);
+			tracerIT.setCompositeElement(true);
+			tracerIT.setParentAttribute(compositeElement);
+			
+			String formITFieldName = tracerIT.getFormFieldName(attribute);
+			assertEquals("it_MonoLCom_Text_0", formITFieldName);
+			
+			AttributeTracer tracerEN = tracerIT.clone();
+			tracerEN.setLang(this.getLangManager().getLang("en"));
+			String formENFieldName = tracerEN.getFormFieldName(attribute);
+			assertEquals("en_MonoLCom_Text_0", formENFieldName);
+			
+			String monolistElementName = tracerIT.getMonolistElementFieldName(compositeElement);
+			assertEquals("MonoLCom_0", monolistElementName);
+			
+			this.initSaveContentAction();
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(1, monolistElementName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formITFieldName, "itValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formITFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formITFieldName, "");
+			this.addParameter(formENFieldName, "enValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(1, monolistElementName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formITFieldName, "itValue");
+			this.addParameter(formENFieldName, "enValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, monolistElementName);
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;

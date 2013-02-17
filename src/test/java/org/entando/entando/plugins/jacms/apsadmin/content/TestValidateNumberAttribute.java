@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestValidateNumberAttribute extends AbstractTestValidateAttribute {
+public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
@@ -240,7 +240,7 @@ public class TestValidateNumberAttribute extends AbstractTestValidateAttribute {
 		}
 	}
 	
-	public void testValidate_ListCompositeElement() throws Throwable {
+	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();

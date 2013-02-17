@@ -19,6 +19,7 @@ package org.entando.entando.plugins.jacms.apsadmin.content;
 
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -27,7 +28,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestValidateMonotextAttribute extends AbstractTestValidateAttribute {
+public class TestValidateMonotextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
@@ -159,6 +160,67 @@ public class TestValidateMonotextAttribute extends AbstractTestValidateAttribute
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
+		} catch (Throwable t) {
+			this.deleteTestContent();
+			throw t;
+		}
+	}
+	
+	public void testValidate_CompositeElement() throws Throwable {
+		try {
+			Content content = this.executeCreateNewContent();
+			AttributeTracer tracer = this.getTracer();
+			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
+			AttributeInterface attribute = compositeAttribute.getAttribute("Monotext");
+			
+			tracer.setCompositeElement(true);
+			tracer.setParentAttribute(compositeAttribute);
+			
+			String formFieldName = tracer.getFormFieldName(attribute);
+			assertEquals("Composite_Monotext", formFieldName);
+			
+			this.initSaveContentAction();
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formFieldName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formFieldName, "MonotextValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formFieldName);
+		} catch (Throwable t) {
+			this.deleteTestContent();
+			throw t;
+		}
+	}
+	
+	public void testValidate_MonolistCompositeElement() throws Throwable {
+		try {
+			Content content = this.executeCreateNewContent();
+			AttributeTracer tracer = this.getTracer();
+			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
+			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
+			AttributeInterface attribute = compositeElement.getAttribute("Monotext");
+			
+			tracer.setListIndex(monolist.getAttributes().size() - 1);
+			tracer.setListLang(this.getLangManager().getDefaultLang());
+			tracer.setMonoListElement(true);
+			tracer.setCompositeElement(true);
+			tracer.setParentAttribute(compositeElement);
+			
+			String formFieldName = tracer.getFormFieldName(attribute);
+			assertEquals("MonoLCom_Monotext_0", formFieldName);
+			
+			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
+			assertEquals("MonoLCom_0", monolistElementName);
+			
+			this.initSaveContentAction();
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(1, monolistElementName);
+			
+			this.initSaveContentAction();
+			this.addParameter(formFieldName, "MonotextValue");
+			this.executeAction(Action.INPUT);
+			this.checkFieldErrors(0, formFieldName);
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;

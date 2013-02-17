@@ -28,7 +28,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
+public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
@@ -79,7 +79,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 		}
 	}
 	
-	public void testValidate_MonoListElement() throws Throwable {
+	public void testValidate_MonolistElement() throws Throwable {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
@@ -236,7 +236,7 @@ public class TestValidateDateAttribute extends AbstractTestValidateAttribute {
 		}
 	}
 	
-	public void testValidate_ListCompositeElement() throws Throwable {
+	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
 			Content content = this.executeCreateNewContent();
 			AttributeTracer tracer = this.getTracer();
