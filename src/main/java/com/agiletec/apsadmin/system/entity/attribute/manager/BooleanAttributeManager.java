@@ -29,13 +29,15 @@ public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
     /**
      * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
+	@Override
     protected Object getValue(AttributeInterface attribute) {
         return ((BooleanAttribute) attribute).getBooleanValue();
     }
     
+	@Override
     protected void setValue(AttributeInterface attribute, String value) {
         if (value != null) {
-            ((BooleanAttribute) attribute).setBooleanValue(new Boolean(value));
+            ((BooleanAttribute) attribute).setBooleanValue(Boolean.parseBoolean(value));
         } else {
             ((BooleanAttribute) attribute).setBooleanValue(null);
         }
@@ -44,6 +46,7 @@ public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
     /**
      * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
+	@Override
     protected boolean isValidListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return true;
     }
@@ -51,6 +54,7 @@ public class BooleanAttributeManager extends AbstractMonoLangAttributeManager {
     /**
      * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
      */
+	@Override
     protected boolean isValidMonoListElement(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
         return true;
     }

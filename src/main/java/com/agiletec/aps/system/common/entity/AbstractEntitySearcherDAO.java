@@ -58,12 +58,14 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	protected void flowRecordsResult(List<ApsEntityRecord> records, EntitySearchFilter[] filters, ResultSet result) throws Throwable {
 		while (result.next()) {
 			ApsEntityRecord record = this.createRecord(result);
-			if (!records.contains(record)) {//TODO DA ANALIZZARE
+			if (!records.contains(record)) {
 				if (!this.isForceTextCaseSearch() || null == filters || filters.length == 0) {
 					records.add(record);
 				} else {
 					boolean verify = this.verifyLikeFieldFilters(result, filters);
-					if (verify) records.add(record);
+					if (verify) {
+						records.add(record);
+					}
 				}
 			}
 		}
@@ -106,7 +108,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			len = filters.length;
 		}
 		EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
-		for(int i=0; i < len; i++){
+		for (int i=0; i < len; i++){
 			newFilters[i] = filters[i];
 		}
 		newFilters[len] = filterToAdd;
@@ -116,12 +118,16 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	protected void flowResult(List<String> contentsId, EntitySearchFilter[] filters, ResultSet result) throws SQLException {
 		while (result.next()) {
 			String id = result.getString(this.getEntityMasterTableIdFieldName());
-			if (contentsId.contains(id)) continue;
+			if (contentsId.contains(id)) {
+				continue;
+			}
 			if (!this.isForceTextCaseSearch() || null == filters || filters.length == 0) {
 				contentsId.add(id);
 			} else {
 				boolean verify = this.verifyLikeFieldFilters(result, filters);
-				if (verify) contentsId.add(id);
+				if (verify) {
+					contentsId.add(id);
+				}
 			}
 		}
 	}
@@ -143,11 +149,15 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			String value = result.getString(fieldName);
 			if (null != filter.getValue()) {
 				verify = this.checkText((String)filter.getValue(), value);
-				if (!verify) break;
+				if (!verify) {
+					break;
+				}
 			} else if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {
 				List<Object> allowedValues = filter.getAllowedValues();
 				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues);
-				if (!verify) break;
+				if (!verify) {
+					break;
+				}
 			}
 		}
 		return verify;
@@ -176,7 +186,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	 * @throws Throwable In case of error.
 	 */
 	protected int addMetadataFieldFilterStatementBlock(EntitySearchFilter[] filters, int index, PreparedStatement stat) throws Throwable {
-		if (filters == null) return index;
+		if (filters == null) {
+			return index;
+		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
 			if (filter.getKey() != null && !filter.isAttributeFilter()) {
@@ -196,7 +208,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	 */
 	protected int addAttributeFilterStatementBlock(EntitySearchFilter[] filters,
 			int index, PreparedStatement stat) throws SQLException {
-		if (filters == null) return index;
+		if (filters == null) {
+			return index;
+		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
 			if (filter.getKey() != null && filter.isAttributeFilter()) {
@@ -226,7 +240,6 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		StringBuffer query = this.createBaseQueryBlock(filters, selectAll);
 		boolean hasAppendWhereClause = this.appendFullAttributeFilterQueryBlocks(filters, query, false);
 		this.appendMetadataFieldFilterQueryBlocks(filters, query, hasAppendWhereClause);
-		
 		boolean ordered = appendOrderQueryBlocks(filters, query, false);
 		return query.toString();
 	}
@@ -259,7 +272,11 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			for (int i=0; i<filters.length; i++) {
 				EntitySearchFilter filter = filters[i];
 				if (!filter.isAttributeFilter() && filter.isLikeOption()) {
-					query.append(", ").append(masterTableName).append(".").append(this.getTableFieldName(filters[i].getKey()));
+					String tableFieldName = this.getTableFieldName(filter.getKey());
+					//check for id column already present
+					if (!tableFieldName.equals(this.getMasterTableIdFieldName())) {
+						query.append(", ").append(masterTableName).append(".").append(tableFieldName);
+					}
 				} else if (filter.isAttributeFilter() && filter.isLikeOption()) {
 					String columnName = this.getAttributeFieldColunm(filter);
 					query.append(", ").append(searchTableName).append(i).append(".").append(columnName);
@@ -272,7 +289,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	}
 	
 	private void appendJoinSerchTableQueryBlock(EntitySearchFilter[] filters, StringBuffer query) {
-		if (filters == null) return;
+		if (filters == null) {
+			return;
+		}
 		String masterTableName = this.getEntityMasterTableName();
 		String masterTableIdFieldName = this.getEntityMasterTableIdFieldName();
 		String searchTableName = this.getEntitySearchTableName();
@@ -338,7 +357,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 				String operator = filter.isLikeOption() ? this.getLikeClause() : "= ? ";
 				query.append(searchTableNameAlias).append(".").append(this.getAttributeFieldColunm(allowedValue)).append(" ");
 				query.append(operator);
-				if (j == (allowedValues.size()-1)) query.append(" ) ");
+				if (j == (allowedValues.size()-1)) {
+					query.append(" ) ");
+				}
 			}
 		} else if (filter.getValue() != null) {
 			Object object = filter.getValue();
@@ -373,7 +394,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	}
 	
 	protected boolean appendMetadataFieldFilterQueryBlocks(EntitySearchFilter[] filters, StringBuffer query, boolean hasAppendWhereClause) {
-		if (filters == null) return hasAppendWhereClause;
+		if (filters == null) {
+			return hasAppendWhereClause;
+		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
 			if (filter.getKey() != null && !filter.isAttributeFilter()) {
@@ -384,7 +407,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	}
 	
 	protected boolean appendOrderQueryBlocks(EntitySearchFilter[] filters, StringBuffer query, boolean ordered) {
-		if (filters == null) return ordered;
+		if (filters == null) {
+			return ordered;
+		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
 			if (null != filter.getKey() && null != filter.getOrder() && !filter.isNullOption()) {
@@ -414,6 +439,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		return hasAppendWhereClause;
 	}
 	
+	@Override
 	protected boolean verifyWhereClauseAppend(StringBuffer query, boolean hasAppendWhereClause) {
 		if (hasAppendWhereClause) {
 			query.append("AND ");
@@ -425,10 +451,16 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	}
 	
 	private void addAttributeOrderQueryBlock(String searchTableNameAlias, StringBuffer query, EntitySearchFilter filter, String order) {
-		if (order == null) order = "";
+		if (order == null) {
+			order = "";
+		}
 		Object object = filter.getValue();
-		if (object == null) object = filter.getStart();
-		if (object == null) object = filter.getEnd();
+		if (object == null) {
+			object = filter.getStart();
+		}
+		if (object == null) {
+			object = filter.getEnd();
+		}
 		if (null == object) {
 			query.append(searchTableNameAlias).append(".textvalue ").append(order).append(", ")
 				.append(searchTableNameAlias).append(".datevalue ").append(order).append(", ")

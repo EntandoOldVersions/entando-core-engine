@@ -184,8 +184,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	
 	protected void addPageRecord(IPage page, Connection conn) throws ApsSystemException {
 		int position = 1;
-		if (page.getParent().getChildren()!= null ){
-			position = page.getParent().getChildren().length + 1;
+		IPage[] sisters = page.getParent().getChildren();
+		if (null != sisters && sisters.length > 0) {
+			IPage last = sisters[sisters.length - 1];
+			if (null != last) {
+				position = last.getPosition() + 1;
+			} else {
+				position = sisters.length + 1;
+			}
 		}
 		PreparedStatement stat = null;
 		try {

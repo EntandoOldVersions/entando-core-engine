@@ -15,23 +15,23 @@
 * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.init.util;
-
-import com.j256.ormlite.db.DerbyEmbeddedDatabaseType;
+package com.agiletec.aps.system.common.entity.model.attribute;
 
 /**
+ * This attribute represent an information of type CheckBox. 
+ * This attribute does not support multiple languages.
  * @author E.Santoboni
  */
-public class ApsDerbyEmbeddedDatabaseType extends DerbyEmbeddedDatabaseType {
+public class CheckBoxAttribute extends BooleanAttribute {
 	
 	@Override
-	public void appendEscapedEntityName(StringBuilder sb, String name) {
-		sb.append(" ").append(name.toUpperCase()).append(" ");
+	protected boolean saveBooleanJDOMElement() {
+		return (null != super.getBooleanValue() && super.getBooleanValue());
 	}
 	
 	@Override
-	protected void appendCharType(StringBuilder sb, int fieldWidth) {
-		sb.append("VARCHAR(1)");
+	protected boolean addSearchInfo() {
+		return (null != super.getBooleanValue() && super.getBooleanValue());
 	}
 	
 }

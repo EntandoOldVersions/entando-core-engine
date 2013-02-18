@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class NumberAttributeValidationRules extends AbstractAttributeValidationRules {
     
+	@Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
         String toStringEqualValue = (this.getValue() != null) ? String.valueOf(this.getValue()) : null;
@@ -45,6 +46,7 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         this.insertJDOMConfigElement("rangeend", this.getRangeEndAttribute(), toStringEndValue, configElement);
     }
     
+	@Override
     protected void extractValidationRules(Element validationElement) {
         super.extractValidationRules(validationElement);
         Element valueElement = validationElement.getChild("value");
@@ -78,12 +80,17 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
         return valueInteger;
     }
     
-    public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
+    @Override
+	public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
-        if (this.isEmpty()) return errors;
+        if (this.isEmpty()) {
+			return errors;
+		}
         try {
             NumberAttribute numberAttribute = (NumberAttribute) attribute;
-            if (null == numberAttribute.getValue()) return errors;
+            if (null == numberAttribute.getValue()) {
+				return errors;
+			}
             Integer attributeValue = numberAttribute.getValue().intValue();
             Integer startValue = (this.getRangeStart() != null) ? (Integer) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
             if (null != startValue && attributeValue < startValue) {
@@ -111,6 +118,9 @@ public class NumberAttributeValidationRules extends AbstractAttributeValidationR
     }
     
     private Integer getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
+        if (null == otherAttributeName) {
+			return null;
+		}
         AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
         if (null != other && (other instanceof NumberAttribute) && ((NumberAttribute) other).getValue() != null) {
             return ((NumberAttribute) other).getValue().intValue();

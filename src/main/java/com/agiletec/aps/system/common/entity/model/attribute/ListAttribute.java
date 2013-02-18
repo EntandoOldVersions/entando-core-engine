@@ -76,9 +76,11 @@ public class ListAttribute extends AbstractListAttribute {
         return attrList;
     }
 
-    /**Return the list of attributes in the current rendering language.
+    /**
+	 * Return the list of attributes in the current rendering language.
      * @return A list of homogeneous attributes.
      */
+	@Override
     public Object getRenderingAttributes() {
         List<AttributeInterface> attrList = this.getAttributeList(this.getRenderingLang());
         return attrList;
@@ -97,9 +99,7 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
 
-    /**
-     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#setDefaultLangCode(java.lang.String)
-     */
+    @Override
     public void setDefaultLangCode(String langCode) {
         super.setDefaultLangCode(langCode);
         Iterator<List<AttributeInterface>> values = this._listMap.values().iterator();
@@ -113,9 +113,7 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
 
-    /**
-     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#getJDOMElement()
-     */
+    @Override
     public Element getJDOMElement() {
         Element listElement = new Element("list");
         listElement.setAttribute("attributetype", this.getType());
@@ -148,6 +146,7 @@ public class ListAttribute extends AbstractListAttribute {
         return _listMap;
     }
 
+    @Override
     public List<AttributeInterface> getAttributes() {
         List<AttributeInterface> attributes = new ArrayList<AttributeInterface>();
         Iterator<List<AttributeInterface>> values = this.getAttributeListMap().values().iterator();
@@ -157,10 +156,12 @@ public class ListAttribute extends AbstractListAttribute {
         return attributes;
     }
 
+    @Override
     public Object getValue() {
         return this.getAttributeListMap();
     }
 
+    @Override
     protected Object getJAXBValue(String langCode) {
         if (null == langCode) {
             if (null == this.getAttributeListMap()) {
@@ -192,6 +193,7 @@ public class ListAttribute extends AbstractListAttribute {
         return jaxrAttributes;
     }
     
+    @Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         JAXBListAttribute jaxbListAttribute = (JAXBListAttribute) jaxbAttribute;
         if (null == jaxbListAttribute) return;
@@ -204,6 +206,7 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
     
+    @Override
     public Status getStatus() {
         boolean valued = true;
         ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
@@ -211,7 +214,7 @@ public class ListAttribute extends AbstractListAttribute {
         for (int i = 0; i < langs.size(); i++) {
             Lang lang = langs.get(i);
             List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
-            if (attributeList == null || attributeList.size() == 0) {
+            if (attributeList == null || attributeList.isEmpty()) {
                 valued = false;
                 break;
             }
@@ -223,6 +226,7 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
     
+    @Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {
@@ -238,7 +242,7 @@ public class ListAttribute extends AbstractListAttribute {
                     elementTracer.setListLang(lang);
                     elementTracer.setListIndex(j);
                     Status elementStatus = attributeElement.getStatus();
-                    if (!elementStatus.equals(Status.EMPTY)) {
+                    if (elementStatus.equals(Status.EMPTY)) {
                         errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                     } else {
                         List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);

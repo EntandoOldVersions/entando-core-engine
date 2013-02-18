@@ -65,6 +65,7 @@ public class MonoListAttribute extends AbstractListAttribute {
      * Return the list of attributes contained in this object.
      * @return A list of homogeneous attributes.
      */
+	@Override
     public List<AttributeInterface> getAttributes() {
         return _attributes;
     }
@@ -82,6 +83,7 @@ public class MonoListAttribute extends AbstractListAttribute {
      * may support several languages (depending on the attributes themselves)
      * @param langCode The language code for the rendering process.
      */
+    @Override
     public void setRenderingLang(String langCode) {
         super.setRenderingLang(langCode);
         for (int i = 0; i < this.getAttributes().size(); i++) {
@@ -97,6 +99,7 @@ public class MonoListAttribute extends AbstractListAttribute {
      * @return The JDOM representing a list of homogeneous attributes, with none or multiple
      * elements.
      */
+    @Override
     public Element getJDOMElement() {
         Element monolistElement = new Element("list");
         monolistElement.setAttribute("attributetype", this.getType());
@@ -110,6 +113,7 @@ public class MonoListAttribute extends AbstractListAttribute {
         return monolistElement;
     }
 
+    @Override
     public Object getRenderingAttributes() {
         if (this.getNestedAttributeType().isSimple()) {
             return this.getAttributes();
@@ -123,10 +127,12 @@ public class MonoListAttribute extends AbstractListAttribute {
         }
     }
 
+    @Override
     public Object getValue() {
         return this.getAttributes();
     }
     
+    @Override
     protected Object getJAXBValue(String langCode) {
         List<DefaultJAXBAttribute> jaxbAttributes = new ArrayList<DefaultJAXBAttribute>();
         List<AttributeInterface> attributes = this.getAttributes();
@@ -137,11 +143,16 @@ public class MonoListAttribute extends AbstractListAttribute {
         return jaxbAttributes;
     }
     
+    @Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         JAXBListAttribute jaxbListAttribute = (JAXBListAttribute) jaxbAttribute;
-        if (null == jaxbListAttribute) return;
+        if (null == jaxbListAttribute) {
+			return;
+		}
         List<DefaultJAXBAttribute> attributes = jaxbListAttribute.getAttributes();
-        if (null == attributes) return;
+        if (null == attributes) {
+			return;
+		}
         for (int i = 0; i < attributes.size(); i++) {
             DefaultJAXBAttribute jaxbAttributeElement = attributes.get(i);
             AttributeInterface attribute = this.addAttribute();
@@ -149,6 +160,7 @@ public class MonoListAttribute extends AbstractListAttribute {
         }
     }
     
+    @Override
     public Status getStatus() {
         List<AttributeInterface> attributes = this.getAttributes();
         if (null != attributes && attributes.size() > 0) {
@@ -157,6 +169,7 @@ public class MonoListAttribute extends AbstractListAttribute {
         return Status.EMPTY;
     }
     
+    @Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {
@@ -167,7 +180,7 @@ public class MonoListAttribute extends AbstractListAttribute {
                 elementTracer.setListIndex(i);
                 elementTracer.setMonoListElement(true);
                 Status elementStatus = attributeElement.getStatus();
-                if (!elementStatus.equals(Status.VALUED)) {
+                if (elementStatus.equals(Status.EMPTY)) {
                     errors.add(new AttributeFieldError(attributeElement, FieldError.INVALID, elementTracer));
                 } else {
                     List<AttributeFieldError> elementErrors = attributeElement.validate(elementTracer);

@@ -182,7 +182,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 				IPage sisterPage = sisterPages[i];
 				if (sisterPage.getCode().equals(pageCode)) {
 					if (!verifyRequiredMovement(i, moveUp, sisterPages.length)) {
-						resultOperation = false;
+						return false;
 					} else {
 						if (moveUp) {
 							IPage pageDown = sisterPages[i - 1];

@@ -47,18 +47,22 @@ import org.springframework.beans.factory.BeanFactoryAware;
  */
 public abstract class AbstractAttribute implements AttributeInterface, BeanFactoryAware, Serializable {
     
+    @Override
     public boolean isMultilingual() {
         return false;
     }
     
+    @Override
     public boolean isTextAttribute() {
         return false;
     }
     
+    @Override
     public String getName() {
         return _name;
     }
     
+    @Override
     public void setName(String name) {
         this._name = name;
     }
@@ -67,14 +71,17 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
      * The returned type corresponds to the attribute code as found in the declaration
      * of the attribute type.
      */
+    @Override
     public String getType() {
         return _type;
     }
     
+    @Override
     public void setType(String typeName) {
         this._type = typeName;
     }
     
+    @Override
     public void setDefaultLangCode(String langCode) {
         this._defaultLangCode = langCode;
     }
@@ -91,6 +98,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
      * Set up the language to use in the rendering process.
      * @param langCode The code of the rendering language.
      */
+    @Override
     public void setRenderingLang(String langCode) {
         _renderingLangCode = langCode;
     }
@@ -106,6 +114,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     /**
      * @return True if the attribute is searchable, false otherwise.
      */
+    @Override
     public boolean isSearcheable() {
         return _searcheable;
     }
@@ -114,10 +123,12 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
      * Toggle the searchable condition of the attribute.
      * @param searchable True if the attribute is searchable, false otherwise.
      */
+    @Override
     public void setSearcheable(boolean searchable) {
         this._searcheable = searchable;
     }
     
+    @Override
     public Object getAttributePrototype() {
         AbstractAttribute clone = null;
         try {
@@ -157,6 +168,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         return clone;
     }
     
+    @Override
     public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
@@ -212,7 +224,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         }
         List<String> values = new ArrayList<String>();
         List<Element> subElements = elements.getChildren(subElementName);
-        if (null == subElements || subElements.size() == 0) {
+        if (null == subElements || subElements.isEmpty()) {
             return null;
         }
         for (int i = 0; i < subElements.size(); i++) {
@@ -228,6 +240,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         return array;
     }
     
+    @Override
     public Element getJDOMConfigElement() {
         Element configElement = new Element(this.getTypeConfigElementName());
         configElement.setAttribute("name", this.getName());
@@ -285,42 +298,52 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     protected void addListElementTypeConfig(Element configElement) {
     }
     
+    @Override
     public String getIndexingType() {
         return _indexingType;
     }
     
+    @Override
     public void setIndexingType(String indexingType) {
         this._indexingType = indexingType;
     }
     
+    @Override
     public boolean isSimple() {
         return true;
     }
     
+    @Override
     public boolean isRequired() {
         return this.getValidationRules().isRequired();
     }
     
+    @Override
     public void setRequired(boolean required) {
         this.getValidationRules().setRequired(required);
     }
     
+    @Override
     public IApsEntity getParentEntity() {
         return _parentEntity;
     }
     
+    @Override
     public void setParentEntity(IApsEntity parentEntity) {
         this._parentEntity = parentEntity;
     }
     
+    @Override
     public AttributeHandlerInterface getHandler() {
         return _handler;
     }
     
+    @Override
     public void setHandler(AttributeHandlerInterface handler) {
         this._handler = handler;
     }
     
+    @Override
     public void disable(String disablingCode) {
         if (_disablingCodes != null && disablingCode != null) {
             for (int i = 0; i < _disablingCodes.length; i++) {
@@ -332,22 +355,27 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         }
     }
     
+    @Override
     public boolean isActive() {
         return _active;
     }
     
+    @Override
     public void setDisablingCodes(String[] disablingCodes) {
         this._disablingCodes = disablingCodes;
     }
     
+    @Override
     public String[] getDisablingCodes() {
         return this._disablingCodes;
     }
     
+    @Override
     public String[] getRoles() {
         return _roles;
     }
     
+    @Override
     public void setRoles(String[] roles) {
         this._roles = roles;
     }
@@ -356,6 +384,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         return new BaseAttributeValidationRules();
     }
     
+    @Override
     public IAttributeValidationRules getValidationRules() {
         if (null == this._validationRules) {
             this.setValidationRules(this.getValidationRuleNewIntance());
@@ -363,10 +392,12 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         return _validationRules;
     }
     
+    @Override
     public void setValidationRules(IAttributeValidationRules validationRules) {
         this._validationRules = validationRules;
     }
     
+    @Override
     public DefaultJAXBAttribute getJAXBAttribute(String langCode) {
         if (null == this.getValue()) {
             return null;
@@ -388,10 +419,12 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     
     protected abstract Object getJAXBValue(String langCode);
     
+    @Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         this.setName(jaxbAttribute.getName());
     }
     
+    @Override
     public DefaultJAXBAttributeType getJAXBAttributeType() {
         DefaultJAXBAttributeType jaxbAttribute = this.getJAXBAttributeTypeInstance();
         jaxbAttribute.setName(this.getName());
@@ -416,6 +449,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         return new DefaultJAXBAttributeType();
     }
     
+	@Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = new ArrayList<AttributeFieldError>();
         try {
@@ -423,7 +457,9 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
                 errors.add(new AttributeFieldError(this, FieldError.INVALID, tracer));
             } else {
                 IAttributeValidationRules validationRules = this.getValidationRules();
-                if (null == validationRules) return errors;
+                if (null == validationRules) {
+					return errors;
+				}
                 ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
                 List<AttributeFieldError> validationRulesErrors = validationRules.validate(this, tracer, langManager);
                 if (null != validationRulesErrors) {
@@ -440,11 +476,13 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     protected BeanFactory getBeanFactory() {
         return this._beanFactory;
     }
+    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }
 	
-	public String getAttributeManagerClassName() {
+	@Override
+    public String getAttributeManagerClassName() {
 		return _attributeManagerClassName;
 	}
 	public void setAttributeManagerClassName(String attributeManagerClassName) {

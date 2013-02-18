@@ -327,6 +327,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	protected void setDefaultShowlets(Page page) throws ApsSystemException {
 		try {
 			Showlet[] defaultShowlets = page.getModel().getDefaultShowlet();
+			if (null == defaultShowlets) {
+				return;
+			}
 			Showlet[] showlets = new Showlet[defaultShowlets.length];
 			for (int i=0; i<defaultShowlets.length; i++) {
 				Showlet defaultShowlet = defaultShowlets[i];

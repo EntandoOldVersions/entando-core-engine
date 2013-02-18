@@ -40,6 +40,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
  */
 public class DateAttributeValidationRules extends AbstractAttributeValidationRules {
     
+	@Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
         String toStringEqualValue = this.toStringValue(this.getValue());
@@ -51,7 +52,9 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
     }
     
     private String toStringValue(Object value) {
-        if (null == value) return null;
+        if (null == value) {
+			return null;
+		}
         Date date = null;
         if (value instanceof XMLGregorianCalendar) {
             XMLGregorianCalendar grCal = (XMLGregorianCalendar) value;
@@ -69,6 +72,7 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
         return null;
     }
     
+	@Override
     protected void extractValidationRules(Element validationElement) {
         super.extractValidationRules(validationElement);
         Element valueElement = validationElement.getChild("value");
@@ -88,12 +92,17 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
         }
     }
     
+	@Override
     public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
-        if (this.isEmpty()) return errors;
+        if (this.isEmpty()) {
+			return errors;
+		}
         try {
             Date attributeValue = ((DateAttribute) attribute).getDate();
-            if (null == attributeValue) return errors;
+            if (null == attributeValue) {
+				return errors;
+			}
             Date startValue = (this.getRangeStart() != null) ? (Date) this.getRangeStart() : this.getOtherAttributeValue(attribute, this.getRangeStartAttribute());
             if (null != startValue && attributeValue.before(startValue)) {
                 AttributeFieldError error = new AttributeFieldError(attribute, FieldError.LESS_THAN_ALLOWED, tracer);
@@ -123,6 +132,9 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
     }
     
     private Date getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
+		if (null == otherAttributeName) {
+			return null;
+		}
         AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
         if (null != other && (other instanceof DateAttribute) && ((DateAttribute) other).getDate() != null) {
             return ((DateAttribute) other).getDate();
