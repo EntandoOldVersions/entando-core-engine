@@ -125,6 +125,8 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	protected String fillAttributeFields(AttributeInterface attribute) {
 		if (null != this.getAttributeDescription() && this.getAttributeDescription().trim().length() > 0) {
 			attribute.setDescription(this.getAttributeDescription().trim());
+		} else {
+			attribute.setDescription(null);
 		}
 		attribute.setRoles(this.createStringArray(this.getAttributeRoles()));
 		attribute.setDisablingCodes(this.createStringArray(this.getDisablingCodes()));
