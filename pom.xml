@@ -61,7 +61,6 @@
 		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
 		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
 		-->
-		
 		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>1527</test.database.port>
@@ -363,7 +362,7 @@
 					<excludes>
 						<exclude>**/*BaseTestCase*</exclude>
 					</excludes>
-					<includes> 
+					<includes>
 						<include>**/AllTests.java</include>
 					</includes>
 				</configuration>
@@ -391,11 +390,11 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -740,7 +739,7 @@
 			<version>1.2.0</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -771,7 +770,7 @@
 			<version>10.8.2.2</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -822,7 +821,7 @@
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-security</artifactId>
 				</exclusion>
-			</exclusions>	
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.oauth.core</groupId>
@@ -836,9 +835,6 @@
 			<version>20100527</version>
 			<type>jar</type>
 		</dependency>
-		
-		
-		
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-core</artifactId>
@@ -851,9 +847,6 @@
 			<version>4.40</version>
 			<type>jar</type>
 		</dependency>
-		
-		
-		
 	</dependencies>
 	<reporting>
 		<plugins>
