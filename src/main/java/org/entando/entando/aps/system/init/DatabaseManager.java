@@ -156,12 +156,12 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error initializating master databases", t);
 		}
 	}
-
+	
 	private void initMasterDatabase(String databaseName, DataSource dataSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
 		try {
-			DatabaseType type = this.getType(dataSource);
+			DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
 			if (type.equals(DatabaseType.DERBY)) {
-				this.initDerbySchema(dataSource);
+				this.getDatabaseRestorer().initDerbySchema(dataSource);
 			}
 			List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
 			if (null == tableClassNames || tableClassNames.isEmpty()) {
@@ -247,7 +247,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	private void createTables(String databaseName, List<String> tableClassNames,
 			DataSource dataSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
 		try {
-			DatabaseType type = this.getType(dataSource);
+			DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
 			TableFactory tableFactory = new TableFactory(databaseName, dataSource, type);
 			tableFactory.createTables(tableClassNames, schemaReport);
 		} catch (Throwable t) {
@@ -256,54 +256,12 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 	}
 	
-	protected DatabaseType getType(DataSource dataSource) throws ApsSystemException {
-		String typeString = null;
-		try {
-			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
-			Iterator<Object> typesIter = this.getDatabaseTypeDrivers().keySet().iterator();
-			while (typesIter.hasNext()) {
-				String typeCode = (String) typesIter.next();
-				List<String> driverClassNames = (List<String>) this.getDatabaseTypeDrivers().get(typeCode);
-				if (null != driverClassNames && driverClassNames.contains(driverClassName)) {
-					typeString = typeCode;
-					break;
-				}
-			}
-			if (null == typeString) {
-				ApsSystemUtils.getLogger().severe("Type not recognized for Driver '" + driverClassName + "' - "
-						+ "Recognized types '" + DatabaseType.values() + "'");
-				return DatabaseType.UNKNOWN;
-			}
-			return Enum.valueOf(DatabaseType.class, typeString.toUpperCase());
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
-			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
-		}
-	}
-	
-	private void initDerbySchema(DataSource dataSource) throws Throwable {
-		String username = this.invokeGetMethod("getUsername", dataSource);
-		try {
-			String[] queryCreateSchema = new String[]{"CREATE SCHEMA " + username.toUpperCase()};
-			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
-			throw new ApsSystemException("Error creating derby schema", t);
-		}
-		try {
-			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
-			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
-			throw new ApsSystemException("Error initializating Derby Schema", t);
-		}
-	}
-	
+	/*
 	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
 		Method method = dataSource.getClass().getDeclaredMethod(methodName);
 		return (String) method.invoke(dataSource);
 	}
-
+	*/
 	//---------------- DATA ------------------- START
 
 	private void initMasterDefaultResource(SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
@@ -347,7 +305,7 @@ public class DatabaseManager extends AbstractInitializerManager
 					if (checkOnStatup) {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 						DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
-						this.initOracleSchema(dataSource);
+						this.getDatabaseRestorer().initOracleSchema(dataSource);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
 						System.out.println("|   ( ok )  " + dataSourceName);
@@ -410,7 +368,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				if (null != script && script.trim().length() > 0) {
 					if (checkOnStatup) {
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
-						this.initOracleSchema(dataSource);
+						this.getDatabaseRestorer().initOracleSchema(dataSource);
 						TableDataUtils.valueDatabase(script, dataSourceName, dataSource, dataReport);
 						System.out.println("|   ( ok )  " + dataSourceName);
 						dataReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
@@ -433,20 +391,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 	}
 	
-	private void initOracleSchema(DataSource dataSource) throws Throwable {
-		DatabaseType type = this.getType(dataSource);
-		try {
-			if (!type.equals(DatabaseType.ORACLE)) {
-				return;
-			}
-			String[] queryTimestampFormat = new String[]{"ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"};
-			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
-		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
-			throw new ApsSystemException("Error initializing oracle schema", t);
-		}
-	}
-	
 	private void restoreDefaultDump() throws ApsSystemException {
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
@@ -460,7 +404,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				Resource resource = (null != defaultDump) ? defaultDump.get(dataSourceName) : null;
 				String script = this.readFile(resource);
 				if (null != script && script.trim().length() > 0) {
-					this.initOracleSchema(dataSource);
+					this.getDatabaseRestorer().initOracleSchema(dataSource);
 					TableDataUtils.valueDatabase(script, dataSourceName, dataSource, null);
 				}
 			}
@@ -699,13 +643,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		return this.getDatabaseDumper().getLocalBackupsFolder();
 	}
 	
-	protected Properties getDatabaseTypeDrivers() {
-		return _databaseTypeDrivers;
-	}
-	public void setDatabaseTypeDrivers(Properties databaseTypeDrivers) {
-		this._databaseTypeDrivers = databaseTypeDrivers;
-	}
-
 	@Override
 	public Map<String, List<String>> getEntandoTableMapping() {
 		return _entandoTableMapping;
@@ -771,8 +708,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setServletContext(ServletContext servletContext) {
 		this._servletContext = servletContext;
 	}
-
-	private Properties _databaseTypeDrivers;
+	
 	private Map<String, List<String>> _entandoTableMapping;
 	private Map<String, Resource> _entandoDefaultSqlResources;
 	private Map<String, Resource> _testSqlResources;

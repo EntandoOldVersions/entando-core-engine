@@ -97,7 +97,6 @@
 	
 	<util:map id="DefaultSqlDump" map-class="java.util.Properties" >
 	</util:map>
-
 	
 	<bean id="abstractDatabaseUtils" class="org.entando.entando.aps.system.init.AbstractDatabaseUtils" 
 			abstract="true">
@@ -108,6 +107,7 @@
 			<entry key="servDataSource"><ref bean="entandoServTableClasses" /></entry>
 		</map>
 		</property>
+		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
 	</bean>
 	
@@ -143,7 +143,6 @@
 		</map>
 		</property>
 		<property name="defaultSqlDump" ref="DefaultSqlDump" />
-		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
 		<property name="databaseDumper" ref="DatabaseDumper" />
 		<property name="databaseRestorer" ref="DatabaseRestorer" />
 	</bean>

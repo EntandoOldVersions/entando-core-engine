@@ -33,16 +33,39 @@ import org.entando.entando.aps.system.init.util.TableFactory;
  * @author E.Santoboni
  */
 public class DatabaseRestorer extends AbstractDatabaseUtils {
-	/*
-	protected DatabaseRestorer(String localBackupsFolder, String subFolderName, 
-			Map<String, List<String>> entandoTableMapping, List<Component> components, BeanFactory beanFactory) {
-		this.setBeanFactory(beanFactory);
-		this.setComponents(components);
-		this.setEntandoTableMapping(entandoTableMapping);
-		this.setLocalBackupsFolder(localBackupsFolder);
-		this.setBackupSubFolder(subFolderName);
+	
+	protected void initOracleSchema(DataSource dataSource) throws Throwable {
+		IDatabaseManager.DatabaseType type = this.getType(dataSource);
+		try {
+			if (!type.equals(IDatabaseManager.DatabaseType.ORACLE)) {
+				return;
+			}
+			String[] queryTimestampFormat = new String[]{"ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"};
+			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
+			throw new ApsSystemException("Error initializing oracle schema", t);
+		}
 	}
-	*/
+	
+	protected void initDerbySchema(DataSource dataSource) throws Throwable {
+		String username = this.invokeGetMethod("getUsername", dataSource);
+		try {
+			String[] queryCreateSchema = new String[]{"CREATE SCHEMA " + username.toUpperCase()};
+			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
+			throw new ApsSystemException("Error creating derby schema", t);
+		}
+		try {
+			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
+			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
+			throw new ApsSystemException("Error initializating Derby Schema", t);
+		}
+	}
+	
 	protected void dropAndRestoreBackup(String backupSubFolder) throws ApsSystemException {
 		try {
 			List<Component> components = this.getComponents();
@@ -110,8 +133,11 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
 				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) continue;
+				if (null == tableClasses || tableClasses.isEmpty()) {
+					continue;
+				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				this.initOracleSchema(dataSource);
 				for (int j = 0; j < tableClasses.size(); j++) {
 					String tableClassName = tableClasses.get(j);
 					Class tableClass = Class.forName(tableClassName);
@@ -124,6 +150,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 						TableDataUtils.valueDatabase(sqlDump, tableName, dataSource, null);
 					}
 				}
+				//
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreLocalDump");

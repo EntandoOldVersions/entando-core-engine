@@ -17,10 +17,13 @@
 */
 package org.entando.entando.aps.system.init;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.File;
+import java.lang.reflect.Method;
 import org.entando.entando.aps.system.init.model.Component;
 import java.util.*;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -30,6 +33,36 @@ import org.springframework.beans.factory.ListableBeanFactory;
  * @author E.Santoboni
  */
 public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
+	
+	protected IDatabaseManager.DatabaseType getType(DataSource dataSource) throws ApsSystemException {
+		String typeString = null;
+		try {
+			String driverClassName = this.invokeGetMethod("getDriverClassName", dataSource);
+			Iterator<Object> typesIter = this.getDatabaseTypeDrivers().keySet().iterator();
+			while (typesIter.hasNext()) {
+				String typeCode = (String) typesIter.next();
+				List<String> driverClassNames = (List<String>) this.getDatabaseTypeDrivers().get(typeCode);
+				if (null != driverClassNames && driverClassNames.contains(driverClassName)) {
+					typeString = typeCode;
+					break;
+				}
+			}
+			if (null == typeString) {
+				ApsSystemUtils.getLogger().severe("Type not recognized for Driver '" + driverClassName + "' - "
+						+ "Recognized types '" + IDatabaseManager.DatabaseType.values() + "'");
+				return IDatabaseManager.DatabaseType.UNKNOWN;
+			}
+			return Enum.valueOf(IDatabaseManager.DatabaseType.class, typeString.toUpperCase());
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
+			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
+		}
+	}
+	
+	protected String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
+		Method method = dataSource.getClass().getDeclaredMethod(methodName);
+		return (String) method.invoke(dataSource);
+	}
 	
 	protected String getLocalBackupsFolder() {
 		StringBuilder dirName = new StringBuilder(this.getProtectedBaseDiskRoot());
@@ -71,6 +104,13 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 		this._entandoTableMapping = entandoTableMapping;
 	}
 	
+	protected Properties getDatabaseTypeDrivers() {
+		return _databaseTypeDrivers;
+	}
+	public void setDatabaseTypeDrivers(Properties databaseTypeDrivers) {
+		this._databaseTypeDrivers = databaseTypeDrivers;
+	}
+	
 	protected IComponentManager getComponentManager() {
 		return _componentManager;
 	}
@@ -82,6 +122,8 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 	
 	private BeanFactory _beanFactory;
 	private Map<String, List<String>> _entandoTableMapping;
+	
+	private Properties _databaseTypeDrivers;
 	
 	private IComponentManager _componentManager;
 	
