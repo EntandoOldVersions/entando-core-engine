@@ -61,15 +61,14 @@
 		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
 		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
 		-->
-		
 		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>1527</test.database.port>
 		<test.database.username>agile</test.database.username>
 		<test.database.password>agile</test.database.password>
-		<test.database.port.url>jdbc:derby:${project.artifactId}testPort;create=true</test.database.port.url>
-		<test.database.serv.url>jdbc:derby:${project.artifactId}testServ;create=true</test.database.serv.url>
-		
+		<test.database.port.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testPort;create=true</test.database.port.url>
+		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
+
 		<spring.version>3.0.6.RELEASE</spring.version>
 		<struts2.version>2.3.4.1</struts2.version>
 	</properties>
@@ -160,7 +159,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/test</outputDirectory>
+							<outputDirectory>${project.build.directory}/test</outputDirectory>
 							<encoding>UTF-8</encoding>
 							<resources>
 								<resource>
@@ -170,169 +169,8 @@
 							</resources>
 						</configuration>
 					</execution>
-					<!-- 
-					<execution>
-						<id>preprocess-db-resources</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/test-package/db/export</outputDirectory>
-							<encoding>UTF-8</encoding>
-							<resources>
-								<resource>
-									<directory>src/test/db/export</directory>
-									<includes>
-										<include>*.sql</include>
-									</includes>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					-->
 				</executions>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sql-maven-plugin</artifactId>
-				<version>1.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>9.1-901.jdbc4</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.derby</groupId>
-						<artifactId>derby</artifactId>
-						<version>10.8.2.2</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<driver>org.postgresql.Driver</driver>
-					<username>${test.database.username}</username>
-					<password>${test.database.password}</password>
-					<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/template1</url>
-					<skip>${skipTests}</skip>
-					<keepFormat>false</keepFormat>
-				</configuration>
-				<executions>
-					<execution>
-						<id>drop-db-before-test-if-any-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>drop database "${project.artifactId}testPort"</sqlCommand>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-					<execution>
-						<id>drop-db-before-test-if-any-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>drop database "${project.artifactId}testServ"</sqlCommand>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-db-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>create database "${project.artifactId}testPort"</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-db-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>create database "${project.artifactId}testServ"</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-schema-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</url>
-							<onError>continue</onError>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testPort_schema.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-schema-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</url>
-							<onError>continue</onError>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testServ_schema.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-data-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</url>
-							<escapeProcessing>false</escapeProcessing>
-							<enableBlockMode>true</enableBlockMode>
-							<printResultSet>true</printResultSet>
-							<outputFile />
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testPort_data.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-data-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</url>
-							<escapeProcessing>false</escapeProcessing>
-							<enableBlockMode>true</enableBlockMode>
-							<printResultSet>true</printResultSet>
-							<outputFile />
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testServ_data.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -363,7 +201,7 @@
 					<excludes>
 						<exclude>**/*BaseTestCase*</exclude>
 					</excludes>
-					<includes> 
+					<includes>
 						<include>**/AllTests.java</include>
 					</includes>
 				</configuration>
@@ -391,11 +229,11 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -740,7 +578,7 @@
 			<version>1.2.0</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -771,7 +609,7 @@
 			<version>10.8.2.2</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -822,7 +660,7 @@
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-security</artifactId>
 				</exclusion>
-			</exclusions>	
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>net.oauth.core</groupId>
@@ -836,9 +674,6 @@
 			<version>20100527</version>
 			<type>jar</type>
 		</dependency>
-		
-		
-		
 		<dependency>
 			<groupId>com.j256.ormlite</groupId>
 			<artifactId>ormlite-core</artifactId>
@@ -851,9 +686,6 @@
 			<version>4.40</version>
 			<type>jar</type>
 		</dependency>
-		
-		
-		
 	</dependencies>
 	<reporting>
 		<plugins>
