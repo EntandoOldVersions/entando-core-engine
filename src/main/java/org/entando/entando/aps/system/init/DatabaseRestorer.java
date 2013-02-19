@@ -29,24 +29,21 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
-
 /**
  * @author E.Santoboni
  */
-public class DatabaseRestorer {
-	
+public class DatabaseRestorer extends AbstractDatabaseUtils {
+	/*
 	protected DatabaseRestorer(String localBackupsFolder, String subFolderName, 
-			Map<String, List<String>> entandoTableMapping, List<Component> components, BeanFactory beanFactory/*, DbInstallerManager manager*/) {
+			Map<String, List<String>> entandoTableMapping, List<Component> components, BeanFactory beanFactory) {
 		this.setBeanFactory(beanFactory);
 		this.setComponents(components);
 		this.setEntandoTableMapping(entandoTableMapping);
 		this.setLocalBackupsFolder(localBackupsFolder);
 		this.setBackupSubFolder(subFolderName);
 	}
-	
-	protected void dropAndRestoreBackup() throws ApsSystemException {
+	*/
+	protected void dropAndRestoreBackup(String backupSubFolder) throws ApsSystemException {
 		try {
 			List<Component> components = this.getComponents();
 			int size = components.size();
@@ -55,7 +52,7 @@ public class DatabaseRestorer {
 				this.dropTables(componentConfiguration.getTableMapping());
 			}
 			this.dropTables(this.getEntandoTableMapping());
-			this.restoreBackup();
+			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
 			throw new ApsSystemException("Error while restoring backup", t);
@@ -63,7 +60,9 @@ public class DatabaseRestorer {
 	}
 	
 	private void dropTables(Map<String, List<String>> tableMapping) throws ApsSystemException {
-		if (null == tableMapping) return;
+		if (null == tableMapping) {
+			return;
+		}
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
@@ -86,13 +85,13 @@ public class DatabaseRestorer {
 		}
 	}
 	
-	protected void restoreBackup() throws ApsSystemException {
+	protected void restoreBackup(String backupSubFolder) throws ApsSystemException {
 		try {
-			this.restoreLocalDump(this.getEntandoTableMapping());
+			this.restoreLocalDump(this.getEntandoTableMapping(), backupSubFolder);
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);
-				this.restoreLocalDump(componentConfiguration.getTableMapping());
+				this.restoreLocalDump(componentConfiguration.getTableMapping(), backupSubFolder);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreBackup");
@@ -100,11 +99,13 @@ public class DatabaseRestorer {
 		}
 	}
 	
-	private void restoreLocalDump(Map<String, List<String>> tableMapping) throws ApsSystemException {
-		if (null == tableMapping) return;
+	private void restoreLocalDump(Map<String, List<String>> tableMapping, String backupSubFolder) throws ApsSystemException {
+		if (null == tableMapping) {
+			return;
+		}
 		try {
 			StringBuilder folder = new StringBuilder(this.getLocalBackupsFolder())
-					.append(this.getBackupSubFolder()).append(File.separator);
+					.append(backupSubFolder).append(File.separator);
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
@@ -129,52 +130,5 @@ public class DatabaseRestorer {
 			throw new RuntimeException("Error while restoring local dump", t);
 		}
 	}
-	
-	private String[] extractBeanNames(Class beanClass) {
-		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-		return factory.getBeanNamesForType(beanClass);
-	}
-	
-	protected BeanFactory getBeanFactory() {
-		return _beanFactory;
-	}
-	protected void setBeanFactory(BeanFactory beanFactory) {
-		this._beanFactory = beanFactory;
-	}
-	
-	protected String getLocalBackupsFolder() {
-		return _localBackupsFolder;
-	}
-	protected void setLocalBackupsFolder(String localBackupsFolder) {
-		this._localBackupsFolder = localBackupsFolder;
-	}
-	
-	protected String getBackupSubFolder() {
-		return _backupSubFolder;
-	}
-	protected void setBackupSubFolder(String backupSubFolder) {
-		this._backupSubFolder = backupSubFolder;
-	}
-	
-	protected Map<String, List<String>> getEntandoTableMapping() {
-		return _entandoTableMapping;
-	}
-	protected void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
-		this._entandoTableMapping = entandoTableMapping;
-	}
-	
-	protected List<Component> getComponents() {
-		return _components;
-	}
-	protected void setComponents(List<Component> components) {
-		this._components = components;
-	}
-	
-	private String _localBackupsFolder;
-	private String _backupSubFolder;
-	
-	private BeanFactory _beanFactory;
-	private Map<String, List<String>> _entandoTableMapping;
-	private List<Component> _components;
 	
 }
