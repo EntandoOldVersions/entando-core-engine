@@ -50,7 +50,19 @@ public interface AttributeInterface extends Serializable {
      * @param name The name to set
      */
     public void setName(String name);
-
+	
+	/**
+     * Return the description of the attribute
+     * @return The description of the attribute
+     */
+    public String getDescription();
+	
+	/**
+	 * Set up the description of the attribute
+	 * @param description The description to set
+	 */
+	public void setDescription(String description);
+	
     /**
      * Return the attribute type
      * @return The attribute type

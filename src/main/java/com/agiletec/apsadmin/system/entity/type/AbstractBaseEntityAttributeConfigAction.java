@@ -57,6 +57,9 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	 */
 	protected void valueFormFields(AttributeInterface attribute) {
 		this.setAttributeName(attribute.getName());
+		if (null != attribute.getDescription() && attribute.getDescription().trim().length() > 0) {
+			this.setAttributeDescription(attribute.getDescription());
+		}
 		this.setAttributeTypeCode(attribute.getType());
 		if (null != attribute.getRoles()) {
 			this.setAttributeRoles(Arrays.asList(attribute.getRoles()));
@@ -74,10 +77,10 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 		}
 		if (attribute.isTextAttribute()) {
 			TextAttributeValidationRules textValRule = (TextAttributeValidationRules) valRule;
-			if (textValRule.getMaxLength() > -1) {
+			if (null != textValRule.getMaxLength() && textValRule.getMaxLength() > -1) {
 				this.setMaxLength(textValRule.getMaxLength());
 			}
-			if (textValRule.getMinLength() > -1) {
+			if (null != textValRule.getMinLength() && textValRule.getMinLength() > -1) {
 				this.setMinLength(textValRule.getMinLength());
 			}
 			this.setRegexp(textValRule.getRegexp());
@@ -120,6 +123,9 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	 * @return A customized return code in the attribute needs a extra configuration, else null.
 	 */
 	protected String fillAttributeFields(AttributeInterface attribute) {
+		if (null != this.getAttributeDescription() && this.getAttributeDescription().trim().length() > 0) {
+			attribute.setDescription(this.getAttributeDescription().trim());
+		}
 		attribute.setRoles(this.createStringArray(this.getAttributeRoles()));
 		attribute.setDisablingCodes(this.createStringArray(this.getDisablingCodes()));
 		attribute.setSearcheable(null != this.getSearcheable() && this.getSearcheable());
@@ -133,10 +139,12 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 		valCond.setOgnlValidationRule(this.getOgnlValidationRule());
 		if (attribute.isTextAttribute()) {
 			TextAttributeValidationRules valRule = (TextAttributeValidationRules) valCond;
-			int maxLength = ((null != this.getMaxLength()) ? this.getMaxLength().intValue() : -1);
-			valRule.setMaxLength(maxLength);
-			int minLength = ((null != this.getMinLength()) ? this.getMinLength().intValue() : -1);
-			valRule.setMinLength(minLength);
+			//int maxLength = ((null != this.getMaxLength()) ? this.getMaxLength().intValue() : -1);
+			//valRule.setMaxLength(maxLength);
+			valRule.setMaxLength(this.getMaxLength());
+			//int minLength = ((null != this.getMinLength()) ? this.getMinLength().intValue() : -1);
+			//valRule.setMinLength(minLength);
+			valRule.setMinLength(this.getMinLength());
 			valRule.setRegexp(this.getRegexp());
 			valRule.setRangeEnd(this.getRangeEndString());
 			valRule.setRangeStart(this.getRangeStartString());
@@ -179,7 +187,9 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	}
 	
 	private String[] createStringArray(List<String> list) {
-		if (null == list || list.isEmpty()) return null;
+		if (null == list || list.isEmpty()) {
+			return null;
+		}
 		String[] array = new String[list.size()];
 		for (int i = 0; i < list.size(); i++) {
 			array[i] = list.get(i);
@@ -286,7 +296,9 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	public List<AttributeRole> getFreeAttributeRoleNames() {
 		List<AttributeRole> freeRoles = new ArrayList<AttributeRole>();
 		List<AttributeRole> roles = this.getAttributeRoles(this.getAttributeTypeCode());
-		if (null == roles) return freeRoles;
+		if (null == roles) {
+			return freeRoles;
+		}
 		for (int i = 0; i < roles.size(); i++) {
 			AttributeRole role = roles.get(i);
 			AttributeInterface utilizer = this.getEntityType().getAttributeByRole(role.getName());
@@ -300,7 +312,9 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	protected List<AttributeRole> getAttributeRoles(String attributeTypeCode) {
 		List<AttributeRole> rolesByType = new ArrayList<AttributeRole>();
 		List<AttributeRole> roles = this.getEntityManager().getAttributeRoles();
-		if (null == roles) return rolesByType;
+		if (null == roles) {
+			return rolesByType;
+		}
 		for (int i = 0; i < roles.size(); i++) {
 			AttributeRole role = roles.get(i);
 			if (role.getAllowedAttributeTypes().contains(attributeTypeCode)) {
@@ -348,6 +362,13 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	}
 	public void setAttributeName(String attributeName) {
 		this._attributeName = attributeName;
+	}
+	
+	public String getAttributeDescription() {
+		return _attributeDescription;
+	}
+	public void setAttributeDescription(String attributeDescription) {
+		this._attributeDescription = attributeDescription;
 	}
 	
 	public String getAttributeTypeCode() {
@@ -578,6 +599,7 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 	private int _strutsAction;
 	
 	private String _attributeName;
+	private String _attributeDescription;
 	private String _attributeTypeCode;
 	private Boolean _searchable;
 	private Boolean _indexable;

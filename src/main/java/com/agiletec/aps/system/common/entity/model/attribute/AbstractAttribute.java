@@ -37,6 +37,7 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 import com.agiletec.aps.system.services.lang.ILangManager;
+import org.jdom.CDATA;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -61,7 +62,16 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     public String getName() {
         return _name;
     }
-    
+	
+	@Override
+	public String getDescription() {
+		return _description;
+	}
+	@Override
+	public void setDescription(String description) {
+		this._description = description;
+	}
+	
     @Override
     public void setName(String name) {
         this._name = name;
@@ -75,7 +85,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     public String getType() {
         return _type;
     }
-    
+	
     @Override
     public void setType(String typeName) {
         this._type = typeName;
@@ -135,6 +145,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             Class attributeClass = Class.forName(this.getClass().getName());
             clone = (AbstractAttribute) attributeClass.newInstance();
             clone.setName(this.getName());
+            clone.setDescription(this.getDescription());
             clone.setType(this.getType());
             clone.setSearcheable(this.isSearcheable());
             clone.setDefaultLangCode(this.getDefaultLangCode());
@@ -173,19 +184,20 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
+			Element descriptionElement = attributeElement.getChild("description");
+			if (null != descriptionElement) {
+				this.setDescription(descriptionElement.getText());
+			}
             String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
             this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
-            
             IAttributeValidationRules validationCondition = this.getValidationRules();
             validationCondition.setConfig(attributeElement);
-            
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
             String required = this.extractXmlAttribute(attributeElement, "required", false);
             if (null != required && required.equalsIgnoreCase("true")) {
                 this.setRequired(true);
             }
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** End Block
-
             String indexingType = this.extractXmlAttribute(attributeElement, "indexingtype", false);
             if (null != indexingType) {
                 this.setIndexingType(indexingType);
@@ -245,11 +257,16 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         Element configElement = new Element(this.getTypeConfigElementName());
         configElement.setAttribute("name", this.getName());
         configElement.setAttribute("attributetype", this.getType());
+		if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
+			Element descriptionElement = new Element("description");
+			descriptionElement.addContent(new CDATA(this.getDescription()));
+			configElement.addContent(descriptionElement);
+		}
         if (this.isSearcheable()) {
             configElement.setAttribute("searcheable", "true");
         }
-        Element validationElement = this.getValidationRules().getJDOMConfigElement();
-        if (null != validationElement) {
+        if (null != this.getValidationRules() && !this.getValidationRules().isEmpty()) {
+			Element validationElement = this.getValidationRules().getJDOMConfigElement();
             configElement.addContent(validationElement);
         }
         if (null != this.getIndexingType() && !this.getIndexingType().equals(IndexableAttributeInterface.INDEXING_TYPE_NONE)) {
@@ -295,8 +312,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     }
 
     @Deprecated(/** DO NOTHING : to guaranted compatibility with previsous version of jAPS 2.0.12 */)
-    protected void addListElementTypeConfig(Element configElement) {
-    }
+    protected void addListElementTypeConfig(Element configElement) {}
     
     @Override
     public String getIndexingType() {
@@ -403,6 +419,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             return null;
         }
         DefaultJAXBAttribute jaxbAttribute = this.getJAXBAttributeInstance();
+        jaxbAttribute.setDescription(this.getDescription());
         jaxbAttribute.setName(this.getName());
         jaxbAttribute.setType(this.getType());
         jaxbAttribute.setValue(this.getJAXBValue(langCode));
@@ -426,23 +443,24 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     
     @Override
     public DefaultJAXBAttributeType getJAXBAttributeType() {
-        DefaultJAXBAttributeType jaxbAttribute = this.getJAXBAttributeTypeInstance();
-        jaxbAttribute.setName(this.getName());
-        jaxbAttribute.setType(this.getType());
+        DefaultJAXBAttributeType jaxbAttributeType = this.getJAXBAttributeTypeInstance();
+        jaxbAttributeType.setName(this.getName());
+        jaxbAttributeType.setDescription(this.getDescription());
+        jaxbAttributeType.setType(this.getType());
         if (this.isSearcheable()) {
-            jaxbAttribute.setSearchable(new Boolean(true));
+            jaxbAttributeType.setSearchable(true);
         }
         if (null != this.getIndexingType() && this.getIndexingType().equalsIgnoreCase(IndexableAttributeInterface.INDEXING_TYPE_TEXT)) {
-            jaxbAttribute.setIndexable(new Boolean(true));
+            jaxbAttributeType.setIndexable(true);
         }
         if (null != this.getRoles() && this.getRoles().length > 0) {
             List<String> roles = Arrays.asList(this.getRoles());
-            jaxbAttribute.setRoles(roles);
+            jaxbAttributeType.setRoles(roles);
         }
-        if (null != this.getValidationRules()) {
-            jaxbAttribute.setValidationRules(this.getValidationRules());
+        if (null != this.getValidationRules() && !this.getValidationRules().isEmpty()) {
+            jaxbAttributeType.setValidationRules(this.getValidationRules());
         }
-        return jaxbAttribute;
+        return jaxbAttributeType;
     }
     
     protected DefaultJAXBAttributeType getJAXBAttributeTypeInstance() {
@@ -490,6 +508,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
 	}
     
     private String _name;
+	private String _description;
     private String _type;
     private String _defaultLangCode;
     private String _renderingLangCode;
