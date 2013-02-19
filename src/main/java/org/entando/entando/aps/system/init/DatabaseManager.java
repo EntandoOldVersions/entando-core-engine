@@ -510,14 +510,11 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
-
+	
 	protected void executeBackup() throws ApsSystemException {
 		try {
 			this.setStatus(DatabaseManager.STATUS_DUMPIMG_IN_PROGRESS);
-			List<Component> components = this.getComponentManager().getCurrentComponents();
-			DatabaseDumper dumper = new DatabaseDumper(this.getLocalBackupsFolder(), this.extractReport(),
-					this.getEntandoTableMapping(), components, this.getBeanFactory());
-			dumper.createBackup(this.getEnvironment());
+			this.getDatabaseDumper().createBackup(this.getEnvironment(), this.extractReport());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "executeBackup");
 			throw new ApsSystemException("Error while creating backup", t);
@@ -646,10 +643,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				return false;
 			}
 			//TODO future improvement - execute 'lifeline' backup
-			List<Component> components = this.getComponentManager().getCurrentComponents();
-			DatabaseRestorer restorer = new DatabaseRestorer(this.getLocalBackupsFolder(), subFolderName,
-					this.getEntandoTableMapping(), components, this.getBeanFactory());
-			restorer.dropAndRestoreBackup();
+			this.getDatabaseRestorer().dropAndRestoreBackup(subFolderName);
 			ApsWebApplicationUtils.executeSystemRefresh(this.getServletContext());
 			return true;
 		} catch (Throwable t) {
@@ -660,26 +654,14 @@ public class DatabaseManager extends AbstractInitializerManager
 			//TODO future improvement - delete 'lifeline' backup
 		}
 	}
-
-	private String getLocalBackupsFolder() {
-		StringBuilder dirName = new StringBuilder(this.getProtectedBaseDiskRoot());
-		if (!dirName.toString().endsWith("\\") && !dirName.toString().endsWith("/")) {
-			dirName.append(File.separator);
-		}
-		dirName.append("databaseBackups").append(File.separator);
-		return dirName.toString();
-	}
-
+	
 	private boolean restoreBackup(String subFolderName) throws ApsSystemException {
 		try {
 			if (!this.checkBackupFolder(subFolderName)) {
 				ApsSystemUtils.getLogger().severe("backup not available - subfolder '" + subFolderName + "'");
 				return false;
 			}
-			List<Component> components = this.getComponentManager().getCurrentComponents();
-			DatabaseRestorer restorer = new DatabaseRestorer(this.getLocalBackupsFolder(), subFolderName,
-					this.getEntandoTableMapping(), components, this.getBeanFactory());
-			restorer.restoreBackup();
+			this.getDatabaseRestorer().restoreBackup(subFolderName);
 			return true;
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreLastBackup");
@@ -712,7 +694,11 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 		return null;
 	}
-
+	
+	protected String getLocalBackupsFolder() {
+		return this.getDatabaseDumper().getLocalBackupsFolder();
+	}
+	
 	protected Properties getDatabaseTypeDrivers() {
 		return _databaseTypeDrivers;
 	}
@@ -749,13 +735,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		this._defaultSqlDump = defaultSqlDump;
 	}
 
-	protected String getProtectedBaseDiskRoot() {
-		return _protectedBaseDiskRoot;
-	}
-	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
-		this._protectedBaseDiskRoot = protBaseDiskRoot;
-	}
-
 	@Override
 	public int getStatus() {
 		return _status;
@@ -770,7 +749,21 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setComponentManager(IComponentManager componentManager) {
 		this._componentManager = componentManager;
 	}
-
+	
+	protected DatabaseDumper getDatabaseDumper() {
+		return _databaseDumper;
+	}
+	public void setDatabaseDumper(DatabaseDumper databaseDumper) {
+		this._databaseDumper = databaseDumper;
+	}
+	
+	protected DatabaseRestorer getDatabaseRestorer() {
+		return _databaseRestorer;
+	}
+	public void setDatabaseRestorer(DatabaseRestorer databaseRestorer) {
+		this._databaseRestorer = databaseRestorer;
+	}
+	
 	protected ServletContext getServletContext() {
 		return _servletContext;
 	}
@@ -785,10 +778,13 @@ public class DatabaseManager extends AbstractInitializerManager
 	private Map<String, Resource> _testSqlResources;
 	private Map<String, Resource> _defaultSqlDump;
 	private int _status;
-	private String _protectedBaseDiskRoot;
 	private IComponentManager _componentManager;
 	public static final int STATUS_READY = 0;
 	public static final int STATUS_DUMPIMG_IN_PROGRESS = 1;
+	
+	private DatabaseDumper _databaseDumper;
+	private DatabaseRestorer _databaseRestorer;
+	
 	private ServletContext _servletContext;
 
 }

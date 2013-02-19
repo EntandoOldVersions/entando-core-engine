@@ -33,53 +33,44 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
-
 /**
  * @author E.Santoboni
  */
-public class DatabaseDumper {
+public class DatabaseDumper extends AbstractDatabaseUtils {
 	
-	protected DatabaseDumper(String localBackupsFolder, SystemInstallationReport installationReport, 
-			Map<String, List<String>> entandoTableMapping, List<Component> components, BeanFactory beanFactory) {
-		this.setBeanFactory(beanFactory);
-		this.setComponents(components);
-		this.setEntandoTableMapping(entandoTableMapping);
-		this.setLocalBackupsFolder(localBackupsFolder);
-		this.setReport(new DataSourceDumpReport(installationReport));
-	}
-	
-	protected void createBackup(AbstractInitializerManager.Environment environment) throws ApsSystemException {
+	protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport) throws ApsSystemException {
 		try {
+			DataSourceDumpReport report = new DataSourceDumpReport(installationReport);
 			long start = System.currentTimeMillis();
-			String subFolder = (AbstractInitializerManager.Environment.develop.equals(environment)) ? 
+			String backupSubFolder = (AbstractInitializerManager.Environment.develop.equals(environment)) ? 
 					environment.toString() : DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
-			this.setBackupSubFolder(subFolder);
-			this.getReport().setSubFolderName(subFolder);
+			//this.setBackupSubFolder(subFolder);
+			report.setSubFolderName(backupSubFolder);
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);
-				this.createBackup(componentConfiguration.getTableMapping());
+				this.createBackup(componentConfiguration.getTableMapping(), report, backupSubFolder);
 			}
-			this.createBackup(this.getEntandoTableMapping());
+			this.createBackup(this.getEntandoTableMapping(), report, backupSubFolder);
 			long time = System.currentTimeMillis() - start;
-			this.getReport().setRequiredTime(time);
-			this.getReport().setDate(new Date());
+			report.setRequiredTime(time);
+			report.setDate(new Date());
 			StringBuilder reportFolder = new StringBuilder(this.getLocalBackupsFolder());
-			if (null != this.getBackupSubFolder()) {
-				reportFolder.append(this.getBackupSubFolder()).append(File.separator);
+			if (null != backupSubFolder) {
+				reportFolder.append(backupSubFolder).append(File.separator);
 			}
 			this.save(DatabaseManager.DUMP_REPORT_FILE_NAME, 
-					reportFolder.toString(), this.getReport().toXml());
+					reportFolder.toString(), report.toXml());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
 	
-	private void createBackup(Map<String, List<String>> tableMapping) throws ApsSystemException {
-		if (null == tableMapping || tableMapping.isEmpty()) return;
+	private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder) throws ApsSystemException {
+		if (null == tableMapping || tableMapping.isEmpty()) {
+			return;
+		}
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int j = 0; j < dataSourceNames.length; j++) {
@@ -91,7 +82,7 @@ public class DatabaseDumper {
 					String tableClassName = tableClassNames.get(k);
 					Class tableClass = Class.forName(tableClassName);
 					String tableName = TableFactory.getTableName(tableClass);
-					this.dumpTableData(tableName, dataSourceName, dataSource);
+					this.dumpTableData(tableName, dataSourceName, dataSource, report, backupSubFolder);
 				}
 			}
 		} catch (Throwable t) {
@@ -100,13 +91,14 @@ public class DatabaseDumper {
 		}
 	}
 	
-	protected void dumpTableData(String tableName, String dataSourceName, DataSource dataSource) throws ApsSystemException {
+	protected void dumpTableData(String tableName, String dataSourceName, 
+			DataSource dataSource, DataSourceDumpReport report, String backupSubFolder) throws ApsSystemException {
 		try {
 			TableDumpResult tableDumpResult = TableDataUtils.dumpTable(dataSource, tableName);
-			this.getReport().addTableReport(dataSourceName, tableDumpResult);
+			report.addTableReport(dataSourceName, tableDumpResult);
 			StringBuilder dirName = new StringBuilder(this.getLocalBackupsFolder());
-			if (null != this.getBackupSubFolder()) {
-				dirName.append(this.getBackupSubFolder()).append(File.separator);
+			if (null != backupSubFolder) {
+				dirName.append(backupSubFolder).append(File.separator);
 			}
 			dirName.append(dataSourceName).append(File.separator);
 			this.save(tableName + ".sql", dirName.toString(), tableDumpResult.getSqlDump());
@@ -148,60 +140,5 @@ public class DatabaseDumper {
 			}
 		}
 	}
-	
-	private String[] extractBeanNames(Class beanClass) {
-		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-		return factory.getBeanNamesForType(beanClass);
-	}
-	
-	protected BeanFactory getBeanFactory() {
-		return _beanFactory;
-	}
-	protected void setBeanFactory(BeanFactory beanFactory) {
-		this._beanFactory = beanFactory;
-	}
-	
-	protected String getLocalBackupsFolder() {
-		return _localBackupsFolder;
-	}
-	protected void setLocalBackupsFolder(String localBackupsFolder) {
-		this._localBackupsFolder = localBackupsFolder;
-	}
-	
-	protected String getBackupSubFolder() {
-		return _backupSubFolder;
-	}
-	protected void setBackupSubFolder(String backupSubFolder) {
-		this._backupSubFolder = backupSubFolder;
-	}
-	
-	protected Map<String, List<String>> getEntandoTableMapping() {
-		return _entandoTableMapping;
-	}
-	protected void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
-		this._entandoTableMapping = entandoTableMapping;
-	}
-	
-	protected List<Component> getComponents() {
-		return _components;
-	}
-	protected void setComponents(List<Component> components) {
-		this._components = components;
-	}
-	
-	protected DataSourceDumpReport getReport() {
-		return _report;
-	}
-	protected void setReport(DataSourceDumpReport report) {
-		this._report = report;
-	}
-	
-	private String _localBackupsFolder;
-	private String _backupSubFolder;
-	
-	private BeanFactory _beanFactory;
-	private Map<String, List<String>> _entandoTableMapping;
-	private List<Component> _components;
-	private DataSourceDumpReport _report;
 	
 }
