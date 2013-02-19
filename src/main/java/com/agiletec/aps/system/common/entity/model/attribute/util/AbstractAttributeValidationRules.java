@@ -50,7 +50,7 @@ public abstract class AbstractAttributeValidationRules extends BaseAttributeVali
 	}
 	
 	@Override
-	protected boolean isEmpty() {
+	public boolean isEmpty() {
 		return (super.isEmpty() 
 				&& (null == this.getRangeStart()) 
 				&& (null == this.getRangeEnd()) 

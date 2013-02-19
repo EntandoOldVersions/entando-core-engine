@@ -33,6 +33,8 @@ public interface IAttributeValidationRules extends Serializable {
     
     public IAttributeValidationRules clone();
     
+	public boolean isEmpty();
+	
     public void setConfig(Element attributeElement);
     
     public Element getJDOMConfigElement();
