@@ -37,7 +37,6 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 import com.agiletec.aps.system.services.lang.ILangManager;
-import org.jdom.CDATA;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -184,10 +183,8 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         try {
             String name = this.extractXmlAttribute(attributeElement, "name", true);
             this.setName(name);
-			Element descriptionElement = attributeElement.getChild("description");
-			if (null != descriptionElement) {
-				this.setDescription(descriptionElement.getText());
-			}
+			String description = this.extractXmlAttribute(attributeElement, "description", false);
+			this.setDescription(description);
             String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
             this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
             IAttributeValidationRules validationCondition = this.getValidationRules();
@@ -258,9 +255,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         configElement.setAttribute("name", this.getName());
         configElement.setAttribute("attributetype", this.getType());
 		if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
-			Element descriptionElement = new Element("description");
-			descriptionElement.addContent(new CDATA(this.getDescription()));
-			configElement.addContent(descriptionElement);
+			configElement.setAttribute("description", this.getDescription());
 		}
         if (this.isSearcheable()) {
             configElement.setAttribute("searcheable", "true");
