@@ -71,7 +71,7 @@ public class PagerTagHelper {
 			if (reqCtx != null) {
 				Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 				ApsProperties config = showlet.getConfig();
-				String stringMax = (String) config.get("maxElemForItem");
+				String stringMax = (null != config) ? (String) config.get("maxElemForItem") : null;
 				if (stringMax != null && stringMax.length() > 0) {
 					maxItems = Integer.parseInt(stringMax);
 				}
