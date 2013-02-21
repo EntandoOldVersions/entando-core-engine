@@ -71,6 +71,7 @@
 				<property name="encrypter">
 					<bean class="com.agiletec.aps.util.DefaultApsEncrypter"></bean>
 				</property>
+				<property name="passwordPlainTextAllowed"><value>${password.plaintText.allowed}</value></property>
 			</bean>
 		</property>
 		<property name="configManager" ref="BaseConfigManager"/>
