@@ -156,14 +156,14 @@ public class UserFilterOptionBean {
 		}
 		this.setFormFieldNames(formFieldNames);
 	}
-
+	
 	private void checkRange(String[] formFieldNames) {
 		if (!this.isAttributeFilter() || null != this.getFormFieldErrors() ||
 				null == this.getFormFieldValues() || this.getFormFieldValues().size() < 2) return;
 		boolean check = false;
 		if (this.getAttribute() instanceof DateAttribute) {
-			Date start = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[0]), "dd/MM/yyyy");
-			Date end = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[1]), "dd/MM/yyyy");
+			Date start = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[0]), this.getDateFormat());
+			Date end = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[1]), this.getDateFormat());
 			check = (!start.equals(end) && start.after(end));
 		} else if (this.getAttribute() instanceof NumberAttribute) {
 			Integer start = Integer.parseInt(this.getFormFieldValues().get(formFieldNames[0]));
@@ -176,7 +176,7 @@ public class UserFilterOptionBean {
 			this.getFormFieldErrors().put(formFieldNames[1], error);
 		}
 	}
-
+	
 	protected String[] extractAttributeParams(String[] fieldsSuffix, String frameIdSuffix, HttpServletRequest request) {
 		String[] formFieldNames = new String[fieldsSuffix.length];
 		for (int i = 0; i < fieldsSuffix.length; i++) {
