@@ -59,14 +59,17 @@ public class CheckFormatUtil {
 	}
 	
 	public static boolean isValidDate(String dateString, String dateFormat) {
-		try {
-			DateFormat df = new SimpleDateFormat(dateFormat);
-			df.setLenient(false);
-			df.parse(dateString);
-			return true;
-		} catch (ParseException e) {
-			return false;
+		if (dateString != null && (dateString.length() > 0)) {
+			try {
+				DateFormat df = new SimpleDateFormat(dateFormat);
+				df.setLenient(false);
+				df.parse(dateString);
+				return true;
+			} catch (ParseException e) {
+				return false;
+			}
 		}
+		return false;
 	}
 	
 }
