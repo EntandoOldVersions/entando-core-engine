@@ -61,6 +61,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the ID of the entity.
      * @return The identification string of the entity.
      */
+	@Override
     public String getId() {
         return this._id;
     }
@@ -69,6 +70,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Associate the entity to the given ID code.
      * @param id The identification string of the entity.
      */
+	@Override
     public void setId(String id) {
         this._id = id;
     }
@@ -77,6 +79,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the code of the Entity Type.
      * @return The code of the Entity Type.
      */
+	@Override
     public String getTypeCode() {
         return this._typeCode;
     }
@@ -85,6 +88,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set up the code of the Entity Type.
      * @param typeCode The Entity Type code.
      */
+	@Override
     public void setTypeCode(String typeCode) {
         this._typeCode = typeCode;
     }
@@ -93,6 +97,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the description of the entity.
      * @return The entity description.
      */
+	@Override
     public String getDescr() {
         return this._descr;
     }
@@ -101,6 +106,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set up the description of the entity.
      * @param descr The description to associate to the entity.
      */
+	@Override
     public void setDescr(String descr) {
         this._descr = descr;
     }
@@ -109,6 +115,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the string that identifies the main group this entity belongs to.
      * @return The main group this entity belongs to.
      */
+	@Override
     public String getMainGroup() {
         return _mainGroup;
     }
@@ -117,6 +124,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set the string that identifies the main group this entity belongs to.
      * @param mainGroup The main group this entity belongs to.
      */
+	@Override
     public void setMainGroup(String mainGroup) {
         this._mainGroup = mainGroup;
     }
@@ -125,6 +133,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the set of codes of the additional groups authorized to view the entity in the front-end. 
      * @return The set of codes belonging to the additional group authorized to access the entity, 
      */
+	@Override
     public Set<String> getGroups() {
         return _groups;
     }
@@ -133,6 +142,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Add a group (code) authorized to view/access the entity in the Front-end.
      * @param groupName The group to add.
      */
+	@Override
     public void addGroup(String groupName) {
         this.getGroups().add(groupName);
     }
@@ -141,6 +151,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Add an attribute to the list of the Entity Attributes.
      * @param attribute An attribute of the entity.
      */
+	@Override
     public void addAttribute(AttributeInterface attribute) {
         this._attributeList.add(attribute);
         this._attributeMap.put(attribute.getName(), attribute);
@@ -151,10 +162,12 @@ public class ApsEntity implements IApsEntity, Serializable {
      * @param key The name of the attribute
      * @return The requested attribute.
      */
+	@Override
     public Object getAttribute(String key) {
         return this._attributeMap.get(key);
     }
     
+	@Override
     public AttributeInterface getAttributeByRole(String roleName) {
         List<AttributeInterface> attributes = this.getAttributeList();
         for (int i = 0; i < attributes.size(); i++) {
@@ -171,6 +184,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Add a new category to the list of the entity categories.
      * @param category The category to add.
      */
+	@Override
     public void addCategory(Category category) {
         this._categories.add(category);
     }
@@ -179,6 +193,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the list of the categories associated to the entity.
      * @return A list of categories.
      */
+	@Override
     public List<Category> getCategories() {
         return this._categories;
     }
@@ -187,6 +202,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Remove a category from the list of the entity categories.
      * @param category The category to remove from the list.
      */
+	@Override
     public void removeCategory(Category category) {
         this._categories.remove(category);
     }
@@ -195,6 +211,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the Map of the Entity Attributes.
      * @return A map containing the attributes.
      */
+	@Override
     public Map<String, AttributeInterface> getAttributeMap() {
         return this._attributeMap;
     }
@@ -203,6 +220,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return a list of the Entity Attributes.
      * @return The list of attributes.
      */
+	@Override
     public List<AttributeInterface> getAttributeList() {
         return this._attributeList;
     }
@@ -211,6 +229,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Return the description of the Entity Type.
      * @return The description of the Entity Type.
      */
+	@Override
     public String getTypeDescr() {
         return this._typeDescr;
     }
@@ -219,6 +238,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set up the description of the Entity Type.
      * @param typeDescr The description of the Entity Type.
      */
+	@Override
     public void setTypeDescr(String typeDescr) {
         this._typeDescr = typeDescr;
     }
@@ -227,6 +247,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set up the language to use in the rendering process of the entity and its attributes.
      * @param langCode The code of the language to use in the rendering process.
      */
+	@Override
     public void setRenderingLang(String langCode) {
         this._renderingLang = langCode;
         for (int i = 0; i < this._attributeList.size(); i++) {
@@ -239,6 +260,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Set up the default language of the entity and its attributes.
      * @param langCode The code of the default language.
      */
+	@Override
     public void setDefaultLang(String langCode) {
         this._defaultLang = langCode;
         for (int i = 0; i < this._attributeList.size(); i++) {
@@ -251,6 +273,7 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Create an object from the prototype.
      * @return The object created from the prototype.
      */
+	@Override
     public IApsEntity getEntityPrototype() {
         IApsEntity entity = null;
         try {
@@ -275,6 +298,7 @@ public class ApsEntity implements IApsEntity, Serializable {
         return entity;
     }
     
+	@Override
     public String getXML() {
         IApsEntityDOM entityDOM = this.getBuildJDOM();
         String xml = entityDOM.getXMLDocument();
@@ -323,14 +347,24 @@ public class ApsEntity implements IApsEntity, Serializable {
      * Disable those attributes whose deactivation code matches the given one.
      * @param disablingCode The deactivation code.
      */
+	@Override
     public void disableAttributes(String disablingCode) {
-        Iterator<AttributeInterface> iterAttribute = this._attributeList.iterator();
+        Iterator<AttributeInterface> iterAttribute = this.getAttributeList().iterator();
         while (iterAttribute.hasNext()) {
             AttributeInterface currentAttribute = iterAttribute.next();
             currentAttribute.disable(disablingCode);
         }
     }
-
+	
+	@Override
+    public void activateAttributes() {
+        Iterator<AttributeInterface> iterAttribute = this.getAttributeList().iterator();
+        while (iterAttribute.hasNext()) {
+            AttributeInterface currentAttribute = iterAttribute.next();
+            currentAttribute.activate();
+        }
+    }
+	
     /**
      * Return the DOM class that generates the XML associated to the entity.
      * @return The DOM class that generates the XML
@@ -339,10 +373,12 @@ public class ApsEntity implements IApsEntity, Serializable {
         return _entityDom;
     }
     
+	@Override
     public void setEntityDOM(IApsEntityDOM entityDom) {
         this._entityDom = entityDom;
     }
     
+	@Override
     public List<FieldError> validate(IGroupManager groupManager) {
         List<FieldError> errors = new ArrayList<FieldError>();
         try {

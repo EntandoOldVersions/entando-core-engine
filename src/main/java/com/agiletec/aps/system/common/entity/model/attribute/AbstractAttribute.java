@@ -367,6 +367,11 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     }
     
     @Override
+    public void activate() {
+		this._active = true;
+	}
+	
+    @Override
     public boolean isActive() {
         return _active;
     }

@@ -229,7 +229,9 @@ public interface AttributeInterface extends Serializable {
      * @param disablingCode The deactivation code.
      */
     public void disable(String disablingCode);
-
+	
+	public void activate();
+	
     /**
      * Set up the deactivation code to disable the attribute.
      * @param disablingCodes The deactivation code.
