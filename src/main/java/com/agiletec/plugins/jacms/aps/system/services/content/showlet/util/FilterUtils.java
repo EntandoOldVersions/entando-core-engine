@@ -48,7 +48,9 @@ public class FilterUtils extends BaseFilterUtils {
 	 * @return The property list.
 	 */
 	public static List<Properties> getFiltersProperties(String filtersShowletParam) {
-		if (null == filtersShowletParam) return new ArrayList<Properties>();
+		if (null == filtersShowletParam) {
+			return new ArrayList<Properties>();
+		}
 		String[] filterStrings = filtersShowletParam.split("\\+");
 		List<Properties> properties = new ArrayList<Properties>(filterStrings.length);
 		for (int i=0; i<filterStrings.length; i++) {
@@ -60,15 +62,14 @@ public class FilterUtils extends BaseFilterUtils {
 		return properties;
 	}
 	
-	/*
+	/**
 	 * @deprecated From Entando 3.0 version 3.2.0. Use getUserFilters(String, Integer, Lang, IApsEntity, String, HttpServletRequest) method
 	 */
-	/*
 	public static List<UserFilterOptionBean> getUserFilters(String userFiltersParam, 
 			Integer currentFrame, Lang currentLang, IApsEntity prototype, HttpServletRequest request) {
 		return getUserFilters(userFiltersParam, currentFrame, currentLang, prototype, "dd/MM/yyyy", request);
 	}
-	*/
+	
 	public static List<UserFilterOptionBean> getUserFilters(String userFiltersParam, 
 			Integer currentFrame, Lang currentLang, IApsEntity prototype, String dateFormat, HttpServletRequest request) {
 		if (null == userFiltersParam) {
@@ -99,15 +100,14 @@ public class FilterUtils extends BaseFilterUtils {
 		return this.getUserFilter(contentType, (IEntityFilterBean) bean, contentManager, "dd/MM/yyyy", reqCtx);
 	}
 	
-	/*
+	/**
 	 * @deprecated From Entando 3.0 version 3.2.0. Use getUserFilter(String contentType, IEntityFilterBean, IContentManager, String, RequestContext) method
 	 */
-	/*
 	public UserFilterOptionBean getUserFilter(String contentType, 
 			IEntityFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
 		return getUserFilter(contentType, bean, contentManager, "dd/MM/yyyy", reqCtx);
 	}
-	*/
+	
 	public UserFilterOptionBean getUserFilter(String contentType, 
 			IEntityFilterBean bean, IContentManager contentManager, String dateFormat, RequestContext reqCtx) {
 		UserFilterOptionBean filter = null;
