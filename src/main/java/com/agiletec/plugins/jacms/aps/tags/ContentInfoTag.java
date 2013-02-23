@@ -26,9 +26,12 @@ import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
@@ -58,13 +61,17 @@ public class ContentInfoTag extends OutSupport {
 		try {
 			IContentViewerHelper helper = (IContentViewerHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_VIEWER_HELPER, this.pageContext);
 			ContentAuthorizationInfo authInfo = helper.getAuthorizationInfo(this.getContentId(), reqCtx);
-			if (null == authInfo) return super.doStartTag();
+			if (null == authInfo) {
+				return super.doStartTag();
+			}
 			if (null == this.getParam() && null != this.getVar()) {
 				this.pageContext.setAttribute(this.getVar(), authInfo);
 			} else if (null != this.getParam()) {
 				Object value = null;
 				if ("contentId".equals(this.getParam())) {
 					value = authInfo.getContentId();
+				} else if ("modelId".equals(this.getParam())) {
+					value = this.extractModelId(authInfo, reqCtx);
 				} else if ("mainGroup".equals(this.getParam())) {
 					value = authInfo.getMainGroup();
 				} else if ("authToEdit".equals(this.getParam())) {
@@ -88,6 +95,20 @@ public class ContentInfoTag extends OutSupport {
 			throw new JspException("Error detected while initializing the tag", t);
 		}
 		return super.doStartTag();
+	}
+	
+	private Object extractModelId(ContentAuthorizationInfo authInfo, RequestContext reqCtx) {
+		Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+        ApsProperties showletConfig = showlet.getConfig();
+		String modelId = (String) showletConfig.get("modelId");
+		if (null == modelId) {
+			modelId = reqCtx.getRequest().getParameter("modelId");
+		}
+		if (null == modelId) {
+			IContentManager contentManager = (IContentManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_MANAGER, this.pageContext);
+			modelId = contentManager.getDefaultModel(authInfo.getContentId());
+		}
+		return modelId;
 	}
 	
 	@Override

@@ -289,6 +289,7 @@
 		<attribute>
 			<description>
 				<![CDATA[Admitted values for "param" attribute are: 'contentId' (returns the code of content id), 
+				'modelId' (returns the code of model id, extracted from showlet configuration or request), 
 				'mainGroup' (returns the code of owner group), 
 				'authToEdit' (returns true if the current user can edit the content, else false).]]>
 			</description>
