@@ -144,7 +144,7 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('CATEGORY', 'e
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('IGNORE', 'it', 'Ignora');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('IGNORE', 'en', 'Ignore');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'it', 'Oops! Hai sbagliato qualcosa!');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'en', 'Whoops! You\'re doing it wrong!);
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'en', 'Whoops! You\'re doing it wrong!');
 
 INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('service', 'Service Page', '<frames>
 	<frame pos="0">
