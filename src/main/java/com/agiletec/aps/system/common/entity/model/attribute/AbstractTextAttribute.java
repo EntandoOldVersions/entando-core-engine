@@ -66,7 +66,11 @@ public abstract class AbstractTextAttribute extends AbstractAttribute implements
 	
 	@Override
 	public int getMaxLength() {
-		return ((TextAttributeValidationRules) this.getValidationRules()).getMaxLength();
+		TextAttributeValidationRules validationRule = (TextAttributeValidationRules) this.getValidationRules();
+		if (null != validationRule && null != validationRule.getMaxLength()) {
+			return validationRule.getMaxLength();
+		}
+		return -1;
 	}
 	
 	@Override
@@ -77,7 +81,11 @@ public abstract class AbstractTextAttribute extends AbstractAttribute implements
 	
 	@Override
 	public int getMinLength() {
-		return ((TextAttributeValidationRules) this.getValidationRules()).getMinLength();
+		TextAttributeValidationRules validationRule = (TextAttributeValidationRules) this.getValidationRules();
+		if (null != validationRule && null != validationRule.getMinLength()) {
+			return validationRule.getMinLength();
+		}
+		return -1;
 	}
 	
 	@Override

@@ -135,8 +135,9 @@
     <bean id="jacmsContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper" >
         <property name="cacheManager" ref="CacheManager" />
         <property name="contentManager" ref="jacmsContentManager" />
-        <property name="searchEngineManager" ref="jacmsSearchEngineManager"/>
-        <property name="authorizationManager" ref="AuthorizationManager"/>
+        <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
+        <property name="authorizationManager" ref="AuthorizationManager" />
+        <property name="userFilterDateFormat"><value>${jacms.frontend.userfilter.dateFormat}</value></property>
     </bean>
     
     <bean id="jacmsContentViewerHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper" >

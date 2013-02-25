@@ -48,7 +48,9 @@ public class FilterUtils extends BaseFilterUtils {
 	 * @return The property list.
 	 */
 	public static List<Properties> getFiltersProperties(String filtersShowletParam) {
-		if (null == filtersShowletParam) return new ArrayList<Properties>();
+		if (null == filtersShowletParam) {
+			return new ArrayList<Properties>();
+		}
 		String[] filterStrings = filtersShowletParam.split("\\+");
 		List<Properties> properties = new ArrayList<Properties>(filterStrings.length);
 		for (int i=0; i<filterStrings.length; i++) {
@@ -60,8 +62,19 @@ public class FilterUtils extends BaseFilterUtils {
 		return properties;
 	}
 	
-	public static List<UserFilterOptionBean> getUserFilters(String userFiltersParam, Integer currentFrame, Lang currentLang, IApsEntity prototype, HttpServletRequest request) {
-		if (null == userFiltersParam) return new ArrayList<UserFilterOptionBean>();
+	/**
+	 * @deprecated From Entando 3.0 version 3.2.0. Use getUserFilters(String, Integer, Lang, IApsEntity, String, HttpServletRequest) method
+	 */
+	public static List<UserFilterOptionBean> getUserFilters(String userFiltersParam, 
+			Integer currentFrame, Lang currentLang, IApsEntity prototype, HttpServletRequest request) {
+		return getUserFilters(userFiltersParam, currentFrame, currentLang, prototype, "dd/MM/yyyy", request);
+	}
+	
+	public static List<UserFilterOptionBean> getUserFilters(String userFiltersParam, 
+			Integer currentFrame, Lang currentLang, IApsEntity prototype, String dateFormat, HttpServletRequest request) {
+		if (null == userFiltersParam) {
+			return new ArrayList<UserFilterOptionBean>();
+		}
 		List<UserFilterOptionBean> list = new ArrayList<UserFilterOptionBean>();
 		String[] filterStrings = userFiltersParam.split("\\+");
 		for (int i = 0; i < filterStrings.length; i++) {
@@ -69,7 +82,7 @@ public class FilterUtils extends BaseFilterUtils {
 			try {
 				String toStringFilter = fullFilterString.substring(1, fullFilterString.length()-1);
 				Properties properties = getProperties(toStringFilter, DEFAULT_FILTER_PARAM_SEPARATOR);
-				UserFilterOptionBean filterBean = new UserFilterOptionBean(properties, prototype, currentFrame, currentLang, request);
+				UserFilterOptionBean filterBean = new UserFilterOptionBean(properties, prototype, currentFrame, currentLang, dateFormat, request);
 				list.add(filterBean);
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilters", 
@@ -80,15 +93,23 @@ public class FilterUtils extends BaseFilterUtils {
 	}
 	
 	/**
-	 * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilter(String contentType, IEntityFilterBean, IContentManager, RequestContext) method
+	 * @deprecated From Entando 3.0 version 3.0.1. Use getUserFilter(String, IEntityFilterBean, IContentManager, RequestContext) method
 	 */
 	public UserFilterOptionBean getUserFilter(String contentType, 
 			IContentListFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
-		return this.getUserFilter(contentType, (IEntityFilterBean) bean, contentManager, reqCtx);
+		return this.getUserFilter(contentType, (IEntityFilterBean) bean, contentManager, "dd/MM/yyyy", reqCtx);
+	}
+	
+	/**
+	 * @deprecated From Entando 3.0 version 3.2.0. Use getUserFilter(String contentType, IEntityFilterBean, IContentManager, String, RequestContext) method
+	 */
+	public UserFilterOptionBean getUserFilter(String contentType, 
+			IEntityFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
+		return getUserFilter(contentType, bean, contentManager, "dd/MM/yyyy", reqCtx);
 	}
 	
 	public UserFilterOptionBean getUserFilter(String contentType, 
-			IEntityFilterBean bean, IContentManager contentManager, RequestContext reqCtx) {
+			IEntityFilterBean bean, IContentManager contentManager, String dateFormat, RequestContext reqCtx) {
 		UserFilterOptionBean filter = null;
 		try {
 			IApsEntity prototype = contentManager.createContentType(contentType);
@@ -97,7 +118,7 @@ public class FilterUtils extends BaseFilterUtils {
 			props.setProperty(UserFilterOptionBean.PARAM_IS_ATTRIBUTE_FILTER, String.valueOf(bean.isAttributeFilter()));
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-			filter = new UserFilterOptionBean(props, prototype, currentFrame, currentLang, reqCtx.getRequest());
+			filter = new UserFilterOptionBean(props, prototype, currentFrame, currentLang, dateFormat, reqCtx.getRequest());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilter", "Error creating user filter");
 		}

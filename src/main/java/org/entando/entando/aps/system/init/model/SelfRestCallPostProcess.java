@@ -34,7 +34,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 	
 	/*
 	<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
-			method="POST" expected="202" printresponse="true" >
+			method="POST" expected="202" printresponse="true" failonerror="true|false">
 		<query>
 			<!--
 			<parameter name="param1" value="param1Value" />
@@ -83,6 +83,10 @@ public class SelfRestCallPostProcess implements IPostProcess {
 				} catch (Exception e) {}
 			}
 			this.setPrintResponse(Boolean.parseBoolean(element.getAttributeValue("printresponse")));
+			String failOnError = element.getAttributeValue("failonerror");
+			if (null != failOnError) {
+				this.setFailOnError(Boolean.parseBoolean(failOnError));
+			}
 			Element parametersElement = element.getChild("query");
 			if (null != parametersElement) {
 				List<Element> parameterElements = parametersElement.getChildren("parameter");
@@ -158,6 +162,13 @@ public class SelfRestCallPostProcess implements IPostProcess {
 		this._printResponse = printResponse;
 	}
 	
+	public boolean isFailOnError() {
+		return _failOnError;
+	}
+	protected void setFailOnError(boolean failOnError) {
+		this._failOnError = failOnError;
+	}
+	
 	public Properties getQueryParameters() {
 		return _queryParameters;
 	}
@@ -192,6 +203,7 @@ public class SelfRestCallPostProcess implements IPostProcess {
 	private ApiMethod.HttpMethod _method;
 	private Integer _expectedResult;
 	private boolean _printResponse;
+	private boolean _failOnError = true;
 	private Properties _queryParameters = new Properties();
 	private MediaType _contentType;
 	private String _contentBody;

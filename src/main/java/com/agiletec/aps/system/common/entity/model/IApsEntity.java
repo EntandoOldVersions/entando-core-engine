@@ -196,6 +196,8 @@ public interface IApsEntity {
      */
     public void disableAttributes(String disablingCode);
     
+    public void activateAttributes();
+    
     public List<FieldError> validate(IGroupManager groupManager);
     
 }

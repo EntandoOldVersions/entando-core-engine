@@ -76,7 +76,7 @@ public class TableDataUtils {
 				if (conn != null) conn.rollback();
 			} catch (Throwable tr) {
 				ApsSystemUtils.logThrowable(tr, TableDataUtils.class, 
-						"dropData", "Error executing rollback");
+						"executeQueries", "Error executing rollback");
 			}
 			String errorMessage = "Error executing script - QUERY:\n" + currentQuery;
 			if (traceException) {

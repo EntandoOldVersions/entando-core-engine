@@ -93,12 +93,7 @@
 			<result type="tiles">admin.jacms.content.chooseLinkType</result>
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
-		<action name="configUrlLink" class="jacmsUrlLinkAttributeAction">
-			<result type="tiles">admin.jacms.content.link.configUrlLinkType</result>
-			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
-		</action>
-
+		
 		<action name="configPageLink" class="jacmsPageLinkAttributeAction" >
 			<result type="tiles">admin.jacms.content.link.configPageLinkType</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
@@ -144,12 +139,12 @@
 			</result>
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
+		
 		<action name="configUrlLink" class="jacmsUrlLinkAttributeAction" >
 			<result type="tiles">admin.jacms.content.link.configUrlLinkType</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
+		
 		<action name="joinUrlLink" class="jacmsUrlLinkAttributeAction" method="joinUrlLink" >
 			<result name="input" type="tiles">admin.jacms.content.link.configUrlLinkType</result>
 			<result type="redirectActionWithAnchor">

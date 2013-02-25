@@ -17,6 +17,9 @@
 */
 package com.agiletec.apsadmin.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,25 +55,21 @@ public class CheckFormatUtil {
      * corrisponda ad una data nel formato dd/MM/yyyy, false in caso contrario.
 	 */
     public static boolean isValidDate(String dateString) {
-		boolean validate = false;
+		return isValidDate(dateString, "dd/MM/yyyy");
+	}
+	
+	public static boolean isValidDate(String dateString, String dateFormat) {
 		if (dateString != null && (dateString.length() > 0)) {
-			dateString = dateString.trim();
-			Pattern pattern = Pattern.compile("(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]\\d\\d\\d\\d");
-			Matcher matcher = pattern.matcher(dateString);
-			validate = matcher.matches();
-			if (validate) {
-				String temp1 = dateString.substring(0,2);//gg
-				String temp2 = dateString.substring(3,5);
-				if (temp1.equals("31") && (temp2.equals("04")||temp2.equals("06")||temp2.equals("09")||temp2.equals("11"))){
-					validate = false;
-				}
-				int temp4 = new Integer(temp1).intValue();
-				if (temp4>=30 && temp2.equals("02")) {
-					validate = false;
-				}
+			try {
+				DateFormat df = new SimpleDateFormat(dateFormat);
+				df.setLenient(false);
+				df.parse(dateString);
+				return true;
+			} catch (ParseException e) {
+				return false;
 			}
 		}
-		return validate;
+		return false;
 	}
 	
 }

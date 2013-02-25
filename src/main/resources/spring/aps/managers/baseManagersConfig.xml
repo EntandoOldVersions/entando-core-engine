@@ -71,6 +71,7 @@
 				<property name="encrypter">
 					<bean class="com.agiletec.aps.util.DefaultApsEncrypter"></bean>
 				</property>
+				<property name="passwordPlainTextAllowed"><value>${password.plainText.allowed}</value></property>
 			</bean>
 		</property>
 		<property name="configManager" ref="BaseConfigManager"/>
@@ -164,6 +165,11 @@
 		</property>
 	</bean>
 	
+    <bean id="ApiI18nLabelInterface" class="org.entando.entando.aps.system.services.i18n.ApiI18nLabelInterface" >
+		<property name="i18nManager" ref="I18nManager" />
+		<property name="langManager" ref="LangManager"/>
+    </bean>
+    
 	<bean id="KeyGeneratorManager" class="com.agiletec.aps.system.services.keygenerator.KeyGeneratorManager" 
 			parent="abstractService" >
 		<property name="keyGeneratorDAO" >

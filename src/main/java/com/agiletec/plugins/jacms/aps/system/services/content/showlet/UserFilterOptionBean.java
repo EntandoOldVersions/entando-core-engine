@@ -43,7 +43,7 @@ import com.agiletec.apsadmin.util.CheckFormatUtil;
  * @author E.Santoboni
  */
 public class UserFilterOptionBean {
-
+	
 	public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
 		this.setKey(properties.getProperty(PARAM_KEY));
 		if (null == this.getKey()) {
@@ -67,10 +67,11 @@ public class UserFilterOptionBean {
 	}
 
 	public UserFilterOptionBean(Properties properties, IApsEntity prototype,
-			Integer currentFrame, Lang currentLang, HttpServletRequest request) throws Throwable {
+			Integer currentFrame, Lang currentLang, String dateFormat, HttpServletRequest request) throws Throwable {
 		this(properties, prototype);
 		this.setCurrentLang(currentLang);
 		this.setCurrentFrame(currentFrame);
+		this.setDateFormat(dateFormat);
 		this.extractFormParameters(request);
 	}
 
@@ -108,7 +109,14 @@ public class UserFilterOptionBean {
 	protected void setCurrentLang(Lang currentLang) {
 		this._currentLang = currentLang;
 	}
-
+	
+	protected String getDateFormat() {
+		return _dateFormat;
+	}
+	protected void setDateFormat(String dateFormat) {
+		this._dateFormat = dateFormat;
+	}
+	
 	protected void extractFormParameters(HttpServletRequest request) throws Throwable {
 		String[] formFieldNames = null;
 		try {
@@ -148,14 +156,14 @@ public class UserFilterOptionBean {
 		}
 		this.setFormFieldNames(formFieldNames);
 	}
-
+	
 	private void checkRange(String[] formFieldNames) {
 		if (!this.isAttributeFilter() || null != this.getFormFieldErrors() ||
 				null == this.getFormFieldValues() || this.getFormFieldValues().size() < 2) return;
 		boolean check = false;
 		if (this.getAttribute() instanceof DateAttribute) {
-			Date start = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[0]), "dd/MM/yyyy");
-			Date end = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[1]), "dd/MM/yyyy");
+			Date start = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[0]), this.getDateFormat());
+			Date end = DateConverter.parseDate(this.getFormFieldValues().get(formFieldNames[1]), this.getDateFormat());
 			check = (!start.equals(end) && start.after(end));
 		} else if (this.getAttribute() instanceof NumberAttribute) {
 			Integer start = Integer.parseInt(this.getFormFieldValues().get(formFieldNames[0]));
@@ -168,7 +176,7 @@ public class UserFilterOptionBean {
 			this.getFormFieldErrors().put(formFieldNames[1], error);
 		}
 	}
-
+	
 	protected String[] extractAttributeParams(String[] fieldsSuffix, String frameIdSuffix, HttpServletRequest request) {
 		String[] formFieldNames = new String[fieldsSuffix.length];
 		for (int i = 0; i < fieldsSuffix.length; i++) {
@@ -186,10 +194,14 @@ public class UserFilterOptionBean {
 		}
 		return formFieldNames;
 	}
-
+	
 	private void checkNoTextAttributeFormValue(boolean isDateAttribute, String value, String fieldName, String rangeField) {
-		if (value == null || value.trim().length() == 0) return;
-		boolean check = (isDateAttribute) ? CheckFormatUtil.isValidDate(value.trim()) : CheckFormatUtil.isValidNumber(value.trim());
+		if (value == null || value.trim().length() == 0) {
+			return;
+		}
+		boolean check = (isDateAttribute) ? 
+				CheckFormatUtil.isValidDate(value.trim(), this.getDateFormat()) : 
+				CheckFormatUtil.isValidNumber(value.trim());
 		if (!check) {
 			if (null == this.getFormFieldErrors()) {
 				this.setFormFieldErrors(new HashMap<String, AttributeFormFieldError>(2));
@@ -224,8 +236,8 @@ public class UserFilterOptionBean {
 			} else if (attribute instanceof DateAttribute) {
 				String start = this.getFormFieldValues().get(this.getFormFieldNames()[0]);
 				String end = this.getFormFieldValues().get(this.getFormFieldNames()[1]);
-				Date startDate = DateConverter.parseDate(start, "dd/MM/yyyy");
-				Date endDate = DateConverter.parseDate(end, "dd/MM/yyyy");
+				Date startDate = DateConverter.parseDate(start, this.getDateFormat());
+				Date endDate = DateConverter.parseDate(end, this.getDateFormat());
 				filter = new EntitySearchFilter(attribute.getName(), true, startDate, endDate);
 			} else if (attribute instanceof BooleanAttribute) {
 				String value = this.getFormFieldValues().get(this.getFormFieldNames()[0]);
@@ -295,7 +307,9 @@ public class UserFilterOptionBean {
 
 	private Integer _currentFrame;
 	private Lang _currentLang;
-
+	
+	private String _dateFormat;
+	
 	private String[] _formFieldNames;
 	private Map<String, String> _formFieldValues;
 	private Map<String, AttributeFormFieldError> _formFieldErrors;
@@ -333,8 +347,7 @@ public class UserFilterOptionBean {
 		public String getRangeFieldType() {
 			return _rangeFieldType;
 		}
-
-
+		
 		private String _attributeName;
 		private String _fieldName;
 		private String _errorKey;
@@ -345,8 +358,7 @@ public class UserFilterOptionBean {
 
 		public static final String FIELD_TYPE_RANGE_START = "START";
 		public static final String FIELD_TYPE_RANGE_END = "END";
-
-
+		
 	}
-
+	
 }

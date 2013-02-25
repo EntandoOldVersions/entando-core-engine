@@ -18,6 +18,14 @@
 		</field-validator>
 	</field>
 	
+    <field name="attributeDescription">
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">50</param>
+			<param name="trim">true</param>
+			<message key="wrongMaxLength" />
+		</field-validator>
+    </field>
+    
 	<!-- OGNL - START VALIDATION BLOCK -->
 	
 	<!-- ognlValidationRule.expression -->

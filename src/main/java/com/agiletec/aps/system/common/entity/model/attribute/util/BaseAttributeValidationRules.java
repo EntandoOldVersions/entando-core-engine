@@ -107,7 +107,8 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
         return null;
     }
 	
-    protected boolean isEmpty() {
+	@Override
+    public boolean isEmpty() {
         return (!this.isRequired() && null == this.getOgnlValidationRule());
     }
 	

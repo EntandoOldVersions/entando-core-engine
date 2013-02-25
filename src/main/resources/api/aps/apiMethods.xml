@@ -84,5 +84,40 @@
     </resource>
     -->
     
+	<!-- *********** I18N Labels *********** -->
+	
+	<resource name="i18nlabel" namespace="core">
+		<description>The rappresentation of the i18n label resource</description>
+        <source>core</source>
+        <method httpMethod="GET" active="true">
+            <description>Return an i18n label</description>
+            <springBean name="ApiI18nLabelInterface" method="getLabel" />
+			<responseClass>org.entando.entando.aps.system.services.i18n.response.I18nLabelResponse</responseClass>
+            <parameters>
+                <parameter key="key" required="true">
+                    <description>The Label key</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add an i18n label</description>
+            <springBean name="ApiI18nLabelInterface" method="addLabel" />
+            <expectedType>org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update an i18n label</description>
+            <springBean name="ApiI18nLabelInterface" method="updateLabel" />
+            <expectedType>org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete an i18n label</description>
+            <springBean name="ApiI18nLabelInterface" method="deleteLabel" />
+            <parameters>
+                <parameter key="key" required="true">
+                    <description>The Label key</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
     
 </apiMethodDefinitions>

@@ -82,8 +82,8 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	
 	@Override
 	public UserFilterOptionBean getUserFilterOption(String contentType, IEntityFilterBean bean, RequestContext reqCtx) {
-		FilterUtils dom = new FilterUtils();
-		return dom.getUserFilter(contentType, bean, this.getContentManager(), reqCtx);
+		FilterUtils filterUtils = new FilterUtils();
+		return filterUtils.getUserFilter(contentType, bean, this.getContentManager(), this.getUserFilterDateFormat(), reqCtx);
 	}
 	
 	@Override
@@ -149,7 +149,9 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 				for (int i = 0; i < userFilters.size(); i++) {
 					UserFilterOptionBean userFilter = userFilters.get(i);
 					EntitySearchFilter filter = userFilter.getEntityFilter();
-					if (null != filter) bean.addFilter(filter);
+					if (null != filter) {
+						bean.addFilter(filter);
+					}
 				}
 			}
 			String[] categories = this.getCategories(bean.getCategories(), config, userFilters);
@@ -169,9 +171,13 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	}
 	
 	protected boolean extractOrCategoryFilterClause(ApsProperties config) {
-		if (null == config) return false;
+		if (null == config) {
+			return false;
+		}
 		String param = config.getProperty(SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER);
-		if (null == param) return false;
+		if (null == param) {
+			return false;
+		}
 		return Boolean.parseBoolean(param);
 	}
 	
@@ -211,7 +217,9 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 				}
 			}
 		}
-		if (codes.size() == 0) return null;
+		if (codes.isEmpty()) {
+			return null;
+		}
 		String[] categoryCodes = new String[codes.size()];
 		Iterator<String> iter = codes.iterator();
 		int i = 0;
@@ -222,10 +230,14 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	}
 	
 	protected void addShowletFilters(IContentListTagBean bean, ApsProperties showletParams, String showletParamName, RequestContext reqCtx) {
-		if (null == showletParams) return; 
+		if (null == showletParams) {
+			return;
+		} 
 		String showletFilters = showletParams.getProperty(showletParamName);
 		EntitySearchFilter[] filters = this.getFilters(bean.getContentType(), showletFilters, reqCtx);
-		if (null == filters) return;
+		if (null == filters) {
+			return;
+		}
 		for (int i=0; i<filters.length; i++) {
 			bean.addFilter(filters[i]);
 		}
@@ -264,7 +276,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	
 	protected String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
 		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-		StringBuffer cacheKey = new StringBuffer(page.getCode());
+		StringBuilder cacheKey = new StringBuilder(page.getCode());
 		Showlet currentShowlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 		cacheKey.append("_").append(currentShowlet.getType().getCode());
 		Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
@@ -272,7 +284,9 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 		cacheKey.append("_LANG").append(currentLang.getCode()).append("_");
 		List<String> groupCodes = new ArrayList<String>(userGroupCodes);
-		if (!groupCodes.contains(Group.FREE_GROUP_NAME)) groupCodes.add(Group.FREE_GROUP_NAME);
+		if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
+			groupCodes.add(Group.FREE_GROUP_NAME);
+		}
 		Collections.sort(groupCodes);
 		for (int i=0; i<groupCodes.size(); i++) {
 			String code = (String) groupCodes.get(i);
@@ -316,13 +330,20 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 			String userFilters = config.getProperty(SHOWLET_PARAM_USER_FILTERS);
 			if (null != userFilters && userFilters.length() > 0) {
-				userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, reqCtx.getRequest());	
+				userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, this.getUserFilterDateFormat(), reqCtx.getRequest());	
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUserFilters");
+			ApsSystemUtils.logThrowable(t, this, "getConfiguredUserFilters");
 			throw new ApsSystemException("Error extracting user filters", t);
 		}
 		return userEntityFilters;
+	}
+	
+	protected String getUserFilterDateFormat() {
+		return _userFilterDateFormat;
+	}
+	public void setUserFilterDateFormat(String userFilterDateFormat) {
+		this._userFilterDateFormat = userFilterDateFormat;
 	}
 	
 	protected ISearchEngineManager getSearchEngineManager() {
@@ -331,6 +352,8 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	public void setSearchEngineManager(ISearchEngineManager searchEngineManager) {
 		this._searchEngineManager = searchEngineManager;
 	}
+	
+	private String _userFilterDateFormat;
 	
 	private ISearchEngineManager _searchEngineManager;
 	

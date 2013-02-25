@@ -147,7 +147,7 @@ public class TableFactory {
 		int result = 0;
 		String logTableName = this.getDatabaseName() + "/" + getTableName(tableClass);
 		try {
-			result = TableUtils.createTable(connectionSource, tableClass);
+			result = ApsTableUtils.createTable(connectionSource, tableClass);
 			if (result > 0) {
 				ApsSystemUtils.getLogger().info("Created table - " + logTableName);
 				Object tableModel = tableClass.newInstance();

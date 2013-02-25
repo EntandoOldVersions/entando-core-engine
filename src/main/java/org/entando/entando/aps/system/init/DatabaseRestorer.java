@@ -29,24 +29,44 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.ListableBeanFactory;
-
 /**
  * @author E.Santoboni
  */
-public class DatabaseRestorer {
+public class DatabaseRestorer extends AbstractDatabaseUtils {
 	
-	protected DatabaseRestorer(String localBackupsFolder, String subFolderName, 
-			Map<String, List<String>> entandoTableMapping, List<Component> components, BeanFactory beanFactory/*, DbInstallerManager manager*/) {
-		this.setBeanFactory(beanFactory);
-		this.setComponents(components);
-		this.setEntandoTableMapping(entandoTableMapping);
-		this.setLocalBackupsFolder(localBackupsFolder);
-		this.setBackupSubFolder(subFolderName);
+	protected void initOracleSchema(DataSource dataSource) throws Throwable {
+		IDatabaseManager.DatabaseType type = this.getType(dataSource);
+		try {
+			if (!type.equals(IDatabaseManager.DatabaseType.ORACLE)) {
+				return;
+			}
+			String[] queryTimestampFormat = new String[]{"ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"};
+			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
+			throw new ApsSystemException("Error initializing oracle schema", t);
+		}
 	}
 	
-	protected void dropAndRestoreBackup() throws ApsSystemException {
+	protected void initDerbySchema(DataSource dataSource) throws Throwable {
+		String username = this.invokeGetMethod("getUsername", dataSource);
+		try {
+			String[] queryCreateSchema = new String[]{"CREATE SCHEMA " + username.toUpperCase()};
+			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
+			throw new ApsSystemException("Error creating derby schema", t);
+		}
+		try {
+			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
+			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
+			throw new ApsSystemException("Error initializating Derby Schema", t);
+		}
+	}
+	
+	protected void dropAndRestoreBackup(String backupSubFolder) throws ApsSystemException {
 		try {
 			List<Component> components = this.getComponents();
 			int size = components.size();
@@ -55,7 +75,7 @@ public class DatabaseRestorer {
 				this.dropTables(componentConfiguration.getTableMapping());
 			}
 			this.dropTables(this.getEntandoTableMapping());
-			this.restoreBackup();
+			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
 			throw new ApsSystemException("Error while restoring backup", t);
@@ -63,7 +83,9 @@ public class DatabaseRestorer {
 	}
 	
 	private void dropTables(Map<String, List<String>> tableMapping) throws ApsSystemException {
-		if (null == tableMapping) return;
+		if (null == tableMapping) {
+			return;
+		}
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
@@ -86,13 +108,13 @@ public class DatabaseRestorer {
 		}
 	}
 	
-	protected void restoreBackup() throws ApsSystemException {
+	protected void restoreBackup(String backupSubFolder) throws ApsSystemException {
 		try {
-			this.restoreLocalDump(this.getEntandoTableMapping());
+			this.restoreLocalDump(this.getEntandoTableMapping(), backupSubFolder);
 			List<Component> components = this.getComponents();
 			for (int i = 0; i < components.size(); i++) {
 				Component componentConfiguration = components.get(i);
-				this.restoreLocalDump(componentConfiguration.getTableMapping());
+				this.restoreLocalDump(componentConfiguration.getTableMapping(), backupSubFolder);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreBackup");
@@ -100,17 +122,22 @@ public class DatabaseRestorer {
 		}
 	}
 	
-	private void restoreLocalDump(Map<String, List<String>> tableMapping) throws ApsSystemException {
-		if (null == tableMapping) return;
+	private void restoreLocalDump(Map<String, List<String>> tableMapping, String backupSubFolder) throws ApsSystemException {
+		if (null == tableMapping) {
+			return;
+		}
 		try {
 			StringBuilder folder = new StringBuilder(this.getLocalBackupsFolder())
-					.append(this.getBackupSubFolder()).append(File.separator);
+					.append(backupSubFolder).append(File.separator);
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int i = 0; i < dataSourceNames.length; i++) {
 				String dataSourceName = dataSourceNames[i];
 				List<String> tableClasses = tableMapping.get(dataSourceName);
-				if (null == tableClasses || tableClasses.isEmpty()) continue;
+				if (null == tableClasses || tableClasses.isEmpty()) {
+					continue;
+				}
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
+				this.initOracleSchema(dataSource);
 				for (int j = 0; j < tableClasses.size(); j++) {
 					String tableClassName = tableClasses.get(j);
 					Class tableClass = Class.forName(tableClassName);
@@ -123,58 +150,12 @@ public class DatabaseRestorer {
 						TableDataUtils.valueDatabase(sqlDump, tableName, dataSource, null);
 					}
 				}
+				//
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreLocalDump");
 			throw new RuntimeException("Error while restoring local dump", t);
 		}
 	}
-	
-	private String[] extractBeanNames(Class beanClass) {
-		ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-		return factory.getBeanNamesForType(beanClass);
-	}
-	
-	protected BeanFactory getBeanFactory() {
-		return _beanFactory;
-	}
-	protected void setBeanFactory(BeanFactory beanFactory) {
-		this._beanFactory = beanFactory;
-	}
-	
-	protected String getLocalBackupsFolder() {
-		return _localBackupsFolder;
-	}
-	protected void setLocalBackupsFolder(String localBackupsFolder) {
-		this._localBackupsFolder = localBackupsFolder;
-	}
-	
-	protected String getBackupSubFolder() {
-		return _backupSubFolder;
-	}
-	protected void setBackupSubFolder(String backupSubFolder) {
-		this._backupSubFolder = backupSubFolder;
-	}
-	
-	protected Map<String, List<String>> getEntandoTableMapping() {
-		return _entandoTableMapping;
-	}
-	protected void setEntandoTableMapping(Map<String, List<String>> entandoTableMapping) {
-		this._entandoTableMapping = entandoTableMapping;
-	}
-	
-	protected List<Component> getComponents() {
-		return _components;
-	}
-	protected void setComponents(List<Component> components) {
-		this._components = components;
-	}
-	
-	private String _localBackupsFolder;
-	private String _backupSubFolder;
-	
-	private BeanFactory _beanFactory;
-	private Map<String, List<String>> _entandoTableMapping;
-	private List<Component> _components;
 	
 }
