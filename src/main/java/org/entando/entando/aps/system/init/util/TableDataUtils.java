@@ -73,7 +73,9 @@ public class TableDataUtils {
 			conn.commit();
 		} catch (Throwable t) {
 			try {
-				if (conn != null) conn.rollback();
+				if (conn != null) {
+					conn.rollback();
+				}
 			} catch (Throwable tr) {
 				ApsSystemUtils.logThrowable(tr, TableDataUtils.class, 
 						"executeQueries", "Error executing rollback");
@@ -85,13 +87,17 @@ public class TableDataUtils {
 			throw new ApsSystemException(errorMessage, t);
 		} finally {
 			try {
-				if (stat != null) stat.close();
+				if (stat != null) {
+					stat.close();
+				}
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 						"closeDaoResources", "Error while closing the statement");
 			}
 			try {
-				if (conn != null) conn.close();
+				if (conn != null) {
+					conn.close();
+				}
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 						"closeDaoStatement", "Error closing the connection");
@@ -115,7 +121,9 @@ public class TableDataUtils {
             int columnCount = metaData.getColumnCount();
 			int[] types = new int[columnCount];
 			for (int i = 0; i < columnCount; i++) {
-				if (i>0) scriptPrefix.append(", ");
+				if (i>0) {
+					scriptPrefix.append(", ");
+				}
 				int indexColumn = i+1;
 				types[i] = metaData.getColumnType(indexColumn);
 				scriptPrefix.append(metaData.getColumnName(indexColumn).toLowerCase());
@@ -128,7 +136,7 @@ public class TableDataUtils {
                     if (i > 0) {
                         sqlDump.append(", ");
                     }
-                    Object value = getColumnValue(res, i, types); //res.getObject(i+1);
+                    Object value = getColumnValue(res, i, types);
                     if (value == null) {
                         sqlDump.append("NULL");
                     } else {
@@ -152,19 +160,25 @@ public class TableDataUtils {
 			throw new ApsSystemException("Error creating backup", t);
 		} finally {
 			try {
-				if (res != null) res.close();
+				if (res != null) {
+					res.close();
+				}
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 						"dumpTable", "Error while closing the resultset");
 			}
 			try {
-				if (stat != null) stat.close();
+				if (stat != null) {
+					stat.close();
+				}
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 						"dumpTable", "Error while closing the statement");
 			}
 			try {
-				if (conn != null) conn.close();
+				if (conn != null) {
+					conn.close();
+				}
 			} catch (Throwable t) {
 				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
 						"dumpTable", "Error closing the connection");
@@ -182,7 +196,12 @@ public class TableDataUtils {
             //case Types.ARRAY:
 			//	return ....;
             case Types.BIGINT:
-				return res.getInt(resIndex);
+				Object bigintObject = res.getObject(resIndex);
+				if (null != bigintObject) {
+					return (Integer) bigintObject;
+				} else {
+					return null;
+				}
             //case Types.BINARY: 
 			//	return ....;
             //case Types.BIT:
@@ -209,11 +228,26 @@ public class TableDataUtils {
             //case Types.DISTINCT: 
 			//	return ....;
             case Types.DOUBLE: 
-				return res.getInt(resIndex);
+				Object doubleObject = res.getObject(resIndex);
+				if (null != doubleObject) {
+					return (Double) doubleObject;
+				} else {
+					return null;
+				}
             case Types.FLOAT: 
-				return res.getBigDecimal(resIndex);
+				Object floatObject = res.getObject(resIndex);
+				if (null != floatObject) {
+					return (Float) floatObject;
+				} else {
+					return null;
+				}
             case Types.INTEGER: 
-				return res.getInt(resIndex);
+				Object intObject = res.getObject(resIndex);
+				if (null != intObject) {
+					return (Integer) intObject;
+				} else {
+					return null;
+				}
             //case Types.JAVA_OBJECT: 
 			//	return ....;
             case Types.LONGNVARCHAR: 
@@ -241,7 +275,12 @@ public class TableDataUtils {
             //case Types.ROWID: 
 			//	return ....;
             case Types.SMALLINT:
-				return res.getInt(resIndex);
+				Object shortObject = res.getObject(resIndex);
+				if (null != shortObject) {
+					return (Integer) shortObject;
+				} else {
+					return null;
+				}
             //case Types.SQLXML:
 			//	return ....;
             //case Types.STRUCT:
@@ -253,7 +292,12 @@ public class TableDataUtils {
 				Timestamp timestamp = res.getTimestamp(resIndex);
 				return getTimestampAsString(timestamp);
             case Types.TINYINT:
-				return res.getInt(resIndex);
+				Object tinyintObject = res.getObject(resIndex);
+				if (null != tinyintObject) {
+					return (Integer) tinyintObject;
+				} else {
+					return null;
+				}
             //case Types.VARBINARY:
 			//	return ....;
             case Types.VARCHAR:
