@@ -121,7 +121,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 			<properties>
 				<property key="navSpec">code(homepage).subtree(1)</property>
 			</properties>
-		</defaultShowlet>		
+		</defaultShowlet>
 	</frame>
 	<frame pos="4">
 		<descr>First Column: Box 2</descr>
@@ -137,7 +137,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 	</frame>
 	<frame pos="8">
 		<descr>Third Column: Box 2</descr>
-	</frame>		
+	</frame>
 </frames>', NULL);
 
 
@@ -281,8 +281,8 @@ INSERT INTO pages (code, parentcode, pos, modelcode, titles, groupcode, showinme
 
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Showlet di Login</property>
-<property key="it">Showlet di Login</property>
+<property key="en">Login Widget</property>
+<property key="it">Widget di Login</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('messages_system', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
@@ -378,7 +378,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 	<ExtendendPrivacyModule>
 		<Param name="extendedPrivacyModuleEnabled">false</Param>
 		<Param name="maxMonthsSinceLastAccess">6</Param>
-		<Param name="maxMonthsSinceLastPasswordChange">3</Param>        
+		<Param name="maxMonthsSinceLastPasswordChange">3</Param>
 	</ExtendendPrivacyModule>
 </Params>');
 
