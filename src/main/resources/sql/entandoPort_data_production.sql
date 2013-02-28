@@ -123,11 +123,28 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('YES', 'it', '
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('YES', 'en', 'Yes');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NO', 'it', 'No');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('NO', 'en', 'No');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('BOTH', 'it', 'Entrambi');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('BOTH', 'en', 'Both');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ENTANDO_API_GOTO_LIST', 'it', 'Lista delle Risorse API');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ENTANDO_API_GOTO_LIST', 'en', 'API Resource List');
-
-
-
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_PREV', 'it', 'Indietro');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_PREV', 'en', 'Previous');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_NEXT', 'it', 'Ancora');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_NEXT', 'en', 'Next');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_FIRST', 'it', 'Inizio');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_FIRST', 'en', 'Start');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_LAST', 'it', 'Fine');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_LAST', 'en', 'End');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_STEP_BACKWARD', 'it', 'Indietro di');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_STEP_BACKWARD', 'en', 'Previous');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_STEP_FORWARD', 'it', 'Avanti di');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGER_STEP_FORWARD', 'en', 'Next');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('CATEGORY', 'it', 'Categoria');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('CATEGORY', 'en', 'Category');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('IGNORE', 'it', 'Ignora');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('IGNORE', 'en', 'Ignore');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'it', 'Oops! Hai sbagliato qualcosa!');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('ERRORS', 'en', 'Whoops! You''re doing it wrong!');
 
 INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('service', 'Service Page', '<frames>
 	<frame pos="0">
