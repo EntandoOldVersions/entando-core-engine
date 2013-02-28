@@ -118,11 +118,11 @@ $content.Data.mediumDate;
 ', NULL);
 INSERT INTO contentmodels (modelid, contenttype, descr, model, stylesheet) VALUES (3, 'ART', 'scheda di un articolo', '------ RENDERING CONTENUTO: id = $content.id; ---------
 ATTRIBUTI:
-  - AUTORI (Monolist-Monotext): 
+  - AUTORI (Monolist-Monotext):
 #foreach ($autore in $content.Autori)
          testo=$autore.text;
 #end
-  - TITOLO (Text): testo=$content.Titolo.getText(); 
+  - TITOLO (Text): testo=$content.Titolo.getText();
   - VEDI ANCHE (Link): testo=$content.VediAnche.text, dest=$content.VediAnche.destination;
   - FOTO (Image): testo=$content.Foto.text, src(1)=$content.Foto.imagePath("1");
   - DATA (Date): data_media = $content.Data.mediumDate;
@@ -375,7 +375,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 			<properties>
 				<property key="navSpec">code(homepage).subtree(1)</property>
 			</properties>
-		</defaultShowlet>		
+		</defaultShowlet>
 	</frame>
 	<frame pos="4">
 		<descr>First Column: Box 2</descr>
@@ -391,7 +391,7 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 	</frame>
 	<frame pos="8">
 		<descr>Third Column: Box 2</descr>
-	</frame>		
+	</frame>
 </frames>', NULL);
 
 
@@ -584,8 +584,8 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 </properties>', 0, NULL);
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('login_form', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
-<property key="en">Showlet di Login</property>
-<property key="it">Showlet di Login</property>
+<property key="en">Login Widget</property>
+<property key="it">Widget di Login</property>
 </properties>', NULL, NULL, NULL, NULL, 1, NULL);
 INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('search_result', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
@@ -653,7 +653,7 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
         <parameter name="orClauseCategoryFilter" />
 	<parameter name="maxElemForItem">Contents for each page</parameter>
 	<parameter name="filters" />
-	<parameter name="title_{lang}">Showlet Title in lang {lang}</parameter>
+	<parameter name="title_{lang}">Widget Title in lang {lang}</parameter>
 	<parameter name="pageLink">The code of the Page to link</parameter>
 	<parameter name="linkDescr_{lang}">Link description in lang {lang}</parameter>
 	<action name="listViewerConfig"/>
@@ -850,7 +850,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 	<ExtendendPrivacyModule>
 		<Param name="extendedPrivacyModuleEnabled">false</Param>
 		<Param name="maxMonthsSinceLastAccess">6</Param>
-		<Param name="maxMonthsSinceLastPasswordChange">3</Param>        
+		<Param name="maxMonthsSinceLastPasswordChange">3</Param>
 	</ExtendendPrivacyModule>
 </Params>');
 
