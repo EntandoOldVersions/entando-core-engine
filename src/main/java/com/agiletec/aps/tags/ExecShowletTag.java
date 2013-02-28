@@ -104,11 +104,15 @@ public class ExecShowletTag extends TagSupport {
 			throw new JspException(msg, t);
 		}
 	}
-
+	
 	protected void includeShowlet(RequestContext reqCtx, Showlet showlet, List<IFrameDecoratorContainer> decorators) throws Throwable {
-		this.includeDecorators(showlet, decorators, false, true);
 		if (null != showlet && this.isUserAllowed(reqCtx, showlet)) {
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);
+		} else {
+			reqCtx.removeExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+		}
+		this.includeDecorators(showlet, decorators, false, true);
+		if (null != showlet && this.isUserAllowed(reqCtx, showlet)) {
 			ShowletType showletType = showlet.getType();
 			if (showletType.isLogic()) {
 				showletType = showletType.getParentType();

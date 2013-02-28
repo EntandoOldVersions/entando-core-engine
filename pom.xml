@@ -30,18 +30,6 @@
 		<name>Entando S.r.l.</name>
 		<url>http://www.entando.com/</url>
 	</organization>
-<!--
-	<distributionManagement>
-		<snapshotRepository>
-			<id>entando-snapshots</id>
-			<url>dav:http://localhost/nexus/content/repositories/entando-snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>entando-releases</id>
-			<url>dav:http://localhost/nexus/content/repositories/entando-releases</url>
-		</repository>
-	</distributionManagement>
--->
 	<properties>
 		<!--
 		<test.database.driver>org.postgresql.Driver</test.database.driver>

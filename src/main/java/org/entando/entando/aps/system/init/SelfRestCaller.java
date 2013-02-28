@@ -156,15 +156,18 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 		log.append("Result   ").append(responseStatus.getStatusCode()).append("\n");
 		log.append("Expected ").append(selfRestCall.getExpectedResult()).append("\n");
 		if (!validResponse) {
-			log.append("*********** INVALID RESPONSE STATUS");
-			if (selfRestCall.isFailOnError()) {
-				log.append(" - the post processes will be stopped");
-			}
-			log.append(" ***********\n");
+			log.append("******** INVALID RESPONSE STATUS ********\n");
 		}
 		log.append("---------------------------------------------------------\n");
 		log.append(writer.toString()).append("\n");
 		log.append("*********************************************************\n");
+		if (!validResponse) {
+			if (!selfRestCall.isFailOnError()) {
+				log.append("failonerror was set to false: continuing anyway.\n");
+			} else {
+				log.append("the post processes will be stopped.\n");
+			}
+		}
 		ApsSystemUtils.getLogger().info(log.toString());
 		System.out.println(log.toString());
 		if (!validResponse && selfRestCall.isFailOnError()) {
