@@ -60,7 +60,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			String title = (String) this.getTitles().get(lang.getCode());
 			if (null == title || title.trim().length() == 0) {
 				String[] args = {lang.getDescr()};
-				String titleKey = "lang"+lang.getCode();
+				String titleKey = "lang" + lang.getCode();
 				this.addFieldError(titleKey, this.getText("error.page.insertTitle", args));
 			}
 		}
@@ -70,7 +70,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
 		while (langsIter.hasNext()) {
 			Lang lang = (Lang) langsIter.next();
-			String titleKey = "lang"+lang.getCode();
+			String titleKey = "lang" + lang.getCode();
 			String title = this.getRequest().getParameter(titleKey);
 			if (null != title) {
 				this.getTitles().put(lang.getCode(), title.trim());
@@ -97,7 +97,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String selectedNode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(this.getSelectedNode());
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage parentPage = this.getPageManager().getPage(selectedNode);
 			this.valueFormForNew(parentPage);
 		} catch (Throwable t) {
@@ -114,6 +116,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		boolean isParentFree = parentPage.getGroup().equals(Group.FREE_GROUP_NAME);
 		this.setGroupSelectLock(!(this.isCurrentUserMemberOf(Group.ADMINS_GROUP_NAME) && isParentFree));
 		this.setDefaultShowlet(true);
+		this.setShowable(true);
 	}
 	
 	@Override
@@ -121,7 +124,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String pageCode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(pageCode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage page = this.getPageManager().getPage(pageCode);
 			this.valueFormForEdit(page);
 		} catch (Throwable t) {
@@ -160,7 +165,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String pageCode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(pageCode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage page = this.getPageManager().getPage(pageCode);
 			this.setPageToShow(page);
 		} catch (Throwable t) {
@@ -191,7 +198,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String copyingPageCode = this.getRequest().getParameter("copyingPageCode");
 		try {
 			String check = this.checkSelectedNode(selectedNode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			if ("".equals(copyingPageCode) || null == this.getPageManager().getPage(copyingPageCode)) {
 				this.addActionError(this.getText("error.page.selectPageToCopy"));
 				return "pageTree";
@@ -354,7 +363,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String selectedNode = this.getSelectedNode();
 		try {
 			String check = this.checkDelete(selectedNode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage currentPage = this.getPageManager().getPage(selectedNode);
 			Map references = this.getHelper().getReferencingObjects(currentPage, this.getRequest());
 			if (references.size()>0) {
@@ -374,7 +385,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	public String delete() {
 		try {
 			String check = this.checkDelete(this.getNodeToBeDelete());
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			this.getPageManager().deletePage(this.getNodeToBeDelete());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "delete");
@@ -385,7 +398,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	
 	protected String checkDelete(String selectedNode) {
 		String check = this.checkSelectedNode(selectedNode);
-		if (null != check) return check;
+		if (null != check) {
+			return check;
+		}
 		IPage currentPage = this.getPageManager().getPage(selectedNode);
 		if (this.getPageManager().getRoot().getCode().equals(currentPage.getCode())) {
 			this.addActionError(this.getText("error.page.removeHome.notAllowed"));
