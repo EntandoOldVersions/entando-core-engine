@@ -96,7 +96,7 @@ public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
 		assertEquals(AbstractPortalAction.STOCK_SHOWLETS_CODE, stockType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("login_form", stockType.getKey());
-			assertEquals("Showlet di Login", stockType.getValue());
+			assertEquals("Widget di Login", stockType.getValue());
 		} else {
 			assertEquals("messages_system", stockType.getKey());
 			assertEquals("System Messages", stockType.getValue());

@@ -46,11 +46,11 @@ public class TestContentViewerHelper extends BaseTestCase {
             
             String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n" +
             		"ATTRIBUTI:\n" +
-            		"  - AUTORI (Monolist-Monotext): \n" +
+            		"  - AUTORI (Monolist-Monotext):\n" +
             		"         testo=Pippo;\n" +
             		"         testo=Paperino;\n" +
             		"         testo=Pluto;\n" +
-            		"  - TITOLO (Text): testo=Il titolo; \n" +
+            		"  - TITOLO (Text): testo=Il titolo;\n" +
             		"  - VEDI ANCHE (Link): testo=Spiderman, dest=http://www.spiderman.org;\n" +
             		"  - FOTO (Image): testo=Image description, src(1)=/Entando/resources/cms/images/lvback_d1.jpg;\n" +
             		"  - DATA (Date): data_media = 10-mar-2004;\n" +

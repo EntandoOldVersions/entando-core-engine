@@ -191,7 +191,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(root.getCode(), action.getParentPageCode());
 		assertEquals(root.getGroup(), action.getGroup());
 		assertFalse(action.isGroupSelectLock());
-		assertFalse(action.isShowable());
+		assertTrue(action.isShowable());
 		assertTrue(action.isDefaultShowlet());
 	}
 	
@@ -216,7 +216,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(customers_page.getCode(), action.getParentPageCode());
 		assertEquals(customers_page.getGroup(), action.getGroup());
 		assertTrue(action.isGroupSelectLock());
-		assertFalse(action.isShowable());
+		assertTrue(action.isShowable());
 		assertTrue(action.isDefaultShowlet());
 	}
 	
@@ -234,7 +234,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(coach_page.getCode(), action.getParentPageCode());
 		assertEquals(coach_page.getGroup(), action.getGroup());
 		assertTrue(action.isGroupSelectLock());
-		assertFalse(action.isShowable());
+		assertTrue(action.isShowable());
 		assertTrue(action.isDefaultShowlet());
 		
 		IPage customers_page = this._pageManager.getPage("customers_page");
@@ -246,7 +246,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(customers_page.getCode(), action.getParentPageCode());
 		assertEquals(customers_page.getGroup(), action.getGroup());
 		assertTrue(action.isGroupSelectLock());
-		assertFalse(action.isShowable());
+		assertTrue(action.isShowable());
 		assertTrue(action.isDefaultShowlet());
 	}
 	
