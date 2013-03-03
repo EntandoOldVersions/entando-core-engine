@@ -211,6 +211,11 @@ public class ApiResourceAction extends AbstractApiAction {
         return items;
     }
     
+	@Override
+	protected String getPermissionAutorityOptionPrefix() {
+		return this.getText("label.api.authority.permission") + " ";
+	}
+	
     public ApiResource getApiResource() {
         return this.getApiResource(this.getNamespace(), this.getResourceName());
     }

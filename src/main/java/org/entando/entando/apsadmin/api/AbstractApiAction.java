@@ -55,13 +55,17 @@ public abstract class AbstractApiAction extends BaseAction {
             for (int i = 0; i < permissions.size(); i++) {
                 Permission permission = permissions.get(i);
                 items.add(new SelectItem(permission.getName(), 
-                        this.getText("label.api.authority.permission") + " " + permission.getDescription()));
+						this.getPermissionAutorityOptionPrefix() + permission.getDescription()));
             }
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getPermissionAutorityOptions", "Error extracting autority options");
         }
         return items;
     }
+	
+	protected String getPermissionAutorityOptionPrefix() {
+		return "";
+	}
 	
     protected String generateRequestBodySchema(ApiMethod method) {
         try {
