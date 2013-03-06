@@ -117,7 +117,8 @@ public class JAXBResource {
 	}
 	
 	private File byteArrayToFile() throws Throwable {
-		File file = new File(this.getFileName());
+		String tempDir = System.getProperty("java.io.tmpdir");
+		File file = new File(tempDir + File.separator + this.getFileName());
 		InputStream inputStream = new ByteArrayInputStream(this.getBase64());
 		try {
 			OutputStream out = new FileOutputStream(file);
