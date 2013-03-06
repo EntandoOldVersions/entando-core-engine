@@ -28,7 +28,7 @@ CREATE TABLE  `EntandotestServ`.`api_oauth_consumers` (
   `expirationdate` date DEFAULT NULL,
   PRIMARY KEY (`consumerkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-CREATE TABLE  `EntandotestServ`.`api_oauth_consumers` (
+CREATE TABLE  `EntandotestServ`.`api_oauth_tokens` (
   `accesstoken` varchar(100) NOT NULL,
   `tokensecret` varchar(100) NOT NULL,
   `consumerkey` varchar(500) NOT NULL,
