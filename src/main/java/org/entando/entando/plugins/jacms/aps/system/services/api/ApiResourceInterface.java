@@ -38,6 +38,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.BaseResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -161,13 +162,14 @@ public class ApiResourceInterface {
 	
 	public StringApiResponse addResource(JAXBResource jaxbResource, Properties properties) throws ApiException, Throwable {
         StringApiResponse response = new StringApiResponse();
+		BaseResourceDataBean bean = null;
 		try {
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             this.check(jaxbResource, user, response, true);
 			if (null != response.getErrors() && !response.getErrors().isEmpty()) {
 				return response;
 			}
-			BaseResourceDataBean bean = jaxbResource.createBataBean(this.getCategoryManager());
+			bean = jaxbResource.createBataBean(this.getCategoryManager());
 			String id = bean.getResourceId();
 			if (null != id && id.trim().length() > 0) {
 				Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
@@ -184,7 +186,11 @@ public class ApiResourceInterface {
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "addResource");
             throw new ApsSystemException("Error into API method", t);
-        }
+        } finally {
+			if (null != bean && null != bean.getFile()) {
+				bean.getFile().delete();
+			}
+		}
 		return response;
     }
 	
@@ -209,19 +215,24 @@ public class ApiResourceInterface {
 	
 	public StringApiResponse updateResource(JAXBResource jaxbResource, Properties properties) throws Throwable {
         StringApiResponse response = new StringApiResponse();
+		BaseResourceDataBean bean = null;
 		try {
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             this.check(jaxbResource, user, response, false);
 			if (null != response.getErrors() && !response.getErrors().isEmpty()) {
 				return response;
 			}
-			BaseResourceDataBean bean = jaxbResource.createBataBean(this.getCategoryManager());
+			bean = jaxbResource.createBataBean(this.getCategoryManager());
 			this.getResourceManager().updateResource(bean);
 			response.setResult(IResponseBuilder.SUCCESS);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "updateResource");
             throw new ApsSystemException("Error into API method", t);
-        }
+        } finally {
+			if (null != bean && null != bean.getFile()) {
+				bean.getFile().delete();
+			}
+		}
 		return response;
     }
 	
@@ -239,9 +250,9 @@ public class ApiResourceInterface {
 			this.addValidationError("Group required", response);
 		} else {
 			if (null == this.getGroupManager().getGroup(groupName)) {
-				this.addValidationError("Group '" + groupName + "' does not exist", response);
+				//this.addValidationError("Group '" + groupName + "' does not exist", response);
 			} else if (!this.getAuthorizationManager().isAuthOnGroup(user, groupName)) {
-				this.addValidationError("Group '" + groupName + "' not allowed", response);
+				//this.addValidationError("Group '" + groupName + "' not allowed", response);
 			}
 		}
 		if (add) {
