@@ -125,6 +125,12 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 						sectDescr = shortcut.getMenuSection().getDescription();
 					}
 					optgroup += " - " + sectDescr;
+				} else {
+					String labelCode = optgroup + ".name";
+					String optgroupDescr = this.getText(labelCode);
+					if (!optgroupDescr.equals(labelCode)) {
+						optgroup = optgroupDescr;
+					}
 				}
 				String descrKey = shortcut.getDescriptionKey();
 				String descr = this.getText(descrKey);
