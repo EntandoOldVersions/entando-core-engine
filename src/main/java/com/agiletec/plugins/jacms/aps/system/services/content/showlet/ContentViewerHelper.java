@@ -63,7 +63,9 @@ public class ContentViewerHelper implements IContentViewerHelper {
 		if (null != renderInfo) {
 			renderedContent = renderInfo.getRenderedContent();
 		}
-		if (null == renderedContent) renderedContent = ""; 
+		if (null == renderedContent) {
+			renderedContent = "";
+		} 
         return renderedContent;
     }
 	
@@ -77,9 +79,9 @@ public class ContentViewerHelper implements IContentViewerHelper {
             String langCode = currentLang.getCode();
             Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
             ApsProperties showletConfig = showlet.getConfig();
-            contentId = this.extractContentId(contentId, showletConfig, reqCtx);
-            modelId = this.extractModelId(contentId, modelId, showletConfig, reqCtx);
-            if (contentId != null && modelId != null) {   
+			contentId = this.extractContentId(contentId, showletConfig, reqCtx);
+			modelId = this.extractModelId(contentId, modelId, showletConfig, reqCtx);
+			if (contentId != null && modelId != null) {   
  	            long longModelId = new Long(modelId).longValue();
 	            this.setStylesheet(longModelId, reqCtx);
 	            renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
@@ -116,9 +118,13 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	}
 	
 	protected void manageAttributeValues(ContentRenderizationInfo renderInfo, boolean publishExtraTitle, RequestContext reqCtx) {
-		if (!publishExtraTitle) return;
+		if (!publishExtraTitle) {
+			return;
+		}
 		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-		if (!page.isUseExtraTitles()) return; 
+		if (!page.isUseExtraTitles()) {
+			return;
+		} 
 		Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 		if (currentFrame == page.getModel().getMainFrame() && null != renderInfo) {
 			Object extraTitle = renderInfo.getAttributeValues().get(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
@@ -148,6 +154,9 @@ public class ContentViewerHelper implements IContentViewerHelper {
 			if (null == contentId) {
 				contentId = reqCtx.getRequest().getParameter(SystemConstants.K_CONTENT_ID_PARAM);
 			}
+		}
+		if (null != contentId && contentId.trim().length() == 0) {
+			contentId = null;
 		}
 		return contentId;
 	}
