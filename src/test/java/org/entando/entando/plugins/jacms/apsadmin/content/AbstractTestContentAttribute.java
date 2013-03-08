@@ -67,21 +67,21 @@ public abstract class AbstractTestContentAttribute extends AbstractBaseTestConte
 	}
 	
 	protected void checkFieldErrors(int singleFieldErrors, String formFieldName) {
-		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
-		//System.out.println(fieldErrors);
+		Map<String, List<String>> fieldsErrors = this.getAction().getFieldErrors();
+		//System.out.println(fieldsErrors);
 		if (0 == singleFieldErrors) {
-			assertEquals(1, fieldErrors.size());
+			assertEquals(1, fieldsErrors.size());
 		} else {
-			assertEquals(2, fieldErrors.size());
+			assertEquals(2, fieldsErrors.size());
 		}
-		assertTrue(fieldErrors.containsKey("MARKER"));
-		List<String> titleFieldErrors = fieldErrors.get(formFieldName);
+		assertTrue(fieldsErrors.containsKey("MARKER"));
+		List<String> fieldErrors = fieldsErrors.get(formFieldName);
 		if (0 == singleFieldErrors) {
-			assertNull(titleFieldErrors);
+			assertNull(fieldErrors);
 		} else {
-			assertNotNull(titleFieldErrors);
+			assertNotNull(fieldErrors);
 			//System.out.println(titleFieldErrors);
-			assertEquals(singleFieldErrors, titleFieldErrors.size());
+			assertEquals(singleFieldErrors, fieldErrors.size());
 		}
 	}
 	

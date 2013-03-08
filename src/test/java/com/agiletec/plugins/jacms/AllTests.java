@@ -81,6 +81,7 @@ import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAtt
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateDateAttribute;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateMonotextAttribute;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateNumberAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateResourceAttribute;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
 
 public class AllTests {
@@ -143,6 +144,7 @@ public class AllTests {
 		suite.addTestSuite(TestValidateDateAttribute.class);
 		suite.addTestSuite(TestValidateMonotextAttribute.class);
 		suite.addTestSuite(TestValidateNumberAttribute.class);
+		suite.addTestSuite(TestValidateResourceAttribute.class);
 		suite.addTestSuite(TestValidateTextAttribute.class);
 		suite.addTestSuite(TestContentAdminAction.class);
 		suite.addTestSuite(TestContentFinderAction.class);
