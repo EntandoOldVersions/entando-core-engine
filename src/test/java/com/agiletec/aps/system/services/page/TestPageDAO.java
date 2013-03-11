@@ -160,8 +160,7 @@ public class TestPageDAO extends BaseTestCase {
 	private Page createPageForTest() {
 		Page page = new Page();
 		page.setCode("temp");
-		Page parentPage = new Page();
-		parentPage.setCode("service");
+		IPage parentPage = this._pageManager.getPage("service");
 		page.setParent(parentPage);
 		page.setParentCode("service");
 		PageModel pageModel = new PageModel();
@@ -189,8 +188,9 @@ public class TestPageDAO extends BaseTestCase {
 	private void init() throws Exception {
     	try {
     		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-    		_pageDao = new PageDAO();
-    		_pageDao.setDataSource(dataSource);
+    		this._pageDao = new PageDAO();
+    		this._pageDao.setDataSource(dataSource);
+			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
     		IPageModelManager pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
     		IShowletTypeManager showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
     		this._pageDao.setPageModelManager(pageModelManager);
@@ -201,5 +201,6 @@ public class TestPageDAO extends BaseTestCase {
 	}
     
     private PageDAO _pageDao;
+	private IPageManager _pageManager;
 	
 }
