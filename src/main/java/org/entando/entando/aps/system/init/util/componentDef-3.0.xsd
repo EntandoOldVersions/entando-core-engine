@@ -21,7 +21,7 @@
   <xs:element name="installation">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="tableMapping"/>
+        <xs:element ref="tableMapping" minOccurs="0" maxOccurs="1"  />
         <xs:element maxOccurs="unbounded" ref="environment"/>
       </xs:sequence>
     </xs:complexType>
