@@ -64,38 +64,49 @@ public class TestPageDAO extends BaseTestCase {
 	}
     
 	public void testAddUpdateDeletePage() throws Throwable {
-		Page newPageForTest = this.createPageForTest();
+		Page newPageForTest = this.createPageForTest("temp");
+		IPage extractedPage = null;
 		try {
-        	_pageDao.deletePage(newPageForTest);
-        	_pageDao.addPage(newPageForTest);
-        	List<IPage> pages = _pageDao.loadPages();
-		    String value = null;
-		    boolean contains = false;
+			List<IPage> pages = this._pageDao.loadPages();
 		    for (int i=0; i<pages.size(); i++) {
     			IPage page = pages.get(i);
-				value = page.getCode();
-				if (value.equals("temp")) {
-					assertEquals(page.getCode(), "temp");
-					assertEquals(page.getGroup(), "free");
-					assertEquals(page.getTitle("it"), "pagina temporanea");
-					assertEquals(page.getModel().getCode(), "service");
-					assertTrue(page.isShowable());
-					Showlet[] showlets = page.getShowlets();
-					contains = showlets[0].getConfig().contains("temp");
-					assertEquals(contains, true);
-					assertEquals(showlets[0].getPublishedContent(), "ART1");
-					assertEquals(showlets[0].getType().getCode(), "content_viewer");
+				if (page.getCode().equals("temp")) {
+					extractedPage = page;
+					break;
 				}
 			}
-			this.updatePage(newPageForTest, _pageDao);
+			assertNull(extractedPage);
+        	this._pageDao.addPage(newPageForTest);
+        	pages = this._pageDao.loadPages();
+		    for (int i=0; i<pages.size(); i++) {
+    			IPage page = pages.get(i);
+				if (page.getCode().equals("temp")) {
+					extractedPage = page;
+					break;
+				}
+			}
+			assertNotNull(extractedPage);
+			assertEquals(extractedPage.getCode(), "temp");
+			assertEquals(extractedPage.getGroup(), "free");
+			assertEquals(extractedPage.getTitle("it"), "pagina temporanea");
+			assertEquals(extractedPage.getModel().getCode(), "service");
+			assertTrue(extractedPage.isShowable());
+			Showlet[] showlets = extractedPage.getShowlets();
+			boolean contains = showlets[0].getConfig().contains("temp");
+			assertEquals(contains, true);
+			assertEquals(showlets[0].getPublishedContent(), "ART1");
+			assertEquals(showlets[0].getType().getCode(), "content_viewer");
+			this.updatePage(extractedPage, this._pageDao);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this.deletePage(newPageForTest, _pageDao);
+			Page pageToDelete = (null != extractedPage) ? (Page) extractedPage : newPageForTest;
+			this.deletePage(pageToDelete, _pageDao);
 		}
 	}
 	
-	private void updatePage(Page pageToUpdate, PageDAO pageDAO) throws Throwable {
+	private void updatePage(IPage ipageToUpdate, PageDAO pageDAO) throws Throwable {
+		Page pageToUpdate = (Page) ipageToUpdate;
 		pageToUpdate.setTitle("it", "pagina temporanea1");
 		pageToUpdate.setShowable(false);
 		Showlet showlet = new Showlet();
@@ -111,22 +122,23 @@ public class TestPageDAO extends BaseTestCase {
 		try {
 			pageDAO.updatePage(pageToUpdate);
 			List<IPage> pages = pageDAO.loadPages();
-	        String value = null;
+	        IPage extractedPage = null;
 	        for (int i=0; i<pages.size(); i++) {
     			IPage page = pages.get(i);
-				value = page.getCode();
-				if (value.equals("temp")) {
-					assertEquals(page.getCode(), "temp");
-					assertEquals(page.getGroup(), "free");
-					assertEquals(page.getTitle("it"), "pagina temporanea1");
-					assertEquals(page.getModel().getCode(), "service");
-					assertFalse(page.isShowable());
-					Showlet[] showlets = page.getShowlets();
-					assertTrue(showlets[0].getConfig().contains("temp1"));
-					assertEquals(showlets[0].getPublishedContent(), "ART11");
-					assertEquals(showlets[0].getType().getCode(), "content_viewer");
+				if (page.getCode().equals("temp")) {
+					extractedPage = page;
 				}
 			}
+			assertNotNull(extractedPage);
+			assertEquals(extractedPage.getCode(), "temp");
+			assertEquals(extractedPage.getGroup(), "free");
+			assertEquals(extractedPage.getTitle("it"), "pagina temporanea1");
+			assertEquals(extractedPage.getModel().getCode(), "service");
+			assertFalse(extractedPage.isShowable());
+			Showlet[] showlets = extractedPage.getShowlets();
+			assertTrue(showlets[0].getConfig().contains("temp1"));
+			assertEquals(showlets[0].getPublishedContent(), "ART11");
+			assertEquals(showlets[0].getType().getCode(), "content_viewer");
         } catch (Throwable t) {
             throw t;
         }
@@ -157,9 +169,9 @@ public class TestPageDAO extends BaseTestCase {
 		assertEquals(contains, false);        
 	}
 	
-	private Page createPageForTest() {
+	private Page createPageForTest(String code) {
 		Page page = new Page();
-		page.setCode("temp");
+		page.setCode(code);
 		IPage parentPage = this._pageManager.getPage("service");
 		page.setParent(parentPage);
 		page.setParentCode("service");

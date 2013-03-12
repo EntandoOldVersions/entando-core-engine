@@ -78,9 +78,9 @@ public class TestLocaleStringAction extends ApsAdminBaseTestCase {
 			result = this.executeSaveNew("admin", newKey, "", "");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
-			assertEquals(2, fieldErrors.size());
+			assertEquals(1, fieldErrors.size());
 			assertNotNull(fieldErrors.get("it"));
-			assertNotNull(fieldErrors.get("en"));
+			assertNull(fieldErrors.get("en"));
 		} catch (Throwable t) {
 			this._i18nManager.deleteLabelGroup(newKey);
 			throw t;
@@ -127,19 +127,20 @@ public class TestLocaleStringAction extends ApsAdminBaseTestCase {
 		String updatedKey = "PAGE";
 		
 		// Label Inglese non valorizzata
-		String result = this.executeSaveEdit("admin", updatedKey, "updatedKeyIt", "");
+		String result = this.executeSaveEdit("admin", updatedKey, "", "updatedKeyEn");
 		assertEquals(Action.INPUT, result);
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 		assertEquals(1, fieldErrors.size());
-		assertNotNull(fieldErrors.get("en"));
+		assertNotNull(fieldErrors.get("it"));
+		assertNull(fieldErrors.get("en"));
 		
 		// Label Italiano e Inglese non valorizzate
 		result = this.executeSaveEdit("admin", updatedKey, "", "");
 		assertEquals(Action.INPUT, result);
 		fieldErrors = this.getAction().getFieldErrors();
-		assertEquals(2, fieldErrors.size());
+		assertEquals(1, fieldErrors.size());
 		assertNotNull(fieldErrors.get("it"));
-		assertNotNull(fieldErrors.get("en"));
+		assertNull(fieldErrors.get("en"));
 	}
 	
 	public void testSaveEdit() throws Throwable {
