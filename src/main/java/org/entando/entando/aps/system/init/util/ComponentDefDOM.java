@@ -23,7 +23,16 @@ import org.jdom.input.SAXBuilder;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import javax.xml.XMLConstants;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 import org.entando.entando.aps.system.init.model.Component;
 import org.jdom.Element;
 
@@ -33,12 +42,12 @@ import org.jdom.Element;
 public class ComponentDefDOM {
     
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
-        //this.validate(xmlText, definitionPath);
+        this.validate(xmlText, configPath);
         ApsSystemUtils.getLogger().info("Loading Component from file : " + configPath);
         this.decodeDOM(xmlText);
     }
-    /*
-    private void validate(String xmlText, String definitionPath) throws ApsSystemException {
+    
+    private void validate(String xmlText, String configPath) throws ApsSystemException {
         SchemaFactory factory =
                 SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         InputStream schemaIs = null;
@@ -51,9 +60,9 @@ public class ComponentDefDOM {
             xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
             Source source = new StreamSource(xmlIs);
             validator.validate(source);
-            ApsSystemUtils.getLogger().info("Valid Component definition : " + definitionPath);
+            ApsSystemUtils.getLogger().info("Valid Component definition : " + configPath);
         } catch (Throwable t) {
-            String message = "Error validating Component definition : " + definitionPath;
+            String message = "Error validating Component definition : " + configPath;
             ApsSystemUtils.logThrowable(t, this, "this", message);
             throw new ApsSystemException(message, t);
         } finally {
@@ -69,7 +78,7 @@ public class ComponentDefDOM {
             }
         }
     }
-    */
+    
     protected Component getComponent(Map<String, String> postProcessClasses) {
         Component component = null;
         try {
