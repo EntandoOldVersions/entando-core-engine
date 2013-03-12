@@ -109,8 +109,11 @@ public class LocaleStringAction extends BaseAction implements ILocaleStringActio
 			if (null != label && label.trim().length()>0) {
 				this.addLabel(code, label);
 			} else {
-				String[] args = {lang.getDescr()};
-				this.addFieldError(code, this.getText("error.label.valueMandatory", args));
+				this.getLabels().remove(code);
+				if (lang.isDefault()) {
+					String[] args = {lang.getDescr()};
+					this.addFieldError(code, this.getText("error.label.valueMandatory", args));
+				}
 			}
 		}
 	}
