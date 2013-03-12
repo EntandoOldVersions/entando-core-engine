@@ -3,14 +3,21 @@
   <xs:element name="component">
     <xs:complexType>
       <xs:sequence>
-        <xs:element ref="code"/>
-        <xs:element ref="description"/>
-        <xs:element ref="installation"/>
+        <xs:element ref="code" />
+        <xs:element ref="description" />
+        <xs:element ref="dependencies" minOccurs="0" maxOccurs="1" />
+        <xs:element ref="installation" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="code" type="xs:NCName"/>
   <xs:element name="description" type="xs:string"/>
+  <xs:element name="dependencies">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="code"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="installation">
     <xs:complexType>
       <xs:sequence>
@@ -52,7 +59,7 @@
   <xs:element name="selfRestCall">
     <xs:complexType>
       <xs:sequence>
-        <xs:element minOccurs="0" ref="query"/>
+        <xs:element minOccurs="0" maxOccurs="1" ref="query"/>
         <xs:element ref="contentBody"/>
       </xs:sequence>
       <xs:attribute name="expected" use="required" type="xs:integer"/>
@@ -82,6 +89,7 @@
       <xs:attribute name="path" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
+  <xs:element name="code" type="xs:NCName"/>
   <xs:element name="datasource">
     <xs:complexType mixed="true">
       <xs:sequence>
