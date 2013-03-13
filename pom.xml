@@ -213,7 +213,7 @@
 				<artifactId>maven-taglib-plugin</artifactId> 
 				<version>2.4</version> 
 				<configuration> 
-					<tldDocDir>target/site/tlddocs</tldDocDir>
+					<tldDocDir>${project.build.directory}/site/tlddocs</tldDocDir>
 					<srcDir>src/main/tld/</srcDir>
 					<title>Core Engine tag library documentation</title>
 				</configuration>
