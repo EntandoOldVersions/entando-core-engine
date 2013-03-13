@@ -20,6 +20,7 @@ package org.entando.entando.aps.system.init;
 import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.util.Collections;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,9 @@ public class ComponentManager implements IComponentManager {
         try {
 			ComponentLoader loader = 
 					new ComponentLoader(this.getLocationPatterns(), this.getPostProcessClasses());
-			this.setComponents(loader.getComponents());
+			List<Component> components = loader.getComponents();
+			Collections.sort(components);
+			this.setComponents(components);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadComponents", "Error loading components definitions");
             throw new ApsSystemException("Error loading components definitions", t);
