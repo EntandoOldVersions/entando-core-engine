@@ -6,7 +6,7 @@
         <xs:element ref="code" />
         <xs:element ref="description" />
         <xs:element ref="dependencies" minOccurs="0" maxOccurs="1" />
-        <xs:element ref="installation" />
+        <xs:element ref="installation" minOccurs="0" maxOccurs="1" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
@@ -67,6 +67,7 @@
       <xs:attribute name="method" use="required" type="xs:NCName"/>
       <xs:attribute name="namespace" use="required" type="xs:NCName"/>
       <xs:attribute name="printresponse" type="xs:boolean"/>
+      <xs:attribute name="failonerror" type="xs:boolean"/>
       <xs:attribute name="resourceName" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
