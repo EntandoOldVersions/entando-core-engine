@@ -1,20 +1,19 @@
 /*
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.plugins.jacms.aps.system.services.api.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -41,9 +40,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "resource")
 @XmlType(propOrder = {"id", "typeCode", "description", "mainGroup", "fileName", "categories", "base64"})
 public class JAXBResource {
-	
+
 	public JAXBResource() {}
-	
+
 	public JAXBResource(ResourceInterface resource) throws ApsSystemException {
 		try {
 			this.setDescription(resource.getDescr());
@@ -72,7 +71,7 @@ public class JAXBResource {
 			throw new ApsSystemException("Error creating jaxb resource", t);
 		}
 	}
-	
+
 	private byte[] fileToByteArray(File file) throws Throwable {
 		FileInputStream fis = new FileInputStream(file);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -87,7 +86,7 @@ public class JAXBResource {
 		}
 		return bos.toByteArray();
 	}
-	
+
 	public BaseResourceDataBean createBataBean(ICategoryManager categoryManager) throws Throwable {
 		BaseResourceDataBean bean = new BaseResourceDataBean();
 		if (null != this.getCategories()) {
@@ -115,7 +114,7 @@ public class JAXBResource {
 		}
 		return bean;
 	}
-	
+
 	private File byteArrayToFile() throws Throwable {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File file = new File(tempDir + File.separator + this.getFileName());
@@ -135,7 +134,7 @@ public class JAXBResource {
 		}
 		return file;
 	}
-	
+
 	@XmlElement(name = "id", required = true)
 	public String getId() {
 		return _id;
@@ -143,7 +142,7 @@ public class JAXBResource {
 	public void setId(String id) {
 		this._id = id;
 	}
-	
+
 	@XmlElement(name = "typeCode", required = true)
 	public String getTypeCode() {
 		return _typeCode;
@@ -151,7 +150,7 @@ public class JAXBResource {
 	public void setTypeCode(String typeCode) {
 		this._typeCode = typeCode;
 	}
-	
+
 	@XmlElement(name = "description", required = true)
 	public String getDescription() {
 		return _description;
@@ -159,7 +158,7 @@ public class JAXBResource {
 	public void setDescription(String description) {
 		this._description = description;
 	}
-	
+
 	@XmlElement(name = "mainGroup", required = true)
 	public String getMainGroup() {
 		return _mainGroup;
@@ -167,7 +166,7 @@ public class JAXBResource {
 	public void setMainGroup(String mainGroup) {
 		this._mainGroup = mainGroup;
 	}
-	
+
 	@XmlElement(name = "fileName", required = true)
 	public String getFileName() {
 		return _fileName;
@@ -175,7 +174,7 @@ public class JAXBResource {
 	public void setFileName(String fileName) {
 		this._fileName = fileName;
 	}
-	
+
 	@XmlElement(name = "category", required = true)
     @XmlElementWrapper(name = "categories")
 	public List<String> getCategories() {
@@ -184,7 +183,7 @@ public class JAXBResource {
 	public void setCategories(List<String> categories) {
 		this._categories = categories;
 	}
-	
+
 	@XmlElement(name = "base64", required = true)
 	public byte[] getBase64() {
 		return _base64;
@@ -192,7 +191,7 @@ public class JAXBResource {
 	public void setBase64(byte[] base64) {
 		this._base64 = base64;
 	}
-	
+
 	private String _id;
 	private String _typeCode;
 	private String _description;
@@ -200,5 +199,5 @@ public class JAXBResource {
 	private String _fileName;
 	private List<String> _categories;
 	private byte[] _base64;
-	
+
 }

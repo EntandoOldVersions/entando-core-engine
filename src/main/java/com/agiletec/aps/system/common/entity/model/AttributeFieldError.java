@@ -1,7 +1,19 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package com.agiletec.aps.system.common.entity.model;
 
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -11,13 +23,13 @@ import java.io.Serializable;
  * @author E.Santoboni
  */
 public class AttributeFieldError extends FieldError implements Serializable {
-    
+
     public AttributeFieldError(AttributeInterface attribute, String errorCode, AttributeTracer tracer) {
         super(null, errorCode);
         this.setTracer(tracer);
         this.setAttribute(attribute);
     }
-    
+
     public String getFieldCode() {
         String fieldCode = super.getFieldCode();
         if (null == fieldCode) {
@@ -25,7 +37,7 @@ public class AttributeFieldError extends FieldError implements Serializable {
         }
         return fieldCode;
     }
-    
+
     public String getFullMessage() {
         StringBuffer buffer = new StringBuffer(this.getAttributePositionMessage());
         buffer.append(" : ");
@@ -38,28 +50,28 @@ public class AttributeFieldError extends FieldError implements Serializable {
         }
         return buffer.toString();
     }
-    
+
     public String getAttributePositionMessage() {
         return this.getTracer().getPositionMessage(this.getAttribute());
     }
-    
+
     public AttributeTracer getTracer() {
         return _tracer;
     }
     protected void setTracer(AttributeTracer tracer) {
         this._tracer = tracer;
     }
-    
+
     public AttributeInterface getAttribute() {
         return _attribute;
     }
     protected void setAttribute(AttributeInterface attribute) {
         this._attribute = attribute;
     }
-    
+
     private AttributeTracer _tracer;
     private AttributeInterface _attribute;
-    
+
     public static final String OGNL_VALIDATION = "OGNL_VALIDATION";
-    
+
 }

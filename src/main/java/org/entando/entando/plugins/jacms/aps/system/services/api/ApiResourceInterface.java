@@ -1,20 +1,19 @@
 /*
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
 import java.util.ArrayList;
@@ -56,17 +55,17 @@ import javax.ws.rs.core.Response;
  * @author E.Santoboni
  */
 public class ApiResourceInterface {
-	
+
 	public List<String> getImages(Properties properties) throws Throwable {
 		properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_IMAGE_CODE);
         return this.getResources(properties);
     }
-	
+
 	public List<String> getAttachments(Properties properties) throws Throwable {
 		properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.getResources(properties);
     }
-	
+
 	public List<String> getResources(Properties properties) throws Throwable {
 		List<String> resources = null;
 		try {
@@ -79,7 +78,7 @@ public class ApiResourceInterface {
                 user = this.getUserManager().getGuestUser();
             }
 			List<String> groupsCodes = this.getAllowedGroupCodes(user);
-            resources = this.getResourceManager().searchResourcesId(resourceTypeCode, 
+            resources = this.getResourceManager().searchResourcesId(resourceTypeCode,
 					description, filename, category, groupsCodes);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getResources");
@@ -87,7 +86,7 @@ public class ApiResourceInterface {
         }
         return resources;
     }
-	
+
 	private List<String> getAllowedGroupCodes(UserDetails user) {
 		List<Group> groups = new ArrayList<Group>();
 		List<Group> groupsOfUser = this.getAuthorizationManager().getUserGroups(user);
@@ -108,17 +107,17 @@ public class ApiResourceInterface {
 		}
     	return codes;
     }
-	
+
 	public JAXBResource getImage(Properties properties) throws Throwable {
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_IMAGE_CODE);
         return this.getResource(properties);
     }
-	
+
 	public JAXBResource getAttachment(Properties properties) throws Throwable {
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.getResource(properties);
     }
-	
+
 	public JAXBResource getResource(Properties properties) throws Throwable {
 		JAXBResource jaxbResource = null;
         String id = properties.getProperty("id");
@@ -126,7 +125,7 @@ public class ApiResourceInterface {
         try {
 			ResourceInterface resource = this.getResourceManager().loadResource(id);
 			if (null == resource || !resource.getType().equalsIgnoreCase(resourceTypeCode)) {
-				throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, 
+				throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
 						"Null resource by id '" + id + "'", Response.Status.CONFLICT);
 			}
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
@@ -135,7 +134,7 @@ public class ApiResourceInterface {
             }
 			String groupName = resource.getMainGroup();
             if (!Group.FREE_GROUP_NAME.equals(groupName) && !this.getAuthorizationManager().isAuthOnGroup(user, groupName)) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
 						"Required resource '" + id + "' does not allowed", Response.Status.FORBIDDEN);
             }
 			jaxbResource = new JAXBResource(resource);
@@ -147,19 +146,19 @@ public class ApiResourceInterface {
         }
         return jaxbResource;
     }
-	
+
 	public StringApiResponse addImage(JAXBResource jaxbResource, Properties properties) throws Throwable {
 		this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_IMAGE_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_IMAGE_CODE);
         return this.addResource(jaxbResource, properties);
     }
-	
+
 	public StringApiResponse addAttachment(JAXBResource jaxbResource, Properties properties) throws Throwable {
 		this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.addResource(jaxbResource, properties);
     }
-	
+
 	public StringApiResponse addResource(JAXBResource jaxbResource, Properties properties) throws ApiException, Throwable {
         StringApiResponse response = new StringApiResponse();
 		BaseResourceDataBean bean = null;
@@ -175,7 +174,7 @@ public class ApiResourceInterface {
 				Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
 				Matcher matcher = pattern.matcher(id);
 				if (!matcher.matches()) {
-					throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, 
+					throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR,
 						"The resourceId can contain only alphabetic characters", Response.Status.CONFLICT);
 				}
 			}
@@ -193,26 +192,26 @@ public class ApiResourceInterface {
 		}
 		return response;
     }
-	
+
 	public StringApiResponse updateImage(JAXBResource jaxbResource, Properties properties) throws Throwable {
         this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_IMAGE_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_IMAGE_CODE);
 		return this.updateResource(jaxbResource, properties);
     }
-	
+
 	public StringApiResponse updateAttachment(JAXBResource jaxbResource, Properties properties) throws Throwable {
 		this.checkType(jaxbResource, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         properties.setProperty(RESOURCE_TYPE_CODE_PARAM, JacmsSystemConstants.RESOURE_ATTACH_CODE);
         return this.updateResource(jaxbResource, properties);
     }
-	
+
 	private void checkType(JAXBResource jaxbResource, String expectedTypeCode) throws Throwable {
 		if (!jaxbResource.getTypeCode().equals(expectedTypeCode)) {
-			throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+			throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
 					"Invalid resource type - '" + jaxbResource.getTypeCode() + "'", Response.Status.CONFLICT);
 		}
 	}
-	
+
 	public StringApiResponse updateResource(JAXBResource jaxbResource, Properties properties) throws Throwable {
         StringApiResponse response = new StringApiResponse();
 		BaseResourceDataBean bean = null;
@@ -235,8 +234,8 @@ public class ApiResourceInterface {
 		}
 		return response;
     }
-	
-	private void check(JAXBResource jaxbResource, UserDetails user, 
+
+	private void check(JAXBResource jaxbResource, UserDetails user,
 			StringApiResponse response, boolean add) throws Throwable {
 		ResourceInterface resourcePrototype = this.getResourceManager().createResourceType(jaxbResource.getTypeCode());
 		if (null == resourcePrototype) {
@@ -276,12 +275,12 @@ public class ApiResourceInterface {
 		if (null == jaxbResource.getDescription() || jaxbResource.getDescription().trim().length() == 0) {
 			this.addValidationError("Description required", response);
 		}
-		
+
 		if (null == jaxbResource.getTypeCode() || jaxbResource.getTypeCode().trim().length() == 0) {
 			this.addValidationError("TypeCode required", response);
 		}
 	}
-	
+
 	private boolean isDuplicateFile(JAXBResource jaxbResource, ResourceInterface resourcePrototype, boolean add) {
 		if (null == jaxbResource.getBase64()) return false;
 		boolean addError = true;
@@ -305,12 +304,12 @@ public class ApiResourceInterface {
 		}
 		return addError;
 	}
-	
+
 	private void addValidationError(String message, StringApiResponse response) {
 		ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, message, Response.Status.FORBIDDEN);
 		response.addError(error);
 	}
-	
+
 	/**
 	 * Delete an Image Resource. The method can be called by Entando API Engine.
 	 * @param properties The properties of the DELETE method call.
@@ -319,7 +318,7 @@ public class ApiResourceInterface {
 	public StringApiResponse deleteImage(Properties properties) throws Throwable {
 		return this.deleteResource(properties, JacmsSystemConstants.RESOURE_IMAGE_CODE);
 	}
-	
+
 	/**
 	 * Delete an Attach Resource. The method can be called by Entando API Engine.
 	 * @param properties The properties of the DELETE method call.
@@ -328,14 +327,14 @@ public class ApiResourceInterface {
 	public StringApiResponse deleteAttachment(Properties properties) throws Throwable {
 		return this.deleteResource(properties, JacmsSystemConstants.RESOURE_ATTACH_CODE);
 	}
-	
+
 	private StringApiResponse deleteResource(Properties properties, String expectedTypeCode) throws ApiException, Throwable {
 		StringApiResponse response = null;
 		try {
             String id = properties.getProperty("id");
             ResourceInterface resource = this.getResourceManager().loadResource(id);
             if (null != resource && !resource.getType().equals(expectedTypeCode)) {
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
 						"Invalid resource type - '" + resource.getType() + "'", Response.Status.CONFLICT);
 			}
 			properties.setProperty(RESOURCE_TYPE_CODE_PARAM, expectedTypeCode);
@@ -348,7 +347,7 @@ public class ApiResourceInterface {
         }
 		return response;
 	}
-	
+
 	/**
 	 * Delete a Resource. The method can be called by Entando API Engine.
 	 * @param properties The properties of the DELETE method call.
@@ -366,13 +365,13 @@ public class ApiResourceInterface {
         }
         return response;
 	}
-	
+
 	private StringApiResponse deleteResource(Properties properties, ResourceInterface resource) throws ApiException, Throwable {
 		StringApiResponse response = new StringApiResponse();
         try {
 			String id = properties.getProperty("id");
 			if (null == resource) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
 						"Resource with code '" + id + "' does not exist", Response.Status.CONFLICT);
             }
 			UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
@@ -380,7 +379,7 @@ public class ApiResourceInterface {
                 user = this.getUserManager().getGuestUser();
             }
 			if (!this.getAuthorizationManager().isAuthOnGroup(user, resource.getMainGroup())) {
-                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
+                throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR,
                         "Resource not allowed for user '" + user.getUsername() + "' - resource group '" + resource.getMainGroup() + "'", Response.Status.FORBIDDEN);
             }
             List<String> references = ((ResourceUtilizer) this.getContentManager()).getResourceUtilizers(id);
@@ -391,7 +390,7 @@ public class ApiResourceInterface {
                     ContentRecordVO record = this.getContentManager().loadContentVO(reference);
                     if (null != record) {
                         found = true;
-                        response.addError(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, 
+                        response.addError(new ApiError(IApiErrorCodes.API_VALIDATION_ERROR,
                                 "Resource " + id + " referenced to content " + record.getId() + " - '" + record.getDescr() + "'", Response.Status.CONFLICT));
                     }
                 }
@@ -411,56 +410,56 @@ public class ApiResourceInterface {
         }
         return response;
 	}
-	
+
 	protected IResourceManager getResourceManager() {
 		return _resourceManager;
 	}
 	public void setResourceManager(IResourceManager resourceManager) {
 		this._resourceManager = resourceManager;
 	}
-	
+
 	protected IContentManager getContentManager() {
         return _contentManager;
     }
     public void setContentManager(IContentManager contentManager) {
         this._contentManager = contentManager;
     }
-	
+
     protected IUserManager getUserManager() {
         return _userManager;
     }
     public void setUserManager(IUserManager userManager) {
         this._userManager = userManager;
     }
-	
+
 	protected IGroupManager getGroupManager() {
 		return groupManager;
 	}
 	public void setGroupManager(IGroupManager groupManager) {
 		this.groupManager = groupManager;
 	}
-	
+
 	protected IAuthorizationManager getAuthorizationManager() {
 		return _authorizationManager;
 	}
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
-	
+
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
-	
+
 	private IResourceManager _resourceManager;
 	private IContentManager _contentManager;
 	private IUserManager _userManager;
 	private IGroupManager groupManager;
 	private IAuthorizationManager _authorizationManager;
 	private ICategoryManager _categoryManager;
-	
+
 	private static final String RESOURCE_TYPE_CODE_PARAM = "resourceTypeCode";
-	
+
 }

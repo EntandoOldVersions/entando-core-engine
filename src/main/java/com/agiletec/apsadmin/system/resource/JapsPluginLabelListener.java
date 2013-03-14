@@ -1,20 +1,19 @@
 /*
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * JAPS and its  source-code is  licensed under the  terms of the
- * GNU General Public License  as published by  the Free Software
- * Foundation (http://www.fsf.org/licensing/licenses/gpl.txt).
- * 
- * You may copy, adapt, and redistribute this file for commercial
- * or non-commercial use.
- * When copying,  adapting,  or redistributing  this document you
- * are required to provide proper attribution  to AgileTec, using
- * the following attribution line:
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package com.agiletec.apsadmin.system.resource;
 
 import java.io.InputStream;
@@ -35,12 +34,12 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
 /**
  * This listener is used to add the properties of the plugins menu to the default resource bundles.
  * Note: this listener distinguishes between plugins under development and standard ones, that is,
- * those plugins found in the WEB-INF/classes/ directory and those normally installed in the 
+ * those plugins found in the WEB-INF/classes/ directory and those normally installed in the
  * WEB-INF/lib/ in the form of JAR files.
  * Apart the 'plugins' contained in the package, we rely on the 'apsadmin' being present soon
  * after the plugin name in the URL to distinguish between jAPS plugins and the others eventually
  * contained in the system libraries.
- * 
+ *
  * @author M. Minnai
  */
 public class JapsPluginLabelListener implements ServletContextListener {
@@ -65,9 +64,9 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		}
 		ApsSystemUtils.getLogger().info("JapsPluginLabelListener summary: "+(classPlugins.size()+jaredPlugins.size())+" plugin detected ("+classPlugins.size()+" under development)");
 	}
-		
+
 	/**
-	 * Discover the directories holding plugins within the classpath 
+	 * Discover the directories holding plugins within the classpath
 	 * @param path the path where to start the search from
 	 * @param event the servlet context event
 	 */
@@ -84,7 +83,7 @@ public class JapsPluginLabelListener implements ServletContextListener {
 				Iterator<String> exclude = _plugin_exclusion_directories.iterator();
 				while (exclude.hasNext()) {
 					String currentDirectoryExcluded = exclude.next();
-					if (currentDirectory.contains(currentDirectoryExcluded) 
+					if (currentDirectory.contains(currentDirectoryExcluded)
 							&& !currentDirectory.contains(PLUGIN_DIRECTORY)) {
 						skip = true;
 						break;
@@ -102,7 +101,7 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		}
 		return plugins;
 	}
-	
+
 	private Set<String> discoverJars(String path, ServletContextEvent event) {
 		Set<String> plugins = new HashSet<String>();
 		Set<String> directory = event.getServletContext().getResourcePaths(path);
@@ -140,16 +139,16 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "discoverJarPlugin");
 		}
-		return plugins; 
+		return plugins;
 	}
-	
+
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// nothing to do
 	}
-	
+
 	/**
-	 * This contains all the directories to exclude from the recursive search when 
+	 * This contains all the directories to exclude from the recursive search when
 	 * PLUGIN_DIRECTORY does NOT exist in the URL or path
 	 */
 	private List<String> _plugin_exclusion_directories = Arrays.asList("/test/",
@@ -165,17 +164,17 @@ public class JapsPluginLabelListener implements ServletContextListener {
 	 * Path to the global properties file within the plugin package
 	 */
 	private final String PLUGIN_RESOURCE_NAME = "global-messages";
-	
+
 	/**
 	 * This is the directory where plugins are searched
 	 */
 	private final String PLUGIN_DIRECTORY = "plugins";
-	
+
 	/**
 	 * The URL of Tomcat classes
 	 */
 	private String TOMCAT_CLASSES = "/WEB-INF/classes/";
-	
+
 	/**
 	 * The URL of the Tomcat shared lib directory
 	 */

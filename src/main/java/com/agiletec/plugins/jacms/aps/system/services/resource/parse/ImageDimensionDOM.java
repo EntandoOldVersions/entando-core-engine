@@ -2,16 +2,15 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
-* JAPS and its  source-code is  licensed under the  terms of the
-* GNU General Public License  as published by  the Free Software
-* Foundation (http://www.fsf.org/licensing/licenses/gpl.txt).
-* 
-* You may copy, adapt, and redistribute this file for commercial
-* or non-commercial use.
-* When copying,  adapting,  or redistributing  this document you
-* are required to provide proper attribution  to AgileTec, using
-* the following attribution line:
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -32,23 +31,23 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 
 /**
- * Questa classe opera per caricare le diverse dimensioni di resize 
+ * Questa classe opera per caricare le diverse dimensioni di resize
  * delle immagini che compongono le risorse immagini.
  * Il risultato è una mappa delle previste dimensioni di resize.
  * @author E.Santoboni
  */
 public class ImageDimensionDOM {
-	
+
 	/**
 	 * Costruttore della classe.
 	 * @param xmlText La stringa xml da interpretare.
-	 * @throws ApsSystemException In caso di errore 
+	 * @throws ApsSystemException In caso di errore
 	 * nell'interpretazione dell'xml di configurazione.
 	 */
 	public ImageDimensionDOM(String xmlText) throws ApsSystemException {
 		this.decodeDOM(xmlText);
 	}
-	
+
 	/**
 	 * Restitusce la mappa delle dimensioni di resize previste.
 	 * @return La mappa delle dimensioni di resize previste.
@@ -82,7 +81,7 @@ public class ImageDimensionDOM {
 		}
 		return dimensions;
 	}
-	
+
 	private void decodeDOM(String xmlText) throws ApsSystemException {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);
@@ -94,7 +93,7 @@ public class ImageDimensionDOM {
 			throw new ApsSystemException("Errore nel parsing della configurazione Dimensioni di resize", t);
 		}
 	}
-	
+
 	private Document _doc;
 	private final String TAB_DIMENSION = "Dimension";
 	private final String TAB_ID = "id";

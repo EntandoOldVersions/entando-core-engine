@@ -1,20 +1,19 @@
 /*
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.aps.system.init;
 
 import org.entando.entando.aps.system.init.model.ComponentEnvironment;
@@ -155,7 +154,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error initializating master databases", t);
 		}
 	}
-	
+
 	private void initMasterDatabase(String databaseName, DataSource dataSource, DataSourceInstallationReport schemaReport) throws ApsSystemException {
 		try {
 			DatabaseType type = this.getDatabaseRestorer().getType(dataSource);
@@ -254,7 +253,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
-	
+
 	/*
 	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
 		Method method = dataSource.getClass().getDeclaredMethod(methodName);
@@ -389,7 +388,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
 		}
 	}
-	
+
 	private void restoreDefaultDump() throws ApsSystemException {
 		try {
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
@@ -453,7 +452,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
-	
+
 	protected void executeBackup() throws ApsSystemException {
 		try {
 			this.setStatus(DatabaseManager.STATUS_DUMPIMG_IN_PROGRESS);
@@ -597,7 +596,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			//TODO future improvement - delete 'lifeline' backup
 		}
 	}
-	
+
 	private boolean restoreBackup(String subFolderName) throws ApsSystemException {
 		try {
 			if (!this.checkBackupFolder(subFolderName)) {
@@ -637,11 +636,11 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 		return null;
 	}
-	
+
 	protected String getLocalBackupsFolder() {
 		return this.getDatabaseDumper().getLocalBackupsFolder();
 	}
-	
+
 	@Override
 	public Map<String, List<String>> getEntandoTableMapping() {
 		return _entandoTableMapping;
@@ -685,21 +684,21 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setComponentManager(IComponentManager componentManager) {
 		this._componentManager = componentManager;
 	}
-	
+
 	protected DatabaseDumper getDatabaseDumper() {
 		return _databaseDumper;
 	}
 	public void setDatabaseDumper(DatabaseDumper databaseDumper) {
 		this._databaseDumper = databaseDumper;
 	}
-	
+
 	protected DatabaseRestorer getDatabaseRestorer() {
 		return _databaseRestorer;
 	}
 	public void setDatabaseRestorer(DatabaseRestorer databaseRestorer) {
 		this._databaseRestorer = databaseRestorer;
 	}
-	
+
 	protected ServletContext getServletContext() {
 		return _servletContext;
 	}
@@ -707,7 +706,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public void setServletContext(ServletContext servletContext) {
 		this._servletContext = servletContext;
 	}
-	
+
 	private Map<String, List<String>> _entandoTableMapping;
 	private Map<String, Resource> _entandoDefaultSqlResources;
 	private Map<String, Resource> _testSqlResources;
@@ -716,10 +715,10 @@ public class DatabaseManager extends AbstractInitializerManager
 	private IComponentManager _componentManager;
 	public static final int STATUS_READY = 0;
 	public static final int STATUS_DUMPIMG_IN_PROGRESS = 1;
-	
+
 	private DatabaseDumper _databaseDumper;
 	private DatabaseRestorer _databaseRestorer;
-	
+
 	private ServletContext _servletContext;
 
 }

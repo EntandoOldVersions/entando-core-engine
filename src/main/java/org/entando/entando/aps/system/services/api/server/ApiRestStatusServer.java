@@ -1,20 +1,19 @@
 /*
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+*
+* See the file License for the specific language governing permissions
+* and limitations under the License
+*
+*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.aps.system.services.api.server;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -38,19 +37,19 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
  * @author E.Santoboni
  */
 public class ApiRestStatusServer {
-	
+
     @GET
     @Produces({"application/json", "application/xml"})
     @Path("/{resourceName}/{httpMethod}")
-    public Object getApiStatus(@PathParam("httpMethod") String httpMethodString, 
+    public Object getApiStatus(@PathParam("httpMethod") String httpMethodString,
             @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
         return this.getApiStatus(httpMethodString, null, resourceName, request);
     }
-    
+
     @GET
     @Produces({"application/json", "application/xml"})
     @Path("/{namespace}/{resourceName}/{httpMethod}")
-    public Object getApiStatus(@PathParam("httpMethod") String httpMethodString, 
+    public Object getApiStatus(@PathParam("httpMethod") String httpMethodString,
             @PathParam("namespace") String namespace, @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
         StringApiResponse response = new StringApiResponse();
         ApiMethod.HttpMethod httpMethod = Enum.valueOf(ApiMethod.HttpMethod.class, httpMethodString.toUpperCase());
@@ -72,8 +71,8 @@ public class ApiRestStatusServer {
         }
         return response;
     }
-    
-    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, 
+
+    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod,
 			String namespace, String resourceName, Throwable t) {
 		StringBuilder buffer = new StringBuilder();
 		buffer.append("Method '").append(httpMethod).
@@ -85,9 +84,9 @@ public class ApiRestStatusServer {
         response.setResult(IResponseBuilder.FAILURE, null);
         return response;
     }
-    
+
     public static enum ApiStatus {
         FREE, INACTIVE, AUTHENTICATION_REQUIRED, AUTHORIZATION_REQUIRED
     }
-    
+
 }
