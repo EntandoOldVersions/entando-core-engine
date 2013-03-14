@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet.util;
@@ -27,7 +27,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 /**
  * Provides utility methods for content filters.
  * @author E.Santoboni
- * @deprecated use {@link FilterUtils} methods
+ * @deprecated From Entando 2.0 version 2.4.1. Use {@link FilterUtils} methods
  */
 public class EntitySearchFilterDOM {
 	

@@ -1,52 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
-  <description><![CDATA["jACMS apsadmin core tag library"]]></description>
-  <display-name>"jACMS apsadmin core tag library"</display-name>
-  <tlib-version>2.2</tlib-version>
-  <short-name>jacmsapsadmin</short-name>
-  <uri>/jacms-apsadmin-core</uri>
-    
-	<!--  INFO TAG DEFINITION - START -->
-	
-	<tag>
-		<description>
-			<![CDATA[Returns a content type (or one of its property) through the code.
-			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
-			The names of the available property of "Content Type": "typeCode", "typeDescr", 
-			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes).]]>
-		</description>
-		<name>contentType</name>
-		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentTypeInfoTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description><![CDATA[The code of the entity type to return]]></description>
-			<name>typeCode</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Name used to reference the content type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value,]]></description>
-			<name>var</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The name of the property to return. It can be one of those indicated in the declaration of the tag.]]></description>
-			<name>property</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	
+<taglib
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.0"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+
+	<description><![CDATA[jACMS Apsadmin Core Tag Library]]></description>
+	<display-name>jACMS Apsadmin Core Tag Library</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>jacmsapsadmin</short-name>
+	<uri>/jacms-apsadmin-core</uri>
+
 	<tag>
 		<description>
 			<![CDATA[Returns a content (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
-			The names of the available property of "Content" (Entity Object): "id", "descr", "typeCode", "typeDescr", 
+			The names of the available property of "Content" (Entity Object): "id", "descr", "typeCode", "typeDescr",
 			"mainGroup" (code), "groups" (extra group codes), "categories" (list of categories),
-			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes), "status" (code), 
+			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes), "status" (code),
 			"viewPage" (page code), "listModel", "defaultModel", "version", "lastEditor" (username of last editor).
-			The names of the available property of "Content" (Record Object): "id", "typeCode", "descr", "status" (code), 
+			The names of the available property of "Content" (Record Object): "id", "typeCode", "descr", "status" (code),
 			"create" (Creation Date), "modify" (last modity date), "mainGroupCode", "version", "lastEditor" (username of last editor).
 			If the current user has the authorization for edit the content, the tag presents the body included.]]>
 		</description>
@@ -91,12 +64,60 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
+	<tag>
+		<description>
+			<![CDATA[This returns the content ready for the preview functionality.
+			This tags comes from the ContentTag class used in the front-end to render a content.]]>
+		</description>
+		<name>contentPreview</name>
+		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	<tag>
+		<description>
+			<![CDATA[This tag allows the preliminary execution of the showlet so to show the preview of the contents
+			within the content administration pages in the backend.
+			This tag class comes directly from the ExecShowletTag class used in the front-end to build the
+			pages of the portal.]]>
+		</description>
+		<name>contentPreviewExecShowlet</name>
+		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewExecShowletTag</tag-class>
+		<body-content>empty</body-content>
+	</tag>
+	<tag>
+		<description>
+			<![CDATA[Returns a content type (or one of its property) through the code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
+			The names of the available property of "Content Type": "typeCode", "typeDescr",
+			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes).]]>
+		</description>
+		<name>contentType</name>
+		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentTypeInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the entity type to return]]></description>
+			<name>typeCode</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the content type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value,]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of those indicated in the declaration of the tag.]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 	<tag>
 		<description>
 			<![CDATA[Returns a resource (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
-			The names of the available property of "Resource": "id", "descr", "type", 
+			The names of the available property of "Resource": "id", "descr", "type",
 			"mainGroup" (code), "folder", "categories" (list of categories), "allowedFileTypes".]]>
 		</description>
 		<name>resource</name>
@@ -121,29 +142,5 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	
-	<!--  INFO TAG DEFINITION - END -->
-    
-	<tag>
-		<description>
-			<![CDATA[This tag allows the preliminary execution of the showlet so to show the preview of the contents
-			within the content administration pages in the backend.
-			This tag class comes directly from the ExecShowletTag class used in the front-end to build the
-			pages of the portal.]]>
-		</description>
-		<name>contentPreviewExecShowlet</name>
-		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewExecShowletTag</tag-class>
-		<body-content>empty</body-content>
-	</tag>
-	
-	<tag>
-		<description>
-			<![CDATA[This returns the content ready for the preview functionality.
-			This tags comes from the ContentTag class used in the front-end to render a content.]]>
-		</description>
-		<name>contentPreview</name>
-		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewTag</tag-class>
-		<body-content>empty</body-content>
-	</tag>
-	
+
 </taglib>

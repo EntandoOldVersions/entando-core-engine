@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.role;
@@ -113,6 +113,7 @@ public class TestRoleManager extends BaseTestCase {
 	private void deleteRoleAndPermission() throws Throwable {
 		Role role = new Role();
 		role.setName("temp");
+		role.setDescription("temp description");
 		this._roleManager.updateRole(role);
 		this._roleManager.removeRole(role);
 		this._roleManager.removePermission("temp");

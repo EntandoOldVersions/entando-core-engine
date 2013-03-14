@@ -8,9 +8,9 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.0</version>
+	<version>3.2.0</version>
 	<name>Entando: Core Engine</name>
-	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
+	<description>Core engine of Entando: an agile, modern and user-centric open source portal-like platform.</description>
 	<url>http://www.entando.com/</url>
 	<licenses>
 		<license>
@@ -23,7 +23,8 @@
 		<connection>scm:git:git://github.com/entando/entando-core-engine.git</connection>
 		<developerConnection>scm:git:git@github.com:entando/entando-core-engine.git</developerConnection>
 		<url>https://github.com/entando/entando-core-engine</url>
-	</scm>	
+	  <tag>v3.2.0</tag>
+  </scm>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
@@ -40,23 +41,35 @@
 		<name>Entando S.r.l.</name>
 		<url>http://www.entando.com/</url>
 	</organization>
-<!--
-	<distributionManagement>
-		<snapshotRepository>
-			<id>entando-snapshots</id>
-			<url>dav:http://localhost/nexus/content/repositories/entando-snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>entando-releases</id>
-			<url>dav:http://localhost/nexus/content/repositories/entando-releases</url>
-		</repository>
-	</distributionManagement>
--->
 	<properties>
+		<!--
+		<test.database.driver>org.postgresql.Driver</test.database.driver>
 		<test.database.hostname>localhost</test.database.hostname>
 		<test.database.port>5432</test.database.port>
 		<test.database.username>agile</test.database.username>
 		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</test.database.port.url>
+		<test.database.serv.url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</test.database.serv.url>
+		-->
+		<!--
+		<test.database.driver>com.mysql.jdbc.Driver</test.database.driver>
+		<test.database.hostname>localhost</test.database.hostname>
+		<test.database.port>3306</test.database.port>
+		<test.database.username>root</test.database.username>
+		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestPort</test.database.port.url>
+		<test.database.serv.url>jdbc:mysql://${test.database.hostname}:${test.database.port}/EntandoCoreEnginetestServ</test.database.serv.url>
+		-->
+		<test.database.driver>org.apache.derby.jdbc.EmbeddedDriver</test.database.driver>
+		<test.database.hostname>localhost</test.database.hostname>
+		<test.database.port>1527</test.database.port>
+		<test.database.username>agile</test.database.username>
+		<test.database.password>agile</test.database.password>
+		<test.database.port.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testPort;create=true</test.database.port.url>
+		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
+
+		<spring.version>3.0.6.RELEASE</spring.version>
+		<struts2.version>2.3.4.1</struts2.version>
 	</properties>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -90,8 +103,18 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
+				<artifactId>maven-release-plugin</artifactId>
 				<version>2.3.2</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<pushChanges>false</pushChanges>
+					<localCheckout>true</localCheckout>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.4</version>
 				<configuration>
 					<target>1.6</target>
 					<source>1.6</source>
@@ -145,7 +168,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/test</outputDirectory>
+							<outputDirectory>${project.build.directory}/test</outputDirectory>
 							<encoding>UTF-8</encoding>
 							<resources>
 								<resource>
@@ -155,192 +178,21 @@
 							</resources>
 						</configuration>
 					</execution>
-					<execution>
-						<id>preprocess-db-resources</id>
-						<phase>process-test-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>target/test-package/db/export</outputDirectory>
-							<encoding>UTF-8</encoding>
-							<resources>
-								<resource>
-									<directory>src/test/db/export</directory>
-									<includes>
-										<include>*.sql</include>
-									</includes>
-									<filtering>false</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sql-maven-plugin</artifactId>
-				<version>1.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>postgresql</groupId>
-						<artifactId>postgresql</artifactId>
-						<version>9.1-901.jdbc4</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<driver>org.postgresql.Driver</driver>
-					<username>${test.database.username}</username>
-					<password>${test.database.password}</password>
-					<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/template1</url>
-					<skip>${skipTests}</skip>
-					<keepFormat>false</keepFormat>
-				</configuration>
-				<executions>
-					<execution>
-						<id>drop-db-before-test-if-any-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>drop database "${project.artifactId}testPort"</sqlCommand>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-					<execution>
-						<id>drop-db-before-test-if-any-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>drop database "${project.artifactId}testServ"</sqlCommand>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-db-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>create database "${project.artifactId}testPort"</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-db-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<autocommit>true</autocommit>
-							<sqlCommand>create database "${project.artifactId}testServ"</sqlCommand>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-schema-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</url>
-							<onError>continue</onError>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testPort_schema.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-schema-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</url>
-							<onError>continue</onError>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testServ_schema.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-data-port</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testPort</url>
-							<escapeProcessing>false</escapeProcessing>
-							<enableBlockMode>true</enableBlockMode>
-							<printResultSet>true</printResultSet>
-							<outputFile />
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testPort_data.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-					<execution>
-						<id>create-data-serv</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>jdbc:postgresql://${test.database.hostname}:${test.database.port}/${project.artifactId}testServ</url>
-							<escapeProcessing>false</escapeProcessing>
-							<enableBlockMode>true</enableBlockMode>
-							<printResultSet>true</printResultSet>
-							<outputFile />
-							<srcFiles>
-								<srcFile>${project.build.directory}/test-package/db/export/${project.artifactId}testServ_data.sql</srcFile>
-							</srcFiles>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.2.1</version><!--$NO-MVN-MAN-VER$ -->
-				<executions>
-					<execution>
-						<id>assembly-misc-files-test</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<ignoreMissingDescriptor>true</ignoreMissingDescriptor>
-							<descriptors>
-								<descriptor>src/test/assembly/misc-test.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.4.3</version>
+				<version>2.12</version>
 				<configuration>
-					<forkMode>pertest</forkMode>
 					<argLine>-Xms512m -Xmx1024m</argLine>
 					<testFailureIgnore>false</testFailureIgnore>
 					<excludes>
 						<exclude>**/*BaseTestCase*</exclude>
 					</excludes>
-					<!-- <includes> <include>**/AllTests.java</include> </includes -->
+					<includes>
+						<include>**/AllTests.java</include>
+					</includes>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -366,11 +218,21 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>			
+			</plugin>
+			<plugin> 
+				<groupId>net.sourceforge.maven-taglib</groupId> 
+				<artifactId>maven-taglib-plugin</artifactId> 
+				<version>2.4</version> 
+				<configuration> 
+					<tldDocDir>${project.build.directory}/site/tlddocs</tldDocDir>
+					<srcDir>src/main/tld/</srcDir>
+					<title>Core Engine tag library documentation</title>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<!--This plugin's configuration is used to store Eclipse m2e settings
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -553,56 +415,56 @@
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
-			<version>3.0.1</version>
+			<version>3.0.5</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-asm</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -623,21 +485,21 @@
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
-			<version>2.2.3.1</version>
+			<version>${struts2.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-spring-plugin</artifactId>
-			<version>2.2.3.1</version>
+			<version>${struts2.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-tiles-plugin</artifactId>
-			<version>2.2.3.1</version>
+			<version>${struts2.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -659,13 +521,6 @@
 			<groupId>org.apache.velocity</groupId>
 			<artifactId>velocity</artifactId>
 			<version>1.6.4</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.struts.xwork</groupId>
-			<artifactId>xwork-core</artifactId>
-			<version>2.2.3.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -722,84 +577,114 @@
 			<version>1.2.0</version>
 			<scope>compile</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.0.6.RELEASE</version>
+			<version>${spring.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901.jdbc4</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.18</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
+			<version>10.8.2.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derbyclient</artifactId>
+			<version>10.8.2.2</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
 			<version>2.2</version>
 			<scope>provided</scope>
 		</dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                    <version>2.5.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-rt-transports-http</artifactId>
-                    <version>2.5.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.ws.rs</groupId>
-                    <artifactId>jsr311-api</artifactId>
-                    <version>1.1.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-bundle</artifactId>
-                    <version>2.5.1</version>
-					<exclusions>
-						<exclusion>
-							<groupId>org.eclipse.jetty</groupId>
-							<artifactId>jetty-server</artifactId>
-						</exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-continuation</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-http</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-io</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-util</artifactId>
-                                                </exclusion>
-                                                <exclusion>
-                                                        <groupId>org.eclipse.jetty</groupId>
-                                                        <artifactId>jetty-security</artifactId>
-                                                </exclusion>
-					</exclusions>	
-                </dependency>
-                
-                <dependency>
-                        <groupId>net.oauth.core</groupId>
-                        <artifactId>oauth</artifactId>
-                        <version>20100527</version>
-                        <type>jar</type>
-                </dependency>
-                <dependency>
-                        <groupId>net.oauth.core</groupId>
-                        <artifactId>oauth-provider</artifactId>
-                        <version>20100527</version>
-                        <type>jar</type>
-                </dependency>
-                
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.ws.rs</groupId>
+			<artifactId>jsr311-api</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-bundle</artifactId>
+			<version>2.5.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-server</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-continuation</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-http</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-io</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-util</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.eclipse.jetty</groupId>
+					<artifactId>jetty-security</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth</artifactId>
+			<version>20100527</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>net.oauth.core</groupId>
+			<artifactId>oauth-provider</artifactId>
+			<version>20100527</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-core</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.j256.ormlite</groupId>
+			<artifactId>ormlite-jdbc</artifactId>
+			<version>4.40</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>

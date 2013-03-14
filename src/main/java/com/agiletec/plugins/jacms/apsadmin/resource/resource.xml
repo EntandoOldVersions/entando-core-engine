@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
-    "http://struts.apache.org/dtds/struts-2.1.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
 	
@@ -68,7 +68,8 @@
 		   		<param name="actionName">list</param>
 			    <param name="resourceTypeCode">${resourceTypeCode}</param>
 			</result>
-        	<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
+        	<!-- <interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref> --><!-- maximun Size = 10 Mb -->
+			<interceptor-ref name="apsFileUpload" />
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
         </action>
     	

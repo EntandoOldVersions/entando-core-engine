@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
@@ -31,19 +31,21 @@ import com.agiletec.aps.system.services.category.Category;
  */
 public class BaseResourceDataBean implements ResourceDataBean {
 	
-	@Override
-	public String getResourceId() {
-		return _resourceId;
-	}
-	public void setResourceId(String resourceId) {
-		this._resourceId = resourceId;
-	}
+	public BaseResourceDataBean() {}
 	
 	public BaseResourceDataBean(File file) {
 		if (null == file) {
 			throw new RuntimeException("Null File");
 		}
 		this.setFile(file);
+	}
+	
+	@Override
+	public String getResourceId() {
+		return _resourceId;
+	}
+	public void setResourceId(String resourceId) {
+		this._resourceId = resourceId;
 	}
 	
 	@Override

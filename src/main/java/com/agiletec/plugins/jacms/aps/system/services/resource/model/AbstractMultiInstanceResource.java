@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
@@ -27,6 +27,7 @@ import java.util.Map;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+import java.io.File;
 
 /**
  * Classe astratta di base per l'implementazione 
@@ -95,6 +96,8 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
 	 * @return Il nome corretto del file.
 	 */
 	public abstract String getInstanceFileName(String masterFileName, int size, String langCode);
+	
+	public abstract File getFile(int size, String langCode);
 	
 	/**
 	 * Restituisce un'istanza della risorsa.

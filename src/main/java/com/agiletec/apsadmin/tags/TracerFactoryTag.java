@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.apsadmin.tags;
@@ -27,7 +27,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
-import com.agiletec.apsadmin.system.entity.attribute.AttributeTracer;
+
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**

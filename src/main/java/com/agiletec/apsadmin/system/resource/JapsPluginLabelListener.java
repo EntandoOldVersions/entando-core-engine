@@ -1,20 +1,20 @@
 /*
- *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * JAPS and its  source-code is  licensed under the  terms of the
- * GNU General Public License  as published by  the Free Software
- * Foundation (http://www.fsf.org/licensing/licenses/gpl.txt).
- * 
- * You may copy, adapt, and redistribute this file for commercial
- * or non-commercial use.
- * When copying,  adapting,  or redistributing  this document you
- * are required to provide proper attribution  to AgileTec, using
- * the following attribution line:
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando software.
+* Entando is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package com.agiletec.apsadmin.system.resource;
 
 import java.io.InputStream;

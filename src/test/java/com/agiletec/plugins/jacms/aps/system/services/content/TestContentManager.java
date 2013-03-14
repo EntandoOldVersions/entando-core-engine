@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content;
@@ -90,7 +90,7 @@ public class TestContentManager extends BaseTestCase {
     	EntitySearchFilter[] filters4 = {versionFilter};
     	contentIds = this._contentManager.searchId(filters4);
 		assertNotNull(contentIds);
-    	assertEquals(23, contentIds.size());
+    	assertEquals(21, contentIds.size());
 	}
 	
 	/*
@@ -180,12 +180,12 @@ public class TestContentManager extends BaseTestCase {
 		List<String> contentIds = this._contentManager.searchId(filters);
 		assertNotNull(contentIds);
 		String[] expected = {"ART187", "ART1","EVN193","EVN194","ART180","RAH1",
-				"EVN191","EVN192","RAH101","EVN103","ART104","ART102","ART111","ART112","EVN23",
-				"EVN24","EVN25","EVN41","EVN20","EVN21","ART120","ART121","ART122"};
+				"EVN191","EVN192","RAH101","EVN103","ART104","ART102","EVN23",
+				"EVN24","EVN25","EVN41","EVN20","EVN21","ART111","ART120","ART121","ART122","ART112"};
     	assertEquals(expected.length, contentIds.size());
     	this.verifyOrder(contentIds, expected);
 	}
-
+	
 	public void testSearchWorkContents() throws Throwable {
     	List<String> contents = this._contentManager.loadWorkContentsId(null, null);
     	assertNotNull(contents);
@@ -291,14 +291,14 @@ public class TestContentManager extends BaseTestCase {
 		EntitySearchFilter[] filters = { creationOrder };
 		String[] categories_1 = { "general_cat2" };
 		List<String> contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
-		String[] order_a = {"EVN193", "ART179"};
+		String[] order_a = {"ART120", "ART112", "ART111", "EVN193", "ART179"};
 		assertEquals(order_a.length, contents.size());
 		this.verifyOrder(contents, order_a);
 		
 		String[] categories_2 = { "general_cat1", "general_cat2" };
 		contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
-		String[] order_b = {"ART179"};
-		assertEquals(1, contents.size());
+		String[] order_b = {"ART111", "ART179"};
+		assertEquals(order_b.length, contents.size());
 		assertEquals(order_b[0], contents.get(0));
 		
 		Content newContent = this._contentManager.loadContent("EVN193", false);
@@ -306,7 +306,7 @@ public class TestContentManager extends BaseTestCase {
 		try {
 			this._contentManager.saveContent(newContent);
 			contents = this._contentManager.loadWorkContentsId(categories_1, filters, groupCodes);
-			String[] order_c = {newContent.getId(), "EVN193", "ART179"};
+			String[] order_c = {newContent.getId(), "ART120", "ART112", "ART111", "EVN193", "ART179"};
 			assertEquals(order_c.length, contents.size());
 			this.verifyOrder(contents, order_c);
 			
@@ -314,7 +314,7 @@ public class TestContentManager extends BaseTestCase {
 			newContent.addCategory(categoryManager.getCategory("general_cat1"));
 			this._contentManager.saveContent(newContent);
 			contents = this._contentManager.loadWorkContentsId(categories_2, filters, groupCodes);
-			String[] order_d = {newContent.getId(), "ART179"};
+			String[] order_d = {newContent.getId(), "ART111", "ART179"};
 			assertEquals(order_d.length, contents.size());
 			this.verifyOrder(contents, order_d);
 		} catch (Throwable t) {
@@ -333,7 +333,7 @@ public class TestContentManager extends BaseTestCase {
     
     public void testLoadContent() throws Throwable {
     	Content content = this._contentManager.loadContent("ART111", false);
-    	assertEquals(Content.STATUS_DRAFT, content.getStatus());
+    	assertEquals(Content.STATUS_PUBLIC, content.getStatus());
     	assertEquals("coach", content.getMainGroup());
     	assertEquals(2, content.getGroups().size());
     	assertTrue(content.getGroups().contains("customers"));
@@ -353,7 +353,7 @@ public class TestContentManager extends BaseTestCase {
     	assertNull(link.getSymbolicLink());
     	
     	HypertextAttribute hypertext = (HypertextAttribute) attributes.get("CorpoTesto");
-    	assertEquals("<p>Corpo Testo Contenuto 3 Coach</p>", hypertext.getTextForLang("it"));
+		assertEquals("<p>Corpo Testo Contenuto 3 Coach</p>", hypertext.getTextForLang("it").trim());
     	assertNull(hypertext.getTextForLang("en"));
     	
     	ResourceAttributeInterface image = (ResourceAttributeInterface) attributes.get("Foto");
@@ -365,7 +365,7 @@ public class TestContentManager extends BaseTestCase {
     
     public void testGetContentTypes() {
     	Map<String, SmallContentType> smallContentTypes = _contentManager.getSmallContentTypesMap();
-    	assertEquals(3, smallContentTypes.size());
+    	assertEquals(4, smallContentTypes.size());
     }
     
     public void testCreateContent() {
@@ -937,46 +937,91 @@ public class TestContentManager extends BaseTestCase {
 		groups.add(Group.ADMINS_GROUP_NAME);
 		String[] categories1 = {"general_cat1"};
 		List<String> contents = this._contentManager.loadWorkContentsId(categories1, null, groups);
-		assertEquals(4, contents.size());
+		assertEquals(5, contents.size());
 		assertTrue(contents.contains("ART179"));
 		assertTrue(contents.contains("ART180"));
 		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
 		assertTrue(contents.contains("EVN192"));
 		
 		String[] categories2 = {"general_cat1", "general_cat2"};
 		
 		contents = this._contentManager.loadWorkContentsId(categories2, null, groups);
-		assertEquals(1, contents.size());
+		assertEquals(2, contents.size());
+		assertTrue(contents.contains("ART111"));
 		assertTrue(contents.contains("ART179"));
     }
 	
 	public void testLoadWorkContentsForCategory_2() throws ApsSystemException {
-		List<String> groups = new ArrayList<String>();
-		groups.add("customers");
-		String[] categories1 = {"general_cat1"};
-		List<String> contents = this._contentManager.loadWorkContentsId(categories1, null, groups);
-		assertEquals(1, contents.size());
-		assertTrue(contents.contains("ART102"));
-    }
-	
-	public void testLoadWorkContentsForCategory_3() throws ApsSystemException {
 		List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
 		String[] categories1 = {"general_cat1"};
 		EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "ART", false);
 		EntitySearchFilter[] filters = {filter1};
 		List<String> contents = this._contentManager.loadWorkContentsId(categories1, filters, groups);
-		assertEquals(3, contents.size());
-		assertTrue(contents.contains("ART179"));
-		assertTrue(contents.contains("ART180"));
+		assertEquals(4, contents.size());
 		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART180"));
+		assertTrue(contents.contains("ART179"));
 		
-		String[] categories2 = {"general_cat1", "general_cat2"};
+		String[] categories2 = {"general_cat2"};
 		contents = this._contentManager.loadWorkContentsId(categories2, filters, groups);
+		assertEquals(4, contents.size());
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART112"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART179"));
+		
+		String[] categories12 = {"general_cat1", "general_cat2"};
+		contents = this._contentManager.loadWorkContentsId(categories12, false, filters, groups);
+		assertEquals(2, contents.size());
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART179"));
+		contents = this._contentManager.loadWorkContentsId(categories12, true, filters, groups);
+		assertEquals(6, contents.size());
+		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART112"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART180"));
+		assertTrue(contents.contains("ART179"));
+		
+		String[] categories3 = {"general_cat3"};
+		contents = this._contentManager.loadWorkContentsId(categories3, filters, groups);
+		assertEquals(3, contents.size());
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART121"));
+		assertTrue(contents.contains("ART122"));
+		
+		String[] categories23 = {"general_cat2", "general_cat3"};
+		contents = this._contentManager.loadWorkContentsId(categories23, false, filters, groups);
 		assertEquals(1, contents.size());
+		assertTrue(contents.contains("ART120"));
+		contents = this._contentManager.loadWorkContentsId(categories23, true, filters, groups);
+		assertEquals(6, contents.size());
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART112"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART179"));
+		assertTrue(contents.contains("ART121"));
+		assertTrue(contents.contains("ART122"));
+		
+		String[] categories123 = {"general_cat1", "general_cat2", "general_cat3"};
+		contents = this._contentManager.loadWorkContentsId(categories123, false, filters, groups);
+		assertEquals(0, contents.size());
+		contents = this._contentManager.loadWorkContentsId(categories123, true, filters, groups);
+		assertEquals(8, contents.size());
+		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART112"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART121"));
+		assertTrue(contents.contains("ART122"));
+		assertTrue(contents.contains("ART180"));
 		assertTrue(contents.contains("ART179"));
     }
-    
+	
 	public void testLoadPublicContentsForCategory() throws ApsSystemException {
     	String[] categories1 = {"evento"};
 		List<String> contents = _contentManager.loadPublicContentsId(categories1, null, null);
@@ -990,7 +1035,7 @@ public class TestContentManager extends BaseTestCase {
 		assertTrue(contents.contains("ART180"));
     }
     
-    public void testLoadPublicEventsForCategory() throws ApsSystemException {
+    public void testLoadPublicEventsForCategory_1() throws ApsSystemException {
     	String[] categories = {"evento"};
 		List<String> contents = _contentManager.loadPublicContentsId("EVN", categories, null, null);
 		assertEquals(2, contents.size());
@@ -1004,6 +1049,60 @@ public class TestContentManager extends BaseTestCase {
 		contents = _contentManager.loadPublicContentsId("EVN", categories, filters, null);
 		assertEquals(1, contents.size());
 		assertTrue(contents.contains("EVN192"));
+    }
+	
+	public void testLoadPublicEventsForCategory_2() throws ApsSystemException {
+		List<String> groups = new ArrayList<String>();
+		groups.add(Group.ADMINS_GROUP_NAME);
+		String[] categories1 = {"general_cat1"};
+		EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "ART", false);
+		EntitySearchFilter[] filters = {filter1};
+		List<String> contents = this._contentManager.loadPublicContentsId(categories1, filters, groups);
+		assertEquals(2, contents.size());
+		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		
+		String[] categories2 = {"general_cat2"};
+		contents = this._contentManager.loadPublicContentsId(categories2, filters, groups);
+		assertEquals(2, contents.size());
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART120"));
+		
+		String[] categories12 = {"general_cat1", "general_cat2"};
+		contents = this._contentManager.loadPublicContentsId(categories12, false, filters, groups);
+		assertEquals(1, contents.size());
+		assertTrue(contents.contains("ART111"));
+		contents = this._contentManager.loadPublicContentsId(categories12, true, filters, groups);
+		assertEquals(3, contents.size());
+		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART120"));
+		
+		String[] categories3 = {"general_cat3"};
+		contents = this._contentManager.loadPublicContentsId(categories3, filters, groups);
+		assertEquals(2, contents.size());
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART122"));
+		
+		String[] categories23 = {"general_cat2", "general_cat3"};
+		contents = this._contentManager.loadPublicContentsId(categories23, false, filters, groups);
+		assertEquals(1, contents.size());
+		assertTrue(contents.contains("ART120"));
+		contents = this._contentManager.loadPublicContentsId(categories23, true, filters, groups);
+		assertEquals(3, contents.size());
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART122"));
+		
+		String[] categories123 = {"general_cat1", "general_cat2", "general_cat3"};
+		contents = this._contentManager.loadPublicContentsId(categories123, false, filters, groups);
+		assertEquals(0, contents.size());
+		contents = this._contentManager.loadPublicContentsId(categories123, true, filters, groups);
+		assertEquals(4, contents.size());
+		assertTrue(contents.contains("ART102"));
+		assertTrue(contents.contains("ART111"));
+		assertTrue(contents.contains("ART120"));
+		assertTrue(contents.contains("ART122"));
     }
     
     public void testLoadEventsForGroup() throws ApsSystemException {

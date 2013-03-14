@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.common.entity.model.attribute;
@@ -45,7 +45,7 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "attributeType")
-@XmlType(propOrder = {"name", "type", "roles", "searchable", "indexable", "validationRules"})
+@XmlType(propOrder = {"name", "description", "type", "roles", "searchable", "indexable", "validationRules"})
 @XmlSeeAlso({ArrayList.class, BaseAttributeValidationRules.class, DateAttributeValidationRules.class, 
     NumberAttributeValidationRules.class, TextAttributeValidationRules.class, OgnlValidationRule.class})
 public class DefaultJAXBAttributeType {
@@ -57,7 +57,15 @@ public class DefaultJAXBAttributeType {
     public void setName(String name) {
         this._name = name;
     }
-
+	
+	@XmlElement(name = "description", required = false)
+    public String getDescription() {
+		return _description;
+	}
+	public void setDescription(String description) {
+		this._description = description;
+	}
+    
     @XmlElement(name = "type", required = true)
     public String getType() {
         return _type;
@@ -111,6 +119,7 @@ public class DefaultJAXBAttributeType {
                         "Invalid name '" + this.getName() + "' of Attribute Type '" + this.getType() + "'");
             }
             attribute.setName(this.getName());
+            attribute.setDescription(this.getDescription());
             attribute.setRoles(this.toArray(this.getRoles()));
             if (null != this.getSearchable()) attribute.setSearcheable(this.getSearchable().booleanValue());
             if (null != this.getIndexable()) attribute.setIndexingType(IndexableAttributeInterface.INDEXING_TYPE_TEXT);
@@ -134,6 +143,7 @@ public class DefaultJAXBAttributeType {
     }
     
     private String _name;
+	private String _description;
     private String _type;
     private List<String> _roles;
     

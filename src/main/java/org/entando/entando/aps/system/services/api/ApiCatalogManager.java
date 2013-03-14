@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.system.services.api;
@@ -23,13 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -38,12 +35,14 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 /**
  * @author E.Santoboni
  */
-public class ApiCatalogManager extends AbstractService implements IApiCatalogManager, ServletContextAware {
+public class ApiCatalogManager extends AbstractService implements IApiCatalogManager {
     
+	@Override
     public void init() throws Exception {
         ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
     }
     
+    @Override
     protected void release() {
         super.release();
         this.setMasterResources(null);
@@ -52,7 +51,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     
     protected void loadResources() throws ApsSystemException {
         try {
-            ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns(), this.getServletContext());
+            ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns());
             Map<String, ApiResource> resources = loader.getResources();
             this.setMasterResources(resources);
             ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized Api Methods");
@@ -84,6 +83,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
     
+    @Override
     public ApiMethod getRelatedMethod(String showletCode) throws ApsSystemException {
         List<ApiMethod> masterMethods = this.getMasterMethods(ApiMethod.HttpMethod.GET);
         for (int i = 0; i < masterMethods.size(); i++) {
@@ -96,6 +96,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return null;
     }
     
+    @Override
     public Map<String, ApiMethod> getRelatedShowletMethods() throws ApsSystemException {
         Map<String, ApiMethod> mapping = new HashMap<String, ApiMethod>();
         try {
@@ -122,11 +123,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return mapping;
     }
     
+    @Override
     public void updateMethodConfig(ApiMethod apiMethod) throws ApsSystemException {
         try {
             ApiMethod masterMethod = this.checkMethod(apiMethod);
             this.getApiCatalogDAO().saveApiStatus(apiMethod);
             masterMethod.setStatus(apiMethod.getStatus());
+			masterMethod.setHidden(apiMethod.getHidden());
             masterMethod.setRequiredAuth(apiMethod.getRequiredAuth());
             String requiredPermission = apiMethod.getRequiredPermission();
             if (null != requiredPermission && requiredPermission.trim().length() > 0) {
@@ -141,10 +144,12 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
     
+    @Override
     public void resetMethodConfig(ApiMethod apiMethod) throws ApsSystemException {
         try {
             ApiMethod masterMethod = this.checkMethod(apiMethod);
-            this.getApiCatalogDAO().resetApiStatus(apiMethod.getResourceName(), apiMethod.getHttpMethod());
+			String resourceCode = ApiResource.getCode(masterMethod.getNamespace(), masterMethod.getResourceName());
+            this.getApiCatalogDAO().resetApiStatus(resourceCode, masterMethod.getHttpMethod());
             masterMethod.resetConfiguration();
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "resetApiStatus", "Error error resetting api status : "
@@ -167,14 +172,17 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     }
     
     @Deprecated
+    @Override
     public ApiMethod getMethod(String resourceName) throws ApsSystemException {
         return this.getMethod(ApiMethod.HttpMethod.GET, resourceName);
     }
     
+    @Override
     public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String resourceName) throws ApsSystemException {
         return this.getMethod(ApiMethod.HttpMethod.GET, null, resourceName);
     }
     
+    @Override
     public ApiMethod getMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApsSystemException {
         ApiMethod masterMethod = this.getMasterMethod(httpMethod, namespace, resourceName);
         if (null != masterMethod) {
@@ -188,7 +196,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-			String resourceCode = this.getResourceCode(namespace, resourceName);
+			String resourceCode = ApiResource.getCode(namespace, resourceName);
             ApiResource resource = this.getMasterResources().get(resourceCode);
             if (null != resource) {
                 return resource.getMethod(httpMethod);
@@ -201,6 +209,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     }
     
     @Deprecated
+    @Override
     public Map<String, ApiMethod> getMethods() throws ApsSystemException {
         Map<String, ApiMethod> map = new HashMap<String, ApiMethod>();
         List<ApiMethod> list = this.getMethods(ApiMethod.HttpMethod.GET);
@@ -211,6 +220,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return map;
     }
     
+    @Override
     public List<ApiMethod> getMethods(ApiMethod.HttpMethod httpMethod) throws ApsSystemException {
         List<ApiMethod> clonedMethods = new ArrayList<ApiMethod>();
         try {
@@ -246,6 +256,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return apiMethods;
     }
     
+    @Override
     public Map<String, ApiResource> getResources() throws ApsSystemException {
         Map<String, ApiResource> clonedApiResources = new HashMap<String, ApiResource>();
         try {
@@ -265,12 +276,13 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return clonedApiResources;
     }
 	
+    @Override
     public ApiResource getResource(String namespace, String resourceName) throws ApsSystemException {
         try {
             if (null == this.getMasterResources()) {
                 this.loadResources();
             }
-			String resourceCode = this.getResourceCode(namespace, resourceName);
+			String resourceCode = ApiResource.getCode(namespace, resourceName);
             ApiResource apiResource = this.getMasterResources().get(resourceCode);
             if (null != apiResource) {
                 return apiResource.clone();
@@ -283,6 +295,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return null;
     }
     
+    @Override
     public ApiService getApiService(String key) throws ApsSystemException {
         try {
             if (null == this.getMasterServices()) {
@@ -299,6 +312,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return service.clone();
     }
     
+    @Override
     public Map<String, ApiService> getServices() throws ApsSystemException {
         Map<String, ApiService> clonedServices = new HashMap<String, ApiService>();
         try {
@@ -321,7 +335,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
         return clonedServices;
     }
-
+	
+    @Override
     public Map<String, ApiService> getServices(String tag, Boolean myentando) throws ApsSystemException {
         Map<String, ApiService> services = this.getServices();
         if ((null == tag || tag.trim().length() == 0) && null == myentando) {
@@ -346,6 +361,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         return servicesToReturn;
     }
 
+    @Override
     public void saveService(ApiService service) throws ApsSystemException {
         try {
             if (null == service) {
@@ -367,6 +383,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
 
+    @Override
     public void deleteService(String key) throws ApsSystemException {
         try {
             this.getApiCatalogDAO().deleteService(key);
@@ -377,6 +394,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
     
+    @Override
     public void updateService(ApiService service) throws ApsSystemException {
         try {
             if (null == service) {
@@ -395,10 +413,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         }
     }
 	
-	private String getResourceCode(String namespace, String resourceName) {
-		return ApiResource.getCode(namespace, resourceName);
-	}
-    
     public Map<String, ApiResource> getMasterResources() {
         return _masterResources;
     }
@@ -413,13 +427,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         this._masterServices = masterServices;
     }
     
-    protected ServletContext getServletContext() {
-        return this._servletContext;
-    }
-    public void setServletContext(ServletContext servletContext) {
-        this._servletContext = servletContext;
-    }
-
     protected String getLocationPatterns() {
         if (null == this._locationPatterns) {
             return DEFAULT_LOCATION_PATTERN;
@@ -440,7 +447,6 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     private Map<String, ApiResource> _masterResources;
     
     private Map<String, ApiService> _masterServices;
-    private ServletContext _servletContext;
     private String _locationPatterns;
     private IApiCatalogDAO _apiCatalogDAO;
     public static final String DEFAULT_LOCATION_PATTERN = "classpath*:/api/**/aps/apiMethods.xml";

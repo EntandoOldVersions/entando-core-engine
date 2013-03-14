@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,28 +12,38 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
+
 /**
  * Rappresenta un modello di contenuto. 
  * L'attributo contentShape rappresenta come il contenuto è formattato (il template di velocity).
  * @author 
  */
+@XmlRootElement(name = "contentModel")
+@XmlType(propOrder = {"id", "contentType", "description", "contentShape", "stylesheet"})
 public class ContentModel implements Comparable, Serializable {
 	
 	/**
 	 * Restituisce l'identificativo del modello.
 	 * @return L'identificativo del modello.
 	 */
+	@XmlElement(name = "id", required = true)
 	public long getId() {
 		return _id;
 	}
-
+	
 	/**
 	 * Setta l'identificativo del modello.
 	 * @param id L'identificativo del modello.
@@ -46,26 +56,28 @@ public class ContentModel implements Comparable, Serializable {
 	 * Restituisce il tipo di contenuto a cui si applica il modello.
 	 * @return Il tipo di contenuto a cui si applica il modello.
 	 */
+	@XmlElement(name = "contentType", required = true)
 	public String getContentType() {
 		return _contentType;
 	}
-
+	
 	/**
 	 * Setta il tipo di contenuto.
 	 * @param contentType Il tipo di contenuto da settare
 	 */
 	public void setContentType(String contentType) {
-	    _contentType = contentType;
+	    this._contentType = contentType;
 	}
 	
 	/**
 	 * Restituisce la descrizione del modello.
 	 * @return La descrizione del modello.
 	 */
+	@XmlElement(name = "description", required = true)
 	public String getDescription() {
 		return _description;
 	}
-
+	
 	/**
 	 * Setta la descrizione del modello.
 	 * @param descr La descrizione del modello.
@@ -75,27 +87,30 @@ public class ContentModel implements Comparable, Serializable {
 	}
 	
 	/**
-	 * @return Returns the _contentShape.
+	 * @return Returns the contentShape.
 	 */
+	@XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
+	@XmlElement(name = "shape", required = true)
 	public String getContentShape() {
 		return _contentShape;
 	}
 	
 	/**
-	 * @param shape The _contentShape to set.
+	 * @param shape The contentShape to set.
 	 */
 	public void setContentShape(String shape) {
-		_contentShape = shape;
+		this._contentShape = shape;
 	}
-
+	
 	/**
 	 * Restituisce il nome del foglio di stile particolare per questo modello.
 	 * @return Il nome del foglio di stile. Può essere null.
 	 */
+	@XmlElement(name = "stylesheet", required = false)
 	public String getStylesheet() {
 		return _stylesheet;
 	}
-
+	
 	/**
 	 * Imposta il nome del foglio di stile particolare per questo modello.
 	 * @param stylesheet Il nome del foglio di stile
@@ -107,6 +122,7 @@ public class ContentModel implements Comparable, Serializable {
 	/**
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
+	@Override
 	public int compareTo(Object model) {
 		int result = this.getContentType().compareTo(((ContentModel) model).getContentType());
 		if (result == 0) {

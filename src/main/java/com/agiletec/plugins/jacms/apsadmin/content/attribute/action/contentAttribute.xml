@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-	"-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
-	"http://struts.apache.org/dtds/struts-2.1.dtd">
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
 
@@ -60,7 +60,8 @@
 				<param name="actionName">entryContent</param>
 				<param name="anchorDest">${entryContentAnchorDest}</param>
 			</result>
-			<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
+			<!-- <interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref> --><!-- maximun Size = 10 Mb -->
+			<interceptor-ref name="apsFileUpload" />
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">manageResources</param></interceptor-ref>
 		</action>
 
@@ -92,12 +93,7 @@
 			<result type="tiles">admin.jacms.content.chooseLinkType</result>
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
-		<action name="configUrlLink" class="jacmsUrlLinkAttributeAction">
-			<result type="tiles">admin.jacms.content.link.configUrlLinkType</result>
-			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
-		</action>
-
+		
 		<action name="configPageLink" class="jacmsPageLinkAttributeAction" >
 			<result type="tiles">admin.jacms.content.link.configPageLinkType</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
@@ -143,12 +139,12 @@
 			</result>
 			<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
+		
 		<action name="configUrlLink" class="jacmsUrlLinkAttributeAction" >
 			<result type="tiles">admin.jacms.content.link.configUrlLinkType</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
-
+		
 		<action name="joinUrlLink" class="jacmsUrlLinkAttributeAction" method="joinUrlLink" >
 			<result name="input" type="tiles">admin.jacms.content.link.configUrlLinkType</result>
 			<result type="redirectActionWithAnchor">

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.showlettype;
@@ -99,7 +99,10 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			}
 			int isLocked = res.getInt(7);
 			showletType.setLocked(isLocked == 1);
-			showletType.setMainGroup(res.getString(8));
+			String mainGroup = res.getString(8);
+			if (null != mainGroup && mainGroup.trim().length() > 0) {
+				showletType.setMainGroup(mainGroup.trim());
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet",
 					"Error parsing the Showlet Type '" + code + "'");

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.helper;
@@ -21,7 +21,7 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 
 /**
  * @author E.Santoboni
- * @deprecated use com.agiletec.aps.system.common.entity.helper.IEntityFilterBean
+ * @deprecated From Entando 2.0 version 2.4.1. Use com.agiletec.aps.system.common.entity.helper.IEntityFilterBean
  */
 public interface IContentListFilterBean extends IEntityFilterBean {
     

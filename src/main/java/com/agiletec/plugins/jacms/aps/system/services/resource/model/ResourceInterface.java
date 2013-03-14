@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+import java.io.File;
 
 /**
  * Interfaccia per gli oggetti risorsa.
@@ -96,6 +97,8 @@ public interface ResourceInterface {
      * @param mainFileName The name of the master file.
      */
 	public void setMasterFileName(String mainFileName);
+	
+	public File getFile();
     
     /**
      * Restituisce la cartella (a partire dalla cartella delle risorse) 
@@ -128,7 +131,7 @@ public interface ResourceInterface {
      * @param baseDiskRoot Il percorso base su disco della cartella delle risorse.
      */
     public void setBaseDiskRoot(String baseDiskRoot);
-     
+    
     /**
      * Setta il percorso base su disco della cartella delle risorse protette.
      * @param protBaseDiskRoot Il percorso base su disco della cartella delle risorse protette.

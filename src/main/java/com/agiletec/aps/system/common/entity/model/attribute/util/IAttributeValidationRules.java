@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
@@ -33,6 +33,8 @@ public interface IAttributeValidationRules extends Serializable {
     
     public IAttributeValidationRules clone();
     
+	public boolean isEmpty();
+	
     public void setConfig(Element attributeElement);
     
     public Element getJDOMConfigElement();

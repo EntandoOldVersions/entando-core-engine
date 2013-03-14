@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
@@ -36,7 +36,6 @@ public abstract class AbstractAttributeValidationRules extends BaseAttributeVali
 		return clone;
 	}
 	
-	
 	protected void insertJDOMConfigElement(String conditionRuleCode, 
 			String attributeName, String toStringValue, Element configElement) {
 		if ((toStringValue != null  && toStringValue.trim().length() > 0) || (attributeName != null && attributeName.trim().length() > 0)) {
@@ -51,7 +50,7 @@ public abstract class AbstractAttributeValidationRules extends BaseAttributeVali
 	}
 	
 	@Override
-	protected boolean isEmpty() {
+	public boolean isEmpty() {
 		return (super.isEmpty() 
 				&& (null == this.getRangeStart()) 
 				&& (null == this.getRangeEnd()) 

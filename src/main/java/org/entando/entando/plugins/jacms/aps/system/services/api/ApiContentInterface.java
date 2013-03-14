@@ -1,20 +1,20 @@
 /*
- *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando software.
+* Entando is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.plugins.jacms.aps.system.services.api;
 
 import java.util.ArrayList;
@@ -51,6 +51,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
+
 import javax.ws.rs.core.Response;
 
 /**
@@ -103,7 +104,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     }
 
     public String getContentsToHtml(Properties properties) throws Throwable {
-        StringBuffer render = new StringBuffer();
+        StringBuilder render = new StringBuilder();
         try {
             String modelId = properties.getProperty("modelId");
             if (null == modelId || modelId.trim().length() == 0) {
@@ -178,7 +179,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContent");
+            ApsSystemUtils.logThrowable(t, this, "getContentToHtml");
             throw new ApsSystemException("Error into API method", t);
         }
         return render;
@@ -253,11 +254,11 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
 						"Content type with code '" + typeCode + "' does not exist", Response.Status.CONFLICT);
             }
             Content content = (Content) jaxbContent.buildEntity(prototype, this.getCategoryManager());
-            if (null != content.getId() && null != this.getContentManager().loadContentVO(content.getId())) {
+            if (null != content.getId()) {
                 throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, 
-						"Content with code '" + content.getId() + "' already exists", Response.Status.CONFLICT);
+						"You cannot specify Content Id", Response.Status.CONFLICT);
             }
-            response = this.validateAndSaveContent(content, properties);
+			response = this.validateAndSaveContent(content, properties);
         } catch (ApiException ae) {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);

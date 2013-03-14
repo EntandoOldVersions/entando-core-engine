@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
@@ -52,9 +52,10 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 			contentWrapper.setRenderingLang(langCode);
 			contentWrapper.setReqCtx(reqCtx);
 			velocityContext.put(this.getEntityWrapperContextName(), contentWrapper);
-			
 			I18nManagerWrapper i18nWrapper = new I18nManagerWrapper(langCode, this.getI18nManager());
 			velocityContext.put("i18n", i18nWrapper);
+			SystemInfoWrapper systemInfoWrapper = new SystemInfoWrapper(reqCtx);
+			velocityContext.put("info", systemInfoWrapper);
 			StringWriter stringWriter = new StringWriter();
 			boolean isEvaluated = Velocity.evaluate(velocityContext, stringWriter, "render", contentModel);
 			if (!isEvaluated) {

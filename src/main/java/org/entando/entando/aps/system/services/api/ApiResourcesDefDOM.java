@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.system.services.api;
@@ -191,6 +191,7 @@ public class ApiResourcesDefDOM {
     public static final String RESOURCE_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String METHOD_DESCRIPTION_ELEMENT_NAME = "description";
     public static final String ACTIVE_ATTRIBUTE_NAME = "active";
+    public static final String HIDDEN_ATTRIBUTE_NAME = "hidden";
     public static final String CAN_SPAWN_OTHER_ATTRIBUTE_NAME = "canSpawnOthers";
     public static final String SOURCE_ELEMENT_NAME = "source";
     public static final String PLUGIN_CODE_ATTRIBUTE_NAME = "pluginCode";

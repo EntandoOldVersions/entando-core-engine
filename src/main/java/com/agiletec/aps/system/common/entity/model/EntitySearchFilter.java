@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model;
@@ -35,6 +35,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
+import java.util.*;
 
 /**
  * This class implements a filter to search among entities.
@@ -72,8 +73,19 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	 */
 	public EntitySearchFilter(String key, boolean isAttributeFilter, Object value, boolean useLikeOption) {
 		this(key, isAttributeFilter);
-		this.setValue(value);
-		this.setLikeOption(useLikeOption);
+		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
+			List<Object> allowedValues = new ArrayList<Object>();
+			allowedValues.addAll((Collection) value);
+			this.setAllowedValues(allowedValues);
+			if (allowedValues.get(0) instanceof String) {
+				this.setLikeOption(useLikeOption);			
+			}
+		} else {
+			this.setValue(value);
+			if (value instanceof String) {			
+				this.setLikeOption(useLikeOption);
+			}
+		}
 	}
 	
 	/**
@@ -316,12 +328,16 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 				}
 			}
 		}
-		if (null == values || values.size() == 0) return null;
+		if (null == values || values.isEmpty()) {
+			return null;
+		}
 		return values;
 	}
 	
 	private static Object getDataObject(String stringValue, String dataType) {
-		if (null == stringValue) return null;
+		if (null == stringValue) {
+			return null;
+		}
 		Object object = null;
 		if (dataType.equals(DATA_TYPE_DATE)) {
 			object = buildDate(stringValue);
@@ -375,7 +391,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	public static final String END_PARAM = "end";
 	public static final String ORDER_PARAM = "order";
 	public static final String DATA_TYPE_PARAM = "dataType";
-        public static final String NULL_VALUE_PARAM = "nullValue";
+    public static final String NULL_VALUE_PARAM = "nullValue";
 	
 	public static final String DATA_TYPE_STRING = "string";
 	public static final String DATA_TYPE_DATE = "date";

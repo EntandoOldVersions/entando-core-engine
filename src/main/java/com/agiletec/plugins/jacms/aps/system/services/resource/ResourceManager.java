@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
@@ -88,7 +88,17 @@ public class ResourceManager extends AbstractService
      */
 	@Override
 	public ResourceInterface addResource(ResourceDataBean bean) throws ApsSystemException {
-		return this.saveResource(bean);
+		ResourceInterface newResource = this.createResource(bean);
+		try {
+			this.generateAndSetResourceId(newResource, bean.getResourceId());
+			newResource.saveResourceInstances(bean);
+    		this.getResourceDAO().addResource(newResource);
+    	} catch (Throwable t) {
+			newResource.deleteResourceInstances();
+			ApsSystemUtils.logThrowable(t, this, "addResource");
+			throw new ApsSystemException("Error adding resource", t);
+    	}
+		return newResource;
     }
 	
     /**
@@ -99,15 +109,22 @@ public class ResourceManager extends AbstractService
 	@Override
 	public void addResource(ResourceInterface resource) throws ApsSystemException {
     	try {
-    		IKeyGeneratorManager keyGenerator = (IKeyGeneratorManager) this.getService(SystemConstants.KEY_GENERATOR_MANAGER);
-			int id = keyGenerator.getUniqueKeyCurrentValue();
-    		resource.setId(String.valueOf(id));
+			this.generateAndSetResourceId(resource, resource.getId());
     		this.getResourceDAO().addResource(resource);
     	} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addResource");
 			throw new ApsSystemException("Error adding resource", t);
     	}
     }
+	
+	private void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
+		if (null == id || id.trim().length() == 0) {
+			IKeyGeneratorManager keyGenerator = 
+					(IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
+			int newId = keyGenerator.getUniqueKeyCurrentValue();
+			resource.setId(String.valueOf(newId));
+		}
+	}
     
     @Override
 	public void updateResource(ResourceDataBean bean) throws ApsSystemException {
@@ -119,7 +136,9 @@ public class ResourceManager extends AbstractService
 				this.getResourceDAO().updateResource(oldResource);
 				this.notifyResourceChanging(oldResource);
 			} else {
-				ResourceInterface updatedResource = this.saveResource(bean);
+				ResourceInterface updatedResource = this.createResource(bean);//this.saveResource(bean);
+				updatedResource.saveResourceInstances(bean);
+				this.getResourceDAO().updateResource(updatedResource);
 				if (!updatedResource.getMasterFileName().equals(oldResource.getMasterFileName())) {
 					oldResource.deleteResourceInstances();
 				}
@@ -147,30 +166,15 @@ public class ResourceManager extends AbstractService
 		}
 	}
 	
-	protected ResourceInterface saveResource(ResourceDataBean bean) throws ApsSystemException {
-    	ResourceInterface resource = this.createResourceType(bean.getResourceType());
-    	try {
-    		resource.setDescr(bean.getDescr());
-    		resource.setMainGroup(bean.getMainGroup());
-    		resource.setCategories(bean.getCategories());
-    		resource.setMasterFileName(bean.getFileName());
-    		resource.saveResourceInstances(bean);
-    		if (null != bean.getResourceId() && bean.getResourceId().trim().length() > 0) {
-    			resource.setId(bean.getResourceId());
-    			this.getResourceDAO().updateResource(resource);
-    			this.notifyResourceChanging(resource);
-    		} else {
-    			this.addResource(resource);
-    		}
-    	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "saveResource");
-    		if (null == bean.getResourceId()) {
-    			resource.deleteResourceInstances();
-    		}
-			throw new ApsSystemException("Error saving resource", t);
-    	}
-    	return resource;
-    }
+	protected ResourceInterface createResource(ResourceDataBean bean) throws ApsSystemException {
+		ResourceInterface resource = this.createResourceType(bean.getResourceType());
+    	resource.setDescr(bean.getDescr());
+    	resource.setMainGroup(bean.getMainGroup());
+    	resource.setCategories(bean.getCategories());
+    	resource.setMasterFileName(bean.getFileName());
+		resource.setId(bean.getResourceId());
+		return resource;
+	}
 	
 	private void notifyResourceChanging(ResourceInterface resource) throws ApsSystemException {
 		ResourceChangedEvent event = new ResourceChangedEvent();

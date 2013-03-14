@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
@@ -20,6 +20,8 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+
+import java.io.File;
 
 /**
  * Classe astratta di base per l'implementazione 
@@ -38,6 +40,17 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	public boolean isMultiInstance() {
     	return false;
     }
+    
+	@Override
+	public File getFile() {
+		ResourceInstance instance = this.getInstance();
+    	String filePath = (this.getDiskFolder() + instance.getFileName());
+		File file = new File(filePath);
+		if (file.exists()) {
+			return file;
+		}
+    	return null;
+	}
     
 	@Override
 	public void deleteResourceInstances() throws ApsSystemException {

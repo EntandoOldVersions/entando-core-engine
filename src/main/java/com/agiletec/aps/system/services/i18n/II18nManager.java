@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.i18n;
@@ -37,6 +37,8 @@ public interface II18nManager {
 	 * @throws ApsSystemException
 	 */
 	public String getLabel(String key, String langCode) throws ApsSystemException;
+	
+	public ApsProperties getLabelGroup(String key) throws ApsSystemException;
 	
 	/**
 	 * Add a group of labels on db.

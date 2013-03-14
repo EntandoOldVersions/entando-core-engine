@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.page;
@@ -182,6 +182,22 @@ public class Page extends TreeNode implements IPage {
 		this._useExtraTitles = useExtraTitles;
 	}
 	
+	@Override
+	public String getCharset() {
+		return _charset;
+	}
+	public void setCharset(String charset) {
+		this._charset = charset;
+	}
+	
+	@Override
+	public String getMimeType() {
+		return _mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this._mimeType = mimeType;
+	}
+	
 	public boolean isVoid() {
 		boolean isVoid = true;
 		Showlet[] showlets = this.getShowlets();
@@ -195,7 +211,7 @@ public class Page extends TreeNode implements IPage {
 		}
 		return isVoid;
 	}
-
+	
 	@Override
 	public String toString() {
 		return "Page: " + this.getCode();
@@ -224,5 +240,9 @@ public class Page extends TreeNode implements IPage {
 	private Showlet[] _showlets;
 	
 	private boolean _useExtraTitles = false;
+	
+	private String _mimeType;
+	
+	private String _charset;
 	
 }

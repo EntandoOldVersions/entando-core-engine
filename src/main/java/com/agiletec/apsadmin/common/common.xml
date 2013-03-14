@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
-    "http://struts.apache.org/dtds/struts-2.1.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
 	
@@ -9,9 +9,7 @@
 		
 		<interceptors>
 			
-			<interceptor name="backendGuiClient" class="com.agiletec.apsadmin.system.BackendGuiClientInterceptor"></interceptor>
-			
-			<interceptor-stack name="japsLoginStack">
+			<interceptor-stack name="entandoLoginStack">
 				<interceptor-ref name="entandoFreeStack" />
 				<interceptor-ref name="validation">
 					<param name="excludeMethods">input,back,cancel</param>
@@ -29,7 +27,7 @@
 		<action name="doLogin" class="dispatchAction" method="doLogin">
 			<result name="input">/WEB-INF/apsadmin/jsp/common/login.jsp</result>
 			<result type="redirectAction">main</result>
-			<interceptor-ref name="japsLoginStack" />
+			<interceptor-ref name="entandoLoginStack" />
 			<interceptor-ref name="backendGuiClient" />
 		</action>
 		
@@ -103,7 +101,7 @@
 			<interceptor-ref name="entandoValidationStack" />
 		</action>
 
-		<action name="configureMyShortcutAjax" class="myShortcutConfigAction">
+		<action name="configureMyShortcutAjax" class="myShortcutConfigAction" method="joinMyShortcut" >
 			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/template/mainBody-shortcut-configure-result-ajax.jsp</result>
 			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/template/mainBody-shortcut-configure-result-ajax.jsp</result>
 			<interceptor-ref name="entandoValidationStack" />

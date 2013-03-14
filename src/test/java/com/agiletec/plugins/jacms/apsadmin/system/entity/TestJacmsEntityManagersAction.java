@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.apsadmin.system.entity;
@@ -60,13 +60,13 @@ public class TestJacmsEntityManagersAction extends ApsAdminBaseTestCase {
 		IEntityTypesAction action = (IEntityTypesAction) this.getAction();
 		List<IApsEntity> entityPrototypes = action.getEntityPrototypes();
 		assertNotNull(entityPrototypes);
-		assertEquals(3, entityPrototypes.size());
+		assertEquals(4, entityPrototypes.size());
 		
 		IApsEntity firstType = entityPrototypes.get(0);
 		assertEquals("ART", firstType.getTypeCode());
 		assertEquals("Articolo rassegna stampa", firstType.getTypeDescr());
 		
-		IApsEntity lastType = entityPrototypes.get(2);
+		IApsEntity lastType = entityPrototypes.get(3);
 		assertEquals("RAH", lastType.getTypeCode());
 		assertEquals("Tipo_Semplice", lastType.getTypeDescr());
 	}

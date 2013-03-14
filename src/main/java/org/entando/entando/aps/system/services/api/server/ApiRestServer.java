@@ -1,20 +1,20 @@
 /*
- *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- * This file is part of Entando software.
- * Entando is a free software;
- * you can redistribute it and/or modify it
- * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
- *
- * See the file License for the specific language governing permissions
- * and limitations under the License
- *
- *
- *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
- *
- */
+*
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando software.
+* Entando is a free software; 
+* you can redistribute it and/or modify it
+* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
 package org.entando.entando.aps.system.services.api.server;
 
 import java.io.IOException;
@@ -42,8 +42,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
 
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
@@ -55,17 +53,18 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
-import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 import org.apache.cxf.jaxrs.impl.ResponseBuilderImpl;
+import org.entando.entando.aps.system.services.api.UnmarshalUtils;
 
 /**
  * @author E.Santoboni
@@ -181,15 +180,19 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Properties properties = this.extractRequestParameters(ui);
+			if (null == langManager.getLang(langCode)) {
+				langCode = langManager.getDefaultLang().getCode();
+			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
             responseObject = responseBuilder.createResponse(apiMethod, properties);
         } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
         } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
         }
         return this.createResponse(responseObject);
     }
@@ -199,26 +202,20 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
+            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
             Properties properties = this.extractRequestParameters(ui);
+            if (null == langManager.getLang(langCode)) {
+				langCode = langManager.getDefaultLang().getCode();
+			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
-            Class expectedType = apiMethod.getExpectedType();
-            Object bodyObject = null;
-            if (MediaType.APPLICATION_JSON_TYPE.equals(mediaType)) {
-                JSONProvider jsonProvider = new JSONProvider();
-                bodyObject = jsonProvider.readFrom(expectedType, expectedType.getGenericSuperclass(), 
-                        expectedType.getAnnotations(), mediaType, null, request.getInputStream());
-            } else {
-                JAXBContext context = JAXBContext.newInstance(expectedType);
-                Unmarshaller unmarshaller = context.createUnmarshaller();
-                bodyObject = (Object) unmarshaller.unmarshal(request.getInputStream());
-            }
+			Object bodyObject = UnmarshalUtils.unmarshal(apiMethod, request, mediaType);
             responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
         } catch (ApiException ae) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, ae);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, ae);
         } catch (Throwable t) {
-            responseObject = this.buildErrorResponse(httpMethod, resourceName, t);
+            responseObject = this.buildErrorResponse(httpMethod, namespace, resourceName, t);
         }
         return this.createResponse(responseObject);
     }
@@ -242,9 +239,12 @@ public class ApiRestServer {
         return properties;
     }
     
-    private StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String resourceName, Throwable t) {
+    protected StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName, Throwable t) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
+		if (null != namespace) {
+			buffer.append(" Namespace '").append(namespace).append("'");
+		}
         ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
         StringApiResponse response = new StringApiResponse();
         if (t instanceof ApiException) {
@@ -291,7 +291,7 @@ public class ApiRestServer {
         }
     }
 	
-	private Response createResponse(Object responseObject) {
+	protected Response createResponse(Object responseObject) {
 		ResponseBuilderImpl responsex = new ResponseBuilderImpl();
 		responsex.entity(responseObject);
 		if (responseObject instanceof AbstractApiResponse) {

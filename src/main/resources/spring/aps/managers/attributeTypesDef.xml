@@ -69,11 +69,13 @@
 			value="com.agiletec.apsadmin.system.entity.attribute.manager.BooleanAttributeManager" />
 	</bean>
 	
-	<bean id="ThreeStateBooleanAttribute" parent="BooleanAttribute" >
+	<bean id="ThreeStateBooleanAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute" 
+			parent="BooleanAttribute" >
 		<property name="type" value="ThreeState" />
 	</bean>
 	
-	<bean id="CheckBoxAttribute" parent="BooleanAttribute" >
+	<bean id="CheckBoxAttribute" class="com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute" 
+			parent="BooleanAttribute" >
 		<property name="type" value="CheckBox" />
 		<property name="attributeManagerClassName" 
 			value="com.agiletec.apsadmin.system.entity.attribute.manager.CheckBoxAttributeManager" />

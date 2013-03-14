@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model;
@@ -195,6 +195,8 @@ public interface IApsEntity {
      * @param disablingCode The deactivation code.
      */
     public void disableAttributes(String disablingCode);
+    
+    public void activateAttributes();
     
     public List<FieldError> validate(IGroupManager groupManager);
     

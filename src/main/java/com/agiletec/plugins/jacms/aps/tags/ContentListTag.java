@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.tags;
@@ -28,14 +28,16 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
 
@@ -60,14 +62,14 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			IContentListShowletHelper helper = (IContentListShowletHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			List<UserFilterOptionBean> defaultUserFilterOptions = helper.getConfiguredUserFilters(this, reqCtx);
 			this.addUserFilterOptions(defaultUserFilterOptions);
 			this.extractExtraShowletParameters(reqCtx);
 			if (null != this.getUserFilterOptions() && null != this.getUserFilterOptionsVar()) {
 				this.pageContext.setAttribute(this.getUserFilterOptionsVar(), this.getUserFilterOptions());
 			}
-			List<String> contents = helper.getContentsId(this, reqCtx);
+			List<String> contents = this.getContentsId(helper, reqCtx);
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doEndTag");
@@ -77,14 +79,39 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		return EVAL_PAGE;
 	}
 	
+	protected List<String> getContentsId(IContentListShowletHelper helper, RequestContext reqCtx) throws ApsSystemException {
+		List<String> contents = null;
+		try {
+			contents = helper.getContentsId(this, reqCtx);
+			Showlet currentShowlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Integer maxElements = null;
+			if (null != currentShowlet.getConfig()) {
+				ApsProperties properties = currentShowlet.getConfig();
+				String maxElementsString = properties.getProperty("maxElements");
+				try {
+					maxElements = Integer.parseInt(maxElementsString);
+				} catch (Exception e) {
+					//nothing to catch
+				}	
+			}
+			if (null != maxElements && contents != null && contents.size() > maxElements) {
+				contents = contents.subList(0, maxElements);
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getContentsId");
+			throw new ApsSystemException("Error extracting content ids", t);
+		}
+		return contents;
+	}
+	
 	private void extractExtraShowletParameters(RequestContext reqCtx) {
 		try {
 			Showlet showlet = (Showlet) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
 			ApsProperties config = showlet.getConfig();
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
-				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
-				this.addMultilanguageShowletParameter(config, IContentListHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
+				this.addMultilanguageShowletParameter(config, IContentListShowletHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
+				this.addMultilanguageShowletParameter(config, IContentListShowletHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
 				if (null != this.getPageLinkVar()) {
 					String pageLink = config.getProperty(ContentListHelper.SHOWLET_PARAM_PAGE_LINK);
 					if (null != pageLink) {

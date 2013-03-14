@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer;
@@ -42,7 +42,8 @@ public interface IContentListFilterAction {
 	
 	public static final int VALUE_FILTER_OPTION = 1;
 	public static final int RANGE_FILTER_OPTION = 2;
-	public static final int ABSENCE_FILTER_OPTION = 3;
+	public static final int PRESENCE_FILTER_OPTION = 3;
+	public static final int ABSENCE_FILTER_OPTION = 4;
 	
 	public static final int NO_DATE_FILTER = 1;
 	public static final int CURRENT_DATE_FILTER = 2;

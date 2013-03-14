@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.controller;
@@ -65,10 +65,14 @@ public class TestControllerManager extends BaseTestCase {
 		ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
 		request.setServletPath("/it/administrators_page.page");
+		request.setRequestURI("/Entando/it/customers_page.page");
 		int status = controller.service(reqCtx);
 		assertEquals(ControllerManager.REDIRECT, status);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/Entando/it/login.page?redirectflag=1", redirectUrl);
+		assertTrue(redirectUrl.contains("/Entando/it/login.page?"));
+		assertTrue(redirectUrl.contains("redirectflag=1"));
+		assertTrue(redirectUrl.contains("returnUrl="));
+		assertTrue(redirectUrl.contains("customers_page.page"));
 		
 		request.setParameter(RequestContext.PAR_REDIRECT_FLAG, "1");
 		status = controller.service(reqCtx);

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.parse;
@@ -71,5 +71,10 @@ public interface IEntityTypeDOM {
 	public Map<String, IApsEntity> getEntityTypes();
 	
 	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException;
+	
+	public String getXml(IApsEntity entityType) throws ApsSystemException;
+	
+	public IApsEntity extractEntityType(String xml, Class entityClass, 
+			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException;
 	
 }

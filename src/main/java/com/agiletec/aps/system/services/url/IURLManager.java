@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.url;
@@ -56,5 +56,7 @@ public interface IURLManager {
 	 * @return The url.
 	 */
 	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params);
+	
+	public String createUrl(IPage requiredPage, Lang requiredLang, Map<String, String> params, boolean escapeAmp);
 	
 }

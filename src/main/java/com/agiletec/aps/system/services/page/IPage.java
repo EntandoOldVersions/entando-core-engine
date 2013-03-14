@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.page;
@@ -94,5 +94,17 @@ public interface IPage extends ITreeNode {
 	 * @return all the showlets of the current page
 	 */
 	public Showlet[] getShowlets();
+	
+	/**
+	 * Return the mimetype configured for this page.
+	 * @return the mimetype configured for this page.
+	 */
+	public String getMimeType();
+	
+	/**
+	 * Return the charset configured for this page.
+	 * @return the charset configured for this page.
+	 */
+	public String getCharset();
 	
 }

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,12 +12,14 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -48,9 +50,18 @@ public class FieldSearchFilter implements Serializable {
 	 */
 	public FieldSearchFilter(String key, Object value, boolean useLikeOption) {
 		this(key);
-		this.setValue(value);
-		if (value instanceof String) {			
-			this.setLikeOption(useLikeOption);
+		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
+			List<Object> allowedValues = new ArrayList<Object>();
+			allowedValues.addAll((Collection) value);
+			this.setAllowedValues(allowedValues);
+			if (allowedValues.get(0) instanceof String) {
+				this.setLikeOption(useLikeOption);			
+			}
+		} else {
+			this.setValue(value);
+			if (value instanceof String) {			
+				this.setLikeOption(useLikeOption);
+			}
 		}
 	}
 	

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.i18n;
@@ -71,6 +71,15 @@ public class I18nManager extends AbstractService implements II18nManager {
 			label = labelsProp.getProperty(langCode);
 		}
 		return label;
+	}
+	
+	@Override
+	public ApsProperties getLabelGroup(String key) throws ApsSystemException {
+		ApsProperties labelsProp = (ApsProperties) this._labelGroups.get(key);
+		if (null == labelsProp) {
+			return null;
+		}
+		return labelsProp.clone();
 	}
 
 	/**

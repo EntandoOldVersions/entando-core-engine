@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 
 /**
  * @author E.Santoboni
@@ -225,7 +225,7 @@ public class TestContentListHelper extends BaseTestCase {
     	try {
     		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
     		this._showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
-    		this._helper = (IContentListHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
+    		this._helper = (IContentListShowletHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
     	} catch (Throwable t) {
             throw new Exception(t);
         }
@@ -233,6 +233,6 @@ public class TestContentListHelper extends BaseTestCase {
     
 	private IPageManager _pageManager = null;
 	private IShowletTypeManager _showletTypeManager;
-	private IContentListHelper _helper;
+	private IContentListShowletHelper _helper;
 	
 }

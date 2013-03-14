@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.common.entity.loader;
@@ -34,7 +34,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeSupportObject {
 	
 	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
-		if (!((IManager) entityManager).getName().equals(((IManager) this.getEntityManagerDest()).getName())) {
+		String managerName = ((IManager) entityManager).getName();
+		if (!managerName.equals(super.getEntityManagerNameDest())) {
 			return;
 		}
 		try {

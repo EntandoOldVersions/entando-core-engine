@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system;
@@ -46,6 +46,8 @@ public interface SystemConstants {
      * su disco per le risorse su file
      */
     public static final String PAR_RESOURCES_DISK_ROOT = "resourceDiskRootFolder";
+	
+	public static final String PAR_FILEUPLOAD_MAXSIZE = "fileUploadMaxSize";
     
     /**
      * Nome parametro extra per requestContext: lingua corrente

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.helper;
@@ -38,13 +38,13 @@ public interface IContentListHelper {
 	
 	public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, String langCode);
 	
-        /**
-         * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String contentType, IEntityFilterBean, String) method
-         */
+	/**
+	 * @deprecated From Entando 2.0 version 2.4.1. Use getFilter(String contentType, IEntityFilterBean, String) method
+	 */
 	public EntitySearchFilter getFilter(String contentType, IContentListFilterBean bean, String langCode);
 	
-        public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, String langCode);
-	
+	public EntitySearchFilter getFilter(String contentType, IEntityFilterBean bean, String langCode);
+
 	public String getFilterParam(EntitySearchFilter[] filters);
 	
 	public static final String CATEGORIES_SEPARATOR = ",";

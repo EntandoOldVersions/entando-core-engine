@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer;
@@ -55,10 +55,15 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 			int attrFilterType = -1;
 			AttributeInterface attribute = (AttributeInterface) prototype.getAttribute(key);
 			if (null != attribute) {
-				if (attribute instanceof ITextAttribute) attrFilterType = TEXT_ATTRIBUTE_FILTER_TYPE;
-				if (attribute instanceof NumberAttribute) attrFilterType = NUMBER_ATTRIBUTE_FILTER_TYPE;
-				if (attribute instanceof BooleanAttribute) attrFilterType = BOOLEAN_ATTRIBUTE_FILTER_TYPE;
-				if (attribute instanceof DateAttribute) attrFilterType = DATE_ATTRIBUTE_FILTER_TYPE;
+				if (attribute instanceof ITextAttribute) {
+					attrFilterType = TEXT_ATTRIBUTE_FILTER_TYPE;
+				} else if (attribute instanceof NumberAttribute) {
+					attrFilterType = NUMBER_ATTRIBUTE_FILTER_TYPE;
+				} else if (attribute instanceof BooleanAttribute) {
+					attrFilterType = BOOLEAN_ATTRIBUTE_FILTER_TYPE;
+				} else if (attribute instanceof DateAttribute) {
+					attrFilterType = DATE_ATTRIBUTE_FILTER_TYPE;
+				}
 			} else if ((METADATA_KEY_PREFIX+IContentManager.CONTENT_CREATION_DATE_FILTER_KEY).equals(key) 
 					|| (METADATA_KEY_PREFIX+IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY).equals(key)) {
 				key = key.substring(METADATA_KEY_PREFIX.length());
@@ -66,7 +71,9 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 				attrFilterType = METADATA_FILTER_TYPE;
 			}
 			this.setFilterTypeId(attrFilterType);
-			if (this.getFilterTypeId()<0) this.setFilterKey(null);
+			if (this.getFilterTypeId() < 0) {
+				this.setFilterKey(null);
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "setFilterType");
 			return FAILURE;
@@ -76,14 +83,9 @@ public class BaseFilterAction extends SimpleShowletConfigAction implements ICont
 	
 	@Override
 	public String setFilterOption() {
-		try {
-			int filterOption = this.getFilterOptionId();
-			if (filterOption != VALUE_FILTER_OPTION && filterOption != RANGE_FILTER_OPTION && filterOption != ABSENCE_FILTER_OPTION) {
-				this.setFilterOptionId(-1);
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setFilterOption");
-			return FAILURE;
+		if (this.getFilterOptionId() == ABSENCE_FILTER_OPTION) {
+			this.saveFilter();
+			return "addFilter";
 		}
 		return SUCCESS;
 	}

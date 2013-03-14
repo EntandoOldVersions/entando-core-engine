@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.controller.control;
@@ -22,9 +22,9 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
-import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import org.springframework.mock.web.MockHttpServletRequest;
 
 /**
  * @author M.Diana
@@ -61,13 +61,17 @@ public class TestRequestAuthorizator extends BaseTestCase {
 	
 	public void testServiceFailure_1() throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
+		((MockHttpServletRequest) reqCtx.getRequest()).setRequestURI("/Entando/it/customers_page.page");
 		this.setUserOnSession(SystemConstants.GUEST_USER_NAME);
 		IPage requiredPage = this._pageManager.getPage("customers_page");
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, requiredPage);
 		int status = _authorizator.service(reqCtx, ControllerManager.CONTINUE);
 		assertEquals(status, ControllerManager.REDIRECT);
 		String redirectUrl = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-		assertEquals("/Entando/it/login.page?redirectflag=1", redirectUrl);
+		assertTrue(redirectUrl.contains("/Entando/it/login.page?"));
+		assertTrue(redirectUrl.contains("redirectflag=1"));
+		assertTrue(redirectUrl.contains("returnUrl="));
+		assertTrue(redirectUrl.contains("customers_page.page"));
 	}
 	
 	public void testServiceFailure_2() throws Throwable {

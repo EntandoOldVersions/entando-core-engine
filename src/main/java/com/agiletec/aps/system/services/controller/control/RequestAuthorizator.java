@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,11 +12,13 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.controller.control;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +34,8 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
+
+import java.net.URLEncoder;
 
 /**
  * Sottoservizio delegato al controllo dell'autorizzazione dell'utente corrente.
@@ -76,7 +80,14 @@ public class RequestAuthorizator extends AbstractControlService {
 			if (authorized) {
 				retStatus = ControllerManager.CONTINUE;
 			} else {
-				retStatus = this.redirect(this.getLoginPageCode(), reqCtx);
+				StringBuilder targetUrl = new StringBuilder(req.getRequestURL());
+				String queryString = req.getQueryString();
+				if (null != queryString && queryString.trim().length() > 0) {
+					targetUrl.append("?").append(queryString);
+				}
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("returnUrl", URLEncoder.encode(targetUrl.toString(), "UTF-8"));
+				retStatus = this.redirect(this.getLoginPageCode(), params, reqCtx);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "service", "Error while processing the request");

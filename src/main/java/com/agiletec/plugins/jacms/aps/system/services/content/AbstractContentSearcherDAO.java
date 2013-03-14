@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content;
@@ -76,7 +76,7 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 			String[] categories, boolean orClauseCategoryFilter, 
 			Collection<String> userGroupCodes, boolean selectAll, Connection conn) {
 		Collection<String> groupsForSelect = this.getGroupsForSelect(userGroupCodes);
-		String query = this.createQueryString(filters, categories, groupsForSelect, selectAll);
+		String query = this.createQueryString(filters, categories, orClauseCategoryFilter, groupsForSelect, selectAll);
 		//System.out.println("QUERY : " + query);
 		PreparedStatement stat = null;
 		try {

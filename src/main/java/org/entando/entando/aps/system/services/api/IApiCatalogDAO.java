@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.system.services.api;
@@ -32,7 +32,7 @@ public interface IApiCatalogDAO {
     
     public void loadApiStatus(Map<String, ApiResource> resources);
     
-    public void resetApiStatus(String resourceName, ApiMethod.HttpMethod httpMethod);
+    public void resetApiStatus(String resourceCode, ApiMethod.HttpMethod httpMethod);
     
     public void saveApiStatus(ApiMethod method);
     
@@ -42,9 +42,9 @@ public interface IApiCatalogDAO {
     public Map<String, ApiService> loadServices(List<ApiMethod> methods);
     
     public void addService(ApiService service);
-
+	
     public void updateService(ApiService service);
-
+	
     public void deleteService(String key);
     
 }

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.apsadmin.system.dispatcher;
@@ -120,7 +120,7 @@ public class FrontServletActionRedirectResult extends ServletRedirectResult impl
             Map.Entry e = (Map.Entry) i.next();
             if (!this.getProhibitedResultParams().contains(e.getKey())) {
                 String potentialValue = e.getValue() == null ? "" : conditionalParse(e.getValue().toString(), invocation);
-                if (!supressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
+				if (!suppressEmptyParameters || ((potentialValue != null) && (potentialValue.length() > 0))) {
                     redirectParams.put(e.getKey().toString(), potentialValue);
                 }
             }

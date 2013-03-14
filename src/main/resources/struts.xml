@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC
-    "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
-    "http://struts.apache.org/dtds/struts-2.1.dtd">
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
     
@@ -17,11 +17,13 @@
 		</result-types>
     	
 		<interceptors>
-            
+                
 			<interceptor name="requestAuth" class="com.agiletec.apsadmin.system.InterceptorMadMax" />
 			<interceptor name="backofficeRequestAuth" class="com.agiletec.apsadmin.system.InterceptorMadMax2nd" />
 			<interceptor name="apsActionParams" class="com.agiletec.apsadmin.system.ApsActionParamsInterceptor" />
 			<interceptor name="chain" class="com.agiletec.apsadmin.system.ChainingInterceptor" />
+                        <interceptor name="apsFileUpload" class="com.agiletec.apsadmin.system.ApsFileUploadInterceptor" />
+                        <interceptor name="backendGuiClient" class="com.agiletec.apsadmin.system.BackendGuiClientInterceptor"></interceptor>
     		
 			<interceptor-stack name="entandoFreeStack">
 				<interceptor-ref name="exception"/>
@@ -36,6 +38,7 @@
 				<interceptor-ref name="staticParams"/>
 				<interceptor-ref name="params"/>
 				<interceptor-ref name="conversionError"/>
+                                <interceptor-ref name="backendGuiClient" />
 			</interceptor-stack>
 			
 			<interceptor-stack name="entandoFreeValidationStack">
@@ -176,13 +179,14 @@
 		</interceptors>
 	</package>
 	
-	<include file="com/agiletec/apsadmin/admin/baseAdmin.xml"/>
-	<include file="com/agiletec/apsadmin/admin/lang/lang.xml"/>
-	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml"/>
+	<include file="com/agiletec/apsadmin/admin/baseAdmin.xml" />
+	<include file="com/agiletec/apsadmin/admin/lang/lang.xml" />
+	<include file="org/entando/entando/apsadmin/admin/database.xml" />
+	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml" />
     
-	<include file="com/agiletec/apsadmin/common/common.xml"/>
+	<include file="com/agiletec/apsadmin/common/common.xml" />
     
-	<include file="com/agiletec/apsadmin/category/category.xml"/>
+	<include file="com/agiletec/apsadmin/category/category.xml" />
     
 	<include file="com/agiletec/apsadmin/portal/page.xml" />
 	<include file="com/agiletec/apsadmin/portal/specialshowlet/specialShowlet.xml" />

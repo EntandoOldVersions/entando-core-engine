@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-       
+
 <!--
 CacheManager Configuration
 ==========================
@@ -21,11 +21,11 @@ particular cache store in the Terracotta clustered memory.
 for new versions of Ehcache over the Internet.  If not specified, updateCheck="true".
 * monitoring - an optional setting that determines whether the CacheManager should
 automatically register the SampledCacheMBean with the system MBean server.
-Currently, this monitoring is only useful when using Terracotta clustering and using the 
-Terracotta Developer Console. With the "autodetect" value, the presence of Terracotta clustering 
-will be detected and monitoring, via the Developer Console, will be enabled. Other allowed values 
-are "on" and "off". The default is "autodetect". This setting does not perform any function when 
-used with JMX monitors. 
+Currently, this monitoring is only useful when using Terracotta clustering and using the
+Terracotta Developer Console. With the "autodetect" value, the presence of Terracotta clustering
+will be detected and monitoring, via the Developer Console, will be enabled. Other allowed values
+are "on" and "off". The default is "autodetect". This setting does not perform any function when
+used with JMX monitors.
 * dynamicConfig - an optional setting that can be used to disable dynamic configuration of caches
 associated with this CacheManager.  By default this is set to true - i.e. dynamic configuration
 is enabled.  Dynamically configurable caches can have their TTI, TTL and maximum disk and
@@ -33,9 +33,9 @@ in-memory capacity changed at runtime through the cache's configuration object.
 -->
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="ehcache.xsd"
-         updateCheck="true" monitoring="autodetect"
+         updateCheck="false" monitoring="autodetect"
          dynamicConfig="true" >
-   
+
     <!--
     DiskStore configuration
     =======================
@@ -52,7 +52,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
     .data and .index files will be created.
 
     If the path is one of the following Java System Property it is replaced by its value in the
-    running VM. For backward compatibility these should be specified without being enclosed in the ${token} 
+    running VM. For backward compatibility these should be specified without being enclosed in the ${token}
     replacement syntax.
 
     The following properties are translated:
@@ -75,11 +75,11 @@ in-memory capacity changed at runtime through the cache's configuration object.
     using an XA enabled ehcache. If no class is specified then DefaultTransactionManagerLookup
     will find the TransactionManager in the following order
 
-     *GenericJNDI (i.e. jboss, where the property jndiName controls the name of the TransactionManager object to look up) 
+     *GenericJNDI (i.e. jboss, where the property jndiName controls the name of the TransactionManager object to look up)
      *Websphere
      *Bitronix
      *Atomikos
-   
+
     You can provide you own lookup class that implements the net.sf.ehcache.transaction.manager.TransactionManagerLookup interface.
     -->
 
@@ -120,31 +120,31 @@ in-memory capacity changed at runtime through the cache's configuration object.
 
     Specifies a TerracottaConfig which will be used to configure the Terracotta
     runtime for this CacheManager.
-   
+
     Configuration can be specified in two main ways: by reference to a source of
     configuration or by use of an embedded Terracotta configuration file.
-   
+
     To specify a reference to a source (or sources) of configuration, use the url
     attribute.  The url attribute must contain a comma-separated list of:
     * path to Terracotta configuration file (usually named tc-config.xml)
     * URL to Terracotta configuration file
     * <server host>:<port> of running Terracotta Server instance
-   
+
     Simplest example for pointing to a Terracotta server on this machine:
     <terracottaConfig url="localhost:9510"/>
-   
+
     Example using a path to Terracotta configuration file:
     <terracottaConfig url="/app/config/tc-config.xml"/>
-   
+
     Example using a URL to a Terracotta configuration file:
     <terracottaConfig url="http://internal/ehcache/app/tc-config.xml"/>
-   
+
     Example using multiple Terracotta server instance URLs (for fault tolerance):
     <terracottaConfig url="host1:9510,host2:9510,host3:9510"/>
 
     To embed a Terracotta configuration file within the ehcache configuration, simply
     place a normal Terracotta XML config within the <terracottaConfig> element.
-   
+
     Example:
     <terracottaConfig>
         <tc-config>
@@ -154,15 +154,15 @@ in-memory capacity changed at runtime through the cache's configuration object.
             </servers>
             <clients>
                 <logs>app/logs-%i</logs>
-            </clients>          
+            </clients>
         </tc-config>
     </terracottaConfig>
-   
+
     For more information on the Terracotta configuration, see the Terracotta documentation.
     -->
-    
+
     <terracottaConfig url="localhost:9510"/>
-	
+
     <!--
     Cache configuration
     ===================
@@ -247,7 +247,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
       synchronously to load objects into a cache. More than one cacheLoaderFactory element
       can be added, in which case the loaders form a chain which are executed in order. If a
       loader returns null, the next in chain is called.
-                                  
+
     Cache Event Listeners
 
     All cacheEventListenerFactory elements can take an optional property listenFor that describes
@@ -282,7 +282,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
 
     Cache Loader
     ++++++++++++
-    
+
     A default CacheLoader may be set which loads objects into the cache through asynchronous and
     synchronous methods on Cache. This is different to the bootstrap cache loader, which is used
     only in distributed caching.
@@ -296,7 +296,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
     ++++++++
 
     To enable an ehcache as a participant in the JTA Transaction, just have the following attribute
-   
+
     transactionalMode="xa", otherwise the default is transactionalMode="off"
 
     Cache Writer
@@ -367,7 +367,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
 
     Terracotta Clustering
     +++++++++++++++++++++
-   
+
     Cache elements can also contain information about whether the cache can be clustered with Terracotta.
     The <terracotta> sub-element has the following attributes:
 
@@ -404,18 +404,18 @@ in-memory capacity changed at runtime through the cache's configuration object.
 
     Simplest example to indicate clustering:
         <terracotta/>
-       
-    To indicate the cache should not be clustered (or remove the <terracotta> element altogether):   
+
+    To indicate the cache should not be clustered (or remove the <terracotta> element altogether):
         <terracotta clustered="false"/>
 
     To indicate the cache should be clustered using identity mode:
-        <terracotta clustered="true" valueMode="identity"/>       
+        <terracotta clustered="true" valueMode="identity"/>
 
     To indicate the cache should be clustered using incoherent mode for bulk load:
         <terracotta clustered="true" coherent="false"/>
 
-    To indicate the cache should be clustered using synchronous-write locking level: 
-        <terracotta clustered="true" synchronousWrites="true"/> 
+    To indicate the cache should be clustered using synchronous-write locking level:
+        <terracotta clustered="true" synchronousWrites="true"/>
     -->
 
     <!--
@@ -424,7 +424,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
 
     The defaultCache has an implicit name "default" which is a reserved cache name.
     -->
-    
+
 	<defaultCache
            maxElementsInMemory="0"
            eternal="false"
@@ -432,7 +432,7 @@ in-memory capacity changed at runtime through the cache's configuration object.
            timeToLiveSeconds="1200">
  		<!-- <terracotta/> -->
     </defaultCache>
-    
+
     <cache name="Entando_Cache"
 		maxElementsInMemory="10000"
 		maxElementsOnDisk="1000"
@@ -442,5 +442,5 @@ in-memory capacity changed at runtime through the cache's configuration object.
 		timeToIdleSeconds="300"
 		timeToLiveSeconds="600"
 		memoryStoreEvictionPolicy="LFU" />
-    
+
 </ehcache>

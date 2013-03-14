@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.authorization.authorizator;
@@ -35,16 +35,19 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 	
 	@Override
 	public List<UserDetails> getUsersByAuthority(IApsAuthority authority) throws ApsSystemException {
-		if (!this.checkAuthority(authority)) return null;
+		if (!this.checkAuthority(authority)) {
+			return null;
+		}
 		List<UserDetails> users = new ArrayList<UserDetails>();
 		try {
-			List<String> usernames = this.getAuthorizatorDAO().getUserAuthorizated(authority);
-			users = new ArrayList<UserDetails>(usernames.size());
-			for (int i=0; i<usernames.size(); i++) {
-				String username = usernames.get(i);
-				UserDetails user = this.getUserManager().getUser(username);
-				if (null != user) {
-					users.add(user);
+			List<String> usernames = this.getUsernamesByAuthority(authority);
+			if (null != usernames && !usernames.isEmpty()) {
+				for (int i=0; i<usernames.size(); i++) {
+					String username = usernames.get(i);
+					UserDetails user = this.getUserManager().getUser(username);
+					if (null != user) {
+						users.add(user);
+					}
 				}
 			}
 		} catch (Throwable t) {
@@ -52,6 +55,21 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 			throw new ApsSystemException("Error retrieving the list of authorized users", t);
 		}
 		return users;
+	}
+	
+	@Override
+	public List<String> getUsernamesByAuthority(IApsAuthority authority) throws ApsSystemException {
+		if (!this.checkAuthority(authority)) {
+			return null;
+		}
+		List<String> usernames = null;
+		try {
+			usernames = this.getAuthorizatorDAO().getUserAuthorizated(authority);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getUsernamesByAuthority");
+			throw new ApsSystemException("Error retrieving the list of authorized users", t);
+		}
+		return usernames;
 	}
 	
 	@Override
@@ -95,13 +113,20 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 	
 	@Override
 	public List<IApsAuthority> getAuthorizationsByUser(UserDetails user) throws ApsSystemException {
+		return this.getAuthorizationsByUser(user.getUsername());
+	}
+	
+	@Override
+	public List<IApsAuthority> getAuthorizationsByUser(String username) throws ApsSystemException {
 		List<IApsAuthority> auths = new ArrayList<IApsAuthority>();
 		try {
-			List<String> authsName = this.getAuthorizatorDAO().getAuthorizationNamesForUser(user.getUsername());
+			List<String> authsName = this.getAuthorizatorDAO().getAuthorizationNamesForUser(username);
 			for (int i=0; i<authsName.size(); i++) {
 				String authName = authsName.get(i);
 				IApsAuthority auth = this.getAuthority(authName);
-				if (null != auth) auths.add(auth);
+				if (null != auth) {
+					auths.add(auth);
+				}
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getAuthorizationsByUser");

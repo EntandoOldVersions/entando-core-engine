@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
@@ -46,11 +46,11 @@ public class TestContentViewerHelper extends BaseTestCase {
             
             String expected = "------ RENDERING CONTENUTO: id = ART1; ---------\n" +
             		"ATTRIBUTI:\n" +
-            		"  - AUTORI (Monolist-Monotext): \n" +
+            		"  - AUTORI (Monolist-Monotext):\n" +
             		"         testo=Pippo;\n" +
             		"         testo=Paperino;\n" +
             		"         testo=Pluto;\n" +
-            		"  - TITOLO (Text): testo=Il titolo; \n" +
+            		"  - TITOLO (Text): testo=Il titolo;\n" +
             		"  - VEDI ANCHE (Link): testo=Spiderman, dest=http://www.spiderman.org;\n" +
             		"  - FOTO (Image): testo=Image description, src(1)=/Entando/resources/cms/images/lvback_d1.jpg;\n" +
             		"  - DATA (Date): data_media = 10-mar-2004;\n" +

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.user;
@@ -36,11 +36,12 @@ import com.agiletec.aps.util.IApsEncrypter;
  * @author M.Diana - E.Santoboni
  */
 public class UserDAO extends AbstractDAO implements IUserDAO {
-
+	
 	/**
 	 * Carica e restituisce la lista completa di utenti presenti nel db.
 	 * @return La lista completa di utenti (oggetti User)
 	 */
+	@Override
 	public List<UserDetails> loadUsers() {
 		Connection conn = null;
 		List<UserDetails> users = null;
@@ -58,9 +59,12 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 		}
 		return users;
 	}
-
+	
+	@Override
 	public List<UserDetails> searchUsers(String text) {
-		if (null == text) text = "";
+		if (null == text) {
+			text = "";
+		}
 		Connection conn = null;
 		List<UserDetails> users = null;
 		PreparedStatement stat = null;
@@ -96,7 +100,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 		}
 		return users;
 	}
-
+	
 	/**
 	 * Carica un'utente corrispondente alla userName e password immessa. null
 	 * se non vi è nessun utente corrispondente.
@@ -105,12 +109,13 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * @return L'oggetto utente corrispondente ai parametri richiesti, oppure
 	 *         null se non vi è nessun utente corrispondente.
 	 */
+	@Override
 	public UserDetails loadUser(String username, String password) {
 		UserDetails user = null;
 		try {
 			String encrypdedPassword = this.getEncryptedPassword(password);
 			user = this.executeLoadingUser(username, encrypdedPassword);
-			if (null == user) {
+			if (null == user && this.isPasswordPlainTextAllowed()) {
 				user = this.executeLoadingUser(username, password);
 			}
 			if (null != user && user instanceof AbstractUser) {
@@ -141,9 +146,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 		}
 		return user;
 	}
-
-
-
+	
 	/**
 	 * Carica un'utente corrispondente alla userName immessa. null
 	 * se non vi è nessun utente corrispondente.
@@ -151,6 +154,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * @return L'oggetto utente corrispondente ai parametri richiesti, oppure
 	 *         null se non vi è nessun utente corrispondente.
 	 */
+	@Override
 	public UserDetails loadUser(String username) {
 		Connection conn = null;
 		User user = null;
@@ -174,6 +178,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * Cancella l'utente.
 	 * @param user L'oggetto di tipo User relativo all'utente da cancellare.
 	 */
+	@Override
 	public void deleteUser(UserDetails user) {
 		this.deleteUser(user.getUsername());
 	}
@@ -182,6 +187,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * Cancella l'utente corrispondente alla userName immessa.
 	 * @param username Il nome identificatore dell'utente.
 	 */
+	@Override
 	public void deleteUser(String username) {
 		Connection conn = null;
 		PreparedStatement stat = null;
@@ -206,6 +212,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * Aggiunge un nuovo utente.
 	 * @param user Oggetto di tipo User relativo all'utente da aggiungere.
 	 */
+	@Override
 	public void addUser(UserDetails user) {
 		Connection conn = null;
 		PreparedStatement stat = null;
@@ -219,7 +226,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			stat.setDate(3, new java.sql.Date(new java.util.Date().getTime()));
 			if (!user.isDisabled()) {
 				stat.setInt(4, 1);
-			} else stat.setInt(4, 0);
+			} else {
+				stat.setInt(4, 0);
+			}
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -235,8 +244,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * (tranne la username che è fissa).
 	 * @param user Oggetto di tipo User relativo all'utente da aggiornare.
 	 */
+	@Override
 	public void updateUser(UserDetails user) {
-		User japsUser = ((user instanceof User) ? (User) user : null);
+		User entandoUser = ((user instanceof User) ? (User) user : null);
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -244,24 +254,25 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(UPDATE_USER);
 			stat.setString(1, user.getPassword());
-			if (null != japsUser && null != japsUser.getLastAccess()) {
-				stat.setDate(2, new java.sql.Date(japsUser.getLastAccess().getTime()));
+			if (null != entandoUser && null != entandoUser.getLastAccess()) {
+				stat.setDate(2, new java.sql.Date(entandoUser.getLastAccess().getTime()));
 			} else {
 				stat.setNull(2, Types.DATE);
 			}
-			if (null != japsUser && null != japsUser.getLastPasswordChange()) {
-				stat.setDate(3, new java.sql.Date(japsUser.getLastPasswordChange().getTime()));
+			if (null != entandoUser && null != entandoUser.getLastPasswordChange()) {
+				stat.setDate(3, new java.sql.Date(entandoUser.getLastPasswordChange().getTime()));
 			} else {
 				stat.setNull(3, Types.DATE);
 			}
-			if (null != japsUser) {
-				if (!japsUser.isDisabled()) {
+			if (null != entandoUser) {
+				if (!entandoUser.isDisabled()) {
 					stat.setInt(4, 1);
-				} else stat.setInt(4, 0);
+				} else {
+					stat.setInt(4, 0);
+				}
 			} else {
 				stat.setNull(4, Types.NUMERIC);
 			}
-
 			stat.setString(5, user.getUsername());
 			stat.executeUpdate();
 			conn.commit();
@@ -394,6 +405,7 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	 * @param groupName Il nome del grupo tramite il quale cercare gli utenti.
 	 * @return La lista degli utenti (oggetti User) membri del gruppo specificato.
 	 */
+	@Override
 	public List<UserDetails> loadUsersForGroup(String groupName) {
 		Connection conn = null;
 		List<UserDetails> users = null;
@@ -421,14 +433,23 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 		}
 		return encrypted;
 	}
-
+	
+	protected boolean isPasswordPlainTextAllowed() {
+		return _passwordPlainTextAllowed;
+	}
+	public void setPasswordPlainTextAllowed(boolean passwordPlainTextAllowed) {
+		this._passwordPlainTextAllowed = passwordPlainTextAllowed;
+	}
+	
 	protected IApsEncrypter getEncrypter() {
 		return _encrypter;
 	}
 	public void setEncrypter(IApsEncrypter encrypter) {
 		this._encrypter = encrypter;
 	}
-
+	
+	private boolean _passwordPlainTextAllowed;
+	
 	private IApsEncrypter _encrypter;
 
 	private final String PREFIX_LOAD_USERS = 

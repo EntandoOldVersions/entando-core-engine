@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.page;
@@ -20,7 +20,6 @@ package com.agiletec.aps.system.services.page;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -72,69 +71,44 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	 */
 	protected List<IPage> createPages(ResultSet res) throws Throwable {
 		List<IPage> pages = new ArrayList<IPage>();
-		Object record[] = null;
 		Page page = null;
 		Showlet showlets[] = null;
 		int numFrames = 0;
 		String prevCode = "...no previous code...";
 		while (res.next()) {
-			record = getRecord(res);
-			String code = (String) record[3];
+			String code = res.getString(3);
 			if (!code.equals(prevCode)) {
 				if (page != null) {
 					pages.add(page);
 				}
-				page = this.createPage(record);
+				page = this.createPage(code, res);
 				numFrames = page.getModel().getFrames().length;
 				showlets = new Showlet[numFrames];
 				page.setShowlets(showlets);
 				prevCode = code;
 			}
-			if (record[9] != null) {
-				Integer pos = new Integer(record[9].toString());
-				int intPos = pos.intValue();
-				if (intPos >= 0 && intPos < numFrames) {
-					showlets[intPos] = this.createShowlet(record, page);
-				} else {
-					ApsSystemUtils.getLogger().info("The position read from the database exceeds " +
-							"the numer of frames defined in the model of the page '"+ page.getCode()+"'");
-				}
+			int pos = res.getInt(9);
+			if (pos >= 0 && pos < numFrames) {
+				Showlet showlet = this.createShowlet(page, pos, res);//this.createShowlet(record, page);
+				showlets[pos] = showlet;
+			} else {
+				ApsSystemUtils.getLogger().info("The position read from the database exceeds " +
+						"the numer of frames defined in the model of the page '"+ page.getCode()+"'");
 			}
 		}
 		pages.add(page);
 		return pages;
 	}
-
-	/**
-	 * Return an array of the objects contained in the given result set. This is needed in
-	 * order to put the record in a buffer because some drivers will prevent the access to the
-	 * same column twice in the same result set.
-	 * WARNING: to fetch the objects of the record use the same index of the result set,
-	 * starting from 1 for the first column.
-	 * 
-	 * @param res The result set containing the objects to put in a buffer.
-	 * @return An array containing the objects fetched from the given result set
-	 * @throws SQLException in case of error
-	 */
-	protected Object[] getRecord(ResultSet res) throws SQLException {
-		int size = res.getMetaData().getColumnCount();
-		Object record[] = new Object[size + 1];
-		for (int i = 1; i <= size; i++) {
-			record[i] = res.getObject(i);
-		}
-		return record;
-	}
-
-	protected Page createPage(Object[] record) throws ApsSystemException {
+	
+	protected Page createPage(String code, ResultSet res) throws Throwable {
 		Page page = new Page();
-		page.setCode((String) record[3]);
-		page.setParentCode((String) record[1]);
-		page.setPosition(Integer.parseInt(record[2].toString()));
-		Integer showable = new Integer (record[4].toString());
+		page.setCode(code);
+		page.setParentCode(res.getString(1));
+		page.setPosition(res.getInt(2));
+		Integer showable = new Integer (res.getInt(4));
 		page.setShowable(showable.intValue() == 1);
-		String modelCode = (String) record[5];
-		page.setModel(this.getPageModelManager().getPageModel(modelCode));
-		String titleText = (String) record[6];
+		page.setModel(this.getPageModelManager().getPageModel(res.getString(5)));
+		String titleText = res.getString(6);
 		ApsProperties titles = new ApsProperties();
 		try {
 			titles.loadFromXml(titleText);
@@ -144,8 +118,8 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			throw new ApsSystemException(msg, t);
 		}
 		page.setTitles(titles);
-		page.setGroup((String) record[7]);
-		String extraConfig = (String) record[8];
+		page.setGroup(res.getString(7));
+		String extraConfig = res.getString(8);
 		if (null != extraConfig && extraConfig.trim().length() > 0) {
 			try {
 				PageExtraConfigDOM configDom = new PageExtraConfigDOM();
@@ -158,15 +132,17 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		}
 		return page;
 	}
-
-	protected Showlet createShowlet(Object[] record, IPage page) throws ApsSystemException {
+	
+	protected Showlet createShowlet(IPage page, int pos, ResultSet res) throws Throwable {
+		String typeCode = res.getString(10);
+		if (null == typeCode) {
+			return null;
+		}
 		Showlet showlet = new Showlet();
-		int pos = Integer.parseInt(record[9].toString());
-		String typeCode = (String) record[10];
 		ShowletType type = this.getShowletTypeManager().getShowletType(typeCode);
 		showlet.setType(type);
 		ApsProperties config = new ApsProperties();
-		String configText = (String) record[11];
+		String configText = res.getString(11);
 		if (null != configText && configText.trim().length() > 0) {
 			try {
 				config.loadFromXml(configText);
@@ -180,7 +156,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			config = type.getConfig();
 		}
 		showlet.setConfig(config);
-		String contentPublished = (String) record[12];
+		String contentPublished = res.getString(12);
 		showlet.setPublishedContent(contentPublished);
 		return showlet;
 	}
@@ -208,8 +184,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	
 	protected void addPageRecord(IPage page, Connection conn) throws ApsSystemException {
 		int position = 1;
-		if (page.getParent().getChildren()!= null ){
-			position = page.getParent().getChildren().length + 1;
+		IPage[] sisters = page.getParent().getChildren();
+		if (null != sisters && sisters.length > 0) {
+			IPage last = sisters[sisters.length - 1];
+			if (null != last) {
+				position = last.getPosition() + 1;
+			} else {
+				position = sisters.length + 1;
+			}
 		}
 		PreparedStatement stat = null;
 		try {

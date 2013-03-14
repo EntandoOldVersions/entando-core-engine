@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.category;
@@ -73,7 +73,7 @@ public class Category extends TreeNode implements Comparable {
 	 */
 	public String getTitle() {
 		String title = null;
-		if (this._renderingLang != null) {
+		if (this._renderingLang != null && null != this.getTitles().get(this._renderingLang)) {
 			title = (String) this.getTitles().get(this._renderingLang);
 		} else {
 			title = (String) this.getTitles().get(this._defaultLang);
@@ -83,6 +83,7 @@ public class Category extends TreeNode implements Comparable {
 		}
 		return title;
 	}
+	
 	
 	/**
 	 * Restituisce il titolo (comprensivo delle progenitrici) della 

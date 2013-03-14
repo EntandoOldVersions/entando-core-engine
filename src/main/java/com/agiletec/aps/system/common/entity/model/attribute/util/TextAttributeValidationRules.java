@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
@@ -26,7 +26,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,6 +37,7 @@ import org.jdom.Element;
  */
 public class TextAttributeValidationRules extends AbstractAttributeValidationRules {
     
+    @Override
     public IAttributeValidationRules clone() {
         TextAttributeValidationRules clone = (TextAttributeValidationRules) super.clone();
         clone.setMaxLength(this.getMaxLength());
@@ -46,14 +46,15 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         return clone;
     }
     
+    @Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
-        if (this.getMinLength() > -1) {
+        if (null != this.getMinLength() && this.getMinLength() > -1) {
             Element element = new Element("minlength");
             element.setText(String.valueOf(this.getMinLength()));
             configElement.addContent(element);
         }
-        if (this.getMaxLength() > -1) {
+        if (null != this.getMaxLength() && this.getMaxLength() > -1) {
             Element element = new Element("maxlength");
             element.setText(String.valueOf(this.getMaxLength()));
             configElement.addContent(element);
@@ -72,6 +73,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         this.insertJDOMConfigElement("rangeend", this.getRangeEndAttribute(), toStringEndValue, configElement);
     }
     
+    @Override
     protected void extractValidationRules(Element validationElement) {
         super.extractValidationRules(validationElement);
         String maxLength = this.extractValue(validationElement, "maxlength");
@@ -103,9 +105,12 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         }
     }
     
+	@Override
     public List<AttributeFieldError> validate(AttributeInterface attribute, AttributeTracer tracer, ILangManager langManager) {
         List<AttributeFieldError> errors = super.validate(attribute, tracer, langManager);
-        if (this.isEmpty()) return errors;
+        if (this.isEmpty()) {
+			return errors;
+		}
         try {
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
@@ -124,18 +129,18 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
     }
     
     protected void checkTextLengths(AttributeInterface attribute, AttributeTracer tracer, Lang lang, List<AttributeFieldError> errors) {
-        int maxLength = this.getMaxLength();
-        int minLength = this.getMinLength();
-        if (maxLength != -1 || minLength != -1) {
+        Integer maxLength = this.getMaxLength();
+        Integer minLength = this.getMinLength();
+        if ((null != maxLength && maxLength > -1) || (null != minLength && minLength > -1)) {
             String text = this.getTextForCheckLength(attribute, lang);
             if (text != null && text.trim().length() > 0) {
                 text = text.trim();
-                if (maxLength != -1 && text.length() > maxLength && text.length() > 0) {
-                    AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MAX_LENGTH, tracer);
+                if ((null != maxLength && maxLength > -1) && text.length() > maxLength) {
+					AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MAX_LENGTH, tracer);
                     error.setMessage("Lang '" + lang.getDescr() + "' -  length " + text.length() + " upper than " + maxLength);
                     errors.add(error);
                 }
-                if (minLength != -1 && text.length() < minLength && text.length() > 0) {
+                if ((null != minLength && minLength > -1) && text.length() < minLength) {
                     AttributeFieldError error = new AttributeFieldError(attribute, FieldError.INVALID_MIN_LENGTH, tracer);
                     error.setMessage("Lang '" + lang.getDescr() + "' -  length " + text.length() + " lower than " + minLength);
                     errors.add(error);
@@ -155,7 +160,7 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
     
     protected void checkRegExp(AttributeInterface attribute, AttributeTracer tracer, Lang lang, List<AttributeFieldError> errors) {
         String text = ((ITextAttribute)attribute).getTextForLang(lang.getCode());
-        if (null != text && text.trim().length() > 0 && null != this.getRegexp()) {
+        if (null != text && text.trim().length() > 0 && null != this.getRegexp() && this.getRegexp().trim().length() > 0) {
             Pattern pattern = Pattern.compile(this.getRegexp());
             Matcher matcher = pattern.matcher(text);
             if (!matcher.matches()) {
@@ -166,24 +171,25 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         }
     }
     
-    protected boolean isEmpty() {
+	@Override
+    public boolean isEmpty() {
         return (super.isEmpty()
-                && (-1 == this.getMaxLength())
-                && (-1 == this.getMinLength())
+                && (null == this.getMaxLength() || this.getMaxLength() < 0)
+                && (null == this.getMinLength() || this.getMinLength() < 0)
                 && (null == this.getRegexp() || this.getRegexp().trim().length() == 0));
     }
     
-    public int getMaxLength() {
+    public Integer getMaxLength() {
         return _maxLength;
     }
-    public void setMaxLength(int maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this._maxLength = maxLength;
     }
 
-    public int getMinLength() {
+    public Integer getMinLength() {
         return _minLength;
     }
-    public void setMinLength(int minLength) {
+    public void setMinLength(Integer minLength) {
         this._minLength = minLength;
     }
 
@@ -194,8 +200,8 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
         this._regexp = regexp;
     }
     
-    private int _maxLength = -1;
-    private int _minLength = -1;
+    private Integer _maxLength;
+    private Integer _minLength;
     private String _regexp;
     
 }

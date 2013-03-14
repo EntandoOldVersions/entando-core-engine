@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.apsadmin.portal;
@@ -96,7 +96,7 @@ public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
 		assertEquals(AbstractPortalAction.STOCK_SHOWLETS_CODE, stockType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("login_form", stockType.getKey());
-			assertEquals("Showlet di Login", stockType.getValue());
+			assertEquals("Widget di Login", stockType.getValue());
 		} else {
 			assertEquals("messages_system", stockType.getKey());
 			assertEquals("System Messages", stockType.getValue());

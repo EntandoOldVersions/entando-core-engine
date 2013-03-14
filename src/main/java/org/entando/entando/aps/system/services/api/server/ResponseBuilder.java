@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software;
@@ -12,7 +12,7 @@
 *
 *
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.system.services.api.server;
@@ -54,6 +54,7 @@ import javax.ws.rs.core.Response;
  */
 public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, ServletContextAware {
     
+	@Override
     @Deprecated
     public Object createResponse(String resourceName, Properties parameters) throws ApsSystemException {
         Object apiResponse = null;
@@ -70,10 +71,12 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return apiResponse;
     }
     
+	@Override
     public Object createResponse(ApiMethod method, Properties parameters) throws ApsSystemException {
         return createResponse(method, null, parameters);
     }
     
+	@Override
     public Object createResponse(ApiMethod method, Object bodyObject, Properties parameters) throws ApsSystemException {
         AbstractApiResponse response = null;
         try {
@@ -136,11 +139,12 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
             }
             htmlResult = this.getVelocityRenderer().render(masterResult, template);
         } catch (ApiException t) {
-            ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
-                    "Error creating html response - " + this.buildApiSignature(apiMethod));
             if (null != t.getErrors()) {
                 apiResponse.addErrors(t.getErrors());
-            }
+            } else {
+				ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
+                    "Error creating html response - " + this.buildApiSignature(apiMethod));
+			}
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "extractHtmlResult",
                     "Error creating html response - " + this.buildApiSignature(apiMethod));
@@ -152,17 +156,17 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         String template = null;
         InputStream is = null;
         try {
-            StringBuffer path = new StringBuffer("classpath*:/api/");
+            StringBuilder path = new StringBuilder("classpath*:/api/");
             if (null != apiMethod.getPluginCode()) {
-                path.append("plugins/" + apiMethod.getPluginCode() + "/");
+                path.append("plugins/").append(apiMethod.getPluginCode()).append("/");
             } else if (!apiMethod.getSource().equalsIgnoreCase("core")) {
-                path.append(apiMethod.getSource() + "/");
+                path.append(apiMethod.getSource()).append("/");
             }
             path.append("aps/get/");
 			if (null != apiMethod.getNamespace()) {
-				path.append(apiMethod.getNamespace() + "/");
+				path.append(apiMethod.getNamespace()).append("/");
 			}
-			path.append(apiMethod.getResourceName() + "/description-item.vm");
+			path.append(apiMethod.getResourceName()).append("/description-item.vm");
             Resource[] resources = ApsWebApplicationUtils.getResources(path.toString(), this.getServletContext());
             if (null != resources && resources.length == 1) {
                 Resource resource = resources[0];
@@ -222,8 +226,9 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return apiResponse;
     }
     
+    @Override
     @Deprecated
-    public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
+	public Object invoke(String resourceName, Properties parameters) throws ApiException, ApsSystemException {
         Object result = null;
         try {
             ApiMethod api = this.extractApiMethod(ApiMethod.HttpMethod.GET, null, resourceName);
@@ -240,6 +245,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
         return result;
     }
     
+	@Override
     public ApiMethod extractApiMethod(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) throws ApiException {
         ApiMethod api = null;
         String signature = this.buildApiSignature(httpMethod, namespace, resourceName);
@@ -268,7 +274,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     }
     
     private String buildApiSignature(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod.toString()).append("' Resource '").append(resourceName).append("'");
 		if (null != namespace) {
 			buffer.append(" Namespace '").append(namespace).append("'");
@@ -406,6 +412,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected BeanFactory getBeanFactory() {
         return this._beanFactory;
     }
+	@Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this._beanFactory = beanFactory;
     }
@@ -413,6 +420,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected ServletContext getServletContext() {
         return this._servletContext;
     }
+	@Override
     public void setServletContext(ServletContext servletContext) {
         this._servletContext = servletContext;
     }

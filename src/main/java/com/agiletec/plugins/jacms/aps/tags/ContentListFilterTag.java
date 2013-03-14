@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.aps.tags;
@@ -23,11 +23,11 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 
 /**
@@ -36,7 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentLi
  * declared and the result of the search will reflect this fact.
  * @author E.Santoboni
  */
-public class ContentListFilterTag extends TagSupport implements IContentListFilterBean {
+public class ContentListFilterTag extends TagSupport implements IEntityFilterBean {
 	
 	public ContentListFilterTag() {
 		super();
@@ -50,17 +50,17 @@ public class ContentListFilterTag extends TagSupport implements IContentListFilt
 		try {
 			if (!this.isRightKey()) {
 				String message = "";
-				for (int i=0; i < IContentListHelper.allowedMetadataFilterKeys.length; i++) {
+				for (int i=0; i < IContentListShowletHelper.allowedMetadataFilterKeys.length; i++) {
 					if (i!=0) message.concat(",");
-					message.concat(IContentListHelper.allowedMetadataFilterKeys[i]);
+					message.concat(IContentListShowletHelper.allowedMetadataFilterKeys[i]);
 				}
 				throw new RuntimeException("The key '" + this.getKey() + "' is unknown; " +
 						"Please use a valid one - " + message);
 			}
-			IContentListHelper helper = (IContentListHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			IContentListShowletHelper helper = (IContentListShowletHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			IContentListTagBean parent = (IContentListTagBean) findAncestorWithClass(this, IContentListTagBean.class);
 			String contentType = parent.getContentType();
-			EntitySearchFilter filter = helper.getFilter(contentType, this, reqCtx);
+			EntitySearchFilter filter = helper.getFilter(contentType, (IEntityFilterBean) this, reqCtx);
 			if (null != filter) {
 				parent.addFilter(filter);
 			}
@@ -75,8 +75,8 @@ public class ContentListFilterTag extends TagSupport implements IContentListFilt
 		if (this.isAttributeFilter()) {
 			return true;
 		} else {
-			for (int i = 0; i < IContentListHelper.allowedMetadataFilterKeys.length; i++) {
-				if (IContentListHelper.allowedMetadataFilterKeys[i].equals(this.getKey())) return true;
+			for (int i = 0; i < IContentListShowletHelper.allowedMetadataFilterKeys.length; i++) {
+				if (IContentListShowletHelper.allowedMetadataFilterKeys[i].equals(this.getKey())) return true;
 			}
 		}
 		return false;

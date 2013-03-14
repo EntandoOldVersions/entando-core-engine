@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.tags.util;
@@ -71,7 +71,7 @@ public class PagerTagHelper {
 			if (reqCtx != null) {
 				Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 				ApsProperties config = showlet.getConfig();
-				String stringMax = (String) config.get("maxElemForItem");
+				String stringMax = (null != config) ? (String) config.get("maxElemForItem") : null;
 				if (stringMax != null && stringMax.length() > 0) {
 					maxItems = Integer.parseInt(stringMax);
 				}

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package org.entando.entando.plugins.jacms.aps.system.services.api.response;
@@ -29,11 +29,13 @@ import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResu
 @XmlRootElement(name = "response")
 public class ContentTypeResponse extends AbstractApiResponse {
     
+    @Override
     @XmlElement(name = "result", required = true)
     public ContentTypeResponseResult getResult() {
         return (ContentTypeResponseResult) super.getResult();
     }
     
+    @Override
     protected AbstractApiResponseResult createResponseResultInstance() {
         return new ContentTypeResponseResult();
     }

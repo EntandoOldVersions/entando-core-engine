@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.parse;
@@ -79,6 +79,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	 * @param entityManagerName The entity manager name
 	 * @throws ApsSystemException If errors are detected while parsing the configuration XML.
 	 */
+	@Override
 	public void initEntityTypeDOM(String xml, Class entityClass, 
 			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
 		try {
@@ -101,21 +102,55 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	
 	@Override
 	public String getXml(Map<String, IApsEntity> entityTypes) throws ApsSystemException {
-		Document document = new Document();
-		Element rootElement = new Element(this.getEntityTypesRootElementName());
-		document.setRootElement(rootElement);
-		List<String> entityTypeCodes = new ArrayList<String>(entityTypes.keySet());
-		Collections.sort(entityTypeCodes);
-		for (int i=0; i<entityTypeCodes.size(); i++) {
-			IApsEntity currentEntityType = entityTypes.get(entityTypeCodes.get(i));
-			Element entityTypeElement = this.createTypeElement(currentEntityType);
-			rootElement.addContent(entityTypeElement);
-		}
 		XMLOutputter out = new XMLOutputter();
-		Format format = Format.getPrettyFormat();
-		format.setIndent("\t");
-		out.setFormat(format);
+		Document document = new Document();
+		try {
+			Element rootElement = new Element(this.getEntityTypesRootElementName());
+			document.setRootElement(rootElement);
+			List<String> entityTypeCodes = new ArrayList<String>(entityTypes.keySet());
+			Collections.sort(entityTypeCodes);
+			for (int i=0; i<entityTypeCodes.size(); i++) {
+				IApsEntity currentEntityType = entityTypes.get(entityTypeCodes.get(i));
+				Element entityTypeElement = this.createTypeElement(currentEntityType);
+				rootElement.addContent(entityTypeElement);
+			}
+			Format format = Format.getPrettyFormat();
+			format.setIndent("\t");
+			out.setFormat(format);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
+			throw new ApsSystemException("Error building xml", t);
+		}
 		return out.outputString(document);
+	}
+	
+	@Override
+	public String getXml(IApsEntity entityType) throws ApsSystemException {
+		XMLOutputter out = new XMLOutputter();
+		Document document = new Document();
+		try {
+			Element entityTypeElement = this.createTypeElement(entityType);
+			document.setRootElement(entityTypeElement);
+			Format format = Format.getPrettyFormat();
+			format.setIndent("\t");
+			out.setFormat(format);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
+			throw new ApsSystemException("Error building xml", t);
+		}
+		return out.outputString(document);
+	}
+	
+	@Override
+	public IApsEntity extractEntityType(String xml, Class entityClass, 
+			IApsEntityDOM entityDom, String entityManagerName) throws ApsSystemException {
+		try {
+			Document document = this.decodeDOM(xml);
+			return this.doParsing(document.getRootElement(), entityClass, entityDom);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "extractEntityType", "Error extracting entity type");
+			throw new ApsSystemException("Error extracting entity type", t);
+		}
 	}
 	
 	protected Element createTypeElement(IApsEntity currentEntityType) {
@@ -165,13 +200,24 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 		List<Element> contentElements = document.getRootElement().getChildren();
 		for (int i=0; i<contentElements.size(); i++) {
 			Element currentContentElem = contentElements.get(i);
-			IApsEntity entity = this.createEntityType(currentContentElem, entityClass);
-			entity.setEntityDOM(entityDom);
+			IApsEntity entity = this.doParsing(currentContentElem, entityClass, entityDom);
 			this._entityTypes.put(entity.getTypeCode(), entity);
-			this.fillEntityType(entity, currentContentElem);
+		}
+	}
+	
+	protected IApsEntity doParsing(Element element, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
+		IApsEntity entity = null;
+		try {
+			entity = this.createEntityType(element, entityClass);
+			entity.setEntityDOM(entityDom);
+			this.fillEntityType(entity, element);
 			entity.setDefaultLang(this.getLangManager().getDefaultLang().getCode());
 			ApsSystemUtils.getLogger().finest("Entity Type '" + entity.getTypeCode() + "' defined");
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "doParsing", "Error extracting entity type");
+			throw new ApsSystemException("Configuration error of the Entity Type detected", t);
 		}
+		return entity;
 	}
 	
 	/**
@@ -196,8 +242,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 				ApsSystemUtils.getLogger().finest("The Attribute " + attribute.getName() + " of type " 
 						+ attribute.getType() + " was successfully inserted in the Entity Type " + entityType.getTypeCode());
 			}
-		} catch (Throwable e) {
-			throw new ApsSystemException("Configuration error of the Entity Type "+entityType.getTypeCode()+" detected", e);
+		} catch (Throwable t) {
+			throw new ApsSystemException("Configuration error of the Entity Type "+entityType.getTypeCode()+" detected", t);
 		}
 	}
 	

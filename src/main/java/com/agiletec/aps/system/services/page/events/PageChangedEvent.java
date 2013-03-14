@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.page.events;
@@ -28,10 +28,12 @@ import com.agiletec.aps.system.services.page.IPage;
  */
 public class PageChangedEvent extends ApsEvent {
 	
+	@Override
 	public void notify(IManager srv) {
 		((PageChangedObserver) srv).updateFromPageChanged(this);
 	}
 	
+	@Override
 	public Class getObserverInterface() {
 		return PageChangedObserver.class;
 	}
@@ -52,6 +54,28 @@ public class PageChangedEvent extends ApsEvent {
 		this._page = page;
 	}
 	
+	public int getOperationCode() {
+		return _operationCode;
+	}
+	public void setOperationCode(int operationCode) {
+		this._operationCode = operationCode;
+	}
+	
+	public int getFramePosition() {
+		return _framePosition;
+	}
+	public void setFramePosition(int framePosition) {
+		this._framePosition = framePosition;
+	}
+	
 	private IPage _page;
+	
+	private int _operationCode;
+	private int _framePosition;
+	
+	public static final int INSERT_OPERATION_CODE = 1;
+	public static final int REMOVE_OPERATION_CODE = 2;
+	public static final int UPDATE_OPERATION_CODE = 3;
+	public static final int EDIT_FRAME_OPERATION_CODE = 4;
 	
 }

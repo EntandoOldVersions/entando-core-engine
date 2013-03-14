@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.loader;
@@ -24,8 +24,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.IManager;
-import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
 /**
@@ -54,7 +52,7 @@ public class ExtraAttributeLoader {
 					Object wrapperObject = beanFactory.getBean(defNames[i]);
 					if (wrapperObject != null) {
 						ExtraAttributeWrapper wrapper = (ExtraAttributeWrapper) wrapperObject;
-						String destEntityManagerName = ((IManager) wrapper.getEntityManagerDest()).getName();
+						String destEntityManagerName = wrapper.getEntityManagerNameDest();
 						if (entityManagerName.equals(destEntityManagerName) && null != wrapper.getAttribute()) {
 							extraAttributes.put(wrapper.getAttribute().getType(), wrapper.getAttribute());
 						}

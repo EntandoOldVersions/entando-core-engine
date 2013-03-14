@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.system.services.api;
@@ -40,7 +40,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
-
+	
+	@Override
     public void loadApiStatus(Map<String, ApiResource> resources) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -75,6 +76,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                 } else {
                     method.setRequiredPermission(null);
                 }
+				boolean hidden = (res.getInt("ishidden") == 1);
+                method.setHidden(hidden);
             }
             conn.commit();
         } catch (Throwable t) {
@@ -84,7 +87,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(res, stat, conn);
         }
     }
-
+	
+    @Override
     public void resetApiStatus(String resourceCode, HttpMethod httpMethod) {
         Connection conn = null;
         try {
@@ -100,7 +104,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeConnection(conn);
         }
     }
-
+	
     protected void resetApiStatus(String resourceCode, HttpMethod httpMethod, Connection conn) {
         PreparedStatement stat = null;
         try {
@@ -115,7 +119,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(null, stat);
         }
     }
-
+	
+    @Override
     public void saveApiStatus(ApiMethod method) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -125,14 +130,19 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
 			String resourceCode = ApiResource.getCode(method.getNamespace(), method.getResourceName());
             this.resetApiStatus(resourceCode, method.getHttpMethod(), conn);
             stat = conn.prepareStatement(SAVE_API_STATUS);
-            //resource, httpmethod, isactive, authenticationrequired, authorizationrequired
             int isActive = (method.isActive()) ? 1 : 0;
             stat.setString(1, resourceCode);
             stat.setString(2, method.getHttpMethod().toString());
             stat.setInt(3, isActive);
             int authentication = (method.getRequiredAuth()) ? 1 : 0;
             stat.setInt(4, authentication);
-            stat.setString(5, method.getRequiredPermission());
+            if (null != method.getRequiredPermission() && method.getRequiredPermission().trim().length() > 0) {
+				stat.setString(5, method.getRequiredPermission());
+			} else {
+				stat.setNull(5, Types.VARCHAR);
+			}
+			int isHidden = (null != method.getHidden() && method.getHidden()) ? 1 : 0;
+			stat.setInt(6, isHidden);
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -144,10 +154,12 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
     }
 	
     @Deprecated
+    @Override
     public Map<String, ApiService> loadServices(Map<String, ApiMethod> methods) {
         return this.loadServices(new ArrayList<ApiMethod>(methods.values()));
     }
 	
+    @Override
     public Map<String, ApiService> loadServices(List<ApiMethod> methods) {
         Map<String, ApiMethod> methodMap = new HashMap<String, ApiMethod>();
         for (int i = 0; i < methods.size(); i++) {
@@ -164,8 +176,6 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             stat = conn.createStatement();
             res = stat.executeQuery(LOAD_SERVICES);
-            //servicekey, parentapi, description, parameters, 
-            //tag, freeparameters, isactive, ispublic
             while (res.next()) {
                 this.buildService(methodMap, services, invalidServices, res);
             }
@@ -197,10 +207,20 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                     freeParameters = dom.extractFreeParameters();
                 }
                 boolean isActive = (1 == res.getInt(7)) ? true : false;
-                boolean isPublic = (1 == res.getInt(8)) ? true : false;
+                boolean isHidden = (1 == res.getInt(8)) ? true : false;
                 boolean isMyEntando = (1 == res.getInt(9)) ? true : false;
                 ApiService apiService = new ApiService(key, description, masterMethod,
-                        parameters, freeParameters, tag, isPublic, isActive, isMyEntando);
+                        parameters, freeParameters, tag, !isHidden, isActive, isMyEntando);
+				boolean authRequired = (1 == res.getInt(10)) ? true : false;
+				apiService.setRequiredAuth(authRequired);
+				String requiredPermission = res.getString(11);
+				if (null != requiredPermission && requiredPermission.trim().length() > 0) {
+					apiService.setRequiredPermission(requiredPermission);
+				}
+				String requiredGroup = res.getString(12);
+				if (null != requiredGroup && requiredGroup.trim().length() > 0) {
+					apiService.setRequiredGroup(requiredGroup);
+				}
                 services.put(key, apiService);
             } else {
                 invalidServices.add(key);
@@ -210,6 +230,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void addService(ApiService service) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -217,25 +238,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(ADD_SERVICE);
-            //servicekey, resource, description, parameters, tag, freeparameters, isactive, ispublic
             stat.setString(1, service.getKey());
-			String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
-			stat.setString(2, resourceCode);
-            stat.setString(3, service.getDescription().toXml());
-            stat.setString(4, service.getParameters().toXml());
-            stat.setString(5, service.getTag());
-            if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
-                stat.setNull(6, Types.VARCHAR);
-            } else {
-                ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
-                stat.setString(6, dom.extractXml(service.getFreeParameters()));
-            }
-            int isActive = (service.isActive()) ? 1 : 0;
-            stat.setInt(7, isActive);
-            int isPublic = (service.isPublicService()) ? 1 : 0;
-            stat.setInt(8, isPublic);
-            int isMyEntando = (service.isMyEntando()) ? 1 : 0;
-            stat.setInt(9, isMyEntando);
+			this.valorizeStatement(service, stat, 1);
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -246,6 +250,7 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
         }
     }
 
+    @Override
     public void updateService(ApiService service) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -253,25 +258,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(UPDATE_SERVICE);
-            //SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? WHERE servicekey = ? ";
-            String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
-			stat.setString(1, resourceCode);
-            stat.setString(2, service.getDescription().toXml());
-            stat.setString(3, service.getParameters().toXml());
-            stat.setString(4, service.getTag());
-            if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
-                stat.setNull(5, Types.VARCHAR);
-            } else {
-                ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
-                stat.setString(5, dom.extractXml(service.getFreeParameters()));
-            }
-            int isActive = (service.isActive()) ? 1 : 0;
-            stat.setInt(6, isActive);
-            int isPublic = (service.isPublicService()) ? 1 : 0;
-            stat.setInt(7, isPublic);
-            int isMyEntando = (service.isMyEntando()) ? 1 : 0;
-            stat.setInt(8, isMyEntando);
-            stat.setString(9, service.getKey());
+			int index = this.valorizeStatement(service, stat, 0);
+            stat.setString(++index, service.getKey());
             stat.executeUpdate();
             conn.commit();
         } catch (Throwable t) {
@@ -281,7 +269,41 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             closeDaoResources(null, stat, conn);
         }
     }
+	
+	private int valorizeStatement(ApiService service, PreparedStatement stat, int index) throws Throwable {
+		String resourceCode = ApiResource.getCode(service.getMaster().getNamespace(), service.getMaster().getResourceName());
+		stat.setString(++index, resourceCode);
+		stat.setString(++index, service.getDescription().toXml());
+		stat.setString(++index, service.getParameters().toXml());
+		stat.setString(++index, service.getTag());
+		if (null == service.getFreeParameters() || service.getFreeParameters().length == 0) {
+			stat.setNull(++index, Types.VARCHAR);
+		} else {
+			ServiceExtraConfigDOM dom = new ServiceExtraConfigDOM();
+			stat.setString(++index, dom.extractXml(service.getFreeParameters()));
+		}
+		int isActive = (service.isActive()) ? 1 : 0;
+		stat.setInt(++index, isActive);
+		int isHidden = (service.isHidden()) ? 1 : 0;
+		stat.setInt(++index, isHidden);
+		int isMyEntando = (service.isMyEntando()) ? 1 : 0;
+		stat.setInt(++index, isMyEntando);
+		int authRequired = (service.getRequiredAuth()) ? 1 : 0;
+		stat.setInt(++index, authRequired);
+		if (null != service.getRequiredPermission() && service.getRequiredPermission().trim().length() > 0) {
+			stat.setString(++index, service.getRequiredPermission());
+		} else {
+			stat.setNull(++index, Types.VARCHAR);
+		}
+		if (null != service.getRequiredGroup() && service.getRequiredGroup().trim().length() > 0) {
+			stat.setString(++index, service.getRequiredGroup());
+		} else {
+			stat.setNull(++index, Types.VARCHAR);
+		}
+		return index;
+    }
 
+    @Override
     public void deleteService(String key) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -301,26 +323,28 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
     }
     
     private static final String LOAD_API_STATUS =
-            "SELECT resource, httpmethod, isactive, authenticationrequired, authorizationrequired "
+            "SELECT resource, httpmethod, isactive, authenticationrequired, authorizationrequired, ishidden "
             + "FROM apicatalog_methods";
     
     private static final String SAVE_API_STATUS =
             "INSERT INTO apicatalog_methods(resource, httpmethod, isactive, "
-            + "authenticationrequired, authorizationrequired) VALUES (?, ?, ?, ?, ?)";
+            + "authenticationrequired, authorizationrequired, ishidden) VALUES (?, ?, ?, ?, ?, ?)";
     
     private static final String RESET_API_STATUS =
             "DELETE FROM apicatalog_methods WHERE resource = ? AND httpmethod = ?";
     
     private static final String LOAD_SERVICES =
-            "SELECT servicekey, resource, description, parameters, tag, "
-            + "freeparameters, isactive, ispublic, myentando FROM apicatalog_services";
+			"SELECT servicekey, resource, description, parameters, tag, freeparameters, isactive, "
+			+ "ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup FROM apicatalog_services";
     
     private static final String ADD_SERVICE =
-            "INSERT INTO apicatalog_services(servicekey, resource, "
-            + "description, parameters, tag, freeparameters, isactive, ispublic, myentando) VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
+            "INSERT INTO apicatalog_services(servicekey, resource, description, parameters, tag, "
+			+ "freeparameters, isactive, ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
     
     private static final String UPDATE_SERVICE =
-            "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , freeparameters = ? , isactive = ? , ispublic = ? , myentando = ? WHERE servicekey = ? ";
+            "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , "
+			+ "freeparameters = ? , isactive = ? , ishidden = ? , myentando = ? , authenticationrequired = ? , requiredpermission = ? , requiredgroup = ? WHERE servicekey = ? ";
     
     private static final String DELETE_SERVICE =
             "DELETE FROM apicatalog_services WHERE servicekey = ? ";

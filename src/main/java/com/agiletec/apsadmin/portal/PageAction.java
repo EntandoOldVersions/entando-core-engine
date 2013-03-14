@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.apsadmin.portal;
@@ -60,7 +60,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			String title = (String) this.getTitles().get(lang.getCode());
 			if (null == title || title.trim().length() == 0) {
 				String[] args = {lang.getDescr()};
-				String titleKey = "lang"+lang.getCode();
+				String titleKey = "lang" + lang.getCode();
 				this.addFieldError(titleKey, this.getText("error.page.insertTitle", args));
 			}
 		}
@@ -70,7 +70,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		Iterator<Lang> langsIter = this.getLangManager().getLangs().iterator();
 		while (langsIter.hasNext()) {
 			Lang lang = (Lang) langsIter.next();
-			String titleKey = "lang"+lang.getCode();
+			String titleKey = "lang" + lang.getCode();
 			String title = this.getRequest().getParameter(titleKey);
 			if (null != title) {
 				this.getTitles().put(lang.getCode(), title.trim());
@@ -97,7 +97,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String selectedNode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(this.getSelectedNode());
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage parentPage = this.getPageManager().getPage(selectedNode);
 			this.valueFormForNew(parentPage);
 		} catch (Throwable t) {
@@ -114,6 +116,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		boolean isParentFree = parentPage.getGroup().equals(Group.FREE_GROUP_NAME);
 		this.setGroupSelectLock(!(this.isCurrentUserMemberOf(Group.ADMINS_GROUP_NAME) && isParentFree));
 		this.setDefaultShowlet(true);
+		this.setShowable(true);
 	}
 	
 	@Override
@@ -121,7 +124,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String pageCode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(pageCode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage page = this.getPageManager().getPage(pageCode);
 			this.valueFormForEdit(page);
 		} catch (Throwable t) {
@@ -160,7 +165,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String pageCode = this.getSelectedNode();
 		try {
 			String check = this.checkSelectedNode(pageCode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage page = this.getPageManager().getPage(pageCode);
 			this.setPageToShow(page);
 		} catch (Throwable t) {
@@ -181,6 +188,8 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		this.setModel(pageToEdit.getModel().getCode());
 		this.setShowable(pageToEdit.isShowable());
 		this.setUseExtraTitles(pageToEdit.isUseExtraTitles());
+		this.setCharset(pageToEdit.getCharset());
+		this.setMimeType(pageToEdit.getMimeType());
 	}
 	
 	@Override
@@ -189,7 +198,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String copyingPageCode = this.getRequest().getParameter("copyingPageCode");
 		try {
 			String check = this.checkSelectedNode(selectedNode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			if ("".equals(copyingPageCode) || null == this.getPageManager().getPage(copyingPageCode)) {
 				this.addActionError(this.getText("error.page.selectPageToCopy"));
 				return "pageTree";
@@ -204,6 +215,8 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			this.setShowable(copiedPage.isShowable());
 			this.setUseExtraTitles(copiedPage.isUseExtraTitles());
 			this.setParentPageCode(selectedNode);
+			this.setCharset(copiedPage.getCharset());
+			this.setMimeType(copiedPage.getMimeType());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "paste");
 			return FAILURE;
@@ -264,6 +277,18 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 					this.getHelper().buildCode(page.getTitle(this.getLangManager().getDefaultLang().getCode()), "page", 25);
 				page.setCode(pageCode);
 			}
+			String charset = this.getCharset();
+			if (null != charset && charset.trim().length() > 0) {
+				page.setCharset(charset);
+			} else {
+				page.setCharset(null);
+			}
+			String mimetype = this.getMimeType();
+			if (null != mimetype && mimetype.trim().length() > 0) {
+				page.setMimeType(mimetype);
+			} else {
+				page.setMimeType(null);
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "buildNewPage");
 			throw new ApsSystemException("Error building new page", t);
@@ -289,6 +314,18 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			}
 			page.setTitles(this.getTitles());
 			page.setExtraGroups(this.getExtraGroups());
+			String charset = this.getCharset();
+			if (null != charset && charset.trim().length() > 0) {
+				page.setCharset(charset);
+			} else {
+				page.setCharset(null);
+			}
+			String mimetype = this.getMimeType();
+			if (null != mimetype && mimetype.trim().length() > 0) {
+				page.setMimeType(mimetype);
+			} else {
+				page.setMimeType(null);
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getUpdatedPage");
 			throw new ApsSystemException("Error updating page", t);
@@ -299,6 +336,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	protected void setDefaultShowlets(Page page) throws ApsSystemException {
 		try {
 			Showlet[] defaultShowlets = page.getModel().getDefaultShowlet();
+			if (null == defaultShowlets) {
+				return;
+			}
 			Showlet[] showlets = new Showlet[defaultShowlets.length];
 			for (int i=0; i<defaultShowlets.length; i++) {
 				Showlet defaultShowlet = defaultShowlets[i];
@@ -323,7 +363,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		String selectedNode = this.getSelectedNode();
 		try {
 			String check = this.checkDelete(selectedNode);
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			IPage currentPage = this.getPageManager().getPage(selectedNode);
 			Map references = this.getHelper().getReferencingObjects(currentPage, this.getRequest());
 			if (references.size()>0) {
@@ -343,7 +385,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	public String delete() {
 		try {
 			String check = this.checkDelete(this.getNodeToBeDelete());
-			if (null != check) return check;
+			if (null != check) {
+				return check;
+			}
 			this.getPageManager().deletePage(this.getNodeToBeDelete());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "delete");
@@ -354,7 +398,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	
 	protected String checkDelete(String selectedNode) {
 		String check = this.checkSelectedNode(selectedNode);
-		if (null != check) return check;
+		if (null != check) {
+			return check;
+		}
 		IPage currentPage = this.getPageManager().getPage(selectedNode);
 		if (this.getPageManager().getRoot().getCode().equals(currentPage.getCode())) {
 			this.addActionError(this.getText("error.page.removeHome.notAllowed"));
@@ -463,6 +509,21 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	public void setStrutsAction(int strutsAction) {
 		this._strutsAction = strutsAction;
 	}
+	
+	public String getCharset() {
+		return _charset;
+	}
+	public void setCharset(String charset) {
+		this._charset = charset;
+	}
+	
+	public String getMimeType() {
+		return _mimeType;
+	}
+	public void setMimeType(String mimeType) {
+		this._mimeType = mimeType;
+	}
+	
 	public ApsProperties getTitles() {
 		return _titles;
 	}
@@ -489,6 +550,32 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	}
 	protected void setReferences(Map references) {
 		this._references = references;
+	}
+	
+	public String[] getAllowedCharsets() {
+		if (null == this.getAllowedCharsetsCSV()) {
+			return new String[0];
+		}
+		return this.getAllowedCharsetsCSV().split(",");
+	}
+	protected String getAllowedCharsetsCSV() {
+		return _allowedCharsetsCSV;
+	}
+	public void setAllowedCharsetsCSV(String allowedCharsetsCSV) {
+		this._allowedCharsetsCSV = allowedCharsetsCSV;
+	}
+	
+	public String[] getAllowedMimeTypes() {
+		if (null == this.getAllowedMimeTypesCSV()) {
+			return new String[0];
+		}
+		return this.getAllowedMimeTypesCSV().split(",");
+	}
+	protected String getAllowedMimeTypesCSV() {
+		return _allowedMimeTypesCSV;
+	}
+	public void setAllowedMimeTypesCSV(String allowedMimeTypesCSV) {
+		this._allowedMimeTypesCSV = allowedMimeTypesCSV;
 	}
 	
 	protected IPageActionHelper getHelper() {
@@ -518,11 +605,17 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	private boolean _useExtraTitles;
 	private int _strutsAction;
 	
+	private String _mimeType;
+	private String _charset;
+	
 	private String _nodeToBeDelete;
 	
 	private IPage _pageToShow;
 	
 	private Map _references;
+	
+	private String _allowedMimeTypesCSV;
+	private String _allowedCharsetsCSV;
 	
 	private IPageModelManager _pageModelManager;
 	private IPageActionHelper _helper;

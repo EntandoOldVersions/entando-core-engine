@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.apsadmin.admin.localestring;
@@ -109,8 +109,11 @@ public class LocaleStringAction extends BaseAction implements ILocaleStringActio
 			if (null != label && label.trim().length()>0) {
 				this.addLabel(code, label);
 			} else {
-				String[] args = {lang.getDescr()};
-				this.addFieldError(code, this.getText("error.label.valueMandatory", args));
+				this.getLabels().remove(code);
+				if (lang.isDefault()) {
+					String[] args = {lang.getDescr()};
+					this.addFieldError(code, this.getText("error.label.valueMandatory", args));
+				}
 			}
 		}
 	}

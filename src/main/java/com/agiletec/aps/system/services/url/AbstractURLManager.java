@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.services.url;
@@ -34,7 +34,7 @@ import com.agiletec.aps.system.common.AbstractService;
  * @author M.Diana
  */
 public abstract class AbstractURLManager extends AbstractService implements IURLManager {
-
+	
 	/**
 	 * Crea e restituisce un oggetto PageURL.<br>
 	 * N.B.: l'oggetto restituito deve essere utilizzato nell'ambito
@@ -44,9 +44,8 @@ public abstract class AbstractURLManager extends AbstractService implements IURL
 	 * @return L'oggetto creato.
 	 */
 	@Override
-	public PageURL createURL(RequestContext reqCtx){
-		PageURL pageUrl = new PageURL(this, reqCtx);
-		return pageUrl;
+	public PageURL createURL(RequestContext reqCtx) {
+		return new PageURL(this, reqCtx);
 	}
 	
 	/**
@@ -57,17 +56,25 @@ public abstract class AbstractURLManager extends AbstractService implements IURL
 	 * il carattere ? di introduzione e il separatore & se ci sono più parametri.
 	 */
 	protected String createQueryString(Map<String, String> params) {
+		return this.createQueryString(params, true);
+	}
+	
+	protected String createQueryString(Map<String, String> params, boolean escapeAmp) {
 		String queryString = "";
 		if (params != null && !params.isEmpty()) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			buf.append("?");
 			Iterator<String> keyIter = params.keySet().iterator();
 			int index = 1;
 			while (keyIter.hasNext()) {
 				String name = keyIter.next();
-				buf.append(name + '=' + params.get(name));
+				buf.append(name).append("=").append(params.get(name));
 				if (index != params.size()) {
-					buf.append("&amp;");
+					if (escapeAmp) {
+						buf.append("&amp;");
+					} else {
+						buf.append("&");
+					}
 					index++;
 				}
 			}

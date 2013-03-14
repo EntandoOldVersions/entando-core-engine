@@ -5,8 +5,11 @@
 <validators>
 	
     <field name="url">
-    	<field-validator type="requiredstring">
+    	<field-validator type="requiredstring" short-circuit="true">
             <message key="requiredstring"/>
+        </field-validator>
+    	<field-validator type="url" short-circuit="true">
+            <message key="error.content.urlLink.invalid"/>
         </field-validator>
     </field>
     

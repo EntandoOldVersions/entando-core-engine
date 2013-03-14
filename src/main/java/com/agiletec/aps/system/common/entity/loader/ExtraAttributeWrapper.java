@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,11 +12,12 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.loader;
 
+import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
@@ -33,14 +34,24 @@ public class ExtraAttributeWrapper {
 		this._attribute = attribute;
 	}
 	
-	protected IEntityManager getEntityManagerDest() {
-		return _entityManagerDest;
-	}
+	/**
+	 * (**DEPRECATED since Entando 3.0.1** Use setEntityManagerNameDest) Set the entity manager destination.
+	 * @param entityManagerDest The entity manager destination.
+	 * @deprecated Since Entando 3.0.1. To avoid circolar references. Use setEntityManagerNameDest
+	 */
 	public void setEntityManagerDest(IEntityManager entityManagerDest) {
-		this._entityManagerDest = entityManagerDest;
+		String name = ((IManager) entityManagerDest).getName();
+		this.setEntityManagerNameDest(name);
+	}
+	
+	protected String getEntityManagerNameDest() {
+		return _entityManagerNameDest;
+	}
+	public void setEntityManagerNameDest(String entityManagerNameDest) {
+		this._entityManagerNameDest = entityManagerNameDest;
 	}
 	
 	private AttributeInterface _attribute;
-	private IEntityManager _entityManagerDest;
+	private String _entityManagerNameDest;
 	
 }

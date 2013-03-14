@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
@@ -50,17 +50,17 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testEditForCustomerUser() throws Throwable {
-		String userName = "editorCustomers";
-		this.testFailureEdit("ART1", userName);
-		this.testSuccesfullEdit("RAH101", userName);
-		this.testFailureEdit("EVN103", userName);
+		String username = "editorCustomers";
+		this.testFailureEdit("ART1", username);
+		this.testSuccesfullEdit("RAH101", username);
+		this.testFailureEdit("EVN103", username);
 	}
 	
 	public void testEditForCoachUser() throws Throwable {
-		String userName = "editorCoach";
-		this.testFailureEdit("ART1", userName);//Contenuto Non autorizzato
-		this.testSuccesfullEdit("RAH101", userName);
-		this.testSuccesfullEdit("EVN103", userName);
+		String username = "editorCoach";
+		this.testFailureEdit("ART1", username);//Contenuto Non autorizzato
+		this.testSuccesfullEdit("RAH101", username);
+		this.testSuccesfullEdit("EVN103", username);
 	}
 	
 	private void testSuccesfullEdit(String contentId, String currentUserName) throws Throwable {
@@ -86,7 +86,8 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	public void testValidate_1() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
-			String result = this.executeCreateNewVoid("ART", insertedDescr, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
+			String result = this.executeCreateNewVoid("ART", 
+					insertedDescr, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
 			Content contentOnSession = this.getContentOnEdit();
 			assertNotNull(contentOnSession);
@@ -127,14 +128,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, insertedDescr, true);
-			EntitySearchFilter[] filters = {filter};
-			List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
-			for (int i=0; i<contentIds.size(); i++) {
-				String contentId = (String) contentIds.get(i);
-				Content content = this.getContentManager().loadContent(contentId, false);
-				this.getContentManager().deleteContent(content);
-			}
+			this.removeTestContent(insertedDescr);
 		}
 	}
 	
@@ -144,7 +138,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			Content contentForTest = this.getContentManager().loadContent("EVN191", true);
 			contentForTest.setId(null);
 			contentForTest.setDescr(insertedDescr);
-			contentForTest.setDescr("coach");//Valorizzo il gruppo proprietario
+			contentForTest.setMainGroup("coach");//Valorizzo il gruppo proprietario
 			
 			contentForTest.getGroups().add("customers");
 			
@@ -170,22 +164,19 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, insertedDescr, true);
-			EntitySearchFilter[] filters = {filter};
-			List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
-			for (int i=0; i<contentIds.size(); i++) {
-				String contentId = (String) contentIds.get(i);
-				Content content = this.getContentManager().loadContent(contentId, false);
-				this.getContentManager().deleteContent(content);
-			}
+			this.removeTestContent(insertedDescr);
 		}
 	}
 	
 	public void testValidate_3() throws Throwable { // Description maxlength
-		String insertedDescr = "Description ";
-		while (insertedDescr.length() < 300) insertedDescr += insertedDescr;
+		String marker = "__DESCR_TEST__";
+		String insertedDescr = marker;
+		while (insertedDescr.length() < 300) {
+			insertedDescr += marker;
+		}
 		try {
-			String result = this.executeCreateNewVoid("ART", "descr", Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
+			String result = this.executeCreateNewVoid("ART", "descr", 
+					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
 			Content contentOnSession = this.getContentOnEdit();
 			assertNotNull(contentOnSession);
@@ -207,14 +198,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, insertedDescr, true);
-			EntitySearchFilter[] filters = {filter};
-			List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
-			for (int i=0; i<contentIds.size(); i++) {
-				String contentId = (String) contentIds.get(i);
-				Content content = this.getContentManager().loadContent(contentId, false);
-				this.getContentManager().deleteContent(content);
-			}
+			this.removeTestContent(insertedDescr);
 		}
 	}
 	
@@ -224,7 +208,8 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	public void testValidate_4() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
-			String result = this.executeCreateNewVoid("RAH", "descr", Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
+			String result = this.executeCreateNewVoid("RAH", "descr", 
+					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
 			Content contentOnSession = this.getContentOnEdit();
 			assertNotNull(contentOnSession);
@@ -234,7 +219,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.addParameter("descr", insertedDescr);
 			this.addParameter("email", "wrongEmailAddress");
 			this.addParameter("Numero", "wrongNumber");
-			this.addParameter("Checkbox", "anyValueWillEvaluateTrue");
+			this.addParameter("Checkbox", "true");
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			
@@ -252,7 +237,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			BooleanAttribute attribute = (BooleanAttribute) content.getAttribute("Checkbox");
 			assertNotNull(attribute);
 			assertEquals("CheckBox", attribute.getType());
-			assertEquals(new Boolean(true), attribute.getValue());
+			assertEquals(Boolean.TRUE, attribute.getValue());
 			
 			this.initAction("/do/jacms/Content", "save");
 			this.setUserOnSession("admin");
@@ -270,19 +255,12 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			attribute = (BooleanAttribute) content.getAttribute("Checkbox");
 			assertNotNull(attribute);
 			assertEquals("CheckBox", attribute.getType());
-			assertEquals(new Boolean(false), attribute.getValue());
+			assertEquals(Boolean.FALSE, attribute.getValue());
 			
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, insertedDescr, true);
-			EntitySearchFilter[] filters = {filter};
-			List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
-			for (int i=0; i<contentIds.size(); i++) {
-				String contentId = (String) contentIds.get(i);
-				Content content = this.getContentManager().loadContent(contentId, false);
-				this.getContentManager().deleteContent(content);
-			}
+			this.removeTestContent(insertedDescr);
 		}
 	}
 	
@@ -292,7 +270,8 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; " + 
 			"Ripeto, Titolo che supera la lunghezza massima di cento caratteri";
 		try {
-			String result = this.executeCreateNewVoid("RAH", "descr", Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
+			String result = this.executeCreateNewVoid("RAH", "descr", 
+					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
 			Content contentOnSession = this.getContentOnEdit();
 			assertNotNull(contentOnSession);
@@ -347,14 +326,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			EntitySearchFilter filter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, insertedDescr, true);
-			EntitySearchFilter[] filters = {filter};
-			List<String> contentIds = this.getContentManager().loadWorkContentsId(filters, new ArrayList<String>());
-			for (int i=0; i<contentIds.size(); i++) {
-				String contentId = (String) contentIds.get(i);
-				Content content = this.getContentManager().loadContent(contentId, false);
-				this.getContentManager().deleteContent(content);
-			}
+			this.removeTestContent(insertedDescr);
 		}
 	}
 	

@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package org.entando.entando.aps.servlet;
@@ -115,7 +115,7 @@ public class AuthorizationOAuthServlet extends HttpServlet {
                 && accessor.consumer.callbackURL.length() > 0) {
             callback = accessor.consumer.callbackURL;
         }
-        if ("none".equals(callback) ) {
+        if( "none".equals(callback) || "oob".equals(callback) ) {
             response.setContentType("text/plain");
             PrintWriter out = response.getWriter();
             out.println("You have successfully authorized '" 

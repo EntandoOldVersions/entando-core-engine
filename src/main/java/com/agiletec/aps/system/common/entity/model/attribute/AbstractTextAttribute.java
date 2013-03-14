@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
@@ -66,7 +66,11 @@ public abstract class AbstractTextAttribute extends AbstractAttribute implements
 	
 	@Override
 	public int getMaxLength() {
-		return ((TextAttributeValidationRules) this.getValidationRules()).getMaxLength();
+		TextAttributeValidationRules validationRule = (TextAttributeValidationRules) this.getValidationRules();
+		if (null != validationRule && null != validationRule.getMaxLength()) {
+			return validationRule.getMaxLength();
+		}
+		return -1;
 	}
 	
 	@Override
@@ -77,7 +81,11 @@ public abstract class AbstractTextAttribute extends AbstractAttribute implements
 	
 	@Override
 	public int getMinLength() {
-		return ((TextAttributeValidationRules) this.getValidationRules()).getMinLength();
+		TextAttributeValidationRules validationRule = (TextAttributeValidationRules) this.getValidationRules();
+		if (null != validationRule && null != validationRule.getMinLength()) {
+			return validationRule.getMinLength();
+		}
+		return -1;
 	}
 	
 	@Override

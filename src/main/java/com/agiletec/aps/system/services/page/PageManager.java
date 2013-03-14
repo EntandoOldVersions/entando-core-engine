@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.page;
@@ -119,7 +119,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			}
 		}
 		this.loadPageTree();
-		this.notifyPageChangedEvent(page);
+		this.notifyPageChangedEvent(page, PageChangedEvent.REMOVE_OPERATION_CODE, null);
 	}
 
 	/**
@@ -136,6 +136,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			throw new ApsSystemException("Error adding a page", t);
 		}
 		this.loadPageTree();
+		this.notifyPageChangedEvent(this.getPage(page.getCode()), PageChangedEvent.INSERT_OPERATION_CODE, null);
 	}
 
 	/**
@@ -152,12 +153,16 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			throw new ApsSystemException("Error updating a page", t);
 		}
 		this.loadPageTree();
-		this.notifyPageChangedEvent(page);
+		this.notifyPageChangedEvent(page, PageChangedEvent.UPDATE_OPERATION_CODE, null);
 	}
-
-	private void notifyPageChangedEvent(IPage page) {
+	
+	private void notifyPageChangedEvent(IPage page, int operationCode, Integer framePos) {
 		PageChangedEvent event = new PageChangedEvent();
 		event.setPage(page);
+		event.setOperationCode(operationCode);
+		if (null != framePos) {
+			event.setFramePosition(framePos);
+		}
 		this.notifyEvent(event);
 	}
 
@@ -182,7 +187,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 				IPage sisterPage = sisterPages[i];
 				if (sisterPage.getCode().equals(pageCode)) {
 					if (!verifyRequiredMovement(i, moveUp, sisterPages.length)) {
-						resultOperation = false;
+						return false;
 					} else {
 						if (moveUp) {
 							IPage pageDown = sisterPages[i - 1];
@@ -251,7 +256,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.getPageDAO().removeShowlet(pageCode, pos);
 			IPage currentPage = this.getPage(pageCode);
 			currentPage.getShowlets()[pos] = null;
-			this.notifyPageChangedEvent(currentPage);
+			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error removing the showlet from the page '" + pageCode + "' in the frame "+ pos;
 			ApsSystemUtils.logThrowable(t, this, "removeShowlet", message);
@@ -278,10 +283,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.getPageDAO().joinShowlet(pageCode, showlet, pos);
 			IPage currentPage = this.getPage(pageCode);
 			currentPage.getShowlets()[pos] = showlet;
-			this.notifyPageChangedEvent(currentPage);
+			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error during the assignation of a showlet to the frame " + pos +" in the page code "+pageCode;
-			ApsSystemUtils.logThrowable(t, this, "setShowlet", message);
+			ApsSystemUtils.logThrowable(t, this, "joinShowlet", message);
 			throw new ApsSystemException(message, t);
 		}
 	}

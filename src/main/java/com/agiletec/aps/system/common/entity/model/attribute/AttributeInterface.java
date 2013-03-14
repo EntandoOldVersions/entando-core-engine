@@ -1,6 +1,6 @@
 /*
 *
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
 * Entando is a free software; 
@@ -12,7 +12,7 @@
 * 
 * 
 * 
-* Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
@@ -50,7 +50,19 @@ public interface AttributeInterface extends Serializable {
      * @param name The name to set
      */
     public void setName(String name);
-
+	
+	/**
+     * Return the description of the attribute
+     * @return The description of the attribute
+     */
+    public String getDescription();
+	
+	/**
+	 * Set up the description of the attribute
+	 * @param description The description to set
+	 */
+	public void setDescription(String description);
+	
     /**
      * Return the attribute type
      * @return The attribute type
@@ -217,7 +229,9 @@ public interface AttributeInterface extends Serializable {
      * @param disablingCode The deactivation code.
      */
     public void disable(String disablingCode);
-
+	
+	public void activate();
+	
     /**
      * Set up the deactivation code to disable the attribute.
      * @param disablingCodes The deactivation code.

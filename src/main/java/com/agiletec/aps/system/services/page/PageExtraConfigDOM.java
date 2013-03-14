@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  * This file is part of Entando software.
  * Entando is a free software; 
@@ -12,7 +12,7 @@
  * 
  * 
  * 
- * Copyright 2012 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
  *
  */
 package com.agiletec.aps.system.services.page;
@@ -43,17 +43,32 @@ public class PageExtraConfigDOM {
 	}
 	
 	protected void addExtraConfig(Page page, Document doc) {
-		Element useExtraTitlesElement = doc.getRootElement().getChild(USE_EXTRA_TITLES_ELEMENT_NAME);
+		Element rootElement = doc.getRootElement();
+		Element useExtraTitlesElement = rootElement.getChild(USE_EXTRA_TITLES_ELEMENT_NAME);
 		if (null != useExtraTitlesElement) {
-			Boolean value = new Boolean(useExtraTitlesElement.getText());
+			Boolean value = Boolean.valueOf(useExtraTitlesElement.getText());
 			page.setUseExtraTitles(value.booleanValue());
 		}
-		Element extraGroupsElement = doc.getRootElement().getChild(EXTRA_GROUPS_ELEMENT_NAME);
+		Element extraGroupsElement = rootElement.getChild(EXTRA_GROUPS_ELEMENT_NAME);
 		if (null != extraGroupsElement) {
 			List<Element> groupElements = extraGroupsElement.getChildren(EXTRA_GROUP_ELEMENT_NAME);
 			for (int i=0; i<groupElements.size(); i++) {
 				Element groupElement = groupElements.get(i);
 				page.addExtraGroup(groupElement.getAttributeValue(EXTRA_GROUP_NAME_ATTRIBUTE));
+			}
+		}
+		Element mimetypeElement = rootElement.getChild(MIMETYPE_ELEMENT_NAME);
+		if (null != mimetypeElement) {
+			String mimetype = mimetypeElement.getText();
+			if (null != mimetype && mimetype.trim().length() > 0) {
+				page.setMimeType(mimetype);
+			}
+		}
+		Element charsetElement = rootElement.getChild(CHARSET_ELEMENT_NAME);
+		if (null != charsetElement) {
+			String charset = charsetElement.getText();
+			if (null != charset && charset.trim().length() > 0) {
+				page.setCharset(charset);
 			}
 		}
 	}
@@ -85,7 +100,6 @@ public class PageExtraConfigDOM {
 		Element useExtraTitlesElement = new Element(USE_EXTRA_TITLES_ELEMENT_NAME);
 		useExtraTitlesElement.setText(String.valueOf(page.isUseExtraTitles()));
 		doc.getRootElement().addContent(useExtraTitlesElement);
-		
 		if (null != extraGroups && extraGroups.size() > 0) {
 			Element extraGroupsElement = new Element(EXTRA_GROUPS_ELEMENT_NAME);
 			doc.getRootElement().addContent(extraGroupsElement);
@@ -96,6 +110,18 @@ public class PageExtraConfigDOM {
 				extraGroupElement.setAttribute(EXTRA_GROUP_NAME_ATTRIBUTE, group);
 				extraGroupsElement.addContent(extraGroupElement);
 			}
+		}
+		String charset = page.getCharset();
+		if (null != charset && charset.trim().length() > 0) {
+			Element charsetElement = new Element(CHARSET_ELEMENT_NAME);
+			charsetElement.setText(charset);
+			doc.getRootElement().addContent(charsetElement);
+		}
+		String mimeType = page.getMimeType();
+		if (null != mimeType && mimeType.trim().length() > 0) {
+			Element mimeTypeElement = new Element(MIMETYPE_ELEMENT_NAME);
+			mimeTypeElement.setText(mimeType);
+			doc.getRootElement().addContent(mimeTypeElement);
 		}
 	}
 	
@@ -110,5 +136,8 @@ public class PageExtraConfigDOM {
 	private static final String EXTRA_GROUPS_ELEMENT_NAME = "extragroups";
 	private static final String EXTRA_GROUP_ELEMENT_NAME = "group";
 	private static final String EXTRA_GROUP_NAME_ATTRIBUTE = "name";
+	
+	private static final String MIMETYPE_ELEMENT_NAME = "mimeType";
+	private static final String CHARSET_ELEMENT_NAME = "charset";
 	
 }
