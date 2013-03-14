@@ -8,7 +8,7 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.2.0</version>
+	<version>3.2.1-SNAPSHOT</version>
 	<name>Entando: Core Engine</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source portal-like platform.</description>
 	<url>http://www.entando.com/</url>
@@ -23,7 +23,7 @@
 		<connection>scm:git:git://github.com/entando/entando-core-engine.git</connection>
 		<developerConnection>scm:git:git@github.com:entando/entando-core-engine.git</developerConnection>
 		<url>https://github.com/entando/entando-core-engine</url>
-	  <tag>v3.2.0</tag>
+	  <tag>HEAD</tag>
   </scm>
 	<developers>
 		<developer>
