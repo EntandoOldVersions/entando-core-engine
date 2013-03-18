@@ -8,7 +8,7 @@
 	<groupId>org.entando.entando</groupId>
 	<artifactId>entando-core-engine</artifactId>
 	<packaging>jar</packaging>
-	<version>3.2.0-EEE-SNAPSHOT</version>
+	<version>3.2.1-EEE-SNAPSHOT</version>
 	<name>E³ - Entando Enterprise Edition: Core Engine</name>
 	<description>Core engine of Entando: an agile, modern and user-centric open source Portal platform.</description>
 	<url>http://www.entando.com/</url>
@@ -23,7 +23,8 @@
 		<connection>scm:git:git://github.com/entando/entando-core-engine.git</connection>
 		<developerConnection>scm:git:git@github.com:entando/entando-core-engine.git</developerConnection>
 		<url>https://github.com/entando/entando-core-engine</url>
-	</scm>
+	  <tag>HEAD</tag>
+  </scm>
 	<developers>
 		<developer>
 			<id>e.santoboni</id>
@@ -100,6 +101,16 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+					<pushChanges>false</pushChanges>
+					<localCheckout>true</localCheckout>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
