@@ -404,7 +404,13 @@
 		<attribute>
 			<description><![CDATA[The code of the page.]]></description>
 			<name>pageCode</name>
-			<required>true</required>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The code of the widget where is published the page to find. Only when pageCode is empty]]></description>
+			<name>widget</name>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

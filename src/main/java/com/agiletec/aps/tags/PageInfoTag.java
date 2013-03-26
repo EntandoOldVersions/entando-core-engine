@@ -18,8 +18,10 @@
 package com.agiletec.aps.tags;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -30,12 +32,16 @@ import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.tags.util.IParameterParentTag;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -47,18 +53,25 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class PageInfoTag extends OutSupport implements IParameterParentTag {
-	
+
 	@Override
 	public int doEndTag() throws JspException {
 		ServletRequest request = this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 		try {
-			IPageManager pageManager = 
-				(IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
-			IPage page = pageManager.getPage(this.getPageCode());
+			IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
+			IPage page = null;
+			if (null != this.getPageCode()) {
+				page = pageManager.getPage(this.getPageCode());
+			} else {
+				if (null != this.getWidget()) {
+					page = this.getPageWithWidget(reqCtx, pageManager);
+				}
+			}
 			if (null == page) {
-				ApsSystemUtils.getLogger().severe("Required info for null page : inserted code '" + this.getPageCode() + "'");
+				ApsSystemUtils.getLogger().severe("Required info for null page : inserted code '" + this.getPageCode() + "' and inserted widget code '" + this.getWidget() + "'");
+				return EVAL_PAGE;
 			}
 			if (this.getInfo() == null || this.getInfo().equals(CODE_INFO)) {
 				this.setValue(page.getCode());
@@ -82,14 +95,45 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		this.release();
 		return EVAL_PAGE;
 	}
-	
+
+	protected IPage getPageWithWidget(RequestContext reqCtx,IPageManager pageManager) throws ApsSystemException, Throwable {
+		IPage page = null;
+		try {
+			IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+			List<IPage> pages = pageManager.getShowletUtilizers(this.getWidget());
+			List<IPage> userPages = new ArrayList<IPage>();
+			if (null != pages && pages.size() > 0) {
+				Iterator<IPage> pageIt = pages.iterator();
+				while (pageIt.hasNext()) {
+					IPage thePage = pageIt.next();
+					if (this.isUserAllowed(reqCtx, thePage)) {
+						userPages.add(thePage);
+					}
+				}
+			}
+			if (null == userPages || userPages.isEmpty()) return null;
+			for (int i = 0; i < userPages.size(); i++) {
+				IPage p = userPages.get(i);
+				if (null == page) {
+					page = p;
+				}
+				if (page.isChildOf(currentPage.getCode())) {
+					break;
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error extracting page with widget");
+		}
+		return page;
+	}
+
 	protected void extractIsChildOfTarget(IPage page) {
 		if (null != this.getTargetPage()) {
 			boolean isChild = (page.getCode().equals(this.getTargetPage()) || page.isChildOf(this.getTargetPage()));
 			this._value = new Boolean(isChild).toString();
 		}
 	}
-	
+
 	protected void extractPageTitle(IPage page, Lang currentLang) {
 		ApsProperties titles = page.getTitles();
 		String value = null;
@@ -101,15 +145,15 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		}
 		if (value == null || value.trim().equals("")) {
 			ILangManager langManager = 
-				(ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
+					(ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
 			value = titles.getProperty(langManager.getDefaultLang().getCode());
 		}
 		this.setValue(value);
 	}
-	
+
 	protected void extractPageUrl(IPage page, Lang currentLang, RequestContext reqCtx) {
 		IURLManager urlManager = 
-			(IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.pageContext);
+				(IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.pageContext);
 		PageURL pageUrl = urlManager.createURL(reqCtx);
 		pageUrl.setPageCode(page.getCode());
 		if (this.getLangCode() != null) {
@@ -126,12 +170,12 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		}
 		this.setValue(pageUrl.getURL());
 	}
-	
+
 	protected void extractPageOwner(IPage page, RequestContext reqCtx) {
 		String value = page.getGroup();
 		this.setValue(value);
 	}	
-	
+
 	protected void evalValue() throws JspException {
 		if (this.getVar() != null) {
 			this.pageContext.setAttribute(this.getVar(), this.getValue());
@@ -148,7 +192,25 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 			}
 		}
 	}
-	
+
+	protected boolean isUserAllowed(RequestContext reqCtx, IPage page) throws Throwable {
+		if (null == page) {
+			return false;
+		}
+		String pageGroup = page.getGroup();
+		try {
+			if (null == pageGroup || pageGroup.equals(Group.FREE_GROUP_NAME)) {
+				return true;
+			}
+			UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+			IAuthorizationManager authorizationManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, pageContext);
+			return authorizationManager.isAuth(currentUser, page);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking user authorities for page " + page.getCode());
+		}
+		return false;
+	}
+
 	@Override
 	public void release() {
 		this._pageCode = null;
@@ -156,52 +218,60 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		this._langCode = null;
 		this._var = null;
 		this._value = null;
+		this._widgetCode = null;
 		this._parameters = null;
 		super.escapeXml = true;
 	}
-	
+
 	public String getPageCode() {
 		return _pageCode;
 	}
 	public void setPageCode(String pageCode) {
 		this._pageCode = pageCode;
 	}
-	
+
+	public String getWidget() {
+		return _widgetCode;
+	}
+	public void setWidget(String widgetCode) {
+		this._widgetCode = widgetCode;
+	}
+
 	public String getInfo() {
 		return _info;
 	}
 	public void setInfo(String info) {
 		this._info = info;
 	}
-	
+
 	public String getTargetPage() {
 		return _targetPage;
 	}
 	public void setTargetPage(String targetPage) {
 		this._targetPage = targetPage;
 	}
-	
+
 	public String getLangCode() {
 		return _langCode;
 	}
 	public void setLangCode(String langCode) {
 		this._langCode = langCode;
 	}
-	
+
 	public void setVar(String var) {
 		this._var = var;
 	}
 	protected String getVar() {
 		return _var;
 	}
-	
+
 	public String getValue() {
 		return _value;
 	}
 	public void setValue(String value) {
 		this._value = value;
 	}
-	
+
 	/**
 	 * Returns True if the system escape the special characters. 
 	 * @return True if the system escape the special characters.
@@ -209,7 +279,7 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 	public boolean getEscapeXml() {
 		return super.escapeXml;
 	}
-	
+
 	/**
 	 * Set if the system has to escape the special characters. 
 	 * @param escapeXml True if the system has to escape the special characters, else false.
@@ -217,11 +287,11 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 	public void setEscapeXml(boolean escapeXml) {
 		super.escapeXml = escapeXml;
 	}
-	
+
 	public Map<String, String> getParameters() {
 		return this._parameters;
 	}
-	
+
 	@Override
 	public void addParameter(String name, String value) {
 		if (null == this._parameters) {
@@ -229,18 +299,19 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 		}
 		this._parameters.put(name, value);
 	}
-	
+
 	private String _pageCode;
+	private String _widgetCode;
 	private String _info;
 	private String _targetPage;
 
 	private String _langCode;
-	
+
 	private String _var;
 	private String _value;
-	
+
 	private Map<String, String> _parameters;
-	
+
 	public static final String CODE_INFO = "code";
 	public static final String URL_INFO = "url";
 	public static final String TITLE_INFO = "title";
