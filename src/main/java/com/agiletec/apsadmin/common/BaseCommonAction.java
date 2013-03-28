@@ -31,7 +31,9 @@ public class BaseCommonAction extends BaseAction implements IBaseCommonAction {
 	@Override
 	public void validate() {
 		super.validate();
-		if (this.getFieldErrors().size()!=0) return;
+		if (!this.getFieldErrors().isEmpty()) {
+			return;
+		}
 		try {
 			UserDetails currentUser = this.getCurrentUser();
 			if (!currentUser.isJapsUser()) {
@@ -53,6 +55,7 @@ public class BaseCommonAction extends BaseAction implements IBaseCommonAction {
 	public String changePassword() {
 		try {
 			this.getUserManager().changePassword(this.getUsername(), this.getPassword());
+			this.addActionMessage(this.getText("message.passwordChanged"));
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "changePassword");
 			return FAILURE;
