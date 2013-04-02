@@ -32,13 +32,14 @@ import com.opensymphony.xwork2.Action;
  */
 public class TestBaseCommonAction extends ApsAdminBaseTestCase {
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
 	}
 	
 	public void testGoChangePasswordPage() throws Throwable {
-    	this.initAction("/do/CurrentUser", "editPassword");
+    	this.initAction("/do/CurrentUser", "editProfile");
     	this.setUserOnSession("admin");
     	String result = super.executeAction();
 		assertEquals(Action.SUCCESS, result);
