@@ -194,6 +194,8 @@ public interface SystemConstants {
      */
     public static final String SYSTEM_DATE_FORMAT = "yyyyMMdd";
     
+	public static final String SYSTEM_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
+	
     public static final String CONFIG_ITEM_LANGS = "langs";
     
     public static final String CONFIG_ITEM_PARAMS = "params";

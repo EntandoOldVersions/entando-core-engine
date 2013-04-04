@@ -9,6 +9,7 @@
 		<property name="attributeTypes">
 		<map>
 			<entry key="Date"><ref bean="DateAttribute" /></entry>
+			<entry key="Timestamp"><ref bean="TimestampAttribute" /></entry>
 			<entry key="Number"><ref bean="NumberAttribute" /></entry>
 			<entry key="Monotext"><ref bean="MonoTextAttribute" /></entry>
 			<entry key="Enumerator"><ref bean="EnumeratorAttribute" /></entry>

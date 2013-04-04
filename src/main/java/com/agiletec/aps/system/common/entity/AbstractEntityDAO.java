@@ -177,7 +177,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 					stat.setString(2, currAttribute.getName());
 					stat.setString(3, searchInfo.getString());
 					if (searchInfo.getDate() != null) {
-						stat.setDate(4, new java.sql.Date(searchInfo.getDate().getTime()));
+						stat.setTimestamp(4, new java.sql.Timestamp(searchInfo.getDate().getTime()));
 					} else {
 						stat.setDate(4, null);
 					}

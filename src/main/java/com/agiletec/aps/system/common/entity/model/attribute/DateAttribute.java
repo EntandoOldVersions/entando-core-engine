@@ -87,6 +87,7 @@ public class DateAttribute extends AbstractAttribute {
         return date;
     }
 
+    @Override
     public String toString() {
         return (null != this.getDate()) ? this.getDate().toString() : "";
     }
@@ -108,7 +109,8 @@ public class DateAttribute extends AbstractAttribute {
         }
         return date;
     }
-
+	
+    @Override
     public Element getJDOMElement() {
         Element attributeElement = new Element("attribute");
         attributeElement.setAttribute("name", this.getName());
@@ -120,7 +122,8 @@ public class DateAttribute extends AbstractAttribute {
         }
         return attributeElement;
     }
-
+	
+    @Override
     public Object getValue() {
         return this.getDate();
     }
@@ -141,10 +144,12 @@ public class DateAttribute extends AbstractAttribute {
         this._date = date;
     }
 
+    @Override
     public boolean isSearchableOptionSupported() {
         return true;
     }
 
+    @Override
     public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
         if (this.getDate() != null) {
             List<AttributeSearchInfo> infos = new ArrayList<AttributeSearchInfo>();
@@ -155,6 +160,7 @@ public class DateAttribute extends AbstractAttribute {
         return null;
     }
 
+    @Override
     protected IAttributeValidationRules getValidationRuleNewIntance() {
         return new DateAttributeValidationRules();
     }
@@ -177,10 +183,12 @@ public class DateAttribute extends AbstractAttribute {
         return _failedDateString;
     }
 
+    @Override
     protected Object getJAXBValue(String langCode) {
         return this.getDate();
     }
-
+	
+	@Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         super.valueFrom(jaxbAttribute);
         Date date = null;
@@ -194,6 +202,9 @@ public class DateAttribute extends AbstractAttribute {
             calendar.set(Calendar.DAY_OF_MONTH, grCal.getDay());
             calendar.set(Calendar.MONTH, grCal.getMonth() - 1);
             calendar.set(Calendar.YEAR, grCal.getYear());
+            calendar.set(Calendar.HOUR_OF_DAY, grCal.getHour());
+            calendar.set(Calendar.MINUTE, grCal.getMinute());
+            calendar.set(Calendar.SECOND, grCal.getSecond());
             date = calendar.getTime();
         } else if (value instanceof Date) {
             date = (Date) value;
@@ -203,6 +214,7 @@ public class DateAttribute extends AbstractAttribute {
         }
     }
 
+    @Override
     public Status getStatus() {
         if (null != this.getDate() || null != this.getFailedDateString()) {
             return Status.VALUED;
@@ -210,6 +222,7 @@ public class DateAttribute extends AbstractAttribute {
         return Status.EMPTY;
     }
     
+    @Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         if (null == this.getDate() && null != this.getFailedDateString()) {
