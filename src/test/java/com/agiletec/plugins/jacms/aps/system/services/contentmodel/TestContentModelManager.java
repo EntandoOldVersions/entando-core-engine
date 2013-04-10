@@ -47,13 +47,13 @@ public class TestContentModelManager extends BaseTestCase {
     public void testGetContentModels() {
     	List<ContentModel> models = this._contentModelManager.getContentModels();
     	assertNotNull(models);
-    	assertEquals(3, models.size());
+    	assertEquals(4, models.size());
     }
     
     public void testGetModelsForContentType() {
     	List<ContentModel> models = this._contentModelManager.getModelsForContentType("ART");
     	assertNotNull(models);
-    	assertEquals(3, models.size());
+    	assertEquals(4, models.size());
     }
     
     public void testAddDeleteContentModel() throws Throwable {
