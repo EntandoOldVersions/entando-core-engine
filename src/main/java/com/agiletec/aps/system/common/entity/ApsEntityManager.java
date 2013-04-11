@@ -53,6 +53,7 @@ import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
+import java.util.Arrays;
 
 /**
  * This abstract service must be extended in all those services that make use of ApsEntities.
@@ -241,7 +242,7 @@ public abstract class ApsEntityManager extends AbstractService
 		this.verifyReloadingNeeded(oldEntityType, entityType);
 		this.notifyEntityTypesChanging(oldEntityType, entityType, EntityTypesChangingEvent.UPDATE_OPERATION_CODE);
 	}
-
+	
 	protected void verifyReloadingNeeded(IApsEntity oldEntityType, IApsEntity newEntityType) {
 		if (this.getStatus(newEntityType.getTypeCode()) == STATUS_NEED_TO_RELOAD_REFERENCES) {
 			return;
@@ -254,9 +255,27 @@ public abstract class ApsEntityManager extends AbstractService
 				this.setStatus(IEntityManager.STATUS_NEED_TO_RELOAD_REFERENCES, oldEntityType.getTypeCode());
 				return;
 			}
+			String[] oldRoles = (null != oldAttribute.getRoles()) ? oldAttribute.getRoles() : new String[0];
+			String[] newRoles = (null != newAttribute.getRoles()) ? newAttribute.getRoles() : new String[0];
+			if ((newRoles.length == 0 && oldRoles.length == 0)) {
+				continue;
+			} else if (newRoles.length != oldRoles.length) {
+				this.setStatus(IEntityManager.STATUS_NEED_TO_RELOAD_REFERENCES, oldEntityType.getTypeCode());
+				return;
+			} else {
+				List<String> oldRolesList = Arrays.asList(oldRoles);
+				List<String> newRolesList = Arrays.asList(newRoles);
+				for (int j = 0; j < newRolesList.size(); j++) {
+					String roleName = newRolesList.get(j);
+					if (!oldRolesList.contains(roleName)) {
+						this.setStatus(IEntityManager.STATUS_NEED_TO_RELOAD_REFERENCES, oldEntityType.getTypeCode());
+						return;
+					}
+				}
+			}
 		}
 	}
-
+	
 	/**
 	 * Remove an entity type from the catalog.
 	 * @param entityTypeCode The code of the entity type to remove.
