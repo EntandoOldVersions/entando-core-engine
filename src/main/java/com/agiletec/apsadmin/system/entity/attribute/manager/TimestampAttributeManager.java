@@ -38,12 +38,14 @@ public class TimestampAttributeManager extends DateAttributeManager {
             this.setValue(attribute, value);
         }
 		String hourValue = this.getValueFromForm(attribute, tracer, "_hour", request);
-		this.setValue(attribute, hourValue, true);
+		this.setValue(attribute, hourValue, VALUE_HOUR);
 		String minuteValue = this.getValueFromForm(attribute, tracer, "_minute", request);
-		this.setValue(attribute, minuteValue, false);
+		this.setValue(attribute, minuteValue, VALUE_MINUTE);
+		String secondValue = this.getValueFromForm(attribute, tracer, "_second", request);
+		this.setValue(attribute, secondValue, VALUE_SECOND);
     }
 	
-	protected void setValue(AttributeInterface attribute, String value, boolean isHour) {
+	protected void setValue(AttributeInterface attribute, String value, String valueType) {
 		TimestampAttribute timestampAttribute = (TimestampAttribute) attribute;
 		//Date data = null;
 		if (value != null) {
@@ -54,46 +56,55 @@ public class TimestampAttributeManager extends DateAttributeManager {
 			try {
 				number = Integer.parseInt(value);
 			} catch (Throwable ex) {
-				this.setError(timestampAttribute, value, isHour);
+				this.setError(timestampAttribute, value, valueType);
 				throw new RuntimeException("Error while parsing the number - " + value + " -", ex);
 			}
 			//data = dataF.parse(value);
 			//dateAttribute.setFailedDateString(null);
-			int max = (isHour) ? 23 : 59;
+			int max = (valueType.equalsIgnoreCase(VALUE_HOUR)) ? 23 : 59;
 			if (number > max) {
-				this.setError(timestampAttribute, value, isHour);
+				this.setError(timestampAttribute, value, valueType);
+				return;
 			} else {
-				this.resetError(timestampAttribute, isHour);
+				this.resetError(timestampAttribute, valueType);
 			}
 		} else {
-			this.setError(timestampAttribute, value, isHour);
+			this.setError(timestampAttribute, value, valueType);
+			return;
 		}
+		
 		if (null != number && null != timestampAttribute.getDate()) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(timestampAttribute.getDate());
-			if (isHour) {
+			if (valueType.equalsIgnoreCase(VALUE_HOUR)) {
 				cal.set(Calendar.HOUR_OF_DAY, number);
-			} else {
+			} else if (valueType.equalsIgnoreCase(VALUE_MINUTE)) {
 				cal.set(Calendar.MINUTE, number);
+			} else if (valueType.equalsIgnoreCase(VALUE_SECOND)) {
+				cal.set(Calendar.SECOND, number);				
 			}
 			timestampAttribute.setDate(cal.getTime());
-			this.resetError(timestampAttribute, isHour);
+			this.resetError(timestampAttribute, valueType);
 		}
 	}
 	
-	private void setError(TimestampAttribute timestampAttribute, String value, boolean isHour) {
-		if (isHour) {
+	private void setError(TimestampAttribute timestampAttribute, String value, String valueType) {
+		if (valueType.equalsIgnoreCase(VALUE_HOUR)) {
 			timestampAttribute.setFailedHourString(value);
-		} else {
+		} else if (valueType.equalsIgnoreCase(VALUE_MINUTE)) {
 			timestampAttribute.setFailedMinuteString(value);
+		} else if (valueType.equalsIgnoreCase(VALUE_SECOND)) {
+			timestampAttribute.setFailedSecondString(value);
 		}
 	}
     
-	private void resetError(TimestampAttribute timestampAttribute, boolean isHour) {
-		if (isHour) {
+	private void resetError(TimestampAttribute timestampAttribute, String valueType) {
+		if (valueType.equalsIgnoreCase(VALUE_HOUR)) {
 			timestampAttribute.setFailedHourString(null);
-		} else {
+		} else if (valueType.equalsIgnoreCase(VALUE_MINUTE)) {
 			timestampAttribute.setFailedMinuteString(null);
+		} else if (valueType.equalsIgnoreCase(VALUE_SECOND)) {
+			timestampAttribute.setFailedSecondString(null);
 		}
 	}
     
@@ -102,4 +113,7 @@ public class TimestampAttributeManager extends DateAttributeManager {
         return request.getParameter(formFieldName);
     }
     
+	private static final String VALUE_HOUR = "h";
+	private static final String VALUE_MINUTE = "m";
+	private static final String VALUE_SECOND = "s";
 }
