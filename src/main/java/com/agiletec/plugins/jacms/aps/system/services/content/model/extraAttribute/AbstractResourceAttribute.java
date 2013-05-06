@@ -266,7 +266,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
             if (null == this.getResources()) {
 				return errors;
 			}
-            ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+            ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);

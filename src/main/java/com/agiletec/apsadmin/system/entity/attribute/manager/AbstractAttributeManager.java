@@ -572,7 +572,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
 	*/
 	
     protected II18nManager getI18nManager() {
-        return this.getBeanFactory().getBean(SystemConstants.I18N_MANAGER, II18nManager.class);
+        return (II18nManager) this.getBeanFactory().getBean(SystemConstants.I18N_MANAGER, II18nManager.class);
     }
 	/*
     public void setI18nManager(II18nManager i18nManager) {
@@ -580,7 +580,7 @@ public abstract class AbstractAttributeManager implements AttributeManagerInterf
     }
 	*/
     protected ILangManager getLangManager() {
-        return this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+        return (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
     }
 	/*
     public void setLangManager(ILangManager langManager) {

@@ -208,7 +208,7 @@ public class ListAttribute extends AbstractListAttribute {
     @Override
     public Status getStatus() {
         boolean valued = true;
-        ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+        ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
         List<Lang> langs = langManager.getLangs();
         for (int i = 0; i < langs.size(); i++) {
             Lang lang = langs.get(i);
@@ -229,7 +229,7 @@ public class ListAttribute extends AbstractListAttribute {
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {
-            ILangManager langManager = this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+            ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
             List<Lang> langs = langManager.getLangs();
             for (int i = 0; i < langs.size(); i++) {
                 Lang lang = langs.get(i);

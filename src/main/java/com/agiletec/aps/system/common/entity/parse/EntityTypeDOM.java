@@ -334,7 +334,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 	}
 	
 	protected ILangManager getLangManager() {
-		return this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+		return (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
 	}
 	
 	protected String getEntityManagerName() {
