@@ -16,6 +16,8 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,8 +25,10 @@ import java.util.List;
 
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IResourceInstanceHelper;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 /**
  * Classe astratta di base per gli oggetti Resource.
@@ -185,52 +189,6 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 	}
 	
 	/**
-	 * Setta l'url base della cartella delle risorse.
-	 * @param baseURL L'url base della cartella delle risorse.
-	 */
-	@Override
-	public void setBaseURL(String baseURL) {
-		if (!baseURL.endsWith("/")) {
-			baseURL += "/";
-		}
-		this._baseURL = baseURL;
-	}
-
-	/**
-	 * Restituisce l'url base della cartella delle risorse.
-	 * @return L'url base della cartella delle risorse.
-	 */
-	protected String getBaseURL() {
-		return _baseURL;
-	}
-	
-	/**
-     * Restituice il percorso base su disco della cartella delle risorse.
-     * @return Il percorso base su disco della cartella delle risorse.
-     */
-    private String getBaseDiskRoot() {
-		return _baseDiskRoot;
-	}
-
-    /**
-     * Setta il percorso base su disco della cartella delle risorse.
-     * @param baseDiskRoot Il percorso base su disco della cartella delle risorse.
-     */
-    @Override
-	public void setBaseDiskRoot(String baseDiskRoot) {
-		this._baseDiskRoot = baseDiskRoot;
-	}
-	
-    private String getProtectedBaseDiskRoot() {
-		return _protectedBaseDiskRoot;
-	}
-    
-    @Override
-	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
-		this._protectedBaseDiskRoot = protBaseDiskRoot;
-	}
-	
-	/**
 	 * Restituisce l'url base della cartella delle risorse pretette.
 	 * @return L'url base della cartella delle risorse protette.
 	 */
@@ -238,7 +196,6 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 		return _protectedBaseURL;
 	}
     
-    @Override
 	public void setProtectedBaseURL(String protBaseURL) {
 		this._protectedBaseURL = protBaseURL;
 	}
@@ -281,12 +238,9 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 		prototype.setMasterFileName("");
 		prototype.setCategories(new ArrayList<Category>());
 		prototype.setFolder(this.getFolder());
-		prototype.setBaseURL(this.getBaseURL());
-		prototype.setBaseDiskRoot(this.getBaseDiskRoot());
-		prototype.setProtectedBaseDiskRoot(this.getProtectedBaseDiskRoot());
 		prototype.setProtectedBaseURL(this.getProtectedBaseURL());
 		prototype.setAllowedExtensions(this.getAllowedExtensions());
-		prototype.setInstanceHelper(this.getInstanceHelper());
+		prototype.setStorageManager(this.getStorageManager());
 		return prototype;
 	}
 	
@@ -321,10 +275,12 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
      * Questo path è necessario al salvataggio o alla rimozione
      * dei file associati ad ogni istanza della risorse.
      * @return Il path assoluto su disco completo.
+	 * @deprecated Since Entando 3.2.1. Use StrorageManager
      */
 	@Override
 	public String getDiskFolder() {
-    	StringBuffer diskFolder = new StringBuffer();
+		/*
+    	StringBuilder diskFolder = new StringBuilder();
     	if (!Group.FREE_GROUP_NAME.equals(this.getMainGroup())) {
     		//RISORSA PROTETTA
     		diskFolder.append(this.getProtectedBaseDiskRoot());
@@ -343,8 +299,24 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     		diskFolder.append(this.getMainGroup() + File.separator);
     	}
     	return diskFolder.toString();
+		*/
+		throw new RuntimeException("Deprecated method");
     }
     
+    protected String getDiskSubFolder() {
+    	StringBuilder diskFolder = new StringBuilder(this.getFolder());
+    	if (this.isProtectedResource()) {
+    		//PROTECTED Resource
+    		diskFolder.append(this.getMainGroup()).append(File.separator);
+    	}
+    	return diskFolder.toString();
+    }
+    
+	@Override
+	public InputStream getResourceStream(ResourceInstance instance) {
+		return this.getResourceStream(instance.getSize(), instance.getLangCode());
+	}
+	
     /**
      * Restitituisce il nome file corretto da utilizzare 
      * per i salvataggi di istanze risorse all'interno del fileSystem.
@@ -364,12 +336,12 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 	 */
 	protected String getUrlPath(ResourceInstance instance) {
 		if (null == instance) return null;
-		StringBuffer urlPath = null;
-		if (!Group.FREE_GROUP_NAME.equals(this.getMainGroup())) {
+		StringBuilder urlPath = new StringBuilder();
+		if (this.isProtectedResource()) {
 			//PATH di richiamo della servlet di autorizzazione
 			//Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
 			String DEF = "def";
-			urlPath = new StringBuffer(this.getProtectedBaseURL());
+			urlPath.append(this.getProtectedBaseURL());
 			if (!urlPath.toString().endsWith("/")) urlPath.append("/");
 			urlPath.append(this.getId()).append("/");
 			if (instance.getSize() < 0) {
@@ -385,20 +357,46 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 			}
 			urlPath.append("/");
     	} else {
-    		urlPath = new StringBuffer(this.getBaseURL());
-    		if (!urlPath.toString().endsWith("/")) urlPath.append("/");
-    		urlPath.append(this.getFolder());
-    		if (!urlPath.toString().endsWith("/")) urlPath.append("/");
-    		urlPath.append(instance.getFileName());
+			StringBuilder subFolder = new StringBuilder(this.getFolder());
+    		if (!subFolder.toString().endsWith("/")) {
+				subFolder.append("/");
+			}
+    		subFolder.append(instance.getFileName());
+			String path = this.getStorageManager().getResourceUrl(subFolder.toString(), false);
+			urlPath.append(path);
     	}
 		return urlPath.toString();
 	}
 	
-	protected IResourceInstanceHelper getInstanceHelper() {
-		return _instanceHelper;
+	protected boolean isProtectedResource() {
+		return (!Group.FREE_GROUP_NAME.equals(this.getMainGroup()));
 	}
-	public void setInstanceHelper(IResourceInstanceHelper instanceHelper) {
-		this._instanceHelper = instanceHelper;
+	
+	protected File saveTempFile(String filename, InputStream is) throws ApsSystemException {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		String filePath = tempDir + File.separator + filename;
+		try {
+			byte[] buffer = new byte[1024];
+			int length = -1;
+			FileOutputStream outStream = new FileOutputStream(filePath);
+			while ((length = is.read(buffer)) != -1) {
+				outStream.write(buffer, 0, length);
+				outStream.flush();
+			}
+			outStream.close();
+			is.close();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "saveTempFile");
+			throw new ApsSystemException("Error on saving temporary file", t);
+		}
+		return new File(filePath);
+	}
+    
+	protected IStorageManager getStorageManager() {
+		return _storageManager;
+	}
+	public void setStorageManager(IStorageManager storageManager) {
+		this._storageManager = storageManager;
 	}
 	
 	private String _id;
@@ -408,13 +406,10 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 	private String _masterFileName;
 	private List<Category> _categories;
 	private String _folder;
-	private String _baseURL;
-	private String _baseDiskRoot;
-	private String _protectedBaseDiskRoot;
 	private String _protectedBaseURL;
 	
 	private String _allowedExtensions;
 	
-	private IResourceInstanceHelper _instanceHelper;
+	private IStorageManager _storageManager;
 	
 }

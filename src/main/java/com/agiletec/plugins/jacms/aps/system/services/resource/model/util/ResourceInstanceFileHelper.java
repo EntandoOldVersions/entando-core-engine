@@ -29,9 +29,12 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 /**
  * Classe Helper per la gestione dei file relativi alle istanze delle risorse.
  * @author E.Santoboni
+ * @deprecated Since Entando 3.2.1. Use IStorageManager
  */
 public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
     
+	@Override
+	@Deprecated
     public void save(String filePath, ResourceDataBean bean) throws ApsSystemException {
         try {
             this.save(filePath, bean.getInputStream());
@@ -41,6 +44,8 @@ public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
         }
     }
     
+	@Override
+    @Deprecated
     public void save(String filePath, InputStream is) throws ApsSystemException {
         try {
             byte[] buffer = new byte[1024];
@@ -58,11 +63,15 @@ public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
         }
     }
     
+	@Override
+    @Deprecated
     public String getFileExtension(String fileName) {
         String extension = fileName.substring(fileName.lastIndexOf('.') + 1).trim();
         return extension;
     }
     
+	@Override
+    @Deprecated
     public String getResourceDiskFolder(ResourceInterface resource) {
         String resDiskFolder = resource.getDiskFolder();
         File dir = new File(resDiskFolder);
@@ -72,6 +81,8 @@ public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
         return resDiskFolder;
     }
     
+	@Override
+    @Deprecated
     public boolean delete(String filePath) throws ApsSystemException {
         File file = new File(filePath);
         if (file.exists()) {
@@ -80,6 +91,8 @@ public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
         return false;
     }
     
+	@Override
+    @Deprecated
     public boolean exists(String filePath) throws ApsSystemException {
         File file = new File(filePath);
         return file.exists();

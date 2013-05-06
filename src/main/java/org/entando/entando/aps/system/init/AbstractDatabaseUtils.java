@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import org.entando.entando.aps.system.init.model.Component;
 import java.util.*;
 import javax.sql.DataSource;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -64,10 +65,7 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 	}
 	
 	protected String getLocalBackupsFolder() {
-		StringBuilder dirName = new StringBuilder(this.getProtectedBaseDiskRoot());
-		if (!dirName.toString().endsWith("\\") && !dirName.toString().endsWith("/")) {
-			dirName.append(File.separator);
-		}
+		StringBuilder dirName = new StringBuilder();
 		dirName.append("databaseBackups").append(File.separator);
 		return dirName.toString();
 	}
@@ -87,13 +85,6 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
 		this._beanFactory = beanFactory;
-	}
-	
-	protected String getProtectedBaseDiskRoot() {
-		return _protectedBaseDiskRoot;
-	}
-	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
-		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
 	
 	protected Map<String, List<String>> getEntandoTableMapping() {
@@ -117,7 +108,12 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 		this._componentManager = componentManager;
 	}
 	
-	private String _protectedBaseDiskRoot;
+	protected IStorageManager getStorageManager() {
+		return _storageManager;
+	}
+	public void setStorageManager(IStorageManager storageManager) {
+		this._storageManager = storageManager;
+	}
 	
 	private BeanFactory _beanFactory;
 	private Map<String, List<String>> _entandoTableMapping;
@@ -125,5 +121,6 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 	private Properties _databaseTypeDrivers;
 	
 	private IComponentManager _componentManager;
+	private IStorageManager _storageManager;
 	
 }

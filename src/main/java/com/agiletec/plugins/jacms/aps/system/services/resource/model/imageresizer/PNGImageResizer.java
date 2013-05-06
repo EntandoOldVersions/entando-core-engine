@@ -44,6 +44,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 public class PNGImageResizer extends AbstractImageResizer {
 	
 	@Override
+	@Deprecated
 	public void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResourceDimension dimension) throws ApsSystemException {
 		BufferedImage imageResized = this.getResizedImage(imageIcon, dimension.getDimx(), dimension.getDimy());
 		try {
@@ -65,6 +66,7 @@ public class PNGImageResizer extends AbstractImageResizer {
 	 * @return L'immagine risultante.
 	 * @throws ApsSystemException In caso di errore.
 	 */
+	@Override
 	protected BufferedImage getResizedImage(ImageIcon imageIcon, int dimensioneX, int dimensioneY) throws ApsSystemException {
     	Image image = imageIcon.getImage();
     	BufferedImage bi = this.toBufferedImage(image);

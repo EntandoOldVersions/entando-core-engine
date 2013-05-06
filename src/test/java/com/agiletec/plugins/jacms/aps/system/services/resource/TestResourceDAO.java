@@ -50,7 +50,7 @@ public class TestResourceDAO extends BaseTestCase {
     	resource.setMainGroup(Group.FREE_GROUP_NAME);
     	resource.setType("Image");
     	resource.setFolder("/temp");
-    	resource.setBaseURL("temp");
+    	//resource.setBaseURL("temp");
     	ResourceRecordVO resourceRecordVO = null;  
         try {
         	mockResourcesDao.deleteResource("temp");

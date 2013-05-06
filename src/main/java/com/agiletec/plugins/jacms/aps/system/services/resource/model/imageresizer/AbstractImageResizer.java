@@ -16,11 +16,52 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.net.URLConnection;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
+
 /**
  * Classe astratta base a servizio delle classi delegate al redimensionameno e salvataggio di file tipo immagine.
  * @author E.Santoboni
  */
 public abstract class AbstractImageResizer implements IImageResizer {
+	
+	@Override
+	public ResourceInstance saveResizedImage(String subPath, boolean isProtectedResource, 
+			ImageIcon imageIcon, ImageResourceDimension dimension) throws ApsSystemException {
+		ResourceInstance resizedInstance = new ResourceInstance();
+		resizedInstance.setSize(dimension.getIdDim());
+		BufferedImage outImage = this.getResizedImage(imageIcon, dimension.getDimx(), dimension.getDimy());
+		String filename = subPath.substring(subPath.lastIndexOf("/") + 1);
+		resizedInstance.setFileName(filename);
+		String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "temp_" + filename;
+		try {
+			File tempFile = new File(tempFilePath);
+	        ImageIO.write(outImage, this.getFileExtension(tempFilePath), tempFile);
+			this.getStorageManager().saveFile(subPath, isProtectedResource, new FileInputStream(tempFile));
+			//resizedInstance.setMimeType(bean.getMimeType());
+			long realLength = tempFile.length() / 1000;
+			resizedInstance.setFileLength(String.valueOf(realLength) + " Kb");
+			tempFile.delete();
+		} catch (Throwable t) {
+			String msg = "Error creating resigned Image";
+			ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
+			throw new ApsSystemException(msg, t);
+		}
+		String mimeType = URLConnection.guessContentTypeFromName(filename);
+		resizedInstance.setMimeType(mimeType);
+		return resizedInstance;
+	}
+	
+	protected abstract BufferedImage getResizedImage(ImageIcon imageIcon, int dimensionX, int dimensionY) throws ApsSystemException;
 	
 	/**
 	 * Calcola il rapporto di scala sulla base della dimensione maggiore (tenuto conto
@@ -48,5 +89,15 @@ public abstract class AbstractImageResizer implements IImageResizer {
 	protected String getFileExtension(String fileName) {
 		return fileName.substring(fileName.lastIndexOf('.')+1).trim();
 	}
+	
+	protected IStorageManager getStorageManager() {
+		return _storageManager;
+	}
+	@Override
+	public void setStorageManager(IStorageManager storageManager) {
+		this._storageManager = storageManager;
+	}
+	
+	private IStorageManager _storageManager;
 	
 }

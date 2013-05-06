@@ -142,14 +142,12 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 					Class tableClass = Class.forName(tableClassName);
 					String tableName = TableFactory.getTableName(tableClass);
 					String fileName = folder.toString() + dataSourceName + File.separator + tableName + ".sql";
-					File tableSqlDumpFile = new File(fileName);
-					if (tableSqlDumpFile.exists()) {
-						FileInputStream is = new FileInputStream(tableSqlDumpFile);
+					InputStream is = this.getStorageManager().getStream(fileName, true);
+					if (null != is) {
 						String sqlDump = FileTextReader.getText(is);
 						TableDataUtils.valueDatabase(sqlDump, tableName, dataSource, null);
 					}
 				}
-				//
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "restoreLocalDump");

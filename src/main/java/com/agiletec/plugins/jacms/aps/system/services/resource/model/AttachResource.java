@@ -52,9 +52,8 @@ public class AttachResource extends AbstractMonoInstanceResource  {
 	public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
 		try {
 			String fileName = this.getInstanceFileName(bean.getFileName());
-			String baseDiskFolder = this.getInstanceHelper().getResourceDiskFolder(this);
-			String filePath = baseDiskFolder + fileName;
-			this.getInstanceHelper().save(filePath, bean.getInputStream());
+			String subPath = this.getDiskSubFolder() + fileName;
+			this.getStorageManager().saveFile(subPath, this.isProtectedResource(), bean.getInputStream());
 			ResourceInstance instance = new ResourceInstance();
 			instance.setSize(0);
 			instance.setFileName(fileName);

@@ -21,6 +21,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * Classe astratta di base per l'implementazione 
@@ -39,16 +40,38 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	public boolean isMultiInstance() {
     	return false;
     }
+	
+	@Override
+	public InputStream getResourceStream(int size, String langCode) {
+		return this.getResourceStream();
+	}
+	
+	@Override
+	public InputStream getResourceStream() {
+		ResourceInstance instance = this.getInstance();
+		String subPath = super.getDiskSubFolder() + instance.getFileName();
+		try {
+			return this.getStorageManager().getStream(subPath, this.isProtectedResource());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getResourceStream");
+			throw new RuntimeException("Error on extracting resource Stream", t);
+		}
+	}
     
 	@Override
+	@Deprecated
 	public File getFile() {
 		ResourceInstance instance = this.getInstance();
-    	String filePath = (this.getDiskFolder() + instance.getFileName());
-		File file = new File(filePath);
-		if (file.exists()) {
-			return file;
+		try {
+			InputStream stream = this.getResourceStream();
+			if (null != stream) {
+				return this.saveTempFile("temp_" + instance.getFileName(), stream);
+			}
+			return null;
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getFile");
+			throw new RuntimeException("Error on extracting file", t);
 		}
-    	return null;
 	}
     
 	@Override
@@ -59,8 +82,8 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 				return;
 			}
 			String docName = this.getInstance().getFileName();
-		    String filePath = this.getDiskFolder() + docName;
-			this.getInstanceHelper().delete(filePath);
+		    String subPath = this.getDiskSubFolder() + docName;
+			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
 			throw new ApsSystemException("Error on deleting resource instances", t);
@@ -70,8 +93,8 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	@Override
 	public boolean exists(String masterFormFileName) throws ApsSystemException {
 		String fileName = this.getInstanceFileName(masterFormFileName);
-		String filePath = this.getDiskFolder() + fileName;
-		return this.getInstanceHelper().exists(filePath);
+		String subPath = this.getDiskSubFolder() + fileName;
+		return this.getStorageManager().exists(subPath, this.isProtectedResource());
 	}
 	
 	/**

@@ -28,6 +28,7 @@ import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
@@ -61,15 +62,37 @@ public class JAXBResource {
 				}
 				this.setCategories(categories);
 			}
-			File file = resource.getFile();
-			if (null != file && file.exists()) {
-				byte[] bytes = this.fileToByteArray(file);
+			InputStream stream = resource.getResourceStream();
+			if (null != stream) {
+				File tempFile = this.createTempFile(new Random().nextInt(100) + resource.getMasterFileName(), stream);
+				byte[] bytes = this.fileToByteArray(tempFile);
 				this.setBase64(bytes);
+				tempFile.delete();
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "JAXBResource");
 			throw new ApsSystemException("Error creating jaxb resource", t);
 		}
+	}
+	
+	protected File createTempFile(String filename, InputStream is) throws ApsSystemException {
+		String tempDir = System.getProperty("java.io.tmpdir");
+		String filePath = tempDir + File.separator + filename;
+		try {
+			byte[] buffer = new byte[1024];
+			int length = -1;
+			FileOutputStream outStream = new FileOutputStream(filePath);
+			while ((length = is.read(buffer)) != -1) {
+				outStream.write(buffer, 0, length);
+				outStream.flush();
+			}
+			outStream.close();
+			is.close();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "saveTempFile");
+			throw new ApsSystemException("Error on saving temporary file", t);
+		}
+		return new File(filePath);
 	}
 
 	private byte[] fileToByteArray(File file) throws Throwable {
@@ -114,7 +137,7 @@ public class JAXBResource {
 		}
 		return bean;
 	}
-
+	
 	private File byteArrayToFile() throws Throwable {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File file = new File(tempDir + File.separator + this.getFileName());

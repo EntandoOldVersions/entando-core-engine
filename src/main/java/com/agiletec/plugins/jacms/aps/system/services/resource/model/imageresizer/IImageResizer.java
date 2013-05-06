@@ -20,6 +20,8 @@ import javax.swing.ImageIcon;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 /**
  * Interfaccia base per le classi delegate al redimensionameno e salvataggio di file tipo immagine.
@@ -36,7 +38,13 @@ public interface IImageResizer {
 	 * Il path è comprensivo del nome del file.
 	 * @param dimension Le dimensioni del rettangolo in cui deve essere inscritta l'immagine.
 	 * @throws ApsSystemException In caso di errore.
+	 * @deprecated 
 	 */
 	public void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResourceDimension dimension) throws ApsSystemException;
+	
+	public ResourceInstance saveResizedImage(String subPath, boolean isProtectedResource, 
+			ImageIcon imageIcon, ImageResourceDimension dimension) throws ApsSystemException;
+	
+	public void setStorageManager(IStorageManager storageManager);
 	
 }

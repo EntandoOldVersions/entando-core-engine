@@ -21,6 +21,7 @@ import java.util.List;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import java.io.File;
+import java.io.InputStream;
 
 /**
  * Interfaccia per gli oggetti risorsa.
@@ -97,7 +98,14 @@ public interface ResourceInterface {
      */
 	public void setMasterFileName(String mainFileName);
 	
+	@Deprecated
 	public File getFile();
+    
+    public InputStream getResourceStream();
+	
+	public InputStream getResourceStream(ResourceInstance instance);
+    
+    public InputStream getResourceStream(int size, String langCode);
     
     /**
      * Restituisce la cartella (a partire dalla cartella delle risorse) 
@@ -114,35 +122,12 @@ public interface ResourceInterface {
     public void setFolder(String folder);
     
     /**
-	 * Setta l'url base della cartella delle risorse.
-	 * @param baseURL L'url base della cartella delle risorse.
-	 */
-    public void setBaseURL(String baseURL);
-    
-    /**
-	 * Setta l'url base della cartella delle risorse pretette.
-	 * @param protectedBaseURL L'url base della cartella delle risorse protette.
-	 */
-    public void setProtectedBaseURL(String protectedBaseURL);
-    
-    /**
-     * Setta il percorso base su disco della cartella delle risorse.
-     * @param baseDiskRoot Il percorso base su disco della cartella delle risorse.
-     */
-    public void setBaseDiskRoot(String baseDiskRoot);
-    
-    /**
-     * Setta il percorso base su disco della cartella delle risorse protette.
-     * @param protBaseDiskRoot Il percorso base su disco della cartella delle risorse protette.
-     */
-    public void setProtectedBaseDiskRoot(String protBaseDiskRoot);
-    
-    /**
      * Restituisce il path assoluto su disco del folder contenitore 
      * dei file delle istanze relative alla risorsa specificata. 
      * Questo path è necessario al salvataggio o alla rimozione
      * dei file associati ad ogni istanza della risorse.
      * @return Il path assoluto su disco completo.
+	 * @deprecated since Entando 3.2.1. Use IStorageManager
      */
     public String getDiskFolder();
     

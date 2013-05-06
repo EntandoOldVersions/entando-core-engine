@@ -31,6 +31,7 @@ import org.entando.entando.aps.system.init.model.TableDumpResult;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 /**
  * @author E.Santoboni
@@ -107,37 +108,11 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 		}
 	}
 	
-	protected void save(String filename, String folder, String content) {
-		FileOutputStream outStream = null;
-		InputStream is = null;
-		try {
-			File dir = new File(folder);
-			if (!dir.exists() || !dir.isDirectory()) {
-				dir.mkdirs();
-			}
-			String filePath = folder + filename;
-			is = new ByteArrayInputStream(content.getBytes());
-			byte[] buffer = new byte[1024];
-            int length = -1;
-            outStream = new FileOutputStream(filePath);
-            while ((length = is.read(buffer)) != -1) {
-                outStream.write(buffer, 0, length);
-                outStream.flush();
-            }
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
-		} finally {
-			try {
-				if (null != outStream) outStream.close();
-			} catch (Throwable t) {
-				throw new RuntimeException("Error while closing OutputStream ", t);
-			}
-			try {
-				if (null != is) is.close();
-			} catch (Throwable t) {
-				throw new RuntimeException("Error while closing InputStream ", t);
-			}
-		}
+	protected void save(String filename, String folder, String content) throws ApsSystemException {
+		IStorageManager storageManager = this.getStorageManager();
+		String path = folder + filename;
+		ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
+		storageManager.saveFile(path, true, bais);
 	}
 	
 }

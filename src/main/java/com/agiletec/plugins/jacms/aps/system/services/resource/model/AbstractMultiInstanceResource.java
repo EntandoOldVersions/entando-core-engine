@@ -51,8 +51,10 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
 			while (instancesIter.hasNext()) {
 				ResourceInstance currentInstance = instancesIter.next();
 				String fileName = currentInstance.getFileName();
-				String filePath = this.getDiskFolder() + fileName;
-				this.getInstanceHelper().delete(filePath);
+				//String filePath = this.getDiskFolder() + fileName;
+				//this.getInstanceHelper().delete(filePath);
+				String subPath = this.getDiskSubFolder() + fileName;
+				this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
@@ -96,6 +98,7 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
 	 */
 	public abstract String getInstanceFileName(String masterFileName, int size, String langCode);
 	
+	@Deprecated
 	public abstract File getFile(int size, String langCode);
 	
 	/**

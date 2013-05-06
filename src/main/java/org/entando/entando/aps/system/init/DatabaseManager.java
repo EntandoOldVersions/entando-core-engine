@@ -38,6 +38,7 @@ import javax.sql.DataSource;
 import org.apache.commons.beanutils.BeanComparator;
 
 import org.entando.entando.aps.system.init.util.TableFactory;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.core.io.Resource;
@@ -179,8 +180,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		String logPrefix = "|   ";
 		System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: SCHEMA\n" + logPrefix);
 		ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
-		if (/*componentReport.getStatus().equals(SystemInstallationReport.Status.PORTING)
-				 || */componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
+		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
 			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			return;
@@ -189,8 +189,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			Map<String, List<String>> tableMapping = componentConfiguration.getTableMapping();
 			DataSourceInstallationReport dataSourceReport = componentReport.getDataSourceReport();
-			//String logTablePrefix = logPrefix + " TABLES - logTablePrefix";
-			//System.out.println(logTablePrefix + " - Installation STARTED!!!");
 			System.out.println(logPrefix + "Starting installation\n" + logPrefix);
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				String dataSourceName = dataSourceNames[j];
@@ -211,7 +209,6 @@ public class DatabaseManager extends AbstractInitializerManager
 					continue;
 				}
 				SystemInstallationReport.Status schemaStatus = dataSourceReport.getDatabaseStatus().get(dataSourceName);
-				//System.out.println(logDbTablePrefix + " - INIT!!!");
 				if (SystemInstallationReport.isSafeStatus(schemaStatus)) {
 					//Already Done!
 					System.out.println(logPrefix + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
@@ -220,12 +217,10 @@ public class DatabaseManager extends AbstractInitializerManager
 				if (null == dataSourceReport.getDataSourceTables().get(dataSourceName)) {
 					dataSourceReport.getDataSourceTables().put(dataSourceName, new ArrayList<String>());
 				}
-				//System.out.println(logDbTablePrefix + " - Installation Started... ");
 				if (checkOnStatup) {
 					dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.INCOMPLETE);
 					DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 					this.createTables(dataSourceName, tableClassNames, dataSource, dataSourceReport);
-					//System.out.println(logDbTablePrefix + " - INSTALLATION DONE! - installated tables " + schemaReport.getDatabaseTables().get(dataSourceName));
 					System.out.println(logPrefix);
 					dataSourceReport.getDatabaseStatus().put(dataSourceName, SystemInstallationReport.Status.OK);
 				} else {
@@ -253,21 +248,14 @@ public class DatabaseManager extends AbstractInitializerManager
 			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
-
-	/*
-	private String invokeGetMethod(String methodName, DataSource dataSource) throws Throwable {
-		Method method = dataSource.getClass().getDeclaredMethod(methodName);
-		return (String) method.invoke(dataSource);
-	}
-	*/
+	
 	//---------------- DATA ------------------- START
 
 	private void initMasterDefaultResource(SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
 		String logPrefix = "|   ";
 		System.out.println("+ [ Component: Core ] :: DATA\n" + logPrefix);
 		ComponentInstallationReport coreComponentReport = report.getComponentReport("entandoCore", false);
-		if (coreComponentReport.getStatus().equals(SystemInstallationReport.Status.OK)
-				/*|| coreComponentReport.getStatus().equals(SystemInstallationReport.Status.RESTORE)*/) {
+		if (coreComponentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
 			String message = logPrefix + "( ok )  Already installed. " + coreComponentReport.getStatus() + "\n" + logPrefix;
 			ApsSystemUtils.getLogger().info(message);
 			System.out.println(message);
@@ -289,7 +277,6 @@ public class DatabaseManager extends AbstractInitializerManager
 					continue;
 				}
 				SystemInstallationReport.Status schemaStatus = dataReport.getDatabaseStatus().get(dataSourceName);
-				//System.out.println(logDbTablePrefix + " - INIT!!!");
 				if (SystemInstallationReport.isSafeStatus(schemaStatus)) {
 					String message = logPrefix + "( ok )  " + dataSourceName + " already installed. " + report.getStatus() + "\n" + logPrefix;
 					System.out.println(message);
@@ -330,8 +317,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		String logPrefix = "|   ";
 		System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: DATA\n" + logPrefix);
 		ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
-		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)
-				/*|| componentReport.getStatus().equals(SystemInstallationReport.Status.RESTORE)*/) {
+		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
 			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			return;
@@ -342,9 +328,8 @@ public class DatabaseManager extends AbstractInitializerManager
 			String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 			for (int j = 0; j < dataSourceNames.length; j++) {
 				String dataSourceName = dataSourceNames[j];
-				//String logDbDataPrefix = "logDataPrefix" + " / Datasource " + dataSourceName;
 				if ((report.getStatus().equals(SystemInstallationReport.Status.PORTING)
-						|| report.getStatus().equals(SystemInstallationReport.Status.RESTORE))  && checkOnStatup) {
+						|| report.getStatus().equals(SystemInstallationReport.Status.RESTORE)) && checkOnStatup) {
 					dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
 					System.out.println("|   ( ok )  " + dataSourceName);
 					report.setUpdated();
@@ -353,8 +338,8 @@ public class DatabaseManager extends AbstractInitializerManager
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 				SystemInstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
 				if (SystemInstallationReport.isSafeStatus(dataStatus)) {
-			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
-			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
+					ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
+					System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 					continue;
 				}
 				Map<String, ComponentEnvironment> environments = componentConfiguration.getEnvironments();
@@ -464,33 +449,18 @@ public class DatabaseManager extends AbstractInitializerManager
 			this.setStatus(DatabaseManager.STATUS_READY);
 		}
 	}
-
+	
 	@Override
 	public void deleteBackup(String subFolderName) throws ApsSystemException {
 		try {
 			String directoryName = this.getLocalBackupsFolder() + subFolderName;
-			File backupFolder = new File(directoryName);
-			this.deleteDirectory(backupFolder);
+			this.getStorageManager().deleteDirectory(directoryName, true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteBackup");
 			throw new ApsSystemException("Error while deleting backup", t);
 		}
 	}
-
-	private void deleteDirectory(File directory) {
-		if (directory.exists() && directory.isDirectory()) {
-			String[] filesName = directory.list();
-			for (int i = 0; i < filesName.length; i++) {
-				File fileToDelete = new File(directory + File.separator + filesName[i]);
-				if (fileToDelete.isDirectory()) {
-					this.deleteDirectory(fileToDelete);
-				}
-				fileToDelete.delete();
-			}
-			directory.delete();
-		}
-	}
-
+	
 	protected DataSourceDumpReport getLastDumpReport() throws ApsSystemException {
 		if (Environment.develop.equals(this.getEnvironment())) {
 			return this.getBackupReport(this.getEnvironment().toString());
@@ -519,8 +489,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public List<DataSourceDumpReport> getBackupReports() throws ApsSystemException {
 		List<DataSourceDumpReport> reports = new ArrayList<DataSourceDumpReport>();
 		try {
-			File backupsFolder = new File(this.getLocalBackupsFolder());
-			String[] children = backupsFolder.list();
+			String[] children = this.getStorageManager().listDirectory(this.getLocalBackupsFolder(), true); //backupsFolder.list();
 			if (null == children || children.length == 0) {
 				return null;
 			}
@@ -539,29 +508,29 @@ public class DatabaseManager extends AbstractInitializerManager
 		return reports;
 	}
 
-	private boolean checkBackupFolder(String subFolderName) {
+	private boolean checkBackupFolder(String subFolderName) throws ApsSystemException {
 		String dirName = this.getLocalBackupsFolder();
 		String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 		for (int i = 0; i < dataSourceNames.length; i++) {
-			String folderName = dirName + File.separator + subFolderName + File.separator + dataSourceNames[i] + File.separator;
-			File directory = new File(folderName);
-			if (!directory.exists() || !directory.isDirectory() || directory.list().length == 0) {
+			String folderName = dirName + /*File.separator + */subFolderName + File.separator + dataSourceNames[i] + File.separator;
+			String[] directoryContent = this.getStorageManager().listFile(folderName, true);
+			if (null == directoryContent || directoryContent.length == 0) {
 				return false;
 			}
 		}
-		File reportFile = new File(this.getLocalBackupsFolder() + subFolderName + File.separator + DUMP_REPORT_FILE_NAME);
-		if (!reportFile.exists()) {
+		String reportFileName = dirName + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
+		if (!this.getStorageManager().exists(reportFileName, true)) {
 			return false;
 		}
 		return true;
 	}
-
+	
 	private DataSourceDumpReport getDumpReport(String subFolderName) throws ApsSystemException {
 		InputStream is = null;
 		DataSourceDumpReport report = null;
 		try {
-			File reportFile = new File(this.getLocalBackupsFolder() + subFolderName + File.separator + DUMP_REPORT_FILE_NAME);
-			is = new FileInputStream(reportFile);
+			String key = this.getLocalBackupsFolder() + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
+			is = this.getStorageManager().getStream(key, true);//new FileInputStream(reportFile);
 			String xml = FileTextReader.getText(is);
 			report = new DataSourceDumpReport(xml);
 		} catch (Throwable t) {
@@ -576,7 +545,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		}
 		return report;
 	}
-
+	
 	@Override
 	public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException {
 		try {
@@ -625,18 +594,18 @@ public class DatabaseManager extends AbstractInitializerManager
 			StringBuilder fileName = new StringBuilder(this.getLocalBackupsFolder())
 					.append(subFolderName).append(File.separator)
 					.append(dataSourceName).append(File.separator).append(tableName).append(".sql");
-			File tableSqlDumpFile = new File(fileName.toString());
-			if (tableSqlDumpFile.exists()) {
-				return new FileInputStream(tableSqlDumpFile);
-			}
+			return this.getStorageManager().getStream(fileName.toString(), true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getTableDump");
 			throw new RuntimeException("Error while extracting table dump - "
 					+ "table '" + tableName + "' - datasource '" + dataSourceName + "' - SubFolder '" + subFolderName + "'", t);
 		}
-		return null;
 	}
-
+	
+	private IStorageManager getStorageManager() {
+		return (IStorageManager) this.getBeanFactory().getBean("StorageManager");
+	}
+	
 	protected String getLocalBackupsFolder() {
 		return this.getDatabaseDumper().getLocalBackupsFolder();
 	}

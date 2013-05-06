@@ -25,6 +25,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 /**
  * Interfaccia base per le classi Helper per la gestione delle istanze delle risorse.
  * @author E.Santoboni
+ * @deprecated Since Entando 3.2.1. Use IStorageManager
  */
 public interface IResourceInstanceHelper {
 	
@@ -34,11 +35,14 @@ public interface IResourceInstanceHelper {
      * @param filePath Il path assoluto su disco dove salvare la risorsa.
      * @param bean L'oggetto detentore dei dati della risorsa da inserire.
      * @throws ApsSystemException In caso di errore nel salvataggio del file.
+	 * @deprecated 
      */
 	public void save(String filePath, ResourceDataBean bean) throws ApsSystemException;
     
-	public void save(String filePath, InputStream is) throws ApsSystemException;
+	@Deprecated
+    public void save(String filePath, InputStream is) throws ApsSystemException;
 	
+    @Deprecated
     public String getFileExtension(String fileName);
 	
     /**
@@ -47,11 +51,14 @@ public interface IResourceInstanceHelper {
      * tipo di risorsa e dal suo gruppo proprietario.
      * @param resource La risorsa cui ricavare il path assoluto su disco.
      * @return Il path assoluto su disco della risorsa.
+	 * @deprecated 
      */
 	public String getResourceDiskFolder(ResourceInterface resource);
 	
-	public boolean delete(String filePath) throws ApsSystemException;
+	@Deprecated
+    public boolean delete(String filePath) throws ApsSystemException;
 	
-	public boolean exists(String filePath) throws ApsSystemException;
+	@Deprecated
+    public boolean exists(String filePath) throws ApsSystemException;
 	
 }

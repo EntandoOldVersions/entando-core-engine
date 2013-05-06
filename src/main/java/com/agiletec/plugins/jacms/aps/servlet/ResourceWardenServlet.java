@@ -16,8 +16,6 @@
 */
 package com.agiletec.plugins.jacms.aps.servlet;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -135,9 +133,10 @@ public class ResourceWardenServlet extends HttpServlet {
 		resp.setHeader("Content-Disposition","inline; filename=" + instance.getFileName());
 		ServletOutputStream out = resp.getOutputStream();
 		try {
-			File fileTemp = new File(resource.getDiskFolder() + instance.getFileName());
-			if (fileTemp.exists()) {
-				InputStream is = new FileInputStream(fileTemp);
+			//File fileTemp = new File(resource.getDiskFolder() + instance.getFileName());
+			InputStream is = resource.getResourceStream(instance);
+			if (null != is) {
+				//InputStream is = new FileInputStream(fileTemp);
 				byte[] buffer = new byte[2048];
 				int length = -1;
 			    // Transfer the data

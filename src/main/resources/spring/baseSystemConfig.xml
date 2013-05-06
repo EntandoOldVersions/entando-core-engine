@@ -61,6 +61,14 @@
 		<value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</value>
 	</util:list>
 	
+	<bean id="StorageManager" class="org.entando.entando.aps.system.services.storage.LocalStorageManager" 
+			init-method="init" >
+		<property name="baseURL" ><jee:jndi-lookup jndi-name="java:comp/env/resourceRootURL" /></property>
+		<property name="baseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/resourceDiskRootFolder" /></property>
+		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
+		<property name="protectedBaseURL" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceRootURL" /></property>
+	</bean>
+	
 	<util:map id="databaseTypeDrivers" map-class="java.util.Properties" value-type="java.util.List">
 		<entry>
 			<key><value>DERBY</value></key>
@@ -108,7 +116,8 @@
 		</map>
 		</property>
 		<property name="databaseTypeDrivers" ref="databaseTypeDrivers" />
-		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
+		<property name="storageManager" ref="StorageManager" />
+		<!-- <property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property> -->
 	</bean>
 	
 	<bean id="DatabaseDumper" class="org.entando.entando.aps.system.init.DatabaseDumper" parent="abstractDatabaseUtils" />

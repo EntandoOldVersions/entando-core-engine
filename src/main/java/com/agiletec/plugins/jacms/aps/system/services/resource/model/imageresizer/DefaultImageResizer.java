@@ -37,26 +37,39 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 public class DefaultImageResizer extends AbstractImageResizer {
 	
 	@Override
+	@Deprecated
 	public void saveResizedImage(ImageIcon imageIcon, String filePath, ImageResourceDimension dimension) throws ApsSystemException {
-		Image image = imageIcon.getImage();
-		double scale = this.computeScale(image.getWidth(null), image.getHeight(null), dimension.getDimx(), dimension.getDimy());
-		int scaledW = (int) (scale * image.getWidth(null));
-		int scaledH = (int) (scale * image.getHeight(null));
-		BufferedImage outImage = new BufferedImage(scaledW, scaledH, BufferedImage.TYPE_INT_RGB);
-		AffineTransform tx = new AffineTransform();
-		tx.scale(scale, scale);
-		Graphics2D g2d = outImage.createGraphics();
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-		g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		g2d.drawImage(image, tx, null);
-		g2d.dispose();
+		BufferedImage outImage = this.getResizedImage(imageIcon, dimension.getDimx(), dimension.getDimy());
 		try {
 			File file = new File(filePath);
 	        ImageIO.write(outImage, this.getFileExtension(filePath), file);
 		} catch (Throwable t) {
-			String msg = this.getClass().getName() + ": saveImageResized: " + t.toString();
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "saveImageResized", t);
+			String msg = "Error creating resigned Image";
+			ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
+			throw new ApsSystemException(msg, t);
+		}
+	}
+	
+	@Override
+	protected BufferedImage getResizedImage(ImageIcon imageIcon, int dimensionX, int dimensionY) throws ApsSystemException {
+		try {
+			Image image = imageIcon.getImage();
+			double scale = this.computeScale(image.getWidth(null), image.getHeight(null), dimensionX, dimensionY);
+			int scaledW = (int) (scale * image.getWidth(null));
+			int scaledH = (int) (scale * image.getHeight(null));
+			BufferedImage outImage = new BufferedImage(scaledW, scaledH, BufferedImage.TYPE_INT_RGB);
+			AffineTransform tx = new AffineTransform();
+			tx.scale(scale, scale);
+			Graphics2D g2d = outImage.createGraphics();
+			g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g2d.drawImage(image, tx, null);
+			g2d.dispose();
+			return outImage;
+		} catch (Throwable t) {
+			String msg = "Error creating resigned Image";
+			ApsSystemUtils.logThrowable(t, this, "getResizedImage", msg);
 			throw new ApsSystemException(msg, t);
 		}
 	}

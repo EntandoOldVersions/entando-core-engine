@@ -17,27 +17,27 @@
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
 import org.im4java.core.ConvertCmd;
-import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer.IImageResizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Classe rappresentante una risorsa Image.
  * @author W.Ambu - E.Santoboni
  */
 public class ImageResource extends AbstractMultiInstanceResource {
-
+	
     /**
      * Restituisce il path dell'immagine (relativa al size immesso).
      * La stringa restituita è comprensiva del folder della risorsa e
@@ -51,19 +51,42 @@ public class ImageResource extends AbstractMultiInstanceResource {
     }
 	
 	@Override
+	public InputStream getResourceStream() {
+		return this.getResourceStream(0, null);
+	}
+	
+	@Override
+	public InputStream getResourceStream(int size, String langCode) {
+		ResourceInstance instance = (ResourceInstance) this.getInstances().get(String.valueOf(size));
+		String subPath = super.getDiskSubFolder() + instance.getFileName();
+		try {
+			return this.getStorageManager().getStream(subPath, this.isProtectedResource());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getFileIs");
+			throw new RuntimeException("Error on extracting file", t);
+		}
+	}
+	
+	@Override
+	@Deprecated
 	public File getFile() {
 		return this.getFile(0, null);
 	}
     
 	@Override
+	@Deprecated
 	public File getFile(int size, String langCode) {
 		ResourceInstance instance = (ResourceInstance) this.getInstances().get(String.valueOf(size));
-		String filePath = this.getDiskFolder() + instance.getFileName();
-		File file = new File(filePath);
-		if (file.exists()) {
-			return file;
+		try {
+			InputStream stream = this.getResourceStream(size, langCode);
+			if (null != stream) {
+				return this.saveTempFile("temp_" + instance.getFileName(), stream);
+			}
+			return null;
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getFile");
+			throw new RuntimeException("Error on extracting file", t);
 		}
-    	return null;
 	}
 	
     @Override
@@ -102,7 +125,7 @@ public class ImageResource extends AbstractMultiInstanceResource {
     	fileName.append(".").append(extension);
     	return fileName.toString();
 	}
-
+	
     @Override
 	public ResourceInstance getInstance(int size, String langCode) {
     	return (ResourceInstance) this.getInstances().get(String.valueOf(size));
@@ -112,10 +135,9 @@ public class ImageResource extends AbstractMultiInstanceResource {
 	public void saveResourceInstances(ResourceDataBean bean) throws ApsSystemException {
 		try {
 			String masterImageFileName = this.getInstanceFileName(bean.getFileName(), 0, null);
-			String baseDiskFolder = this.getInstanceHelper().getResourceDiskFolder(this);
-			String masterFilePath = baseDiskFolder + masterImageFileName;
-			this.getInstanceHelper().delete(masterFilePath);
-			this.getInstanceHelper().save(masterFilePath, bean.getInputStream());
+			String subPath = this.getDiskSubFolder() + masterImageFileName;
+			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
+			File tempMasterFile = this.saveTempFile("temp_" + masterImageFileName, bean.getInputStream());
 			ResourceInstance instance = new ResourceInstance();
 			instance.setSize(0);
 			instance.setFileName(masterImageFileName);
@@ -123,7 +145,10 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			instance.setMimeType(mimeType);
 			instance.setFileLength(bean.getFileSize() + " Kb");
 			this.addInstance(instance);
-			this.saveResizedInstances(bean, baseDiskFolder, masterFilePath);
+			this.saveResizedInstances(bean, tempMasterFile.getAbsolutePath());
+			this.getStorageManager().saveFile(subPath, 
+					this.isProtectedResource(), new FileInputStream(tempMasterFile));
+			tempMasterFile.delete();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "saveResourceInstances");
 			throw new ApsSystemException("Error saving image resource instances", t);
@@ -134,25 +159,25 @@ public class ImageResource extends AbstractMultiInstanceResource {
     public void reloadResourceInstances() throws ApsSystemException {
     	try {
     		ResourceInstance masterInstance = this.getInstance(0, null);
-    		String filename = masterInstance.getFileName();
-    		String baseDiskFolder = this.getInstanceHelper().getResourceDiskFolder(this);
-			String masterFilePath = baseDiskFolder + filename;
-			File masterFile = new File(masterFilePath);
-			BaseResourceDataBean bean = new BaseResourceDataBean(masterFile);
-			int index = filename.lastIndexOf("_d0.");
-			String masterFileName = filename.substring(0, index) + filename.substring(index+3);
+    		String masterImageFileName = masterInstance.getFileName();
+			String subPath = this.getDiskSubFolder() + masterImageFileName;
+			InputStream masterImageIs = this.getStorageManager().getStream(subPath, this.isProtectedResource());
+			File tempMasterFile = this.saveTempFile("temp_" + masterImageFileName, masterImageIs);
+			BaseResourceDataBean bean = new BaseResourceDataBean(tempMasterFile);
+			int index = masterImageFileName.lastIndexOf("_d0.");
+			String masterFileName = masterImageFileName.substring(0, index) + masterImageFileName.substring(index+3);
 			bean.setFileName(masterFileName);
 			bean.setMimeType(masterInstance.getMimeType());
-			this.saveResizedInstances(bean, baseDiskFolder, masterFilePath);
+			this.saveResizedInstances(bean, tempMasterFile.getAbsolutePath());
+			tempMasterFile.delete();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "reloadResourceInstances");
 			throw new ApsSystemException("Error reloading image resource instances", t);
 		}
     }
 	
-	private void saveResizedInstances(ResourceDataBean bean, String baseDiskFolder, String masterFilePath) throws ApsSystemException {
+	private void saveResizedInstances(ResourceDataBean bean, String masterFilePath) throws ApsSystemException {
 		try {
-			String mimeType = bean.getMimeType();
 			Map<Integer, ImageResourceDimension> dimensions = this.getImageDimensionReader().getImageDimensions();
 			Iterator<ImageResourceDimension> iterDimensions = dimensions.values().iterator();
 			while (iterDimensions.hasNext()) {
@@ -160,9 +185,9 @@ public class ImageResource extends AbstractMultiInstanceResource {
 				//Is the system use ImageMagick?
 				if (!this.isImageMagickEnabled()) {
 					ImageIcon imageIcon = new ImageIcon(masterFilePath);
-					this.saveResizedImage(bean, imageIcon, dimension, mimeType, baseDiskFolder);
+					this.saveResizedImage(bean, imageIcon, dimension);
 				} else {
-					this.saveResizedImage(bean, dimension, mimeType, baseDiskFolder);
+					this.saveResizedImage(bean, dimension);
 				}
 			}
 		} catch (Throwable t) {
@@ -170,7 +195,7 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			throw new ApsSystemException("Error saving resized image resource instances", t);
 		}
 	}
-
+	
 	/**
 	 * Redim images using im4Java
 	 * @param bean
@@ -178,26 +203,23 @@ public class ImageResource extends AbstractMultiInstanceResource {
 	 * @param mimeType
 	 * @param baseDiskFolder
 	 * @throws ApsSystemException
-	 * @throws IOException
-	 * @throws InterruptedException
-	 * @throws IM4JavaException
 	 */
-	private void saveResizedImage(ResourceDataBean bean, ImageResourceDimension dimension, String mimeType,
-			String baseDiskFolder) throws ApsSystemException, IOException, InterruptedException, IM4JavaException {
+	private void saveResizedImage(ResourceDataBean bean, ImageResourceDimension dimension) throws ApsSystemException {
 		if (dimension.getIdDim() == 0) {
 			//salta l'elemento con id zero che non va ridimensionato
 			return;
 		}
 		String imageName = this.getInstanceFileName(bean.getFileName(), dimension.getIdDim(), null);
-		String filePath = baseDiskFolder + imageName;
+		String subPath = super.getDiskSubFolder() + imageName;
 		try {
-			this.getInstanceHelper().delete(filePath);
+			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 			ResourceInstance resizedInstance = new ResourceInstance();
 			resizedInstance.setSize(dimension.getIdDim());
 			resizedInstance.setFileName(imageName);
-			resizedInstance.setMimeType(mimeType);
-			File fileTemp = new File(filePath);
-			long realLength = fileTemp.length() / 1000;
+			resizedInstance.setMimeType(bean.getMimeType());
+			String tempFilePath = System.getProperty("java.io.tmpdir") + File.separator + "temp_" + imageName;
+			File tempFile = new File(tempFilePath);
+			long realLength = tempFile.length() / 1000;
 			resizedInstance.setFileLength(String.valueOf(realLength) + " Kb");
 			this.addInstance(resizedInstance);
 			// create command
@@ -212,48 +234,46 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			imOper.addImage();
 			imOper.resize(dimension.getDimx(), dimension.getDimy());
 			imOper.addImage();
-			convertCmd.run(imOper, bean.getFile().getAbsolutePath(), fileTemp.getAbsolutePath());
+			convertCmd.run(imOper, bean.getFile().getAbsolutePath(), tempFile.getAbsolutePath());
+			this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(tempFile));
+			tempFile.delete();
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
-			throw new ApsSystemException("Error creating resource file instance '" + filePath + "'", t);
+			throw new ApsSystemException("Error creating resource file instance '" + subPath + "'", t);
 		}
 	}
-
-	private void saveResizedImage(ResourceDataBean bean, ImageIcon imageIcon,
-			ImageResourceDimension dimension, String mimeType, String baseDiskFolder) throws ApsSystemException {
+	
+	private void saveResizedImage(ResourceDataBean bean, 
+			ImageIcon imageIcon, ImageResourceDimension dimension) throws ApsSystemException {
 		if (dimension.getIdDim() == 0) {
 			//salta l'elemento con id zero che non va ridimensionato
 			return;
 		}
 		String imageName = this.getInstanceFileName(bean.getFileName(), dimension.getIdDim(), null);
-		String filePath = baseDiskFolder + imageName;
+		String subPath = super.getDiskSubFolder() + imageName;
 		try {
-			this.getInstanceHelper().delete(filePath);
-			IImageResizer resizer = this.getImageResizer(filePath);
-			resizer.saveResizedImage(imageIcon, filePath, dimension);
-			ResourceInstance resizedInstance = new ResourceInstance();
-			resizedInstance.setSize(dimension.getIdDim());
-			resizedInstance.setFileName(imageName);
-			resizedInstance.setMimeType(mimeType);
-			File fileTemp = new File(filePath);
-			long realLength = fileTemp.length() / 1000;
-			resizedInstance.setFileLength(String.valueOf(realLength) + " Kb");
+			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
+			IImageResizer resizer = this.getImageResizer(subPath);
+			ResourceInstance resizedInstance = 
+					resizer.saveResizedImage(subPath, this.isProtectedResource(), imageIcon, dimension);
 			this.addInstance(resizedInstance);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
-			throw new ApsSystemException("Error creating resource file instance '" + filePath + "'", t);
+			throw new ApsSystemException("Error creating resource file instance '" + subPath + "'", t);
 		}
 	}
-
+	
 	private IImageResizer getImageResizer(String filePath) {
-		String extension = this.getInstanceHelper().getFileExtension(filePath).toLowerCase();
+		String extension = filePath.substring(filePath.lastIndexOf('.') + 1).trim();
 		String resizerClassName = this.getImageResizerClasses().get(extension);
 		if (null == resizerClassName) {
 			resizerClassName = this.getImageResizerClasses().get("DEFAULT_RESIZER");
 		}
 		try {
 			Class resizerClass = Class.forName(resizerClassName);
-			return (IImageResizer) resizerClass.newInstance();
+			IImageResizer resizer = (IImageResizer) resizerClass.newInstance();
+			resizer.setStorageManager(this.getStorageManager());
+			return resizer;
 		} catch (Throwable t) {
 			throw new RuntimeException("Errore in creazione resizer da classe '"
 					+ resizerClassName + "' per immagine tipo '" + extension + "'", t);
@@ -263,8 +283,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 	@Override
 	public boolean exists(String masterFormFileName) throws ApsSystemException {
 		String fileName = this.getInstanceFileName(masterFormFileName, 0, null);
-		String filePath = this.getDiskFolder() + fileName;
-		return this.getInstanceHelper().exists(filePath);
+		String subPath = this.getDiskSubFolder() + fileName;
+		return this.getStorageManager().exists(subPath, this.isProtectedResource());
 	}
 	
     protected IImageDimensionReader getImageDimensionReader() {
