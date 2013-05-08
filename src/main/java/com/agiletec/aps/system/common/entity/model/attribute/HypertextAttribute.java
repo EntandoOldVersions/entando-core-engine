@@ -72,7 +72,7 @@ public class HypertextAttribute extends TextAttribute {
      * @param n The number of characters to return
      * @return The string of text with the desired length.
      */
-  public String getEscapedHead(int n) {
+  public String getHeadEscaped(int n) {
         String parsedText = super.getText().replaceAll("<[^<>]+>", "").trim();
         String head = parsedText;
 
