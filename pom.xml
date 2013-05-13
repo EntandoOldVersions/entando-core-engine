@@ -69,7 +69,7 @@
 		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
 
 		<spring.version>3.0.6.RELEASE</spring.version>
-		<struts2.version>2.3.4.1</struts2.version>
+		<struts2.version>2.3.14</struts2.version>
 	</properties>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -403,7 +403,7 @@
 		<dependency>
 			<groupId>ognl</groupId>
 			<artifactId>ognl</artifactId>
-			<version>3.0.5</version>
+			<version>3.0.6</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

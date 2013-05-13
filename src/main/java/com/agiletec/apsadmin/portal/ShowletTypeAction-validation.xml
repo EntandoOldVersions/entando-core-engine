@@ -9,7 +9,7 @@
             <message key="requiredstring" />
         </field-validator>
         <field-validator type="regex" short-circuit="true">
-           <param name="expression"><![CDATA[([a-zA-Z0-9_])*]]></param>
+           <param name="regex"><![CDATA[([a-zA-Z0-9_])*]]></param>
            <message key="wrongCharacters" />
         </field-validator>
         <field-validator type="fieldexpression" short-circuit="true">

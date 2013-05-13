@@ -21,7 +21,7 @@
 			<message key="requiredstring" />
         </field-validator>
         <field-validator type="regex" short-circuit="true">
-           <param name="expression"><![CDATA[([^\"])+]]></param>
+           <param name="regex"><![CDATA[([^\"])+]]></param>
            <message key="wrongCharacters" />
         </field-validator>
         <field-validator type="stringlength" short-circuit="true">
@@ -49,7 +49,7 @@
 	
 	<field name="fileName">
 		<field-validator type="regex" short-circuit="true">
-           <param name="expression"><![CDATA[(^[\w|\.|\-| ]+?)\.([\w|\-]+?$)]]></param>
+           <param name="regex"><![CDATA[(^[\w|\.|\-| ]+?)\.([\w|\-]+?$)]]></param>
            <message key="error.resource.filename.wrongCharacters" />
         </field-validator>
         <field-validator type="fieldexpression" short-circuit="true">
