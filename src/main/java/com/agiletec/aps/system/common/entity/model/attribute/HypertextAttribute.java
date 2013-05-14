@@ -51,7 +51,7 @@ public class HypertextAttribute extends TextAttribute {
      * language purged by the HTML tags, if any.
      * @param n The number of characters to return 
      * @return The string of text with the desired length.
-     * @deprecated has bugs. Use the getEscapedHead instead
+     * @deprecated It might return less characters than requested. Use the getHeadEscaped instead
      */
     public String getHead(int n) {
         HtmlHandler htmlhandler = new HtmlHandler();
@@ -67,25 +67,23 @@ public class HypertextAttribute extends TextAttribute {
     }
     
     /**
-     * Return the requested number of characters of the text associated to this attribute, in the current
-     * language purged by the HTML tags, if any.
-     * @param n The number of characters to return
+     * Return the requested number of characters rounded on word boundary of 
+     * the text associated to this attribute, in the current language,
+     * stripping HTML tags, if any. 
+     * @param n The minimum number of characters to return
      * @return The string of text with the desired length.
      */
-  public String getHeadEscaped(int n) {
-        String parsedText = super.getText().replaceAll("<[^<>]+>", "").trim();
-        String head = parsedText;
+    public String getEscapedHead(int n) {
+    	String parsedText = super.getText().replaceAll("<[^<>]+>", "").trim();
+    	String head = parsedText;
 
-        if (n < parsedText.length()) {
-           int idx = 0;
-
-            while ((Character.isLetterOrDigit(parsedText.charAt(idx))
-                    || (parsedText.charAt(n) == ';')) && (idx < n)) {
-                idx++;
-            }
-            head = parsedText.substring(0, idx);
-        }
-        return head;
+    	if (n < parsedText.length()) {
+    		while ((Character.isLetterOrDigit(parsedText.charAt(n)) || (parsedText.charAt(n) == ';')) && (n < parsedText.length())) {
+    			n++;
+    		}
+    		head = parsedText.substring(0, n);
+    	}
+    	return head;
     }
     
     public Element getJDOMElement() {
