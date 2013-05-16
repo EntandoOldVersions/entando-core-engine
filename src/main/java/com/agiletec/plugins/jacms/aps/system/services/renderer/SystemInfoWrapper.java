@@ -16,12 +16,15 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
+import java.util.List;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
@@ -57,6 +60,21 @@ public class SystemInfoWrapper {
             ApsSystemUtils.logThrowable(t, this, "getCurrentPage", "Error current page");
 			return null;
         }
+    }
+
+    public IPage getPageWithWidget(String widgetCode) {
+    	IPage page = null;
+    	try {
+            IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.getReqCtx().getRequest());
+    		List<IPage> pages = pageManager.getShowletUtilizers(widgetCode);
+    		if (null != pages && !pages.isEmpty()) {
+    			page = pages.get(0);
+    		}
+    		return page;
+    	} catch (Throwable t) {
+    		ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error getting page with widget");
+    		return null;
+    	}
     }
 	
     public Lang getCurrentLang() {
