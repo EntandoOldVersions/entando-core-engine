@@ -29,55 +29,52 @@ import java.io.InputStream;
  */
 public class LocalStorageManager implements IStorageManager {
 	
-    public void init() throws Exception {
-        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
-    }
+	public void init() throws Exception {
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
+	}
 	
 	@Override
 	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		try {
-			int index = fullPath.lastIndexOf(File.separator);
-			if (index > 0) {
-				File dir = new File(fullPath.substring(0, index));
-				if (!dir.exists() || !dir.isDirectory()) {
-					dir.mkdirs();
-				}
+			File dir = new File(fullPath).getParentFile();
+			if (!dir.exists()) {
+				dir.mkdirs();
 			}
-            byte[] buffer = new byte[1024];
-            int length = -1;
-            FileOutputStream outStream = new FileOutputStream(fullPath);
-            while ((length = is.read(buffer)) != -1) {
-                outStream.write(buffer, 0, length);
-                outStream.flush();
-            }
-            outStream.close();
-            is.close();
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
-            throw new ApsSystemException("Error on saving file", t);
-        }
+			byte[] buffer = new byte[1024];
+			int length = -1;
+			FileOutputStream outStream = new FileOutputStream(fullPath);
+			while ((length = is.read(buffer)) != -1) {
+				outStream.write(buffer, 0, length);
+				outStream.flush();
+			}
+			outStream.close();
+			is.close();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "save");
+			throw new ApsSystemException("Error on saving file", t);
+		}
 	}
 	
 	@Override
 	public boolean deleteFile(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		File file = new File(fullPath);
-        if (file.exists()) {
-            return file.delete();
-        }
-        return false;
+		if (file.exists()) {
+			return file.delete();
+		}
+		return false;
 	}
 	
 	@Override
 	public void createDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
-        File dir = new File(fullPath);
-        if (!dir.exists() || !dir.isDirectory()) {
-            dir.mkdirs();
-        }
+		File dir = new File(fullPath);
+		if (!dir.exists() || !dir.isDirectory()) {
+			dir.mkdirs();
+		}
 	}
-
+	
 	@Override
 	public void deleteDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
@@ -86,10 +83,10 @@ public class LocalStorageManager implements IStorageManager {
 	}
 	
 	private boolean delete(File file) throws ApsSystemException {
-        if (file.exists()) {
+		if (file.exists()) {
 			if (file.isDirectory()) {
 				String[] filesName = file.list();
-				for (int i=0; i<filesName.length; i++) {
+				for (int i = 0; i < filesName.length; i++) {
 					File fileToDelete = new File(file.getAbsoluteFile() + File.separator + filesName[i]);
 					this.delete(fileToDelete);
 				}
@@ -97,9 +94,9 @@ public class LocalStorageManager implements IStorageManager {
 			} else {
 				return file.delete();
 			}
-        }
-        return false;
-    }
+		}
+		return false;
+	}
 	
 	@Override
 	public InputStream getStream(String subPath, boolean isProtectedResource) throws ApsSystemException {
@@ -110,9 +107,9 @@ public class LocalStorageManager implements IStorageManager {
 				return new FileInputStream(file);
 			}
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getStream");
-            throw new ApsSystemException("Error extracting stream", t);
-        }
+			ApsSystemUtils.logThrowable(t, this, "getStream");
+			throw new ApsSystemException("Error extracting stream", t);
+		}
 		return null;
 	}
 	
@@ -120,7 +117,7 @@ public class LocalStorageManager implements IStorageManager {
 	public boolean exists(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		File file = new File(fullPath);
-        return file.exists();
+		return file.exists();
 	}
 	
 	@Override
@@ -128,7 +125,7 @@ public class LocalStorageManager implements IStorageManager {
 		String baseUrl = (!isProtectedResource) ? this.getBaseURL() : this.getProtectedBaseURL();
 		return this.createPath(baseUrl, subPath, true);
 	}
-    
+	
 	@Override
 	public String[] list(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
@@ -174,7 +171,7 @@ public class LocalStorageManager implements IStorageManager {
 	protected String[] addChild(String stringToAdd, String[] objects) {
 		int len = objects.length;
 		String[] newArray = new String[len + 1];
-		for (int i=0; i < len; i++){
+		for (int i = 0; i < len; i++) {
 			newArray[i] = objects[i];
 		}
 		newArray[len] = stringToAdd;
@@ -195,7 +192,7 @@ public class LocalStorageManager implements IStorageManager {
 		} else if (!baseEndWithSlash && !subPathStartWithSlash) {
 			return basePath + separator + subPath;
 		} else {
-			String base = basePath.substring(0, basePath.length()-2);
+			String base = basePath.substring(0, basePath.length() - 2);
 			return base + subPath;
 		}
 	}
@@ -207,28 +204,28 @@ public class LocalStorageManager implements IStorageManager {
 		this._baseURL = baseURL;
 	}
 	
-    protected String getBaseDiskRoot() {
+	protected String getBaseDiskRoot() {
 		return _baseDiskRoot;
 	}
 	public void setBaseDiskRoot(String baseDiskRoot) {
 		this._baseDiskRoot = baseDiskRoot;
 	}
 	
-    protected String getProtectedBaseDiskRoot() {
+	protected String getProtectedBaseDiskRoot() {
 		return _protectedBaseDiskRoot;
 	}
 	public void setProtectedBaseDiskRoot(String protBaseDiskRoot) {
 		this._protectedBaseDiskRoot = protBaseDiskRoot;
 	}
-	
-    protected String getProtectedBaseURL() {
+
+	protected String getProtectedBaseURL() {
 		return _protectedBaseURL;
 	}
 	public void setProtectedBaseURL(String protBaseURL) {
 		this._protectedBaseURL = protBaseURL;
 	}
 	
-    private String _baseURL;
+	private String _baseURL;
 	private String _baseDiskRoot;
 	private String _protectedBaseDiskRoot;
 	private String _protectedBaseURL;
