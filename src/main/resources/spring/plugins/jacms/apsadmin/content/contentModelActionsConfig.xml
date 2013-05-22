@@ -97,7 +97,7 @@
 		</entry>
 		<entry>
 			<key><value>Hypertext</value></key>
-			<value><![CDATA[text;getTextForLang(\"<LANG_CODE>\");textMap[\"<LANG_CODE>\"];getTextBeforeImage(<PERCENT_VALUE>);getTextByRange(<START_PERCENT_VALUE>,<END_PERCENT_VALUE>);getTextAfterImage(<PERCENT_VALUE>);getHead(<VALUE>);getHeadEscaped(VALUE)]]></value>
+			<value><![CDATA[text;getTextForLang(\"<LANG_CODE>\");textMap[\"<LANG_CODE>\"];getTextBeforeImage(<PERCENT_VALUE>);getTextByRange(<START_PERCENT_VALUE>,<END_PERCENT_VALUE>);getTextAfterImage(<PERCENT_VALUE>);getHead(<VALUE>);getEscapedHead(VALUE)]]></value>
 		</entry>
 	</util:map>
 	
