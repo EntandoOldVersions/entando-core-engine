@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamWriter;
 import org.apache.cxf.staxutils.transform.OutTransformWriter;
 import org.entando.entando.aps.system.services.api.model.CDataAdapter;
 
-
 /**
  * @author E.Santoboni
  */
@@ -37,6 +36,7 @@ public class CDataOutTransformWriter extends OutTransformWriter {
         super(writer, outMap, append, dropEls, attributesToElements, defaultNamespace);
     }
     
+    @Override
     public void writeCharacters(String text) throws XMLStreamException {
         if (CDataAdapter.isCdata(new String(text))) {
             String parsedCDataText = CDataAdapter.parse(new String(text));
