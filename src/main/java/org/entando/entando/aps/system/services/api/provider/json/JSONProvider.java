@@ -16,29 +16,23 @@
 */
 package org.entando.entando.aps.system.services.api.provider.json;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.SequenceInputStream;
 import java.io.StringReader;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -46,11 +40,9 @@ import javax.ws.rs.ext.Provider;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.w3c.dom.Document;
@@ -58,17 +50,12 @@ import org.w3c.dom.Document;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.io.CachedOutputStream;
 import org.apache.cxf.jaxrs.ext.MessageContext;
-import org.apache.cxf.jaxrs.ext.Nullable;
-import org.apache.cxf.jaxrs.provider.AbstractJAXBProvider;
 import org.apache.cxf.jaxrs.provider.json.utils.JSONUtils;
-import org.apache.cxf.jaxrs.utils.AnnotationUtils;
 import org.apache.cxf.jaxrs.utils.HttpUtils;
 import org.apache.cxf.jaxrs.utils.InjectionUtils;
 import org.apache.cxf.jaxrs.utils.JAXBUtils;
 import org.apache.cxf.message.MessageUtils;
 import org.apache.cxf.staxutils.StaxUtils;
-import org.apache.cxf.staxutils.W3CDOMStreamWriter;
-import org.codehaus.jettison.JSONSequenceTooLargeException;
 import org.codehaus.jettison.mapped.Configuration;
 import org.codehaus.jettison.mapped.SimpleConverter;
 import org.codehaus.jettison.mapped.TypeConverter;
@@ -80,11 +67,11 @@ import org.codehaus.jettison.util.StringIndenter;
 @Produces("application/json")
 @Consumes("application/json")
 @Provider
-public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
+public class JSONProvider<T> extends org.apache.cxf.jaxrs.provider.json.JSONProvider<T>  {
 	
     private static final String MAPPED_CONVENTION = "mapped";
     private static final String BADGER_FISH_CONVENTION = "badgerfish";
-    private static final String DROP_ROOT_CONTEXT_PROPERTY = "drop.json.root.element";
+    //private static final String DROP_ROOT_CONTEXT_PROPERTY = "drop.json.root.element";
     static {
         new SimpleConverter();
     }
@@ -93,15 +80,15 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         new ConcurrentHashMap<String, String>();
     private boolean serializeAsArray;
     private List<String> arrayKeys;
-    private List<String> primitiveArrayKeys;
-    private boolean unwrapped;
-    private String wrapperName;
-    private Map<String, String> wrapperMap;
-    private boolean dropRootElement;
+    //private List<String> primitiveArrayKeys;
+    //private boolean unwrapped;
+    //private String wrapperName;
+    //private Map<String, String> wrapperMap;
+    //private boolean dropRootElement;
     private boolean dropCollectionWrapperElement;
     private boolean ignoreMixedContent; 
     private boolean writeXsiType = true;
-    private boolean readXsiType = true;
+    //private boolean readXsiType = true;
     private boolean ignoreNamespaces;
     private String convention = MAPPED_CONVENTION;
     private TypeConverter typeConverter;
@@ -109,91 +96,119 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
     
     @Override
     public void setAttributesToElements(boolean value) {
+		super.setAttributesToElements(value);
         this.attributesToElements = value;
     }
     
+	@Override
     public void setConvention(String value) {
+		super.setConvention(value);
         if (!MAPPED_CONVENTION.equals(value) && !BADGER_FISH_CONVENTION.equals(value)) {
             throw new IllegalArgumentException("Unsupported convention \"" + value);
         }
         convention = value;
     }
     
+    @Override
     public void setConvertTypesToStrings(boolean convert) {
+		super.setConvertTypesToStrings(convert);
         if (convert) {
             this.setTypeConverter(new SimpleConverter());
         }
     }
     
+    @Override
     public void setTypeConverter(TypeConverter converter) {
+		super.setTypeConverter(converter);
         this.typeConverter = converter;
     }
     
+    @Override
     public void setIgnoreNamespaces(boolean ignoreNamespaces) {
+		super.setIgnoreNamespaces(ignoreNamespaces);
         this.ignoreNamespaces = ignoreNamespaces;
     }
     
     @Context
+    @Override
     public void setMessageContext(MessageContext mc) {
+		super.setMessageContext(mc);
         super.setContext(mc);
     }
-    
+	/*
+    @Override
     public void setDropRootElement(boolean drop) {
         this.dropRootElement = drop;
     }
-    
+    */
+    @Override
     public void setDropCollectionWrapperElement(boolean drop) {
+		super.setDropCollectionWrapperElement(drop);
         this.dropCollectionWrapperElement = drop;
     }
     
+    @Override
     public void setIgnoreMixedContent(boolean ignore) {
+		super.setIgnoreMixedContent(ignore);
         this.ignoreMixedContent = ignore;
     }
-    
+    /*
     public void setSupportUnwrapped(boolean unwrap) {
         this.unwrapped = unwrap;
     }
-    
+	*/
+    /*
     public void setWrapperName(String wName) {
         wrapperName = wName;
     }
-    
+	*/
+    /*
     public void setWrapperMap(Map<String, String> map) {
         wrapperMap = map;
     }
-    
+	*/
+    /*
     @Override
     public void setEnableBuffering(boolean enableBuf) {
         super.setEnableBuffering(enableBuf);
     }
-    
+	*/
+    /*
     @Override
     public void setConsumeMediaTypes(List<String> types) {
         super.setConsumeMediaTypes(types);
     }
-    
+	*/
+    /*
     @Override
     public void setProduceMediaTypes(List<String> types) {
         super.setProduceMediaTypes(types);
     }
-    
+    */
+	@Override
     public void setSerializeAsArray(boolean asArray) {
+		super.setSerializeAsArray(asArray);
         this.serializeAsArray = asArray;
     }
     
+    @Override
     public void setArrayKeys(List<String> keys) {
+		super.setArrayKeys(keys);
         this.arrayKeys = keys;
     }
     
+    @Override
     public void setNamespaceMap(Map<String, String> namespaceMap) {
+		super.setNamespaceMap(namespaceMap);
         this.namespaceMap.putAll(namespaceMap);
     }
-
+	/*
     @Override
     public boolean isReadable(Class<?> type, Type genericType, Annotation[] anns, MediaType mt) {
         return super.isReadable(type, genericType, anns, mt) || Document.class.isAssignableFrom(type);    
     }
-    
+	*/
+    /*
 	@Override
     public T readFrom(Class<T> type, Type genericType, Annotation[] anns, MediaType mt, 
         MultivaluedMap<String, String> headers, InputStream is) 
@@ -219,7 +234,7 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
             Class<?> theType = getActualType(theGenericType, genericType, anns);
             Unmarshaller unmarshaller = createUnmarshaller(theType, genericType, isCollection);
             XMLStreamReader xsr = createReader(type, realStream, isCollection);
-            Object response = null;
+            Object response;
             if (JAXBElement.class.isAssignableFrom(type) 
                 || unmarshalAsJaxbElement
                 || jaxbElementClassMap != null && jaxbElementClassMap.containsKey(theType.getName())) {
@@ -255,16 +270,18 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         // unreachable
         return null;
     }
-
+	*/
+	/*
     protected XMLStreamReader createReader(Class<?> type, InputStream is, boolean isCollection) 
         throws Exception {
         XMLStreamReader reader = createReader(type, is);
         return isCollection ? new JAXBCollectionWrapperReader(reader) : reader;
     }
-    
+    */
+	/*
     protected XMLStreamReader createReader(Class<?> type, InputStream is) 
         throws Exception {
-        XMLStreamReader reader = null;
+        XMLStreamReader reader;
         if (BADGER_FISH_CONVENTION.equals(convention)) {
             reader = JSONUtils.createBadgerFishReader(is);
         } else {
@@ -274,7 +291,8 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         reader = createTransformReaderIfNeeded(reader, is);
         return reader;
     }
-    
+    */
+	/*
     protected InputStream getInputStream(Class<T> cls, Type type, InputStream is) throws Exception {
         if (unwrapped) {
             String rootName = getRootName(cls, type);
@@ -284,9 +302,11 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
             final InputStream[] streams = new InputStream[]{isBefore, is, isAfter};
             Enumeration<InputStream> list = new Enumeration<InputStream>() {
                 private int index; 
+				@Override
                 public boolean hasMoreElements() {
                     return index < streams.length;
                 }
+				@Override
                 public InputStream nextElement() {
                     return streams[index++];
                 }
@@ -296,7 +316,8 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
             return is;
         }
     }
-    
+    */
+	/*
     protected String getRootName(Class<T> cls, Type type) throws Exception {
         String name = null;
         if (wrapperName != null) {
@@ -319,13 +340,14 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         }
         return "{\"" + name + "\":";
     }
-    
+    */
+	/*
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] anns, MediaType mt) {
         return super.isWriteable(type, genericType, anns, mt)
             || Document.class.isAssignableFrom(type);
     }
-    
+    */
 	@Override
     public void writeTo(T obj, Class<?> cls, Type genericType, Annotation[] anns,  
         MediaType m, MultivaluedMap<String, Object> headers, OutputStream os)
@@ -368,14 +390,15 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
             StaxUtils.close(writer);
         }
     }
-
-    protected void copyReaderToWriter(XMLStreamReader reader, XMLStreamWriter writer) 
+	/*
+    @Override
+	protected void copyReaderToWriter(XMLStreamReader reader, XMLStreamWriter writer) 
         throws Exception {
         writer.writeStartDocument();
         StaxUtils.copy(reader, writer);
         writer.writeEndDocument();
     }
-    
+    */
     protected void executeMarshalCollection(Class<?> originalCls, Object collection, 
 			Type genericType, String encoding, OutputStream os, MediaType m, Annotation[] anns) throws Exception {
         Class<?> actualClass = InjectionUtils.getActualType(genericType);
@@ -384,10 +407,10 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
                                              : (Collection<?>) collection;
         Iterator<?> it = c.iterator();
         Object firstObj = it.hasNext() ? it.next() : null;
-        String startTag = null;
-        String endTag = null;
+        String startTag;
+        String endTag;
         if (!dropCollectionWrapperElement) {
-            QName qname = null;
+            QName qname;
             if (firstObj instanceof JAXBElement) {
                 JAXBElement<?> el = (JAXBElement<?>)firstObj;
                 qname = el.getName();
@@ -517,7 +540,7 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         }
         return writer;
     }
-	
+	/*
     protected boolean isDropRootNeeded() {
         MessageContext mc = getContext();
         if (mc != null) {
@@ -529,7 +552,7 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         }
         return dropRootElement;
     }
-    
+    */
     protected void executeMarshal(Object actualObject, Class<?> actualClass, 
                            Type genericType, String enc, OutputStream os) throws Exception {
         actualObject = convertToJaxbElementIfNeeded(actualObject, actualClass, genericType);
@@ -558,16 +581,19 @@ public class JSONProvider<T> extends AbstractJAXBProvider<T>  {
         return prefix == null ? "" : prefix;
     }
     
+	@Override
     public void setWriteXsiType(boolean writeXsiType) {
+		super.setWriteXsiType(writeXsiType);
         this.writeXsiType = writeXsiType;
     }
-    
+    /*
     public void setReadXsiType(boolean readXsiType) {
         this.readXsiType = readXsiType;
     }
-
+	*/
+	/*
     public void setPrimitiveArrayKeys(List<String> primitiveArrayKeys) {
         this.primitiveArrayKeys = primitiveArrayKeys;
     }
-    
+    */
 }
