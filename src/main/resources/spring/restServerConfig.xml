@@ -29,10 +29,12 @@
         <jaxrs:extensionMappings>
             <entry key="json" value="application/json" />
             <entry key="xml" value="application/xml" />
+			<entry key="jsonp" value="application/javascript" />
         </jaxrs:extensionMappings>
         <jaxrs:providers>
             <ref bean="jaxbProvider"/>
             <ref bean="jsonProvider"/>
+            <ref bean="jsonpProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
     
@@ -59,6 +61,15 @@
     <bean id="jsonProvider" class="org.entando.entando.aps.system.services.api.provider.json.JSONProvider">
         <property name="produceMediaTypes" ref="ApiJsonTypes"/>
         <property name="consumeMediaTypes" ref="ApiJsonTypes"/>
+    </bean>
+    
+    <util:list id="ApiJsonpTypes">
+        <value>application/javascript</value>
+    </util:list>
+    
+    <bean id="jsonpProvider" class="org.entando.entando.aps.system.services.api.provider.jsonp.JSONPProvider">
+        <property name="produceMediaTypes" ref="ApiJsonpTypes"/>
+        <!-- <property name="consumeMediaTypes" ref="ApiJsonpTypes"/> -->
     </bean>
     
 </beans>

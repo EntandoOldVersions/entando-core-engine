@@ -39,7 +39,7 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 public class ApiRestStatusServer {
 
     @GET
-    @Produces({"application/json", "application/xml"})
+    @Produces({"application/json", "application/xml", "application/javascript"})
     @Path("/{resourceName}/{httpMethod}")
     public Object getApiStatus(@PathParam("httpMethod") String httpMethodString,
             @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
@@ -47,7 +47,7 @@ public class ApiRestStatusServer {
     }
 
     @GET
-    @Produces({"application/json", "application/xml"})
+    @Produces({"application/json", "application/xml", "application/javascript"})
     @Path("/{namespace}/{resourceName}/{httpMethod}")
     public Object getApiStatus(@PathParam("httpMethod") String httpMethodString,
             @PathParam("namespace") String namespace, @PathParam("resourceName") String resourceName, @Context HttpServletRequest request) {
