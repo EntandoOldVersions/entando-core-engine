@@ -26,6 +26,8 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
+import com.agiletec.aps.system.services.url.IURLManager;
+import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 /**
@@ -55,7 +57,8 @@ public class SystemInfoWrapper {
 	
     public IPage getCurrentPage() {
 		try {
-            return (IPage) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+            IPage page = (IPage) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+            return page;
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getCurrentPage", "Error current page");
 			return null;
@@ -72,11 +75,27 @@ public class SystemInfoWrapper {
     		}
     		return page;
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error getting page with widget");
+    		ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error getting page with widget: " + widgetCode);
     		return null;
     	}
     }
-	
+
+    public String getPageURLWithWidget(String widgetCode) {
+    	String url = null;
+    	try {
+    		IPage page = this.getPageWithWidget(widgetCode);
+    		if (null == page) return url;
+    		IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.getReqCtx().getRequest());
+    		PageURL pageUrl = urlManager.createURL(this.getReqCtx());
+    		pageUrl.setPage(page);
+    		url = pageUrl.getURL();
+    	} catch (Throwable t) {
+    		ApsSystemUtils.logThrowable(t, this, "getPageURLWithWidget", "Error getting pageUrl with widget: " + widgetCode);
+    		return null;
+    	}
+    	return url;
+    }
+    
     public Lang getCurrentLang() {
 		try {
             return (Lang) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);

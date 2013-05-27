@@ -601,4 +601,44 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	
+	<tag>
+    	<description>
+			Search and return the page (or the list of pages) with the given widget type. When "filterParamName" and "filterParamValue" attributes are present, the returned list will be filtered by a specific widget configuration.
+    	</description>
+    	<name>pageWithWidget</name>
+    	<tag-class>com.agiletec.aps.tags.PageWithWidgetTag</tag-class>
+    	<body-content>empty</body-content>
+    	<attribute>
+      		<description></description>
+      		<name>var</name>
+      		<required>true</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description>The code of the widget to search</description>
+      		<name>widgetTypeCode</name>
+      		<required>true</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description>Optional widget config param name</description>
+      		<name>filterParamName</name>
+      		<required>false</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description>Optional widget config param value</description>
+      		<name>filterParamValue</name>
+      		<required>false</required>
+      		<rtexprvalue>true</rtexprvalue>
+    	</attribute>
+    	<attribute>
+      		<description>Optional, dafault false. When true the result is a list of pages, when false the returned page is the first occurence</description>
+      		<name>listResult</name>
+      		<required>false</required>
+      		<rtexprvalue>false</rtexprvalue>
+    	</attribute>
+    </tag>
+	
 </taglib>
