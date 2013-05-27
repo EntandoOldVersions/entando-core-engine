@@ -17,39 +17,33 @@
 */
 package com.agiletec.aps.system.services.cache;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
 import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
-
-import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.page.events.PageChangedObserver;
-import com.agiletec.aps.util.FileTextReader;
+
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 
 /**
  * Manager of the System Cache
  * @author E.Santoboni
  */
-public class EhCacheManager extends AbstractService implements ICacheManager, PageChangedObserver, ServletContextAware {
+public class EhCacheManager extends AbstractService implements ICacheManager, PageChangedObserver/*, ServletContextAware*/ {
 	
 	@Override
 	public void init() throws Exception {
+		/*
 		InputStream is1 = this._servletContext.getResourceAsStream(this.getCacheConfigurationFilePath());
 		InputStream is2 = null;
 		try {
@@ -69,8 +63,8 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 		}
 		this._cacheManager.clearAll();
 		this._cache = this._cacheManager.getCache(CACHE_NAME);
-		ApsSystemUtils.getLogger().config(
-				this.getClass().getName() + ": cache service initialized");
+		*/
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache service initialized");
 	}
 	
 	@Override
@@ -83,26 +77,27 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 	@Override
 	protected void release() {
 		super.release();
-		this._cacheManager.removalAll();
-		this._cacheManager.shutdown();
-		this._groups.clear();
+		this.destroy();
 	}
 	
 	@Override
 	public void destroy() {
-		this._cacheManager.removalAll();
-		this._cacheManager.shutdown();
+		EhCacheCacheManager cacheManager = this.getCacheManager();
+		cacheManager.getCacheManager().removalAll();
+		cacheManager.getCacheManager().shutdown();
 		this._groups.clear();
 	}
 	
 	@Override
 	public void flushAll() {
-		this._cache.flush();
+		Cache cache = this.getCache();
+		cache.flush();
 	}
 	
 	@Override
+	//@CacheEvict(value="ok", key="#key")
 	public void flushEntry(String key) {
-		this._cache.remove(key);
+		this.getCache().remove(key);
 	}
 	
 	@Override
@@ -113,35 +108,40 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 	
 	@Override
 	public Object getFromCache(String key, int myRefreshPeriod) {
-		Element element = this._cache.get(key);
+		Cache cache = this.getCache();
+		Element element = cache.get(key);
 		if (null == element) return null;
 		long creationTime = element.getCreationTime();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(creationTime);
 		calendar.add(Calendar.SECOND, myRefreshPeriod);
 		if (calendar.before(Calendar.getInstance())) {
-			this._cache.remove(key);
+			cache.remove(key);
 			return null;
 		}
 		return element.getObjectValue();
 	}
 	
 	public long getCreationTime(String key) {
-		Element element = this._cache.get(key);
+		Cache cache = this.getCache();
+		Element element = cache.get(key);
 		if (null == element) return 0;
 		return element.getCreationTime();
 	}
 	
 	@Override
 	public Object getFromCache(String key) {
-		Element element = this._cache.get(key);
+		Cache cache = this.getCache();
+		Element element = cache.get(key);
 		if (null == element) return null;
 		return element.getObjectValue();
 	}
+	
 	@Override
 	public void putInCache(String key, Object obj, String[] groups) {
+		Cache cache = this.getCache();
 		Element element = new Element(key, obj);
-		this._cache.put(element);
+		cache.put(element);
 		this.accessOnGroupMapping(1, groups, key);
 	}
 	
@@ -176,9 +176,22 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 	@Override
 	public void putInCache(String key, Object obj) {
 		Element element = new Element(key, obj);
-		this._cache.put(element);
+		Cache cache = this.getCache();
+		cache.put(element);
 	}
 	
+	protected Cache getCache() {
+		return this.getCacheManager().getCacheManager().getCache(CACHE_NAME);
+	}
+	
+	protected EhCacheCacheManager getCacheManager() {
+		return _cacheManager;
+	}
+	public void setCacheManager(EhCacheCacheManager cacheManager) {
+		this._cacheManager = cacheManager;
+	}
+	
+	/*
 	protected String getCacheConfigurationFilePath() {
 		return _cacheConfigurationFilePath;
 	}
@@ -197,16 +210,18 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 	public void setServletContext(ServletContext servletContext) {
 		this._servletContext = servletContext;
 	}
+	*/
+	//private String _cacheConfigurationFilePath;
+	//private String _cacheDiskRootFolder;
+	//private ServletContext _servletContext;
 	
-	private String _cacheConfigurationFilePath;
-	private String _cacheDiskRootFolder;
-	private ServletContext _servletContext;
+	private EhCacheCacheManager _cacheManager;
 	
-	private CacheManager _cacheManager;
-	private Cache _cache;
+	//private CacheManager _cacheManager;
+	//private Cache _cache;
 	
 	private Map<String, List<String>> _groups = new HashMap<String, List<String>>();
-	private final String CACHE_DISK_ROOT_FOLDER_MARKER = "@cacheDiskRootFolder@";
+	//private final String CACHE_DISK_ROOT_FOLDER_MARKER = "@cacheDiskRootFolder@";
 	private final String CACHE_NAME = "Entando_Cache";
 	
 }

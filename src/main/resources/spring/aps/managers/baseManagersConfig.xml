@@ -4,10 +4,15 @@
 		xmlns:context="http://www.springframework.org/schema/context"
 		xmlns:jee="http://www.springframework.org/schema/jee"
 		xmlns:util="http://www.springframework.org/schema/util"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		xmlns:cache="http://www.springframework.org/schema/cache"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
-			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd 
+			http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+	
+	<cache:annotation-driven />
 	
 	<bean id="NotifyManager" class="com.agiletec.aps.system.common.notify.NotifyManager" />
 	
@@ -92,10 +97,16 @@
 			parent="abstractService" >
 	</bean>
 	
+	<bean id="springEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:config-location="${cacheConfigurationFilePath}"/>
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cache-manager-ref="springEhCacheManager"/>
+	
 	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.EhCacheManager" 
 			parent="abstractService" >
+		<property name="cacheManager" ref="cacheManager" />
+		<!--
 		<property name="cacheConfigurationFilePath" ><value>${cacheConfigurationFilePath}</value></property>
 		<property name="cacheDiskRootFolder"><jee:jndi-lookup jndi-name="java:comp/env/cacheDiskRootFolder" /></property>
+		-->
 	</bean>
 	
 	<bean id="LangManager" class="com.agiletec.aps.system.services.lang.LangManager" 
