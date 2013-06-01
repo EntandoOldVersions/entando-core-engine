@@ -135,7 +135,7 @@ public class CmsCacheWrapperManager extends AbstractService
 	}
 	
 	@Override
-	@Cacheable(value = ICacheManager.CACHE_NAME, key = JacmsSystemConstants.CONTENT_CACHE_PREFIX + "#id")
+	@Cacheable(value = ICacheManager.CACHE_NAME, key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)")
 	public Content getPublicContent(String id) throws ApsSystemException {
 		Content content = null;
 		try {
