@@ -25,6 +25,7 @@ import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
+import java.io.Serializable;
 
 /**
  * Rappresenta un contenuto informativo. 
@@ -35,7 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
  * precedentemente costruito.
  * @author 
  */
-public class Content extends ApsEntity {
+public class Content extends ApsEntity implements Serializable {
 	
 	/**
 	 * Restituisce lo stato del contenuto.

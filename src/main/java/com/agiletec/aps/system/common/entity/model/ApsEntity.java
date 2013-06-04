@@ -45,7 +45,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  * defined in the configuration.
  * @author E.Santoboni
  */
-public class ApsEntity implements IApsEntity, Serializable {
+public class ApsEntity implements IApsEntity {
     
     /**
      * Initialization of the entity with its related elements.
