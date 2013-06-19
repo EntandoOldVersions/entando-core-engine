@@ -33,31 +33,31 @@ import com.opensymphony.xwork2.util.ValueStack;
  */
 public class ParamMap extends Component {
 	
-    public ParamMap(ValueStack stack) {
-        super(stack);
-    }
-    
-    @Override
-	public boolean end(Writer writer, String body) {
-    	Log log = LogFactory.getLog(ParamMap.class);
-    	Component component = this.findAncestor(Component.class);
-        if (null == this.getMap()) {
-            log.warn("Attribute map is mandatory.");
-            return super.end(writer, null);
-        }
-        Object object = findValue(this.getMap());
-        if (null == object) {
-            log.warn("Map not found in ValueStack");
-            return super.end(writer, null);
-        }
-        if(!(object instanceof Map)) {
-            log.warn("Error in JSP. Attribute map must evaluate to java.util.Map. Found type: " + object.getClass().getName());
-            return super.end(writer, null);
-        }
-        component.addAllParameters((Map) object);
-		return super.end(writer, null);
+	public ParamMap(ValueStack stack) {
+		super(stack);
 	}
-
+	
+	@Override
+	public boolean end(Writer writer, String body) {
+		Log log = LogFactory.getLog(ParamMap.class);
+		Component component = this.findAncestor(Component.class);
+		if (null == this.getMap()) {
+			log.info("Attribute map is mandatory.");
+			return super.end(writer, body);
+		}
+		Object object = this.findValue(this.getMap());
+		if (null == object) {
+			log.info("Map not found in ValueStack");
+			return super.end(writer, body);
+		}
+		if (!(object instanceof Map)) {
+			log.warn("Error in JSP. Attribute map must evaluate to java.util.Map. Found type: " + object.getClass().getName());
+			return super.end(writer, body);
+		}
+		component.addAllParameters((Map) object);
+		return super.end(writer, body);
+	}
+	
 	protected String getMap() {
 		return _map;
 	}
