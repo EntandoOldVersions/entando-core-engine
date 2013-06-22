@@ -75,7 +75,6 @@
     <bean id="jacmsContentAuthorizationHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.helper.ContentAuthorizationHelper" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="authorizationManager" ref="AuthorizationManager" />
-		<!-- <property name="cmsCacheWrapperManager" ref="jacmsCacheWrapperManager" /> -->
     </bean>
     
     <bean id="jacmsBaseContentRenderer" class="com.agiletec.plugins.jacms.aps.system.services.renderer.BaseContentRenderer" 
@@ -102,8 +101,6 @@
 			parent="abstractService" >
         <property name="contentRenderer" ref="jacmsBaseContentRenderer" />
         <property name="contentManager" ref="jacmsContentManager" />
-        <!-- <property name="cacheManager" ref="CacheManager" /> -->
-		<!-- <property name="cmsCacheWrapperManager" ref="jacmsCacheWrapperManager" /> -->
         <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
         <property name="linkResolver" ref="jacmsLinkResolverManager" />
 		<property name="authorizationManager" ref="AuthorizationManager" />
@@ -130,16 +127,12 @@
     </bean>
     
     <bean id="jacmsBaseContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper" >
-        <!-- <property name="cacheManager" ref="CacheManager" /> -->
         <property name="contentManager" ref="jacmsContentManager" />
-        <!-- <property name="authorizationManager" ref="AuthorizationManager"/> -->
     </bean>
     
     <bean id="jacmsContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper" >
-        <!-- <property name="cacheManager" ref="CacheManager" /> -->
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
-        <!-- <property name="authorizationManager" ref="AuthorizationManager" /> -->
         <property name="userFilterDateFormat"><value>${jacms.frontend.userfilter.dateFormat}</value></property>
     </bean>
     
@@ -147,12 +140,11 @@
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
+        <property name="contentAuthorizationHelper" ref="jacmsContentAuthorizationHelper" />
     </bean>
     
     <bean id="jacmsCacheWrapperManager" class="com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager" 
 			parent="abstractService" >
-        <!-- <property name="contentModelManager" ref="jacmsContentModelManager" /> -->
-        <!-- <property name="langManager" ref="LangManager" /> -->
         <property name="cacheInfoManager" ref="CacheInfoManager" />
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
@@ -170,7 +162,6 @@
         <property name="contentListHelper" ref="jacmsBaseContentListHelper" />
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />
-        <!-- <property name="cmsCacheWrapperManager" ref="jacmsCacheWrapperManager" /> -->
     </bean>
     
     <bean id="jacmsApiContentTypeInterface" class="org.entando.entando.plugins.jacms.aps.system.services.api.ApiContentTypeInterface" >
