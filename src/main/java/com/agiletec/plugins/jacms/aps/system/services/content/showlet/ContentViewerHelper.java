@@ -30,6 +30,8 @@ import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
@@ -97,6 +99,27 @@ public class ContentViewerHelper implements IContentViewerHelper {
     		throw new ApsSystemException("Error extracting renderization info", t);
     	}
         return renderizationInfo;
+	}
+	
+	@Override
+	public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException {
+		PublicContentAuthorizationInfo authInfo = null;
+		try {
+			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			contentId = this.extractContentId(contentId, showlet.getConfig(), reqCtx);
+			if (null == contentId) {
+				ApsSystemUtils.getLogger().info("Null contentId");
+				return null;
+			}
+			authInfo = this.getContentAuthorizationHelper().getAuthorizationInfo(contentId);
+			if (null == authInfo) {
+				ApsSystemUtils.getLogger().info("Null authorization info by content '" + contentId + "'");
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getAuthorizationInfo");
+			throw new ApsSystemException("Error extracting content authorization info by content '" + contentId + "'", t);
+		}
+		return authInfo;
 	}
 	
 	protected void manageAttributeValues(ContentRenderizationInfo renderInfo, boolean publishExtraTitle, RequestContext reqCtx) {
@@ -232,8 +255,17 @@ public class ContentViewerHelper implements IContentViewerHelper {
 		this._contentDispenser = contentDispenser;
 	}
 	
+	protected IContentAuthorizationHelper getContentAuthorizationHelper() {
+		return _contentAuthorizationHelper;
+	}
+	public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
+		this._contentAuthorizationHelper = contentAuthorizationHelper;
+	}
+	
 	private IContentModelManager _contentModelManager;
     private IContentManager _contentManager;
     private IContentDispenser _contentDispenser;
+	
+	private IContentAuthorizationHelper _contentAuthorizationHelper;
 	
 }

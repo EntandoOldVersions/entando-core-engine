@@ -58,8 +58,8 @@ public class ContentInfoTag extends OutSupport {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
-			PublicContentAuthorizationInfo authInfo = contentAuthHelper.getAuthorizationInfo(this.getContentId());
+			IContentViewerHelper helper = (IContentViewerHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_VIEWER_HELPER, this.pageContext);
+			PublicContentAuthorizationInfo authInfo = helper.getAuthorizationInfo(this.getContentId(), reqCtx);
 			if (null == authInfo) {
 				return super.doStartTag();
 			}
@@ -74,10 +74,11 @@ public class ContentInfoTag extends OutSupport {
 				} else if ("mainGroup".equals(this.getParam())) {
 					value = authInfo.getMainGroup();
 				} else if ("authToEdit".equals(this.getParam())) {
+					IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
 					HttpSession session = this.pageContext.getSession();
 					UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 					boolean isAuth = contentAuthHelper.isAuthToEdit(currentUser, authInfo);
-					value = new Boolean(isAuth);
+					value = Boolean.valueOf(isAuth);
 				}
 				if (null != value) {
 					String var = this.getVar();
