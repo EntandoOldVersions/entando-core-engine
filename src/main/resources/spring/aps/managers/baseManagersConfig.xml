@@ -111,7 +111,8 @@
 	
 	<!--deprecated -->
 	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.OldCacheManager" 
-			parent="CacheInfoManager" >
+			parent="abstractService" >
+		<property name="cacheInfoManager" ref="CacheInfoManager" />
 	</bean>
 	
 	<bean id="CacheInfoManager" class="org.entando.entando.aps.system.services.cache.CacheInfoManager" 

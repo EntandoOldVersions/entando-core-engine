@@ -17,6 +17,15 @@
 package org.entando.entando.aps.system.services.cache;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.events.PageChangedEvent;
+import com.agiletec.aps.system.services.page.events.PageChangedObserver;
+
+import java.lang.reflect.Method;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,15 +34,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.events.PageChangedEvent;
-import com.agiletec.aps.system.services.page.events.PageChangedObserver;
-import java.lang.reflect.Method;
-
 import org.apache.commons.lang.time.DateUtils;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -53,7 +55,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache service initialized");
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache info service initialized");
 	}
 	
 	@Around("@annotation(cacheableInfo)")
@@ -114,13 +116,12 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 		return pjp.proceed();
 	}
 	
-	
-	protected void setExpirationTime(String key, int expiresInMinute) {
+	public void setExpirationTime(String key, int expiresInMinute) {
 		Date expirationTime = DateUtils.addMinutes(new Date(), expiresInMinute);
 		expirationTimes.put(key.toString(), expirationTime);
 	}
 	
-	protected void setExpirationTime(String key, long expiresInSeconds) {
+	public void setExpirationTime(String key, long expiresInSeconds) {
 		Date expirationTime = DateUtils.addSeconds(new Date(), (int) expiresInSeconds);
 		expirationTimes.put(key.toString(), expirationTime);
 	}
@@ -205,7 +206,9 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 					objectKeys = new ArrayList<String>();
 					this._groups.put(group, objectKeys);
 				}
-				if (!objectKeys.contains(key)) objectKeys.add(key);
+				if (!objectKeys.contains(key)) {
+					objectKeys.add(key);
+				}
 			}
 		} else {
 			//rimozione

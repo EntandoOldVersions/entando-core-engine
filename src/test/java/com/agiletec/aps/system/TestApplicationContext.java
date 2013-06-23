@@ -33,6 +33,8 @@ import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import static junit.framework.Assert.assertNotNull;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
  * @author W.Ambu
@@ -42,8 +44,8 @@ public class TestApplicationContext extends BaseTestCase {
     public void testGetServices() {
     	ConfigInterface configManager = (ConfigInterface) this.getService(SystemConstants.BASE_CONFIG_MANAGER);
         assertNotNull(configManager);
-        ICacheManager cacheManager = (ICacheManager) this.getService(SystemConstants.CACHE_MANAGER);
-        assertNotNull(cacheManager);
+        ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
+        assertNotNull(cacheInfoManager);
         ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
         assertNotNull(langManager);
         IShowletTypeManager showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);

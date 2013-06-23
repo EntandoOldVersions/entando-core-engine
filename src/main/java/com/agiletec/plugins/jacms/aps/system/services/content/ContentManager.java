@@ -275,7 +275,7 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void insertOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());
@@ -337,7 +337,7 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void removeOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());
@@ -387,7 +387,7 @@ public class ContentManager extends ApsEntityManager
 	@Override
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void deleteContent(Content content) throws ApsSystemException {
 		try {
 			this.getContentDAO().deleteEntity(content.getId());

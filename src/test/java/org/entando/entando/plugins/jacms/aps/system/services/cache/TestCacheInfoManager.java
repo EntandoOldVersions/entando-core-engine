@@ -33,10 +33,6 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderiza
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 
 import java.util.List;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
 
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import org.entando.entando.plugins.jacms.aps.system.services.MockContentListBean;

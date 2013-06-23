@@ -140,6 +140,9 @@ public class BaseContentListHelper implements IContentListHelper {
         if (null != bean.getListName()) {
             cacheKey.append("LISTNAME_").append(bean.getListName());
         }
+        if (null != bean.getContentType()) {
+            cacheKey.append("TYPE_").append(bean.getContentType());
+        }
         List<String> groupCodes = new ArrayList<String>(userGroupCodes);
         if (!groupCodes.contains(Group.FREE_GROUP_NAME)) {
             groupCodes.add(Group.FREE_GROUP_NAME);
@@ -147,7 +150,7 @@ public class BaseContentListHelper implements IContentListHelper {
         Collections.sort(groupCodes);
         for (int i = 0; i < groupCodes.size(); i++) {
             if (i == 0) {
-                cacheKey.append("-GROUPS_");
+                cacheKey.append("-GROUPS");
             }
             String code = groupCodes.get(i);
             cacheKey.append("_").append(code);
@@ -157,7 +160,7 @@ public class BaseContentListHelper implements IContentListHelper {
             Collections.sort(categoryCodes);
             for (int j = 0; j < categoryCodes.size(); j++) {
                 if (j == 0) {
-                    cacheKey.append("-CATEGORIES_");
+                    cacheKey.append("-CATEGORIES");
                 }
                 String code = categoryCodes.get(j);
                 cacheKey.append("_").append(code);
@@ -166,7 +169,7 @@ public class BaseContentListHelper implements IContentListHelper {
         if (null != bean.getFilters()) {
             for (int k = 0; k < bean.getFilters().length; k++) {
                 if (k == 0) {
-                    cacheKey.append("-FILTERS_");
+                    cacheKey.append("-FILTERS");
                 }
                 EntitySearchFilter filter = bean.getFilters()[k];
                 cacheKey.append("_").append(filter.toString());

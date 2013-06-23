@@ -16,53 +16,87 @@
 */
 package com.agiletec.aps.system.services.cache;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.AbstractService;
+
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
  * Manager of the System Cache
  * @author E.Santoboni
  */
-public class OldCacheManager extends CacheInfoManager implements ICacheManager {
+public class OldCacheManager extends AbstractService implements ICacheManager {
+	
+	@Override
+	public void init() throws Exception {
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache service initialized");
+	}
+	
+	@Override
+	public void flushAll() {
+		if (this.getCacheInfoManager() instanceof CacheInfoManager) {
+			((CacheInfoManager) this.getCacheInfoManager()).flushAll();
+		}
+	}
 	
 	@Override
 	public void flushEntry(String key) {
-		super.flushEntry(key);
+		this.getCacheInfoManager().flushEntry(key);
 	}
 	
 	@Override
 	public void flushGroup(String group) {
-		super.flushGroup(group);
+		this.getCacheInfoManager().flushGroup(group);
 	}
 	
 	@Override
 	@Deprecated
 	public Object getFromCache(String key, int myRefreshPeriod) {
-		return super.getFromCache(key);
+		return this.getFromCache(key);
 	}
 	
 	@Override
 	public Object getFromCache(String key) {
-		return super.getFromCache(key);
+		if (this.getCacheInfoManager() instanceof CacheInfoManager) {
+			return ((CacheInfoManager) this.getCacheInfoManager()).getFromCache(key);
+		}
+		return null;
 	}
 	
 	@Override
 	public void putInCache(String key, Object obj, String[] groups) {
-		super.putInCache(key, obj, groups);
+		if (this.getCacheInfoManager() instanceof CacheInfoManager) {
+			((CacheInfoManager) this.getCacheInfoManager()).putInCache(key, obj, groups);
+		}
 	}
 	
 	@Override
 	public void putInCacheGroups(String key, String[] groups) {
-		super.putInGroup(key, groups);
+		this.getCacheInfoManager().putInGroup(key, groups);
 	}
 	
 	@Override
 	public void putInCache(String key, Object obj) {
-		super.putInCache(key, obj);
+		if (this.getCacheInfoManager() instanceof CacheInfoManager) {
+			((CacheInfoManager) this.getCacheInfoManager()).putInCache(key, obj);
+		}
 	}
 	
 	@Override
 	public void setExpirationTime(String key, long expiresInSeconds) {
-		super.setExpirationTime(key, expiresInSeconds);
+		if (this.getCacheInfoManager() instanceof CacheInfoManager) {
+			((CacheInfoManager) this.getCacheInfoManager()).setExpirationTime(key, expiresInSeconds);
+		}
 	}
+	
+	protected ICacheInfoManager getCacheInfoManager() {
+		return _cacheInfoManager;
+	}
+	public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
+		this._cacheInfoManager = cacheInfoManager;
+	}
+	
+	private ICacheInfoManager _cacheInfoManager;
 	
 }
