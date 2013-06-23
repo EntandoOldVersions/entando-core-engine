@@ -33,6 +33,10 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderiza
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 
 import java.util.List;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.assertTrue;
 
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import org.entando.entando.plugins.jacms.aps.system.services.MockContentListBean;
@@ -189,14 +193,14 @@ public class TestCacheInfoManager extends BaseTestCase {
 		}
     }
 	
-	public void testGetRenderedContentGroups_1() throws Throwable {
+	public void testGetRenderedContentsGroup_1() throws Throwable {
 		String contentId = null;
 		long modelId = -1;
 		try {
 			modelId = this.createMockContentModel();
 			contentId = this.createMockContent();
 			String cacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + contentId;
-			this.testGroupRenderedContents(contentId, modelId, cacheGroupId);
+			this.testGetRenderedContentsGroup(contentId, modelId, cacheGroupId);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -204,14 +208,14 @@ public class TestCacheInfoManager extends BaseTestCase {
 		}
 	}
 	
-	public void testGetRenderedContentGroups_2() throws Throwable {
+	public void testGetRenderedContentsGroup_2() throws Throwable {
 		String contentId = null;
 		long modelId = -1;
 		try {
 			modelId = this.createMockContentModel();
 			contentId = this.createMockContent();
 			String cacheGroupId = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + modelId;
-			this.testGroupRenderedContents(contentId, modelId, cacheGroupId);
+			this.testGetRenderedContentsGroup(contentId, modelId, cacheGroupId);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -219,14 +223,14 @@ public class TestCacheInfoManager extends BaseTestCase {
 		}
 	}
 	
-	public void testGetRenderedContentGroups_3() throws Throwable {
+	public void testGetRenderedContentsGroup_3() throws Throwable {
 		String contentId = null;
 		long modelId = -1;
 		try {
 			modelId = this.createMockContentModel();
 			contentId = this.createMockContent();
 			String cacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + contentId.substring(0, 3);
-			this.testGroupRenderedContents(contentId, modelId, cacheGroupId);
+			this.testGetRenderedContentsGroup(contentId, modelId, cacheGroupId);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -234,7 +238,7 @@ public class TestCacheInfoManager extends BaseTestCase {
 		}
 	}
 	
-	protected void testGroupRenderedContents(String contentId, long modelId, String cacheGroupId) throws Throwable {
+	protected void testGetRenderedContentsGroup(String contentId, long modelId, String cacheGroupId) throws Throwable {
     	RequestContext reqCtx = this.getRequestContext();
 		String langCode = "en";
 		try {
@@ -314,6 +318,32 @@ public class TestCacheInfoManager extends BaseTestCase {
 			throw t;
 		} finally {
 			this.deleteMockContent(contentId);
+		}
+	}
+	
+	public void testGetContentsGroup() throws Throwable {
+		try {
+			UserDetails guestUser = super.getUser(SystemConstants.GUEST_USER_NAME);
+			MockContentListBean bean = new MockContentListBean();
+			bean.setContentType("ART");
+			assertTrue(bean.isCacheable());
+			String cacheKey = BaseContentListHelper.buildCacheKey(bean, guestUser);
+			List<String> extractedContents = this._contentListHelper.getContentsId(bean, guestUser);
+			List<String> cachedContents = (List<String>) this._cacheInfoManager.getFromCache(cacheKey);
+			assertNotNull(cachedContents);
+			assertEquals(extractedContents.size(), cachedContents.size());
+			
+			String cacheGroupId = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + "ART";
+			this._cacheInfoManager.flushGroup(cacheGroupId);
+			cachedContents = (List<String>) this._cacheInfoManager.getFromCache(cacheKey);
+			assertNull(cachedContents);
+			
+			extractedContents = this._contentListHelper.getContentsId(bean, guestUser);
+			cachedContents = (List<String>) this._cacheInfoManager.getFromCache(cacheKey);
+			assertNotNull(cachedContents);
+			assertEquals(extractedContents.size(), cachedContents.size());
+		} catch (Throwable t) {
+			throw t;
 		}
 	}
 	
