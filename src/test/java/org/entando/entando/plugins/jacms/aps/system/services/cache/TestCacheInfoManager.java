@@ -389,7 +389,7 @@ public class TestCacheInfoManager extends BaseTestCase {
 			this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
 			this._contentModelManager = (IContentModelManager) this.getService(JacmsSystemConstants.CONTENT_MODEL_MANAGER);
 			this._cacheInfoManager = (CacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
-			this._contentListHelper = (IContentListHelper) this.getApplicationContext().getBean("jacmsBaseContentListHelper");
+			this._contentListHelper = (IContentListHelper) this.getApplicationContext().getBean(JacmsSystemConstants.BASE_CONTENT_LIST_HELPER);
     	} catch (Throwable t) {
             throw new Exception(t);
         }

@@ -66,6 +66,8 @@ public class JacmsSystemConstants {
 	
 	public static final String CONTENT_VIEWER_HELPER = "jacmsContentViewerHelper";
 	
+	public static final String BASE_CONTENT_LIST_HELPER = "jacmsBaseContentListHelper";
+	
 	public static final String CONTENT_LIST_HELPER = "jacmsContentListHelper";
 	
 	public static final String CONTENT_PREVIEW_VIEWER_HELPER = "jacmsContentPreviewViewerHelper";
