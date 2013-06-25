@@ -176,8 +176,17 @@ public class CmsCacheWrapperManager extends AbstractService
 	public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
 		this._cacheInfoManager = cacheInfoManager;
 	}
-	
+	/*
+	public SlowService getXxx() {
+		return xxx;
+	}
+	public void setXxx(SlowService xxx) {
+		this.xxx = xxx;
+	}
+	*/
 	private IContentManager _contentManager;
 	private ICacheInfoManager _cacheInfoManager;
+	
+	//private SlowService xxx;
 	
 }
