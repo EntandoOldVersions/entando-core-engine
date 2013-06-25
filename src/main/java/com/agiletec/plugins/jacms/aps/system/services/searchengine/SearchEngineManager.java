@@ -55,6 +55,7 @@ public class SearchEngineManager extends AbstractService
 	@Override
 	public void refresh() throws Throwable {
 		this.release();
+		this._lastReloadInfo = null;
 		this.getFactory().init();
 		this.init();
 	}

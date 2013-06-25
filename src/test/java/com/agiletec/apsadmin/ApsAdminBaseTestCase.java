@@ -48,6 +48,7 @@ import com.agiletec.aps.system.common.notify.NotifyManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.opensymphony.xwork2.ActionProxy;
 import com.opensymphony.xwork2.ActionProxyFactory;
 import com.opensymphony.xwork2.ActionSupport;
@@ -63,21 +64,33 @@ public class ApsAdminBaseTestCase extends TestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
-		// Link the servlet context and the Spring context  
-		this._servletContext = new MockServletContext("", new FileSystemResourceLoader());
-		
-		this._applicationContext = this.getConfigUtils().createApplicationContext(_servletContext);
-		
-		this._servletContext.setAttribute(
-				WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, _applicationContext);
+		boolean refresh = false;
+		if (null == _applicationContext) {
+			// Link the servlet context and the Spring context  
+			_servletContext = new MockServletContext("", new FileSystemResourceLoader());
+			
+			_applicationContext = this.getConfigUtils().createApplicationContext(_servletContext);
+			
+			_servletContext.setAttribute(
+					WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, _applicationContext);
+		} else {
+			refresh = true;
+		}
 		
 		this._request = new MockHttpServletRequest();
 		this._response = new MockHttpServletResponse();
 		this._request.setSession(new MockHttpSession(this._servletContext));
 		
+		if (refresh) {
+			try {
+				ApsWebApplicationUtils.executeSystemRefresh(this._request);
+				this.waitNotifyingThread();
+			} catch (Throwable e) {}
+		}
+		
 		// Use spring as the object factory for Struts  
-		StrutsSpringObjectFactory ssf = new StrutsSpringObjectFactory(null, null, null, this._servletContext, null, this.createContainer());
-		ssf.setApplicationContext(this._applicationContext);
+		StrutsSpringObjectFactory ssf = new StrutsSpringObjectFactory(null, null, null, _servletContext, null, this.createContainer());
+		ssf.setApplicationContext(_applicationContext);
 		
 		// Dispatcher is the guy that actually handles all requests.  Pass in  
 		// an empty Map as the parameters but if you want to change stuff like  
@@ -89,7 +102,7 @@ public class ApsAdminBaseTestCase extends TestCase {
 		this.setInitParameters(props);
 		
 		Map params = new HashMap(props);
-		this._dispatcher = new Dispatcher(this._servletContext, params);
+		this._dispatcher = new Dispatcher(_servletContext, params);
 		this._dispatcher.init();
 		Dispatcher.setInstance(this._dispatcher);
 	}
@@ -105,7 +118,7 @@ public class ApsAdminBaseTestCase extends TestCase {
 		this.waitNotifyingThread();
 		super.tearDown();
 		this.getConfigUtils().closeDataSources(this.getApplicationContext());
-		this.getConfigUtils().destroyContext(this.getApplicationContext());
+		//this.getConfigUtils().destroyContext(this.getApplicationContext());
 	}
     
 	protected void waitNotifyingThread() throws InterruptedException {
@@ -240,12 +253,8 @@ public class ApsAdminBaseTestCase extends TestCase {
 		return (IManager) this.getApplicationContext().getBean(name);
 	}
 	
-    protected void setApplicationContext(ApplicationContext applicationContext) {
-    	this._applicationContext = applicationContext;
-    }
-    
     protected ApplicationContext getApplicationContext() {
-    	return this._applicationContext;
+    	return _applicationContext;
     }
     
     protected ConfigTestUtils getConfigUtils() {
@@ -260,10 +269,10 @@ public class ApsAdminBaseTestCase extends TestCase {
     	return this._request;
     }
     
-    private ApplicationContext _applicationContext;
+    private static ApplicationContext _applicationContext;
     private Dispatcher _dispatcher;
 	private ActionProxy _proxy;
-	private MockServletContext _servletContext;
+	private static MockServletContext _servletContext;
 	private MockHttpServletRequest _request;
 	private MockHttpServletResponse _response;
 	private ActionSupport _action;
