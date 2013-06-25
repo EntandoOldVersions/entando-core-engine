@@ -45,7 +45,7 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction =(IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
-		assertEquals(3, contentModels.size());		
+		assertEquals(4, contentModels.size());		
 	}
 	
 	public void testSearch_1() throws Throwable {
@@ -53,7 +53,7 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction = (IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
-		assertEquals(3, contentModels.size());
+		assertEquals(4, contentModels.size());
 		
 		result = this.executeSearch("CNG");
 		assertEquals(Action.SUCCESS, result);
@@ -70,7 +70,7 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction = (IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
-		assertEquals(4, contentModels.size());
+		assertEquals(5, contentModels.size());
 		
 		result = this.executeSearch("EVN");
 		assertEquals(Action.SUCCESS, result);

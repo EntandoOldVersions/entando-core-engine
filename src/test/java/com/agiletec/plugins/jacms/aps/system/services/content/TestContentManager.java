@@ -532,40 +532,39 @@ public class TestContentManager extends BaseTestCase {
 		assertEquals(1, contents.size());
 		assertEquals("EVN192", contents.get(0));
     }
+	
+	public void testLoadPublicEvents_4() throws ApsSystemException {
+		this.testLoadPublicEvents_4(true);
+		this.testLoadPublicEvents_4(false);
+	}
     
-    public void testLoadPublicEvents_4() throws ApsSystemException {
+    protected void testLoadPublicEvents_4(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		
-		EntitySearchFilter filter1 = new EntitySearchFilter("Titolo", true, "Ce", "TF");
+		EntitySearchFilter filter1 = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "Ce", "TF") 
+				: new EntitySearchFilter("Titolo", true, "Ce", "TF");
 		filter1.setLangCode("it");
 		filter1.setOrder(EntitySearchFilter.DESC_ORDER);
-		
 		EntitySearchFilter[] filters1 = {filter1};
-		
-		List<String> contents = _contentManager.loadPublicContentsId("EVN", null, filters1, groups);
-		
+		List<String> contents = this._contentManager.loadPublicContentsId("EVN", null, filters1, groups);
 		String[] expectedOrderedContentsId = {"EVN25", "EVN41", "EVN20", "EVN21", "EVN23"};
 		assertEquals(expectedOrderedContentsId.length, contents.size());
 		for (int i=0; i<expectedOrderedContentsId.length; i++) {
 			assertEquals(expectedOrderedContentsId[i], contents.get(i));
 		}
-		
 		filter1 = new EntitySearchFilter("Titolo", true, null, "TF");
 		filter1.setLangCode("it");
 		filter1.setOrder(EntitySearchFilter.DESC_ORDER);
-		
 		EntitySearchFilter[] filters2 = {filter1};
-		
-		contents = _contentManager.loadPublicContentsId("EVN", null, filters2, groups);
-		
+		contents = this._contentManager.loadPublicContentsId("EVN", null, filters2, groups);
 		String[] expectedOrderedContentsId2 = {"EVN25", "EVN41", "EVN20", "EVN21", "EVN23", "EVN24"};
 		assertEquals(expectedOrderedContentsId2.length, contents.size());
 		for (int i=0; i<expectedOrderedContentsId2.length; i++) {
 			assertEquals(expectedOrderedContentsId2[i], contents.get(i));
 		}
     }
-    
+	
 	public void testLoadPublicEvents_5() throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
@@ -584,12 +583,19 @@ public class TestContentManager extends BaseTestCase {
     }
 	
 	public void testLoadPublicEvents_6() throws ApsSystemException {
+		this.testLoadPublicEvents_6(true);
+		this.testLoadPublicEvents_6(false);
+	}
+	
+	protected void testLoadPublicEvents_6(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
 		List<Object> allowedDescription = new ArrayList<Object>();
 		allowedDescription.add("Mostra");//EVN21, EVN20
 		allowedDescription.add("Collezione");//EVN23
-		EntitySearchFilter filter = new EntitySearchFilter("Titolo", true, allowedDescription, true);
+		EntitySearchFilter filter = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, allowedDescription, true) 
+				: new EntitySearchFilter("Titolo", true, allowedDescription, true);
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
@@ -602,12 +608,19 @@ public class TestContentManager extends BaseTestCase {
     }
     
 	public void testLoadPublicEvents_7() throws ApsSystemException {
+		this.testLoadPublicEvents_7(true);
+		this.testLoadPublicEvents_7(false);
+	}
+	
+	protected void testLoadPublicEvents_7(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
 		List<Object> allowedDescription = new ArrayList<Object>();
 		allowedDescription.add("Mostra Zootecnica");//EVN20
 		allowedDescription.add("Title B - Event 2");//EVN192
-		EntitySearchFilter filter1 = new EntitySearchFilter("Titolo", true, allowedDescription, false);
+		EntitySearchFilter filter1 = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, allowedDescription, false) 
+				: new EntitySearchFilter("Titolo", true, allowedDescription, false);
 		filter1.setLangCode("en");
 		EntitySearchFilter filter2 = new EntitySearchFilter("DataInizio", true);
 		filter2.setOrder(EntitySearchFilter.ASC_ORDER);
@@ -621,12 +634,19 @@ public class TestContentManager extends BaseTestCase {
     }
 	
 	public void testLoadPublicEvents_8() throws ApsSystemException {
+		this.testLoadPublicEvents_8(true);
+		this.testLoadPublicEvents_8(false);
+	}
+	
+	protected void testLoadPublicEvents_8(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
 		List<Object> allowedDescription = new ArrayList<Object>();
 		allowedDescription.add("Castello");//EVN24
 		allowedDescription.add("dei bambini");//EVN24
-		EntitySearchFilter filter = new EntitySearchFilter("Titolo", true, allowedDescription, true);
+		EntitySearchFilter filter = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, allowedDescription, true) 
+				: new EntitySearchFilter("Titolo", true, allowedDescription, true);
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
@@ -638,13 +658,20 @@ public class TestContentManager extends BaseTestCase {
 		}
     }
 	
+	public void testLoadPublicEvents_9_a() throws ApsSystemException {
+		this.testLoadPublicEvents_9_a(true);
+		this.testLoadPublicEvents_9_a(false);
+	}
+	
 	/*
 	 * ATTENTION: invalid test on mysql db because the standard search with 'LIKE' clause is case insensitive
 	 */
-	public void testLoadPublicEvents_9_a() throws ApsSystemException {
+	protected void testLoadPublicEvents_9_a(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		EntitySearchFilter filter = new EntitySearchFilter("Titolo", true, "le", true);
+		EntitySearchFilter filter = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "le", true) 
+				: new EntitySearchFilter("Titolo", true, "le", true);
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
@@ -657,17 +684,25 @@ public class TestContentManager extends BaseTestCase {
     }
 	
 	public void testLoadPublicEvents_9_b() throws ApsSystemException {
+		this.testLoadPublicEvents_9_b(true);
+		this.testLoadPublicEvents_9_b(false);
+	}
+	
+	protected void testLoadPublicEvents_9_b(boolean useRoleFilter) throws ApsSystemException {
 		//forcing case insensitive search
     	PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
     	searcherDao.setForceCaseInsensitiveLikeSearch(true);
-    	
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		EntitySearchFilter filter = new EntitySearchFilter("Titolo", true, "le", true);
+		EntitySearchFilter filter = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "le", true) 
+				: new EntitySearchFilter("Titolo", true, "le", true);
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
+		System.out.println("********************************+");
 		List<String> contents = this._contentManager.loadPublicContentsId("EVN", null, filters, groups);
+		System.out.println("********************************+");
 		String[] expectedOrderedContentsId2 = {"EVN25", "EVN21", "EVN23"};
 		assertEquals(expectedOrderedContentsId2.length, contents.size());
 		for (int i=0; i<expectedOrderedContentsId2.length; i++) {
@@ -676,13 +711,19 @@ public class TestContentManager extends BaseTestCase {
     }
 	
 	public void testLoadPublicEvents_9_c() throws ApsSystemException {
+		this.testLoadPublicEvents_9_c(true);
+		this.testLoadPublicEvents_9_c(false);
+	}
+	
+	protected void testLoadPublicEvents_9_c(boolean useRoleFilter) throws ApsSystemException {
 		//forcing case sensitive search
     	PublicContentSearcherDAO searcherDao = (PublicContentSearcherDAO) this.getApplicationContext().getBean("jacmsPublicContentSearcherDAO");
     	searcherDao.setForceCaseSensitiveLikeSearch(true);
-    	
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		EntitySearchFilter filter = new EntitySearchFilter("Titolo", true, "LE", true);
+		EntitySearchFilter filter = (useRoleFilter) 
+				? EntitySearchFilter.createRoleFilter(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE, "LE", true) 
+				: new EntitySearchFilter("Titolo", true, "LE", true);
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
@@ -1169,10 +1210,9 @@ public class TestContentManager extends BaseTestCase {
 		}
     }
 	
-    public void testLoadWorkContentsByAttribute_2() throws ApsSystemException {
+	public void testLoadWorkContentsByAttribute_2() throws ApsSystemException {
 		List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		
 		EntitySearchFilter filter0 = new EntitySearchFilter(IContentManager.ENTITY_ID_FILTER_KEY, false);
 		filter0.setOrder(EntitySearchFilter.ASC_ORDER);
 		EntitySearchFilter filter1 = new EntitySearchFilter(IContentManager.ENTITY_TYPE_CODE_FILTER_KEY, false, "EVN", true);

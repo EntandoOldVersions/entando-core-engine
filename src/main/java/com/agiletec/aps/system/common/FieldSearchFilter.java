@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class FieldSearchFilter implements Serializable {
 	
+	protected FieldSearchFilter() {}
+	
 	/**
 	 * Filter constructor.
 	 * This constructor is used when checking the presence of a value contained
@@ -101,7 +103,7 @@ public class FieldSearchFilter implements Serializable {
 		}
 	}
 	
-	private void setKey(String key) {
+	protected void setKey(String key) {
 		if (null == key || key.trim().length() == 0) {
 			throw new RuntimeException("Error: Key required");
 		}

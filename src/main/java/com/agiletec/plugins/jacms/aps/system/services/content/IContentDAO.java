@@ -21,36 +21,12 @@ import java.util.List;
 
 import com.agiletec.aps.system.common.entity.IEntityDAO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 
 /**
  * Basic interface for the Data Access Objects for the 'content' objects. 
  * @author M.Diana - E.Santoboni - S.Didaci
  */
 public interface IContentDAO extends IEntityDAO {
-	
-	/**
-	 * Return a 'ContentRecordVO' (shortly: VO) containing the all content informations
-	 * stored in the DB. 
-	 * @param id The id of the requested content. 
-	 * @return The VO object corresponding to the wanted content.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use loadEntityRecord
-	 */
-	public ContentRecordVO loadContentVO(String id);
-	
-	/**
-	 * Add the record a the given content in the DB.
-	 * @param content The content to insert.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use addEntity
-	 */
-	public void addContent(Content content);
-	
-	/**
-	 * Updates the given content in the DB.
-	 * @param content The content to update.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use updateEntity
-	 */
-	public void updateContent(Content content);
 	
 	/**
 	 * Publish a content.
@@ -76,13 +52,6 @@ public interface IContentDAO extends IEntityDAO {
 	 * @param content the content to unpublish.
 	 */
 	public void removeOnLineContent(Content content);
-	
-	/**
-	 * Deletes a content from the DB.
-	 * @param content The content to delete.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use deleteEntity
-	 */
-	public void deleteContent(Content content);
 	
 	/**
 	 * Return the list of the contents IDs referenced by the specified group.

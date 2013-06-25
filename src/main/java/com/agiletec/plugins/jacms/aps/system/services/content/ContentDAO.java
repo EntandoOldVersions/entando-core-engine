@@ -54,19 +54,6 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		return LOAD_CONTENT_VO;
 	}
 	
-	/**
-	 * Search for a content given the ID. This returns null if no results are
-	 * found otherwise the content is returned in an object of type 
-	 * {@link ContentRecordVO}.
-	 * @param id The ID of the content to search for.
-	 * @return The content found.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use loadEntityRecord
-	 */
-	@Override
-	public ContentRecordVO loadContentVO(String id) {
-		return (ContentRecordVO) super.loadEntityRecord(id);
-	}
-	
 	@Override
 	protected ApsEntityRecord createEntityRecord(ResultSet res) throws Throwable {
 		ContentRecordVO contentVo = new ContentRecordVO();
@@ -89,55 +76,6 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		return contentVo;
 	}
 	
-	/**
-	 * Insert a content in the DB.
-	 * @param content The content to record in the DB.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use addEntity
-	 */
-	@Override
-	public void addContent(Content content) {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.addContentRecord(content, conn);
-			this.addEntitySearchRecord(content.getId(), content, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Errore in aggiunta contenuto", "addContent");
-		} finally {
-			closeConnection(conn);
-		}
-	}
-	
-	/**
-	 * @deprecated From jAPS 2.0 version 2.0.9
-	 */
-	protected void addContentRecord(Content content, Connection conn) throws ApsSystemException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(ADD_CONTENT);
-			stat.setString(1, content.getId());
-			stat.setString(2, content.getTypeCode());
-			stat.setString(3, content.getDescr());
-			stat.setString(4, content.getStatus());
-			stat.setString(5, content.getXML());
-			String currentDate = DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT);
-			stat.setString(6, currentDate);
-			stat.setString(7, currentDate);
-			stat.setString(8, content.getMainGroup());
-			stat.setString(9, content.getVersion());
-			stat.setString(10, content.getLastEditor());
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			processDaoException(t, "Errore in aggiunta contenuto",
-					"addContentRecord");
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
-	
 	@Override
 	public void addEntity(IApsEntity entity) {
 		Connection conn = null;
@@ -150,6 +88,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
 			this.addWorkContentRelationsRecord((Content) entity, conn);
+			this.addContentAttributeRoleRecord(entity.getId(), entity, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -180,56 +119,6 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		stat.setString(10, content.getLastEditor());
 	}
 	
-	/**
-	 * Updates the given content in a database.
-	 * @param content The content to update in the DB.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use updateEntity
-	 */
-	@Override
-	public void updateContent(Content content){
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.deleteEntitySearchRecord(content.getId(), conn);
-			this.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
-			this.updateContentRecord(content, conn);
-			this.addEntitySearchRecord(content.getId(), content, conn);
-			this.addWorkContentRelationsRecord(content, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Errore in aggiornamento contenuto", "updateContent");
-		} finally {
-			closeConnection(conn);
-		}
-	}
-	
-	/**
-	 * @deprecated From jAPS 2.0 version 2.0.9
-	 */
-	protected void updateContentRecord(Content content, Connection conn) throws ApsSystemException {
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(UPDATE_CONTENT);
-			stat.setString(1, content.getTypeCode());
-			stat.setString(2, content.getDescr());
-			stat.setString(3, content.getStatus());
-			stat.setString(4, content.getXML());
-			stat.setString(5, DateConverter.getFormattedDate(new Date(), JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT));
-			stat.setString(6, content.getMainGroup());
-			stat.setString(7, content.getVersion());
-			stat.setString(8, content.getLastEditor());
-			stat.setString(9, content.getId());
-			stat.executeUpdate();
-		} catch (Throwable t) {
-			processDaoException(t, "Errore in aggiornamento contenuto - " + content.getId(),
-					"updateContentRecord");
-		} finally {
-			closeDaoResources(null, stat);
-		}
-	}
-	
 	@Override
 	public void updateEntity(IApsEntity entity) {
 		Connection conn = null;
@@ -239,11 +128,13 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			conn.setAutoCommit(false);
 			this.deleteEntitySearchRecord(entity.getId(), conn);
 			this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+			this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			stat = conn.prepareStatement(this.getUpdateEntityRecordQuery());
 			this.buildUpdateEntityStatement(entity, stat);
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
 			this.addWorkContentRelationsRecord((Content) entity, conn);
+			this.addContentAttributeRoleRecord(entity.getId(), entity, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -283,14 +174,18 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
+			super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
 			super.deleteEntitySearchRecord(content.getId(), conn);
 			super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
 			this.updateContentRecordForInsertOnLine(content, conn);
 			this.addPublicContentSearchRecord(content.getId(), content, conn);
 			super.addEntitySearchRecord(content.getId(), content, conn);
+			this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
 			this.addWorkContentRelationsRecord(content, conn);
 			this.addContentRelationsRecord(content, conn);
+			this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -355,8 +250,10 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 				conn.setAutoCommit(false);
 				super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
 				super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
+				super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
 				this.addPublicContentSearchRecord(content.getId(), content, conn);
 				this.addContentRelationsRecord(content, conn);
+				this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
 				conn.commit();
 			} catch (Throwable t) {
 				this.executeRollback(conn);
@@ -379,9 +276,11 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			super.deleteEntitySearchRecord(content.getId(), conn);
 			super.addEntitySearchRecord(content.getId(), content, conn);
 			this.addWorkContentRelationsRecord(content, conn);
+			this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -423,6 +322,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	private void removeOnLineContent(Content content, Connection conn) throws ApsSystemException {
 		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
 		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(REMOVE_ONLINE_CONTENT);
@@ -442,19 +342,6 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		}
 	}
 	
-	/**
-	 * Delete permanently a content in the DB. Such operation is not reversible,
-	 * so that the content won't be accessible in any manner.
-	 * @param content The content to delete permanently.
-	 * @deprecated From jAPS 2.0 version 2.0.9, use deleteEntity
-	 */
-	@Override
-	public void deleteContent(Content content) {
-		if (null != content) {
-			this.deleteEntity(content.getId());
-		}
-	}
-	
 	@Override
 	protected String getDeleteEntityRecordQuery() {
 		return DELETE_CONTENT;
@@ -469,7 +356,9 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_SEARCH_RECORD, conn);
 			super.deleteEntitySearchRecord(entityId, conn);
 			super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_REL_RECORD, conn);
+			super.deleteRecordsByEntityId(entityId, DELETE_ATTRIBUTE_ROLE_RECORD, conn);
 			super.deleteRecordsByEntityId(entityId, DELETE_WORK_CONTENT_REL_RECORD, conn);
+			super.deleteRecordsByEntityId(entityId, DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 			super.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
 			conn.commit();
 		} catch (Throwable t) {
@@ -604,6 +493,18 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		}
 	}
 	
+	protected void addContentAttributeRoleRecord(String id, IApsEntity entity, String query, Connection conn) throws ApsSystemException {
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(query);
+			super.addEntityAttributeRoleRecord(id, entity, stat);
+		} catch (Throwable t) {
+			processDaoException(t, "Error on adding content attribute role records", "addContentAttributeRoleRecord");
+		} finally {
+			closeDaoResources(null, stat);
+		}
+	}
+	
 	@Override
 	public List<String> getContentUtilizers(String contentId) {
 		List<String> contentIds = null;
@@ -697,12 +598,19 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	}
 	
 	@Override
+	protected String getAddingAttributeRoleRecordQuery() {
+		return ADD_WORK_ATTRIBUTE_ROLE_RECORD;
+	}
+	
+	@Override
+	protected String getRemovingAttributeRoleRecordQuery() {
+		return DELETE_WORK_ATTRIBUTE_ROLE_RECORD;
+	}
+	
+	@Override
 	protected String getExtractingAllEntityIdQuery() {
 		return LOAD_ALL_CONTENTS_ID;
 	}
-	
-	@Deprecated
-	protected final String DATE_FORMAT = JacmsSystemConstants.CONTENT_METADATA_DATE_FORMAT;
 	
 	private final String DELETE_CONTENT =
 		"DELETE FROM contents WHERE contentid = ? ";
@@ -792,5 +700,17 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	
 	private final String LOAD_ALL_CONTENTS_ID = 
 		"SELECT contentid FROM contents";
+	
+	private final String ADD_ATTRIBUTE_ROLE_RECORD =
+		"INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
+	
+	private final String DELETE_ATTRIBUTE_ROLE_RECORD =
+		"DELETE FROM contentattributeroles WHERE contentid = ? ";
+	
+	private final String ADD_WORK_ATTRIBUTE_ROLE_RECORD =
+		"INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ( ? , ? , ? )";
+	
+	private final String DELETE_WORK_ATTRIBUTE_ROLE_RECORD =
+		"DELETE FROM workcontentattributeroles WHERE contentid = ? ";
 	
 }

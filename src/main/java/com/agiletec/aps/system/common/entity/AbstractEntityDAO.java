@@ -50,6 +50,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			this.buildAddEntityStatement(entity, stat);
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
+			this.addEntityAttributeRoleRecord(entity.getId(), entity, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -69,7 +70,8 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteEntitySearchRecord(entityId, conn);
+			this.deleteRecordsByEntityId(entityId, this.getRemovingSearchRecordQuery(), conn);
+			this.deleteRecordsByEntityId(entityId, this.getRemovingAttributeRoleRecordQuery(), conn);
 			this.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
 			conn.commit();
 		} catch (Throwable t) {
@@ -88,11 +90,13 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteEntitySearchRecord(entity.getId(), conn);
+			this.deleteRecordsByEntityId(entity.getId(), this.getRemovingSearchRecordQuery(), conn);
+			this.deleteRecordsByEntityId(entity.getId(), this.getRemovingAttributeRoleRecordQuery(), conn);
 			stat = conn.prepareStatement(this.getUpdateEntityRecordQuery());
 			this.buildUpdateEntityStatement(entity, stat);
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
+			this.addEntityAttributeRoleRecord(entity.getId(), entity, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -143,7 +147,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error detected while reloading references", "reloadEntityReferences");
+			processDaoException(t, "Error detected while reloading references", "reloadEntitySearchRecords");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -183,6 +187,37 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 					}
 					stat.setBigDecimal(5, searchInfo.getBigDecimal());
 					stat.setString(6, searchInfo.getLangCode());
+					stat.addBatch();
+					stat.clearParameters();
+				}
+			}
+		}
+		stat.executeBatch();
+	}
+	
+	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, Connection conn) throws ApsSystemException {
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(this.getAddingAttributeRoleRecordQuery());
+			this.addEntityAttributeRoleRecord(id, entity, stat);
+		} catch (Throwable t) {
+			processDaoException(t, "Error while adding a new attribute role record", "addEntityAttributeRoleRecord");
+		} finally {
+			closeDaoResources(null, stat);
+		}
+	}
+	
+	protected void addEntityAttributeRoleRecord(String id, IApsEntity entity, PreparedStatement stat) throws Throwable {
+		List<AttributeInterface> attributes = entity.getAttributeList();
+		for (int i = 0; i < attributes.size(); i++) {
+			AttributeInterface currAttribute = attributes.get(i);
+			String[] roleNames = currAttribute.getRoles();
+			if (null != roleNames && roleNames.length > 0) {
+				for (int j = 0; j < roleNames.length; j++) {
+					String roleName = roleNames[j];
+					stat.setString(1, id);
+					stat.setString(2, currAttribute.getName());
+					stat.setString(3, roleName);
 					stat.addBatch();
 					stat.clearParameters();
 				}
@@ -257,12 +292,16 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 	 */
 	protected abstract String getAddingSearchRecordQuery();
 	
+	protected abstract String getAddingAttributeRoleRecordQuery();
+	
 	/**
 	 * Return the query to delete the record associated to an entity. The returned query will only need
 	 * the declaration of the ID of the entity to delete.
 	 * @return  The query to delete the look up record of a single entity.
 	 */
 	protected abstract String getRemovingSearchRecordQuery();
+	
+	protected abstract String getRemovingAttributeRoleRecordQuery();
 	
 	/**
 	 * Return the query that extracts the list of entity IDs.

@@ -43,6 +43,8 @@ import java.util.*;
  */
 public class EntitySearchFilter extends FieldSearchFilter implements Serializable {
 	
+	protected EntitySearchFilter() {}
+	
 	/**
 	 * Filter constructor.
 	 * This constructor is used when checking the presence of a value contained
@@ -130,6 +132,54 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		this.setLikeOption(useLikeOption);
 	}
 	
+	public static EntitySearchFilter createRoleFilter(String roleName) {
+		EntitySearchFilter filter = new EntitySearchFilter();
+		filter.setAttributeFilter(true);
+		filter.setRoleName(roleName);
+		return filter;
+	}
+	
+	public static EntitySearchFilter createRoleFilter(String roleName, Object value, boolean useLikeOption) {
+		EntitySearchFilter filter = new EntitySearchFilter();
+		filter.setAttributeFilter(true);
+		filter.setRoleName(roleName);
+		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
+			List<Object> allowedValues = new ArrayList<Object>();
+			allowedValues.addAll((Collection) value);
+			filter.setAllowedValues(allowedValues);
+			if (allowedValues.get(0) instanceof String) {
+				filter.setLikeOption(useLikeOption);			
+			}
+		} else {
+			filter.setValue(value);
+			if (value instanceof String) {			
+				filter.setLikeOption(useLikeOption);
+			}
+		}
+		return filter;
+	}
+	
+	public static EntitySearchFilter createRoleFilter(String roleName, Object start, Object end) {
+		EntitySearchFilter filter = new EntitySearchFilter();
+		filter.setAttributeFilter(true);
+		filter.setRoleName(roleName);
+		if (start != null && end != null && !start.getClass().equals(end.getClass())) {
+			throw new RuntimeException("Error: 'start' and 'end' types have to be equals");
+		}
+		filter.setStart(start);
+		filter.setEnd(end);
+		return filter;
+	}
+	
+	public static EntitySearchFilter createRoleFilter(String roleName, List<Object> allowedValues, boolean useLikeOption) {
+		EntitySearchFilter filter = new EntitySearchFilter();
+		filter.setAttributeFilter(true);
+		filter.setRoleName(roleName);
+		filter.setAllowedValues(allowedValues);
+		filter.setLikeOption(useLikeOption);
+		return filter;
+	}
+	
 	/**
 	 * This method shows if the filter must be applied on a Entity Attribute or
 	 * a metadata.
@@ -143,12 +193,21 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		this._attributeFilter = attributeFilter;
 	}
 	
+	public String getRoleName() {
+		return _roleName;
+	}
+	protected void setRoleName(String roleName) {
+		this._roleName = roleName;
+	}
+	
 	public String getLangCode() {
 		return this._langCode;
 	}
 	
 	public void setLangCode(String langCode) {
-		if (null == langCode) return;
+		if (null == langCode) {
+			return;
+		}
 		if (!this.isAttributeFilter()) {
 			throw new RuntimeException("Error: The language can be only specified on attribute filters");
 		}
@@ -162,9 +221,20 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	}
 	
 	@Override
+	public void setNullOption(boolean nullOption) {
+		if (null == this.getKey() && null != this.getRoleName()) {
+			throw new RuntimeException("Error: the NULL cluase may be used only in conjunction with not null key");
+		}
+		super.setNullOption(nullOption);
+	}
+	
+	@Override
 	public String toString() {
 		StringBuffer param = new StringBuffer();
-		param.append(KEY_PARAM).append("=").append(this.getKey()).append(SEPARATOR);
+		if (null != this.getKey()) {
+			param.append(KEY_PARAM).append("=").append(this.getKey()).append(SEPARATOR);
+		}
+		this.appendParamValue(param, this.getRoleName(), ROLE_PARAM);
 		param.append(FILTER_TYPE_PARAM).append("=").append(Boolean.toString(this.isAttributeFilter()));
 		this.appendParamValue(param, this.getValue(), VALUE_PARAM);
 		if (this.getValue() instanceof String) {
@@ -198,7 +268,9 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 			if (value instanceof List) {
 				List<Object> values = (List<Object>) value;
 				for (int i = 0; i < values.size() ; i++) {
-					if (i>0) param.append(ALLOWED_VALUES_SEPARATOR);
+					if (i>0) {
+						param.append(ALLOWED_VALUES_SEPARATOR);
+					}
 					param.append(values.get(i));
 				}
 			} else {
@@ -231,7 +303,9 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		String[] params = toStringFilter.split(SEPARATOR);
 		for (int i=0; i<params.length; i++) {
 			String[] elements = params[i].split("=");
-			if (elements.length != 2) continue;
+			if (elements.length != 2) {
+				continue;
+			}
 			props.setProperty(elements[0], elements[1]);
 		}
 		return props;
@@ -241,21 +315,38 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		EntitySearchFilter filter = null;
 		try {
 			String key = props.getProperty(KEY_PARAM);
-			if (null == key) return null;
+			String roleName = props.getProperty(ROLE_PARAM);
+			if (null == key && null == roleName) {
+				return null;
+			}
+			//pkjkljkljljkl
 			boolean isAttributeFilter = Boolean.parseBoolean(props.getProperty(FILTER_TYPE_PARAM));
-			filter = new EntitySearchFilter(key, isAttributeFilter);
+			//filter = new EntitySearchFilter(key, isAttributeFilter);
+			filter = new EntitySearchFilter();
 			boolean isDateAttribute = false;
-                        if (!isAttributeFilter) {
+            if (!isAttributeFilter) {
+				filter.setKey(key);
 				String dataType = props.getProperty(DATA_TYPE_PARAM);
-				if (null == dataType) dataType = DATA_TYPE_STRING;
+				if (null == dataType) {
+					dataType = DATA_TYPE_STRING;
+				}
 				setValues(filter, props, dataType);
 			} else {
-				AttributeInterface attr = (AttributeInterface) prototype.getAttribute(key);
+				AttributeInterface attr = null;
+				if (null != key) {
+					attr = (AttributeInterface) prototype.getAttribute(key);
+					filter.setKey(key);
+				} else {
+					attr = (AttributeInterface) prototype.getAttributeByRole(roleName);
+					filter.setRoleName(roleName);
+				}
+				filter.setAttributeFilter(true);
+				//AttributeInterface attr = (AttributeInterface) prototype.getAttribute(key);
 				if (null != attr && null != prototype) {
 					String dataType = null;
 					if (attr instanceof DateAttribute) {
 						dataType = DATA_TYPE_DATE;
-                                                isDateAttribute = true;
+                        isDateAttribute = true;
 					} else if (attr instanceof ITextAttribute || attr instanceof BooleanAttribute) {
 						dataType = DATA_TYPE_STRING;
 					} else if (attr instanceof NumberAttribute) {
@@ -285,7 +376,9 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	}
 	
 	private static void setValues(EntitySearchFilter filter, Properties props, String dataType) {
-		if (null == dataType) return;
+		if (null == dataType) {
+			return;
+		}
 		String value = props.getProperty(VALUE_PARAM);
 		String allowedValues = props.getProperty(ALLOWED_VALUES_PARAM);
 		String start = props.getProperty(START_PARAM);
@@ -313,9 +406,11 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		String langCode = props.getProperty(LANG_PARAM);
 		filter.setLangCode(langCode);
 	}
-
+	
 	private static List<Object> buildAllowedValues(String allowedValues, String dataType) {
-		if (null == allowedValues) return null;
+		if (null == allowedValues) {
+			return null;
+		}
 		List<Object> values = null;
 		String[] stringValues = allowedValues.split(ALLOWED_VALUES_SEPARATOR);
 		if (null != stringValues && stringValues.length > 0) {
@@ -378,9 +473,11 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	private boolean _attributeFilter;
 	
 	private String _langCode;
+	private String _roleName;
 	
 	public static final String SEPARATOR = ";";
 	public static final String KEY_PARAM = "key";
+	public static final String ROLE_PARAM = "role";
 	public static final String FILTER_TYPE_PARAM = "attributeFilter";
 	public static final String VALUE_PARAM = "value";
 	public static final String ALLOWED_VALUES_PARAM = "allowedValues";

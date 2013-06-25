@@ -137,7 +137,8 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		boolean verify = true;
 		for (int i=0; i<likeFieldFilters.length; i++) {
 			EntitySearchFilter filter = likeFieldFilters[i];
-			if (filter.getKey() == null || !filter.isLikeOption() || !this.isForceTextCaseSearch()) {
+			if ((null == filter.getKey() && null == filter.getRoleName()) 
+					|| !filter.isLikeOption() || !this.isForceTextCaseSearch()) {
 				continue;
 			}
 			String fieldName = null;
@@ -213,8 +214,12 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
-			if (filter.getKey() != null && filter.isAttributeFilter()) {
-				stat.setString(++index, filter.getKey());
+			if ((null != filter.getKey() || null != filter.getRoleName()) && filter.isAttributeFilter()) {
+				if (null != filter.getKey()) {
+					stat.setString(++index, filter.getKey());
+				} else {
+					stat.setString(++index, filter.getRoleName());
+				}
 				index = this.addObjectSearchStatementBlock(filter, index, stat);
 			}
 		}
@@ -296,12 +301,21 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		String masterTableIdFieldName = this.getEntityMasterTableIdFieldName();
 		String searchTableName = this.getEntitySearchTableName();
 		String searchTableIdFieldName = this.getEntitySearchTableIdFieldName();
+		String attributeRoleTableName = this.getEntityAttributeRoleTableName();
+		String attributeRoleTableIdFieldName = this.getEntityAttributeRoleTableIdFieldName();
 		for (int i=0; i<filters.length; i++) {
-			if (null != filters[i].getKey() && filters[i].isAttributeFilter() && !filters[i].isNullOption()) {
+			EntitySearchFilter filter = filters[i];
+			if ((null != filter.getKey() || null != filter.getRoleName()) && filter.isAttributeFilter() && !filter.isNullOption()) {
 				query.append("INNER JOIN ");
 				query.append(searchTableName).append(" ").append(searchTableName).append(i).append(" ON ")
 					.append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
 					.append(searchTableName).append(i).append(".").append(searchTableIdFieldName).append(" ");
+				if (null != filter.getRoleName()) {
+					query.append("INNER JOIN ");
+					query.append(attributeRoleTableName).append(" ").append(attributeRoleTableName).append(i).append(" ON ")
+						.append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
+						.append(attributeRoleTableName).append(i).append(".").append(attributeRoleTableIdFieldName).append(" ");
+				}
 			}
 		}
 	}
@@ -310,12 +324,14 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		if (filters != null) {
 			for (int i=0; i<filters.length; i++) {
 				EntitySearchFilter filter = filters[i];
-				if (filter.getKey() == null || !filter.isAttributeFilter()) {
+				if (/*filter.getKey() == null || */!filter.isAttributeFilter()) {
 					continue;
 				}
-				if (filter.isNullOption()) {
+				//if (filter.isNullOption()) {
+				if (filter.isNullOption() && filter.getKey() != null) {
 					hasAppendWhereClause = this.appendNullAttributeFilterQueryBlocks(filter, query, hasAppendWhereClause);
-				} else {
+				//} else {
+				} else if (!filter.isNullOption() && (filter.getKey() != null || filter.getRoleName() != null)) {
 					hasAppendWhereClause = this.appendValuedAttributeFilterQueryBlocks(filter, i, query, hasAppendWhereClause);
 				}
 			}
@@ -338,8 +354,14 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	
 	private boolean appendValuedAttributeFilterQueryBlocks(EntitySearchFilter filter, int index, StringBuffer query, boolean hasAppendWhereClause) {
 		String searchTableNameAlias = this.getEntitySearchTableName()+index;
+		String attributeRoleTableNameAlias = this.getEntityAttributeRoleTableName()+index;
 		hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
-		query.append(searchTableNameAlias).append(".attrname = ? ");
+		if (null != filter.getKey()) {
+			query.append(searchTableNameAlias).append(".attrname = ? ");
+		} else {
+			query.append(attributeRoleTableNameAlias).append(".rolename = ? ");
+			query.append(" AND ").append(searchTableNameAlias).append(".attrname = ").append(attributeRoleTableNameAlias).append(".attrname ");
+		}
 		hasAppendWhereClause = this.addAttributeLangQueryBlock(searchTableNameAlias, query, filter, hasAppendWhereClause);
 		if (filter.isLikeOption() && this.isForceTextCaseSearch()) {
 			return hasAppendWhereClause;
@@ -412,7 +434,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		}
 		for (int i=0; i<filters.length; i++) {
 			EntitySearchFilter filter = filters[i];
-			if (null != filter.getKey() && null != filter.getOrder() && !filter.isNullOption()) {
+			if ((null != filter.getKey() || null != filter.getRoleName()) && null != filter.getOrder() && !filter.isNullOption()) {
 				if (!ordered) {
 					query.append("ORDER BY ");
 					ordered = true;
@@ -532,6 +554,10 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 	 * @return The name of "Entity ID" field.
 	 */
 	protected abstract String getEntitySearchTableIdFieldName();
+	
+	protected abstract String getEntityAttributeRoleTableName();
+	
+	protected abstract String getEntityAttributeRoleTableIdFieldName();
 	
 	@Override
 	protected String getMasterTableIdFieldName() {

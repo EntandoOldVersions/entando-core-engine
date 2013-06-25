@@ -11,8 +11,10 @@
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ResourceRelation</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentRelation</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentSearch</class>
+				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.ContentAttributeRole</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.WorkContentRelation</class>
 				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.WorkContentSearch</class>
+				<class>org.entando.entando.plugins.jacms.aps.system.init.portdb.WorkContentAttributeRole</class>
 			</datasource>
 		</tableMapping>
 		<environment code="production">

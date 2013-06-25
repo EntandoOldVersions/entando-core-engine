@@ -69,12 +69,16 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	protected void flowResult(List<String> contentsId, FieldSearchFilter[] filters, ResultSet result) throws SQLException {
 		while (result.next()) {
 			String id = result.getString(this.getMasterTableIdFieldName());
-			if (contentsId.contains(id)) continue;
+			if (contentsId.contains(id)) {
+				continue;
+			}
 			if (!this.isForceTextCaseSearch() || null == filters || filters.length == 0) {
 				contentsId.add(id);
 			} else {
 				boolean verify = this.verifyLikeFieldFilters(result, filters);
-				if (verify) contentsId.add(id);
+				if (verify) {
+					contentsId.add(id);
+				}
 			}
 		}
 	}
@@ -91,11 +95,15 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			String value = result.getString(fieldName);
 			if (null != filter.getValue()) {
 				verify = this.checkText((String)filter.getValue(), value);
-				if (!verify) break;
+				if (!verify) {
+					break;
+				}
 			} else if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {
 				List<Object> allowedValues = filter.getAllowedValues();
 				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues);
-				if (!verify) break;
+				if (!verify) {
+					break;
+				}
 			}
 		}
 		return verify;
@@ -106,7 +114,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 		for (int j = 0; j < allowedValues.size(); j++) {
 			String allowedValue = (String) allowedValues.get(j);
 			verify = this.checkText(allowedValue, extractedValue);
-			if (verify) break;
+			if (verify) {
+				break;
+			}
 		}
 		return verify;
 	}
@@ -154,7 +164,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	 * @throws Throwable In case of error.
 	 */
 	protected int addMetadataFieldFilterStatementBlock(FieldSearchFilter[] filters, int index, PreparedStatement stat) throws Throwable {
-		if (filters == null) return index;
+		if (filters == null) {
+			return index;
+		}
 		for (int i=0; i<filters.length; i++) {
 			FieldSearchFilter filter = filters[i];
 			if (filter.getKey() != null) {
@@ -197,22 +209,22 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 		}
 		return index;
 	}
-        
-        protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
+	
+	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
 			Object object, boolean isLikeOption) throws SQLException {
-            this.addObjectSearchStatementBlock(stat, index, object, null, isLikeOption);
-        }
+		this.addObjectSearchStatementBlock(stat, index, object, null, isLikeOption);
+	}
 	
 	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
 			Object object, Integer dateDelay, boolean isLikeOption) throws SQLException {
 		if (object instanceof String) {
 			if (isLikeOption) {
-				stat.setString(index, "%"+((String) object)+"%");
+				stat.setString(index, "%" + ((String) object) + "%");
 			} else {
 				stat.setString(index, (String) object);
 			}
 		} else if (object instanceof Date) {
-                        Calendar calendar = Calendar.getInstance();
+			Calendar calendar = Calendar.getInstance();
 			calendar.setTime((Date) object);
 			if (dateDelay != null) {
 				calendar.add(Calendar.DATE, dateDelay);
@@ -270,7 +282,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	}
 	
 	protected boolean appendMetadataFieldFilterQueryBlocks(FieldSearchFilter[] filters, StringBuffer query, boolean hasAppendWhereClause) {
-		if (filters == null) return hasAppendWhereClause;
+		if (filters == null) {
+			return hasAppendWhereClause;
+		}
 		for (int i=0; i<filters.length; i++) {
 			FieldSearchFilter filter = filters[i];
 			if (filter.getKey() != null) {
@@ -300,7 +314,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 				} else {
 					query.append("= ? ");
 				}
-				if (j == (allowedValues.size()-1)) query.append(" ) ");
+				if (j == (allowedValues.size()-1)) {
+					query.append(" ) ");
+				}
 			}
 		} else {
 			query.append(this.getMasterTableName()).append(".").append(tableFieldName).append(" ");
@@ -332,7 +348,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	}
 	
 	protected boolean appendOrderQueryBlocks(FieldSearchFilter[] filters, StringBuffer query, boolean ordered) {
-		if (filters == null) return ordered;
+		if (filters == null) {
+			return ordered;
+		}
 		for (int i=0; i<filters.length; i++) {
 			FieldSearchFilter filter = filters[i];
 			if (null != filter.getKey() && null != filter.getOrder() && !filter.isNullOption()) {

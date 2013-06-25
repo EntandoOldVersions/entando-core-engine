@@ -45,7 +45,7 @@ public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implement
 	public List<String> loadContentsId(String[] categories, boolean orClauseCategoryFilter, 
 			EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
 		List<String> contentsId = new ArrayList<String>();
-		if (userGroupCodes == null || userGroupCodes.size()==0) {
+		if (userGroupCodes == null || userGroupCodes.isEmpty()) {
 			return contentsId;
 		}
 		Connection conn = null;
@@ -75,6 +75,14 @@ public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implement
 	@Override
 	protected String getContentRelationsTableName() {
 		return "workcontentrelations";
+	}
+	@Override
+	protected String getEntityAttributeRoleTableName() {
+		return "workcontentattributeroles";
+	}
+	@Override
+	protected String getEntityAttributeRoleTableIdFieldName() {
+		return "contentid";
 	}
 	
 }

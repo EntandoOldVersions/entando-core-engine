@@ -59,7 +59,9 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 	public List<String> loadPublicContentsId(String[] categories, 
 			boolean orClauseCategoryFilter, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
 		Set<String> groupCodes = new HashSet<String>();
-		if (null != userGroupCodes) groupCodes.addAll(userGroupCodes);
+		if (null != userGroupCodes) {
+			groupCodes.addAll(userGroupCodes);
+		}
 		groupCodes.add(Group.FREE_GROUP_NAME);
 		EntitySearchFilter onLineFilter = new EntitySearchFilter(IContentManager.CONTENT_ONLINE_FILTER_KEY, false);
 		filters = this.addFilter(filters, onLineFilter);
@@ -112,7 +114,9 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 		query.append(" ( ");
 		int size = userGroupCodes.size();
 		for (int i=0; i<size; i++) {
-			if (i!=0) query.append("OR ");
+			if (i!=0) {
+				query.append("OR ");
+			}
 			query.append("contents.maingroup = ? ");
 		}
 		query.append(" OR contents.contentid IN ( SELECT contentid FROM ")
@@ -150,6 +154,14 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 	@Override
 	protected String getContentRelationsTableName() {
 		return "contentrelations";
+	}
+	@Override
+	protected String getEntityAttributeRoleTableName() {
+		return "contentattributeroles";
+	}
+	@Override
+	protected String getEntityAttributeRoleTableIdFieldName() {
+		return "contentid";
 	}
 	
 }

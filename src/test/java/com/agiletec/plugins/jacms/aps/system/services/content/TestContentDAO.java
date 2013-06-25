@@ -42,11 +42,13 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
  */
 public class TestContentDAO extends BaseTestCase {
 	
+	@Override
 	protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
     
+	@Override
     protected void tearDown() throws Exception {
 		super.tearDown();
 		this.dispose();
@@ -63,13 +65,13 @@ public class TestContentDAO extends BaseTestCase {
     }
 	
 	private void deleteContent(Content content) throws ApsSystemException {
-		_contentDao.deleteContent(content);
+		this._contentDao.deleteEntity(content.getId());
 		ContentRecordVO contentRecord = (ContentRecordVO) this._contentDao.loadEntityRecord(content.getId());
 		assertNull(contentRecord);
 	}
 	
 	private void addContent(Content mockContent) throws ApsSystemException {
-		_contentDao.addContent(mockContent);
+		_contentDao.addEntity(mockContent);
 		ContentRecordVO contentRecord = (ContentRecordVO) this._contentDao.loadEntityRecord(mockContent.getId());
 		assertEquals(mockContent.getDescr(), contentRecord.getDescr());
 		assertEquals(mockContent.getStatus(), contentRecord.getStatus());
@@ -165,7 +167,7 @@ public class TestContentDAO extends BaseTestCase {
     }
 	
 	private void updateContent(Content mockContent) throws ApsSystemException {
-		_contentDao.updateContent(mockContent);
+		this._contentDao.updateEntity(mockContent);
 		ContentRecordVO contentRecord = (ContentRecordVO) this._contentDao.loadEntityRecord(mockContent.getId());
 		assertEquals(mockContent.getDescr(), contentRecord.getDescr());
 		assertEquals(mockContent.getStatus(), contentRecord.getStatus());
@@ -203,7 +205,7 @@ public class TestContentDAO extends BaseTestCase {
     private void dispose() throws Exception {
 		Content mockContent = this.getMockContent();
 		try {
-			_contentDao.deleteContent(mockContent);
+			this._contentDao.deleteEntity(mockContent.getId());
 		} catch (Throwable e) {
 			throw new Exception(e);
 		}
@@ -212,14 +214,13 @@ public class TestContentDAO extends BaseTestCase {
     private void init() throws Exception {
 		this._contentDao = new ContentDAO();
 		try {
-			_contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
-			
+			this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
 			Content mockContent = this.getMockContent();
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 			this._contentDao.setDataSource(dataSource);
 			ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
 			this._contentDao.setLangManager(langManager);
-			this._contentDao.addContent(mockContent);
+			this._contentDao.addEntity(mockContent);
 		} catch (Throwable e) {
 			throw new Exception(e);
 		}

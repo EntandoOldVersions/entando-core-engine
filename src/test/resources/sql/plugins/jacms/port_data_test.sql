@@ -44,6 +44,8 @@ $content.CorpoTesto.getTextAfterImage(0)
 <li><a href="$content.VediAnche.destination">$content.VediAnche.text</a></li>
 </p>
 #end', NULL);
+INSERT INTO contentmodels (modelid, contenttype, descr, model, stylesheet) VALUES (11, 'ART', 'List Model', '#if ($content.Titolo.text != "")<h1 class="titolo">$content.Titolo.text</h1>#end
+<a href="$content.contentLink">Details...</a>', NULL);
 
 
 
@@ -335,60 +337,6 @@ INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcon
 
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTypes', 'Definition of the Content Types', '<?xml version="1.0" encoding="UTF-8"?>
 <contenttypes>
-	<contenttype typecode="ART" typedescr="Articolo rassegna stampa" viewpage="contentview" listmodel="11" defaultmodel="1">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" indexingtype="text">
-				<validations>
-					<required>true</required>
-				</validations>
-			</attribute>
-			<list name="Autori" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="Autori" attributetype="Monotext" />
-				</nestedtype>
-			</list>
-			<attribute name="VediAnche" attributetype="Link" />
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="Foto" attributetype="Image" />
-			<attribute name="Data" attributetype="Date" searcheable="true" />
-			<attribute name="Numero" attributetype="Number" searcheable="true" />
-		</attributes>
-	</contenttype>
-	<contenttype typecode="EVN" typedescr="Evento" viewpage="contentview" listmodel="51" defaultmodel="5">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" searcheable="true" indexingtype="text" />
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="DataInizio" attributetype="Date" searcheable="true" />
-			<attribute name="DataFine" attributetype="Date" searcheable="true" />
-			<attribute name="Foto" attributetype="Image" />
-			<list name="LinkCorrelati" attributetype="Monolist">
-				<nestedtype>
-					<attribute name="LinkCorrelati" attributetype="Link" />
-				</nestedtype>
-			</list>
-		</attributes>
-	</contenttype>
-	<contenttype typecode="RAH" typedescr="Tipo_Semplice" viewpage="contentview" listmodel="126" defaultmodel="457">
-		<attributes>
-			<attribute name="Titolo" attributetype="Text" indexingtype="text">
-				<validations>
-					<minlength>10</minlength>
-					<maxlength>100</maxlength>
-				</validations>
-			</attribute>
-			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="Foto" attributetype="Image" />
-			<attribute name="email" attributetype="Monotext">
-				<validations>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-			</attribute>
-			<attribute name="Numero" attributetype="Number" />
-			<attribute name="Correlati" attributetype="Link" />
-			<attribute name="Allegati" attributetype="Attach" />
-			<attribute name="Checkbox" attributetype="CheckBox" />
-		</attributes>
-	</contenttype>
 	<contenttype typecode="ALL" typedescr="Content type with all attribute types" viewpage="announcements_read" listmodel="**NULL**" defaultmodel="**NULL**">
 		<attributes>
 			<attribute name="Attach" attributetype="Attach" />
@@ -519,10 +467,10 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<attribute name="MonoLCom" attributetype="Composite">
 						<attributes>
 							<attribute name="Attach" attributetype="Attach" />
-							<attribute name="Date" attributetype="Date" >
+							<attribute name="Date" attributetype="Date">
 								<validations>
-									<rangeend attribute="Date" />
 									<rangestart>10/10/1971</rangestart>
+									<rangeend attribute="Date" />
 								</validations>
 							</attribute>
 							<attribute name="Enumerator" attributetype="Enumerator" separator=","><![CDATA[a,b,c]]></attribute>
@@ -531,10 +479,10 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 							<attribute name="Link" attributetype="Link" />
 							<attribute name="Longtext" attributetype="Longtext" />
 							<attribute name="Monotext" attributetype="Monotext" />
-							<attribute name="Number" attributetype="Number" >
+							<attribute name="Number" attributetype="Number">
 								<validations>
-									<rangeend attribute="Number" />
 									<rangestart>25</rangestart>
+									<rangeend attribute="Number" />
 								</validations>
 							</attribute>
 							<attribute name="Text" attributetype="Text" />
@@ -608,6 +556,68 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 					<required>true</required>
 				</validations>
 			</attribute>
+		</attributes>
+	</contenttype>
+	<contenttype typecode="ART" typedescr="Articolo rassegna stampa" viewpage="contentview" listmodel="11" defaultmodel="1">
+		<attributes>
+			<attribute name="Titolo" attributetype="Text" indexingtype="TEXT">
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>jacms:title</role>
+				</roles>
+			</attribute>
+			<list name="Autori" attributetype="Monolist">
+				<nestedtype>
+					<attribute name="Autori" attributetype="Monotext" />
+				</nestedtype>
+			</list>
+			<attribute name="VediAnche" attributetype="Link" />
+			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
+			<attribute name="Foto" attributetype="Image" />
+			<attribute name="Data" attributetype="Date" searcheable="true" />
+			<attribute name="Numero" attributetype="Number" searcheable="true" />
+		</attributes>
+	</contenttype>
+	<contenttype typecode="EVN" typedescr="Evento" viewpage="contentview" listmodel="51" defaultmodel="5">
+		<attributes>
+			<attribute name="Titolo" attributetype="Text" searcheable="true" indexingtype="TEXT">
+				<validations />
+				<roles>
+					<role>jacms:title</role>
+				</roles>
+			</attribute>
+			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
+			<attribute name="DataInizio" attributetype="Date" searcheable="true" />
+			<attribute name="DataFine" attributetype="Date" searcheable="true" />
+			<attribute name="Foto" attributetype="Image" />
+			<list name="LinkCorrelati" attributetype="Monolist">
+				<nestedtype>
+					<attribute name="LinkCorrelati" attributetype="Link" />
+				</nestedtype>
+			</list>
+		</attributes>
+	</contenttype>
+	<contenttype typecode="RAH" typedescr="Tipo_Semplice" viewpage="contentview" listmodel="126" defaultmodel="457">
+		<attributes>
+			<attribute name="Titolo" attributetype="Text" indexingtype="text">
+				<validations>
+					<minlength>10</minlength>
+					<maxlength>100</maxlength>
+				</validations>
+			</attribute>
+			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
+			<attribute name="Foto" attributetype="Image" />
+			<attribute name="email" attributetype="Monotext">
+				<validations>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+			</attribute>
+			<attribute name="Numero" attributetype="Number" />
+			<attribute name="Correlati" attributetype="Link" />
+			<attribute name="Allegati" attributetype="Attach" />
+			<attribute name="Checkbox" attributetype="CheckBox" />
 		</attributes>
 	</contenttype>
 </contenttypes>
@@ -746,6 +756,31 @@ INSERT INTO contentsearch (contentid, attrname, textvalue, datevalue, numvalue, 
 
 
 
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART122', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART121', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART120', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART111', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART102', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART180', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART112', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART104', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART1', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('ART187', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN193', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN194', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN191', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN25', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN21', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN41', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN24', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN23', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN103', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN192', 'Titolo', 'jacms:title');
+INSERT INTO contentattributeroles (contentid, attrname, rolename) VALUES ('EVN20', 'Titolo', 'jacms:title');
+
+
+
+
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART102', 'general_cat1');
 INSERT INTO workcontentrelations (contentid, refcategory) VALUES ('ART180', 'cat1');
@@ -829,3 +864,29 @@ INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numval
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'Titolo', 'Mostra Zootecnica', NULL, NULL, 'en');
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataInizio', NULL, '2006-02-13 00:00:00', NULL, NULL);
 INSERT INTO workcontentsearch (contentid, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('EVN20', 'DataFine', NULL, '2006-02-20 00:00:00', NULL, NULL);
+
+
+
+
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART122', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART121', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART120', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART111', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART102', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART180', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART112', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART104', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART1', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART179', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('ART187', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN193', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN194', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN191', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN25', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN21', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN41', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN24', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN23', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN103', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN192', 'Titolo', 'jacms:title');
+INSERT INTO workcontentattributeroles (contentid, attrname, rolename) VALUES ('EVN20', 'Titolo', 'jacms:title');
