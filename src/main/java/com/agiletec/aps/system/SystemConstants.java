@@ -161,8 +161,11 @@ public interface SystemConstants {
     
     /**
      * Nome del servizio gestore cache.
+	 * @deprecated 
      */
     public static final String CACHE_MANAGER = "CacheManager";
+    
+    public static final String CACHE_INFO_MANAGER = "CacheInfoManager";
     
     public static final String AUTHENTICATION_PROVIDER_MANAGER = "AuthenticationProviderManager";
     

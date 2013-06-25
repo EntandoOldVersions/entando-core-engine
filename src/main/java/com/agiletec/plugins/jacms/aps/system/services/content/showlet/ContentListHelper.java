@@ -108,14 +108,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
 		List<String> contentsId = null;
 		try {
-			//List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
-			//UserFilterOptionBean fullTextUserFilter = null;
-			//if (!isUserFilterExecuted && bean.isCacheable()) {
-			//contentsId = this.searchInCache(bean.getListName(), reqCtx);
-			//}
-			//if (null == contentsId) {
-			contentsId = this.extractContentsId(bean, reqCtx/*, isUserFilterExecuted*/);
-			//}
+			contentsId = this.extractContentsId(bean, reqCtx);
 			contentsId = this.executeFullTextSearch(bean, contentsId, reqCtx);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getContentsId");
@@ -137,8 +130,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return false;
 	}
 	
-	protected List<String> extractContentsId(IContentListTagBean bean, 
-			RequestContext reqCtx/*, boolean isUserFilterExecuted*/) throws ApsSystemException {
+	protected List<String> extractContentsId(IContentListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
 			List<UserFilterOptionBean> userFilters = bean.getUserFilterOptions();
@@ -168,12 +160,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			boolean orCategoryFilterClause = this.extractOrCategoryFilterClause(config);
 			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), 
                                 categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
-			/*
-			if (!isUserFilterExecuted && bean.isCacheable()) {
-				String cacheKey = buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
-				this.putListInCache(bean.getContentType(), reqCtx, contentsId, cacheKey);
-			}
-			*/
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "extractContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
@@ -192,21 +178,14 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return Boolean.parseBoolean(param);
 	}
 	
-	protected List<String> executeFullTextSearch(IContentListTagBean bean, List<String> masterContentsId, RequestContext reqCtx 
-			/*, UserFilterOptionBean fullTextUserFilter*/) throws ApsSystemException {
-		//boolean isUserFilterExecuted = false;
+	protected List<String> executeFullTextSearch(IContentListTagBean bean, 
+			List<String> masterContentsId, RequestContext reqCtx) throws ApsSystemException {
 		UserFilterOptionBean fullTextUserFilter = null;
 		List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
 		if (null != userFilterOptions) {
 			for (int i = 0; i < userFilterOptions.size(); i++) {
 				UserFilterOptionBean userFilter = userFilterOptions.get(i);
 				if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
-					//if (userFilter.isAttributeFilter() || 
-					//		(!userFilter.isAttributeFilter() 
-									//&& !userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT))) {
-						//if executed full-text search filter... it's not important here
-						//isUserFilterExecuted = true;
-					//} else 
 					if (!userFilter.isAttributeFilter() 
 									&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
 						fullTextUserFilter = userFilter;
@@ -278,33 +257,11 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	protected List<String> getContentsId(IContentListTagBean bean, String[] categories, RequestContext reqCtx) throws Throwable {
 		return this.getContentsId(bean, reqCtx);
 	}
-	/*
-	protected void putListInCache(String contentType, RequestContext reqCtx, List<String> contentsId, String cacheKey) {
-		if (this.getCacheManager() != null && contentsId != null) {
-			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-			String pageCacheGroupName = SystemConstants.PAGES_CACHE_GROUP_PREFIX + page.getCode();
-			String contentTypeCacheGroupName = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + contentType;
-			String[] groups = {contentTypeCacheGroupName, pageCacheGroupName};
-			this.getCacheManager().putInCache(cacheKey, contentsId, groups);
-		}
-	}
-	*/
+	
 	protected Collection<String> getAllowedGroups(RequestContext reqCtx) {
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		return getAllowedGroupCodes(currentUser);//super.getAllowedGroups(currentUser);
+		return getAllowedGroupCodes(currentUser);
 	}
-	/*
-	@Override
-	public List<String> searchInCache(String listName, RequestContext reqCtx) throws Throwable {
-		Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
-		String cacheKey = buildCacheKey(listName, userGroupCodes, reqCtx);
-		Object object = this.getCacheManager().getFromCache(cacheKey, 1800);//refresh ogni 30min
-		if (null != object && (object instanceof List)) {
-			return (List) object;
-		}
-		return null;
-	}
-	*/
 	
 	public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);

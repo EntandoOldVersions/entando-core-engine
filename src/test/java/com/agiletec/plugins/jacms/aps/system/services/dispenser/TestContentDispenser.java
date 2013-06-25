@@ -21,12 +21,13 @@ import com.agiletec.aps.BaseTestCase;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+
+import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 
 /**
  * @author W.Ambu - E.Santoboni
@@ -91,14 +92,14 @@ public class TestContentDispenser extends BaseTestCase {
 			ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(content.getId(), 2, "it", reqCtx);
 			assertNotNull(outputInfo);
 			
-			assertNotNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
-			assertNotNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
+			assertNotNull(this._cacheInfoManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
+			assertNotNull(this._cacheInfoManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
 			
 			this._contentManager.insertOnLineContent(content);
 			this.waitNotifyingThread();
 			
-			assertNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
-			assertNull(this._cacheManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
+			assertNull(this._cacheInfoManager.getFromCache(JacmsSystemConstants.CONTENT_CACHE_PREFIX+content.getId()));
+			assertNull(this._cacheInfoManager.getFromCache(JacmsSystemConstants.CONTENT_AUTH_INFO_CACHE_PREFIX+content.getId()));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -178,7 +179,7 @@ public class TestContentDispenser extends BaseTestCase {
     		this._contentDispenser = (IContentDispenser) this.getService(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER);
 			this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
 			this._contentModelManager = (IContentModelManager) this.getService(JacmsSystemConstants.CONTENT_MODEL_MANAGER);
-			this._cacheManager = (ICacheManager) this.getService(SystemConstants.CACHE_MANAGER);
+			this._cacheInfoManager = (CacheInfoManager) this.getService(SystemConstants.CACHE_INFO_MANAGER);
     	} catch (Throwable t) {
     		throw new Exception(t);
     	}
@@ -187,7 +188,7 @@ public class TestContentDispenser extends BaseTestCase {
     private IContentDispenser _contentDispenser = null;
     private IContentManager _contentManager = null;
     private IContentModelManager _contentModelManager = null;
-    private ICacheManager _cacheManager = null;
+	private CacheInfoManager _cacheInfoManager;
     
     private String _attendedEnART1 = 
 		"ART1;\n" 

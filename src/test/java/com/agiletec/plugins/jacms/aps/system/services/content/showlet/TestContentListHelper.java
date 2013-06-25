@@ -151,7 +151,7 @@ public class TestContentListHelper extends BaseTestCase {
 			filter.setOrder(EntitySearchFilter.DESC_ORDER);
 			bean.addFilter(filter);
 			List<String> contents = this._helper.getContentsId(bean, reqCtx);
-			String[] expected = {"EVN194", "EVN193", "EVN24", "EVN23", /*"EVN41", */"EVN25", "EVN20", "EVN21", /*"EVN103", */"EVN192", "EVN191"};
+			String[] expected = {"EVN194", "EVN193", "EVN24", "EVN23", "EVN25", "EVN20", "EVN21", "EVN192", "EVN191"};
 			assertEquals(expected.length, contents.size());
 			for (int i=0; i<expected.length; i++) {
 				assertEquals(expected[i], contents.get(i));

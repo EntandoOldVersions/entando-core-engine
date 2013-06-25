@@ -335,6 +335,9 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error
 	 */
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
 	public void removeOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());
@@ -382,6 +385,9 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error.
 	 */
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
 	public void deleteContent(Content content) throws ApsSystemException {
 		try {
 			this.getContentDAO().deleteEntity(content.getId());

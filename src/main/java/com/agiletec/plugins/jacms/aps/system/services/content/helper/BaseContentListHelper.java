@@ -90,50 +90,20 @@ public class BaseContentListHelper implements IContentListHelper {
 			condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user))")
 	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENTS_ID_CACHE_GROUP_PREFIX.concat(#bean.contentType)", expiresInMinute = 30)
     public List<String> getContentsId(IContentListBean bean, UserDetails user) throws Throwable {
-		/*
-        List<String> contentsId = null;
-        try {
-            //contentsId = this.searchInCache(bean, user);
-            //if (null == contentsId) {
-            contentsId = this.extractContentsId(bean, user);
-            //}
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContentsId");
-            throw new ApsSystemException("Error extracting contents id", t);
-        }
-        return contentsId;
-    }
-	
-    protected List<String> extractContentsId(IContentListBean bean, UserDetails user) throws ApsSystemException {
-		*/
-        List<String> contentsId = null;
+		List<String> contentsId = null;
         try {
             if (null == bean.getContentType()) {
                 throw new ApsSystemException("Content type not defined");
             }
             Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
             contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
-            /*
-			if (bean.isCacheable()) {
-                String cacheKey = this.buildCacheKey(bean, userGroupCodes);
-                this.putListInCache(bean.getContentType(), contentsId, cacheKey);
-            }
-			*/
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "extractContentsId");
             throw new ApsSystemException("Error extracting contents id", t);
         }
         return contentsId;
     }
-	/*
-    private void putListInCache(String contentType, List<String> contentsId, String cacheKey) {
-        if (this.getCacheManager() != null && contentsId != null) {
-            String contentTypeCacheGroupName = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + contentType;
-            String[] groups = {contentTypeCacheGroupName};
-            this.getCacheManager().putInCache(cacheKey, contentsId, groups);
-        }
-    }
-	*/
+	
     /**
      * Return the groups to witch execute the filter to contents.
      * The User object is non null, extract the groups from the user, else 
@@ -143,20 +113,7 @@ public class BaseContentListHelper implements IContentListHelper {
 	 * @deprecated 
      */
     protected Collection<String> getAllowedGroups(UserDetails user) {
-        /*
-		Set<String> allowedGroup = new HashSet<String>();
-		allowedGroup.add(Group.FREE_GROUP_NAME);
-        if (null != user) {
-            List<Group> groups = this.getAuthorizationManager().getUserGroups(user);
-            Iterator<Group> iter = groups.iterator();
-            while (iter.hasNext()) {
-                Group group = iter.next();
-                allowedGroup.add(group.getName());
-            }
-        }
-        return allowedGroup;
-		*/
-		return getAllowedGroupCodes(user);
+        return getAllowedGroupCodes(user);
     }
 	
     public static Collection<String> getAllowedGroupCodes(UserDetails user) {
@@ -172,16 +129,7 @@ public class BaseContentListHelper implements IContentListHelper {
         }
         return allowedGroup;
     }
-	/*
-    protected List<String> searchInCache(IContentListBean bean, UserDetails user) throws Throwable {
-        String cacheKey = this.buildCacheKey(bean, user);
-        Object object = this.getCacheManager().getFromCache(cacheKey, 1800);//refresh ogni 30min
-        if (null != object && (object instanceof List)) {
-            return (List) object;
-        }
-        return null;
-    }
-	*/
+	
 	public static String buildCacheKey(IContentListBean bean, UserDetails user) {
 		Collection<String> userGroupCodes = getAllowedGroupCodes(user);
 		return buildCacheKey(bean, userGroupCodes);
