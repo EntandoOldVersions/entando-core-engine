@@ -69,6 +69,7 @@ update jpsurvey SET checkusername = 0;
 ALTER TABLE jpsurvey ALTER COLUMN checkusername SET NOT NULL;
 -- for "jpsurvey" plugin - End
 
+
 ```
 
 
