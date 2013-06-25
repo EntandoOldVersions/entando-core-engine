@@ -222,6 +222,5 @@ public class EhCacheManager extends AbstractService implements ICacheManager, Pa
 	
 	private Map<String, List<String>> _groups = new HashMap<String, List<String>>();
 	//private final String CACHE_DISK_ROOT_FOLDER_MARKER = "@cacheDiskRootFolder@";
-	private final String CACHE_NAME = "Entando_Cache";
 	
 }

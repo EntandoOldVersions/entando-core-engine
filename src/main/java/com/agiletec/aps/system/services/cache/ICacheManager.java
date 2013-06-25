@@ -70,4 +70,6 @@ public interface ICacheManager {
 	 */
 	public Object getFromCache(String key, int myRefreshPeriod);
 	
+	public static final String CACHE_NAME = "Entando_Cache";
+	
 }

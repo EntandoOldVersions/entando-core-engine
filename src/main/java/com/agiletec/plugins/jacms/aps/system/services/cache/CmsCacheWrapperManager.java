@@ -43,6 +43,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceCha
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
+import org.springframework.cache.annotation.Cacheable;
+
 /**
  * Cache Wrapper Manager for plugin jacms
  * @author E.Santoboni
@@ -109,7 +111,9 @@ public class CmsCacheWrapperManager extends AbstractService
 	public void updateFromResourceChanged(ResourceChangedEvent event) {
 		try {
 			ResourceInterface resource = event.getResource();
-			if (null == resource) return;
+			if (null == resource) {
+				return;
+			}
 			List<String> utilizers = ((ResourceUtilizer) this.getContentManager()).getResourceUtilizers(resource.getId());
 			for (int i = 0; i < utilizers.size(); i++) {
 				String contentId = utilizers.get(i);
@@ -131,20 +135,16 @@ public class CmsCacheWrapperManager extends AbstractService
 	}
 	
 	@Override
+	@Cacheable(value = ICacheManager.CACHE_NAME, key = JacmsSystemConstants.CONTENT_CACHE_PREFIX + "#id")
 	public Content getPublicContent(String id) throws ApsSystemException {
 		Content content = null;
 		try {
-			String cacheKey = JacmsSystemConstants.CONTENT_CACHE_PREFIX + id;
-			content = (Content) this.getCacheManager().getFromCache(cacheKey);
-			if (null == content) {
-				content = this.getContentManager().loadContent(id, true);
-				if (null != content) {
-					String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId();
-					String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + content.getTypeCode();
-					String[] groups = {contentCacheGroupId, typeCacheGroupId};
-					this.getCacheManager().putInCache(cacheKey, content, groups);
-				}
-			}
+			content = this.getContentManager().loadContent(id, true);
+			String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId();
+			String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + content.getTypeCode();
+			String[] groups = {contentCacheGroupId, typeCacheGroupId};
+			//this.getCacheManager().putInCache(cacheKey, content, groups);
+			//System.out.println("loaded from db " + id);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getPublicContent");
 			throw new ApsSystemException("Error extracting content by id '" + id + "'", t);
@@ -195,7 +195,7 @@ public class CmsCacheWrapperManager extends AbstractService
 	}
 	
 	protected ICacheManager getCacheManager() {
-		return _cacheManager;
+		return this._cacheManager;
 	}
 	public void setCacheManager(ICacheManager cacheManager) {
 		this._cacheManager = cacheManager;
@@ -214,10 +214,19 @@ public class CmsCacheWrapperManager extends AbstractService
 	public void setContentModelManager(IContentModelManager contentModelManager) {
 		this._contentModelManager = contentModelManager;
 	}
-	
+	/*
+	public SlowService getXxx() {
+		return xxx;
+	}
+	public void setXxx(SlowService xxx) {
+		this.xxx = xxx;
+	}
+	*/
 	private IContentManager _contentManager;
 	private ICacheManager _cacheManager;
 	private ILangManager _langManager;
 	private IContentModelManager _contentModelManager;
+	
+	//private SlowService xxx;
 	
 }
