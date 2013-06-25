@@ -21,6 +21,7 @@ import com.agiletec.aps.BaseTestCase;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.cache.ICacheManager;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * Classe test del servizio gestore cache.
@@ -67,12 +68,13 @@ public class TestCacheManager extends BaseTestCase {
     	String value = "Stringa prova";
     	String key = "Chiave prova";
     	this._cacheManager.putInCache(key, value);
+		this._cacheManager.setExpirationTime(key, 2);
+		Object extracted = this._cacheManager.getFromCache(key);
+    	assertEquals(value, extracted);
     	synchronized (this) {
     		this.wait(3000);
 		}
-    	Object extracted = this._cacheManager.getFromCache(key);
-    	assertEquals(value, extracted);
-    	extracted = this._cacheManager.getFromCache(key, 2);
+    	extracted = this._cacheManager.getFromCache(key);
     	assertNull(extracted);
     }
     

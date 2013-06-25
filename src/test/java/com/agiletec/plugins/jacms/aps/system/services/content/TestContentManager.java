@@ -700,9 +700,7 @@ public class TestContentManager extends BaseTestCase {
 		filter.setLangCode("it");
 		filter.setOrder(EntitySearchFilter.DESC_ORDER);
 		EntitySearchFilter[] filters = {filter};
-		System.out.println("********************************+");
 		List<String> contents = this._contentManager.loadPublicContentsId("EVN", null, filters, groups);
-		System.out.println("********************************+");
 		String[] expectedOrderedContentsId2 = {"EVN25", "EVN21", "EVN23"};
 		assertEquals(expectedOrderedContentsId2.length, contents.size());
 		for (int i=0; i<expectedOrderedContentsId2.length; i++) {

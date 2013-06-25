@@ -43,6 +43,11 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
+import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Contents manager. This implements all the methods needed to create and manage the contents.
@@ -165,6 +170,9 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException In case of error.
 	 */
 	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)", condition = "#onLine")
+	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#id)")
 	public Content loadContent(String id, boolean onLine) throws ApsSystemException {
 		Content content = null;
 		try {
@@ -265,6 +273,9 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error.
 	 */
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
+	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id)")
 	public void insertOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());

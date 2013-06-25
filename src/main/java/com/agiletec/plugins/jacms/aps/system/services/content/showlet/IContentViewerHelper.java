@@ -19,7 +19,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 
 /**
@@ -42,6 +41,6 @@ public interface IContentViewerHelper {
 	
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException;
 	
-	public ContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException;
+	//public ContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException;
 	
 }

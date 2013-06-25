@@ -19,6 +19,8 @@ package com.agiletec.plugins.jacms.aps.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,9 +43,9 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMonoInstanceResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.AbstractMultiInstanceResource;
@@ -51,8 +53,6 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This servlet handles the requests for protected resources. 
@@ -122,8 +122,8 @@ public class ResourceWardenServlet extends HttpServlet {
 	}
 	
 	private boolean isAuthOnProtectedRes(UserDetails currentUser, String resourceId, String contentId, HttpServletRequest request) {
-		IContentDispenser dispender = (IContentDispenser) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_DISPENSER_MANAGER, request);
-		ContentAuthorizationInfo authInfo = dispender.getAuthorizationInfo(contentId);
+		IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, request);
+		PublicContentAuthorizationInfo authInfo = contentAuthHelper.getAuthorizationInfo(contentId);
 		IAuthorizationManager authManager = (IAuthorizationManager) ApsWebApplicationUtils.getBean(SystemConstants.AUTHORIZATION_SERVICE, request);
 		return (authInfo.isProtectedResourceReference(resourceId) && authInfo.isUserAllowed(authManager.getUserGroups(currentUser)));
 	}
@@ -134,10 +134,8 @@ public class ResourceWardenServlet extends HttpServlet {
 		resp.setHeader("Content-Disposition","inline; filename=" + instance.getFileName());
 		ServletOutputStream out = resp.getOutputStream();
 		try {
-			//File fileTemp = new File(resource.getDiskFolder() + instance.getFileName());
 			InputStream is = resource.getResourceStream(instance);
 			if (null != is) {
-				//InputStream is = new FileInputStream(fileTemp);
 				byte[] buffer = new byte[2048];
 				int length = -1;
 			    // Transfer the data

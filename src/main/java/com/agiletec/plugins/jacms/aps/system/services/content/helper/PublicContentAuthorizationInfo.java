@@ -14,7 +14,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.dispenser;
+package com.agiletec.plugins.jacms.aps.system.services.content.helper;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -25,17 +25,21 @@ import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AbstractResourceAttribute;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the authorization information of a content.
  * The enhanced object is cached by alphanumeric identifier produced by the identifier of the content.
  * @author E.Santoboni
  */
-public class ContentAuthorizationInfo implements Serializable {
+public class PublicContentAuthorizationInfo implements Serializable {
 	
 	private static final long serialVersionUID = -5241592759371755368L;
 	
-	public ContentAuthorizationInfo(Content content) {
+	public PublicContentAuthorizationInfo(Content content) {
 		this._contentId = content.getId();
 		this._contentType = content.getTypeCode();
 		this._mainGroup = content.getMainGroup();
@@ -68,6 +72,23 @@ public class ContentAuthorizationInfo implements Serializable {
 		this._allowedGroups = allowedGroups;
 	}
 	
+	public boolean isUserAllowed(Collection<String> userGroupCodes) {
+		if (null == userGroupCodes) {
+			userGroupCodes = new ArrayList<String>();
+		}
+		if (userGroupCodes.contains(Group.ADMINS_GROUP_NAME)) {
+			return true;
+		}
+    	for (int i=0; i<_allowedGroups.length; i++) {
+			String allowedGroup = _allowedGroups[i];
+			if (Group.FREE_GROUP_NAME.equals(allowedGroup) || 
+					userGroupCodes.contains(allowedGroup)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	/**
 	 * Verifica i permessi dell'utente in accesso al contenuto.
 	 * Restituisce true se l'utente specificato è abilitato 
@@ -77,27 +98,15 @@ public class ContentAuthorizationInfo implements Serializable {
 	 * al contenuto, false in caso contrario.
 	 */
 	public boolean isUserAllowed(List<Group> userGroups) {
-		boolean check = this.checkGroup(userGroups, Group.ADMINS_GROUP_NAME);
-		if (check) return true;
-    	for (int i=0; i<_allowedGroups.length; i++) {
-			String allowedGroup = _allowedGroups[i];
-			if (Group.FREE_GROUP_NAME.equals(allowedGroup) || 
-					this.checkGroup(userGroups, allowedGroup)) {
-				return true;
-			}
+		if (null == userGroups) {
+			userGroups = new ArrayList<Group>();
 		}
-		return false;
-	}
-	
-	private boolean checkGroup(List<Group> groups, String groupName) {
-		Iterator<Group> iter = groups.iterator();
-    	while (iter.hasNext()) {
-    		Group group = iter.next();
-    		if (group.getName().equals(groupName)) {
-    			return true;
-    		}
-    	}
-		return false;
+		Set<String> codes = new HashSet<String>();
+		for (int i = 0; i < userGroups.size(); i++) {
+			Group group = userGroups.get(i);
+			codes.add(group.getAuthority());
+		}
+		return this.isUserAllowed(codes);
 	}
 	
 	/**

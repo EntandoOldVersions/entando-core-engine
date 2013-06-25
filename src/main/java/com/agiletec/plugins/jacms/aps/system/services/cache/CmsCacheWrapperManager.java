@@ -22,20 +22,18 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingObserver;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.cache.ICacheManager;
-import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
-import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedEvent;
-import com.agiletec.plugins.jacms.aps.system.services.content.event.PublicContentChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
@@ -43,20 +41,20 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceCha
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
-import org.springframework.cache.annotation.Cacheable;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
  * Cache Wrapper Manager for plugin jacms
  * @author E.Santoboni
  */
 public class CmsCacheWrapperManager extends AbstractService 
-		implements ICmsCacheWrapperManager, PublicContentChangedObserver, ContentModelChangedObserver, EntityTypesChangingObserver, ResourceChangedObserver {
+		implements ICmsCacheWrapperManager, /*PublicContentChangedObserver, */ContentModelChangedObserver, EntityTypesChangingObserver, ResourceChangedObserver {
 	
 	@Override
 	public void init() throws Exception {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
 	}
-	
+	/*
 	@Override
 	public void updateFromPublicContentChanged(PublicContentChangedEvent event) {
 		try {
@@ -71,7 +69,7 @@ public class CmsCacheWrapperManager extends AbstractService
 					"Error notifing event " + PublicContentChangedEvent.class.getName());
 		}
 	}
-	
+	*/
 	@Override
 	public void updateFromContentModelChanged(ContentModelChangedEvent event) {
 		try {
@@ -81,7 +79,7 @@ public class CmsCacheWrapperManager extends AbstractService
 				log.info("Notified content model update : type " + model.getId());
 			}
 			String cacheGroupKey = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + model.getId();
-			this.getCacheManager().flushGroup(cacheGroupKey);
+			this.getCacheInfoManager().flushGroup(cacheGroupKey);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateFromContentModelChanged", 
 					"Error notifing event " + ContentModelChangedEvent.class.getName());
@@ -100,7 +98,7 @@ public class CmsCacheWrapperManager extends AbstractService
 				log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
 			}
 			String typeGroupKey = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + oldEntityType.getTypeCode();
-			this.getCacheManager().flushGroup(typeGroupKey);
+			this.getCacheInfoManager().flushGroup(typeGroupKey);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateFromEntityTypesChanging", 
 					"Error notifing event " + EntityTypesChangingEvent.class.getName());
@@ -128,63 +126,41 @@ public class CmsCacheWrapperManager extends AbstractService
 		}
 	}
 	
-	private void releaseRelatedItems(Content content) {
-		this.getCacheManager().flushGroup(JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId());
-		this.getCacheManager().flushGroup(JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + content.getTypeCode());
-		this.getCacheManager().flushEntry(JacmsSystemConstants.CONTENT_CACHE_PREFIX + content.getId());
+	protected void releaseRelatedItems(Content content) {
+		this.getCacheInfoManager().flushGroup(JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId());
+		this.getCacheInfoManager().flushGroup(JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + content.getTypeCode());
+		this.getCacheInfoManager().flushEntry(JacmsSystemConstants.CONTENT_CACHE_PREFIX + content.getId());
 	}
 	
-	@Override
-	@Cacheable(value = ICacheManager.CACHE_NAME, key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)")
-	public Content getPublicContent(String id) throws ApsSystemException {
-		Content content = null;
-		try {
-			content = this.getContentManager().loadContent(id, true);
-			String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + content.getId();
-			String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + content.getTypeCode();
-			String[] groups = {contentCacheGroupId, typeCacheGroupId};
-			//this.getCacheManager().putInCache(cacheKey, content, groups);
-			//System.out.println("loaded from db " + id);
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getPublicContent");
-			throw new ApsSystemException("Error extracting content by id '" + id + "'", t);
+	public static String getContentCacheGroupsCsv(String contentId) {
+		StringBuilder builder = new StringBuilder();
+		if (null != contentId) {
+			String typeCode = contentId.substring(0, 3);
+			String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + contentId;
+			String typeCacheGroupId = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + typeCode;
+			builder.append(contentCacheGroupId).append(",").append(typeCacheGroupId);
 		}
-		return content;
+		return builder.toString();
 	}
 	
-	@Override
-	public void flushAll() {
-		this.getCacheManager().flushAll();
+	public static String getContentListCacheGroupsCsv(IContentListTagBean bean, RequestContext reqCtx) {
+		StringBuilder builder = new StringBuilder();
+		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
+		String pageCacheGroupName = SystemConstants.PAGES_CACHE_GROUP_PREFIX + page.getCode();
+		String contentTypeCacheGroupName = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + bean.getContentType();
+		builder.append(pageCacheGroupName).append(",").append(contentTypeCacheGroupName);
+		return builder.toString();
 	}
 	
-	@Override
-	public void flushEntry(String key) {
-		this.getCacheManager().flushEntry(key);
-	}
-	
-	@Override
-	public void flushGroup(String group) {
-		this.getCacheManager().flushGroup(group);
-	}
-	
-	@Override
-	public void putInCache(String key, Object obj) {
-		this.getCacheManager().putInCache(key, obj);
-	}
-	
-	@Override
-	public void putInCache(String key, Object obj, String[] groups) {
-		this.getCacheManager().putInCache(key, obj, groups);
-	}
-	
-	@Override
-	public Object getFromCache(String key) {
-		return this.getCacheManager().getFromCache(key);
-	}
-	
-	@Override
-	public Object getFromCache(String key, int myRefreshPeriod) {
-		return this.getCacheManager().getFromCache(key, myRefreshPeriod);
+	public static String getContentCacheGroupsToEvictCsv(String contentId) {
+		StringBuilder builder = new StringBuilder();
+		if (null != contentId) {
+			String typeCode = contentId.substring(0, 3);
+			String contentCacheGroupId = JacmsSystemConstants.CONTENT_CACHE_GROUP_PREFIX + contentId;
+			String typeCacheGroupId = JacmsSystemConstants.CONTENTS_ID_CACHE_GROUP_PREFIX + typeCode;
+			builder.append(contentCacheGroupId).append(",").append(typeCacheGroupId);
+		}
+		return builder.toString();
 	}
 	
 	protected IContentManager getContentManager() {
@@ -194,39 +170,14 @@ public class CmsCacheWrapperManager extends AbstractService
 		this._contentManager = contentManager;
 	}
 	
-	protected ICacheManager getCacheManager() {
-		return this._cacheManager;
+	protected ICacheInfoManager getCacheInfoManager() {
+		return _cacheInfoManager;
 	}
-	public void setCacheManager(ICacheManager cacheManager) {
-		this._cacheManager = cacheManager;
-	}
-	
-	protected ILangManager getLangManager() {
-		return _langManager;
-	}
-	public void setLangManager(ILangManager langManager) {
-		this._langManager = langManager;
+	public void setCacheInfoManager(ICacheInfoManager cacheInfoManager) {
+		this._cacheInfoManager = cacheInfoManager;
 	}
 	
-	protected IContentModelManager getContentModelManager() {
-		return _contentModelManager;
-	}
-	public void setContentModelManager(IContentModelManager contentModelManager) {
-		this._contentModelManager = contentModelManager;
-	}
-	/*
-	public SlowService getXxx() {
-		return xxx;
-	}
-	public void setXxx(SlowService xxx) {
-		this.xxx = xxx;
-	}
-	*/
 	private IContentManager _contentManager;
-	private ICacheManager _cacheManager;
-	private ILangManager _langManager;
-	private IContentModelManager _contentModelManager;
-	
-	//private SlowService xxx;
+	private ICacheInfoManager _cacheInfoManager;
 	
 }

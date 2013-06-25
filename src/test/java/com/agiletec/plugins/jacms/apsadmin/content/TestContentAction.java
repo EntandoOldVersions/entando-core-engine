@@ -601,7 +601,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		assertNull(onEdit.getId());
     	assertEquals(content.getTypeCode(), onEdit.getTypeCode());
     	assertEquals(content.getMainGroup(), onEdit.getMainGroup());
-    	assertTrue(onEdit.getDescr().indexOf(content.getDescr())>0);
+    	assertTrue(onEdit.getDescr().indexOf(content.getDescr())>-1);
 	}
 	
 	protected String executeCopyPaste(String contentId, boolean copyPublicVersion, String currentUserName) throws Throwable {

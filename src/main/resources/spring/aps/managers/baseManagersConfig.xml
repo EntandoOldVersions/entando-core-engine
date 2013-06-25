@@ -5,14 +5,17 @@
 		xmlns:jee="http://www.springframework.org/schema/jee"
 		xmlns:util="http://www.springframework.org/schema/util"
 		xmlns:cache="http://www.springframework.org/schema/cache"
-        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:p="http://www.springframework.org/schema/p" 
+		xmlns:aop="http://www.springframework.org/schema/aop" 
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd 
-			http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd">
+			http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd 
+			http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
 	
-	<cache:annotation-driven />
+	<cache:annotation-driven cache-manager="springCacheManager" />
+	<aop:aspectj-autoproxy proxy-target-class="true" />
 	
 	<bean id="NotifyManager" class="com.agiletec.aps.system.common.notify.NotifyManager" />
 	
@@ -97,16 +100,23 @@
 			parent="abstractService" >
 	</bean>
 	
-	<bean id="springEhCacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:config-location="${cacheConfigurationFilePath}"/>
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cache-manager-ref="springEhCacheManager"/>
+	<!-- SPRING OBJECT -->
+	<bean id="springCacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+		<property name="caches">
+			<set>
+				<bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="Entando_Cache"/>
+			</set>
+		</property>
+	</bean>
 	
-	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.EhCacheManager" 
+	<!--deprecated -->
+	<bean id="CacheManager" class="com.agiletec.aps.system.services.cache.OldCacheManager" 
+			parent="CacheInfoManager" >
+	</bean>
+	
+	<bean id="CacheInfoManager" class="org.entando.entando.aps.system.services.cache.CacheInfoManager" 
 			parent="abstractService" >
-		<property name="cacheManager" ref="cacheManager" />
-		<!--
-		<property name="cacheConfigurationFilePath" ><value>${cacheConfigurationFilePath}</value></property>
-		<property name="cacheDiskRootFolder"><jee:jndi-lookup jndi-name="java:comp/env/cacheDiskRootFolder" /></property>
-		-->
+		<property name="springCacheManager" ref="springCacheManager" />
 	</bean>
 	
 	<bean id="LangManager" class="com.agiletec.aps.system.services.lang.LangManager" 

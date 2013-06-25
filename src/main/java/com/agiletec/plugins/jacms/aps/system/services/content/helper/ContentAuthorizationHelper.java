@@ -29,7 +29,9 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Return informations of content authorization
@@ -48,13 +50,17 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	}
 	
 	@Override
-	public boolean isAuth(UserDetails user, ContentAuthorizationInfo info) throws ApsSystemException {
+	public boolean isAuth(UserDetails user, PublicContentAuthorizationInfo info) throws ApsSystemException {
 		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(user);
 		return info.isUserAllowed(userGroups);
 	}
 	
 	@Override
 	public boolean isAuth(UserDetails user, String contentId, boolean publicVersion) throws ApsSystemException {
+		if (publicVersion) {
+			PublicContentAuthorizationInfo authorizationInfo = this.getAuthorizationInfo(contentId);
+			return this.isAuth(user, authorizationInfo);
+		}
 		Content content = this.getContentManager().loadContent(contentId, publicVersion);
 		return this.isAuth(user, content);
 	}
@@ -96,7 +102,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	}
 	
 	@Override
-	public boolean isAuthToEdit(UserDetails user, ContentAuthorizationInfo info) throws ApsSystemException {
+	public boolean isAuthToEdit(UserDetails user, PublicContentAuthorizationInfo info) throws ApsSystemException {
 		String mainGroupName = info.getMainGroup();
 		return this.isAuthToEdit(user, mainGroupName);
 	}
@@ -114,6 +120,21 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	public boolean isAuthToEdit(UserDetails user, String contentId, boolean publicVersion) throws ApsSystemException {
 		Content content = this.getContentManager().loadContent(contentId, publicVersion);
 		return this.isAuth(user, content);
+	}
+	
+	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_AUTH_INFO_CACHE_PREFIX.concat(#contentId)")
+	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#contentId)")
+	public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId) {
+		PublicContentAuthorizationInfo authInfo = null;
+		try {
+			Content content = this.getContentManager().loadContent(contentId, true);
+			authInfo = new PublicContentAuthorizationInfo(content);
+		} catch (Throwable t) {
+			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "getAuthorizationInfo", t);
+		}
+		return authInfo;
 	}
 	
 	protected IContentManager getContentManager() {

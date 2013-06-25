@@ -41,7 +41,6 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 
-import com.agiletec.plugins.jacms.aps.system.services.cache.ICmsCacheWrapperManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper;
@@ -183,11 +182,11 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         }
         return render;
     }
-
+	
     protected Content getPublicContent(String id) throws ApiException, Throwable {
         Content content = null;
         try {
-            content = this.getCmsCacheWrapperManager().getPublicContent(id);
+			content = this.getContentManager().loadContent(id, true);
             if (null == content) {
                 throw new ApiException(IApiErrorCodes.API_PARAMETER_VALIDATION_ERROR, "Null content by id '" + id + "'", Response.Status.CONFLICT);
             }
@@ -458,14 +457,14 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     public void setContentAuthorizationHelper(IContentAuthorizationHelper contentAuthorizationHelper) {
         this._contentAuthorizationHelper = contentAuthorizationHelper;
     }
-
+	/*
     protected ICmsCacheWrapperManager getCmsCacheWrapperManager() {
         return _cmsCacheWrapperManager;
     }
     public void setCmsCacheWrapperManager(ICmsCacheWrapperManager cmsCacheWrapperManager) {
         this._cmsCacheWrapperManager = cmsCacheWrapperManager;
     }
-
+	*/
     protected IContentDispenser getContentDispenser() {
         return _contentDispenser;
     }
@@ -508,7 +507,7 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
     private IPageManager _pageManager;
     private IResourceManager _resourceManager;
     private IContentAuthorizationHelper _contentAuthorizationHelper;
-    private ICmsCacheWrapperManager _cmsCacheWrapperManager;
+    //private ICmsCacheWrapperManager _cmsCacheWrapperManager;
     private IContentDispenser _contentDispenser;
     private String _itemsStartElement = "<ul>";
     private String _itemStartElement = "<li>";

@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.helper;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 
 /**
  * Return informations of content authorization
@@ -54,7 +53,7 @@ public interface IContentAuthorizationHelper {
 	 * @return True if the given user can view the content.
 	 * @throws ApsSystemException In case of error
 	 */
-	public boolean isAuth(UserDetails user, ContentAuthorizationInfo info) throws ApsSystemException;
+	public boolean isAuth(UserDetails user, PublicContentAuthorizationInfo info) throws ApsSystemException;
 	
 	/**
 	 * Return true if the given user can edit the given content.
@@ -82,6 +81,13 @@ public interface IContentAuthorizationHelper {
 	 * @return True if the given user can edit the content.
 	 * @throws ApsSystemException In case of error
 	 */
-	public boolean isAuthToEdit(UserDetails user, ContentAuthorizationInfo info) throws ApsSystemException;
+	public boolean isAuthToEdit(UserDetails user, PublicContentAuthorizationInfo info) throws ApsSystemException;
+	
+	/**
+	 * Return the object that contains the authorization info of the content.
+	 * @param contentId The content that extract the info.
+	 * @return The authorization info.
+	 */
+	public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId);
 	
 }

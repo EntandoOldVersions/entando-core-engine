@@ -36,13 +36,6 @@ public interface IContentDispenser {
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx);
 	
 	/**
-	 * Return the object that contains the authorization info of the content.
-	 * @param contentId The content that extract the info.
-	 * @return The authorization info.
-	 */
-	public ContentAuthorizationInfo getAuthorizationInfo(String contentId);
-	
-	/**
 	 * Return the object that contains the renderization info of the content.
 	 * @param contentId The content id.
 	 * @param modelId The velocity model id.

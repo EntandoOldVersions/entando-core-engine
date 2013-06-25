@@ -41,10 +41,14 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Classe helper per la showlet di erogazione contenuti in lista.
@@ -93,35 +97,26 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	}
 	
 	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
+			condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).isUserFilterExecuted(#bean)")
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
+			beforeInvocation = true, 
+			condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx))")
+	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
 	public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
 		List<String> contentsId = null;
 		try {
-			List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
-			UserFilterOptionBean fullTextUserFilter = null;
-			boolean isUserFilterExecuted = false;
-			if (null != userFilterOptions) {
-				for (int i = 0; i < userFilterOptions.size(); i++) {
-					UserFilterOptionBean userFilter = userFilterOptions.get(i);
-					if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
-						if (userFilter.isAttributeFilter() || 
-								(!userFilter.isAttributeFilter() 
-										&& !userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT))) {
-							//if executed full-text search filter... it's not important here
-							isUserFilterExecuted = true;
-						} else if (!userFilter.isAttributeFilter() 
-										&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
-							fullTextUserFilter = userFilter;
-						}
-					}
-				}
-			}
-			if (!isUserFilterExecuted && bean.isCacheable()) {
-				contentsId = this.searchInCache(bean.getListName(), reqCtx);
-			}
-			if (null == contentsId) {
-				contentsId = this.extractContentsId(bean, userFilterOptions, reqCtx, isUserFilterExecuted);
-			}
-			contentsId = this.executeFullTextSearch(reqCtx, contentsId, fullTextUserFilter);
+			//List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
+			//UserFilterOptionBean fullTextUserFilter = null;
+			//if (!isUserFilterExecuted && bean.isCacheable()) {
+			//contentsId = this.searchInCache(bean.getListName(), reqCtx);
+			//}
+			//if (null == contentsId) {
+			contentsId = this.extractContentsId(bean, reqCtx/*, isUserFilterExecuted*/);
+			//}
+			contentsId = this.executeFullTextSearch(bean, contentsId, reqCtx);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
@@ -129,10 +124,24 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return contentsId;
 	}
 	
+	public static boolean isUserFilterExecuted(IContentListTagBean bean) {
+		if (null == bean || null == bean.getUserFilterOptions() || bean.getUserFilterOptions().isEmpty()) {
+			return false;
+		}
+		for (int i = 0; i < bean.getUserFilterOptions().size(); i++) {
+			UserFilterOptionBean userFilter = bean.getUserFilterOptions().get(i);
+			if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	protected List<String> extractContentsId(IContentListTagBean bean, 
-			List<UserFilterOptionBean> userFilters, RequestContext reqCtx, boolean isUserFilterExecuted) throws ApsSystemException {
+			RequestContext reqCtx/*, boolean isUserFilterExecuted*/) throws ApsSystemException {
 		List<String> contentsId = null;
 		try {
+			List<UserFilterOptionBean> userFilters = bean.getUserFilterOptions();
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			ApsProperties config = showlet.getConfig();
 			if (null == bean.getContentType() && null != config) {
@@ -159,10 +168,12 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			boolean orCategoryFilterClause = this.extractOrCategoryFilterClause(config);
 			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), 
                                 categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
+			/*
 			if (!isUserFilterExecuted && bean.isCacheable()) {
-				String cacheKey = this.buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
+				String cacheKey = buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
 				this.putListInCache(bean.getContentType(), reqCtx, contentsId, cacheKey);
 			}
+			*/
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "extractContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
@@ -181,8 +192,28 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return Boolean.parseBoolean(param);
 	}
 	
-	protected List<String> executeFullTextSearch(RequestContext reqCtx, 
-			List<String> masterContentsId, UserFilterOptionBean fullTextUserFilter) throws ApsSystemException {
+	protected List<String> executeFullTextSearch(IContentListTagBean bean, List<String> masterContentsId, RequestContext reqCtx 
+			/*, UserFilterOptionBean fullTextUserFilter*/) throws ApsSystemException {
+		//boolean isUserFilterExecuted = false;
+		UserFilterOptionBean fullTextUserFilter = null;
+		List<UserFilterOptionBean> userFilterOptions = bean.getUserFilterOptions();
+		if (null != userFilterOptions) {
+			for (int i = 0; i < userFilterOptions.size(); i++) {
+				UserFilterOptionBean userFilter = userFilterOptions.get(i);
+				if (null != userFilter.getFormFieldValues() && userFilter.getFormFieldValues().size() > 0) {
+					//if (userFilter.isAttributeFilter() || 
+					//		(!userFilter.isAttributeFilter() 
+									//&& !userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT))) {
+						//if executed full-text search filter... it's not important here
+						//isUserFilterExecuted = true;
+					//} else 
+					if (!userFilter.isAttributeFilter() 
+									&& userFilter.getKey().equals(UserFilterOptionBean.KEY_FULLTEXT)) {
+						fullTextUserFilter = userFilter;
+					}
+				}
+			}
+		}
 		if (fullTextUserFilter != null && null != fullTextUserFilter.getFormFieldValues()) {
 			String word = fullTextUserFilter.getFormFieldValues().get(fullTextUserFilter.getFormFieldNames()[0]);
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
@@ -247,7 +278,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	protected List<String> getContentsId(IContentListTagBean bean, String[] categories, RequestContext reqCtx) throws Throwable {
 		return this.getContentsId(bean, reqCtx);
 	}
-	
+	/*
 	protected void putListInCache(String contentType, RequestContext reqCtx, List<String> contentsId, String cacheKey) {
 		if (this.getCacheManager() != null && contentsId != null) {
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
@@ -257,24 +288,31 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			this.getCacheManager().putInCache(cacheKey, contentsId, groups);
 		}
 	}
-	
+	*/
 	protected Collection<String> getAllowedGroups(RequestContext reqCtx) {
 		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-		return super.getAllowedGroups(currentUser);
+		return getAllowedGroupCodes(currentUser);//super.getAllowedGroups(currentUser);
 	}
-	
+	/*
 	@Override
 	public List<String> searchInCache(String listName, RequestContext reqCtx) throws Throwable {
 		Collection<String> userGroupCodes = this.getAllowedGroups(reqCtx);
-		String cacheKey = this.buildCacheKey(listName, userGroupCodes, reqCtx);
+		String cacheKey = buildCacheKey(listName, userGroupCodes, reqCtx);
 		Object object = this.getCacheManager().getFromCache(cacheKey, 1800);//refresh ogni 30min
 		if (null != object && (object instanceof List)) {
 			return (List) object;
 		}
 		return null;
 	}
+	*/
 	
-	protected String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
+	public static String buildCacheKey(IContentListTagBean bean, RequestContext reqCtx) {
+		UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+		Collection<String> userGroupCodes = getAllowedGroupCodes(currentUser);
+		return buildCacheKey(bean.getListName(), userGroupCodes, reqCtx);
+	}
+	
+	protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
 		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 		StringBuilder cacheKey = new StringBuilder(page.getCode());
 		Showlet currentShowlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);

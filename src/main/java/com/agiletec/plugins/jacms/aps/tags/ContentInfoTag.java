@@ -32,8 +32,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
-import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentAuthorizationInfo;
 
 /**
  * Return an information of a specified content.
@@ -58,8 +58,8 @@ public class ContentInfoTag extends OutSupport {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			IContentViewerHelper helper = (IContentViewerHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_VIEWER_HELPER, this.pageContext);
-			ContentAuthorizationInfo authInfo = helper.getAuthorizationInfo(this.getContentId(), reqCtx);
+			IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
+			PublicContentAuthorizationInfo authInfo = contentAuthHelper.getAuthorizationInfo(this.getContentId());
 			if (null == authInfo) {
 				return super.doStartTag();
 			}
@@ -74,7 +74,6 @@ public class ContentInfoTag extends OutSupport {
 				} else if ("mainGroup".equals(this.getParam())) {
 					value = authInfo.getMainGroup();
 				} else if ("authToEdit".equals(this.getParam())) {
-					IContentAuthorizationHelper contentAuthHelper = (IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
 					HttpSession session = this.pageContext.getSession();
 					UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 					boolean isAuth = contentAuthHelper.isAuthToEdit(currentUser, authInfo);
@@ -96,7 +95,7 @@ public class ContentInfoTag extends OutSupport {
 		return super.doStartTag();
 	}
 	
-	private Object extractModelId(ContentAuthorizationInfo authInfo, RequestContext reqCtx) {
+	private Object extractModelId(PublicContentAuthorizationInfo authInfo, RequestContext reqCtx) {
 		Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
         ApsProperties showletConfig = showlet.getConfig();
 		String modelId = (String) showletConfig.get("modelId");
