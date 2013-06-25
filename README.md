@@ -62,6 +62,13 @@ CREATE TABLE jpwebdynamicform_attroles
 );
 -- for "Web Dynamic Form" plugin - End
 
+
+-- for "jpsurvey" plugin - Start
+ALTER TABLE jpsurvey ADD COLUMN checkusername smallint;
+update jpsurvey SET checkusername = 0;
+ALTER TABLE jpsurvey ALTER COLUMN checkusername SET NOT NULL;
+-- for "jpsurvey" plugin - End
+
 ```
 
 
