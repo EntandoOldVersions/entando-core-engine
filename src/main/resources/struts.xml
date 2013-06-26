@@ -5,6 +5,10 @@
 
 <struts>
     
+	<bean type="org.apache.struts2.dispatcher.StaticContentLoader" 
+		  class="com.agiletec.apsadmin.system.dispatcher.EntandoStaticContentLoader" name="entandoStaticContentLoader" />
+	
+	<constant name="struts.staticContentLoader" value="entandoStaticContentLoader" />
 	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
 	<constant name="struts.devMode" value="false" />
     
