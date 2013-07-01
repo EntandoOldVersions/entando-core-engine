@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -26,10 +25,12 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.apsadmin.portal.IPageTreeAction;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.ITreeAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
 import com.opensymphony.xwork2.Action;
 
@@ -39,8 +40,8 @@ import com.opensymphony.xwork2.Action;
 public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	
 	public void testConfigPageLink_1() throws Throwable {
-		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "configPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "configPageLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
@@ -53,8 +54,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 
 	public void testConfigPageLink_2() throws Throwable {
-		this.initJoinLinkTest("admin", "ART102", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "configPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART102", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "configPageLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
@@ -67,8 +68,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testOpenPageNode_1() throws Throwable {
-		this.initJoinLinkTest("admin", "ART102", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "openCloseTreeOnConfigPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART102", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "openCloseTreeOnConfigPageLink", contentOnSessionMarker);
 		this.addParameter("treeNodeActionMarkerCode", ITreeAction.ACTION_MARKER_OPEN);
 		this.addParameter("targetNode", "homepage");
 		String result = this.executeAction();
@@ -77,8 +78,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testOpenPageNode_2() throws Throwable {
-		this.initJoinLinkTest("editorCustomers", "ART102", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "openCloseTreeOnConfigPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("editorCustomers", "ART102", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "openCloseTreeOnConfigPageLink", contentOnSessionMarker);
 		this.addParameter("treeNodeActionMarkerCode", ITreeAction.ACTION_MARKER_OPEN);
 		this.addParameter("targetNode", "homepage");
 		String result = this.executeAction();
@@ -97,8 +98,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureJoinPageLink_1() throws Throwable {
-		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "joinPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "joinPageLink", contentOnSessionMarker);
 		this.addParameter("linkType", String.valueOf(SymbolicLink.PAGE_TYPE));
 		String result = this.executeAction();
 		assertEquals(Action.INPUT, result);
@@ -109,8 +110,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureJoinPageLink_2() throws Throwable {
-		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "joinPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "joinPageLink", contentOnSessionMarker);
 		this.addParameter("linkType", String.valueOf(SymbolicLink.PAGE_TYPE));
 		this.addParameter("selectedNode", "");
 		String result = this.executeAction();
@@ -122,8 +123,8 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureJoinPageLink_3() throws Throwable {
-		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "joinPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "joinPageLink", contentOnSessionMarker);
 		this.addParameter("linkType", String.valueOf(SymbolicLink.PAGE_TYPE));
 		this.addParameter("selectedNode", "wrongPageCode");
 		String result = this.executeAction();
@@ -135,25 +136,28 @@ public class TestPageLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testJoinPageLink_1() throws Throwable {
-		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
-		this.initAction("/do/jacms/Content/Link", "joinPageLink");
+		String contentOnSessionMarker = this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
+		this.initContentAction("/do/jacms/Content/Link", "joinPageLink", contentOnSessionMarker);
 		this.addParameter("linkType", String.valueOf(SymbolicLink.PAGE_TYPE));
 		this.addParameter("selectedNode", "pagina_11");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		Content content = this.getContentOnEdit();
+		Content content = this.getContentOnEdit(contentOnSessionMarker);
 		LinkAttribute attribute = (LinkAttribute) content.getAttribute("VediAnche");
 		SymbolicLink symbolicLink = attribute.getSymbolicLink();
 		assertNotNull(symbolicLink);
 		assertEquals("pagina_11", symbolicLink.getPageDest());
 	}
 	
-	private void initJoinLinkTest(String username, String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
+	private String initJoinLinkTest(String username, String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
+		Content content = this.getContentManager().loadContent(contentId, false);
 		this.executeEdit(contentId, username);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, simpleLinkAttributeName);
 		session.setAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM, langCode);
+		return contentOnSessionMarker;
 	}
 	
 }

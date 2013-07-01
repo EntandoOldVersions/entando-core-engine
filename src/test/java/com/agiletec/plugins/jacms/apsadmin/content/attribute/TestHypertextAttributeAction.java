@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -23,6 +22,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
 
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.apsadmin.portal.IPageTreeAction;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.ITreeAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.hypertext.ContentLinkAttributeAction;
 import com.opensymphony.xwork2.Action;
@@ -34,6 +34,7 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 	
 	public void testFindContent_1() throws Throwable {
 		this.initIntroContentLink("admin", "ART1");//Contenuto del gruppo Free
+		
 		
 		ContentLinkAttributeAction action = (ContentLinkAttributeAction) this.getAction();
 		List<String> contentIds = action.getContents();
@@ -76,7 +77,8 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 	
 	private void initIntroContentLink(String username, String contentId) throws Throwable {
 		this.executeEdit(contentId, username);
-		this.initAction("/do/jacms/Content/Hypertext", "introContentLink");
+		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
+		this.initContentAction("/do/jacms/Content/Hypertext", "introContentLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
@@ -129,17 +131,19 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 	}
 	
 	//http://localhost:8080/PortalExample/do/jacms/Content/Hypertext/configInternalLink.action?internalActionName=openTreeOnPageLink&activeTab=1&targetNode=homepage&
-
+	
 	private void initIntroPageLink(String username, String contentId) throws Throwable {
 		this.executeEdit(contentId, username);
-		this.initAction("/do/jacms/Content/Hypertext", "introPageLink");
+		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
+		this.initContentAction("/do/jacms/Content/Hypertext", "introPageLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
 	
 	private void openTree(String username, String contentId, String nodeToOpen) throws Throwable {
 		this.executeEdit(contentId, username);
-		this.initAction("/do/jacms/Content/Hypertext", "introPageLink");
+		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
+		this.initContentAction("/do/jacms/Content/Hypertext", "introPageLink", contentOnSessionMarker);
 		this.addParameter("treeNodeActionMarkerCode", ITreeAction.ACTION_MARKER_OPEN);
 		this.addParameter("targetNode", nodeToOpen);
 		String result = this.executeAction();

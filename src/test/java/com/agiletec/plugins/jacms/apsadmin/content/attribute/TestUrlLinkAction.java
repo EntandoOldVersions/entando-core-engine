@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -17,6 +16,7 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +27,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
 import com.opensymphony.xwork2.Action;
 
@@ -36,9 +37,9 @@ import com.opensymphony.xwork2.Action;
 public class TestUrlLinkAction extends AbstractBaseTestContentAction {
 	
 	public void testFailureJoinContentLink_1() throws Throwable {
-		this.initJoinLinkTest("ART1", "VediAnche", "it");
+		String contentOnSessionMarker = this.initJoinLinkTest("ART1", "VediAnche", "it");
 		
-		this.initAction("/do/jacms/Content/Link", "joinUrlLink");
+		this.initContentAction("/do/jacms/Content/Link", "joinUrlLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.INPUT, result);
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
@@ -48,14 +49,14 @@ public class TestUrlLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testJoinContentLink_1() throws Throwable {
-		this.initJoinLinkTest("ART1", "VediAnche", "it");
+		String contentOnSessionMarker = this.initJoinLinkTest("ART1", "VediAnche", "it");
 		
-		this.initAction("/do/jacms/Content/Link", "joinUrlLink");
+		this.initContentAction("/do/jacms/Content/Link", "joinUrlLink", contentOnSessionMarker);
 		this.addParameter("url", "http://www.japsportal.org");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		Content content = this.getContentOnEdit();
+		Content content = this.getContentOnEdit(contentOnSessionMarker);
 		LinkAttribute attribute = (LinkAttribute) content.getAttribute("VediAnche");
 		SymbolicLink symbolicLink = attribute.getSymbolicLink();
 		assertNotNull(symbolicLink);
@@ -64,12 +65,15 @@ public class TestUrlLinkAction extends AbstractBaseTestContentAction {
 		assertEquals("http://www.japsportal.org", symbolicLink.getUrlDest());
 	}
 	
-	private void initJoinLinkTest(String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
+	private String initJoinLinkTest(String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
+		Content content = this.getContentManager().loadContent(contentId, false);
 		this.executeEdit(contentId, "admin");
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, simpleLinkAttributeName);
 		session.setAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM, langCode);
+		return contentOnSessionMarker;
 	}
 	
 }

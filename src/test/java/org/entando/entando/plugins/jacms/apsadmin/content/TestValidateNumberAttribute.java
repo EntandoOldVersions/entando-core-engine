@@ -32,17 +32,18 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface numberAttribute = (AttributeInterface) content.getAttribute("Number");
 			String formFieldName = tracer.getFormFieldName(numberAttribute);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "41");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -54,22 +55,23 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_2() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Number2");
 			String formFieldName = tracer.getFormFieldName(dateAttribute);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "1011");//validation: end range 300
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "25");//validation: end start 50
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "250");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -81,7 +83,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonoListElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLNumb");
 			AttributeInterface attribute = monolist.addAttribute();
@@ -93,16 +96,16 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("MonoLNumb_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "98");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -112,11 +115,11 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
 			assertEquals("MonoLNumb_1", formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.addParameter(formFieldName2, "71");
 			this.checkFieldErrors(1, formFieldName2);
@@ -129,7 +132,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_ListElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			ListAttribute list = (ListAttribute) content.getAttribute("ListNumber");
 			AttributeInterface attributeIT = list.addAttribute("it");
@@ -147,16 +151,16 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			tracerEN.setLang(this.getLangManager().getLang("en"));
 			tracerEN.setListLang(this.getLangManager().getLang("en"));
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "wrongNumber");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "27");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -166,11 +170,11 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
 			assertEquals("it_ListNumber_1", formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "26");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -179,11 +183,11 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
 			assertEquals("en_ListNumber_0", formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldEnName, "57");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldEnName);
@@ -196,7 +200,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_CompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
 			AttributeInterface attribute = compositeAttribute.getAttribute("Number");
@@ -207,11 +212,11 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("Composite_Number", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongNumberValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
@@ -219,17 +224,17 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			//OGNL VALIDATION - evalOnValuedAttribute="true"
 			//#entity.getAttribute(''Number'').value == null || (#entity.getAttribute(''Number'').value != null && value > #entity.getAttribute(''Number'').value)
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "58");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Number", "100");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "101");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -242,7 +247,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
@@ -260,31 +266,31 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
 			assertEquals("MonoLCom_0", monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongNumberValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10");//validation: start range 25
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "50");//validation: start range 25
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Number", "40");//validation: end range attribute "Number"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "35");//validation: end range attribute "Number"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);

@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -31,12 +30,13 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface monotext = (AttributeInterface) content.getAttribute("Text");
 			String formFieldName = tracer.getFormFieldName(monotext);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "monotextValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -48,33 +48,34 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_2() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface textAttribute = (AttributeInterface) content.getAttribute("Text2");
 			//Mail attribute (required, min=15, max=30, regex=**mailFormat**)
 			String formFieldName = tracer.getFormFieldName(textAttribute);
 			assertEquals("it_Text2", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "invalidText2Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "ii@22.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccddeeffgghh112233@iillmmnnooppqq334455.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccdd@eeffgghhii.com");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -87,7 +88,8 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_3() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			tracer.setLang(this.getLangManager().getLang("en"));//NO DEFAULT LANG
 			AttributeInterface textAttribute = (AttributeInterface) content.getAttribute("Text2");
@@ -95,26 +97,26 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(textAttribute);
 			assertEquals("en_Text2", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "invalidText2Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "ii@22.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccddeeffgghh112233@iillmmnnooppqq334455.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccdd@eeffgghhii.com");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -127,7 +129,8 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonoListElement_1() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolistAttribute = (MonoListAttribute) content.getAttribute("MonoLText");
 			AttributeInterface textAttribute = monolistAttribute.addAttribute();
@@ -143,11 +146,11 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(textAttribute);
 			assertEquals("it_MonoLText_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "MonoLMonotElement0Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -159,7 +162,7 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String monolistElementName2 = tracer.getMonolistElementFieldName(attribute2);
 			assertEquals("MonoLText_1", monolistElementName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName2);
 		} catch (Throwable t) {
@@ -170,7 +173,8 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonoListElement_2() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			MonoListAttribute monolistAttribute = (MonoListAttribute) content.getAttribute("MonoLText");
 			AttributeInterface textAttribute = monolistAttribute.addAttribute();
@@ -192,16 +196,16 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String formENFieldName = tracerEN.getFormFieldName(textAttribute);
 			assertEquals("en_MonoLText_0", formENFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formENFieldName, "MonoLMonotElement0ValueEN");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formENFieldName, "MonoLMonotElement0ValueEN");
 			this.addParameter(formITFieldName, "MonoLMonotElement0ValueIT");
 			this.executeAction(Action.INPUT);
@@ -217,12 +221,12 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String monolistElementName2 = tracerIT.getMonolistElementFieldName(attribute2);
 			assertEquals("MonoLText_1", monolistElementName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formENFieldName2, "MonoLMonotElement1ValueEN");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formENFieldName2, "MonoLMonotElement1ValueEN");
 			this.addParameter(formITFieldName2, "MonoLMonotElement1ValueIT");
 			this.executeAction(Action.INPUT);
@@ -236,7 +240,8 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_CompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
 			AttributeInterface attribute = compositeAttribute.getAttribute("Text");
@@ -252,16 +257,16 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String formENFieldName = tracerEN.getFormFieldName(attribute);
 			assertEquals("en_Composite_Text", formENFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formITFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "itValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formITFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "");
 			this.addParameter(formENFieldName, "enValue");
 			this.executeAction(Action.INPUT);
@@ -275,7 +280,8 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
@@ -298,22 +304,22 @@ public class TestValidateTextAttribute extends AbstractTestContentAttribute {
 			String monolistElementName = tracerIT.getMonolistElementFieldName(compositeElement);
 			assertEquals("MonoLCom_0", monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "itValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formITFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "");
 			this.addParameter(formENFieldName, "enValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "itValue");
 			this.addParameter(formENFieldName, "enValue");
 			this.executeAction(Action.INPUT);

@@ -44,21 +44,22 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 	
 	protected void validateSingle(String attributeName) throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface booleanAttribute = (AttributeInterface) content.getAttribute(attributeName);
 			String formFieldName = tracer.getFormFieldName(booleanAttribute);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "false");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -83,7 +84,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 	
 	protected void validateMonolistElement(String monolistAttributeName) throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute(monolistAttributeName);
 			AttributeInterface attribute = monolist.addAttribute();
@@ -95,16 +97,16 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals(monolistAttributeName + "_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "false");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -114,7 +116,7 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
 			assertEquals(monolistAttributeName + "_1", formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName2);
 			
@@ -138,7 +140,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 	
 	protected void validateListElement(String listAttributeName) throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			ListAttribute list = (ListAttribute) content.getAttribute(listAttributeName);
 			AttributeInterface attributeIT = list.addAttribute("it");
@@ -156,16 +159,16 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			tracerEN.setLang(this.getLangManager().getLang("en"));
 			tracerEN.setListLang(this.getLangManager().getLang("en"));
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "false");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -175,11 +178,11 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
 			assertEquals("it_"+ listAttributeName + "_1", formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -188,11 +191,11 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
 			assertEquals("en_"+ listAttributeName + "_0", formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldEnName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldEnName);
@@ -217,7 +220,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 	
 	protected void validateCompositeElement(String compositeAttributeName, String attributeName) throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute(compositeAttributeName);
 			AttributeInterface attribute = compositeAttribute.getAttribute(attributeName);
@@ -228,16 +232,16 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals(compositeAttributeName + "_" + attributeName, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "false");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -262,7 +266,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 	
 	protected void validateMonolistCompositeElement(String monolistAttributeName, String attributeName) throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute(monolistAttributeName);
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
@@ -280,16 +285,16 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
 			assertEquals(monolistAttributeName + "_0", monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "true");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "false");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);

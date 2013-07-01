@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -61,7 +60,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testPreviewContent() throws Throwable {
-		String contentId = "EVN191";
+		String contentId = "EVN192";
 		Content contentForTest = this.getContentManager().loadContent(contentId, true);
 		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
 		

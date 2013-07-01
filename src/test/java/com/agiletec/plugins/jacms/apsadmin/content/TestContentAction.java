@@ -587,6 +587,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testRedirectFindImageResource() throws Throwable {
 		String contentId = "ART1";
+		this.executeEdit(contentId, "admin");
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.initContentAction("/do/jacms/Content", "chooseResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
@@ -624,9 +625,9 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	private void executeSuccessfulCopyPaste(String contentId, boolean publicVersion, String currentUserName) throws Throwable {
 		Content content = this.getContentManager().loadContent(contentId, publicVersion);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.PASTE);
 		String result = this.executeCopyPaste(contentId, publicVersion, currentUserName);
 		assertEquals(Action.SUCCESS, result);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.PASTE);
 		Content onEdit = this.getContentOnEdit(contentOnSessionMarker);
 		assertNull(onEdit.getId());
     	assertEquals(content.getTypeCode(), onEdit.getTypeCode());

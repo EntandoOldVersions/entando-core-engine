@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -24,8 +23,11 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.entity.attribute.action.list.IListAttributeAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
+
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -34,13 +36,13 @@ import com.opensymphony.xwork2.Action;
 public class TestListAttributeAction extends AbstractBaseTestContentAction {
 	
 	public void testAddListElement() throws Throwable {
-		this.initContent();
-		this.initAction("/do/jacms/Content", "addListElement");
+		String contentOnSessionMarker = this.initEditContent();
+		this.initContentAction("/do/jacms/Content", "addListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "Autori");
 		this.addParameter("listLangCode", "it");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		Content currentContent = this.getContentOnEdit();
+		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		MonoListAttribute monoListAttribute = (MonoListAttribute) currentContent.getAttribute("Autori");
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		String[] expected = {"Pippo", "Paperino", "Pluto", ""};
@@ -48,28 +50,28 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testMoveListElement() throws Throwable {
-		this.initContent();
-		this.initAction("/do/jacms/Content", "moveListElement");
+		String contentOnSessionMarker = this.initEditContent();
+		this.initContentAction("/do/jacms/Content", "moveListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "Autori");
 		this.addParameter("elementIndex", "1");
 		this.addParameter("listLangCode", "it");
 		this.addParameter("movement", IListAttributeAction.MOVEMENT_UP_CODE);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		Content currentContent = this.getContentOnEdit();
+		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		MonoListAttribute monoListAttribute = (MonoListAttribute) currentContent.getAttribute("Autori");
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		String[] expected = {"Paperino", "Pippo", "Pluto"};
 		this.verifyText(attributes, expected);
 		
-		this.initAction("/do/jacms/Content", "moveListElement");
+		this.initContentAction("/do/jacms/Content", "moveListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "Autori");
 		this.addParameter("elementIndex", "1");
 		this.addParameter("listLangCode", "it");
 		this.addParameter("movement", IListAttributeAction.MOVEMENT_DOWN_CODE);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		currentContent = this.getContentOnEdit();
+		currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		monoListAttribute = (MonoListAttribute) currentContent.getAttribute("Autori");
 		attributes = monoListAttribute.getAttributes();
 		String[] expected2 = {"Paperino", "Pluto", "Pippo"};
@@ -77,27 +79,31 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testRemoveListElement() throws Throwable {
-		this.initContent();
-		this.initAction("/do/jacms/Content", "removeListElement");
+		String contentOnSessionMarker = this.initEditContent();
+		this.initContentAction("/do/jacms/Content", "removeListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "Autori");
 		this.addParameter("elementIndex", "1");
 		this.addParameter("listLangCode", "it");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		Content currentContent = this.getContentOnEdit();
+		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		MonoListAttribute monoListAttribute = (MonoListAttribute) currentContent.getAttribute("Autori");
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		String[] expected = {"Pippo", "Pluto"};
 		this.verifyText(attributes, expected);
 	}
 	
-	private void initContent() throws Throwable {
-		this.executeEdit("ART1", "admin");
-		Content currentContent = this.getContentOnEdit();
+	private String initEditContent() throws Throwable {
+		String contentId = "ART1";
+		Content content = this.getContentManager().loadContent(contentId, false);
+		this.executeEdit(contentId, "admin");
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		MonoListAttribute monoListAttribute = (MonoListAttribute) currentContent.getAttribute("Autori");
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		String[] expected = {"Pippo", "Paperino", "Pluto"};
 		this.verifyText(attributes, expected);
+		return contentOnSessionMarker;
 	}
 	
 	private void verifyText(List<AttributeInterface> attributes, String[] expected) {

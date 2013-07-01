@@ -65,7 +65,7 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		if (operation == ApsAdminSystemConstants.ADD) {
 			content = this._contentManager.createContentType(param);
 		} else {
-			content = this._contentManager.loadContent(param, true);
+			content = this._contentManager.loadContent(param, false);
 		}
 		return AbstractContentAction.buildContentOnSessionMarker(content, operation);
 	}

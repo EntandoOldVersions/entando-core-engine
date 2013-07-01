@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -32,12 +31,13 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface monotext = (AttributeInterface) content.getAttribute("Monotext");
 			String formFieldName = tracer.getFormFieldName(monotext);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "monotextValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -49,32 +49,33 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_Single_2() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface monotext = (AttributeInterface) content.getAttribute("Monotext2");
 			//Mail attribute (required, min=15, max=30, regex=**mailFormat**)
 			String formFieldName = tracer.getFormFieldName(monotext);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "invalidMonotext2Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "ii@22.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccddeeffgghh112233@iillmmnnooppqq334455.it");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "aabbccdd@eeffgghhii.com");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -87,7 +88,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_MonoListElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLMonot");
 			AttributeInterface attribute = monolist.addAttribute();
@@ -101,11 +103,11 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("MonoLMonot_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "MonoLMonotElement0Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -115,7 +117,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
 			assertEquals("MonoLMonot_1", formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName2);
 		} catch (Throwable t) {
@@ -126,7 +128,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_ListElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			ListAttribute list = (ListAttribute) content.getAttribute("ListMonot");
 			AttributeInterface attribute = list.addAttribute("it");
@@ -142,11 +145,11 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("it_ListMonot_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "ListMonotElement0Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -156,7 +159,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			formFieldName = tracer.getFormFieldName(attribute2);
 			assertEquals("it_ListMonot_1", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
@@ -168,7 +171,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_CompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
 			AttributeInterface attribute = compositeAttribute.getAttribute("Monotext");
@@ -179,11 +183,11 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("Composite_Monotext", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "MonotextValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -195,7 +199,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 	
 	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
@@ -213,11 +218,11 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
 			assertEquals("MonoLCom_0", monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "MonotextValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);

@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -28,10 +27,10 @@ import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentA
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
-import java.sql.Array;
 
 /**
  * @author E.Santoboni
@@ -48,17 +47,18 @@ public abstract class AbstractTestContentAttribute extends AbstractBaseTestConte
 		return tracer;
 	}
 	
-	protected Content executeCreateNewContent() throws Throwable {
+	protected String executeCreateNewContent() throws Throwable {
 		String result = this.executeCreateNewVoid(TEST_CONTENT_TYPE_CODE, 
 				TEST_CONTENT_DESCRIPTION, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 		assertEquals(Action.SUCCESS, result);
-		Content contentOnSession = this.getContentOnEdit();
+		String contentOnSessionMarker = this.extractSessionMarker(TEST_CONTENT_TYPE_CODE, ApsAdminSystemConstants.ADD);
+		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
-		return contentOnSession;
+		return contentOnSessionMarker;
 	}
 	
-	protected void initSaveContentAction() throws Throwable {
-		this.initAction("/do/jacms/Content", "save");
+	protected void initSaveContentAction(String contentOnSessionMarker) throws Throwable {
+		this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 	}
 	
 	protected void executeAction(String expectedResult) throws Throwable {

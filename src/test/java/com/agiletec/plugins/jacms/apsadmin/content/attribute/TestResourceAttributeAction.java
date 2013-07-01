@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -17,19 +16,21 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
-import javax.servlet.http.HttpSession;
-
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.AttachAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ImageAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ResourceAttributeActionHelper;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
+
 import com.opensymphony.xwork2.Action;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @author E.Santoboni
@@ -37,8 +38,12 @@ import com.opensymphony.xwork2.Action;
 public class TestResourceAttributeAction extends AbstractBaseTestContentAction {
 	
 	public void testChooseImageResource() throws Throwable {
-		this.executeEdit("ART1", "admin");
-		this.initAction("/do/jacms/Content", "chooseResource");
+		String contentId = "ART1";
+		Content content = this.getContentManager().loadContent(contentId, false);
+		this.executeEdit(contentId, "admin");
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+		
+		this.initContentAction("/do/jacms/Content", "chooseResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
 		this.addParameter("resourceTypeCode", "Image");
 		this.addParameter("resourceLangCode", "it");
@@ -53,39 +58,42 @@ public class TestResourceAttributeAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testRemoveImageResource_1() throws Throwable {
-		this.initForImageRemovingTest();
+		String contentOnSessionMarker = this.initForImageRemovingTest();
 		
-		this.initAction("/do/jacms/Content", "removeResource");
+		this.initContentAction("/do/jacms/Content", "removeResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
 		this.addParameter("resourceTypeCode", "Image");
 		this.addParameter("resourceLangCode", "it");
 		assertEquals(Action.SUCCESS, this.executeAction());
 		
-		Content contentOnEdit = this.getContentOnEdit();
+		Content contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
 		ImageAttribute imageAttribute = (ImageAttribute) contentOnEdit.getAttribute("Foto");
 		assertNull(imageAttribute.getResource("it"));
 		assertNull(imageAttribute.getResource("en"));
 	}
 	
 	public void testRemoveImageResource_2() throws Throwable {
-		this.initForImageRemovingTest();
+		String contentOnSessionMarker = this.initForImageRemovingTest();
 		
-		this.initAction("/do/jacms/Content", "removeResource");
+		this.initContentAction("/do/jacms/Content", "removeResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
 		this.addParameter("resourceTypeCode", "Image");
 		this.addParameter("resourceLangCode", "en");
 		assertEquals(Action.SUCCESS, this.executeAction());
 		
-		Content contentOnEdit = this.getContentOnEdit();
+		Content contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
 		ImageAttribute imageAttribute = (ImageAttribute) contentOnEdit.getAttribute("Foto");
 		assertNotNull(imageAttribute.getResource("it"));
 		assertEquals("44", imageAttribute.getResource("it").getId());
 		assertNull(imageAttribute.getResource("en"));
 	}
-
-	private void initForImageRemovingTest() throws Throwable, ApsSystemException {
-		this.executeEdit("ART180", "admin");
-		Content contentOnEdit = this.getContentOnEdit();
+	
+	private String initForImageRemovingTest() throws Throwable, ApsSystemException {
+		String contentId = "ART180";
+		Content content = this.getContentManager().loadContent(contentId, false);
+		this.executeEdit(contentId, "admin");
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+		Content contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
 		ImageAttribute imageAttribute = (ImageAttribute) contentOnEdit.getAttribute("Foto");
 		assertEquals("44", imageAttribute.getResource("it").getId());
 		assertNull(imageAttribute.getResource("en"));
@@ -95,22 +103,27 @@ public class TestResourceAttributeAction extends AbstractBaseTestContentAction {
 		assertNotNull(res);
 		assertEquals("jAPS Team", res.getDescr());
 		imageAttribute.getResources().put("en", res);
+		return contentOnSessionMarker;
 	}
 	
 	public void testRemoveAttachResource() throws Throwable {
-		this.executeEdit("RAH1", "admin");
-		Content contentOnEdit = this.getContentOnEdit();
+		String contentId = "RAH1";
+		Content content = this.getContentManager().loadContent(contentId, false);
+		this.executeEdit(contentId, "admin");
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+		Content contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
+		
 		AttachAttribute attachAttribute = (AttachAttribute) contentOnEdit.getAttribute("Allegati");
 		assertEquals("7", attachAttribute.getResource("it").getId());
 		assertNull(attachAttribute.getResource("en"));
 		
-		this.initAction("/do/jacms/Content", "removeResource");
+		this.initContentAction("/do/jacms/Content", "removeResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Allegati");
 		this.addParameter("resourceTypeCode", "Attach");
 		this.addParameter("resourceLangCode", "it");
 		assertEquals(Action.SUCCESS, this.executeAction());
 		
-		contentOnEdit = this.getContentOnEdit();
+		contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
 		attachAttribute = (AttachAttribute) contentOnEdit.getAttribute("Allegati");
 		assertNull(attachAttribute.getResource("it"));
 		assertNull(attachAttribute.getResource("en"));

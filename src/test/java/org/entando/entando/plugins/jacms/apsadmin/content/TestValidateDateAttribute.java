@@ -32,17 +32,18 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_1() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Date");
 			String formFieldName = tracer.getFormFieldName(dateAttribute);
 
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "dateValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "25/07/2012");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -54,22 +55,23 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_Single_2() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface dateAttribute = (AttributeInterface) content.getAttribute("Date2");
 			String formFieldName = tracer.getFormFieldName(dateAttribute);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10/10/2011");//validation: end range 25/11/2010
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10/10/2009");//validation: end range 25/11/2010
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Date", "10/12/2009");//validation: start range attribute "Date"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
@@ -81,7 +83,8 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonolistElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLDate");
 			AttributeInterface attribute = monolist.addAttribute();
@@ -93,16 +96,16 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("MonoLDate_0", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "dateValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "11/07/1982");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
@@ -112,11 +115,11 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
 			assertEquals("MonoLDate_1", formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName2);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.addParameter(formFieldName2, "18/04/1971");
 			this.checkFieldErrors(1, formFieldName2);
@@ -129,7 +132,8 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_ListElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracerIT = this.getTracer();
 			ListAttribute list = (ListAttribute) content.getAttribute("ListDate");
 			AttributeInterface attributeIT = list.addAttribute("it");
@@ -147,16 +151,16 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			tracerEN.setLang(this.getLangManager().getLang("en"));
 			tracerEN.setListLang(this.getLangManager().getLang("en"));
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "ListDateElement0Value");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "26/11/2007");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -166,11 +170,11 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
 			assertEquals("it_ListDate_1", formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldItName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldItName, "26/11/2007");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldItName);
@@ -179,11 +183,11 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
 			assertEquals("en_ListDate_0", formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldEnName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldEnName, "06/07/1987");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldEnName);
@@ -196,7 +200,8 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_CompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
 			AttributeInterface attribute = compositeAttribute.getAttribute("Date");
@@ -207,26 +212,26 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			String formFieldName = tracer.getFormFieldName(attribute);
 			assertEquals("Composite_Date", formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongDateValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10/10/2011");//validation: end range 10/10/2010
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10/10/2008");//validation: end range 10/10/2010
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Date", "10/10/2009");//validation: start range attribute "Date"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
@@ -238,7 +243,8 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 	
 	public void testValidate_MonolistCompositeElement() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
@@ -256,26 +262,26 @@ public class TestValidateDateAttribute extends AbstractTestContentAttribute {
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
 			assertEquals("MonoLCom_0", monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, monolistElementName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "wrongDateValue");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "24/10/1961");//validation: start range 10/10/1971
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "10/10/2008");//validation: start range 10/10/1971
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(0, formFieldName);
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Date", "10/10/1999");//validation: end range attribute "Date"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);

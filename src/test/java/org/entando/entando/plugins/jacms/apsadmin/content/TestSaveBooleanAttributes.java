@@ -20,7 +20,9 @@ package org.entando.entando.plugins.jacms.apsadmin.content;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.CheckBoxAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ThreeStateAttribute;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -30,27 +32,31 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 	
 	public void testSaveBooleanAttribute() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			BooleanAttribute attribute = (BooleanAttribute) content.getAttribute("Boolean");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
-			content = this.executeSaveAndReloadContent();
+			this.initSaveContentAction(contentOnSessionMarker);
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (BooleanAttribute) content.getAttribute("Boolean");
 			assertNotNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Boolean", "false");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (BooleanAttribute) content.getAttribute("Boolean");
 			assertNotNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("Boolean", "true");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (BooleanAttribute) content.getAttribute("Boolean");
 			assertNotNull(attribute.getBooleanValue());
 			assertTrue(attribute.getValue());
@@ -64,27 +70,31 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 	
 	public void testSaveCheckBoxAttribute() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			CheckBoxAttribute attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
-			content = this.executeSaveAndReloadContent();
+			this.initSaveContentAction(contentOnSessionMarker);
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("CheckBox", "false");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("CheckBox", "true");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
 			assertNotNull(attribute.getBooleanValue());
 			assertTrue(attribute.getValue());
@@ -98,27 +108,31 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 	
 	public void testSaveThreeStateAttribute() throws Throwable {
 		try {
-			Content content = this.executeCreateNewContent();
+			String contentOnSessionMarker = this.executeCreateNewContent();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			ThreeStateAttribute attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
-			content = this.executeSaveAndReloadContent();
+			this.initSaveContentAction(contentOnSessionMarker);
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
 			assertNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("ThreeState", "false");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
 			assertNotNull(attribute.getBooleanValue());
 			assertFalse(attribute.getValue());
 			
-			this.initSaveContentAction();
+			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter("ThreeState", "true");
-			content = this.executeSaveAndReloadContent();
+			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
 			assertNotNull(attribute.getBooleanValue());
 			assertTrue(attribute.getValue());
@@ -130,14 +144,14 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 		}
 	}
 	
-	private Content executeSaveAndReloadContent() throws Throwable {
-		Content contentOnSession = super.getContentOnEdit();
+	private String executeSaveAndReloadContent(String contentOnSessionMarker) throws Throwable {
+		Content contentOnSession = super.getContentOnEdit(contentOnSessionMarker);
 		this.addParameter("MARKER", "MARKER");
 		this.executeAction(Action.SUCCESS);
 		String id = contentOnSession.getId();
 		String result = super.executeEdit(id, "admin");
 		assertEquals(Action.SUCCESS, result);
-		return super.getContentOnEdit();
+		return this.extractSessionMarker(id, ApsAdminSystemConstants.EDIT);
 	}
 	
 }
