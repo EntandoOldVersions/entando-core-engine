@@ -24,7 +24,10 @@ import com.agiletec.aps.tags.ExecShowletTag;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * This tag allows the preliminary execution of the showlet so to show the preview of the contents
@@ -36,7 +39,13 @@ public class ContentPreviewExecShowletTag extends ExecShowletTag {
 	
 	@Override
 	protected void includeShowlet(RequestContext reqCtx, Showlet showlet, List<IFrameDecoratorContainer> decorators) throws Throwable {
-		Content contentOnSession = (Content) reqCtx.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		HttpServletRequest request = reqCtx.getRequest();
+		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+			contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+		}
+		Content contentOnSession = (Content) request.getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 		if (contentOnSession!=null && showlet != null 
 				&& "viewerConfig".equals(showlet.getType().getAction())) {
 			IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);

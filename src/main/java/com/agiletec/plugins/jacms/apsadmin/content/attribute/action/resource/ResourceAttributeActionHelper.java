@@ -95,7 +95,7 @@ public class ResourceAttributeActionHelper {
 	}
 	
 	protected static String buildEntryContentAnchorDest(HttpSession session) {
-		StringBuffer buffer = new StringBuffer("contentedit_");
+		StringBuilder buffer = new StringBuilder("contentedit_");
 		buffer.append(session.getAttribute(ResourceAttributeActionHelper.RESOURCE_LANG_CODE_SESSION_PARAM));
 		buffer.append("_" + session.getAttribute(ResourceAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM));
 		return buffer.toString();
@@ -106,7 +106,12 @@ public class ResourceAttributeActionHelper {
 	 * @return Il contenuto in sesione.
 	 */
 	public static Content getContent(HttpServletRequest request) {
-		return (Content) request.getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+			contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+		}
+		return (Content) request.getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 	}
 	
 	public static void removeResource(HttpServletRequest request) {

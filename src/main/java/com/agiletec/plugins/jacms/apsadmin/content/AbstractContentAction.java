@@ -25,6 +25,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -70,7 +71,8 @@ public abstract class AbstractContentAction extends BaseAction {
 	 * @return Il contenuto in sesione.
 	 */
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	protected Content updateContentOnSession() {
@@ -124,6 +126,31 @@ public abstract class AbstractContentAction extends BaseAction {
 	 */
 	public List<Lang> getLangs() {
 		return this.getLangManager().getLangs();
+	}
+	
+	public static String buildContentOnSessionMarker(Content content, int operation) {
+		String marker = null;
+		switch (operation) {
+			case ApsAdminSystemConstants.ADD:
+				marker = content.getTypeCode() + "_newContent";
+				break;
+			case ApsAdminSystemConstants.EDIT:
+				marker = content.getTypeCode() + "_editContent_" + content.getId();
+				break;
+			case ApsAdminSystemConstants.PASTE:
+				marker = content.getTypeCode() + "_pasteContent_" + content.getId();
+				break;
+			default:
+				throw new RuntimeException("Unrecognized operation : " + operation);
+		}
+		return marker;
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	/**
@@ -214,6 +241,8 @@ public abstract class AbstractContentAction extends BaseAction {
 	public void setGroupManager(IGroupManager groupManager) {
 		this._groupManager = groupManager;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private IContentManager _contentManager;
 	private IContentActionHelper _contentActionHelper;

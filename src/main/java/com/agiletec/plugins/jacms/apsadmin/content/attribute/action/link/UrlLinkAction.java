@@ -48,12 +48,16 @@ public class UrlLinkAction extends BaseAction {
 		this.setEntryContentAnchorDest(anchorDest);
 	}
 	
-	/**
-	 * Restituisce il contenuto in sesione.
-	 * @return Il contenuto in sesione.
-	 */
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	public SymbolicLink getSymbolicLink() {
@@ -91,6 +95,8 @@ public class UrlLinkAction extends BaseAction {
 	public void setLinkAttributeHelper(ILinkAttributeActionHelper linkAttributeHelper) {
 		this._linkAttributeHelper = linkAttributeHelper;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private String _url;
 	

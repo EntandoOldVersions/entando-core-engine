@@ -80,11 +80,12 @@ public class ResourceAttributeAction extends BaseAction implements IResourceAttr
 	 * @return Il contenuto in sesione.
 	 */
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	public String getEntryContentAnchorDestFromRemove() {
-		StringBuffer buffer = new StringBuffer("contentedit_");
+		StringBuilder buffer = new StringBuilder("contentedit_");
 		buffer.append(this.getResourceLangCode());
 		buffer.append("_");
 		if (null != this.getParentAttributeName()) {
@@ -93,6 +94,13 @@ public class ResourceAttributeAction extends BaseAction implements IResourceAttr
 			buffer.append(this.getAttributeName());
 		}
 		return buffer.toString();
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	@Override
@@ -162,6 +170,8 @@ public class ResourceAttributeAction extends BaseAction implements IResourceAttr
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private String _attributeName;
 	private String _parentAttributeName;

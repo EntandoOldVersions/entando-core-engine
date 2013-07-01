@@ -63,7 +63,8 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 	 * @return Il contenuto in sesione.
 	 */
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	/**
@@ -93,6 +94,13 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 		return true;
 	}
 	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
+	}
+	
 	public String getResourceId() {
 		return _resourceId;
 	}
@@ -109,6 +117,8 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 	protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
 		this._entryContentAnchorDest = entryContentAnchorDest;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private String _resourceId;
 	private String _entryContentAnchorDest;

@@ -82,12 +82,19 @@ public class ExtendedResourceAction extends ResourceAction {
 	 * @return Il contenuto in sesione.
 	 */
 	public Content getContent() {
-		HttpSession session = this.getRequest().getSession();
-		return (Content) session.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	public boolean isOnEditContent() {
 		return true;
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	public String getEntryContentAnchorDest() {
@@ -99,6 +106,8 @@ public class ExtendedResourceAction extends ResourceAction {
 	protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
 		this._entryContentAnchorDest = entryContentAnchorDest;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private String _entryContentAnchorDest;
 	

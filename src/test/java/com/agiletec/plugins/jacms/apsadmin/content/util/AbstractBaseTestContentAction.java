@@ -18,10 +18,12 @@
 package com.agiletec.plugins.jacms.apsadmin.content.util;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 /**
@@ -29,6 +31,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
  */
 public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase {
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
@@ -51,12 +54,22 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		this.addParameter("contentStatus", contentStatus);
 		this.addParameter("contentMainGroup", contentMainGroup);
 		String result = this.executeAction();
-		assertNotNull(this.getContentOnEdit());
+		
+		Content prototype = this._contentManager.createContentType(contentTypeCode);
+		String contentSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		
+		assertNotNull(this.getContentOnEdit(contentSessionMarker));
 		return result;
 	}
 	
-	protected Content getContentOnEdit() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+	protected void initContentAction(String namespace, String name, String contentOnSessionMarker) throws Exception {
+		this.initAction(namespace, name);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
+	}
+	
+	protected Content getContentOnEdit(String contentMarker) {
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentMarker);
 	}
 	
 	/**

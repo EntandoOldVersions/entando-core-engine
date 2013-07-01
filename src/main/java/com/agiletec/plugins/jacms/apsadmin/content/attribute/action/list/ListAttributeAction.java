@@ -73,7 +73,8 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 	}
 	
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	protected Content updateContentOnSession() {
@@ -84,6 +85,13 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 	
 	public String getEntryContentAnchorDest() {
 		return "contentedit_" + this.getListLangCode() + "_" + this.getAttributeName();
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	public String getResourceTypeCode() {
@@ -109,6 +117,7 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 		this._contentActionHelper = contentActionHelper;
 	}
 	
+	private String _contentOnSessionMarker;
 	private String _resourceTypeCode;
 	
 	private IContentActionHelper _contentActionHelper;

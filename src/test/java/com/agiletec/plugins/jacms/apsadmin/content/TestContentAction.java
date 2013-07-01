@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -28,6 +27,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -64,11 +64,12 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	private void testSuccesfullEdit(String contentId, String currentUserName) throws Throwable {
+		Content content = this.getContentManager().loadContent(contentId, false);
 		String result = this.executeEdit(contentId, currentUserName);
 		assertEquals(Action.SUCCESS, result);
 		try {
-			Content content = this.getContentManager().loadContent(contentId, false);
-			Content currentContent = this.getContentOnEdit();
+			String contentSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+			Content currentContent = this.getContentOnEdit(contentSessionMarker);
     		assertEquals(content.getId(), currentContent.getId());
     		assertEquals(content.getTypeCode(), currentContent.getTypeCode());
     		assertEquals(content.getDescr(), currentContent.getDescr());
@@ -85,15 +86,18 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testValidate_1() throws Throwable {
 		String insertedDescr = "XXX Prova Validazione XXX";
+		String contentTypeCode = "ART";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 		try {
-			String result = this.executeCreateNewVoid("ART", 
+			String result = this.executeCreateNewVoid(contentTypeCode, 
 					insertedDescr, Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
-			Content contentOnSession = this.getContentOnEdit();
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			assertEquals(insertedDescr, contentOnSession.getDescr());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			
@@ -104,13 +108,13 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			assertEquals(1, titleFieldErrors.size());//Verifica obbligatorietà attributo "Titolo"
 			
 			String monolistAttributeName = "Autori";
-			contentOnSession = this.getContentOnEdit();
+			contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			MonoListAttribute monolist = (MonoListAttribute) contentOnSession.getAttribute(monolistAttributeName);
 			assertEquals(0, monolist.getAttributes().size());
 			monolist.addAttribute();
 			assertEquals(1, monolist.getAttributes().size());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -136,6 +140,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
 			Content contentForTest = this.getContentManager().loadContent("EVN191", true);
+			String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
 			contentForTest.setId(null);
 			contentForTest.setDescr(insertedDescr);
 			contentForTest.setMainGroup("coach");//Valorizzo il gruppo proprietario
@@ -150,9 +155,9 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			symbolicLink.setDestinationToContent("EVN103");//Contenuto di coach
 			linkAttribute.setSymbolicLink(symbolicLink);
 			
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT, contentForTest);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, contentForTest);
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			String result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -169,19 +174,22 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testValidate_3() throws Throwable { // Description maxlength
+		String contentTypeCode = "ART";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 		String marker = "__DESCR_TEST__";
 		String insertedDescr = marker;
 		while (insertedDescr.length() < 300) {
 			insertedDescr += marker;
 		}
 		try {
-			String result = this.executeCreateNewVoid("ART", "descr", 
+			String result = this.executeCreateNewVoid(contentTypeCode, "descr", 
 					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
-			Content contentOnSession = this.getContentOnEdit();
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", insertedDescr);
 			result = this.executeAction();
@@ -206,15 +214,18 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	 * We test, among other things the CheckBox attribute
 	 */
 	public void testValidate_4() throws Throwable {
+		String contentTypeCode = "RAH";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
-			String result = this.executeCreateNewVoid("RAH", "descr", 
+			String result = this.executeCreateNewVoid(contentTypeCode, "descr", 
 					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
-			Content contentOnSession = this.getContentOnEdit();
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", insertedDescr);
 			this.addParameter("email", "wrongEmailAddress");
@@ -231,7 +242,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			List<String> numberFieldErrors = fieldErros.get("Numero");
 			assertEquals(1, numberFieldErrors.size());
 			
-			Content content = this.getContentOnEdit();
+			Content content = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(content);
 			assertTrue(content.getAttributeMap().containsKey("Checkbox"));
 			BooleanAttribute attribute = (BooleanAttribute) content.getAttribute("Checkbox");
@@ -239,7 +250,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			assertEquals("CheckBox", attribute.getType());
 			assertEquals(Boolean.TRUE, attribute.getValue());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
@@ -249,7 +260,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			
-			content = this.getContentOnEdit();
+			content = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(content);
 			assertTrue(content.getAttributeMap().containsKey("Checkbox"));
 			attribute = (BooleanAttribute) content.getAttribute("Checkbox");
@@ -265,18 +276,21 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testValidate_5() throws Throwable {
+		String contentTypeCode = "RAH";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 		String insertedDescr = "XXX Prova Validazione XXX";
 		String shortTitle = "short";
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; " + 
 			"Ripeto, Titolo che supera la lunghezza massima di cento caratteri";
 		try {
-			String result = this.executeCreateNewVoid("RAH", "descr", 
+			String result = this.executeCreateNewVoid(contentTypeCode, "descr", 
 					Content.STATUS_DRAFT, Group.FREE_GROUP_NAME, "admin");
 			assertEquals(Action.SUCCESS, result);
-			Content contentOnSession = this.getContentOnEdit();
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", insertedDescr);
 			this.addParameter("it_Titolo", shortTitle);
@@ -292,7 +306,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			List<String> titleItFieldErrors = fieldErros.get("it_Titolo");
 			assertEquals(1, titleItFieldErrors.size());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
@@ -307,7 +321,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			titleItFieldErrors = fieldErros.get("it_Titolo");
 			assertEquals(1, titleItFieldErrors.size());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
@@ -332,13 +346,15 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testValidate_6() throws Throwable {
 		String contentId = "ART112";
+		Content mainContent = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
 		try {
 			this.initAction("/do/jacms/Content", "edit");
 			this.setUserOnSession("admin");
 			this.addParameter("contentId", contentId);
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
-			Content contentOnEdit = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+			Content contentOnEdit = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnEdit);
 			
 			assertEquals("coach", contentOnEdit.getMainGroup());
@@ -346,19 +362,19 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			assertTrue(contentOnEdit.getGroups().contains("customers"));
 			assertTrue(contentOnEdit.getGroups().contains("helpdesk"));
 			
-			this.initAction("/do/jacms/Content", "removeGroup");
+			this.initContentAction("/do/jacms/Content", "removeGroup", contentOnSessionMarker);
 			this.addParameter("extraGroupName", "customers");
 			this.addParameter("descr", contentOnEdit.getDescr());
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
-			contentOnEdit = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+			contentOnEdit = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 			assertEquals(1, contentOnEdit.getGroups().size());
 		} catch (Throwable t) {
 			throw t;
 		}
-		Content mainContent = this.getContentManager().loadContent(contentId, true);
+		//Content mainContent = this.getContentManager().loadContent(contentId, true);
 		try {
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.addParameter("descr", mainContent.getDescr());
 			String result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -372,98 +388,113 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testJoinRemoveCategory() throws Throwable {
-		this.executeEdit("ART1", "admin");
+		String contentId = "ART1";
+		Content mainContent = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
+		
+		this.executeEdit(contentId, "admin");
 		String categoryCodeToAdd = "cat1";
 		String categoryFieldName = "categoryCode";
-		Content contentOnSession = this.getContentOnEdit();
+		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(0, contentOnSession.getCategories().size());
 		
-		this.initAction("/do/jacms/Content", "joinCategory");
+		this.initContentAction("/do/jacms/Content", "joinCategory", contentOnSessionMarker);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 		this.addParameter(categoryFieldName, categoryCodeToAdd);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getCategories().size());
 		
 		//tentativo aggiunta categoria duplicata
-		this.initAction("/do/jacms/Content", "joinCategory");
+		this.initContentAction("/do/jacms/Content", "joinCategory", contentOnSessionMarker);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 		this.addParameter(categoryFieldName, categoryCodeToAdd);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getCategories().size());
 		
 		//tentativo aggiunta categoria inesistente
-		this.initAction("/do/jacms/Content", "joinCategory");
+		this.initContentAction("/do/jacms/Content", "joinCategory", contentOnSessionMarker);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 		this.addParameter(categoryFieldName, "wrongCategoryCode");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getCategories().size());
 		
-		this.initAction("/do/jacms/Content", "removeCategory");
+		this.initContentAction("/do/jacms/Content", "removeCategory", contentOnSessionMarker);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 		this.addParameter(categoryFieldName, categoryCodeToAdd);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(0, contentOnSession.getCategories().size());
 	}
 	
 	public void testJoinRemoveGroup() throws Throwable {
-		this.executeEdit("ART1", "admin");
+		String contentId = "ART1";
+		Content mainContent = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
+		
+		this.executeEdit(contentId, "admin");
 		String groupToAdd = "coach";
 		String extraGroupFieldName = "extraGroupName";
-		Content contentOnSession = this.getContentOnEdit();
+		Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(0, contentOnSession.getGroups().size());
 		
-		this.initAction("/do/jacms/Content", "joinGroup");
+		this.initContentAction("/do/jacms/Content", "joinGroup", contentOnSessionMarker);
 		this.addParameter(extraGroupFieldName, groupToAdd);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getGroups().size());
 		
 		//tentativo aggiunta gruppo duplicata
-		this.initAction("/do/jacms/Content", "joinGroup");
+		this.initContentAction("/do/jacms/Content", "joinGroup", contentOnSessionMarker);
 		this.addParameter(extraGroupFieldName, groupToAdd);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getGroups().size());
 		
 		//tentativo aggiunta gruppo inesistente
-		this.initAction("/do/jacms/Content", "joinGroup");
+		this.initContentAction("/do/jacms/Content", "joinGroup", contentOnSessionMarker);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 		this.addParameter(extraGroupFieldName, "wrongGroupCode");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(1, contentOnSession.getGroups().size());
 		
-		this.initAction("/do/jacms/Content", "removeGroup");
+		this.initContentAction("/do/jacms/Content", "removeGroup", contentOnSessionMarker);
 		this.addParameter(extraGroupFieldName, groupToAdd);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		contentOnSession = this.getContentOnEdit();
+		contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(contentOnSession);
 		assertEquals(0, contentOnSession.getGroups().size());
 	}
 	
-	public void testSave() throws Throwable {
-		Content master = this.getContentManager().loadContent("ART1", false);
+	public void testSaveNewContent() throws Throwable {
+		String contentId = "ART1";
+		Content master = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(master, ApsAdminSystemConstants.ADD);
 		master.setId(null);
 		String descr = "Contenuto di prova per testSave";
 		try {
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT, master);
-			this.initAction("/do/jacms/Content", "save");
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, master);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", "");
 			String result = this.executeAction();
@@ -471,7 +502,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(1, fieldErrors.size());
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.addParameter("descr", descr);
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
@@ -486,24 +517,25 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		String contentId = "ART111";
 		this.executeEdit(contentId, "admin");
 		Content master = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(master, ApsAdminSystemConstants.EDIT);
 		String groupToRemove = "customers";
 		try {
-			Content contentOnSession = this.getContentOnEdit();
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			assertEquals(2, contentOnSession.getGroups().size());
 			assertTrue(contentOnSession.getGroups().contains(groupToRemove));
 			
-			this.initAction("/do/jacms/Content", "removeGroup");
+			this.initContentAction("/do/jacms/Content", "removeGroup", contentOnSessionMarker);
 			this.addParameter("extraGroupName", groupToRemove);
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			
-			contentOnSession = this.getContentOnEdit();
+			contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
 			assertEquals(1, contentOnSession.getGroups().size());
 			assertFalse(contentOnSession.getGroups().contains(groupToRemove));
 			
-			this.initAction("/do/jacms/Content", "save");
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.addParameter("descr", master.getDescr());
 			this.addParameter("mainGroup", master.getMainGroup());
 			this.addParameter("descr", master.getDescr());
@@ -536,12 +568,14 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testSuspendReferencedContent() throws Throwable {
-		Content master = this.getContentManager().loadContent("ART1", false);
+		String contentId = "ART1";
+		Content master = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(master, ApsAdminSystemConstants.EDIT);
 		try {
-			this.executeEdit("ART1", "admin");
-			Content contentOnSession = this.getContentOnEdit();
+			this.executeEdit(contentId, "admin");
+			Content contentOnSession = this.getContentOnEdit(contentOnSessionMarker);
 			assertNotNull(contentOnSession);
-			this.initAction("/do/jacms/Content", "suspend");
+			this.initContentAction("/do/jacms/Content", "suspend", contentOnSessionMarker);
 			String result = this.executeAction();
 			assertEquals("references", result);
 			ContentAction action = (ContentAction) this.getAction();
@@ -558,8 +592,10 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testRedirectFindImageResource() throws Throwable {
-		this.executeEdit("ART1", "admin");
-		this.initAction("/do/jacms/Content", "chooseResource");
+		String contentId = "ART1";
+		Content master = this.getContentManager().loadContent(contentId, false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(master, ApsAdminSystemConstants.EDIT);
+		this.initContentAction("/do/jacms/Content", "chooseResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
 		this.addParameter("resourceTypeCode", "Image");
 		this.addParameter("resourceLangCode", "it");
@@ -597,7 +633,8 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		Content content = this.getContentManager().loadContent(contentId, publicVersion);
 		String result = this.executeCopyPaste(contentId, publicVersion, currentUserName);
 		assertEquals(Action.SUCCESS, result);
-		Content onEdit = this.getContentOnEdit();
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.PASTE);
+		Content onEdit = this.getContentOnEdit(contentOnSessionMarker);
 		assertNull(onEdit.getId());
     	assertEquals(content.getTypeCode(), onEdit.getTypeCode());
     	assertEquals(content.getMainGroup(), onEdit.getMainGroup());

@@ -30,9 +30,13 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.SelectItem;
+
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
+
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
 
@@ -60,7 +64,9 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				ApsSystemUtils.getLogger().info("Utente non abilitato all'editazione del contenuto " + content.getId());
 				return USER_NOT_ALLOWED;
 			}
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT, content);
+			String marker = buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
+			super.setContentOnSessionMarker(marker);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
@@ -80,10 +86,12 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				ApsSystemUtils.getLogger().info("Utente non abilitato all'accesso del contenuto " + content.getId());
 				return USER_NOT_ALLOWED;
 			}
+			String marker = buildContentOnSessionMarker(content, ApsAdminSystemConstants.PASTE);
 			content.setId(null);
 			content.setVersion(Content.INIT_VERSION);
 			content.setDescr(this.getText("label.copyOf") + " " + content.getDescr());
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT, content);
+			super.setContentOnSessionMarker(marker);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "copyPaste");
 			return FAILURE;
@@ -187,7 +195,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				} else {
 					this.getContentManager().saveContent(currentContent);
 				}
-				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
 				log.info("Salvato contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
 			} else {
@@ -216,7 +224,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 					return "references";
 				}
 				this.getContentManager().removeOnLineContent(currentContent);
-				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
 				log.info("Sospeso contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
 			}

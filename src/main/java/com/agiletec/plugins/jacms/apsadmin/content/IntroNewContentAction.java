@@ -20,6 +20,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
+
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
 /**
@@ -35,9 +38,9 @@ public class IntroNewContentAction extends AbstractContentAction {
 	 * @return Il risultato dell'azione.
 	 */
 	public String openNew() {
-		HttpServletRequest request = this.getRequest();
+		//HttpServletRequest request = this.getRequest();
 		try {
-			request.getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+			//request.getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
 			this.setContentStatus(Content.STATUS_DRAFT);
 			if (this.getAuthorizationManager().isAuthOnGroup(this.getCurrentUser(), Group.FREE_GROUP_NAME)) {
 				this.setContentMainGroup(Group.FREE_GROUP_NAME);
@@ -60,7 +63,9 @@ public class IntroNewContentAction extends AbstractContentAction {
 			prototype.setDescr(this.getContentDescription());
 			prototype.setStatus(this.getContentStatus());
 			prototype.setMainGroup(this.getContentMainGroup());
-			request.getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT, prototype);
+			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+			super.setContentOnSessionMarker(marker);
+			request.getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
 			ApsSystemUtils.getLogger().finest("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createNewVoid");

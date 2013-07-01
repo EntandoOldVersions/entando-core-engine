@@ -26,6 +26,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.
@@ -37,11 +38,17 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 	@Override
 	public String getRenderedContent(String contentId, String modelId, RequestContext reqCtx) throws ApsSystemException {
 		String renderedContent = "";
+		HttpServletRequest request = reqCtx.getRequest();
 		try {
+			String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+			if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+				contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+			}
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 			String langCode = currentLang.getCode();
 			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-			Content contentOnSession = (Content) reqCtx.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+			Content contentOnSession = (Content) request.getSession()
+					.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 			contentId = (contentOnSession.getId() == null ? contentOnSession.getTypeCode()+"123" : contentOnSession.getId());
 			ApsProperties showletConfig = showlet.getConfig();
 			modelId = this.extractModelId(contentId, modelId, showletConfig);

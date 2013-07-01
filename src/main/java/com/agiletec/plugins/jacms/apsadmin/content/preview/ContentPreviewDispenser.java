@@ -21,6 +21,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Fornisce i contenuti formattati per la funzione preview da redazione contenuti.
@@ -31,7 +32,13 @@ public class ContentPreviewDispenser extends BaseContentDispenser {
 	
 	@Override
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx) {
-		Content contentOnSession = (Content) reqCtx.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		HttpServletRequest request = reqCtx.getRequest();
+		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+			contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+		}
+		Content contentOnSession = (Content) request.getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 		String renderedContent = this.getRenderedContent(contentOnSession, modelId, langCode, reqCtx);
 		return renderedContent;
 	}

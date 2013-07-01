@@ -83,13 +83,21 @@ public class ContentCategoryAction extends AbstractTreeAction implements IConten
 	}
 	
 	public Content getContent() {
-		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		return (Content) this.getRequest().getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
 	
 	protected Content updateContentOnSession() {
 		Content content = this.getContent();
 		this.getContentActionHelper().updateEntity(content, this.getRequest());
 		return content;
+	}
+	
+	public String getContentOnSessionMarker() {
+		return _contentOnSessionMarker;
+	}
+	public void setContentOnSessionMarker(String contentOnSessionMarker) {
+		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
 	
 	public String getCategoryCode() {
@@ -112,6 +120,8 @@ public class ContentCategoryAction extends AbstractTreeAction implements IConten
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
+	
+	private String _contentOnSessionMarker;
 	
 	private String _categoryCode;
 	private ICategoryManager _categoryManager;

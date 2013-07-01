@@ -96,7 +96,10 @@
     	
         <action name="createNewVoid" class="jacmsIntroNewContentAction" method="createNewVoid">
             <result name="input" type="tiles">admin.jacms.content.new</result>
-        	<result type="redirectAction">entryContent</result>
+        	<result type="redirectAction">
+				<param name="actionName">entryContent</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
@@ -114,12 +117,16 @@
             <result type="redirectAction">
             	<param name="actionName">entryContent</param>
             	<param name="categoryCode">${categoryCode}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
             </result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
         <action name="removeCategory*" class="jacmsContentCategoryAction" method="removeCategory">
-           	<result type="redirectAction">entryContent</result>
+           	<result type="redirectAction">
+				<param name="actionName">entryContent</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
@@ -151,7 +158,7 @@
             <result type="redirectAction">list</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">validateContents</param></interceptor-ref>
         </action>
-        
+		
         <!-- INIZIO Azioni di preview contenuti -->
         
     	<action name="preview*" class="jacmsContentPreviewAction" method="preview">
@@ -160,6 +167,7 @@
         		<param name="previewPageCode">${previewPageCode}</param>
         		<param name="previewLangCode">${previewLangCode}</param>
         		<param name="anchorDest">jAPSContentPreview</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -181,16 +189,19 @@
         		<param name="elementIndex">${elementIndex}</param>
         		<param name="resourceTypeCode">${resourceTypeCode}</param>
         		<param name="resourceLangCode">${listLangCode}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<result name="chooseLink" type="redirectAction">
     			<param name="actionName">chooseLink</param>
         		<param name="attributeName">${attributeName}</param>
         		<param name="elementIndex">${elementIndex}</param>
         		<param name="langCode">${listLangCode}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<result type="redirectActionWithAnchor">
         		<param name="actionName">entryContent</param>
         		<param name="anchorDest">${entryContentAnchorDest}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -199,6 +210,7 @@
             <result type="redirectActionWithAnchor">
         		<param name="actionName">entryContent</param>
         		<param name="anchorDest">${entryContentAnchorDest}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -207,6 +219,7 @@
             <result type="redirectActionWithAnchor">
         		<param name="actionName">entryContent</param>
         		<param name="anchorDest">${entryContentAnchorDest}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -229,6 +242,7 @@
             <result type="redirectActionWithAnchor">
         		<param name="actionName">entryContent</param>
         		<param name="anchorDest">${entryContentAnchorDestFromRemove}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -250,6 +264,7 @@
             <result type="redirectActionWithAnchor">
         		<param name="actionName">entryContent</param>
         		<param name="anchorDest">${entryContentAnchorDestFromRemove}</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
@@ -276,5 +291,5 @@
         </action>
     	
     </package>
-    
+	
 </struts>

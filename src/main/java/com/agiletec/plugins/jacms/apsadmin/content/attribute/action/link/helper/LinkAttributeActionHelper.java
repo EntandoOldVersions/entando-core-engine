@@ -86,7 +86,7 @@ public class LinkAttributeActionHelper implements ILinkAttributeActionHelper {
 	
 	@Override
 	public String buildEntryContentAnchorDest(HttpSession session) {
-		StringBuffer buffer = new StringBuffer("contentedit_");
+		StringBuilder buffer = new StringBuilder("contentedit_");
 		buffer.append(session.getAttribute(LINK_LANG_CODE_SESSION_PARAM));
 		buffer.append("_" + session.getAttribute(ATTRIBUTE_NAME_SESSION_PARAM));
 		return buffer.toString();
@@ -170,7 +170,12 @@ public class LinkAttributeActionHelper implements ILinkAttributeActionHelper {
 	 * @return Il contenuto in sesione.
 	 */
 	protected Content getContent(HttpServletRequest request) {
-		return (Content) request.getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
+		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
+			contentOnSessionMarker = request.getParameter("contentOnSessionMarker");
+		}
+		return (Content) request.getSession()
+				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 	}
 	
 }
