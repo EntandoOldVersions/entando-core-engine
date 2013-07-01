@@ -27,6 +27,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.Action;
 
@@ -37,48 +38,60 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 	
 	public void testPreviewNewContent() throws Throwable {
 		String insertedDescr = "XXX Prova preview XXX";
-		String result = this.executeCreateNewVoid("ART", insertedDescr, Content.STATUS_DRAFT,  Group.FREE_GROUP_NAME, "admin");
+		String contentTypeCode = "ART";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		
+		String result = this.executeCreateNewVoid(contentTypeCode, insertedDescr, Content.STATUS_DRAFT,  Group.FREE_GROUP_NAME, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		Content content = this.getContentOnEdit();
+		Content content = this.getContentOnEdit(contentOnSessionMarker);
 		ITextAttribute titleAttribute = (ITextAttribute) content.getAttribute("Titolo");
 		assertNull(titleAttribute.getTextForLang("it"));
 		assertEquals(content.getDescr(), insertedDescr);
 		
-		this.initAction("/do/jacms/Content", "preview");
+		this.initContentAction("/do/jacms/Content", "preview", contentOnSessionMarker);
 		this.addParameter("it_Titolo", "Nuovo titolo di prova");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		content = this.getContentOnEdit();
+		content = this.getContentOnEdit(contentOnSessionMarker);
 		titleAttribute = (ITextAttribute) content.getAttribute("Titolo");
 		assertEquals("Nuovo titolo di prova", titleAttribute.getTextForLang("it"));
 	}
 	
 	public void testPreviewContent() throws Throwable {
-		String result = this.executeEdit("EVN192", "admin");
+		String contentId = "EVN191";
+		Content contentForTest = this.getContentManager().loadContent(contentId, true);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
+		
+		String result = this.executeEdit(contentId, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		Content content = this.getContentOnEdit();
+		Content content = this.getContentOnEdit(contentOnSessionMarker);
 		ITextAttribute titleAttribute = (ITextAttribute) content.getAttribute("Titolo");
 		assertEquals("Titolo B - Evento 2", titleAttribute.getTextForLang("it"));
 		
-		this.initAction("/do/jacms/Content", "preview");
+		this.initContentAction("/do/jacms/Content", "preview", contentOnSessionMarker);
 		this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 		this.addParameter("it_Titolo", "Nuovo titolo di prova");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		content = this.getContentOnEdit();
+		content = this.getContentOnEdit(contentOnSessionMarker);
 		titleAttribute = (ITextAttribute) content.getAttribute("Titolo");
 		assertEquals("Nuovo titolo di prova", titleAttribute.getTextForLang("it"));
 	}
 	
 	public void testExecutePreviewContent_1() throws Throwable {
-		String result = this.executeEdit("EVN192", "admin");
+		String contentId = "EVN192";
+		Content contentForTest = this.getContentManager().loadContent(contentId, true);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
+		
+		String result = this.executeEdit(contentId, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executePreviewPage("");
+		result = this.executePreviewPage("", contentOnSessionMarker);
 		assertEquals(Action.SUCCESS, result);
 		
 		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
@@ -88,10 +101,14 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testExecutePreviewContent_2() throws Throwable {
-		String result = this.executeEdit("ART187", "admin");
+		String contentId = "ART187";
+		Content contentForTest = this.getContentManager().loadContent(contentId, true);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
+		
+		String result = this.executeEdit(contentId, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executePreviewPage(null);
+		result = this.executePreviewPage(null, contentOnSessionMarker);
 		assertEquals(Action.SUCCESS, result);
 		
 		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
@@ -101,10 +118,14 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testExecutePreviewContent_3() throws Throwable {
-		String result = this.executeEdit("ART187", "admin");
+		String contentId = "ART187";
+		Content contentForTest = this.getContentManager().loadContent(contentId, true);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
+		
+		String result = this.executeEdit(contentId, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executePreviewPage("pagina_2");
+		result = this.executePreviewPage("pagina_2", contentOnSessionMarker);
 		assertEquals(Action.SUCCESS, result);
 		
 		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
@@ -114,10 +135,14 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureExecutePreviewContent() throws Throwable {
-		String result = this.executeEdit("ART187", "admin");
+		String contentId = "ART187";
+		Content contentForTest = this.getContentManager().loadContent(contentId, true);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(contentForTest, ApsAdminSystemConstants.EDIT);
+		
+		String result = this.executeEdit(contentId, "admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executePreviewPage("wrongPageCode");
+		result = this.executePreviewPage("wrongPageCode", contentOnSessionMarker);
 		assertEquals(Action.INPUT, result);
 		
 		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
@@ -127,8 +152,8 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErrors.get("previewPageCode").size());
 	}
 	
-	private String executePreviewPage(String pageDest) throws Throwable {
-		this.initAction("/do/jacms/Content", "executePreview");
+	private String executePreviewPage(String pageDest, String contentOnSessionMarker) throws Throwable {
+		this.initContentAction("/do/jacms/Content", "executePreview", contentOnSessionMarker);
 		this.addParameter("previewPageCode", pageDest);
 		return this.executeAction();
 	}

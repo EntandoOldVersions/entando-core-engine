@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -17,6 +16,7 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.util;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
@@ -55,11 +55,19 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		this.addParameter("contentMainGroup", contentMainGroup);
 		String result = this.executeAction();
 		
-		Content prototype = this._contentManager.createContentType(contentTypeCode);
-		String contentSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
-		
+		String contentSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
 		assertNotNull(this.getContentOnEdit(contentSessionMarker));
 		return result;
+	}
+	
+	protected String extractSessionMarker(String param, int operation) throws ApsSystemException {
+		Content content = null;
+		if (operation == ApsAdminSystemConstants.ADD) {
+			content = this._contentManager.createContentType(param);
+		} else {
+			content = this._contentManager.loadContent(param, true);
+		}
+		return AbstractContentAction.buildContentOnSessionMarker(content, operation);
 	}
 	
 	protected void initContentAction(String namespace, String name, String contentOnSessionMarker) throws Exception {

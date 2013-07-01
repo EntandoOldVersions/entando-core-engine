@@ -20,23 +20,23 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * @author E.Santoboni
  */
-public class TestIntroNewContentAction extends ApsAdminBaseTestCase {
+public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 	
 	public void testOpenNew() throws Throwable {
 		String result = this.executeOpenNew("admin");
 		assertEquals(Action.SUCCESS, result);
-		assertNull(this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT));
 		
 		result = this.executeOpenNew("pageManagerCoach");
 		assertEquals("userNotAllowed", result);
@@ -49,9 +49,13 @@ public class TestIntroNewContentAction extends ApsAdminBaseTestCase {
 	}
 	
 	public void testCreateNewVoid() throws Throwable {
+		String contentTypeCode = "ART";
+		Content prototype = this.getContentManager().createContentType(contentTypeCode);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
-		this.addParameter("contentTypeCode", "ART");
+		this.addParameter("contentTypeCode", contentTypeCode);
 		String result = this.executeAction();
 		assertEquals(Action.INPUT, result);
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
@@ -59,20 +63,20 @@ public class TestIntroNewContentAction extends ApsAdminBaseTestCase {
 		assertEquals(1, fieldErrors.get("contentDescription").size());
 		assertEquals(1, fieldErrors.get("contentMainGroup").size());
 		
-		Content content = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		Content content = super.getContentOnEdit(contentOnSessionMarker);
 		assertNull(content);
 		
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
-		this.addParameter("contentTypeCode", "ART");
+		this.addParameter("contentTypeCode", contentTypeCode);
 		this.addParameter("contentDescription", "Descrizione di prova");
 		this.addParameter("contentMainGroup", Group.FREE_GROUP_NAME);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		content = (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
+		content = super.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(content);
-		assertEquals("ART", content.getTypeCode());
+		assertEquals(contentTypeCode, content.getTypeCode());
 	}
 	
 	public void testCreateNewVoid_2() throws Throwable {

@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.ContentLinkAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
 import com.opensymphony.xwork2.Action;
@@ -38,9 +40,10 @@ import com.opensymphony.xwork2.Action;
 public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	
 	public void testFindContent_1() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART1", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");//Contenuto del gruppo Free
 		
-		this.initAction("/do/jacms/Content/Link", "configContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "configContentLink", contentOnSessionMarker);
 		this.addParameter("linkType", "3");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -53,9 +56,10 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFindContent_2() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART120", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "ART120", "VediAnche", "it");//Contenuto del gruppo degli amministratori
 		
-		this.initAction("/do/jacms/Content/Link", "configContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "configContentLink", contentOnSessionMarker);
 		this.addParameter("linkType", "3");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -66,9 +70,10 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFindContent_3() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART102", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("editorCustomers", "ART102", "VediAnche", "it");//Contenuto del gruppo customers
 		
-		this.initAction("/do/jacms/Content/Link", "configContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "configContentLink", contentOnSessionMarker);
 		this.addParameter("linkType", "3");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -83,9 +88,10 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFindContent_4() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("EVN25", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "EVN25", "LinkCorrelati", "it");//Contenuto del gruppo coach
 		
-		this.initAction("/do/jacms/Content/Link", "configContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "configContentLink", contentOnSessionMarker);
 		this.addParameter("linkType", "3");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -100,9 +106,10 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureJoinContentLink_1() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART1", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
 		
-		this.initAction("/do/jacms/Content/Link", "joinContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "joinContentLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.INPUT, result);
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
@@ -112,9 +119,10 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testFailureJoinContentLink_2() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART1", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
 		
-		this.initAction("/do/jacms/Content/Link", "joinContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "joinContentLink", contentOnSessionMarker);
 		this.addParameter("contentId", "ART78");//CONTENUTO INESISTENTE
 		String result = this.executeAction();
 		assertEquals(BaseAction.FAILURE, result);
@@ -130,14 +138,15 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 	}
 	
 	public void testJoinContentLink_1() throws Throwable {
+		String contentOnSessionMarker = this.extractSessionMarker("ART1", ApsAdminSystemConstants.EDIT);
 		this.initJoinLinkTest("admin", "ART1", "VediAnche", "it");
 		
-		this.initAction("/do/jacms/Content/Link", "joinContentLink");
+		this.initContentAction("/do/jacms/Content/Link", "joinContentLink", contentOnSessionMarker);
 		this.addParameter("contentId", "ART1");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		Content content = this.getContentOnEdit();
+		Content content = this.getContentOnEdit(contentOnSessionMarker);
 		LinkAttribute attribute = (LinkAttribute) content.getAttribute("VediAnche");
 		SymbolicLink symbolicLink = attribute.getSymbolicLink();
 		assertNotNull(symbolicLink);
@@ -154,8 +163,8 @@ public class TestContentLinkAction extends AbstractBaseTestContentAction {
 		assertEquals("configContentOnPageLink", result);
 	}
 	
-	private void initJoinLinkTest(String currentUserName, String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
-		this.executeEdit(contentId, currentUserName);
+	private void initJoinLinkTest(String username, String contentId, String simpleLinkAttributeName, String langCode) throws Throwable {
+		this.executeEdit(contentId, username);
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, simpleLinkAttributeName);

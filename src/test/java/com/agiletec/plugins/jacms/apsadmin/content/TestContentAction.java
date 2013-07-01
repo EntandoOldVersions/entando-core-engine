@@ -164,7 +164,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getFieldErrors().size());
-			assertEquals(1, ((List<String>) action.getFieldErrors().get("LinkCorrelati_0")).size());
+			assertEquals(1, action.getFieldErrors().get("LinkCorrelati_0").size());
 			
 		} catch (Throwable t) {
 			throw t;
@@ -175,8 +175,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testValidate_3() throws Throwable { // Description maxlength
 		String contentTypeCode = "ART";
-		Content prototype = this.getContentManager().createContentType(contentTypeCode);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		String contentOnSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
 		String marker = "__DESCR_TEST__";
 		String insertedDescr = marker;
 		while (insertedDescr.length() < 300) {
@@ -215,8 +214,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	 */
 	public void testValidate_4() throws Throwable {
 		String contentTypeCode = "RAH";
-		Content prototype = this.getContentManager().createContentType(contentTypeCode);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		String contentOnSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
 		String insertedDescr = "XXX Prova Validazione XXX";
 		try {
 			String result = this.executeCreateNewVoid(contentTypeCode, "descr", 
@@ -277,8 +275,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testValidate_5() throws Throwable {
 		String contentTypeCode = "RAH";
-		Content prototype = this.getContentManager().createContentType(contentTypeCode);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+		String contentOnSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
 		String insertedDescr = "XXX Prova Validazione XXX";
 		String shortTitle = "short";
 		String longTitle = "Titolo che supera la lunghezza massima di cento caratteri; " + 
@@ -346,8 +343,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testValidate_6() throws Throwable {
 		String contentId = "ART112";
-		Content mainContent = this.getContentManager().loadContent(contentId, false);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
+		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		try {
 			this.initAction("/do/jacms/Content", "edit");
 			this.setUserOnSession("admin");
@@ -372,7 +368,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 		} catch (Throwable t) {
 			throw t;
 		}
-		//Content mainContent = this.getContentManager().loadContent(contentId, true);
+		Content mainContent = this.getContentManager().loadContent(contentId, true);
 		try {
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.addParameter("descr", mainContent.getDescr());
@@ -389,8 +385,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testJoinRemoveCategory() throws Throwable {
 		String contentId = "ART1";
-		Content mainContent = this.getContentManager().loadContent(contentId, false);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
+		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		
 		this.executeEdit(contentId, "admin");
 		String categoryCodeToAdd = "cat1";
@@ -440,8 +435,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testJoinRemoveGroup() throws Throwable {
 		String contentId = "ART1";
-		Content mainContent = this.getContentManager().loadContent(contentId, false);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(mainContent, ApsAdminSystemConstants.EDIT);
+		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		
 		this.executeEdit(contentId, "admin");
 		String groupToAdd = "coach";
@@ -593,8 +587,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 	
 	public void testRedirectFindImageResource() throws Throwable {
 		String contentId = "ART1";
-		Content master = this.getContentManager().loadContent(contentId, false);
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(master, ApsAdminSystemConstants.EDIT);
+		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.initContentAction("/do/jacms/Content", "chooseResource", contentOnSessionMarker);
 		this.addParameter("attributeName", "Foto");
 		this.addParameter("resourceTypeCode", "Image");
