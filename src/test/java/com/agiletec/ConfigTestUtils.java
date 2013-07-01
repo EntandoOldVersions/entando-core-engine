@@ -81,7 +81,6 @@ public class ConfigTestUtils {
 			builder.bind("java:comp/env/protectedResourceDiskRootFolder", testConfig.getProperty("protectedResourceDiskRootFolder"));
 			
 			builder.bind("java:comp/env/indexDiskRootFolder", testConfig.getProperty("indexDiskRootFolder"));
-			builder.bind("java:comp/env/cacheDiskRootFolder", testConfig.getProperty("cacheDiskRootFolder"));
 			
 			Iterator<Entry<Object, Object>> configIter = testConfig.entrySet().iterator();
 			while (configIter.hasNext()) {
