@@ -67,21 +67,11 @@
 		<test.database.password>agile</test.database.password>
 		<test.database.port.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testPort;create=true</test.database.port.url>
 		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
-		
+
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<struts2.version>2.3.15.1</struts2.version>
 		<cxf.version>2.7.5</cxf.version>
 	</properties>
-	<repositories>
-		<repository>
-			<id>struts2-bootstrap3-plugin-mvn-repo</id>
-			<url>https://raw.github.com/entando/struts2-bootstrap3-plugin/mvn-repo/</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
 	<build>
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<extensions>
@@ -487,13 +477,6 @@
 			<groupId>org.apache.struts</groupId>
 			<artifactId>struts2-core</artifactId>
 			<version>${struts2.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.entando.struts2.bootstrap3</groupId>
-			<artifactId>struts2-bootstrap3-plugin</artifactId>
-			<version>1.0.0</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
