@@ -23,8 +23,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.services.mock.MockShowletTypeDAO;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
@@ -68,7 +68,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
 			String result = this.executeUpdate(showletTypeCode, "", "english title", "admin");
 			assertEquals(Action.INPUT, result);
@@ -76,7 +76,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			assertEquals(1, action.getFieldErrors().size());
 			result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin");
 			assertEquals(Action.SUCCESS, result);
-			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
@@ -94,13 +94,13 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
 			ApsProperties newProperties = new ApsProperties();
 			newProperties.put("contentId", "EVN191");
 			String result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
 			assertEquals(Action.SUCCESS, result);
-			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
@@ -143,7 +143,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			type.setLocked(true);
 			this._showletTypeManager.addShowletType(type);
 			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
@@ -169,7 +169,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
 			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
 			
@@ -257,14 +257,14 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	private ShowletType createNewShowletType(String code) {
-    	ShowletType type = new ShowletType();
+	private WidgetType createNewShowletType(String code) {
+    	WidgetType type = new WidgetType();
     	type.setCode(code);
     	ApsProperties titles = new ApsProperties();
     	titles.put("it", "Titolo");
     	titles.put("en", "Title");
     	type.setTitles(titles);
-    	ShowletType parent = this._showletTypeManager.getShowletType("content_viewer");
+    	WidgetType parent = this._showletTypeManager.getShowletType("content_viewer");
     	assertNotNull(parent);
     	type.setParentType(parent);
     	type.setPluginCode("jacms");
@@ -435,7 +435,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			Showlet copiedShowlet = this._pageManager.getPage("customers_page").getShowlets()[2];
 			assertNotNull(copiedShowlet);
 			assertNotNull(copiedShowlet.getConfig());
-			ShowletType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			Iterator<Object> keysIter = config.keySet().iterator();
@@ -478,7 +478,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			Showlet newShowlet = this._pageManager.getPage(pageDest).getShowlets()[frameDest];
 			assertNotNull(newShowlet);
 			assertNotNull(newShowlet.getConfig());
-			ShowletType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(addedType);
 			assertEquals(newShowlet.getType().getCode(), addedType.getCode());
 			ApsProperties config = addedType.getConfig();
@@ -511,7 +511,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			
-			ShowletType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			assertEquals(2, config.size());
@@ -550,7 +550,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 	private void init() throws Exception {
 		try {
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-			this._showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+			this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 			this._mockShowletTypeDAO = new MockShowletTypeDAO();
 			this._mockShowletTypeDAO.setDataSource(dataSource);
@@ -560,7 +560,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 	}
     
 	private IPageManager _pageManager = null;
-    private IShowletTypeManager _showletTypeManager = null;
+    private IWidgetTypeManager _showletTypeManager = null;
     private MockShowletTypeDAO _mockShowletTypeDAO;
 	
 }

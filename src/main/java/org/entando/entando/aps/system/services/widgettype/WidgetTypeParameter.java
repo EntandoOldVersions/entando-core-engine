@@ -23,11 +23,11 @@ import java.io.Serializable;
  * Rappresenta un parametro di configurazione della Showlet.
  * @author E.Santoboni
  */
-public class ShowletTypeParameter implements Serializable {
+public class WidgetTypeParameter implements Serializable {
 	
 	@Override
-	public ShowletTypeParameter clone() {
-		ShowletTypeParameter clone = new ShowletTypeParameter();
+	public WidgetTypeParameter clone() {
+		WidgetTypeParameter clone = new WidgetTypeParameter();
 		clone.setDescr(this.getDescr());
 		clone.setName(this.getName());
 		return clone;

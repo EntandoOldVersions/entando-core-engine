@@ -25,8 +25,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
@@ -140,7 +140,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			return null;
 		}
 		Showlet showlet = new Showlet();
-		ShowletType type = this.getShowletTypeManager().getShowletType(typeCode);
+		WidgetType type = this.getShowletTypeManager().getShowletType(typeCode);
 		showlet.setType(type);
 		ApsProperties config = new ApsProperties();
 		String configText = res.getString(11);
@@ -471,15 +471,15 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		this._pageModelManager = pageModelManager;
 	}
 
-	protected IShowletTypeManager getShowletTypeManager() {
+	protected IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
-	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}
 
 	private IPageModelManager _pageModelManager;
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 
 	// attenzione: l'ordinamento deve rispettare prima l'ordine delle pagine
 	// figlie nelle pagine madri, e poi l'ordine delle showlet nella pagina.

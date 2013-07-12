@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -404,7 +404,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 				Showlet showlet = showlets[i];
 				if (i==3) {
 					assertNotNull(showlet);
-					ShowletType type = showlet.getType();
+					WidgetType type = showlet.getType();
 					assertEquals("leftmenu", type.getCode());
 					assertEquals(1, type.getTypeParameters().size());
 					assertNull(type.getConfig());

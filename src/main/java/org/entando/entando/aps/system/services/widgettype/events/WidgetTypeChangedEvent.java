@@ -23,15 +23,15 @@ import com.agiletec.aps.system.common.notify.ApsEvent;
 /**
  * @author E.Santoboni
  */
-public class ShowletTypeChangedEvent extends ApsEvent {
+public class WidgetTypeChangedEvent extends ApsEvent {
 	
 	@Override
 	public void notify(IManager srv) {
-		((ShowletTypeChangedObserver) srv).updateFromShowletTypeChanged(this);
+		((WidgetTypeChangedObserver) srv).updateFromShowletTypeChanged(this);
 	}
 	
 	public Class getObserverInterface() {
-		return ShowletTypeChangedObserver.class;
+		return WidgetTypeChangedObserver.class;
 	}
 	
 	public String getShowletTypeCode() {

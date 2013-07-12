@@ -21,7 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -85,7 +85,7 @@ public class CurrentShowletTag extends OutSupport {
 		ServletRequest request = this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-		ShowletType type = showlet.getType();
+		WidgetType type = showlet.getType();
 		String value = type.getTitles().getProperty(currentLang.getCode());
 		if (null == value || value.trim().length() == 0) {
 			ILangManager langManager = 

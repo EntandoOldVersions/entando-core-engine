@@ -20,8 +20,8 @@ package com.agiletec.apsadmin.portal.specialshowlet;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
@@ -70,7 +70,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 			throw new Exception("Showlet Code missin or invalid : " + this.getShowletTypeCode());
 		}
 		Showlet showlet = new Showlet();
-		ShowletType type = this.getShowletType(this.getShowletTypeCode());
+		WidgetType type = this.getShowletType(this.getShowletTypeCode());
 		showlet.setType(type);
 		showlet.setConfig(new ApsProperties());
 		return showlet;
@@ -104,9 +104,9 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	
 	protected void createValuedShowlet() throws Exception {
 		Showlet showlet = this.createNewShowlet();
-		List<ShowletTypeParameter> parameters = showlet.getType().getTypeParameters();
+		List<WidgetTypeParameter> parameters = showlet.getType().getTypeParameters();
 		for (int i=0; i<parameters.size(); i++) {
-			ShowletTypeParameter param = parameters.get(i);
+			WidgetTypeParameter param = parameters.get(i);
 			String paramName = param.getName();
 			String value = this.getRequest().getParameter(paramName);
 			if (value != null && value.trim().length()>0) {
@@ -152,7 +152,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 		this._frame = frame;
 	}
 	
-	public ShowletType getShowletType(String typeCode) {
+	public WidgetType getShowletType(String typeCode) {
 		return this.getShowletTypeManager().getShowletType(typeCode);
 	}
 	

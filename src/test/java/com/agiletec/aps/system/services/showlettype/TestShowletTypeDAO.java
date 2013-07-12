@@ -21,8 +21,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeDAO;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,19 +35,19 @@ public class TestShowletTypeDAO extends BaseTestCase {
 	
     public void testLoadShowletTypes() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-    	ShowletTypeDAO showletTypeDao = new ShowletTypeDAO();
+    	WidgetTypeDAO showletTypeDao = new WidgetTypeDAO();
     	showletTypeDao.setDataSource(dataSource);
     	ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
     	showletTypeDao.setLangManager(langManager);
-    	Map<String, ShowletType> types = null;
+    	Map<String, WidgetType> types = null;
 		try {
 			types = showletTypeDao.loadShowletTypes();
 		} catch (Throwable t) {
             throw t;
         }
-		ShowletType showletType = (ShowletType) types.get("content_viewer");
+		WidgetType showletType = (WidgetType) types.get("content_viewer");
 		assertNotNull(showletType);
-		showletType = (ShowletType) types.get("content_viewer_list");
+		showletType = (WidgetType) types.get("content_viewer_list");
 		assertNotNull(showletType);
 	}    
 	

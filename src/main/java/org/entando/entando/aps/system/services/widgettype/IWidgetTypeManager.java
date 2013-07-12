@@ -24,26 +24,26 @@ import com.agiletec.aps.util.ApsProperties;
 
 /**
  * Interfaccia base per i Servizi gestiori dei tipi di 
- * showlet (ShowletType) definiti nel sistema.
+ * showlet (WidgetType) definiti nel sistema.
  * @author 
  */
-public interface IShowletTypeManager {
+public interface IWidgetTypeManager {
 	
 	/**
 	 * Restituisce la definizione di un tipo di showlet in base al codice.
 	 * @param code Il codice univoco del tipo
 	 * @return La definizione del tipo di showlet
 	 */
-	public ShowletType getShowletType(String code);
+	public WidgetType getShowletType(String code);
 	
 	/**
 	 * Restituisce la lista completa (ordinata per descrizione) dei tipi di showlet.
 	 * @return la lista completa delle showlet (ordinata per la descrizione del tipo) 
-	 * disponibili in oggetti ShowletType.
+	 * disponibili in oggetti WidgetType.
 	 */
-	public List<ShowletType> getShowletTypes();
+	public List<WidgetType> getShowletTypes();
 	
-	public void addShowletType(ShowletType showletType) throws ApsSystemException;
+	public void addShowletType(WidgetType showletType) throws ApsSystemException;
 	
 	public void deleteShowletType(String showletTypeCode) throws ApsSystemException;
 	

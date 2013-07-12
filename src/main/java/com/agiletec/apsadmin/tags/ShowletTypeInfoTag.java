@@ -17,8 +17,8 @@
 */
 package com.agiletec.apsadmin.tags;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -26,7 +26,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 /**
  * Returns a showlet type (or one of its property) through the code.
  * You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
- * The names of the available property of "ShowletType": "code", "titles" (map of titles indexed by the system languages), "parameters" (list of object {@link ShowletTypeParameter}), 
+ * The names of the available property of "WidgetType": "code", "titles" (map of titles indexed by the system languages), "parameters" (list of object {@link WidgetTypeParameter}), 
  * "action" (the code of the action used to manage the type), "pluginCode", "parentTypeCode", 
  * "config" (map of default parameter values indexed by the key), "locked".
  * @author E.Santoboni
@@ -35,7 +35,7 @@ public class ShowletTypeInfoTag extends AbstractObjectInfoTag {
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
-		IShowletTypeManager showletTypeManager = (IShowletTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.SHOWLET_TYPE_MANAGER, this.pageContext);
+		IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.pageContext);
 		return showletTypeManager.getShowletType(keyValue);
 	}
 	

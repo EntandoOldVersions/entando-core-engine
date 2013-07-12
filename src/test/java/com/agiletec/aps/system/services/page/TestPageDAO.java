@@ -21,8 +21,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -114,7 +114,7 @@ public class TestPageDAO extends BaseTestCase {
 		config.setProperty("temp1", "temp1");		
 		showlet.setConfig(config);
 		showlet.setPublishedContent("ART11");
-		ShowletType showletType = new ShowletType();
+		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
 		showlet.setType(showletType);
 		Showlet[] modifiesShowlets = {showlet};
@@ -189,7 +189,7 @@ public class TestPageDAO extends BaseTestCase {
 		config.setProperty("temp", "temp");		
 		showlet.setConfig(config);
 		showlet.setPublishedContent("ART1");
-		ShowletType showletType = new ShowletType();
+		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
 		showlet.setType(showletType);
 		Showlet[] showlets = {showlet};
@@ -204,7 +204,7 @@ public class TestPageDAO extends BaseTestCase {
     		this._pageDao.setDataSource(dataSource);
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
     		IPageModelManager pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
-    		IShowletTypeManager showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+    		IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     		this._pageDao.setPageModelManager(pageModelManager);
     		this._pageDao.setShowletTypeManager(showletTypeManager);
 		} catch (Throwable e) {

@@ -21,8 +21,8 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -45,7 +45,7 @@ public class PageModelDOM {
 	 * @param showletTypeManager Il manager gestore dei tipi di showlet.
 	 * @throws ApsSystemException
 	 */
-	public PageModelDOM(String xmlText, IShowletTypeManager showletTypeManager) throws ApsSystemException {
+	public PageModelDOM(String xmlText, IWidgetTypeManager showletTypeManager) throws ApsSystemException {
 		this.decodeDOM(xmlText);
 		this.buildFrames(showletTypeManager);
 	}
@@ -73,7 +73,7 @@ public class PageModelDOM {
 		return prop;
 	}
 	
-	private void buildFrames(IShowletTypeManager showletTypeManager) throws ApsSystemException {
+	private void buildFrames(IWidgetTypeManager showletTypeManager) throws ApsSystemException {
 		List<Element> frameElements = this._doc.getRootElement().getChildren(TAB_FRAME);
 		if (null != frameElements && frameElements.size() > 0) {
 			int framesNumber = frameElements.size();
@@ -107,10 +107,10 @@ public class PageModelDOM {
 		}
 	}
 	
-	private void buildDefaultShowlet(Element defaultShowletElement, int pos, IShowletTypeManager showletTypeManager) {
+	private void buildDefaultShowlet(Element defaultShowletElement, int pos, IWidgetTypeManager showletTypeManager) {
 		Showlet showlet = new Showlet();
 		String showletCode = defaultShowletElement.getAttributeValue(ATTRIBUTE_CODE);
-		ShowletType type = showletTypeManager.getShowletType(showletCode);
+		WidgetType type = showletTypeManager.getShowletType(showletCode);
 		if (null == type) {
 			throw new RuntimeException("The code of the default showlet '" + showletCode + "' unknown");
 		}

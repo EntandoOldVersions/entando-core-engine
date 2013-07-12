@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -36,8 +36,8 @@ public class TestPageModelDAO extends BaseTestCase {
 	
     public void testLoadModels() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-    	IShowletTypeManager showletTypeManager = 
-         	(IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+    	IWidgetTypeManager showletTypeManager = 
+         	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 		PageModelDAO pageModelDAO = new PageModelDAO();
 		pageModelDAO.setDataSource(dataSource);
 		pageModelDAO.setShowletTypeManager(showletTypeManager);

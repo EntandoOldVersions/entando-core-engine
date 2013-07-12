@@ -17,7 +17,7 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -38,8 +38,8 @@ public class TestPageModelDOM extends BaseTestCase {
 				+ "<frame pos=\"4\"><descr>Box destra alto</descr></frame>"
 				+ "<frame pos=\"5\"><descr>Box destra basso</descr></frame>"
 				+ "</frames>";
-		IShowletTypeManager showletTypeManager = 
-        	(IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+		IWidgetTypeManager showletTypeManager = 
+        	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         PageModelDOM pageModelDOM = new PageModelDOM(framesXml, showletTypeManager);
         String[] frames = pageModelDOM.getFrames();
         assertEquals(frames[0].equals("Box sinistra alto"), true);

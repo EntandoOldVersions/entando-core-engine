@@ -17,8 +17,8 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
@@ -100,9 +100,9 @@ public class TestContentViewerHelper extends BaseTestCase {
             _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
             
             Showlet showlet = new Showlet();
-            IShowletTypeManager showletTypeMan = 
-            	(IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
-            ShowletType showletType = showletTypeMan.getShowletType("content_viewer");
+            IWidgetTypeManager showletTypeMan = 
+            	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+            WidgetType showletType = showletTypeMan.getShowletType("content_viewer");
             showlet.setType(showletType);
             showlet.setConfig(new ApsProperties());
             _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);

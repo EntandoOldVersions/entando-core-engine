@@ -20,7 +20,7 @@ package com.agiletec.aps.system.services.pagemodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -84,7 +84,7 @@ public class TestPageModelManager extends BaseTestCase {
 			Showlet showlet = defaultShowlets[i];
 			if (i==3) {
 				assertNotNull(showlet);
-				ShowletType type = showlet.getType();
+				WidgetType type = showlet.getType();
 				assertEquals("leftmenu", type.getCode());
 				assertEquals(1, type.getTypeParameters().size());
 				assertNull(type.getConfig());

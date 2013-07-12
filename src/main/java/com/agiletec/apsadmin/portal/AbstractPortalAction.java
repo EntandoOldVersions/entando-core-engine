@@ -26,8 +26,8 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -65,9 +65,9 @@ public abstract class AbstractPortalAction extends BaseAction {
 	
 	protected Map<String, List<SelectItem>> getShowletFlavoursMapping(List<String> pluginCodes) {
 		Map<String, List<SelectItem>> mapping = new HashMap<String, List<SelectItem>>();
-		List<ShowletType> types = this.getShowletTypeManager().getShowletTypes();
+		List<WidgetType> types = this.getShowletTypeManager().getShowletTypes();
 		for (int i = 0; i < types.size(); i++) {
-			ShowletType type = types.get(i);
+			WidgetType type = types.get(i);
 			String pluginCode = type.getPluginCode();
 			if (null != pluginCode && pluginCode.trim().length() > 0) {
 				//is a plugin's showlet
@@ -91,7 +91,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		return mapping;
 	}
 	
-	protected void addFlavourShowletType(String mapCode, ShowletType type, Map<String, List<SelectItem>> mapping) {
+	protected void addFlavourShowletType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
 		List<SelectItem> showletTypes = mapping.get(mapCode);
 		if (null == showletTypes) {
 			showletTypes = new ArrayList<SelectItem>();
@@ -236,10 +236,10 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._groupManager = groupManager;
 	}
 	
-	protected IShowletTypeManager getShowletTypeManager() {
+	protected IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
-	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}
 	
@@ -257,7 +257,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;
 	
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 	private IApiCatalogManager _apiCatalogManager;
 	
 	/**

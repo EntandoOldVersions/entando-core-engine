@@ -30,11 +30,11 @@ import com.agiletec.aps.util.ApsProperties;
  * effettivamente l'oggetto visuale.
  * @author
  */
-public class ShowletType implements Serializable {
+public class WidgetType implements Serializable {
 	
 	@Override
-	public ShowletType clone() {
-		ShowletType clone = new ShowletType();
+	public WidgetType clone() {
+		WidgetType clone = new WidgetType();
 		clone.setAction(this.getAction());
 		clone.setCode(this.getCode());
 		if (null != this.getConfig()) {
@@ -48,7 +48,7 @@ public class ShowletType implements Serializable {
 			clone.setTitles(this.getTitles().clone());
 		}
 		if (null != this.getTypeParameters()) {
-			List<ShowletTypeParameter> params = new ArrayList<ShowletTypeParameter>();
+			List<WidgetTypeParameter> params = new ArrayList<WidgetTypeParameter>();
 			for (int i = 0; i < this.getTypeParameters().size(); i++) {
 				params.add(this.getTypeParameters().get(i).clone());
 			}
@@ -83,18 +83,18 @@ public class ShowletType implements Serializable {
 	
 	/**
 	 * restituisce la lista dei parametri previsti per il tipo di showlet.
-	 * @return La lista di parametri in oggetti del tipo ShowletTypeParameter.
+	 * @return La lista di parametri in oggetti del tipo WidgetTypeParameter.
 	 */
-	public List<ShowletTypeParameter> getTypeParameters() {
+	public List<WidgetTypeParameter> getTypeParameters() {
 		return _parameters;
 	}
 
 	/**
 	 * Imposta la lista dei parametri previsti per il tipo di showlet.
-	 * La lista deve essere composta da oggetti del tipo ShowletTypeParameter.
+	 * La lista deve essere composta da oggetti del tipo WidgetTypeParameter.
 	 * @param typeParameters The parameters to set.
 	 */
-	public void setTypeParameters(List<ShowletTypeParameter> typeParameters) {
+	public void setTypeParameters(List<WidgetTypeParameter> typeParameters) {
 		this._parameters = typeParameters;
 	}
 	
@@ -138,10 +138,10 @@ public class ShowletType implements Serializable {
 		this._parentTypeCode = parentTypeCode;
 	}
 	
-	public ShowletType getParentType() {
+	public WidgetType getParentType() {
 		return _parentType;
 	}
-	public void setParentType(ShowletType parentType) {
+	public void setParentType(WidgetType parentType) {
 		this._parentType = parentType;
 		if (null != parentType) {
 			this.setParentTypeCode(parentType.getCode());
@@ -187,7 +187,7 @@ public class ShowletType implements Serializable {
 	/**
 	 * La lista dei parametri previsti per il tipo di showlet.
 	 */
-	private List<ShowletTypeParameter> _parameters;
+	private List<WidgetTypeParameter> _parameters;
 	
 	/**
 	 * Il nome della action specifica che gestisce questo tipo di showlet.
@@ -202,7 +202,7 @@ public class ShowletType implements Serializable {
 	
 	private String _parentTypeCode;
 	
-	private ShowletType _parentType;
+	private WidgetType _parentType;
 	
 	private ApsProperties _config;
 	

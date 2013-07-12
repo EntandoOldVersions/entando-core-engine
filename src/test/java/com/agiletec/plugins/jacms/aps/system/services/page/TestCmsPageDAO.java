@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -56,7 +56,7 @@ public class TestCmsPageDAO extends BaseTestCase {
     		_pageDao = new CmsPageDAO();
     		_pageDao.setDataSource(dataSource);
     		IPageModelManager pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
-    		IShowletTypeManager showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+    		IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     		this._pageDao.setPageModelManager(pageModelManager);
     		this._pageDao.setShowletTypeManager(showletTypeManager);
 		} catch (Throwable e) {

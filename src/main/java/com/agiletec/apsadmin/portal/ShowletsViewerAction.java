@@ -19,7 +19,7 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -63,7 +63,7 @@ public class ShowletsViewerAction extends AbstractPortalAction implements IShowl
 		return this.getShowletUtilizers(this.getShowletTypeCode());
 	}
 	
-	public ShowletType getShowletType(String typeCode) {
+	public WidgetType getShowletType(String typeCode) {
 		return this.getShowletTypeManager().getShowletType(typeCode);
 	}
 	

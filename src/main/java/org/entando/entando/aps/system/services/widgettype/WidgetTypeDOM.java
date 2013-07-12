@@ -46,7 +46,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 	<action name="viewerConfig"/>
 </config>
  */
-public class ShowletTypeDOM {
+public class WidgetTypeDOM {
 	
 	/**
 	 * Costruttore della classe.
@@ -54,21 +54,21 @@ public class ShowletTypeDOM {
 	 * @throws ApsSystemException In caso di errore 
 	 * nell'interpretazione dell'xml di configurazione.
 	 */
-	public ShowletTypeDOM(String xmlText) throws ApsSystemException {
+	public WidgetTypeDOM(String xmlText) throws ApsSystemException {
 		this.decodeDOM(xmlText);
 	}
 	
-	public ShowletTypeDOM(String xmlText, List<Lang> langs) throws ApsSystemException {
+	public WidgetTypeDOM(String xmlText, List<Lang> langs) throws ApsSystemException {
 		this.decodeDOM(xmlText);
 		this.setLangs(langs);
 	}
 	
-	public ShowletTypeDOM(List<ShowletTypeParameter> parameters, String action) throws ApsSystemException {
+	public WidgetTypeDOM(List<WidgetTypeParameter> parameters, String action) throws ApsSystemException {
 		this.setDoc(new Document());
 		Element root = new Element("config");
 		if (null != parameters && parameters.size() > 0) {
 			for (int i = 0; i < parameters.size(); i++) {
-				ShowletTypeParameter parameter = parameters.get(i);
+				WidgetTypeParameter parameter = parameters.get(i);
 				Element paramElement = new Element(TAB_PARAMETER);
 				paramElement.setAttribute("name", parameter.getName());
 				if (null != parameter.getDescr()) {
@@ -86,15 +86,15 @@ public class ShowletTypeDOM {
 	}
 	
 	/**
-	 * Restituisce la lista (in oggetti ShowletTypeParameter) 
+	 * Restituisce la lista (in oggetti WidgetTypeParameter) 
 	 * di parametri di configurazione della showlet.
 	 * @return La lista dei parametri di configurazione della showlet.
 	 */
-	public List<ShowletTypeParameter> getParameters() {
-		List<ShowletTypeParameter> parameters = null;
+	public List<WidgetTypeParameter> getParameters() {
+		List<WidgetTypeParameter> parameters = null;
 		List<Element> paramElements = this.getDoc().getRootElement().getChildren(TAB_PARAMETER);
 		if (null != paramElements && paramElements.size() > 0) {
-			parameters = new ArrayList<ShowletTypeParameter>();
+			parameters = new ArrayList<WidgetTypeParameter>();
 			Iterator<Element> paramElementsIter = paramElements.iterator();
 			while (paramElementsIter.hasNext()) {
 				Element parameterElement = paramElementsIter.next();
@@ -104,7 +104,7 @@ public class ShowletTypeDOM {
 		return parameters;
 	}
 	
-	protected void createParameters(List<ShowletTypeParameter> parameters, Element parameterElement) {
+	protected void createParameters(List<WidgetTypeParameter> parameters, Element parameterElement) {
 		String name = parameterElement.getAttributeValue("name");
 		String description = parameterElement.getText();
 		if (name.indexOf("{lang}") > 0) {
@@ -122,8 +122,8 @@ public class ShowletTypeDOM {
 		}
 	}
 	
-	protected void addParameter(List<ShowletTypeParameter> parameters, String name, String description) {
-		ShowletTypeParameter parameter = new ShowletTypeParameter();
+	protected void addParameter(List<WidgetTypeParameter> parameters, String name, String description) {
+		WidgetTypeParameter parameter = new WidgetTypeParameter();
 		parameter.setName(name);
 		if (null != description) {
 			parameter.setDescr(description.trim());

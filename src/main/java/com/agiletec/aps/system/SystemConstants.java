@@ -106,7 +106,13 @@ public interface SystemConstants {
     /**
      * Nome del servizio che gestisce i tipi di showlet.
      */
-    public static final String SHOWLET_TYPE_MANAGER = "ShowletTypeManager";
+    public static final String WIDGET_TYPE_MANAGER = "ShowletTypeManager";
+
+	/**
+	 * Nome del servizio che gestisce i tipi di showlet.
+	 * @deprecated Use {@link #WIDGET_TYPE_MANAGER} instead
+	 */
+	public static final String SHOWLET_TYPE_MANAGER = WIDGET_TYPE_MANAGER;
     
     /**
      * Nome del servizio che gestisce i modelli di pagina.

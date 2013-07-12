@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -90,7 +90,7 @@ public class CmsPageActionUtil {
 			boolean isRightCode = null == viewerShowletCode || viewer.getType().getCode().equals(viewerShowletCode);
 			String actionName = viewer.getType().getAction();
 			boolean isRightAction = null != actionName && actionName.toLowerCase().indexOf("viewer") >= 0;
-			List<ShowletTypeParameter> typeParameters = viewer.getType().getTypeParameters();
+			List<WidgetTypeParameter> typeParameters = viewer.getType().getTypeParameters();
 			if ((isRightCode || isRightAction )  
 					&& (null != typeParameters && !typeParameters.isEmpty())
 					&& (null == viewer.getConfig() || viewer.getConfig().isEmpty())) {

@@ -19,7 +19,7 @@ package com.agiletec.aps.system.services.page;
 
 import java.io.Serializable;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.util.ApsProperties;
 
@@ -52,7 +52,7 @@ public class Showlet implements Serializable {
 	 * Return the type of the showlet
 	 * @param The type of the showlet
 	 */
-	public ShowletType getType() {
+	public WidgetType getType() {
 		return _type;
 	}
 
@@ -60,7 +60,7 @@ public class Showlet implements Serializable {
 	 * Set the showlet type
 	 * @param type The of the showlet 
 	 */
-	public void setType(ShowletType type) {
+	public void setType(WidgetType type) {
 		this._type = type;
 	}
 	
@@ -83,7 +83,7 @@ public class Showlet implements Serializable {
 	/**
 	 * The type of the showlet
 	 */
-	private ShowletType _type;
+	private WidgetType _type;
 	
 	/**
 	 * The configuration properties; the configuration may be null

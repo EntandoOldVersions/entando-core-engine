@@ -22,8 +22,8 @@ import com.agiletec.aps.system.common.notify.ObserverService;
 /**
  * @author E.Santoboni
  */
-public interface ShowletTypeChangedObserver extends ObserverService {
+public interface WidgetTypeChangedObserver extends ObserverService {
 	
-	public void updateFromShowletTypeChanged(ShowletTypeChangedEvent event);
+	public void updateFromShowletTypeChanged(WidgetTypeChangedEvent event);
 	
 }

@@ -19,8 +19,8 @@ package com.agiletec.plugins.jacms.apsadmin.portal;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -116,10 +116,10 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 	protected void checkViewerPage(IPage page) {
 		int mainFrame = page.getModel().getMainFrame();
 		if (this.isViewerPage() && mainFrame>-1) {
-			IShowletTypeManager showletTypeManager = (IShowletTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.SHOWLET_TYPE_MANAGER, this.getRequest());
+			IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.getRequest());
 			Showlet viewer = new Showlet();
 			viewer.setConfig(new ApsProperties());
-			ShowletType type = showletTypeManager.getShowletType(this.getViewerShowletCode());
+			WidgetType type = showletTypeManager.getShowletType(this.getViewerShowletCode());
 			if (null == type) {
 				throw new RuntimeException("Showlet 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerShowletCode());
 			}

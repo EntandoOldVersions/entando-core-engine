@@ -32,27 +32,27 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Data Access Object per i tipi di showlet (ShowletType).
+ * Data Access Object per i tipi di showlet (WidgetType).
  * @author 
  */
-public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
+public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	
 	/**
 	 * Carica e restituisce il Map dei tipi di showlet.
 	 * @return Il map dei tipi di showlet
 	 */
 	@Override
-	public Map<String, ShowletType> loadShowletTypes() {
+	public Map<String, WidgetType> loadShowletTypes() {
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
-		Map<String, ShowletType> showletTypes = new HashMap<String, ShowletType>();
+		Map<String, WidgetType> showletTypes = new HashMap<String, WidgetType>();
 		try {
 			conn = this.getConnection();
 			stat = conn.createStatement();
 			res = stat.executeQuery(ALL_SHOWLET_TYPES);
 			while (res.next()) {
-				ShowletType showletType = this.showletTypeFromResultSet(res);
+				WidgetType showletType = this.showletTypeFromResultSet(res);
 				showletTypes.put(showletType.getCode(), showletType);
 			}
 		} catch (Throwable t) {
@@ -69,8 +69,8 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 	 * @return Il tipo di showlet generato.
 	 * @throws ApsSystemException In caso di errore
 	 */
-	protected ShowletType showletTypeFromResultSet(ResultSet res) throws ApsSystemException {
-		ShowletType showletType = new ShowletType();
+	protected WidgetType showletTypeFromResultSet(ResultSet res) throws ApsSystemException {
+		WidgetType showletType = new WidgetType();
 		String code = null;
 		try {
 			code = res.getString(1);
@@ -81,7 +81,7 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			showletType.setTitles(titles);
 			String xml = res.getString(3);
 			if (null != xml && xml.trim().length() > 0) {
-				ShowletTypeDOM showletTypeDom = new ShowletTypeDOM(xml, this.getLangManager().getLangs());
+				WidgetTypeDOM showletTypeDom = new WidgetTypeDOM(xml, this.getLangManager().getLangs());
 				showletType.setTypeParameters(showletTypeDom.getParameters());
 				showletType.setAction(showletTypeDom.getAction());
 			}
@@ -112,7 +112,7 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 	}
 	
 	@Override
-	public void addShowletType(ShowletType showletType) {
+	public void addShowletType(WidgetType showletType) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -123,7 +123,7 @@ public class ShowletTypeDAO extends AbstractDAO implements IShowletTypeDAO {
 			stat.setString(1, showletType.getCode());
 			stat.setString(2, showletType.getTitles().toXml());
 			if (null != showletType.getTypeParameters()) {
-				ShowletTypeDOM showletTypeDom = new ShowletTypeDOM(showletType.getTypeParameters(), showletType.getAction());
+				WidgetTypeDOM showletTypeDom = new WidgetTypeDOM(showletType.getTypeParameters(), showletType.getAction());
 				stat.setString(3, showletTypeDom.getXMLDocument());
 			} else {
 				stat.setNull(3, Types.VARCHAR);

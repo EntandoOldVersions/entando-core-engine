@@ -22,18 +22,18 @@ import java.util.Map;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Interfaccia base per Data Access Object dei tipi di showlet (ShowletType).
+ * Interfaccia base per Data Access Object dei tipi di showlet (WidgetType).
  * @author E.Santoboni
  */
-public interface IShowletTypeDAO {
+public interface IWidgetTypeDAO {
 	
 	/**
 	 * Carica e restituisce il Map dei tipi di showlet.
 	 * @return Il map dei tipi di showlet
 	 */
-	public Map<String, ShowletType> loadShowletTypes();
+	public Map<String, WidgetType> loadShowletTypes();
 	
-	public void addShowletType(ShowletType showletType);
+	public void addShowletType(WidgetType showletType);
 	
 	public void deleteShowletType(String showletTypeCode);
 	

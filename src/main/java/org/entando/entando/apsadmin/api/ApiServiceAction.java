@@ -25,8 +25,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
 import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -150,7 +150,7 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			ApiMethod masterMethod = this.getMethod(this.getNamespace(), this.getResourceName());
 			if (null != this.getShowletTypeCode() && null != masterMethod.getRelatedShowlet()) {
-				ShowletType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+				WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
 				if (null != type && type.isLogic()) {
 					ApsProperties parameters =
 							this.extractParametersFromShowletProperties(masterMethod.getRelatedShowlet(), type.getConfig());
@@ -205,7 +205,7 @@ public class ApiServiceAction extends AbstractApiAction {
 				return INPUT;
 			}
 			Showlet masterShowlet = showlets[this.getFramePos()];
-			ShowletType type = (masterShowlet.getType().isLogic()) ? masterShowlet.getType().getParentType() : masterShowlet.getType();
+			WidgetType type = (masterShowlet.getType().isLogic()) ? masterShowlet.getType().getParentType() : masterShowlet.getType();
 			if (null == masterMethod.getRelatedShowlet()
 					|| !masterMethod.getRelatedShowlet().getShowletCode().equals(type.getCode())) {
 				this.addFieldError("framePos", this.getText("error.service.paste.invalidShowlet",
@@ -561,10 +561,10 @@ public class ApiServiceAction extends AbstractApiAction {
 		this._pageManager = pageManager;
 	}
 
-	protected IShowletTypeManager getShowletTypeManager() {
+	protected IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
-	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}
 	
@@ -602,7 +602,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	private String _showletTypeCode;
 	
 	private IPageManager _pageManager;
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 	private IGroupManager _groupManager;
 	
 }

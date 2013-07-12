@@ -23,7 +23,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -87,14 +87,14 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 		return pageModel;
 	}
 	
-	protected IShowletTypeManager getShowletTypeManager() {
+	protected IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
-	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}
 
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 	
 	private final String ALL_PAGEMODEL = 
 		"SELECT code, descr, frames, plugincode FROM pagemodels";

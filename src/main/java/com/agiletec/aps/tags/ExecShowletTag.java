@@ -43,7 +43,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanComparator;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -116,7 +116,7 @@ public class ExecShowletTag extends TagSupport {
 		}
 		this.includeDecorators(showlet, decorators, false, true);
 		if (null != showlet && this.isUserAllowed(reqCtx, showlet)) {
-			ShowletType showletType = showlet.getType();
+			WidgetType showletType = showlet.getType();
 			if (showletType.isLogic()) {
 				showletType = showletType.getParentType();
 			}

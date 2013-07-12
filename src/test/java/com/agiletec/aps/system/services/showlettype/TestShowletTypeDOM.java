@@ -20,8 +20,8 @@ package com.agiletec.aps.system.services.showlettype;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeDOM;
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeDOM;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -42,29 +42,29 @@ public class TestShowletTypeDOM extends BaseTestCase {
 							"<parameter name=\"filters\" />" +
 							"<action name=\"listViewerConfig\"/>" +
 							"</config>";
-		ShowletTypeDOM showletTypeDOM = new ShowletTypeDOM(framesXml);
+		WidgetTypeDOM showletTypeDOM = new WidgetTypeDOM(framesXml);
         String action = showletTypeDOM.getAction();
         assertTrue(action.equals("listViewerConfig"));
-        List<ShowletTypeParameter> params = showletTypeDOM.getParameters();
+        List<WidgetTypeParameter> params = showletTypeDOM.getParameters();
         assertEquals(3, params.size());
 	}
     
     public void testCreateConfig() throws ApsSystemException {
-    	ShowletTypeParameter params1 = new ShowletTypeParameter();
+    	WidgetTypeParameter params1 = new WidgetTypeParameter();
     	params1.setName("param1");
     	params1.setDescr("Param1 Descr");
-    	ShowletTypeParameter params2 = new ShowletTypeParameter();
+    	WidgetTypeParameter params2 = new WidgetTypeParameter();
     	params2.setName("param2");
     	params2.setDescr("Param2 Descr");
-    	List<ShowletTypeParameter> params = new ArrayList<ShowletTypeParameter>();
+    	List<WidgetTypeParameter> params = new ArrayList<WidgetTypeParameter>();
     	params.add(params1);
     	params.add(params2);
-    	ShowletTypeDOM showletTypeDOM = new ShowletTypeDOM(params, "customActionName");
+    	WidgetTypeDOM showletTypeDOM = new WidgetTypeDOM(params, "customActionName");
     	String xml = showletTypeDOM.getXMLDocument();
     	
-    	ShowletTypeDOM showletTypeDOM2 = new ShowletTypeDOM(xml);
+    	WidgetTypeDOM showletTypeDOM2 = new WidgetTypeDOM(xml);
     	assertEquals("customActionName", showletTypeDOM2.getAction());
-    	List<ShowletTypeParameter> extractedParams = showletTypeDOM2.getParameters();
+    	List<WidgetTypeParameter> extractedParams = showletTypeDOM2.getParameters();
     	assertEquals(2, extractedParams.size());
     	assertEquals("param1", extractedParams.get(0).getName());
     	assertEquals("Param2 Descr", extractedParams.get(1).getDescr());

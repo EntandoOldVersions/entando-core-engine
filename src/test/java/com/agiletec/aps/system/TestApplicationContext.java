@@ -35,7 +35,7 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import static junit.framework.Assert.assertNotNull;
 
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author W.Ambu
@@ -49,7 +49,7 @@ public class TestApplicationContext extends BaseTestCase {
         assertNotNull(cacheInfoManager);
         ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
         assertNotNull(langManager);
-        IShowletTypeManager showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+        IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         assertNotNull(showletTypeManager);
         IPageModelManager pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
         assertNotNull(pageModelManager);

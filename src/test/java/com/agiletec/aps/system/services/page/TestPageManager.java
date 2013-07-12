@@ -23,8 +23,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockShowletsDAO;
@@ -76,7 +76,7 @@ public class TestPageManager extends BaseTestCase {
 		config.setProperty("temp", "temp");		
 		showlet.setConfig(config);
 		showlet.setPublishedContent("ART1");
-		ShowletType showletType = new ShowletType();
+		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
 		showlet.setType(showletType);
 		Showlet[] showlets = {showlet};
@@ -129,7 +129,7 @@ public class TestPageManager extends BaseTestCase {
 		config.setProperty("temp1", "temp1");		
 		showlet.setConfig(config);
 		showlet.setPublishedContent("ART1");
-		ShowletType showletType = new ShowletType();
+		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
 		showlet.setType(showletType);
 		Showlet[] showlets = {showlet};
@@ -325,7 +325,7 @@ public class TestPageManager extends BaseTestCase {
 	}
 	
 	private Showlet getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
-		ShowletType type = this._showletTypeManager.getShowletType(showletTypeCode);
+		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
 		Showlet showlet = new Showlet();
 		showlet.setType(type);
 		if (null != config) {
@@ -337,13 +337,13 @@ public class TestPageManager extends BaseTestCase {
 	private void init() throws Exception {
     	try {
     		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-    		this._showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+    		this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     	} catch (Throwable t) {
             throw new Exception(t);
         }
     }
     
 	private IPageManager _pageManager = null;
-    private IShowletTypeManager _showletTypeManager;
+    private IWidgetTypeManager _showletTypeManager;
 	
 }

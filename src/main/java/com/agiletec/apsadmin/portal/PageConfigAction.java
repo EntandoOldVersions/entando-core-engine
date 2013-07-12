@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
@@ -49,7 +49,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			Showlet showlet = this.getCurrentPage().getShowlets()[this.getFrame()];// può essere null
 			this.setShowlet(showlet);
 			if (showlet != null) {
-				ShowletType showletType = showlet.getType();
+				WidgetType showletType = showlet.getType();
 				ApsSystemUtils.getLogger().finest("pageCode=" + this.getPageCode() 
 						+ ", frame=" + this.getFrame() + ", showletCode=" + showletType.getCode());
 				this.setShowletAction(showletType.getAction());
@@ -79,7 +79,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			}
 			log.finest("code=" + this.getShowletTypeCode() + ", pageCode=" 
 					+ this.getPageCode() + ", frame=" + this.getFrame());
-			ShowletType showletType = this.getShowletType(this.getShowletTypeCode());
+			WidgetType showletType = this.getShowletType(this.getShowletTypeCode());
 			if (null == showletType) {
 				this.addActionError(this.getText("error.page.showletTypeCodeUnknown"));
 				return INPUT;
@@ -152,11 +152,11 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		return null;
 	}
 	
-	public List<ShowletType> getShowletTypes() {
+	public List<WidgetType> getShowletTypes() {
 		return this.getShowletTypeManager().getShowletTypes();
 	}
 	
-	public ShowletType getShowletType(String typeCode) {
+	public WidgetType getShowletType(String typeCode) {
 		return this.getShowletTypeManager().getShowletType(typeCode);
 	}
 	

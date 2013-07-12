@@ -19,8 +19,8 @@ package com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -101,7 +101,7 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 		}
 	}
 	
-	public ShowletType getShowletType(String typeCode) {
+	public WidgetType getShowletType(String typeCode) {
 		return this.getShowletTypeManager().getShowletType(typeCode);
 	}
 	
@@ -151,10 +151,10 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 		this._pageManager = pageManager;
 	}
 	
-	protected IShowletTypeManager getShowletTypeManager() {
+	protected IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
-	public void setShowletTypeManager(IShowletTypeManager showletTypeManager) {
+	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}
 	
@@ -166,6 +166,6 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 	private String _modelId;
 	
 	private IPageManager _pageManager;
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 	
 }

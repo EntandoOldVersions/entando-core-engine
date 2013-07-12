@@ -24,9 +24,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
-import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockShowletTypeDAO;
@@ -47,11 +47,11 @@ public class TestShowletTypeManager extends BaseTestCase {
     }
 	
 	public void testGetShowletTypes() throws ApsSystemException {
-		List<ShowletType> list = _showletTypeManager.getShowletTypes();
-		Iterator<ShowletType> iter = list.iterator();
+		List<WidgetType> list = _showletTypeManager.getShowletTypes();
+		Iterator<WidgetType> iter = list.iterator();
 		Map<String, String> showletTypes = new HashMap<String, String>();
 		while (iter.hasNext()) {
-			ShowletType showletType = iter.next();
+			WidgetType showletType = iter.next();
 			showletTypes.put(showletType.getCode(), showletType.getTitles().getProperty("it"));
 		}
 		boolean containsKey = showletTypes.containsKey("content_viewer_list");
@@ -65,7 +65,7 @@ public class TestShowletTypeManager extends BaseTestCase {
 	}
     
     public void testGetShowletType_1() throws ApsSystemException {
-    	ShowletType showletType = _showletTypeManager.getShowletType("content_viewer");
+    	WidgetType showletType = _showletTypeManager.getShowletType("content_viewer");
 		assertEquals("content_viewer", showletType.getCode());
 		assertEquals("Contenuti - Pubblica un Contenuto", showletType.getTitles().get("it"));
 		assertTrue(showletType.isLocked());
@@ -75,11 +75,11 @@ public class TestShowletTypeManager extends BaseTestCase {
 		assertNull(showletType.getConfig());
 		String action = showletType.getAction();
 		assertEquals(action, "viewerConfig");
-		List<ShowletTypeParameter> list = showletType.getTypeParameters();
-		Iterator<ShowletTypeParameter> iter = list.iterator();
+		List<WidgetTypeParameter> list = showletType.getTypeParameters();
+		Iterator<WidgetTypeParameter> iter = list.iterator();
 		Map<String, String> parameters = new HashMap<String, String>();
 		while (iter.hasNext()) {
-			ShowletTypeParameter parameter = (ShowletTypeParameter) iter.next();
+			WidgetTypeParameter parameter = (WidgetTypeParameter) iter.next();
 			parameters.put(parameter.getName(), parameter.getDescr());
 		}
 		boolean containsKey = parameters.containsKey("contentId");
@@ -93,7 +93,7 @@ public class TestShowletTypeManager extends BaseTestCase {
 	}
 	
     public void testGetShowletType_2() throws ApsSystemException {
-    	ShowletType showletType = _showletTypeManager.getShowletType("90_events");
+    	WidgetType showletType = _showletTypeManager.getShowletType("90_events");
 		assertEquals("90_events", showletType.getCode());
 		assertEquals("Lista contenuti anni '90", showletType.getTitles().get("it"));
 		assertFalse(showletType.isLocked());
@@ -125,7 +125,7 @@ public class TestShowletTypeManager extends BaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			type.setLocked(true);
 			this._showletTypeManager.addShowletType(type);
 			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
@@ -151,7 +151,7 @@ public class TestShowletTypeManager extends BaseTestCase {
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
     		this._showletTypeManager.deleteShowletType(showletTypeCode);
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
 			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
 		} catch (Throwable t) {
@@ -168,9 +168,9 @@ public class TestShowletTypeManager extends BaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
-			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo", extracted.getTitles().get("it"));
 			assertEquals("Title", extracted.getTitles().get("en"));
@@ -196,9 +196,9 @@ public class TestShowletTypeManager extends BaseTestCase {
     	String showletTypeCode = "test_showletType";
     	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
     	try {
-			ShowletType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(showletTypeCode);
 			this._showletTypeManager.addShowletType(type);
-			ShowletType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
 			assertNotNull(extracted);
 			assertEquals("content_viewer", extracted.getParentType().getCode());
 			assertEquals("ART112", extracted.getConfig().get("contentId"));
@@ -225,14 +225,14 @@ public class TestShowletTypeManager extends BaseTestCase {
 		}
     }
     
-    private ShowletType createNewShowletType(String code) {
-    	ShowletType type = new ShowletType();
+    private WidgetType createNewShowletType(String code) {
+    	WidgetType type = new WidgetType();
     	type.setCode(code);
     	ApsProperties titles = new ApsProperties();
     	titles.put("it", "Titolo");
     	titles.put("en", "Title");
     	type.setTitles(titles);
-    	ShowletType parent = this._showletTypeManager.getShowletType("content_viewer");
+    	WidgetType parent = this._showletTypeManager.getShowletType("content_viewer");
     	assertNotNull(parent);
     	type.setParentType(parent);
     	type.setPluginCode("jacms");
@@ -244,7 +244,7 @@ public class TestShowletTypeManager extends BaseTestCase {
     
     private void init() throws Exception {
 		try {
-			this._showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+			this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 			this._mockShowletTypeDAO = new MockShowletTypeDAO();
 			this._mockShowletTypeDAO.setDataSource(dataSource);
@@ -253,7 +253,7 @@ public class TestShowletTypeManager extends BaseTestCase {
 		}
 	}
     
-    private IShowletTypeManager _showletTypeManager = null;
+    private IWidgetTypeManager _showletTypeManager = null;
     private MockShowletTypeDAO _mockShowletTypeDAO;
     
 }

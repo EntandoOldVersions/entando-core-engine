@@ -19,8 +19,8 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
-import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
@@ -212,7 +212,7 @@ public class TestContentListHelper extends BaseTestCase {
     }
 	
 	private Showlet getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
-		ShowletType type = this._showletTypeManager.getShowletType(showletTypeCode);
+		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
 		Showlet showlet = new Showlet();
 		showlet.setType(type);
 		if (null != config) {
@@ -224,7 +224,7 @@ public class TestContentListHelper extends BaseTestCase {
 	private void init() throws Exception {
     	try {
     		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-    		this._showletTypeManager = (IShowletTypeManager) this.getService(SystemConstants.SHOWLET_TYPE_MANAGER);
+    		this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     		this._helper = (IContentListShowletHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
     	} catch (Throwable t) {
             throw new Exception(t);
@@ -232,7 +232,7 @@ public class TestContentListHelper extends BaseTestCase {
     }
     
 	private IPageManager _pageManager = null;
-	private IShowletTypeManager _showletTypeManager;
+	private IWidgetTypeManager _showletTypeManager;
 	private IContentListShowletHelper _helper;
 	
 }

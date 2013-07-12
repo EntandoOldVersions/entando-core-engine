@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.widgettype.events.ShowletTypeChangedEvent;
+import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -34,13 +34,13 @@ import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Servizio di gestione dei tipi di showlet (ShowletType) definiti
+ * Servizio di gestione dei tipi di showlet (WidgetType) definiti
  * nel sistema. (Questo servizio non riguarda la configurazione delle
  * istanze di showlet nelle pagine)
  * @author 
  */
-public class ShowletTypeManager extends AbstractService 
-		implements IShowletTypeManager, LangsChangedObserver, GroupUtilizer {
+public class WidgetTypeManager extends AbstractService 
+		implements IWidgetTypeManager, LangsChangedObserver, GroupUtilizer {
 	
 	@Override
 	public void init() throws Exception {
@@ -55,9 +55,9 @@ public class ShowletTypeManager extends AbstractService
 	private void loadShowletTypes() throws ApsSystemException {
 		try {
 			this._showletTypes = this.getShowletTypeDAO().loadShowletTypes();
-			Iterator<ShowletType> iter = this._showletTypes.values().iterator();
+			Iterator<WidgetType> iter = this._showletTypes.values().iterator();
 			while (iter.hasNext()) {
-				ShowletType type = iter.next();
+				WidgetType type = iter.next();
 				String mainTypeCode = type.getParentTypeCode();
 				if (null != mainTypeCode) {
 					type.setParentType(this._showletTypes.get(mainTypeCode));
@@ -79,25 +79,25 @@ public class ShowletTypeManager extends AbstractService
 	}
 	
 	@Override
-	public ShowletType getShowletType(String code) {
+	public WidgetType getShowletType(String code) {
 		return this._showletTypes.get(code);
 	}
 	
 	@Override
-	public List<ShowletType> getShowletTypes() {
-		List<ShowletType> types = new ArrayList<ShowletType>();
-		Iterator<ShowletType> masterTypesIter = this._showletTypes.values().iterator();
+	public List<WidgetType> getShowletTypes() {
+		List<WidgetType> types = new ArrayList<WidgetType>();
+		Iterator<WidgetType> masterTypesIter = this._showletTypes.values().iterator();
 		while (masterTypesIter.hasNext()) {
-			ShowletType showletType = masterTypesIter.next();
+			WidgetType showletType = masterTypesIter.next();
 			types.add(showletType.clone());
 		}
 		return types;
 	}
 	
 	@Override
-	public void addShowletType(ShowletType showletType) throws ApsSystemException {
+	public void addShowletType(WidgetType showletType) throws ApsSystemException {
 		try {
-			ShowletType type = this._showletTypes.get(showletType.getCode());
+			WidgetType type = this._showletTypes.get(showletType.getCode());
 			if (null != type) {
 				ApsSystemUtils.getLogger().severe("Type already exists : type code" + showletType.getCode());
 				return;
@@ -123,7 +123,7 @@ public class ShowletTypeManager extends AbstractService
 	@Override
 	public void deleteShowletType(String showletTypeCode) throws ApsSystemException {
 		try {
-			ShowletType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._showletTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
@@ -144,7 +144,7 @@ public class ShowletTypeManager extends AbstractService
 	@Deprecated
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) throws ApsSystemException {
 		try {
-			ShowletType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._showletTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
@@ -159,7 +159,7 @@ public class ShowletTypeManager extends AbstractService
 	@Override
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException {
 		try {
-			ShowletType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._showletTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
@@ -171,7 +171,7 @@ public class ShowletTypeManager extends AbstractService
 			type.setTitles(titles);
 			type.setConfig(defaultConfig);
 			type.setMainGroup(mainGroup);
-			ShowletTypeChangedEvent event = new ShowletTypeChangedEvent();
+			WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
 			event.setShowletTypeCode(showletTypeCode);
 			this.notifyEvent(event);
 		} catch (Throwable t) {
@@ -184,7 +184,7 @@ public class ShowletTypeManager extends AbstractService
 	@Deprecated
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles) throws ApsSystemException {
 		try {
-			ShowletType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._showletTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
@@ -198,17 +198,17 @@ public class ShowletTypeManager extends AbstractService
 	}
 	
 	@Override
-	public List<ShowletType> getGroupUtilizers(String groupName) throws ApsSystemException {
-		List<ShowletType> utilizers = null;
+	public List<WidgetType> getGroupUtilizers(String groupName) throws ApsSystemException {
+		List<WidgetType> utilizers = null;
 		try {
 			boolean freeTypes = (null == groupName || groupName.equals(Group.FREE_GROUP_NAME));
-			List<ShowletType> allTypes = this.getShowletTypes();
+			List<WidgetType> allTypes = this.getShowletTypes();
 			for (int i = 0; i < allTypes.size(); i++) {
-				ShowletType type = allTypes.get(i);
+				WidgetType type = allTypes.get(i);
 				String typeGroup = type.getMainGroup();
 				if ((freeTypes && null == typeGroup) || groupName.equals(typeGroup)) {
 					if (null == utilizers) {
-						utilizers = new ArrayList<ShowletType>();
+						utilizers = new ArrayList<WidgetType>();
 					}
 					utilizers.add(type);
 				}
@@ -220,15 +220,15 @@ public class ShowletTypeManager extends AbstractService
 		return utilizers;
 	}
 	
-	protected IShowletTypeDAO getShowletTypeDAO() {
+	protected IWidgetTypeDAO getShowletTypeDAO() {
 		return _showletTypeDao;
 	}
-	public void setShowletTypeDAO(IShowletTypeDAO showletTypeDAO) {
+	public void setShowletTypeDAO(IWidgetTypeDAO showletTypeDAO) {
 		this._showletTypeDao = showletTypeDAO;
 	}
 	
-	private Map<String, ShowletType> _showletTypes;
+	private Map<String, WidgetType> _showletTypes;
 	
-	private IShowletTypeDAO _showletTypeDao;
+	private IWidgetTypeDAO _showletTypeDao;
 	
 }
