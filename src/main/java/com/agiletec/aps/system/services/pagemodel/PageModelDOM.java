@@ -21,6 +21,8 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -28,8 +30,6 @@ import org.jdom.input.SAXBuilder;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

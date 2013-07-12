@@ -15,12 +15,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.services.showlettype;
+package org.entando.entando.aps.system.services.widgettype;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.entando.entando.aps.system.services.widgettype.events.ShowletTypeChangedEvent;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -29,7 +31,6 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
-import com.agiletec.aps.system.services.showlettype.events.ShowletTypeChangedEvent;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

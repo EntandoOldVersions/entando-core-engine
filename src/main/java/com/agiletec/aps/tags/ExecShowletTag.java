@@ -31,16 +31,19 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
 import org.springframework.web.context.WebApplicationContext;
 
 /**

@@ -17,11 +17,11 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 
 /**
  * @version 1.0

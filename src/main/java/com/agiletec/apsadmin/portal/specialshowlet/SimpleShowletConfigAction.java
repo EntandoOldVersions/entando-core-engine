@@ -20,11 +20,12 @@ package com.agiletec.apsadmin.portal.specialshowlet;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 

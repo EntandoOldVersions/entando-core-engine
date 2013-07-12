@@ -25,12 +25,13 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

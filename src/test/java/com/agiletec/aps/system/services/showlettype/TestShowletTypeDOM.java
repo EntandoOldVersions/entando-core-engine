@@ -20,11 +20,11 @@ package com.agiletec.aps.system.services.showlettype;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeDOM;
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeDOM;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 
 /**
  * @author M.Diana

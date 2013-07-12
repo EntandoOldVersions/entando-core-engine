@@ -25,6 +25,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
 import org.entando.entando.aps.system.services.api.model.ApiService;
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
@@ -33,8 +35,6 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 

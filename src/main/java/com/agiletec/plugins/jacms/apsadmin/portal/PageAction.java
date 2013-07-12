@@ -19,6 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.portal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -26,8 +29,6 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.PageUtilizer;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;

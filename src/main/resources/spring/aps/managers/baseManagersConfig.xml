@@ -135,10 +135,10 @@
 		</property>
 	</bean>
 	
-	<bean id="ShowletTypeManager" class="com.agiletec.aps.system.services.showlettype.ShowletTypeManager" 
+	<bean id="ShowletTypeManager" class="org.entando.entando.aps.system.services.widgettype.ShowletTypeManager" 
 			parent="abstractService" >
 		<property name="showletTypeDAO" >
-			<bean class="com.agiletec.aps.system.services.showlettype.ShowletTypeDAO">
+			<bean class="org.entando.entando.aps.system.services.widgettype.ShowletTypeDAO">
 				<property name="dataSource" ref="portDataSource" />
 				<property name="langManager" ref="LangManager"/>
 			</bean>

@@ -23,9 +23,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockShowletsDAO;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -34,8 +36,6 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

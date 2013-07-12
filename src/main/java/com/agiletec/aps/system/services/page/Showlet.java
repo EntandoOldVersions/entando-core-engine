@@ -19,7 +19,8 @@ package com.agiletec.aps.system.services.page;
 
 import java.io.Serializable;
 
-import com.agiletec.aps.system.services.showlettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+
 import com.agiletec.aps.util.ApsProperties;
 
 /**

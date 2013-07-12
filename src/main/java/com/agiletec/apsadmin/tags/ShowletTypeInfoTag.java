@@ -17,9 +17,10 @@
 */
 package com.agiletec.apsadmin.tags;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 /**

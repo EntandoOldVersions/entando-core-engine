@@ -23,9 +23,10 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 
 /**
  * Data Access Object per i modelli di pagina (PageModel)0

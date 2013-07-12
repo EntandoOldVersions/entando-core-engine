@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.services.showlettype.events;
+package org.entando.entando.aps.system.services.widgettype.events;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 

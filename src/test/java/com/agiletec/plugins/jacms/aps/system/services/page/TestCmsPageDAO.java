@@ -21,11 +21,11 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.widgettype.IShowletTypeManager;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
-import com.agiletec.aps.system.services.showlettype.IShowletTypeManager;
 import com.agiletec.plugins.jacms.aps.system.services.page.CmsPageDAO;
 
 /**

@@ -20,10 +20,11 @@ package com.agiletec.apsadmin.portal;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
 
 /**
  * Main action class for the pages configuration.

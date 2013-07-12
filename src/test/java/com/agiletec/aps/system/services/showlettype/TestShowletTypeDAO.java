@@ -21,12 +21,12 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.widgettype.ShowletType;
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeDAO;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
-import com.agiletec.aps.system.services.showlettype.ShowletType;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeDAO;
 
 /**
  * @author M.Diana

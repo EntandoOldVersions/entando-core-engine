@@ -20,11 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.widgettype.ShowletTypeParameter;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.showlettype.ShowletTypeParameter;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
 /**
