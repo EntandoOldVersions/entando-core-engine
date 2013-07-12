@@ -16,7 +16,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
-import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
+import com.agiletec.aps.system.common.searchengine.IEntitySearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -24,7 +24,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * di oggetti ricercabili tramite motore di ricerca.
  * @author W.Ambu - E.Santoboni
  */
-public interface ICmsSearchEngineManager extends ISearchEngineManager {
+public interface ICmsSearchEngineManager extends IEntitySearchEngineManager {
 	
 	/**
      * Ricarica in blocco le indicizzazioni dei contenuti 

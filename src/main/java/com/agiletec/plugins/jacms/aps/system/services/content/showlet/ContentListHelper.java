@@ -33,7 +33,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
+import com.agiletec.aps.system.common.searchengine.IEntitySearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -341,15 +341,15 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		this._userFilterDateFormat = userFilterDateFormat;
 	}
 	
-	protected ISearchEngineManager getSearchEngineManager() {
+	protected IEntitySearchEngineManager getSearchEngineManager() {
 		return _searchEngineManager;
 	}
-	public void setSearchEngineManager(ISearchEngineManager searchEngineManager) {
+	public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
 		this._searchEngineManager = searchEngineManager;
 	}
 	
 	private String _userFilterDateFormat;
 	
-	private ISearchEngineManager _searchEngineManager;
+	private IEntitySearchEngineManager _searchEngineManager;
 	
 }
