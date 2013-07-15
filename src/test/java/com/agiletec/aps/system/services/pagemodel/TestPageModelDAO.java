@@ -40,7 +40,7 @@ public class TestPageModelDAO extends BaseTestCase {
          	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 		PageModelDAO pageModelDAO = new PageModelDAO();
 		pageModelDAO.setDataSource(dataSource);
-		pageModelDAO.setShowletTypeManager(showletTypeManager);
+		pageModelDAO.setWidgetTypeManager(showletTypeManager);
 		Map<String, PageModel> models = null;
         try {
             models = pageModelDAO.loadModels();

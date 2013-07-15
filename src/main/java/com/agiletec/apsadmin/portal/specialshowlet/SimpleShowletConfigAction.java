@@ -153,7 +153,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getShowletTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getShowletType(typeCode);
 	}
 	
 	@Override

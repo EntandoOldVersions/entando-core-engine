@@ -102,7 +102,7 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getShowletTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getShowletType(typeCode);
 	}
 	
 	public IPage getCurrentPage() {
@@ -151,13 +151,16 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 		this._pageManager = pageManager;
 	}
 	
-	protected IWidgetTypeManager getShowletTypeManager() {
-		return _showletTypeManager;
+	public IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
 	}
-	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
-		this._showletTypeManager = showletTypeManager;
+
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
 	}
-	
+
+
+
 	private String _pageCode;
 	private int _frame = -1;
 	private String _showletTypeCode;
@@ -166,6 +169,6 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 	private String _modelId;
 	
 	private IPageManager _pageManager;
-	private IWidgetTypeManager _showletTypeManager;
+	private IWidgetTypeManager _widgetTypeManager;
 	
 }

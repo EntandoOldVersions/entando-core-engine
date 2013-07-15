@@ -64,7 +64,7 @@ public class ShowletsViewerAction extends AbstractPortalAction implements IShowl
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getShowletTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getShowletType(typeCode);
 	}
 	
 	public String getShowletTypeCode() {

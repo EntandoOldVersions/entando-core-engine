@@ -31,7 +31,7 @@ import com.agiletec.aps.system.services.page.PageDAO;
 public class CmsPageDAO extends PageDAO implements ICmsPageDAO {
 	
 	@Override
-    public List<String> getContentUtilizers(String contentId) {
+	public List<String> getContentUtilizers(String contentId) {
 		Connection conn = null;
 		List<String> pageCodes = new ArrayList<String>();
 		PreparedStatement stat = null;

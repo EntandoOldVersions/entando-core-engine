@@ -140,7 +140,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			return null;
 		}
 		Showlet showlet = new Showlet();
-		WidgetType type = this.getShowletTypeManager().getShowletType(typeCode);
+		WidgetType type = this.getWidgetTypeManager().getShowletType(typeCode);
 		showlet.setType(type);
 		ApsProperties config = new ApsProperties();
 		String configText = res.getString(11);
@@ -471,18 +471,16 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		this._pageModelManager = pageModelManager;
 	}
 
-	
-
-	public IWidgetTypeManager getShowletTypeManager() {
-		return _showletTypeManager;
+	public IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
 	}
-
-	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
-		this._showletTypeManager = showletTypeManager;
+	
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
 	}
 
 	private IPageModelManager _pageModelManager;
-	private IWidgetTypeManager _showletTypeManager;
+	private IWidgetTypeManager _widgetTypeManager;
 
 	// attenzione: l'ordinamento deve rispettare prima l'ordine delle pagine
 	// figlie nelle pagine madri, e poi l'ordine delle showlet nella pagina.

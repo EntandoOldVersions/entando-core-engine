@@ -152,12 +152,8 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		return null;
 	}
 	
-	public List<WidgetType> getShowletTypes() {
-		return this.getShowletTypeManager().getShowletTypes();
-	}
-	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getShowletTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getShowletType(typeCode);
 	}
 	
 	public IPage getCurrentPage() {

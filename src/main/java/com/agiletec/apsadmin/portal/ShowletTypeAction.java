@@ -93,13 +93,13 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			ApsProperties titles = new ApsProperties();
 			titles.put("it", this.getItalianTitle());
 			titles.put("en", this.getEnglishTitle());
-			WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
 			String mainGroupToSet = (this.hasCurrentUserPermission(Permission.SUPERUSER)) ? this.getMainGroup() : type.getMainGroup();
 			ApsProperties configToSet = type.getConfig();
 			if (type.isLogic() && type.isUserType() && !type.isLocked() && this.hasCurrentUserPermission(Permission.SUPERUSER)) {
 				configToSet = this.extractShowletTypeConfig(type.getParentType().getTypeParameters());
 			}
-			this.getShowletTypeManager().updateShowletType(this.getShowletTypeCode(), titles, configToSet, mainGroupToSet);
+			this.getWidgetTypeManager().updateShowletType(this.getShowletTypeCode(), titles, configToSet, mainGroupToSet);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
@@ -117,7 +117,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			if (null == showletToCopy) {
 				this.setReplaceOnPage(false);
 				newType = this.createNewShowletType();
-				WidgetType parentType = this.getShowletTypeManager().getShowletType(this.getParentShowletTypeCode());
+				WidgetType parentType = this.getWidgetTypeManager().getShowletType(this.getParentShowletTypeCode());
 				newType.setParentType(parentType);
 				ApsProperties config = this.extractShowletTypeConfig(parentType.getTypeParameters());
 				newType.setConfig(config);
@@ -128,7 +128,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			//TODO CHECK MainGroup
 			newType.setMainGroup(this.getMainGroup());
 			
-			this.getShowletTypeManager().addShowletType(newType);
+			this.getWidgetTypeManager().addShowletType(newType);
 			if (this.isReplaceOnPage()) {
 				WidgetType type = this.getShowletType(this.getShowletTypeCode());
 				Showlet showlet = new Showlet();
@@ -154,7 +154,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	private String checkNewShowlet() throws Throwable {
-		WidgetType parentType = this.getShowletTypeManager().getShowletType(this.getParentShowletTypeCode());
+		WidgetType parentType = this.getWidgetTypeManager().getShowletType(this.getParentShowletTypeCode());
 		if (null == parentType) {
 			this.addActionError(this.getText("error.showletType.invalid.null", new String[]{this.getParentShowletTypeCode()}));
 			return "inputShowletTypes";
@@ -233,7 +233,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			String check = this.checkShowletType();
 			if (null != check) return check;
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
-			WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
 			ApsProperties titles = type.getTitles();
 			this.setItalianTitle(titles.getProperty("it"));
 			this.setEnglishTitle(titles.getProperty("en"));
@@ -246,7 +246,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	private String checkShowletType() {
-		WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+		WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
 		if (null == type) {
 			this.addActionError(this.getText("error.showletType.invalid.null", new String[]{this.getShowletTypeCode()}));
 			return "inputShowletTypes";
@@ -271,7 +271,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		try {
 			String check = this.checkDeleteShowletType();
 			if (null != check) return check;
-			this.getShowletTypeManager().deleteShowletType(this.getShowletTypeCode());
+			this.getWidgetTypeManager().deleteShowletType(this.getShowletTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
@@ -283,7 +283,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		try {
 			String check = this.checkShowletType();
 			if (null != check) return check;
-			WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
 			if (type.isLocked()) {
 				this.addActionError(this.getText("error.showletType.locked.undeletable", new String[]{this.getShowletTypeCode()}));
 				return "inputShowletTypes";
@@ -301,7 +301,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	}
 	
 	public WidgetType getShowletType(String code) {
-		return this.getShowletTypeManager().getShowletType(code);
+		return this.getWidgetTypeManager().getShowletType(code);
 	}
 	
 	public Group getGroup(String groupCode) {

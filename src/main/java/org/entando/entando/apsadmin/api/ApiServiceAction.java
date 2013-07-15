@@ -150,7 +150,7 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			ApiMethod masterMethod = this.getMethod(this.getNamespace(), this.getResourceName());
 			if (null != this.getShowletTypeCode() && null != masterMethod.getRelatedShowlet()) {
-				WidgetType type = this.getShowletTypeManager().getShowletType(this.getShowletTypeCode());
+				WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
 				if (null != type && type.isLogic()) {
 					ApsProperties parameters =
 							this.extractParametersFromShowletProperties(masterMethod.getRelatedShowlet(), type.getConfig());
@@ -560,13 +560,6 @@ public class ApiServiceAction extends AbstractApiAction {
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-
-	protected IWidgetTypeManager getShowletTypeManager() {
-		return _showletTypeManager;
-	}
-	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
-		this._showletTypeManager = showletTypeManager;
-	}
 	
 	protected IGroupManager getGroupManager() {
 		return _groupManager;
@@ -575,6 +568,16 @@ public class ApiServiceAction extends AbstractApiAction {
 		this._groupManager = groupManager;
 	}
 	
+	public IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
+	}
+
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
+	}
+
+
+
 	private String _serviceGroup;
 	private int _strutsAction;
 	
@@ -602,7 +605,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	private String _showletTypeCode;
 	
 	private IPageManager _pageManager;
-	private IWidgetTypeManager _showletTypeManager;
 	private IGroupManager _groupManager;
+	private IWidgetTypeManager _widgetTypeManager;
 	
 }

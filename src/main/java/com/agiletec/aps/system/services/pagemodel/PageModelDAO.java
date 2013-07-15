@@ -75,7 +75,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			pageModel.setDescr(res.getString(2));
 			String xmlFrames = res.getString(3);
 			if (null != xmlFrames && xmlFrames.length() > 0) {
-				PageModelDOM pageModelDOM = new PageModelDOM(xmlFrames, this.getShowletTypeManager());
+				PageModelDOM pageModelDOM = new PageModelDOM(xmlFrames, this.getWidgetTypeManager());
 				pageModel.setFrames(pageModelDOM.getFrames());
 				pageModel.setMainFrame(pageModelDOM.getMainFrame());
 				pageModel.setDefaultShowlet(pageModelDOM.getDefaultShowlet());
@@ -87,14 +87,15 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 		return pageModel;
 	}
 	
-	protected IWidgetTypeManager getShowletTypeManager() {
-		return _showletTypeManager;
-	}
-	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
-		this._showletTypeManager = showletTypeManager;
+	public IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
 	}
 
-	private IWidgetTypeManager _showletTypeManager;
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
+	}
+
+	private IWidgetTypeManager _widgetTypeManager;
 	
 	private final String ALL_PAGEMODEL = 
 		"SELECT code, descr, frames, plugincode FROM pagemodels";

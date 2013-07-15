@@ -65,7 +65,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	
 	protected Map<String, List<SelectItem>> getShowletFlavoursMapping(List<String> pluginCodes) {
 		Map<String, List<SelectItem>> mapping = new HashMap<String, List<SelectItem>>();
-		List<WidgetType> types = this.getShowletTypeManager().getShowletTypes();
+		List<WidgetType> types = this.getWidgetTypeManager().getShowletTypes();
 		for (int i = 0; i < types.size(); i++) {
 			WidgetType type = types.get(i);
 			String pluginCode = type.getPluginCode();
@@ -236,13 +236,6 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._groupManager = groupManager;
 	}
 	
-	protected IWidgetTypeManager getShowletTypeManager() {
-		return _showletTypeManager;
-	}
-	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
-		this._showletTypeManager = showletTypeManager;
-	}
-	
 	protected IApiCatalogManager getApiCatalogManager() {
 		return _apiCatalogManager;
 	}
@@ -250,6 +243,14 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._apiCatalogManager = apiCatalogManager;
 	}
 	
+	public IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
+	}
+
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
+	}
+
 	private String _selectedNode;
 	
 	private String _stockShowletCodes;
@@ -257,7 +258,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;
 	
-	private IWidgetTypeManager _showletTypeManager;
+	private IWidgetTypeManager _widgetTypeManager;
 	private IApiCatalogManager _apiCatalogManager;
 	
 	/**

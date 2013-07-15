@@ -14,7 +14,7 @@
 			class="org.entando.entando.apsadmin.api.ApiServiceAction" parent="abstractBaseAction">
         <property name="apiCatalogManager" ref="ApiCatalogManager" />
         <property name="pageManager" ref="PageManager" />
-        <property name="showletTypeManager" ref="WidgetTypeManager" />
+        <property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="roleManager" ref="RoleManager" />
 		<property name="groupManager" ref="GroupManager" />
     </bean>

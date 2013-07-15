@@ -150,7 +150,7 @@
 		<property name="pageModelDAO" >
 			<bean class="com.agiletec.aps.system.services.pagemodel.PageModelDAO">
 				<property name="dataSource" ref="portDataSource" />
-				<property name="showletTypeManager" ref="WidgetTypeManager" />
+				<property name="widgetTypeManager" ref="WidgetTypeManager" />
 			</bean>
 		</property>
 	</bean>
@@ -160,7 +160,7 @@
 		<property name="pageDAO" >
 			<bean class="com.agiletec.aps.system.services.page.PageDAO">
 				<property name="dataSource" ref="portDataSource" />
-				<property name="showletTypeManager" ref="WidgetTypeManager" />
+				<property name="widgetTypeManager" ref="WidgetTypeManager" />
 				<property name="pageModelManager" ref="PageModelManager" />
 			</bean>
 		</property>

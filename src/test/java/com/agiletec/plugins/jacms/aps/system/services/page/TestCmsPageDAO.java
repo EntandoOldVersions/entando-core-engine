@@ -58,7 +58,7 @@ public class TestCmsPageDAO extends BaseTestCase {
     		IPageModelManager pageModelManager = (IPageModelManager) this.getService(SystemConstants.PAGE_MODEL_MANAGER);
     		IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
     		this._pageDao.setPageModelManager(pageModelManager);
-    		this._pageDao.setShowletTypeManager(showletTypeManager);
+    		this._pageDao.setWidgetTypeManager(showletTypeManager);
 		} catch (Throwable e) {
 			throw new Exception(e);
 		}
