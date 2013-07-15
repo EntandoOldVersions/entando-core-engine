@@ -54,7 +54,7 @@ public class WidgetTypeManager extends AbstractService
 	 */
 	private void loadShowletTypes() throws ApsSystemException {
 		try {
-			this._showletTypes = this.getShowletTypeDAO().loadShowletTypes();
+			this._showletTypes = this.getWidgetTypeDAO().loadShowletTypes();
 			Iterator<WidgetType> iter = this._showletTypes.values().iterator();
 			while (iter.hasNext()) {
 				WidgetType type = iter.next();
@@ -112,7 +112,7 @@ public class WidgetTypeManager extends AbstractService
 			if (null != showletType.getTypeParameters() && null != showletType.getConfig()) {
 				throw new ApsSystemException("ERROR : Params not null and config not null");
 			}
-			this.getShowletTypeDAO().addShowletType(showletType);
+			this.getWidgetTypeDAO().addShowletType(showletType);
 			this._showletTypes.put(showletType.getCode(), showletType);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addShowletType");
@@ -132,7 +132,7 @@ public class WidgetTypeManager extends AbstractService
 				ApsSystemUtils.getLogger().severe("A loked showlet can't be deleted - type " + showletTypeCode);
 				return;
 			}
-			this.getShowletTypeDAO().deleteShowletType(showletTypeCode);
+			this.getWidgetTypeDAO().deleteShowletType(showletTypeCode);
 			this._showletTypes.remove(showletTypeCode);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteShowletType");
@@ -167,7 +167,7 @@ public class WidgetTypeManager extends AbstractService
 			if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
 				defaultConfig = type.getConfig();
 			}
-			this.getShowletTypeDAO().updateShowletType(showletTypeCode, titles, defaultConfig, mainGroup);
+			this.getWidgetTypeDAO().updateShowletType(showletTypeCode, titles, defaultConfig, mainGroup);
 			type.setTitles(titles);
 			type.setConfig(defaultConfig);
 			type.setMainGroup(mainGroup);
@@ -189,7 +189,7 @@ public class WidgetTypeManager extends AbstractService
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
 			}
-			this.getShowletTypeDAO().updateShowletTypeTitles(showletTypeCode, titles);
+			this.getWidgetTypeDAO().updateShowletTypeTitles(showletTypeCode, titles);
 			type.setTitles(titles);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
@@ -220,17 +220,16 @@ public class WidgetTypeManager extends AbstractService
 		return utilizers;
 	}
 	
-	protected IWidgetTypeDAO getShowletTypeDAO() {
-		return _showletTypeDao;
+	public IWidgetTypeDAO getWidgetTypeDAO() {
+		return _widgetTypeDAO;
 	}
-	public void setShowletTypeDAO(IWidgetTypeDAO showletTypeDAO) {
-		this._showletTypeDao = showletTypeDAO;
+
+	public void setWidgetTypeDAO(IWidgetTypeDAO widgetTypeDAO) {
+		this._widgetTypeDAO = widgetTypeDAO;
 	}
-	
+
 	private Map<String, WidgetType> _showletTypes;
 	
-	@Deprecated
-	private IWidgetTypeDAO _showletTypeDao;
-	private IWidgetTypeDAO widgetTypeDAO;
+	private IWidgetTypeDAO _widgetTypeDAO;
 	
 }
