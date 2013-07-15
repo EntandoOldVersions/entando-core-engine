@@ -11,7 +11,7 @@
 		<property name="pageDAO" >
 			<bean class="com.agiletec.plugins.jacms.aps.system.services.page.CmsPageDAO">
 				<property name="dataSource" ref="portDataSource" />
-				<property name="showletTypeManager" ref="ShowletTypeManager" />
+				<property name="showletTypeManager" ref="WidgetTypeManager" />
 				<property name="pageModelManager" ref="PageModelManager" />
 			</bean>
 		</property>

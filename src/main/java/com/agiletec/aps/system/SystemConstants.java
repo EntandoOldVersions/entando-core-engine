@@ -106,7 +106,7 @@ public interface SystemConstants {
     /**
      * Nome del servizio che gestisce i tipi di showlet.
      */
-    public static final String WIDGET_TYPE_MANAGER = "ShowletTypeManager";
+    public static final String WIDGET_TYPE_MANAGER = "WidgetTypeManager";
 
 	/**
 	 * Nome del servizio che gestisce i tipi di showlet.

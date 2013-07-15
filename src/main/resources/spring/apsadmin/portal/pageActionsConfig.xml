@@ -8,7 +8,7 @@
 	<bean id="abstractPortalAction" abstract="true" class="com.agiletec.apsadmin.portal.AbstractPortalAction" parent="abstractBaseAction" >
 		<property name="groupManager" ref="GroupManager" />
 		<property name="pageManager" ref="PageManager" />
-		<property name="showletTypeManager" ref="ShowletTypeManager" />
+		<property name="showletTypeManager" ref="WidgetTypeManager" />
 		<property name="apiCatalogManager" ref="ApiCatalogManager" />
 		<property name="stockShowletCodes"><value>${showlets.stock}</value></property>
 	</bean>

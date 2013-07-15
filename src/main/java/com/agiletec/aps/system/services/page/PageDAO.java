@@ -471,9 +471,12 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		this._pageModelManager = pageModelManager;
 	}
 
-	protected IWidgetTypeManager getShowletTypeManager() {
+	
+
+	public IWidgetTypeManager getShowletTypeManager() {
 		return _showletTypeManager;
 	}
+
 	public void setShowletTypeManager(IWidgetTypeManager showletTypeManager) {
 		this._showletTypeManager = showletTypeManager;
 	}

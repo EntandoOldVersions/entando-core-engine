@@ -229,6 +229,8 @@ public class WidgetTypeManager extends AbstractService
 	
 	private Map<String, WidgetType> _showletTypes;
 	
+	@Deprecated
 	private IWidgetTypeDAO _showletTypeDao;
+	private IWidgetTypeDAO widgetTypeDAO;
 	
 }

@@ -135,7 +135,7 @@
 		</property>
 	</bean>
 	
-	<bean id="ShowletTypeManager" class="org.entando.entando.aps.system.services.widgettype.WidgetTypeManager" 
+	<bean id="WidgetTypeManager" class="org.entando.entando.aps.system.services.widgettype.WidgetTypeManager" 
 			parent="abstractService" >
 		<property name="showletTypeDAO" >
 			<bean class="org.entando.entando.aps.system.services.widgettype.WidgetTypeDAO">
@@ -150,7 +150,7 @@
 		<property name="pageModelDAO" >
 			<bean class="com.agiletec.aps.system.services.pagemodel.PageModelDAO">
 				<property name="dataSource" ref="portDataSource" />
-				<property name="showletTypeManager" ref="ShowletTypeManager" />
+				<property name="showletTypeManager" ref="WidgetTypeManager" />
 			</bean>
 		</property>
 	</bean>
@@ -160,7 +160,7 @@
 		<property name="pageDAO" >
 			<bean class="com.agiletec.aps.system.services.page.PageDAO">
 				<property name="dataSource" ref="portDataSource" />
-				<property name="showletTypeManager" ref="ShowletTypeManager" />
+				<property name="showletTypeManager" ref="WidgetTypeManager" />
 				<property name="pageModelManager" ref="PageModelManager" />
 			</bean>
 		</property>

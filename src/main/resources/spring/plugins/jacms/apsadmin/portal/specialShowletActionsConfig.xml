@@ -17,7 +17,7 @@
 		<property name="groupManager" ref="GroupManager"/>
 		<property name="entityActionHelper" ref="jacmsContentActionHelper"/>
 		<property name="pageManager" ref="PageManager" />
-		<property name="showletTypeManager" ref="ShowletTypeManager" />
+		<property name="showletTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	
 	<bean id="jacmsContentListViewerShowletAction" scope="prototype" 

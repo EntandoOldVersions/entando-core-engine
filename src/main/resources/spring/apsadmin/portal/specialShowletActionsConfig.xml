@@ -7,7 +7,7 @@
 	
 	<bean id="simpleShowletAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction" parent="abstractPortalAction" >
-		<property name="showletTypeManager" ref="ShowletTypeManager" />
+		<property name="showletTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	
 	<bean id="navigatorShowletAction" scope="prototype" 
