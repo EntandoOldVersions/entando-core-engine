@@ -1,3 +1,5 @@
 target
 derby.log
 nb-configuration.xml
+.project
+.classpath
