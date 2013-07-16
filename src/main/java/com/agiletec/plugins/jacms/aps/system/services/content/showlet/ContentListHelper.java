@@ -33,7 +33,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.searchengine.IEntitySearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -47,6 +46,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 

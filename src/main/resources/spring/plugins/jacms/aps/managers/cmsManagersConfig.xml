@@ -106,6 +106,7 @@
 		<property name="authorizationManager" ref="AuthorizationManager" />
     </bean>
     
+	<!-- SearchEngine - start -->
     <bean id="jacmsSearchEngineIndexerDao" class="com.agiletec.plugins.jacms.aps.system.services.searchengine.IndexerDAO" scope="prototype">
         <property name="langManager" ref="LangManager" />
     </bean>
@@ -114,9 +115,7 @@
     
     <bean id="jacmsSearchEngineDAOFactory" class="com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineDAOFactory" 
 			init-method="init">
-        <property name="indexDiskRootFolder">
-            <jee:jndi-lookup jndi-name="java:comp/env/indexDiskRootFolder" />
-        </property>
+        <property name="indexDiskRootFolder"><jee:jndi-lookup jndi-name="java:comp/env/indexDiskRootFolder" /></property>
         <property name="configManager" ref="BaseConfigManager"/>
     </bean>
     
@@ -125,6 +124,7 @@
         <property name="factory" ref="jacmsSearchEngineDAOFactory" />
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
+	<!-- SearchEngine - end -->
     
     <bean id="jacmsBaseContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper" >
         <property name="contentManager" ref="jacmsContentManager" />

@@ -17,17 +17,10 @@
 */
 package com.agiletec.aps.system.common.searchengine;
 
-import java.util.Collection;
-import java.util.List;
-
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 /**
  * @author E.Santoboni
+ * @deprecated Since Entando 3.3.1, use org.entando.entando.aps.system.services.searchengine.ISearchEngineManager
  */
-public interface ISearchEngineManager {
-	
-	public List<String> searchId(String sectionCode, String langCode, 
-			String word, Collection<String> allowedGroups) throws ApsSystemException;
+public interface ISearchEngineManager extends org.entando.entando.aps.system.services.searchengine.ISearchEngineManager {
 	
 }
