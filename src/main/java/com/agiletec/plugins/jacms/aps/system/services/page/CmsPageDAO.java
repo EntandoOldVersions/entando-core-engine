@@ -54,6 +54,6 @@ public class CmsPageDAO extends PageDAO implements ICmsPageDAO {
 	}
     
     private static final String LOAD_REFERENCING_PAGES_FOR_CONTENT = 
-		"SELECT pagecode FROM showletconfig WHERE publishedcontent = ? ";
+		"SELECT pagecode FROM widgetconfig WHERE publishedcontent = ? ";
     
 }

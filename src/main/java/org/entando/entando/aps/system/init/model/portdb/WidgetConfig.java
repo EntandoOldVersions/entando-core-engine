@@ -26,10 +26,10 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = ShowletConfig.TABLE_NAME)
-public class ShowletConfig implements ExtendedColumnDefinition {
+@DatabaseTable(tableName = WidgetConfig.TABLE_NAME)
+public class WidgetConfig implements ExtendedColumnDefinition {
 	
-	public ShowletConfig() {}
+	public WidgetConfig() {}
 	
 	@DatabaseField(foreign=true, columnName = "pagecode", 
 			width = 30, 
@@ -77,11 +77,11 @@ public class ShowletConfig implements ExtendedColumnDefinition {
 		return queries;
 	}
 	
-	public static final String TABLE_NAME = "showletconfig";
+	public static final String TABLE_NAME = "widgetconfig";
 	
 }
 /*
-CREATE TABLE showletconfig
+CREATE TABLE widgetconfig
 (
   pagecode character varying(30) NOT NULL,
   framepos integer NOT NULL,

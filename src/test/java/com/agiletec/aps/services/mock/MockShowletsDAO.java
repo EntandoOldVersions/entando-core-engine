@@ -42,7 +42,7 @@ public class MockShowletsDAO  extends AbstractDAO {
         ResultSet res = null;
         try {
         	conn = this.getConnection();
-            stat = conn.prepareStatement("select pagecode from showletconfig where pagecode=?");
+            stat = conn.prepareStatement("select pagecode from widgetconfig where pagecode=?");
             stat.setString(1, code);
             res = stat.executeQuery();
             return res.next();

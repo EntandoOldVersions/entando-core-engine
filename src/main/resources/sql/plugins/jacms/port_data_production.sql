@@ -35,7 +35,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 
 
-INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('homepage', 0, 'content_viewer', NULL, NULL);
+INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('homepage', 0, 'content_viewer', NULL, NULL);
 
 
 

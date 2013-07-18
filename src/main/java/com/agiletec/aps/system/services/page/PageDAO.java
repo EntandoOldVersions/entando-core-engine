@@ -488,7 +488,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		"SELECT p.parentcode, p.pos, p.code, p.showinmenu, "
 		+ "p.modelcode, p.titles, p.groupcode, p.extraconfig, "
 		+ "s.framepos, s.showletcode, s.config, s.publishedcontent "
-		+ "FROM pages p LEFT JOIN showletconfig s ON p.code = s.pagecode "
+		+ "FROM pages p LEFT JOIN widgetconfig s ON p.code = s.pagecode "
 		+ "ORDER BY p.parentcode, p.pos, p.code, s.framepos";
 	
 	private static final String ADD_PAGE = 
@@ -498,7 +498,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		"DELETE FROM pages WHERE code = ? ";
 
 	private static final String DELETE_SHOWLETS_FOR_PAGE = 
-		"DELETE FROM showletconfig WHERE pagecode = ? ";
+		"DELETE FROM widgetconfig WHERE pagecode = ? ";
 
 	private static final String REMOVE_SHOWLET_FROM_FRAME = 
 		DELETE_SHOWLETS_FOR_PAGE + " AND framepos = ? ";
@@ -516,6 +516,6 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		"UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
 
 	private static final String ADD_SHOWLET_FOR_PAGE = 
-		"INSERT INTO showletconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
+		"INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
 
 }
