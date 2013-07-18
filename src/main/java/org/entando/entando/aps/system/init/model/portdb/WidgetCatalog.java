@@ -23,10 +23,10 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = ShowletCatalog.TABLE_NAME)
-public class ShowletCatalog {
+@DatabaseTable(tableName = WidgetCatalog.TABLE_NAME)
+public class WidgetCatalog {
 	
-	public ShowletCatalog() {}
+	public WidgetCatalog() {}
 	
 	@DatabaseField(columnName = "code", 
 			dataType = DataType.STRING, 
@@ -67,11 +67,11 @@ public class ShowletCatalog {
 			width = 20)
 	private String _mainGroup;
 	
-	public static final String TABLE_NAME = "showletcatalog";
+	public static final String TABLE_NAME = "widgetcatalog";
 	
 }
 /*
-CREATE TABLE showletcatalog
+CREATE TABLE widgetcatalog
 (
   code character varying(40) NOT NULL,
   titles character varying NOT NULL,

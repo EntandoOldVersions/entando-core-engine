@@ -241,7 +241,7 @@ INSERT INTO resourcerelations (resid, refcategory) VALUES ('44', 'resCat1');
 
 
 
-INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('90_events', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('90_events', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Lista contenuti anni ''90</property>
 <property key="it">Lista contenuti anni ''90</property>
@@ -251,12 +251,12 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 <property key="filters">(order=ASC;attributeFilter=true;end=31/12/1999;key=DataInizio;start=01/01/1990)</property>
 <property key="contentType">EVN</property>
 </properties>', 0, NULL);
-INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('search_result', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('search_result', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Search - Search Result</property>
 <property key="it">Ricerca - Risultati della Ricerca</property>
 </properties>', NULL, 'jacms', NULL, NULL, 1, NULL);
-INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Contents - Publish a Content</property>
 <property key="it">Contenuti - Pubblica un Contenuto</property>
@@ -270,7 +270,7 @@ INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode
 	<action name="viewerConfig"/>
 </config>
 ', 'jacms', NULL, NULL, 1, NULL);
-INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="en">Contents - Publish a List of Contents</property>
 <property key="it">Contenuti - Pubblica una Lista di Contenuti</property>

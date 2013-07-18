@@ -44,7 +44,7 @@ public class ShowletConfig implements ExtendedColumnDefinition {
 	@DatabaseField(foreign=true, columnName = "showletcode", 
 			width = 40, 
 			canBeNull = false)
-	private ShowletCatalog _showlet;
+	private WidgetCatalog _widget;
 	
 	@DatabaseField(columnName = "config", 
 			dataType = DataType.LONG_STRING)
@@ -59,7 +59,7 @@ public class ShowletConfig implements ExtendedColumnDefinition {
 	public String[] extensions(IDatabaseManager.DatabaseType type) {
 		String tableName = TABLE_NAME;
 		String pageTableName = Page.TABLE_NAME;
-		String showletCatalogTableName = ShowletCatalog.TABLE_NAME;
+		String showletCatalogTableName = WidgetCatalog.TABLE_NAME;
 		if (IDatabaseManager.DatabaseType.MYSQL.equals(type)) {
 			tableName = "`" + tableName + "`";
 			pageTableName = "`" + pageTableName + "`";
@@ -93,7 +93,7 @@ CREATE TABLE showletconfig
       REFERENCES pages (code) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
   CONSTRAINT showletconfig_showletcode_fkey FOREIGN KEY (showletcode)
-      REFERENCES showletcatalog (code) MATCH SIMPLE
+      REFERENCES widgetcatalog (code) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 */

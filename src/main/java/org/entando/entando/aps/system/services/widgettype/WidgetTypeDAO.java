@@ -254,24 +254,24 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	private ILangManager _langManager;
 	
 	private final String ALL_SHOWLET_TYPES = 
-		"SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup FROM showletcatalog";
+		"SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup FROM widgetcatalog";
 	
 	private final String ADD_SHOWLET_TYPE = 
-		"INSERT INTO showletcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) " +
+		"INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) " +
 		"VALUES ( ? , ? , ? , ? , ? , ? , ? , ?)";
 	
 	private final String DELETE_SHOWLET_TYPE = 
-		"DELETE FROM showletcatalog WHERE code = ? AND locked = ? ";
+		"DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 	
 	@Deprecated
 	private final String UPDATE_SHOWLET_TYPE_DEPRECATED = 
-		"UPDATE showletcatalog SET titles = ? , defaultconfig = ? WHERE code = ? ";
+		"UPDATE widgetcatalog SET titles = ? , defaultconfig = ? WHERE code = ? ";
 	
 	private final String UPDATE_SHOWLET_TYPE = 
-		"UPDATE showletcatalog SET titles = ? , defaultconfig = ? , maingroup = ? WHERE code = ? ";
+		"UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ? WHERE code = ? ";
 	
 	@Deprecated
 	private final String UPDATE_SHOWLET_TYPE_TITLES = 
-		"UPDATE showletcatalog SET titles = ? WHERE code = ? ";
+		"UPDATE widgetcatalog SET titles = ? WHERE code = ? ";
 	
 }

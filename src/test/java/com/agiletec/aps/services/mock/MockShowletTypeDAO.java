@@ -46,6 +46,6 @@ public class MockShowletTypeDAO extends AbstractDAO {
 	}
 	
 	private final String DELETE_SHOWLET_TYPE =
-		"DELETE FROM showletcatalog WHERE code = ?";
+		"DELETE FROM widgetcatalog WHERE code = ?";
 	
 }
