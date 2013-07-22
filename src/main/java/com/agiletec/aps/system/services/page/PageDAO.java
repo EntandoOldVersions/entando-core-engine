@@ -487,7 +487,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	private static final String ALL_PAGES = 
 		"SELECT p.parentcode, p.pos, p.code, p.showinmenu, "
 		+ "p.modelcode, p.titles, p.groupcode, p.extraconfig, "
-		+ "s.framepos, s.showletcode, s.config, s.publishedcontent "
+		+ "s.framepos, s.widgetcode, s.config, s.publishedcontent "
 		+ "FROM pages p LEFT JOIN widgetconfig s ON p.code = s.pagecode "
 		+ "ORDER BY p.parentcode, p.pos, p.code, s.framepos";
 	
@@ -516,6 +516,6 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		"UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
 
 	private static final String ADD_SHOWLET_FOR_PAGE = 
-		"INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
+		"INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
 
 }

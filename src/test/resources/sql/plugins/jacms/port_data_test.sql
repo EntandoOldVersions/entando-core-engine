@@ -292,41 +292,41 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 
 
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('pagina_11', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('pagina_11', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>
 ', 'ART187');
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('homepage', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('homepage', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="modelId">2</property>
 <property key="contentId">ART1</property>
 </properties>
 ', 'ART1');
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('coach_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('coach_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>
 ', 'ART187');
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('customers_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('customers_page', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART111</property>
 </properties>
 ', 'ART111');
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('homepage', 0, 'content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('homepage', 0, 'content_viewer_list', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="maxElemForItem">5</property>
 <property key="modelId">11</property>
 <property key="contentType">NEW</property>
 <property key="filters">(order=DESC;attributeFilter=true;likeOption=false;key=Date)+(order=ASC;attributeFilter=true;likeOption=false;key=Title)</property>
 </properties>', NULL);
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('customer_subpage_2', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('customer_subpage_2', 2, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART112</property>
 </properties>
 ', 'ART112');
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('contentview', 2, 'content_viewer', NULL, NULL);
-INSERT INTO widgetconfig (pagecode, framepos, showletcode, config, publishedcontent) VALUES ('pagina_2', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('contentview', 2, 'content_viewer', NULL, NULL);
+INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ('pagina_2', 1, 'content_viewer', '<?xml version="1.0" encoding="UTF-8"?>
 <properties>
 <property key="contentId">ART187</property>
 </properties>

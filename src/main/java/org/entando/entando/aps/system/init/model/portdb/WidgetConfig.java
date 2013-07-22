@@ -41,7 +41,7 @@ public class WidgetConfig implements ExtendedColumnDefinition {
 			canBeNull = false)
 	private int _framePos;
 	
-	@DatabaseField(foreign=true, columnName = "showletcode", 
+	@DatabaseField(foreign=true, columnName = "widgetcode", 
 			width = 40, 
 			canBeNull = false)
 	private WidgetCatalog _widget;
@@ -72,7 +72,7 @@ public class WidgetConfig implements ExtendedColumnDefinition {
 				+ "ADD CONSTRAINT " + TABLE_NAME + "_pagecode_fkey FOREIGN KEY (pagecode) "
 				+ "REFERENCES " + pageTableName + " (code)";
 		queries[2] = "ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_showletcode_fkey FOREIGN KEY (showletcode) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_showletcode_fkey FOREIGN KEY (widgetcode) "
 				+ "REFERENCES " + showletCatalogTableName + " (code)";
 		return queries;
 	}
@@ -85,14 +85,14 @@ CREATE TABLE widgetconfig
 (
   pagecode character varying(30) NOT NULL,
   framepos integer NOT NULL,
-  showletcode character varying(40) NOT NULL,
+  widgetcode character varying(40) NOT NULL,
   config character varying,
   publishedcontent character varying(30),
   CONSTRAINT showletconfig_pkey PRIMARY KEY (pagecode , framepos ),
   CONSTRAINT showletconfig_pagecode_fkey FOREIGN KEY (pagecode)
       REFERENCES pages (code) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT showletconfig_showletcode_fkey FOREIGN KEY (showletcode)
+  CONSTRAINT showletconfig_showletcode_fkey FOREIGN KEY (widgetcode)
       REFERENCES widgetcatalog (code) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 )
