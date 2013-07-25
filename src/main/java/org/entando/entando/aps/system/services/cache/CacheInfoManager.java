@@ -68,7 +68,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 			MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 			Method targetMethod = methodSignature.getMethod();
 			Class targetClass = pjp.getTarget().getClass();
-			Method effectiveTargetMethod = targetClass.getDeclaredMethod(targetMethod.getName(), targetMethod.getParameterTypes());
+			Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
 			Cacheable cacheable = effectiveTargetMethod.getAnnotation(Cacheable.class);
 			if (null == cacheable) {
 				return result;
