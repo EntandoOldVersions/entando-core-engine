@@ -45,7 +45,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.Filte
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
