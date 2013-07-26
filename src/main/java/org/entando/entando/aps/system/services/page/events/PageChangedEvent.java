@@ -15,11 +15,12 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.services.page.events;
+package org.entando.entando.aps.system.services.page.events;
+
+import org.entando.entando.aps.system.services.page.IPage;
 
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.ApsEvent;
-import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * Evento specifico da rilanciare in corispondenza 

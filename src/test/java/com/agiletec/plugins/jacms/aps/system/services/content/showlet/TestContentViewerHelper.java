@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
+import org.entando.entando.aps.system.services.page.Showlet;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -24,7 +25,6 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
 

@@ -23,13 +23,14 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.widget.INavigatorParser;
+import org.entando.entando.aps.system.services.page.widget.NavigatorTarget;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.page.showlet.INavigatorParser;
-import com.agiletec.aps.system.services.page.showlet.NavigatorTarget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;

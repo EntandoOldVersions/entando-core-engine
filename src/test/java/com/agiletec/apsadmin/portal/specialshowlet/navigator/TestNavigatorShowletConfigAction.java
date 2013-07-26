@@ -21,13 +21,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.IPageManager;
+import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.widget.NavigatorExpression;
 
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Showlet;
-import com.agiletec.aps.system.services.page.showlet.NavigatorExpression;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.specialshowlet.navigator.INavigatorShowletConfigAction;
 import com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorShowletConfigAction;

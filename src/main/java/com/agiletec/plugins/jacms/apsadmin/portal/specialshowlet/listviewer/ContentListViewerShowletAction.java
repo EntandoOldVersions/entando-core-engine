@@ -20,14 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.Showlet;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;

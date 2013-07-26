@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.services.page.showlet;
+package org.entando.entando.aps.system.services.page.widget;
 
 /**
  * Oggetto di utilità per la configurazione delle showlet navigatore.

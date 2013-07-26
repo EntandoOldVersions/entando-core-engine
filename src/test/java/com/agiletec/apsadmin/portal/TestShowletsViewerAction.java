@@ -20,10 +20,10 @@ package com.agiletec.apsadmin.portal;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import org.entando.entando.aps.system.services.page.IPage;
 
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.apsadmin.portal.ShowletsViewerAction;

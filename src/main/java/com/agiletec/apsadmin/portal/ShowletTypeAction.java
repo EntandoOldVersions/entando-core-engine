@@ -19,13 +19,13 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.List;
 
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.Showlet;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Showlet;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;

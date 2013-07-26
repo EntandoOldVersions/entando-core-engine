@@ -19,11 +19,11 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.List;
 
+import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * @author E.Santoboni

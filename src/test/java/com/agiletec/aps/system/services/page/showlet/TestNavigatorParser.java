@@ -19,14 +19,14 @@ package com.agiletec.aps.system.services.page.showlet;
 
 import java.util.List;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.IPageManager;
+import org.entando.entando.aps.system.services.page.widget.INavigatorParser;
+import org.entando.entando.aps.system.services.page.widget.NavigatorTarget;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.showlet.INavigatorParser;
-import com.agiletec.aps.system.services.page.showlet.NavigatorTarget;
 
 /**
  * @version 1.0

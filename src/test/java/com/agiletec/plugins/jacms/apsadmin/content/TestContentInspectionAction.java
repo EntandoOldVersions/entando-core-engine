@@ -19,9 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 
 import java.util.List;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
+import org.entando.entando.aps.system.services.page.IPage;
 
-import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentInspectionAction;
 import com.opensymphony.xwork2.Action;

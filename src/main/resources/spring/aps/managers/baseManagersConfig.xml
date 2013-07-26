@@ -155,10 +155,10 @@
 		</property>
 	</bean>
 	
-	<bean id="PageManager" class="com.agiletec.aps.system.services.page.PageManager" 
+	<bean id="PageManager" class="org.entando.entando.aps.system.services.page.PageManager" 
 			parent="abstractService" >
 		<property name="pageDAO" >
-			<bean class="com.agiletec.aps.system.services.page.PageDAO">
+			<bean class="org.entando.entando.aps.system.services.page.PageDAO">
 				<property name="dataSource" ref="portDataSource" />
 				<property name="widgetTypeManager" ref="WidgetTypeManager" />
 				<property name="pageModelManager" ref="PageModelManager" />
@@ -166,7 +166,7 @@
 		</property>
 	</bean>
 	
-	<bean id="NavigatorParser" class="com.agiletec.aps.system.services.page.showlet.NavigatorParser">
+	<bean id="NavigatorParser" class="org.entando.entando.aps.system.services.page.widget.NavigatorParser">
 		<property name="authManager" ref="AuthorizationManager"/>
 		<property name="pageManager" ref="PageManager"/>
 	</bean>

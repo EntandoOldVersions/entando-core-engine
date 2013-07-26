@@ -28,7 +28,6 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingObserver;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -42,6 +41,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceCha
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.page.IPage;
 
 /**
  * Cache Wrapper Manager for plugin jacms

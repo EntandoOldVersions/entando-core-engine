@@ -17,12 +17,12 @@
 */
 package com.agiletec.apsadmin.portal;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import org.entando.entando.aps.system.services.page.IPage;
+import org.entando.entando.aps.system.services.page.IPageManager;
+import org.entando.entando.aps.system.services.page.Showlet;
 
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.page.Showlet;
 import com.opensymphony.xwork2.Action;
 
 /**

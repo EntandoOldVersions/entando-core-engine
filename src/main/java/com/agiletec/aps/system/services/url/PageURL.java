@@ -23,9 +23,10 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.entando.entando.aps.system.services.page.IPage;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * Rappresenta un URL ad una pagina del sistema. Oggetti di questa classe
