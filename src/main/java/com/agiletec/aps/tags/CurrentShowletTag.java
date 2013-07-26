@@ -22,7 +22,7 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -48,15 +48,15 @@ public class CurrentShowletTag extends OutSupport {
 	@Override
 	public int doStartTag() throws JspException {
 		try {
-			Showlet showlet = this.extractShowlet();
-			if (null == showlet) return super.doStartTag();
+			Widget widget = this.extractShowlet();
+			if (null == widget) return super.doStartTag();
 			String value = null;
 			if ("code".equals(this.getParam())) {
-				value = showlet.getType().getCode();
+				value = widget.getType().getCode();
 			} else if ("title".equals(this.getParam())) {
-				value = this.extractTitle(showlet);
+				value = this.extractTitle(widget);
 			} else if ("config".equals(this.getParam())) {
-				ApsProperties config = showlet.getConfig();
+				ApsProperties config = widget.getConfig();
 				if (null != config) {
 					value = config.getProperty(this.getConfigParam());
 				}
@@ -81,11 +81,11 @@ public class CurrentShowletTag extends OutSupport {
 		return super.doStartTag();
 	}
 	
-	private String extractTitle(Showlet showlet) {
+	private String extractTitle(Widget widget) {
 		ServletRequest request = this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-		WidgetType type = showlet.getType();
+		WidgetType type = widget.getType();
 		String value = type.getTitles().getProperty(currentLang.getCode());
 		if (null == value || value.trim().length() == 0) {
 			ILangManager langManager = 
@@ -96,20 +96,20 @@ public class CurrentShowletTag extends OutSupport {
 		return value;
 	}
 	
-	private Showlet extractShowlet() {
+	private Widget extractShowlet() {
 		ServletRequest req =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
-		Showlet showlet = null;
+		Widget widget = null;
 		if (this.getFrame() < 0) {
-			showlet = (Showlet) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+			widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
 		} else {
 			IPage currentPage = (IPage) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_PAGE));
-			Showlet[] showlets = currentPage.getShowlets();
+			Widget[] showlets = currentPage.getShowlets();
 			if (showlets.length > this.getFrame()) {
-				showlet = showlets[this.getFrame()];
+				widget = showlets[this.getFrame()];
 			}
 		}
-		return showlet;
+		return widget;
 	}
 	
 	@Override

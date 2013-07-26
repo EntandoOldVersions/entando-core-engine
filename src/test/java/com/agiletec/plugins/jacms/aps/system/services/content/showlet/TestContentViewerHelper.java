@@ -17,7 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -99,13 +99,13 @@ public class TestContentViewerHelper extends BaseTestCase {
             lang.setDescr("italiano");
             _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, lang);
             
-            Showlet showlet = new Showlet();
+            Widget widget = new Widget();
             IWidgetTypeManager showletTypeMan = 
             	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
             WidgetType showletType = showletTypeMan.getShowletType("content_viewer");
-            showlet.setType(showletType);
-            showlet.setConfig(new ApsProperties());
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);
+            widget.setType(showletType);
+            widget.setConfig(new ApsProperties());
+            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
             
             this._helper = (IContentViewerHelper) this.getApplicationContext().getBean("jacmsContentViewerHelper");
         } catch (Throwable t) {

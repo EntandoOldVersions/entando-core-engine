@@ -26,7 +26,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -63,9 +63,9 @@ public class PageWithWidgetTag extends TagSupport {
 		Iterator<IPage> it = pages.iterator();
 		while (it.hasNext()) {
 			IPage currentPage = it.next();
-			Showlet[] showlets = currentPage.getShowlets();
+			Widget[] showlets = currentPage.getShowlets();
 			for (int i = 0; i < showlets.length; i++) {
-				Showlet currentWidget = showlets[i];
+				Widget currentWidget = showlets[i];
 				if (null != currentWidget && currentWidget.getType().getCode().equals(this.getWidgetTypeCode())) {
 					ApsProperties config = currentWidget.getConfig();
 					if (null != config) {

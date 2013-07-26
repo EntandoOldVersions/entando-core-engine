@@ -20,7 +20,7 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -79,8 +79,8 @@ public class ContentViewerHelper implements IContentViewerHelper {
         	Logger log = ApsSystemUtils.getLogger();
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String langCode = currentLang.getCode();
-            Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-            ApsProperties showletConfig = showlet.getConfig();
+            Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+            ApsProperties showletConfig = widget.getConfig();
 			contentId = this.extractContentId(contentId, showletConfig, reqCtx);
 			modelId = this.extractModelId(contentId, modelId, showletConfig, reqCtx);
 			if (contentId != null && modelId != null) {   
@@ -106,8 +106,8 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException {
 		PublicContentAuthorizationInfo authInfo = null;
 		try {
-			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-			contentId = this.extractContentId(contentId, showlet.getConfig(), reqCtx);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			contentId = this.extractContentId(contentId, widget.getConfig(), reqCtx);
 			if (null == contentId) {
 				ApsSystemUtils.getLogger().info("Null contentId");
 				return null;

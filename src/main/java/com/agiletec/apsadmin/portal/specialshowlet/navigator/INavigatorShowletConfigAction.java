@@ -25,7 +25,7 @@ import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
 
 /**
  * Interfaccia per la classe action dell'interfaccia 
- * di gestione configurazione Showlet tipo Navigator
+ * di gestione configurazione Widget tipo Navigator
  * @version 1.0
  * @author E.Santoboni
  */

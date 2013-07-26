@@ -21,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -97,8 +97,8 @@ public class ContentInfoTag extends OutSupport {
 	}
 	
 	private Object extractModelId(PublicContentAuthorizationInfo authInfo, RequestContext reqCtx) {
-		Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-        ApsProperties showletConfig = showlet.getConfig();
+		Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+        ApsProperties showletConfig = widget.getConfig();
 		String modelId = (String) showletConfig.get("modelId");
 		if (null == modelId) {
 			modelId = reqCtx.getRequest().getParameter("modelId");

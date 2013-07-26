@@ -32,7 +32,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -143,8 +143,8 @@ public class InternalServletTag extends TagSupport {
 		ServletRequest req =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 		try {
-			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-			this.includeShowlet(reqCtx, responseWrapper, showlet);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			this.includeShowlet(reqCtx, responseWrapper, widget);
 			Cookie[] cookies = responseWrapper.getCookiesToAdd();
 			if (null != cookies) {
 				for (int i = 0; i < cookies.length; i++) {
@@ -161,10 +161,10 @@ public class InternalServletTag extends TagSupport {
 		return output;
 	}
 	
-	protected void includeShowlet(RequestContext reqCtx, ResponseWrapper responseWrapper, Showlet showlet) throws ServletException, IOException {
+	protected void includeShowlet(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
 		HttpServletRequest request = reqCtx.getRequest();
 		try {
-			String actionPath = this.extractIntroActionPath(reqCtx, showlet);
+			String actionPath = this.extractIntroActionPath(reqCtx, widget);
 			String requestActionPath = request.getParameter(REQUEST_PARAM_ACTIONPATH);
 			String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
@@ -184,15 +184,15 @@ public class InternalServletTag extends TagSupport {
 	 * Extract the init Action Path. 
 	 * Return the tag attribute (if set), else the showlet parameter.
 	 * @param reqCtx The request context
-	 * @param showlet The current showlet.
+	 * @param widget The current showlet.
 	 * @return The init Action Path
 	 */
-	protected String extractIntroActionPath(RequestContext reqCtx, Showlet showlet) {
+	protected String extractIntroActionPath(RequestContext reqCtx, Widget widget) {
 		String actionPath = this.getActionPath();
 		if (null == this.getActionPath()) {
-			ApsProperties config = showlet.getConfig();
-			if (showlet.getType().isLogic()) {
-				config = showlet.getType().getConfig();
+			ApsProperties config = widget.getConfig();
+			if (widget.getType().isLogic()) {
+				config = widget.getType().getConfig();
 			}
 			if (null != config) {
 				actionPath = config.getProperty(CONFIG_PARAM_ACTIONPATH);

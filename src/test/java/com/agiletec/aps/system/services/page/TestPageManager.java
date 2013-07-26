@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
 import org.entando.entando.aps.system.services.page.Page;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -71,15 +71,15 @@ public class TestPageManager extends BaseTestCase {
 		ApsProperties titles = new ApsProperties();
 		titles.setProperty("it", "pagina temporanea");
 		page.setTitles(titles);
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		ApsProperties config = new ApsProperties();
 		config.setProperty("temp", "temp");		
-		showlet.setConfig(config);
-		showlet.setPublishedContent("ART1");
+		widget.setConfig(config);
+		widget.setPublishedContent("ART1");
 		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
-		showlet.setType(showletType);
-		Showlet[] showlets = {showlet};
+		widget.setType(showletType);
+		Widget[] showlets = {widget};
 		page.setShowlets(showlets);
 		_pageManager.addPage(page);
 		parentPage = _pageManager.getPage("service");
@@ -124,15 +124,15 @@ public class TestPageManager extends BaseTestCase {
 		ApsProperties titles = new ApsProperties();
 		titles.setProperty("it", "pagina temporanea1");
 		page.setTitles(titles);
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		ApsProperties config = new ApsProperties();
 		config.setProperty("temp1", "temp1");		
-		showlet.setConfig(config);
-		showlet.setPublishedContent("ART1");
+		widget.setConfig(config);
+		widget.setPublishedContent("ART1");
 		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
-		showlet.setType(showletType);
-		Showlet[] showlets = {showlet};
+		widget.setType(showletType);
+		Widget[] showlets = {widget};
 		page.setShowlets(showlets);
 		_pageManager.updatePage(page);
 		
@@ -190,8 +190,8 @@ public class TestPageManager extends BaseTestCase {
 		String pageCode = "wrongPageCode";
 		int frame = 2;
 		try {
-			Showlet showlet = this.getShowletForTest("login", null);
-			this._pageManager.joinShowlet(pageCode, showlet, frame);
+			Widget widget = this.getShowletForTest("login", null);
+			this._pageManager.joinShowlet(pageCode, widget, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per pagina inesistente
@@ -206,8 +206,8 @@ public class TestPageManager extends BaseTestCase {
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
 		assertTrue(pagina_1.getShowlets().length<=frame);
 		try {
-			Showlet showlet = this.getShowletForTest("login", null);
-			this._pageManager.joinShowlet(pageCode, showlet, frame);
+			Widget widget = this.getShowletForTest("login", null);
+			this._pageManager.joinShowlet(pageCode, widget, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per frame errato in modello
@@ -252,10 +252,10 @@ public class TestPageManager extends BaseTestCase {
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
 		assertNull(pagina_1.getShowlets()[frame]);
 		try {
-			Showlet showlet = this.getShowletForTest("login_form", null);
-			this._pageManager.joinShowlet(pageCode, showlet, frame);
+			Widget widget = this.getShowletForTest("login_form", null);
+			this._pageManager.joinShowlet(pageCode, widget, frame);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			Showlet extracted = pagina_1.getShowlets()[frame];
+			Widget extracted = pagina_1.getShowlets()[frame];
 			assertNotNull(extracted);
 			assertEquals("login_form", extracted.getType().getCode());
 			
@@ -324,14 +324,14 @@ public class TestPageManager extends BaseTestCase {
 		assertEquals("customer_subpage_2", pageUtilizers4.get(6).getCode());
 	}
 	
-	private Showlet getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
+	private Widget getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
 		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
-		Showlet showlet = new Showlet();
-		showlet.setType(type);
+		Widget widget = new Widget();
+		widget.setType(type);
 		if (null != config) {
-			showlet.setConfig(config);
+			widget.setConfig(config);
 		}
-		return showlet;
+		return widget;
 	}
 	
 	private void init() throws Exception {

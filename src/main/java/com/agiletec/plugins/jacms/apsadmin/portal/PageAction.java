@@ -22,7 +22,7 @@ import java.util.List;
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.Page;
 import org.entando.entando.aps.system.services.page.PageUtilizer;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -117,14 +117,14 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		int mainFrame = page.getModel().getMainFrame();
 		if (this.isViewerPage() && mainFrame>-1) {
 			IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.getRequest());
-			Showlet viewer = new Showlet();
+			Widget viewer = new Widget();
 			viewer.setConfig(new ApsProperties());
 			WidgetType type = showletTypeManager.getShowletType(this.getViewerShowletCode());
 			if (null == type) {
-				throw new RuntimeException("Showlet 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerShowletCode());
+				throw new RuntimeException("Widget 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerShowletCode());
 			}
 			viewer.setType(type);
-			Showlet[] showlets = page.getShowlets();
+			Widget[] showlets = page.getShowlets();
 			showlets[mainFrame] = viewer;
 		}
 	}
@@ -134,11 +134,11 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		try {
 			IPage page = this.getPage(pageCode);
 			if (null == page) return contents;
-			Showlet[] showlets = page.getShowlets();
+			Widget[] showlets = page.getShowlets();
 			for (int i=0; i<showlets.length; i++) {
-				Showlet showlet = showlets[i];
-				if (null != showlet) {
-					String contentId = showlet.getPublishedContent();
+				Widget widget = showlets[i];
+				if (null != widget) {
+					String contentId = widget.getPublishedContent();
 					if (null != contentId) {
 						Content content = this.getContentManager().loadContent(contentId, true);
 						if (null != content) {

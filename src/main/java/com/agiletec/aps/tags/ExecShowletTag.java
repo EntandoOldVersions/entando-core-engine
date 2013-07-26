@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -94,12 +94,12 @@ public class ExecShowletTag extends TagSupport {
 		try {
 			List<IFrameDecoratorContainer> decorators = this.extractDecorators();
 			BodyContent body = this.pageContext.pushBody();
-			Showlet[] showlets = page.getShowlets();
+			Widget[] showlets = page.getShowlets();
 			for (int frame = 0; frame < showlets.length; frame++) {
 				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
-				Showlet showlet = showlets[frame];
+				Widget widget = showlets[frame];
 				body.clearBody();
-				this.includeShowlet(reqCtx, showlet, decorators);
+				this.includeShowlet(reqCtx, widget, decorators);
 				showletOutput[frame] = body.getString();
 			}
 		} catch (Throwable t) {
@@ -108,15 +108,15 @@ public class ExecShowletTag extends TagSupport {
 		}
 	}
 	
-	protected void includeShowlet(RequestContext reqCtx, Showlet showlet, List<IFrameDecoratorContainer> decorators) throws Throwable {
-		if (null != showlet && this.isUserAllowed(reqCtx, showlet)) {
-			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);
+	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
+		if (null != widget && this.isUserAllowed(reqCtx, widget)) {
+			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
 		} else {
 			reqCtx.removeExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 		}
-		this.includeDecorators(showlet, decorators, false, true);
-		if (null != showlet && this.isUserAllowed(reqCtx, showlet)) {
-			WidgetType showletType = showlet.getType();
+		this.includeDecorators(widget, decorators, false, true);
+		if (null != widget && this.isUserAllowed(reqCtx, widget)) {
+			WidgetType showletType = widget.getType();
 			if (showletType.isLogic()) {
 				showletType = showletType.getParentType();
 			}
@@ -127,11 +127,11 @@ public class ExecShowletTag extends TagSupport {
 				jspPath.append("plugins/").append(pluginCode.trim()).append("/");
 			}
 			jspPath.append("aps/jsp/showlets/").append(showletType.getCode()).append(".jsp");
-			this.includeDecorators(showlet, decorators, true, true);
+			this.includeDecorators(widget, decorators, true, true);
 			this.pageContext.include(jspPath.toString());
-			this.includeDecorators(showlet, decorators, true, false);
+			this.includeDecorators(widget, decorators, true, false);
 		}
-		this.includeDecorators(showlet, decorators, false, false);
+		this.includeDecorators(widget, decorators, false, false);
 	}
 
 	protected List<IFrameDecoratorContainer> extractDecorators() throws ApsSystemException {
@@ -153,7 +153,7 @@ public class ExecShowletTag extends TagSupport {
 		return containters;
 	}
 	
-	protected void includeDecorators(Showlet showlet, 
+	protected void includeDecorators(Widget widget, 
 			List<IFrameDecoratorContainer> decorators, boolean isShowletDecorator, boolean includeHeader) throws Throwable {
 		if (null == decorators || decorators.isEmpty()) {
 			return;
@@ -164,7 +164,7 @@ public class ExecShowletTag extends TagSupport {
 					? decorators.get(i)
 					: decorators.get(decorators.size() - i - 1);
 			if ((isShowletDecorator != decoratorContainer.isShowletDecorator()) 
-					|| !decoratorContainer.needsDecoration(showlet, reqCtx)) {
+					|| !decoratorContainer.needsDecoration(widget, reqCtx)) {
 				continue;
 			}
 			String path = (includeHeader) ? decoratorContainer.getHeaderPath() : decoratorContainer.getFooterPath();
@@ -174,11 +174,11 @@ public class ExecShowletTag extends TagSupport {
 		}
 	}
 	
-	protected boolean isUserAllowed(RequestContext reqCtx, Showlet showlet) throws Throwable {
-		if (null == showlet) {
+	protected boolean isUserAllowed(RequestContext reqCtx, Widget widget) throws Throwable {
+		if (null == widget) {
 			return false;
 		}
-		String showletTypeGroup = showlet.getType().getMainGroup();
+		String showletTypeGroup = widget.getType().getMainGroup();
 		try {
 			if (null == showletTypeGroup || showletTypeGroup.equals(Group.FREE_GROUP_NAME)) {
 				return true;

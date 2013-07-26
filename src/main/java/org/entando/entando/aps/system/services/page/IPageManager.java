@@ -63,11 +63,11 @@ public interface IPageManager extends ITreeNodeManager {
 	 * If the position is already occupied by another showlet this will be substituted with the
 	 * new one.
 	 * @param pageCode the code of the page where to set the showlet
-	 * @param showlet The showlet to set
+	 * @param widget The showlet to set
 	 * @param pos The position where to place the showlet in
 	 * @throws ApsSystemException In case of error.
 	 */
-	public void joinShowlet(String pageCode, Showlet showlet, int pos) throws ApsSystemException;
+	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException;
 
 	/**
 	 * Remove a showlet from the given page.

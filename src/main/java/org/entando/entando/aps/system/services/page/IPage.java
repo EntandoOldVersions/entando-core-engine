@@ -93,7 +93,7 @@ public interface IPage extends ITreeNode {
 	 * Return the showlets configured in this page.
 	 * @return all the showlets of the current page
 	 */
-	public Showlet[] getShowlets();
+	public Widget[] getShowlets();
 	
 	/**
 	 * Return the mimetype configured for this page.

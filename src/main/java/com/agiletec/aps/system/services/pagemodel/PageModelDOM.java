@@ -21,7 +21,7 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.jdom.Document;
@@ -78,7 +78,7 @@ public class PageModelDOM {
 		if (null != frameElements && frameElements.size() > 0) {
 			int framesNumber = frameElements.size();
 			_frames = new String[framesNumber];
-			_defaultShowlet = new Showlet[framesNumber];
+			_defaultShowlet = new Widget[framesNumber];
 			_existMainFrame = false;
 			Iterator<Element> frameElementsIter = frameElements.iterator();
 			while (frameElementsIter.hasNext()) {
@@ -103,26 +103,26 @@ public class PageModelDOM {
 			}
 		} else {
 			_frames = new String[0];
-			_defaultShowlet = new Showlet[0];
+			_defaultShowlet = new Widget[0];
 		}
 	}
 	
 	private void buildDefaultShowlet(Element defaultShowletElement, int pos, IWidgetTypeManager showletTypeManager) {
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		String showletCode = defaultShowletElement.getAttributeValue(ATTRIBUTE_CODE);
 		WidgetType type = showletTypeManager.getShowletType(showletCode);
 		if (null == type) {
 			throw new RuntimeException("The code of the default showlet '" + showletCode + "' unknown");
 		}
-		showlet.setType(type);
+		widget.setType(type);
 		Element propertiesElement = defaultShowletElement.getChild(TAB_PROPERTIES);
 		if (null != propertiesElement) {
 			ApsProperties prop = this.buildProperties(propertiesElement);
-			showlet.setConfig(prop);
+			widget.setConfig(prop);
 		} else {
-			showlet.setConfig(new ApsProperties());
+			widget.setConfig(new ApsProperties());
 		}
-		_defaultShowlet[pos] = showlet;
+		_defaultShowlet[pos] = widget;
 	}
 	
 	/**
@@ -151,7 +151,7 @@ public class PageModelDOM {
 	 * Restituisce la configurazione delle showlet di default.
 	 * @return Le showlet di default.
 	 */
-	public Showlet[] getDefaultShowlet() {
+	public Widget[] getDefaultShowlet() {
 		return this._defaultShowlet;
 	}
 	
@@ -168,5 +168,5 @@ public class PageModelDOM {
 	private boolean _existMainFrame;
 	private int _mainFrame;
 	private String[] _frames;
-	private Showlet[] _defaultShowlet;
+	private Widget[] _defaultShowlet;
 }

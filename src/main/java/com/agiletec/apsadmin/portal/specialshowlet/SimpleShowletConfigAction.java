@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
@@ -43,46 +43,46 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	
 	protected String extractInitConfig() {
 		if (null != this.getShowlet()) return SUCCESS;
-		Showlet showlet = this.getCurrentPage().getShowlets()[this.getFrame()];
+		Widget widget = this.getCurrentPage().getShowlets()[this.getFrame()];
 		Logger log = ApsSystemUtils.getLogger();
-		if (null == showlet) {
+		if (null == widget) {
 			try {
-				showlet = this.createNewShowlet();
+				widget = this.createNewShowlet();
 			} catch (Exception e) {
 				log.severe(e.getMessage());
 				//TODO METTI MESSAGGIO DI ERRORE NON PREVISO... Vai in pageTree con messaggio di errore Azione non prevista o cosa del genere
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
 			}
-			log.info("Configurating new Showlet " + this.getShowletTypeCode() + 
+			log.info("Configurating new Widget " + this.getShowletTypeCode() + 
 					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
 		} else {
-			log.info("Edit Showlet config " + showlet.getType().getCode() + 
+			log.info("Edit Widget config " + widget.getType().getCode() + 
 					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
-			showlet = this.createCloneFrom(showlet);
+			widget = this.createCloneFrom(widget);
 		}
-		this.setShowlet(showlet);
+		this.setShowlet(widget);
 		return SUCCESS;
 	}
 	
-	protected Showlet createNewShowlet() throws Exception {
+	protected Widget createNewShowlet() throws Exception {
 		if (this.getShowletTypeCode() == null || this.getShowletType(this.getShowletTypeCode()) == null) {
-			throw new Exception("Showlet Code missin or invalid : " + this.getShowletTypeCode());
+			throw new Exception("Widget Code missin or invalid : " + this.getShowletTypeCode());
 		}
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		WidgetType type = this.getShowletType(this.getShowletTypeCode());
-		showlet.setType(type);
-		showlet.setConfig(new ApsProperties());
-		return showlet;
+		widget.setType(type);
+		widget.setConfig(new ApsProperties());
+		return widget;
 	}
 	
-	protected Showlet createCloneFrom(Showlet showlet) {
-		Showlet clone = new Showlet();
-		clone.setType(showlet.getType());
-		if (null != showlet.getConfig()) {
-			clone.setConfig((ApsProperties) showlet.getConfig().clone());
+	protected Widget createCloneFrom(Widget widget) {
+		Widget clone = new Widget();
+		clone.setType(widget.getType());
+		if (null != widget.getConfig()) {
+			clone.setConfig((ApsProperties) widget.getConfig().clone());
 		}
-		clone.setPublishedContent(showlet.getPublishedContent());
+		clone.setPublishedContent(widget.getPublishedContent());
 		return clone;
 	}
 	
@@ -93,7 +93,7 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 			this.checkBaseParams();
 			this.createValuedShowlet();
 			this.getPageManager().joinShowlet(this.getPageCode(), this.getShowlet(), this.getFrame());
-			log.finest("Saving Showlet - code = " + this.getShowlet().getType().getCode() + 
+			log.finest("Saving Widget - code = " + this.getShowlet().getType().getCode() + 
 					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -103,20 +103,20 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	}
 	
 	protected void createValuedShowlet() throws Exception {
-		Showlet showlet = this.createNewShowlet();
-		List<WidgetTypeParameter> parameters = showlet.getType().getTypeParameters();
+		Widget widget = this.createNewShowlet();
+		List<WidgetTypeParameter> parameters = widget.getType().getTypeParameters();
 		for (int i=0; i<parameters.size(); i++) {
 			WidgetTypeParameter param = parameters.get(i);
 			String paramName = param.getName();
 			String value = this.getRequest().getParameter(paramName);
 			if (value != null && value.trim().length()>0) {
-				showlet.getConfig().setProperty(paramName, value);
+				widget.getConfig().setProperty(paramName, value);
 				if ("contentId".equals(paramName)) {
-					showlet.setPublishedContent(value);
+					widget.setPublishedContent(value);
 				}
 			}
 		}
-		this.setShowlet(showlet);
+		this.setShowlet(widget);
 	}
 	
 	protected String checkBaseParams() {
@@ -157,11 +157,11 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	}
 	
 	@Override
-	public Showlet getShowlet() {
+	public Widget getShowlet() {
 		return _showlet;
 	}
-	public void setShowlet(Showlet showlet) {
-		this._showlet = showlet;
+	public void setShowlet(Widget widget) {
+		this._showlet = widget;
 	}
 	
 	public String getShowletTypeCode() {
@@ -175,6 +175,6 @@ public class SimpleShowletConfigAction extends AbstractPortalAction implements I
 	private int _frame = -1;
 	private String _showletTypeCode;
 	
-	private Showlet _showlet;
+	private Widget _showlet;
 	
 }

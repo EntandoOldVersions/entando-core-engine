@@ -28,7 +28,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.
@@ -48,11 +48,11 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 			}
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
 			String langCode = currentLang.getCode();
-			Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			Content contentOnSession = (Content) request.getSession()
 					.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 			contentId = (contentOnSession.getId() == null ? contentOnSession.getTypeCode()+"123" : contentOnSession.getId());
-			ApsProperties showletConfig = showlet.getConfig();
+			ApsProperties showletConfig = widget.getConfig();
 			modelId = this.extractModelId(contentId, modelId, showletConfig);
 			if (null != contentId && null != modelId) {
 				long longModelId = new Long(modelId).longValue();

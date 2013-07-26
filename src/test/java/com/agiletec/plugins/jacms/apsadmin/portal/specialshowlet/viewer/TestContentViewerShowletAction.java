@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -53,18 +53,18 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigViewer("admin", "homepage", "1", "content_viewer");
 		assertEquals(Action.SUCCESS, result);
 		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
-		Showlet showlet = action.getShowlet();
-		assertNotNull(showlet);
-		assertEquals(0, showlet.getConfig().size());
+		Widget widget = action.getShowlet();
+		assertNotNull(widget);
+		assertEquals(0, widget.getConfig().size());
 	}
 	
 	public void testInitConfigViewer_2() throws Throwable {
 		String result = this.executeConfigViewer("admin", "homepage", "2", null);
 		assertEquals(Action.SUCCESS, result);
 		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
-		Showlet showlet = action.getShowlet();
-		assertNotNull(showlet);
-		ApsProperties props = showlet.getConfig();
+		Widget widget = action.getShowlet();
+		assertNotNull(widget);
+		ApsProperties props = widget.getConfig();
 		assertEquals(2, props.size());
 		assertEquals("ART1", props.getProperty("contentId"));
 		assertEquals("2", props.getProperty("modelId"));
@@ -119,7 +119,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		String result = this.executeJoinContent("admin", "pagina_11", "1", "EVN24");//Contenuto Free
 		assertEquals(Action.SUCCESS, result);
 		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
-		Showlet newShowlet = action.getShowlet();
+		Widget newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("EVN24", newShowlet.getConfig().getProperty("contentId"));
 		assertNull(newShowlet.getConfig().getProperty("modelId"));
@@ -137,7 +137,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		String result = this.executeJoinContent("admin", "customers_page", "1", "EVN191");//Contenuto Free su pagina non free
 		assertEquals(Action.SUCCESS, result);
 		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
-		Showlet newShowlet = action.getShowlet();
+		Widget newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("EVN191", newShowlet.getConfig().getProperty("contentId"));
 		assertNull(newShowlet.getConfig().getProperty("modelId"));
@@ -167,8 +167,8 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		String pageCode = "pagina_2";
 		int frame = 0;
 		IPage page = this._pageManager.getPage(pageCode);
-		Showlet showlet = page.getShowlets()[frame];
-		assertNull(showlet);
+		Widget widget = page.getShowlets()[frame];
+		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
 			this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "saveViewerConfig");
@@ -180,12 +180,12 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals("configure", result);
 			page = this._pageManager.getPage(pageCode);
-			showlet = page.getShowlets()[frame];
-			assertNotNull(showlet);
-			assertEquals("content_viewer", showlet.getType().getCode());
-			assertEquals(2, showlet.getConfig().size());
-			assertEquals("ART187", showlet.getConfig().getProperty("contentId"));
-			assertEquals("1", showlet.getConfig().getProperty("modelId"));
+			widget = page.getShowlets()[frame];
+			assertNotNull(widget);
+			assertEquals("content_viewer", widget.getType().getCode());
+			assertEquals(2, widget.getConfig().size());
+			assertEquals("ART187", widget.getConfig().getProperty("contentId"));
+			assertEquals("1", widget.getConfig().getProperty("modelId"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -224,8 +224,8 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private void intSaveViewerConfig(String contentId, String pageCode, int frame) throws Throwable {
 		IPage page = this._pageManager.getPage(pageCode);
-		Showlet showlet = page.getShowlets()[frame];
-		assertNull(showlet);
+		Widget widget = page.getShowlets()[frame];
+		assertNull(widget);
 		this.setUserOnSession("admin");
 		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "saveViewerConfig");
 		Map<String, String> params = new HashMap<String, String>();

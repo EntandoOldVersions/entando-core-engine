@@ -25,7 +25,7 @@ import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
 import org.entando.entando.aps.system.services.page.Page;
 import org.entando.entando.aps.system.services.page.PageDAO;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -92,7 +92,7 @@ public class TestPageDAO extends BaseTestCase {
 			assertEquals(extractedPage.getTitle("it"), "pagina temporanea");
 			assertEquals(extractedPage.getModel().getCode(), "service");
 			assertTrue(extractedPage.isShowable());
-			Showlet[] showlets = extractedPage.getShowlets();
+			Widget[] showlets = extractedPage.getShowlets();
 			boolean contains = showlets[0].getConfig().contains("temp");
 			assertEquals(contains, true);
 			assertEquals(showlets[0].getPublishedContent(), "ART1");
@@ -110,15 +110,15 @@ public class TestPageDAO extends BaseTestCase {
 		Page pageToUpdate = (Page) ipageToUpdate;
 		pageToUpdate.setTitle("it", "pagina temporanea1");
 		pageToUpdate.setShowable(false);
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		ApsProperties config = new ApsProperties();
 		config.setProperty("temp1", "temp1");		
-		showlet.setConfig(config);
-		showlet.setPublishedContent("ART11");
+		widget.setConfig(config);
+		widget.setPublishedContent("ART11");
 		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
-		showlet.setType(showletType);
-		Showlet[] modifiesShowlets = {showlet};
+		widget.setType(showletType);
+		Widget[] modifiesShowlets = {widget};
 		pageToUpdate.setShowlets(modifiesShowlets);
 		try {
 			pageDAO.updatePage(pageToUpdate);
@@ -136,7 +136,7 @@ public class TestPageDAO extends BaseTestCase {
 			assertEquals(extractedPage.getTitle("it"), "pagina temporanea1");
 			assertEquals(extractedPage.getModel().getCode(), "service");
 			assertFalse(extractedPage.isShowable());
-			Showlet[] showlets = extractedPage.getShowlets();
+			Widget[] showlets = extractedPage.getShowlets();
 			assertTrue(showlets[0].getConfig().contains("temp1"));
 			assertEquals(showlets[0].getPublishedContent(), "ART11");
 			assertEquals(showlets[0].getType().getCode(), "content_viewer");
@@ -185,15 +185,15 @@ public class TestPageDAO extends BaseTestCase {
 		ApsProperties titles = new ApsProperties();
 		titles.setProperty("it", "pagina temporanea");
 		page.setTitles(titles);
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		ApsProperties config = new ApsProperties();
 		config.setProperty("temp", "temp");		
-		showlet.setConfig(config);
-		showlet.setPublishedContent("ART1");
+		widget.setConfig(config);
+		widget.setPublishedContent("ART1");
 		WidgetType showletType = new WidgetType();
 		showletType.setCode("content_viewer");
-		showlet.setType(showletType);
-		Showlet[] showlets = {showlet};
+		widget.setType(showletType);
+		Widget[] showlets = {widget};
 		page.setShowlets(showlets);
 		return page;
 	}

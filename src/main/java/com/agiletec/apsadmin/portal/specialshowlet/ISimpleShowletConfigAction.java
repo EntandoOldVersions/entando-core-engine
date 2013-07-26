@@ -17,7 +17,7 @@
 */
 package com.agiletec.apsadmin.portal.specialshowlet;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * Basic interface for the action classes which configure the showlets with parameters. 
@@ -41,6 +41,6 @@ public interface ISimpleShowletConfigAction {
 	 * Return the configuration of the showlet currently on edit.   
 	 * @return The showlet currently on edit.
 	 */
-	public Showlet getShowlet();
+	public Widget getShowlet();
 	
 }

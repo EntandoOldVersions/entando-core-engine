@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.page.events.PageChangedEvent;
 import org.entando.entando.aps.system.services.page.events.PageChangedObserver;
 
@@ -84,14 +84,14 @@ public class ContentPageMapperManager extends AbstractService
     private void searchPublishedContents(IPage page) {
     	PageModel pageModel = page.getModel();
         int mainFrame = pageModel.getMainFrame();
-        Showlet[] showlets = page.getShowlets();
-        Showlet showlet = null;
+        Widget[] showlets = page.getShowlets();
+        Widget widget = null;
         if (null != showlets && mainFrame != -1){
-            showlet = showlets[mainFrame];
+            widget = showlets[mainFrame];
         }
         String contentId = null;
-        if (null != showlet) {
-            contentId = showlet.getPublishedContent();
+        if (null != widget) {
+            contentId = widget.getPublishedContent();
         }
         if (null != contentId) {
         	this.getContentPageMapper().add(contentId, page.getCode());

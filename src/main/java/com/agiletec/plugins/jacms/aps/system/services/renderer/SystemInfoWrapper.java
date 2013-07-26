@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -106,11 +106,11 @@ public class SystemInfoWrapper {
         }
     }
 	
-    public Showlet getCurrentShowlet() {
+    public Widget getCurrentShowlet() {
 		try {
-            return (Showlet) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+            return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getCurrentShowlet", "Error current Showlet");
+            ApsSystemUtils.logThrowable(t, this, "getCurrentShowlet", "Error current Widget");
 			return null;
         }
     }

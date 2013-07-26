@@ -19,7 +19,7 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import java.io.Serializable;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * Rappresentazione di un modello di pagina. Questo oggetto contiene
@@ -101,7 +101,7 @@ public class PageModel implements Serializable {
 	 * Restituisce la configurazione delle showlet di default.
 	 * @return Le showlet di default.
 	 */
-	public Showlet[] getDefaultShowlet() {
+	public Widget[] getDefaultShowlet() {
 		return _defaultShowlet;
 	}
 
@@ -109,7 +109,7 @@ public class PageModel implements Serializable {
 	 * Setta la configurazione delle showlet di default.
 	 * @param defaultShowlet Le showlet di default.
 	 */
-	public void setDefaultShowlet(Showlet[] defaultShowlet) {
+	public void setDefaultShowlet(Widget[] defaultShowlet) {
 		this._defaultShowlet = defaultShowlet;
 	}
 	
@@ -154,7 +154,7 @@ public class PageModel implements Serializable {
 	/**
 	 * L'insieme delle showlet di default.
 	 */
-	private Showlet[] _defaultShowlet;
+	private Widget[] _defaultShowlet;
 	
 	/**
 	 * The code of the plugin owner of page model.

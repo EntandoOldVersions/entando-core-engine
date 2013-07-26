@@ -21,7 +21,7 @@ import java.util.Collection;
 
 import javax.servlet.ServletRequest;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -70,8 +70,8 @@ public class PagerTagHelper {
 		if (maxItems == 0) {
 			RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 			if (reqCtx != null) {
-				Showlet showlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
-				ApsProperties config = showlet.getConfig();
+				Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+				ApsProperties config = widget.getConfig();
 				String stringMax = (null != config) ? (String) config.get("maxElemForItem") : null;
 				if (stringMax != null && stringMax.length() > 0) {
 					maxItems = Integer.parseInt(stringMax);

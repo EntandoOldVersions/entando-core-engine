@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -142,7 +142,7 @@ public class SymbolicLinkValidator {
      * che anche un frame sia occupato da una showlet.
      */
     protected boolean isVoidPage(IPage page) {
-        Showlet[] showlets = page.getShowlets();
+        Widget[] showlets = page.getShowlets();
         for (int i = 0; i < showlets.length; i++) {
             if (null != showlets[i]) {
                 return false;

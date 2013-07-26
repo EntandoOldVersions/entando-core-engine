@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -85,7 +85,7 @@ public class CmsPageActionUtil {
 		try {
 			int mainFrame = page.getModel().getMainFrame();
 			if (mainFrame < 0) return false;
-			Showlet viewer = page.getShowlets()[mainFrame];
+			Widget viewer = page.getShowlets()[mainFrame];
 			if (null == viewer) return false;
 			boolean isRightCode = null == viewerShowletCode || viewer.getType().getCode().equals(viewerShowletCode);
 			String actionName = viewer.getType().getAction();

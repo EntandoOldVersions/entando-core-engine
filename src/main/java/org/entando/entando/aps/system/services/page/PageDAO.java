@@ -73,7 +73,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	protected List<IPage> createPages(ResultSet res) throws Throwable {
 		List<IPage> pages = new ArrayList<IPage>();
 		Page page = null;
-		Showlet showlets[] = null;
+		Widget showlets[] = null;
 		int numFrames = 0;
 		String prevCode = "...no previous code...";
 		while (res.next()) {
@@ -84,14 +84,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 				}
 				page = this.createPage(code, res);
 				numFrames = page.getModel().getFrames().length;
-				showlets = new Showlet[numFrames];
+				showlets = new Widget[numFrames];
 				page.setShowlets(showlets);
 				prevCode = code;
 			}
 			int pos = res.getInt(9);
 			if (pos >= 0 && pos < numFrames) {
-				Showlet showlet = this.createShowlet(page, pos, res);//this.createShowlet(record, page);
-				showlets[pos] = showlet;
+				Widget widget = this.createShowlet(page, pos, res);//this.createShowlet(record, page);
+				showlets[pos] = widget;
 			} else {
 				ApsSystemUtils.getLogger().info("The position read from the database exceeds " +
 						"the numer of frames defined in the model of the page '"+ page.getCode()+"'");
@@ -134,14 +134,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		return page;
 	}
 	
-	protected Showlet createShowlet(IPage page, int pos, ResultSet res) throws Throwable {
+	protected Widget createShowlet(IPage page, int pos, ResultSet res) throws Throwable {
 		String typeCode = res.getString(10);
 		if (null == typeCode) {
 			return null;
 		}
-		Showlet showlet = new Showlet();
+		Widget widget = new Widget();
 		WidgetType type = this.getWidgetTypeManager().getShowletType(typeCode);
-		showlet.setType(type);
+		widget.setType(type);
 		ApsProperties config = new ApsProperties();
 		String configText = res.getString(11);
 		if (null != configText && configText.trim().length() > 0) {
@@ -156,10 +156,10 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		} else {
 			config = type.getConfig();
 		}
-		showlet.setConfig(config);
+		widget.setConfig(config);
 		String contentPublished = res.getString(12);
-		showlet.setPublishedContent(contentPublished);
-		return showlet;
+		widget.setPublishedContent(contentPublished);
+		return widget;
 	}
 
 	/**
@@ -383,17 +383,17 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		if (null == page.getShowlets()) return;
 		PreparedStatement stat = null;
 		try {
-			Showlet[] showlets = page.getShowlets();
+			Widget[] showlets = page.getShowlets();
 			stat = conn.prepareStatement(ADD_SHOWLET_FOR_PAGE);
 			for (int i = 0; i < showlets.length; i++) {
-				Showlet showlet = showlets[i];
-				if (showlet != null) {
-					if (null == showlet.getType()) {
-						ApsSystemUtils.getLogger().severe("Showlet Type null when adding " +
+				Widget widget = showlets[i];
+				if (widget != null) {
+					if (null == widget.getType()) {
+						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
 								"showlet on frame '" + i + "' of page '" + page.getCode() + "'");
 						continue;
 					}
-					this.valueAddShowletStatement(page.getCode(), i, showlet, stat);
+					this.valueAddShowletStatement(page.getCode(), i, widget, stat);
 					stat.addBatch();
 					stat.clearParameters();
 				}
@@ -428,7 +428,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	}
 
 	@Override
-	public void joinShowlet(String pageCode, Showlet showlet, int pos) {
+	public void joinShowlet(String pageCode, Widget widget, int pos) {
 		this.removeShowlet(pageCode, pos);
 		Connection conn = null;
 		PreparedStatement stat = null;
@@ -436,7 +436,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(ADD_SHOWLET_FOR_PAGE);
-			this.valueAddShowletStatement(pageCode, pos, showlet, stat);
+			this.valueAddShowletStatement(pageCode, pos, widget, stat);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -448,20 +448,20 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	}
 	
 	private void valueAddShowletStatement(String pageCode, 
-			int pos, Showlet showlet, PreparedStatement stat) throws Throwable {
+			int pos, Widget widget, PreparedStatement stat) throws Throwable {
 		stat.setString(1, pageCode);
 		stat.setInt(2, pos);
-		stat.setString(3, showlet.getType().getCode());
-		if (!showlet.getType().isLogic()) {
+		stat.setString(3, widget.getType().getCode());
+		if (!widget.getType().isLogic()) {
 			String config = null;
-			if (null != showlet.getConfig()) {
-				config = showlet.getConfig().toXml();
+			if (null != widget.getConfig()) {
+				config = widget.getConfig().toXml();
 			}
 			stat.setString(4, config);
 		} else {
 			stat.setNull(4, Types.VARCHAR);
 		}
-		stat.setString(5, showlet.getPublishedContent());
+		stat.setString(5, widget.getPublishedContent());
 	}
 
 	protected IPageModelManager getPageModelManager() {

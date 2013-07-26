@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
@@ -93,10 +93,10 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(customers_page.getModel().getCode(), action.getModel());
 		assertTrue(action.isShowable());
 		assertTrue(action.isGroupSelectLock());
-		Showlet showlet = customers_page.getShowlets()[customers_page.getModel().getMainFrame()];
-		if (null != showlet) {
-			assertEquals("content_viewer", showlet.getType().getCode());
-			assertTrue(null != showlet.getConfig() && !showlet.getConfig().isEmpty());
+		Widget widget = customers_page.getShowlets()[customers_page.getModel().getMainFrame()];
+		if (null != widget) {
+			assertEquals("content_viewer", widget.getType().getCode());
+			assertTrue(null != widget.getConfig() && !widget.getConfig().isEmpty());
 		}
 	}
 	
@@ -151,10 +151,10 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(page.isShowable(), pageToShow.isShowable());
 		assertEquals("Publicazione Contenuto", pageToShow.getTitles().getProperty("it"));
 		assertEquals("Content Publishing", pageToShow.getTitles().getProperty("en"));
-		Showlet showlet = page.getShowlets()[page.getModel().getMainFrame()];
-		if (null != showlet) {
-			assertEquals("content_viewer", showlet.getType().getCode());
-			assertTrue(null == showlet.getConfig() || showlet.getConfig().isEmpty());
+		Widget widget = page.getShowlets()[page.getModel().getMainFrame()];
+		if (null != widget) {
+			assertEquals("content_viewer", widget.getType().getCode());
+			assertTrue(null == widget.getConfig() || widget.getConfig().isEmpty());
 		}
 	}
 	
@@ -398,21 +398,21 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 			IPage addedPage = this._pageManager.getPage(pageCode);
 			assertNotNull(addedPage);
 			assertEquals("Pagina Test 2", addedPage.getTitles().getProperty("it"));
-			Showlet[] showlets = addedPage.getShowlets();
+			Widget[] showlets = addedPage.getShowlets();
 			assertEquals(addedPage.getModel().getFrames().length, showlets.length);
 			for (int i = 0; i < showlets.length; i++) {
-				Showlet showlet = showlets[i];
+				Widget widget = showlets[i];
 				if (i==3) {
-					assertNotNull(showlet);
-					WidgetType type = showlet.getType();
+					assertNotNull(widget);
+					WidgetType type = widget.getType();
 					assertEquals("leftmenu", type.getCode());
 					assertEquals(1, type.getTypeParameters().size());
 					assertNull(type.getConfig());
-					ApsProperties config = showlet.getConfig();
+					ApsProperties config = widget.getConfig();
 					assertEquals(1, config.size());
 					assertEquals("code(homepage).subtree(1)", config.getProperty("navSpec"));
 				} else {
-					assertNull(showlet);
+					assertNull(widget);
 				}
 			}
 		} catch (Throwable t) {

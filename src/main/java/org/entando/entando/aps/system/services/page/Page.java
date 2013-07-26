@@ -162,7 +162,7 @@ public class Page extends TreeNode implements IPage {
 	 * @return all the showlets of the current page
 	 */
 	@Override
-	public Showlet[] getShowlets() {
+	public Widget[] getShowlets() {
 		return _showlets;
 	}
 
@@ -170,7 +170,7 @@ public class Page extends TreeNode implements IPage {
 	 * Assign a set of showlets to the current page.
 	 * @param the showlets to assign.
 	 */
-	public void setShowlets(Showlet[] showlets) {
+	public void setShowlets(Widget[] showlets) {
 		this._showlets = showlets;
 	}
 	
@@ -200,7 +200,7 @@ public class Page extends TreeNode implements IPage {
 	
 	public boolean isVoid() {
 		boolean isVoid = true;
-		Showlet[] showlets = this.getShowlets();
+		Widget[] showlets = this.getShowlets();
 		if (null != showlets) {
 			for (int i = 0; i < showlets.length; i++) {
 				if (null != showlets[i]) {
@@ -237,7 +237,7 @@ public class Page extends TreeNode implements IPage {
 	/**
 	 * The showlet of the current page
 	 */
-	private Showlet[] _showlets;
+	private Widget[] _showlets;
 	
 	private boolean _useExtraTitles = false;
 	

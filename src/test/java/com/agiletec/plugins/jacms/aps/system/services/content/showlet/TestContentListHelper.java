@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -195,12 +195,12 @@ public class TestContentListHelper extends BaseTestCase {
 	private RequestContext valueRequestContext(String pageCode, int frame) throws Throwable {
 		RequestContext reqCtx = this.getRequestContext();
 		try {
-			Showlet showletToAdd = this.getShowletForTest("content_viewer_list", null);
+			Widget showletToAdd = this.getShowletForTest("content_viewer_list", null);
 			this._pageManager.joinShowlet(pageCode, showletToAdd, frame);
 			IPage page = this._pageManager.getPage(pageCode);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, page);
-			Showlet showlet = page.getShowlets()[frame];
-			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);
+			Widget widget = page.getShowlets()[frame];
+			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
 		} catch (Throwable t) {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
@@ -211,14 +211,14 @@ public class TestContentListHelper extends BaseTestCase {
     	return reqCtx;
     }
 	
-	private Showlet getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
+	private Widget getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
 		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
-		Showlet showlet = new Showlet();
-		showlet.setType(type);
+		Widget widget = new Widget();
+		widget.setType(type);
 		if (null != config) {
-			showlet.setConfig(config);
+			widget.setConfig(config);
 		}
-		return showlet;
+		return widget;
 	}
 	
 	private void init() throws Exception {

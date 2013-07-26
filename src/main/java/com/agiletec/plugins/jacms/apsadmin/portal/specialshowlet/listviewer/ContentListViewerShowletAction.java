@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -130,9 +130,9 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 	@Override
 	public String configContentType() {
 		try {
-			Showlet showlet = super.createNewShowlet();
-			showlet.getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_CONTENT_TYPE, this.getContentType());
-			this.setShowlet(showlet);
+			Widget widget = super.createNewShowlet();
+			widget.getConfig().setProperty(IContentListShowletHelper.SHOWLET_PARAM_CONTENT_TYPE, this.getContentType());
+			this.setShowlet(widget);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "init");
 			return FAILURE;
@@ -143,8 +143,8 @@ public class ContentListViewerShowletAction extends SimpleShowletConfigAction im
 	@Override
 	public String changeContentType() {
 		try {
-			Showlet showlet = super.createNewShowlet();
-			this.setShowlet(showlet);
+			Widget widget = super.createNewShowlet();
+			this.setShowlet(widget);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "changeContentType");
 			return FAILURE;

@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -186,14 +186,14 @@ public class ContentModelManager extends AbstractService implements IContentMode
      * @param page La pagina nel qual cercare il modello di contenuto
      */
     private void searchReferencingPages(long modelId, Map<String, List<IPage>> utilizers, IPage page) {
-    	Showlet[] showlets = page.getShowlets();
+    	Widget[] showlets = page.getShowlets();
     	if (null != showlets) {
     		for (int i=0; i<showlets.length; i++) {
-    			Showlet showlet = showlets[i];
-    			if (null != showlet) {
-        			if (null != showlet.getConfig()) {
-        				String id = showlet.getConfig().getProperty("modelId");
-        				String contentId = showlet.getConfig().getProperty("contentId");
+    			Widget widget = showlets[i];
+    			if (null != widget) {
+        			if (null != widget.getConfig()) {
+        				String id = widget.getConfig().getProperty("modelId");
+        				String contentId = widget.getConfig().getProperty("contentId");
         				if (null != id && null != contentId) {
         					long longId = new Long(id).longValue();
                 			if (modelId == longId) {

@@ -25,7 +25,7 @@ import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -432,7 +432,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executePasteShowletType("admin", showletTypeCode, "en", "it", "customers_page", "2");
 			assertEquals(Action.SUCCESS, result);
 			
-			Showlet copiedShowlet = this._pageManager.getPage("customers_page").getShowlets()[2];
+			Widget copiedShowlet = this._pageManager.getPage("customers_page").getShowlets()[2];
 			assertNotNull(copiedShowlet);
 			assertNotNull(copiedShowlet.getConfig());
 			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
@@ -454,7 +454,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 		String showletTypeCode = "randomShowletCode_2";
 		String pageDest = "pagina_1";
 		int frameDest = 1;
-		Showlet temp = this._pageManager.getPage("pagina_11").getShowlets()[2];
+		Widget temp = this._pageManager.getPage("pagina_11").getShowlets()[2];
 		assertNotNull(temp);
 		assertEquals("content_viewer", temp.getType().getCode());
 		IPage page = this._pageManager.getPage(pageDest);
@@ -475,7 +475,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals("replaceOnPage", result);
 			
-			Showlet newShowlet = this._pageManager.getPage(pageDest).getShowlets()[frameDest];
+			Widget newShowlet = this._pageManager.getPage(pageDest).getShowlets()[frameDest];
 			assertNotNull(newShowlet);
 			assertNotNull(newShowlet.getConfig());
 			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);

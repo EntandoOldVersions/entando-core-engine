@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -46,10 +46,10 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
-			Showlet showlet = this.getCurrentPage().getShowlets()[this.getFrame()];// può essere null
-			this.setShowlet(showlet);
-			if (showlet != null) {
-				WidgetType showletType = showlet.getType();
+			Widget widget = this.getCurrentPage().getShowlets()[this.getFrame()];// può essere null
+			this.setShowlet(widget);
+			if (widget != null) {
+				WidgetType showletType = widget.getType();
 				ApsSystemUtils.getLogger().finest("pageCode=" + this.getPageCode() 
 						+ ", frame=" + this.getFrame() + ", showletCode=" + showletType.getCode());
 				this.setShowletAction(showletType.getAction());
@@ -89,9 +89,9 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 				//continua con la configurazione di showlet
 				return "configureSpecialShowlet";
 			}
-			Showlet showlet = new Showlet();
-			showlet.setType(showletType);
-			this.getPageManager().joinShowlet(this.getPageCode(), showlet, this.getFrame());
+			Widget widget = new Widget();
+			widget.setType(showletType);
+			this.getPageManager().joinShowlet(this.getPageCode(), widget, this.getFrame());
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "joinShowlet");
 			return FAILURE;
@@ -188,11 +188,11 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		this._showletTypeCode = showletTypeCode;
 	}
 	
-	public Showlet getShowlet() {
+	public Widget getShowlet() {
 		return _showlet;
 	}
-	public void setShowlet(Showlet showlet) {
-		this._showlet = showlet;
+	public void setShowlet(Widget widget) {
+		this._showlet = widget;
 	}
 	
 	private String _pageCode;
@@ -200,6 +200,6 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	private String _showletAction;
 	private String _showletTypeCode;
 	
-	private Showlet _showlet;
+	private Widget _showlet;
 	
 }

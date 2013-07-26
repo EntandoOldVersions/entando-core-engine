@@ -28,7 +28,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * This tag allows the preliminary execution of the showlet so to show the preview of the contents
@@ -39,7 +39,7 @@ import org.entando.entando.aps.system.services.page.Showlet;
 public class ContentPreviewExecShowletTag extends ExecShowletTag {
 	
 	@Override
-	protected void includeShowlet(RequestContext reqCtx, Showlet showlet, List<IFrameDecoratorContainer> decorators) throws Throwable {
+	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
 		HttpServletRequest request = reqCtx.getRequest();
 		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
 		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
@@ -47,18 +47,18 @@ public class ContentPreviewExecShowletTag extends ExecShowletTag {
 		}
 		Content contentOnSession = (Content) request.getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
-		if (contentOnSession!=null && showlet != null 
-				&& "viewerConfig".equals(showlet.getType().getAction())) {
+		if (contentOnSession!=null && widget != null 
+				&& "viewerConfig".equals(widget.getType().getAction())) {
 			IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-			if ((currentPage.getCode().equals(contentOnSession.getViewPage()) && (showlet.getConfig() == null || showlet.getConfig().size() == 0)) 
-					|| (showlet.getConfig() != null && showlet.getConfig().get("contentId") != null && showlet.getConfig().get("contentId").equals(contentOnSession.getId()))) {
+			if ((currentPage.getCode().equals(contentOnSession.getViewPage()) && (widget.getConfig() == null || widget.getConfig().size() == 0)) 
+					|| (widget.getConfig() != null && widget.getConfig().get("contentId") != null && widget.getConfig().get("contentId").equals(contentOnSession.getId()))) {
 				String path = CONTENT_VIEWER_JSP;
-				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, showlet);
+				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
 				this.pageContext.include(path.toString());
 				return;
 			}
 		}
-		super.includeShowlet(reqCtx, showlet, decorators);
+		super.includeShowlet(reqCtx, widget, decorators);
 	}
 	
 	private final String CONTENT_VIEWER_JSP="/WEB-INF/plugins/jacms/apsadmin/jsp/content/preview/content_viewer.jsp";

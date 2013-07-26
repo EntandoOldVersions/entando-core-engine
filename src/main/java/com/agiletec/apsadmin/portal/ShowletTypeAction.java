@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
@@ -113,7 +113,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			String check = (isCopy) ? this.checkShowletToCopy() : this.checkNewShowlet();
 			if (null != check) return check;
 			WidgetType newType = null;
-			Showlet showletToCopy = this.extractShowletToCopy();
+			Widget showletToCopy = this.extractShowletToCopy();
 			if (null == showletToCopy) {
 				this.setReplaceOnPage(false);
 				newType = this.createNewShowletType();
@@ -131,10 +131,10 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 			this.getWidgetTypeManager().addShowletType(newType);
 			if (this.isReplaceOnPage()) {
 				WidgetType type = this.getShowletType(this.getShowletTypeCode());
-				Showlet showlet = new Showlet();
-				showlet.setType(type);
+				Widget widget = new Widget();
+				widget.setType(type);
 				IPage page = this.getPageManager().getPage(this.getPageCode());
-				page.getShowlets()[this.getFramePos()] = showlet;
+				page.getShowlets()[this.getFramePos()] = widget;
 				this.getPageManager().updatePage(page);
 				return "replaceOnPage";
 			}
@@ -145,12 +145,12 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		return SUCCESS;
 	}
 	
-	private Showlet extractShowletToCopy() throws Throwable {
+	private Widget extractShowletToCopy() throws Throwable {
 		IPage page = this.getPageManager().getPage(this.getPageCode());
 		if (null == page) return null;
-		Showlet[] showlets = page.getShowlets();
-		Showlet showlet = showlets[this.getFramePos()];
-		return showlet;
+		Widget[] showlets = page.getShowlets();
+		Widget widget = showlets[this.getFramePos()];
+		return widget;
 	}
 	
 	private String checkNewShowlet() throws Throwable {
@@ -178,20 +178,20 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 					new String[]{this.getPageCode()}));
 			return "inputShowletTypes";
 		}
-		Showlet[] showlets = page.getShowlets();
+		Widget[] showlets = page.getShowlets();
 		if (null == this.getFramePos() || showlets.length <= this.getFramePos()) {
 			String framePos = (null != this.getFramePos()) ? this.getFramePos().toString() : null;
 			this.addActionError(this.getText("error.page.invalidPageFrame.adv", 
 					new String[]{this.getPageCode(), framePos}));
 			return "inputShowletTypes";
 		}
-		Showlet showlet = showlets[this.getFramePos()];
-		if (null == showlet) {
+		Widget widget = showlets[this.getFramePos()];
+		if (null == widget) {
 			this.addActionError(this.getText("error.page.nullShowletOnFrame", 
 					new String[]{this.getPageCode(), this.getFramePos().toString()}));
 			return "inputShowletTypes";
 		}
-		this.setShowletToCopy(showlet);
+		this.setShowletToCopy(widget);
 		return null;
 	}
 	
@@ -206,7 +206,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		return type;
 	}
 	
-	private WidgetType createCopiedShowlet(Showlet showletToCopy) {
+	private WidgetType createCopiedShowlet(Widget showletToCopy) {
 		WidgetType type = this.createNewShowletType();
 		WidgetType parentType = showletToCopy.getType();
 		type.setParentType(parentType);
@@ -372,10 +372,10 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 		this._framePos = framePos;
 	}
 	
-	public Showlet getShowletToCopy() {
+	public Widget getShowletToCopy() {
 		return _showletToCopy;
 	}
-	public void setShowletToCopy(Showlet showletToCopy) {
+	public void setShowletToCopy(Widget showletToCopy) {
 		this._showletToCopy = showletToCopy;
 	}
 	
@@ -398,7 +398,7 @@ public class ShowletTypeAction extends AbstractPortalAction implements IShowletT
 	
 	private String _pageCode;
 	private Integer _framePos;
-	private Showlet _showletToCopy;
+	private Widget _showletToCopy;
 	private boolean _replaceOnPage;
 	
 }

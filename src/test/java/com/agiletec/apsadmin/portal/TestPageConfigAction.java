@@ -19,7 +19,7 @@ package com.agiletec.apsadmin.portal;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -147,20 +147,20 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "contentview";
 		int frame = 1;
 		IPage contentview = this._pageManager.getPage(pageCode);
-		Showlet showlet = contentview.getShowlets()[frame];
+		Widget widget = contentview.getShowlets()[frame];
 		try {
-			assertNotNull(showlet);
+			assertNotNull(widget);
 			String result = this.executeTrashShowlet(pageCode, frame, "pageManagerCoach");
 			assertEquals("pageTree", result);
 			assertEquals(1, this.getAction().getActionErrors().size());
 			result = this.executeTrashShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			IPage modifiedContentview = this._pageManager.getPage(pageCode);
-			Showlet[] modifiedShowlets = modifiedContentview.getShowlets();
+			Widget[] modifiedShowlets = modifiedContentview.getShowlets();
 			assertNotNull(modifiedShowlets[frame]);
 		} catch (Throwable t) {
 			contentview = this._pageManager.getPage(pageCode);
-			contentview.getShowlets()[frame] = showlet;
+			contentview.getShowlets()[frame] = widget;
 			this._pageManager.updatePage(contentview);
 			throw t;
 		}
@@ -170,22 +170,22 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "contentview";
 		int frame = 1;
 		IPage contentview = this._pageManager.getPage(pageCode);
-		Showlet showlet = contentview.getShowlets()[frame];
+		Widget widget = contentview.getShowlets()[frame];
 		try {
-			assertNotNull(showlet);
+			assertNotNull(widget);
 			String result = this.executeDeleteShowlet(pageCode, frame, "pageManagerCoach");
 			assertEquals("pageTree", result);
 			assertEquals(1, this.getAction().getActionErrors().size());
 			result = this.executeDeleteShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			IPage modifiedContentview = this._pageManager.getPage(pageCode);
-			Showlet[] modifiedShowlets = modifiedContentview.getShowlets();
+			Widget[] modifiedShowlets = modifiedContentview.getShowlets();
 			assertNull(modifiedShowlets[frame]);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
 			contentview = this._pageManager.getPage(pageCode);
-			contentview.getShowlets()[frame] = showlet;
+			contentview.getShowlets()[frame] = widget;
 			this._pageManager.updatePage(contentview);
 		}
 	}

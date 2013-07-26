@@ -20,7 +20,7 @@ package com.agiletec.aps.system.services.pagemodel;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
@@ -47,10 +47,10 @@ public class TestPageModelManager extends BaseTestCase {
 		String descr = pageModel.getDescr();
 		assertEquals(code, "home");
 		assertEquals(descr, "Modello home page");
-		Showlet[] showlets = pageModel.getDefaultShowlet();
+		Widget[] showlets = pageModel.getDefaultShowlet();
 		for (int i = 0; i < showlets.length; i++) {
-			Showlet showlet = showlets[i]; 
-			assertEquals(showlet, null);
+			Widget widget = showlets[i]; 
+			assertEquals(widget, null);
 		}
 		String[] frames = pageModel.getFrames();
 		assertEquals(frames[0], "Box sinistra alto");
@@ -78,21 +78,21 @@ public class TestPageModelManager extends BaseTestCase {
 		PageModel model = this._pageModelManager.getPageModel("internal");
 		assertNotNull(model);
 		assertEquals(9, model.getFrames().length);
-		Showlet[] defaultShowlets = model.getDefaultShowlet();
+		Widget[] defaultShowlets = model.getDefaultShowlet();
 		assertEquals(model.getFrames().length, defaultShowlets.length);
 		for (int i = 0; i < defaultShowlets.length; i++) {
-			Showlet showlet = defaultShowlets[i];
+			Widget widget = defaultShowlets[i];
 			if (i==3) {
-				assertNotNull(showlet);
-				WidgetType type = showlet.getType();
+				assertNotNull(widget);
+				WidgetType type = widget.getType();
 				assertEquals("leftmenu", type.getCode());
 				assertEquals(1, type.getTypeParameters().size());
 				assertNull(type.getConfig());
-				ApsProperties config = showlet.getConfig();
+				ApsProperties config = widget.getConfig();
 				assertEquals(1, config.size());
 				assertEquals("code(homepage).subtree(1)", config.getProperty("navSpec"));
 			} else {
-				assertNull(showlet);
+				assertNull(widget);
 			}
 		}
 	}

@@ -19,7 +19,7 @@ package com.agiletec.apsadmin.portal.specialshowlet;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
@@ -42,9 +42,9 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigSimpleParameter("admin", "homepage", "1", "formAction");
 		assertEquals(Action.SUCCESS, result);
 		ISimpleShowletConfigAction action = (ISimpleShowletConfigAction) this.getAction();
-		Showlet showlet = action.getShowlet();
-		assertNotNull(showlet);
-		assertEquals(0, showlet.getConfig().size());
+		Widget widget = action.getShowlet();
+		assertNotNull(widget);
+		assertEquals(0, widget.getConfig().size());
 	}
 	
 	public void testInitConfigSimpleParameter_withNoShowletCode() throws Throwable {
@@ -57,9 +57,9 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigSimpleParameter("admin", "pagina_2", "2", null);
 		assertEquals(Action.SUCCESS, result);
 		ISimpleShowletConfigAction action = (ISimpleShowletConfigAction) this.getAction();
-		Showlet showlet = action.getShowlet();
-		assertNotNull(showlet);
-		ApsProperties props = showlet.getConfig();
+		Widget widget = action.getShowlet();
+		assertNotNull(widget);
+		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
 		String value = props.getProperty("actionPath");
 		assertEquals("/do/login", value);
@@ -81,8 +81,8 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "pagina_2";
 		int frame = 0;
 		IPage page = this._pageManager.getPage(pageCode);
-		Showlet showlet = page.getShowlets()[frame];
-		assertNull(showlet);
+		Widget widget = page.getShowlets()[frame];
+		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
 			this.initAction("/do/Page/SpecialShowlet", "saveConfigSimpleParameter");
@@ -93,11 +93,11 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals("configure", result);
 			page = this._pageManager.getPage(pageCode);
-			showlet = page.getShowlets()[frame];
-			assertNotNull(showlet);
-			assertEquals("formAction", showlet.getType().getCode());
-			assertEquals(1, showlet.getConfig().size());
-			assertEquals("/WEB-INF/pippo.jsp", showlet.getConfig().getProperty("actionPath"));
+			widget = page.getShowlets()[frame];
+			assertNotNull(widget);
+			assertEquals("formAction", widget.getType().getCode());
+			assertEquals(1, widget.getConfig().size());
+			assertEquals("/WEB-INF/pippo.jsp", widget.getConfig().getProperty("actionPath"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {

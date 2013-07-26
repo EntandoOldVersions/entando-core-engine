@@ -63,11 +63,11 @@ public interface IPageDAO {
 	 * Nel caso che la posizione specificata sia già occupata, la showlet corrente 
 	 * sarà sostituita da quella specificata. 
 	 * @param pageCode Il codice della pagina in cui settare la showlet.
-	 * @param showlet La showlet da settare.
+	 * @param widget La showlet da settare.
 	 * @param pos La posizione della pagina su cui settare la showlet.
 	 * @throws ApsSystemException In caso di errore.
 	 */
-	public void joinShowlet(String pageCode, Showlet showlet, int pos);
+	public void joinShowlet(String pageCode, Widget widget, int pos);
 
 	/**
 	 * Rimuove una showlet nella pagina specificata.

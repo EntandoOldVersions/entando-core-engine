@@ -24,7 +24,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.page.widget.INavigatorParser;
 import org.entando.entando.aps.system.services.page.widget.NavigatorTarget;
 
@@ -50,7 +50,7 @@ public class NavigatorTag extends TagSupport {
 			IPage currPage = (IPage) this._reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 			UserDetails currentUser = (UserDetails) this.pageContext.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 			if (this._spec == null) {
-				Showlet currShowlet =  (Showlet) _reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+				Widget currShowlet =  (Widget) _reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
 				ApsProperties showletConfig = currShowlet.getConfig();
 				String spec = (null != showletConfig) ? showletConfig.getProperty(CONFIG_PARAM_SPEC) : null;
 				this._targets = navigatorParser.parseSpec(spec, currPage, currentUser);

@@ -18,7 +18,7 @@
 package org.entando.entando.aps.system.services.page.widget;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -92,7 +92,7 @@ public class NavigatorTarget {
 	 */
 	public boolean isVoidPage() {
 		boolean isVoid = true;
-		Showlet[] showlets = this.getPage().getShowlets();
+		Widget[] showlets = this.getPage().getShowlets();
 		for (int i = 0; i < showlets.length; i++) {
 			if (null != showlets[i]) {
 				isVoid = false;

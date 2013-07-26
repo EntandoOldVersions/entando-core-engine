@@ -27,7 +27,7 @@ import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -198,13 +198,13 @@ public class ApiServiceAction extends AbstractApiAction {
 				this.addFieldError("pageCode", this.getText("error.service.paste.invalidPageCode", new String[]{this.getPageCode()}));
 				return INPUT;
 			}
-			Showlet[] showlets = page.getShowlets();
+			Widget[] showlets = page.getShowlets();
 			if (null == this.getFramePos() || this.getFramePos() > showlets.length || null == showlets[this.getFramePos()]) {
 				String framePosString = (null != this.getFramePos()) ? this.getFramePos().toString() : "null";
 				this.addFieldError("framePos", this.getText("error.service.paste.invalidFramePos", new String[]{this.getPageCode(), framePosString}));
 				return INPUT;
 			}
-			Showlet masterShowlet = showlets[this.getFramePos()];
+			Widget masterShowlet = showlets[this.getFramePos()];
 			WidgetType type = (masterShowlet.getType().isLogic()) ? masterShowlet.getType().getParentType() : masterShowlet.getType();
 			if (null == masterMethod.getRelatedShowlet()
 					|| !masterMethod.getRelatedShowlet().getShowletCode().equals(type.getCode())) {
@@ -224,7 +224,7 @@ public class ApiServiceAction extends AbstractApiAction {
 		return SUCCESS;
 	}
 	
-	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedShowlet relatedShowlet, Showlet masterShowlet) {
+	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedShowlet relatedShowlet, Widget masterShowlet) {
 		ApsProperties showletProperties = (masterShowlet.getType().isLogic())
 				? masterShowlet.getType().getConfig() : masterShowlet.getConfig();
 		return this.extractParametersFromShowletProperties(relatedShowlet, showletProperties);

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.page.widget.INavigatorParser;
 import org.entando.entando.aps.system.services.page.widget.NavigatorExpression;
 
@@ -48,10 +48,10 @@ public class NavigatorShowletConfigAction extends SimpleShowletConfigAction impl
 		try {
 			String result = super.extractInitConfig();
 			if (!result.equals(SUCCESS)) return result;
-			Showlet showlet = this.getShowlet();
+			Widget widget = this.getShowlet();
 			String navSpec = null;
-			if (null != showlet.getConfig()) {
-				navSpec = showlet.getConfig().getProperty("navSpec");
+			if (null != widget.getConfig()) {
+				navSpec = widget.getConfig().getProperty("navSpec");
 			}
 			this.createExpressions(navSpec);
 			this.setNavSpec(navSpec);
@@ -152,7 +152,7 @@ public class NavigatorShowletConfigAction extends SimpleShowletConfigAction impl
 	 * @throws Throwable Il caso di errore.
 	 */
 	protected void createNavigatorParams(List<NavigatorExpression> expressions) throws Throwable {
-		Showlet prototype = this.createNewShowlet();
+		Widget prototype = this.createNewShowlet();
 		//COSTRUISCE SHOWLET PROTOTIPO VUOTA E SETTA SPECIFICATORE
 		String navSpec = this.getNavigatorParser().getSpec(expressions);
 		prototype.getConfig().setProperty("navSpec", navSpec);

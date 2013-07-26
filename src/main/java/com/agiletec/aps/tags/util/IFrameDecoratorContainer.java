@@ -17,7 +17,7 @@
 */
 package com.agiletec.aps.tags.util;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.RequestContext;
 
@@ -26,7 +26,7 @@ import com.agiletec.aps.system.RequestContext;
  */
 public interface IFrameDecoratorContainer {
 	
-	public boolean needsDecoration(Showlet showlet, RequestContext reqCtx);
+	public boolean needsDecoration(Widget widget, RequestContext reqCtx);
 	
 	public boolean isShowletDecorator();
 	

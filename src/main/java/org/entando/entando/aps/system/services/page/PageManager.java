@@ -270,20 +270,20 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 	 * If the position is already occupied by another showlet this will be substituted with the
 	 * new one.
 	 * @param pageCode the code of the page where to set the showlet
-	 * @param showlet The showlet to set
+	 * @param widget The showlet to set
 	 * @param pos The position where to place the showlet in
 	 * @throws ApsSystemException In case of error.
 	 */
 	@Override
-	public void joinShowlet(String pageCode, Showlet showlet, int pos) throws ApsSystemException {
+	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException {
 		this.checkPagePos(pageCode, pos);
-		if (null == showlet || null == showlet.getType()) {
-			throw new ApsSystemException("Invalid null value found in either the Showlet or the showletType");
+		if (null == widget || null == widget.getType()) {
+			throw new ApsSystemException("Invalid null value found in either the Widget or the showletType");
 		}
 		try {
-			this.getPageDAO().joinShowlet(pageCode, showlet, pos);
+			this.getPageDAO().joinShowlet(pageCode, widget, pos);
 			IPage currentPage = this.getPage(pageCode);
-			currentPage.getShowlets()[pos] = showlet;
+			currentPage.getShowlets()[pos] = widget;
 			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error during the assignation of a showlet to the frame " + pos +" in the page code "+pageCode;
@@ -432,10 +432,10 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 	}
 	
 	private void getShowletUtilizers(IPage page, String showletTypeCode, List<IPage> showletUtilizers) {
-		Showlet[] showlets = page.getShowlets();
+		Widget[] showlets = page.getShowlets();
 		for (int i = 0; i < showlets.length; i++) {
-			Showlet showlet = showlets[i];
-			if (null != showlet && null != showlet.getType() && showletTypeCode.equals(showlet.getType().getCode())) {
+			Widget widget = showlets[i];
+			if (null != widget && null != widget.getType() && showletTypeCode.equals(widget.getType().getCode())) {
 				showletUtilizers.add(page);
 				break;
 			}

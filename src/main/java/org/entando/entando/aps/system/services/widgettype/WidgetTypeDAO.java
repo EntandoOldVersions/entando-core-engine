@@ -105,8 +105,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet",
-					"Error parsing the Showlet Type '" + code + "'");
-			throw new ApsSystemException("Error in the parsing in the Showlet Type '" + code + "'", t);
+					"Error parsing the Widget Type '" + code + "'");
+			throw new ApsSystemException("Error in the parsing in the Widget Type '" + code + "'", t);
 		}
 		return showletType;
 	}

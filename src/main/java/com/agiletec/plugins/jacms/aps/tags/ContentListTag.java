@@ -23,7 +23,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -82,7 +82,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		List<String> contents = null;
 		try {
 			contents = helper.getContentsId(this, reqCtx);
-			Showlet currentShowlet = (Showlet) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
 			Integer maxElements = null;
 			if (null != currentShowlet.getConfig()) {
 				ApsProperties properties = currentShowlet.getConfig();
@@ -105,8 +105,8 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	private void extractExtraShowletParameters(RequestContext reqCtx) {
 		try {
-			Showlet showlet = (Showlet) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
-			ApsProperties config = showlet.getConfig();
+			Widget widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+			ApsProperties config = widget.getConfig();
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
 				this.addMultilanguageShowletParameter(config, IContentListShowletHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());

@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.page.IPage;
 import org.entando.entando.aps.system.services.page.Page;
-import org.entando.entando.aps.system.services.page.Showlet;
+import org.entando.entando.aps.system.services.page.Widget;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -261,7 +261,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				if (this.isDefaultShowlet()) {
 					this.setDefaultShowlets(page);
 				} else {
-					page.setShowlets(new Showlet[pageModel.getFrames().length]);
+					page.setShowlets(new Widget[pageModel.getFrames().length]);
 				}
 			}
 			page.setTitles(this.getTitles());
@@ -308,7 +308,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				//Ho cambiato modello e allora cancello tutte le showlets Precedenti
 				PageModel model = this.getPageModelManager().getPageModel(this.getModel());
 				page.setModel(model);
-				page.setShowlets(new Showlet[model.getFrames().length]);
+				page.setShowlets(new Widget[model.getFrames().length]);
 			}
 			if (this.isDefaultShowlet()) {
 				this.setDefaultShowlets(page);
@@ -336,16 +336,16 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	
 	protected void setDefaultShowlets(Page page) throws ApsSystemException {
 		try {
-			Showlet[] defaultShowlets = page.getModel().getDefaultShowlet();
+			Widget[] defaultShowlets = page.getModel().getDefaultShowlet();
 			if (null == defaultShowlets) {
 				return;
 			}
-			Showlet[] showlets = new Showlet[defaultShowlets.length];
+			Widget[] showlets = new Widget[defaultShowlets.length];
 			for (int i=0; i<defaultShowlets.length; i++) {
-				Showlet defaultShowlet = defaultShowlets[i];
+				Widget defaultShowlet = defaultShowlets[i];
 				if (null != defaultShowlet) {
 					if (null == defaultShowlet.getType()) {
-						ApsSystemUtils.getLogger().severe("Showlet Type null when adding " +
+						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
 								"defaulShowlet (of pagemodel '" + page.getModel().getCode() + "') on frame '" + i + "' of page '" + page.getCode() + "'");
 						continue;
 					}
