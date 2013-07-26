@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.PageDAO;
+import com.agiletec.aps.system.services.page.PageDAO;
 
 /**
  * Estensione del Data Access Object per gli oggetti pagina {@link PageDAO}.

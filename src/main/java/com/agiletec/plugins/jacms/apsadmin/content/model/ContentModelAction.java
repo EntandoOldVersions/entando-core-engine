@@ -26,12 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;

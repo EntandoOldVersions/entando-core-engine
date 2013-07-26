@@ -17,9 +17,8 @@
 */
 package com.agiletec.apsadmin.portal;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.apsadmin.system.ITreeAction;
 
 /**

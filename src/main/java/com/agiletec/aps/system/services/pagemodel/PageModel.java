@@ -19,7 +19,7 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import java.io.Serializable;
 
-import org.entando.entando.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.page.Widget;
 
 /**
  * Rappresentazione di un modello di pagina. Questo oggetto contiene

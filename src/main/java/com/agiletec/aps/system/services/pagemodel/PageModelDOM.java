@@ -21,7 +21,6 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.jdom.Document;
@@ -30,6 +29,7 @@ import org.jdom.input.SAXBuilder;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

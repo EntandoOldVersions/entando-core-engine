@@ -21,8 +21,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -30,6 +28,8 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 

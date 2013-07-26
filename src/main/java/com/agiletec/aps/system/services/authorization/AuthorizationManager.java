@@ -23,12 +23,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.UserDetails;

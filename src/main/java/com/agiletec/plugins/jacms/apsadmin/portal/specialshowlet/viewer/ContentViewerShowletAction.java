@@ -19,9 +19,8 @@ package com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;

@@ -29,6 +29,8 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
@@ -41,8 +43,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.BeanComparator;
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.springframework.web.context.WebApplicationContext;
 

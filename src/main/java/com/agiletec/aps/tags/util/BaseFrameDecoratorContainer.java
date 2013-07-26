@@ -17,9 +17,8 @@
 */
 package com.agiletec.aps.tags.util;
 
-import org.entando.entando.aps.system.services.page.Widget;
-
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.services.page.Widget;
 
 /**
  * @author E.Santoboni

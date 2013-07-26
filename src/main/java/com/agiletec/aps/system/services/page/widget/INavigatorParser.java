@@ -15,13 +15,12 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.page.widget;
+package com.agiletec.aps.system.services.page.widget;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 /**

@@ -19,13 +19,12 @@ package com.agiletec.plugins.jacms.apsadmin.system;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Widget;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.system.entity.type.EntityTypeConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;

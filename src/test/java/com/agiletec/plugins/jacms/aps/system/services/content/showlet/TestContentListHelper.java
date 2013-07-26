@@ -19,9 +19,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.IPageManager;
-import org.entando.entando.aps.system.services.page.Widget;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -29,6 +26,9 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;

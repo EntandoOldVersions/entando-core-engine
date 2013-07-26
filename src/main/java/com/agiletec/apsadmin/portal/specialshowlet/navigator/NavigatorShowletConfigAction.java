@@ -20,12 +20,11 @@ package com.agiletec.apsadmin.portal.specialshowlet.navigator;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Widget;
-import org.entando.entando.aps.system.services.page.widget.INavigatorParser;
-import org.entando.entando.aps.system.services.page.widget.NavigatorExpression;
-
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.system.services.page.widget.INavigatorParser;
+import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
 
 /**

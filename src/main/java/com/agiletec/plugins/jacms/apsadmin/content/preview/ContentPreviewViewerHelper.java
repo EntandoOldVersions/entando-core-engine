@@ -21,14 +21,13 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.

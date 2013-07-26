@@ -19,12 +19,11 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;

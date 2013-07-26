@@ -20,9 +20,8 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;

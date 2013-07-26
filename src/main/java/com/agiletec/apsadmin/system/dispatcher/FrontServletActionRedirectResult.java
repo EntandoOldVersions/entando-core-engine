@@ -21,6 +21,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.tags.InternalServletTag;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -41,7 +42,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-import org.entando.entando.aps.system.services.page.Page;
 
 /**
  * Redirect Action Result with ancot for internal servlet actions.

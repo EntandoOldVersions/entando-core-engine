@@ -19,8 +19,7 @@ package com.agiletec.apsadmin.portal.specialshowlet.navigator;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.widget.NavigatorExpression;
-
+import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
 
 /**

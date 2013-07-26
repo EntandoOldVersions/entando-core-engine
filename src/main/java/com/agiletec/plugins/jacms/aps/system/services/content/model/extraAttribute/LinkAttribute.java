@@ -25,12 +25,12 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPageManager;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.TextAttribute;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.CmsAttributeReference;

@@ -17,9 +17,8 @@
 */
 package com.agiletec.aps.system.services.page.showlet;
 
-import org.entando.entando.aps.system.services.page.widget.NavigatorExpression;
-
 import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 
 /**
  * @version 1.0

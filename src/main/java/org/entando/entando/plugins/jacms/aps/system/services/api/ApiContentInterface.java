@@ -25,7 +25,6 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
-import org.entando.entando.aps.system.services.page.IPageManager;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
 
@@ -37,6 +36,7 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;

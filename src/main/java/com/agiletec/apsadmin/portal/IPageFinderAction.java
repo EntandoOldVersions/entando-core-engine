@@ -19,7 +19,7 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * This class declares the method used to search through pages. Noticeably we don't have here a 

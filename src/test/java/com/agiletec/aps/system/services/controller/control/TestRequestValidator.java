@@ -17,7 +17,6 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
-import org.entando.entando.aps.system.services.page.IPage;
 import org.springframework.mock.web.MockHttpServletRequest;
 
 import com.agiletec.aps.BaseTestCase;
@@ -27,6 +26,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * @author M.Casari

@@ -19,12 +19,11 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.Collection;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.IPageManager;
-
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.tree.ITreeNode;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.apsadmin.portal.IPageTreeAction;
 import com.agiletec.apsadmin.portal.PageTreeAction;

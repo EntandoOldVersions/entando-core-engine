@@ -16,14 +16,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.linkresolver;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.IPageManager;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.aps.system.services.user.IUserManager;

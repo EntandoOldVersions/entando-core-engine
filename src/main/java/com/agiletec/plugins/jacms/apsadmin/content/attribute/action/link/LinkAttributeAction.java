@@ -18,10 +18,9 @@ package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link;
 
 import javax.servlet.http.HttpSession;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.IPageManager;
-
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;

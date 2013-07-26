@@ -19,9 +19,8 @@ package com.agiletec.plugins.jacms.aps.system.services.contentmodel;
 import java.util.List;
 import java.util.Map;
 
-import org.entando.entando.aps.system.services.page.IPage;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 
 /**

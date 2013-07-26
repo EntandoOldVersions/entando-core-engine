@@ -26,6 +26,7 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.url.IURLManager;
@@ -34,7 +35,6 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import static junit.framework.Assert.assertNotNull;
 
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.page.IPageManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**

@@ -20,10 +20,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.PageManager;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.PageManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 
 /**

@@ -18,6 +18,8 @@ package com.agiletec.plugins.jacms.apsadmin.tags;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.tags.ExecShowletTag;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -26,9 +28,6 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.entando.entando.aps.system.services.page.IPage;
-import org.entando.entando.aps.system.services.page.Widget;
 
 /**
  * This tag allows the preliminary execution of the showlet so to show the preview of the contents
