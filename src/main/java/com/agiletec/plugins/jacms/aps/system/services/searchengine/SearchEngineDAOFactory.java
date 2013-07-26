@@ -2,9 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -18,20 +18,17 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
 import java.io.File;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
+import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 
 /**
  * Classe factory degli elementi ad uso del SearchEngine.
  * @author E.Santoboni
  */
-public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFactoryAware {
+public class SearchEngineDAOFactory implements ISearchEngineDAOFactory/*, BeanFactoryAware*/ {
 	
 	@Override
 	public void init() throws Exception {
@@ -53,15 +50,30 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 	
 	@Override
 	public IIndexerDAO getIndexer(boolean newIndex, String subDir) throws ApsSystemException {
-		IIndexerDAO indexerDao = (IIndexerDAO) this._beanFactory.getBean("jacmsSearchEngineIndexerDao");
-		indexerDao.init(this.getDirectory(subDir), newIndex);
+		IIndexerDAO indexerDao = null;
+		try {
+			Class indexerClass = Class.forName(this.getIndexerClassName());
+            indexerDao = (IIndexerDAO) indexerClass.newInstance();
+			indexerDao.setLangManager(this.getLangManager());
+			indexerDao.init(this.getDirectory(subDir), newIndex);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getIndexer", "Error creating new indexer");
+			throw new ApsSystemException("Error creating new indexer", t);
+		}
 		return indexerDao;
 	}
 	
 	@Override
 	public ISearcherDAO getSearcher(String subDir) throws ApsSystemException {
-		ISearcherDAO searcherDao = (ISearcherDAO) this._beanFactory.getBean("jacmsSearchEngineSearcherDao");
-		searcherDao.init(this.getDirectory(subDir));
+		ISearcherDAO searcherDao = null;
+		try {
+			Class searcherClass = Class.forName(this.getSearcherClassName());
+            searcherDao = (ISearcherDAO) searcherClass.newInstance();
+			searcherDao.init(this.getDirectory(subDir));
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getSearcher", "Error creating new searcher");
+			throw new ApsSystemException("Error creating new searcher", t);
+		}
 		return searcherDao;
 	}
 	
@@ -75,7 +87,9 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 	
 	private File getDirectory(String subDirectory) throws ApsSystemException {
 		String dirName = this.getIndexDiskRootFolder();
-		if (!dirName.endsWith("/")) dirName += "/";
+		if (!dirName.endsWith("/")) {
+			dirName += "/";
+		}
 		dirName += subDirectory;
 		ApsSystemUtils.getLogger().config("Index Directory: " + dirName);
 		File dir = new File(dirName);
@@ -92,8 +106,9 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 	@Override
 	public void deleteSubDirectory(String subDirectory) {
 		String dirName = this.getIndexDiskRootFolder();
-		if (!dirName.endsWith("/") || !dirName.endsWith(File.separator)) 
+		if (!dirName.endsWith("/") || !dirName.endsWith(File.separator)) {
 			dirName += File.separator;
+		}
 		dirName += subDirectory;
 		File dir = new File(dirName);
 		if (dir.exists() || dir.isDirectory()) {
@@ -105,6 +120,20 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 			dir.delete();
 			ApsSystemUtils.getLogger().config("Deleted subfolder " + subDirectory);
 		}
+	}
+	
+	public String getIndexerClassName() {
+		return _indexerClassName;
+	}
+	public void setIndexerClassName(String indexerClassName) {
+		this._indexerClassName = indexerClassName;
+	}
+	
+	public String getSearcherClassName() {
+		return _searcherClassName;
+	}
+	public void setSearcherClassName(String searcherClassName) {
+		this._searcherClassName = searcherClassName;
 	}
 	
 	protected String getIndexDiskRootFolder() {
@@ -121,16 +150,20 @@ public class SearchEngineDAOFactory implements ISearchEngineDAOFactory, BeanFact
 		this._configManager = configService;
 	}
 	
-	@Override
-	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-		this._beanFactory = beanFactory;
+	protected ILangManager getLangManager() {
+		return _langManager;
+	}
+	public void setLangManager(ILangManager langManager) {
+		this._langManager = langManager;
 	}
 	
-	private BeanFactory _beanFactory;
+	private String _indexerClassName;
+	private String _searcherClassName;
 	
 	private String _indexDiskRootFolder;
 	private String _subDirectory;
 	
 	private ConfigInterface _configManager;
+	private ILangManager _langManager;
 	
 }
