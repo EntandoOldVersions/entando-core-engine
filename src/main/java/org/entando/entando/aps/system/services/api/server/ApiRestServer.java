@@ -88,7 +88,7 @@ public class ApiRestServer {
 
     @POST
     @Consumes({"application/xml"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{resourceName}")
     public Object doPostFromXmlBody(@PathParam("langCode") String langCode, @PathParam("resourceName") String resourceName,
             @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -97,7 +97,7 @@ public class ApiRestServer {
 
     @POST
     @Consumes({"application/xml"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{namespace}/{resourceName}")
     public Object doPostFromXmlBody(@PathParam("langCode") String langCode, @PathParam("namespace") String namespace,
 			@PathParam("resourceName") String resourceName, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -106,7 +106,7 @@ public class ApiRestServer {
 
     @POST
     @Consumes({"application/json"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{resourceName}")
     public Object doPostFromJsonBody(@PathParam("langCode") String langCode, @PathParam("resourceName") String resourceName,
             @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -115,7 +115,7 @@ public class ApiRestServer {
 
     @POST
     @Consumes({"application/json"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{namespace}/{resourceName}")
     public Object doPostFromJsonBody(@PathParam("langCode") String langCode, @PathParam("namespace") String namespace,
 			@PathParam("resourceName") String resourceName, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -124,7 +124,7 @@ public class ApiRestServer {
 
     @PUT
     @Consumes({"application/xml"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{resourceName}")
     public Object doPutFromXmlBody(@PathParam("langCode") String langCode, @PathParam("resourceName") String resourceName,
             @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -133,7 +133,7 @@ public class ApiRestServer {
 
     @PUT
     @Consumes({"application/xml"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{namespace}/{resourceName}")
     public Object doPutFromXmlBody(@PathParam("langCode") String langCode, @PathParam("namespace") String namespace,
 			@PathParam("resourceName") String resourceName, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -142,7 +142,7 @@ public class ApiRestServer {
 
     @PUT
     @Consumes({"application/json"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{resourceName}")
     public Object doPutFromJsonBody(@PathParam("langCode") String langCode, @PathParam("resourceName") String resourceName,
             @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -151,7 +151,7 @@ public class ApiRestServer {
 
     @PUT
     @Consumes({"application/json"})
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{namespace}/{resourceName}")
     public Object doPutFromJsonBody(@PathParam("langCode") String langCode, @PathParam("namespace") String namespace,
 			@PathParam("resourceName") String resourceName, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -159,7 +159,7 @@ public class ApiRestServer {
     }
 
     @DELETE
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{resourceName}")
     public Object doDelete(@PathParam("langCode") String langCode, @PathParam("resourceName") String resourceName,
             @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
@@ -167,7 +167,7 @@ public class ApiRestServer {
     }
 
     @DELETE
-    @Produces({"application/json", "application/xml", "application/javascript"})
+    @Produces({"application/json", "application/xml"})
     @Path("/{langCode}/{namespace}/{resourceName}")
     public Object doDelete(@PathParam("langCode") String langCode, @PathParam("namespace") String namespace,
 			@PathParam("resourceName") String resourceName, @Context HttpServletRequest request, @Context HttpServletResponse response, @Context UriInfo ui) {
