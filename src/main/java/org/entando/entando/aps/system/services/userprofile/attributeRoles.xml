@@ -1,0 +1,12 @@
+<roles>
+	<role>
+		<name>userprofile:fullname</name>
+		<description>The Attribute containing the full name</description>
+		<allowedTypes>Monotext</allowedTypes>
+	</role>
+	<role>
+		<name>userprofile:mail</name>
+		<description>The Attribute containing the mail address</description>
+		<allowedTypes>Monotext</allowedTypes>
+	</role>
+</roles>

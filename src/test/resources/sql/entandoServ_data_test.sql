@@ -89,3 +89,84 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<shortcuts>
 	<box pos="6">core.tools.setting</box>
 	<box pos="7">core.tools.entities</box>
 </shortcuts>');
+
+
+
+INSERT INTO userprofile_authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('editorCustomers', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
+<profile id="editorCustomers" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories />
+	<attributes>
+		<attribute name="fullname" attributetype="Monotext"><monotext>Sean Red</monotext></attribute>
+		<attribute name="birthdate" attributetype="Date"><date>19520521</date></attribute>
+		<attribute name="email" attributetype="Monotext"><monotext>sean.red@mailinator.com</monotext></attribute>
+		<attribute name="language" attributetype="Monotext"><monotext>it</monotext></attribute>
+		<attribute name="boolean1" attributetype="Boolean"><boolean>false</boolean></attribute>
+		<attribute name="boolean2" attributetype="Boolean"><boolean>false</boolean></attribute>
+	</attributes>
+</profile>', 0);
+INSERT INTO userprofile_authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('mainEditor', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
+<profile id="mainEditor" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories />
+	<attributes>
+		<attribute name="fullname" attributetype="Monotext"><monotext>Amanda Chedwase</monotext></attribute>
+		<attribute name="birthdate" attributetype="Date"><date>19471124</date></attribute>
+		<attribute name="email" attributetype="Monotext"><monotext>amanda.chedwase@mailinator.com</monotext></attribute>
+		<attribute name="language" attributetype="Monotext"><monotext>it</monotext></attribute>
+		<attribute name="boolean1" attributetype="Boolean"><boolean>false</boolean></attribute>
+		<attribute name="boolean2" attributetype="Boolean"><boolean>false</boolean></attribute>
+	</attributes>
+</profile>', 0);
+INSERT INTO userprofile_authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('pageManagerCoach', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
+<profile id="pageManagerCoach" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories />
+	<attributes>
+		<attribute name="fullname" attributetype="Monotext"><monotext>Raimond Stevenson</monotext></attribute>
+		<attribute name="birthdate" attributetype="Date"><date>20000904</date></attribute>
+		<attribute name="email" attributetype="Monotext"><monotext>raimond.stevenson@mailinator.com</monotext></attribute>
+		<attribute name="language" attributetype="Monotext"><monotext>it</monotext></attribute>
+		<attribute name="boolean1" attributetype="Boolean"><boolean>false</boolean></attribute>
+		<attribute name="boolean2" attributetype="Boolean"><boolean>false</boolean></attribute>
+	</attributes>
+</profile>', 0);
+INSERT INTO userprofile_authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('editorCoach', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
+<profile id="editorCoach" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories />
+	<attributes>
+		<attribute name="fullname" attributetype="Monotext"><monotext>Rick Bobonsky</monotext></attribute>
+		<attribute name="email" attributetype="Monotext"><monotext>rick.bobonsky@mailinator.com</monotext></attribute>
+		<attribute name="birthdate" attributetype="Date"><date>19450301</date></attribute>
+		<attribute name="language" attributetype="Monotext"><monotext>it</monotext></attribute>
+		<attribute name="boolean1" attributetype="Boolean"><boolean>false</boolean></attribute>
+		<attribute name="boolean2" attributetype="Boolean"><boolean>false</boolean></attribute>
+	</attributes>
+</profile>', 0);
+
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCoach', 'fullname', 'Rick Bobonsky', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCoach', 'email', 'rick.bobonsky@mailinator.com', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCoach', 'birthdate', NULL, '1945-03-01 00:00:00', NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCoach', 'boolean1', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCoach', 'boolean2', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCustomers', 'fullname', 'Sean Red', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCustomers', 'email', 'sean.red@mailinator.com', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCustomers', 'birthdate', NULL, '1952-05-21 00:00:00', NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCustomers', 'boolean1', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('editorCustomers', 'boolean2', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('mainEditor', 'fullname', 'Amanda Chedwase', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('mainEditor', 'email', 'amanda.chedwase@mailinator.com', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('mainEditor', 'birthdate', NULL, '1947-11-24 00:00:00', NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('mainEditor', 'boolean1', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('mainEditor', 'boolean2', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('pageManagerCoach', 'fullname', 'Raimond Stevenson', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('pageManagerCoach', 'email', 'raimond.stevenson@mailinator.com', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('pageManagerCoach', 'birthdate', NULL, '2000-09-04 00:00:00', NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('pageManagerCoach', 'boolean1', 'false', NULL, NULL, NULL);
+INSERT INTO userprofile_profilesearch (username, attrname, textvalue, datevalue, numvalue, langcode) VALUES ('pageManagerCoach', 'boolean2', 'false', NULL, NULL, NULL);
+
+
+
+
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('editorCoach', 'fullname', 'userprofile:fullname');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('editorCustomers', 'fullname', 'userprofile:fullname');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('mainEditor', 'fullname', 'userprofile:fullname');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('pageManagerCoach', 'fullname', 'userprofile:fullname');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('editorCoach', 'email', 'userprofile:mail');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('editorCustomers', 'email', 'userprofile:mail');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('mainEditor', 'email', 'userprofile:mail');
+INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ('pageManagerCoach', 'email', 'userprofile:mail');
+

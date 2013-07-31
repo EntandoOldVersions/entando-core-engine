@@ -258,7 +258,30 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 	</ExtendendPrivacyModule>
 </Params>
 ');
-
+INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userprofileProfileType', 'User Profile Definitions', '<?xml version="1.0" encoding="UTF-8"?>
+<profiletypes>
+	<profiletype typecode="PFL" typedescr="Default user profile">
+		<attributes>
+			<attribute name="fullname" attributetype="Monotext" searcheable="true">
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:fullname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Monotext" searcheable="true">
+				<validations>
+					<required>true</required>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+				<roles>
+					<role>userprofile:mail</role>
+				</roles>
+			</attribute>
+		</attributes>
+	</profiletype>
+</profiletypes>');
 
 
 

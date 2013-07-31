@@ -59,6 +59,9 @@
 		<value>org.entando.entando.aps.system.init.model.servdb.ApiOAuthToken</value>
 		<value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogMethod</value>
 		<value>org.entando.entando.aps.system.init.model.servdb.ApiCatalogService</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserProfile</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserProfileSearch</value>
+		<value>org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole</value>
 	</util:list>
 	
 	<bean id="StorageManager" class="org.entando.entando.aps.system.services.storage.LocalStorageManager" 

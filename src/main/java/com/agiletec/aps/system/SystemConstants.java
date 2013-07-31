@@ -139,6 +139,11 @@ public interface SystemConstants {
      * Nome del del servizio di gestione degli utenti.
      */
     public static final String USER_MANAGER = "UserManager";
+	
+	/**
+	 * Bean Name of UserProfile Manager
+	 */
+	public static final String USER_PROFILE_MANAGER = "UserProfileManager";
     
     /**
      * Nome del servizio di gestione degli URL.
@@ -278,4 +283,21 @@ public interface SystemConstants {
      */
     public static final String GUEST_USER_NAME = "guest";
     
+	/**
+	 * Code of default type of UserProfile Object
+	 */
+	public static final String DEFAULT_PROFILE_TYPE_CODE = "PFL";
+	
+	/**
+	 * The name of the attribute containing the full name
+	 */
+	public static final String USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME = "userprofile:fullname";
+	
+	/**
+	 * The name of the attribute that contains the mail address
+	 */
+	public static final String USER_PROFILE_ATTRIBUTE_ROLE_MAIL = "userprofile:mail";
+	
+	public static final String USER_PROFILE_ATTRIBUTE_DISABLING_CODE_ON_EDIT = "userprofile:onEdit";
+	
 }

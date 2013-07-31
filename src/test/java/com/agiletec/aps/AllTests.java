@@ -59,6 +59,7 @@ import com.agiletec.aps.system.services.user.TestAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.TestUserDAO;
 import com.agiletec.aps.system.services.user.TestUserManager;
 import com.agiletec.aps.util.TestHtmlHandler;
+import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 public class AllTests {
 	
@@ -124,6 +125,9 @@ public class AllTests {
 		suite.addTestSuite(TestApplicationContext.class);	
 		//
 		suite.addTestSuite(TestHtmlHandler.class);
+		
+		suite.addTestSuite(TestUserProfileManager.class);
+		suite.addTestSuite(org.entando.entando.aps.system.services.userprofile.TestUserManager.class);
 		
 		return suite;
 	}
