@@ -51,7 +51,7 @@ public class UserProfileSearcherDAO extends AbstractEntitySearcherDAO {
 
 	@Override
 	protected String getEntityMasterTableName() {
-		return "jpuserprofile_authuserprofiles";
+		return "userprofile_authuserprofiles";
 	}
 
 	@Override
@@ -61,12 +61,12 @@ public class UserProfileSearcherDAO extends AbstractEntitySearcherDAO {
 
 	@Override
 	protected String getEntitySearchTableName() {
-		return "jpuserprofile_profilesearch";
+		return "userprofile_profilesearch";
 	}
 	
 	@Override
 	protected String getEntityAttributeRoleTableName() {
-		return "jpuserprofile_attroles";
+		return "userprofile_attroles";
 	}
 	
 	@Override

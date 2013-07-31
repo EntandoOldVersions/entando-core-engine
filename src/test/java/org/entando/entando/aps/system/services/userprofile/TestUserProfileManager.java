@@ -27,9 +27,12 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
 
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
+import org.opensaml.saml2.metadata.provider.EntityRoleFilter;
 
 /**
  * @author E.Santoboni
@@ -47,8 +50,8 @@ public class TestUserProfileManager extends BaseTestCase {
 	}
 	
 	public void testAttributeSupportObjects() throws Throwable {
-		assertTrue(this._profileManager.getAttributeRoles().size()>=3);
-		assertTrue(this._profileManager.getAttributeDisablingCodes().size()>=1);
+		assertTrue(this._profileManager.getAttributeRoles().size()>=2);
+		assertTrue(this._profileManager.getAttributeDisablingCodes().isEmpty());
 	}
 	
 	public void testAddProfile() throws Throwable {
@@ -102,7 +105,7 @@ public class TestUserProfileManager extends BaseTestCase {
 		this._profileManager.deleteProfile("pippo");
 	}
 	
-	public void testSearchProfiles() throws Throwable {
+	public void testSearchProfiles_1() throws Throwable {
 		List<String> usernames = this._profileManager.searchId(null);
 		assertNotNull(usernames);
     	assertEquals(4, usernames.size());
@@ -122,6 +125,37 @@ public class TestUserProfileManager extends BaseTestCase {
     	String[] expected2 = {"editorCoach", "pageManagerCoach"};
     	assertEquals(expected2.length, usernames.size());
     	this.verifyOrder(usernames, expected2);
+	}
+	
+	public void testSearchProfiles_2() throws Throwable {
+		EntitySearchFilter fullnameRoleFilter = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
+		fullnameRoleFilter.setOrder(EntitySearchFilter.ASC_ORDER);
+		EntitySearchFilter[] filters1 = {fullnameRoleFilter};
+		List<String> usernames = this._profileManager.searchId(filters1);
+		assertNotNull(usernames);
+    	String[] expected1 = {"mainEditor", "pageManagerCoach", "editorCoach", "editorCustomers"};
+		assertEquals(expected1.length, usernames.size());
+    	this.verifyOrder(usernames, expected1);
+		
+		EntitySearchFilter fullnameRoleFilter2 = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME, "se", true);
+		fullnameRoleFilter2.setOrder(EntitySearchFilter.ASC_ORDER);
+		
+		EntitySearchFilter[] filters2 = {fullnameRoleFilter2};
+		usernames = this._profileManager.searchId(filters2);
+		assertNotNull(usernames);
+    	String[] expected2 = {"mainEditor", "editorCustomers"};
+		assertEquals(expected2.length, usernames.size());
+    	this.verifyOrder(usernames, expected2);
+		
+		EntitySearchFilter fullnameRoleFilter3 = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME, "se", true);
+		EntitySearchFilter usernameFilter3 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false);
+    	usernameFilter3.setOrder(EntitySearchFilter.ASC_ORDER);
+		EntitySearchFilter[] filters3 = {fullnameRoleFilter3, usernameFilter3};
+		usernames = this._profileManager.searchId(filters3);
+		assertNotNull(usernames);
+    	String[] expected3 = {"editorCustomers", "mainEditor"};
+		assertEquals(expected3.length, usernames.size());
+    	this.verifyOrder(usernames, expected3);
 	}
 	
 	public void testSearchProfileRecords() throws Throwable {
