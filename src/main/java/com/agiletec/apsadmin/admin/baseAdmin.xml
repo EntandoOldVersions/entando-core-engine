@@ -6,7 +6,12 @@
 <struts>
 	
     <package name="core_do/BaseAdmin" namespace="/do/BaseAdmin" extends="entando-default">
-    	
+    
+        <action name="settings" class="baseAdminAction">
+            <result type="tiles">admin.BaseAdmin.settings</result>
+                <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+
         <action name="reloadConfig" class="baseAdminAction" method="reloadConfig">
             <result type="tiles">admin.BaseAdmin.reloadConfigResult</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
