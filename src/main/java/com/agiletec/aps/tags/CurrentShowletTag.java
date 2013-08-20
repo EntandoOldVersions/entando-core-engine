@@ -101,7 +101,7 @@ public class CurrentShowletTag extends OutSupport {
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 		Widget widget = null;
 		if (this.getFrame() < 0) {
-			widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+			widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
 		} else {
 			IPage currentPage = (IPage) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_PAGE));
 			Widget[] showlets = currentPage.getShowlets();

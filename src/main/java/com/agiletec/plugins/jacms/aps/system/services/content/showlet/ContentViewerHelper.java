@@ -78,7 +78,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
         	Logger log = ApsSystemUtils.getLogger();
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String langCode = currentLang.getCode();
-            Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+            Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
             ApsProperties showletConfig = widget.getConfig();
 			contentId = this.extractContentId(contentId, showletConfig, reqCtx);
 			modelId = this.extractModelId(contentId, modelId, showletConfig, reqCtx);
@@ -105,7 +105,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	public PublicContentAuthorizationInfo getAuthorizationInfo(String contentId, RequestContext reqCtx) throws ApsSystemException {
 		PublicContentAuthorizationInfo authInfo = null;
 		try {
-			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			contentId = this.extractContentId(contentId, widget.getConfig(), reqCtx);
 			if (null == contentId) {
 				ApsSystemUtils.getLogger().info("Null contentId");

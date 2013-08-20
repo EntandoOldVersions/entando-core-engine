@@ -200,7 +200,7 @@ public class TestContentListHelper extends BaseTestCase {
 			IPage page = this._pageManager.getPage(pageCode);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, page);
 			Widget widget = page.getShowlets()[frame];
-			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
+			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
 		} catch (Throwable t) {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);

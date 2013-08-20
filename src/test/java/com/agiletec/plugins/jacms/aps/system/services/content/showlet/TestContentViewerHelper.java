@@ -105,7 +105,7 @@ public class TestContentViewerHelper extends BaseTestCase {
             WidgetType showletType = showletTypeMan.getShowletType("content_viewer");
             widget.setType(showletType);
             widget.setConfig(new ApsProperties());
-            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
+            _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
             
             this._helper = (IContentViewerHelper) this.getApplicationContext().getBean("jacmsContentViewerHelper");
         } catch (Throwable t) {

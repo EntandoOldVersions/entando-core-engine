@@ -60,9 +60,16 @@ public interface SystemConstants {
     public static final String EXTRAPAR_CURRENT_PAGE = "currentPage";
     
     /**
-     * Nome parametro extra per requestContext: showlet corrente
+     * Nome parametro extra per requestContext: widget corrente
      */
-    public static final String EXTRAPAR_CURRENT_SHOWLET = "currentShowlet";
+    public static final String EXTRAPAR_CURRENT_WIDGET = "currentShowlet";
+
+	/**
+	 * Nome parametro extra per requestContext: showlet corrente
+	 * @deprecated Use {@link #EXTRAPAR_CURRENT_WIDGET} instead
+	 */
+	public static final String EXTRAPAR_CURRENT_SHOWLET = EXTRAPAR_CURRENT_WIDGET;
+
     /**
      * Nome parametro extra per requestContext: frame corrente
      */

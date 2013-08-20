@@ -134,7 +134,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		List<String> contentsId = null;
 		try {
 			List<UserFilterOptionBean> userFilters = bean.getUserFilterOptions();
-			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			ApsProperties config = widget.getConfig();
 			if (null == bean.getContentType() && null != config) {
 				bean.setContentType(config.getProperty(SHOWLET_PARAM_CONTENT_TYPE));
@@ -272,7 +272,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
 		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 		StringBuilder cacheKey = new StringBuilder(page.getCode());
-		Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+		Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 		cacheKey.append("_").append(currentShowlet.getType().getCode());
 		Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 		cacheKey.append("_").append(frame.intValue());
@@ -310,7 +310,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	public List<UserFilterOptionBean> getConfiguredUserFilters(IContentListTagBean bean, RequestContext reqCtx) throws ApsSystemException {
 		List<UserFilterOptionBean> userEntityFilters = null;
 		try {
-			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			ApsProperties config = widget.getConfig();
 			if (null == config || null == config.getProperty(SHOWLET_PARAM_CONTENT_TYPE)) {
 				return null;

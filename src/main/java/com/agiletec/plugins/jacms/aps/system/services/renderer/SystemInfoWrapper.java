@@ -107,7 +107,7 @@ public class SystemInfoWrapper {
 	
     public Widget getCurrentShowlet() {
 		try {
-            return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+            return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getCurrentShowlet", "Error current Widget");
 			return null;

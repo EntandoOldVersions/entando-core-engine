@@ -97,7 +97,7 @@ public class ContentInfoTag extends OutSupport {
 	}
 	
 	private Object extractModelId(PublicContentAuthorizationInfo authInfo, RequestContext reqCtx) {
-		Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+		Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
         ApsProperties showletConfig = widget.getConfig();
 		String modelId = (String) showletConfig.get("modelId");
 		if (null == modelId) {

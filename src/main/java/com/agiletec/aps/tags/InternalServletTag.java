@@ -142,7 +142,7 @@ public class InternalServletTag extends TagSupport {
 		ServletRequest req =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 		try {
-			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			this.includeShowlet(reqCtx, responseWrapper, widget);
 			Cookie[] cookies = responseWrapper.getCookiesToAdd();
 			if (null != cookies) {

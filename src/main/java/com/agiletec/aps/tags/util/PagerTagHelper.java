@@ -69,7 +69,7 @@ public class PagerTagHelper {
 		if (maxItems == 0) {
 			RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 			if (reqCtx != null) {
-				Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+				Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 				ApsProperties config = widget.getConfig();
 				String stringMax = (null != config) ? (String) config.get("maxElemForItem") : null;
 				if (stringMax != null && stringMax.length() > 0) {

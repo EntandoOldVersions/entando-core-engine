@@ -81,7 +81,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		List<String> contents = null;
 		try {
 			contents = helper.getContentsId(this, reqCtx);
-			Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			Integer maxElements = null;
 			if (null != currentShowlet.getConfig()) {
 				ApsProperties properties = currentShowlet.getConfig();
@@ -104,7 +104,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	private void extractExtraShowletParameters(RequestContext reqCtx) {
 		try {
-			Widget widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_SHOWLET));
+			Widget widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
 			ApsProperties config = widget.getConfig();
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));

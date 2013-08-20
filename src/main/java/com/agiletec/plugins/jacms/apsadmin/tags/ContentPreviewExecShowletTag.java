@@ -20,7 +20,7 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.tags.ExecShowletTag;
+import com.agiletec.aps.tags.ExecWidgetTag;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
@@ -32,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This tag allows the preliminary execution of the showlet so to show the preview of the contents
  * within the content administration pages in the backend.
- * This tag class extends the {@link ExecShowletTag} class used in the front-end to build the pages of the portal.
+ * This tag class extends the {@link ExecWidgetTag} class used in the front-end to build the pages of the portal.
  * @author E.Santoboni
  */
-public class ContentPreviewExecShowletTag extends ExecShowletTag {
+public class ContentPreviewExecShowletTag extends ExecWidgetTag {
 	
 	@Override
 	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
@@ -52,7 +52,7 @@ public class ContentPreviewExecShowletTag extends ExecShowletTag {
 			if ((currentPage.getCode().equals(contentOnSession.getViewPage()) && (widget.getConfig() == null || widget.getConfig().size() == 0)) 
 					|| (widget.getConfig() != null && widget.getConfig().get("contentId") != null && widget.getConfig().get("contentId").equals(contentOnSession.getId()))) {
 				String path = CONTENT_VIEWER_JSP;
-				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
+				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
 				this.pageContext.include(path.toString());
 				return;
 			}

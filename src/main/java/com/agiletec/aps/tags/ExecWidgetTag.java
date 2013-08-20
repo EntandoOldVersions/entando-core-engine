@@ -47,15 +47,15 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * Triggers the preliminary execution of the showlet, it must be used
+ * Triggers the preliminary execution of the widget, it must be used
  * <b>uniquely</b> in the main.jsp. It does not produce any output since the
- * goal is to insert in the RequestContext the partial output of each showlet
+ * goal is to insert in the RequestContext the partial output of each widget
  * and the informations to include in the page head
  *
  * @author M.Diana - E.Santoboni
  */
 @SuppressWarnings("serial")
-public class ExecShowletTag extends TagSupport {
+public class ExecWidgetTag extends TagSupport {
 
 	/**
 	 * Invoke the showlet configured in the page.
@@ -110,9 +110,9 @@ public class ExecShowletTag extends TagSupport {
 	
 	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
 		if (null != widget && this.isUserAllowed(reqCtx, widget)) {
-			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET, widget);
+			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
 		} else {
-			reqCtx.removeExtraParam(SystemConstants.EXTRAPAR_CURRENT_SHOWLET);
+			reqCtx.removeExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 		}
 		this.includeDecorators(widget, decorators, false, true);
 		if (null != widget && this.isUserAllowed(reqCtx, widget)) {
@@ -126,7 +126,7 @@ public class ExecShowletTag extends TagSupport {
 			if (isPluginShowlet) {
 				jspPath.append("plugins/").append(pluginCode.trim()).append("/");
 			}
-			jspPath.append("aps/jsp/showlets/").append(showletType.getCode()).append(".jsp");
+			jspPath.append(WIDGET_LOCATION).append(showletType.getCode()).append(".jsp");
 			this.includeDecorators(widget, decorators, true, true);
 			this.pageContext.include(jspPath.toString());
 			this.includeDecorators(widget, decorators, true, false);
@@ -193,5 +193,5 @@ public class ExecShowletTag extends TagSupport {
 	}
 	
 	protected final String JSP_FOLDER = "/WEB-INF/aps/jsp/";
-	
+	public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 }

@@ -195,8 +195,8 @@
 	</tag>
 	<tag><!-- SPECIAL SYSTEM TAG //  Use only within "main.jsp" -->
 		<description><![CDATA[Triggers the preliminary execution of the showlets.<br/>It can be used <b><b>only</b></b> in the main.jsp.]]></description>
-		<name>execShowlet</name>
-		<tag-class>com.agiletec.aps.tags.ExecShowletTag</tag-class>
+		<name>execWidget</name>
+		<tag-class>com.agiletec.aps.tags.ExecWidgetTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
 	<tag><!--  SPECIAL SYSTEM TAG // Use only within showlets -->
