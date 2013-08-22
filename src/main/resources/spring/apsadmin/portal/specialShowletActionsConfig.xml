@@ -6,7 +6,7 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	
 	<bean id="simpleShowletAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction" parent="abstractPortalAction" >
+			class="com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction" parent="abstractPortalAction" >
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	

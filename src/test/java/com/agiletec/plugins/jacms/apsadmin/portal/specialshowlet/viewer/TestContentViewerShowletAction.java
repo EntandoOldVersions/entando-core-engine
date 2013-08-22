@@ -27,7 +27,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.IContentViewerShowletAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.IContentViewerWidgetAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -51,7 +51,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testInitConfigViewer_1() throws Throwable {
 		String result = this.executeConfigViewer("admin", "homepage", "1", "content_viewer");
 		assertEquals(Action.SUCCESS, result);
-		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
+		IContentViewerWidgetAction action = (IContentViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
@@ -60,7 +60,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testInitConfigViewer_2() throws Throwable {
 		String result = this.executeConfigViewer("admin", "homepage", "2", null);
 		assertEquals(Action.SUCCESS, result);
-		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
+		IContentViewerWidgetAction action = (IContentViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -117,7 +117,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testJoinContent_1() throws Throwable {
 		String result = this.executeJoinContent("admin", "pagina_11", "1", "EVN24");//Contenuto Free
 		assertEquals(Action.SUCCESS, result);
-		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
+		IContentViewerWidgetAction action = (IContentViewerWidgetAction) this.getAction();
 		Widget newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("EVN24", newShowlet.getConfig().getProperty("contentId"));
@@ -125,7 +125,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		
 		result = this.executeJoinContent("admin", "pagina_11", "1", "ART121");//Contenuto del gruppo "administrators" ma autorizzato ai free
 		assertEquals(Action.SUCCESS, result);
-		action = (IContentViewerShowletAction) this.getAction();
+		action = (IContentViewerWidgetAction) this.getAction();
 		newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("ART121", newShowlet.getConfig().getProperty("contentId"));
@@ -135,7 +135,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testJoinContent_2() throws Throwable {
 		String result = this.executeJoinContent("admin", "customers_page", "1", "EVN191");//Contenuto Free su pagina non free
 		assertEquals(Action.SUCCESS, result);
-		IContentViewerShowletAction action = (IContentViewerShowletAction) this.getAction();
+		IContentViewerWidgetAction action = (IContentViewerWidgetAction) this.getAction();
 		Widget newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("EVN191", newShowlet.getConfig().getProperty("contentId"));
@@ -143,7 +143,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		
 		result = this.executeJoinContent("admin", "customers_page", "1", "EVN25");//Contenuto del gruppo "non free" su pagina di gruppo diverso ma autorizzato ai free
 		assertEquals(Action.SUCCESS, result);
-		action = (IContentViewerShowletAction) this.getAction();
+		action = (IContentViewerWidgetAction) this.getAction();
 		newShowlet = action.getShowlet();
 		assertNotNull(newShowlet);
 		assertEquals("EVN25", newShowlet.getConfig().getProperty("contentId"));

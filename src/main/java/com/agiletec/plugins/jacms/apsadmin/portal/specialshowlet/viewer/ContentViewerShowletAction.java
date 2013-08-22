@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -33,7 +33,7 @@ import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
  * Action per la gestione della configurazione della showlet erogatore contenuto singolo.
  * @author E.Santoboni
  */
-public class ContentViewerShowletAction extends SimpleShowletConfigAction implements IContentViewerShowletAction {
+public class ContentViewerShowletAction extends SimpleWidgetConfigAction implements IContentViewerWidgetAction {
 	
 	@Override
 	public void validate() {

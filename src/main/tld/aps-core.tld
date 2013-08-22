@@ -152,8 +152,8 @@
 			<![CDATA[Returns informations about the showlet where the tag resides.
 			To obtain information about a showlet placed in a frame other than the current, use the "frame" attribute.]]>
 		</description>
-		<name>currentShowlet</name>
-		<tag-class>com.agiletec.aps.tags.CurrentShowletTag</tag-class>
+		<name>currentWidget</name>
+		<tag-class>com.agiletec.aps.tags.CurrentWidgetTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description><![CDATA[The requested parameter. It can assume one of the following values:<br/>
@@ -545,7 +545,7 @@
 		<description><![CDATA[Defines the position of inclusion of a showlet.<br/>
 		This tag can be used <b>only</b> in a page model.]]></description>
 		<name>show</name>
-		<tag-class>com.agiletec.aps.tags.ShowletTag</tag-class>
+		<tag-class>com.agiletec.aps.tags.WidgetTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description><![CDATA[The positional number of the frame, starting from 0.]]></description>

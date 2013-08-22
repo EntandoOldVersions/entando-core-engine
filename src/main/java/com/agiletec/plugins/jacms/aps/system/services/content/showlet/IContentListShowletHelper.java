@@ -28,7 +28,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 
 /**
  * Interfaccia base per l'implementazione del bean helper della showlet di erogatore lista contenuti.
- * La classe è a servizio sia delle funzioni dell'area di amministrazione che di font-end.
+ * La classe è a servizio sia delle funzioni dell'area di amministrazione che di front-end.
  * @author E.Santoboni
  */
 public interface IContentListShowletHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper {

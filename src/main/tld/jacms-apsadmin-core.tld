@@ -80,8 +80,8 @@
 			This tag class comes directly from the ExecShowletTag class used in the front-end to build the
 			pages of the portal.]]>
 		</description>
-		<name>contentPreviewExecShowlet</name>
-		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewExecShowletTag</tag-class>
+		<name>contentPreviewExecWidget</name>
+		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentPreviewExecWidgetTag</tag-class>
 		<body-content>empty</body-content>
 	</tag>
 	<tag>

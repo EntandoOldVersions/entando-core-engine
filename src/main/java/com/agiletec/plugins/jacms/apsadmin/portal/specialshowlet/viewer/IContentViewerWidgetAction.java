@@ -22,7 +22,7 @@ import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
  * Interfaccia base per le action gestori della configurazione della showlet erogatore contenuto singolo.
  * @author E.Santoboni
  */
-public interface IContentViewerShowletAction extends ISimpleShowletConfigAction {
+public interface IContentViewerWidgetAction extends ISimpleShowletConfigAction {
 	
 	/**
 	 * Esegue l'operazione di associazione di un contenuto alla showlet.

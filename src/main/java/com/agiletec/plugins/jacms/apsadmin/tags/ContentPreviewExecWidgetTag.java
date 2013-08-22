@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
  * This tag class extends the {@link ExecWidgetTag} class used in the front-end to build the pages of the portal.
  * @author E.Santoboni
  */
-public class ContentPreviewExecShowletTag extends ExecWidgetTag {
+public class ContentPreviewExecWidgetTag extends ExecWidgetTag {
 	
 	@Override
 	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {

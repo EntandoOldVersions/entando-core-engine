@@ -43,7 +43,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni - E.Mezzano
  */
 @SuppressWarnings("serial")
-public class CurrentShowletTag extends OutSupport {
+public class CurrentWidgetTag extends OutSupport {
 	
 	@Override
 	public int doStartTag() throws JspException {

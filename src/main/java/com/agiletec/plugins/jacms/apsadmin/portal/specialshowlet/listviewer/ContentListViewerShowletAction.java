@@ -30,7 +30,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.SelectItem;
-import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
@@ -45,7 +45,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
  * Action per la gestione della configurazione della showlet erogatore avanzato lista contenuti.
  * @author E.Santoboni
  */
-public class ContentListViewerShowletAction extends SimpleShowletConfigAction implements IContentListViewerShowletAction {
+public class ContentListViewerShowletAction extends SimpleWidgetConfigAction implements IContentListViewerShowletAction {
 
 	@Override
 	public void validate() {

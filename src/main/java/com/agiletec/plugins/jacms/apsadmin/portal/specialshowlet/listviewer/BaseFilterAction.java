@@ -28,7 +28,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.util.SelectItem;
-import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
@@ -39,7 +39,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * di gestione dei filtri su attributo (di tipo "Text", "Boolean", "Date" o "Number").
  * @author E.Santoboni
  */
-public class BaseFilterAction extends SimpleShowletConfigAction implements IContentListFilterAction {
+public class BaseFilterAction extends SimpleWidgetConfigAction implements IContentListFilterAction {
 	
 	@Override
 	public String newFilter() {

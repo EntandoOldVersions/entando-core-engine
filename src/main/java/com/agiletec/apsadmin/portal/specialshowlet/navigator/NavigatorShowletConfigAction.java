@@ -25,13 +25,13 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.page.widget.INavigatorParser;
 import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
-import com.agiletec.apsadmin.portal.specialshowlet.SimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction;
 
 /**
  * Classe action per la gestione della configurazione delle showlet tipo Navigatore.
  * @author E.Santoboni
  */
-public class NavigatorShowletConfigAction extends SimpleShowletConfigAction implements INavigatorShowletConfigAction {
+public class NavigatorShowletConfigAction extends SimpleWidgetConfigAction implements INavigatorShowletConfigAction {
 	
 	@Override
 	public void validate() {

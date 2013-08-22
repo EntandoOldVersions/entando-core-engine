@@ -27,10 +27,10 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 
 /**
- * Includes the jsp associated to the showlet as configured in the page frame
+ * Includes the jsp associated to the widget as configured in the page frame
  * 
  */
-public class ShowletTag extends TagSupport {
+public class WidgetTag extends TagSupport {
 
 	public int doEndTag() throws JspException {
 		ServletRequest req =  this.pageContext.getRequest();
