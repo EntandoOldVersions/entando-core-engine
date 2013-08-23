@@ -33,7 +33,7 @@ import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
  * Action per la gestione della configurazione della showlet erogatore contenuto singolo.
  * @author E.Santoboni
  */
-public class ContentViewerShowletAction extends SimpleWidgetConfigAction implements IContentViewerWidgetAction {
+public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implements IContentViewerWidgetAction {
 	
 	@Override
 	public void validate() {
