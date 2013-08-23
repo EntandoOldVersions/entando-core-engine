@@ -29,12 +29,11 @@ import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * Classe action delegate alla ricerca utenti.
- * @version 1.0
  * @author E.Santoboni
+ * @deprecated From Entando 3.3.1, use org.entando.entando.apsadmin.user.UserProfileFinderAction
  */
 public class UserFinderAction extends BaseAction implements IUserFinderAction {
 	
-	@Override
 	public List<UserDetails> getUsers() {
 		try {
 			List<UserDetails> users = this.getUserManager().searchUsers(this.getText());
@@ -43,7 +42,7 @@ public class UserFinderAction extends BaseAction implements IUserFinderAction {
 			return users;
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getUsers");
-			throw new RuntimeException("Errore in ricerca utenti", t);
+			throw new RuntimeException("Error searching users", t);
 		}
 	}
 	

@@ -21,9 +21,8 @@ import java.util.List;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.apsadmin.user.IUserFinderAction;
 import com.opensymphony.xwork2.Action;
+import org.entando.entando.apsadmin.user.UserProfileFinderAction;
 
 /**
  * @version 1.0
@@ -39,8 +38,8 @@ public class TestUserFinderAction extends ApsAdminBaseTestCase {
 	public void testList() throws Throwable {
 		String result = this.executeList("admin");
 		assertEquals(Action.SUCCESS, result);
-		IUserFinderAction userFinderAction = (IUserFinderAction) this.getAction();
-		List<UserDetails> users = userFinderAction.getUsers();
+		UserProfileFinderAction userFinderAction = (UserProfileFinderAction) this.getAction();
+		List<String> users = userFinderAction.getSearchResult();
 		assertFalse(users.isEmpty());
 		assertTrue(users.size()>=8);
 	}
@@ -48,26 +47,26 @@ public class TestUserFinderAction extends ApsAdminBaseTestCase {
     public void testSearchUsers() throws Throwable {
     	String result = this.executeSearch("admin", "ustomer");
     	assertEquals(Action.SUCCESS, result);
-    	IUserFinderAction userFinderAction = (IUserFinderAction) this.getAction();
-    	List<UserDetails> users = userFinderAction.getUsers();
+    	UserProfileFinderAction userFinderAction = (UserProfileFinderAction) this.getAction();
+		List<String> users = userFinderAction.getSearchResult();
 		assertEquals(3, users.size());
 		
 		result = this.executeSearch("admin", "anager");
     	assertEquals(Action.SUCCESS, result);
-    	userFinderAction = (IUserFinderAction) this.getAction();
-    	users = userFinderAction.getUsers();
+    	userFinderAction = (UserProfileFinderAction) this.getAction();
+		users = userFinderAction.getSearchResult();
 		assertEquals(2, users.size());
 		
 		result = this.executeSearch("admin", "");
 		assertEquals(Action.SUCCESS, result);
-    	userFinderAction = (IUserFinderAction) this.getAction();
-    	users = userFinderAction.getUsers();
+    	userFinderAction = (UserProfileFinderAction) this.getAction();
+		users = userFinderAction.getSearchResult();
 		assertTrue(users.size()>=8);
 		
 		result = this.executeSearch("admin", null);
 		assertEquals(Action.SUCCESS, result);
-    	userFinderAction = (IUserFinderAction) this.getAction();
-    	users = userFinderAction.getUsers();
+    	userFinderAction = (UserProfileFinderAction) this.getAction();
+		users = userFinderAction.getSearchResult();
 		assertTrue(users.size()>=8);
     }
 	

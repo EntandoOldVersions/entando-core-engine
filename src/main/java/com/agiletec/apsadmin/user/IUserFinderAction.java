@@ -17,13 +17,10 @@
 */
 package com.agiletec.apsadmin.user;
 
-import java.util.List;
-
-import com.agiletec.aps.system.services.user.UserDetails;
-
 /**
  * Interfaccia base per le classi acion delegate alla ricerca e visualizzazione utenti in lista.
  * @author E.Santoboni
+ * @deprecated From Entando 3.3.1, use org.entando.entando.apsadmin.user.UserProfileFinderAction
  */
 public interface IUserFinderAction {
 	
@@ -33,6 +30,6 @@ public interface IUserFinderAction {
 	 * @return La lista di utenti che deve essere erogata dall'interfaccia di 
 	 * visualizzazione degli utenti.
 	 */
-	public List<UserDetails> getUsers();
+	//public List<UserDetails> getUsers();
 	
 }

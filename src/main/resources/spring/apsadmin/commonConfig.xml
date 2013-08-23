@@ -16,15 +16,32 @@
 		<property name="langManager" ref="LangManager" />
 	</bean>
 	
+	<bean id="dispatchAction" scope="prototype" 
+			class="com.agiletec.apsadmin.common.DispatchAction" parent="abstractBaseAction">
+		<property name="authenticationProvider" ref="AuthenticationProviderManager"/>
+	</bean>
+	
+	<!-- *************************** -->
+	
 	<bean id="baseCommonAction" class="com.agiletec.apsadmin.common.BaseCommonAction" scope="prototype" 
 			parent="abstractBaseAction">
 		<property name="userManager" ref="UserManager"/>
 	</bean>
 	
-	<bean id="dispatchAction" scope="prototype" 
-			class="com.agiletec.apsadmin.common.DispatchAction" parent="abstractBaseAction">
-		<property name="authenticationProvider" ref="AuthenticationProviderManager"/>
+	<bean id="currentUserProfileAction" 
+			class="org.entando.entando.apsadmin.common.currentuser.CurrentUserProfileAction" 
+			scope="prototype" parent="abstractEntityAction" >
+		<property name="userProfileManager" ref="UserProfileManager" />
+		<property name="i18nManager" ref="I18nManager" />
 	</bean>
+	
+	<bean id="currentUserProfileListAttributeAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.common.currentuser.attribute.action.list.ListAttributeAction" 
+			parent="abstractBaseAction" >
+		<property name="entityActionHelper" ref="entityActionHelper"/>
+	</bean>
+	
+	<!-- *************************** -->
 	
 	<bean id="myShortcutConfigAction" scope="prototype" 
 			class="com.agiletec.apsadmin.common.MyShortcutConfigAction" parent="abstractBaseAction">
