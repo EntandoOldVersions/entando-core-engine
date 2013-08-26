@@ -32,6 +32,7 @@ public abstract class AbstractUser implements UserDetails, Serializable {
 	 * Restituisce la username dell'utente.
 	 * @return Stringa username.
 	 */
+	@Override
 	public String getUsername() {
 		return this._username;
 	}
@@ -48,6 +49,7 @@ public abstract class AbstractUser implements UserDetails, Serializable {
 	 * Restituisce la password dell'utente.
 	 * @return Stringa password.
 	 */
+	@Override
 	public String getPassword() {
 		return _password;
 	}
@@ -60,6 +62,7 @@ public abstract class AbstractUser implements UserDetails, Serializable {
 		this._password = password;
 	}
 
+	@Override
 	public String toString() {
 		return this.getUsername();
 	}
@@ -71,17 +74,19 @@ public abstract class AbstractUser implements UserDetails, Serializable {
 	public boolean isGuest() {
 		return (this.getAuthorities().length == 0);
 	}
-
+	
+	@Override
 	public void addAutority(IApsAuthority auth) {
 		int len = this.getAuthorities().length;
 		IApsAuthority[] newAuths = new IApsAuthority[len + 1];
-		for(int i=0; i < len; i++){
+		for (int i=0; i < len; i++){
 			newAuths[i] = this.getAuthorities()[i];
 		}
 		newAuths[len] = auth;
 		this._authorities = newAuths;
 	}
 
+	@Override
 	public void addAutorities(List<IApsAuthority> auths) {
 		for (int i=0; i<auths.size(); i++) {
 			IApsAuthority auth = auths.get(i);

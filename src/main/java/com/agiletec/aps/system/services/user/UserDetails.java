@@ -30,8 +30,11 @@ public interface UserDetails {
 	/**
 	 * Return 'true' if the current user is a jAPS user, that is, exists within jAPS local table
 	 * @return
+	 * @deprecated use isEntandoUser
 	 */
 	public boolean isJapsUser();
+	
+	public boolean isEntandoUser();
 	
 	/**
 	 * Get the authorities of the current user

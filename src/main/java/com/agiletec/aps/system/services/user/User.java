@@ -25,26 +25,27 @@ import java.util.Date;
  * @author M.Diana - E.Santoboni
  */
 public class User extends AbstractUser {
-
-	/**
-	 * Indica se l'utente è definito localmente 
-	 * all'interno del db "serv" di jAPS.
-	 * @return true se è un'utente locale di jAPS, 
-	 * false se è un'utente definito in altra base dati.
-	 */
+	
+	@Override
+	@Deprecated
 	public boolean isJapsUser() {
+		return this.isEntandoUser();
+	}
+	
+	@Override
+	public boolean isEntandoUser() {
 		return true;
 	}
-
+	
 	/**
 	 * Crea una copia dell'oggetto user e lo restituisce.
 	 * @return Oggetto di tipo User clonato.
 	 */
+	@Override
 	public Object clone() {
 		User cl = new User();
 		cl.setUsername(this.getUsername());
 		cl.setPassword("");
-
 		cl.setAuthorities(this.getAuthorities());
 		return cl;
 	}
@@ -132,7 +133,7 @@ public class User extends AbstractUser {
 		}
 		return super.isCredentialsNotExpired();
 	}
-
+	
 	private Date _creationDate;//CAMBIARE IN REGISTRATION DATE
 	private Date _lastAccess;
 	private Date _lastPasswordChange;
