@@ -2,6 +2,13 @@ SQL notes
 
 ```sql
 
+-- transition from 'showlets' to 'widgets' - Start
+ALTER TABLE showletcatalog RENAME TO widgetcatalog;
+ALTER TABLE showletconfig RENAME TO widgetconfig;
+
+ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
+-- transition from 'showlets' to 'widgets' - End
+
 CREATE TABLE contentattributeroles
 (
   contentid character varying(16) NOT NULL,
