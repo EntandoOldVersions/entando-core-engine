@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class TestUserFinderAction extends ApsAdminBaseTestCase {
 	private String executeSearch(String currentUser, String text) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/User", "search");
-		if (null != text) this.addParameter("text", text);
+		if (null != text) this.addParameter("username", text);
 		return this.executeAction();
 	}
 	

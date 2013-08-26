@@ -122,7 +122,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
     
     public String getEmailAttributeValue(String username) {
         IUserProfile userProfile = (IUserProfile) this.getEntity(username);
-        return (String) userProfile.getValue(userProfile.getMailAttributeName());
+		return (String) userProfile.getValue(userProfile.getMailAttributeName());
     }
     
     public Lang getDefaultLang() {

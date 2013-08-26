@@ -92,7 +92,7 @@ public class UserProfile extends ApsEntity implements IUserProfile, Serializable
 	
 	@Override
 	public String getMailAttributeName() {
-		AttributeInterface attribute = this.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
+		AttributeInterface attribute = this.getAttributeByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
 		if (null != attribute) {
 			return attribute.getName();
 		}

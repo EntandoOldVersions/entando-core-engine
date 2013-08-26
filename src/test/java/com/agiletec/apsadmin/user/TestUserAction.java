@@ -40,6 +40,7 @@ import com.opensymphony.xwork2.Action;
  */
 public class TestUserAction extends ApsAdminBaseTestCase {
 	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();

@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -15,16 +14,26 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
+
+import java.util.Iterator;
+import java.util.List;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.authorization.IApsAuthority;
+import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
+import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.apsadmin.user.IAuthorityToUsersAction;
 
 /**
  * Classe action delegata alla gestione delle operazioni di associazione 
  * delle autorizzazioni agli utenti del sistema.
  * @author E.Mezzano - E.Santoboni
- * @deprecated From Entando 3.3.1, use org.entando.entando.apsadmin.user.AuthorityToUsersAction
  */
-public class AuthorityToUsersAction extends org.entando.entando.apsadmin.user.AuthorityToUsersAction implements IAuthorityToUsersAction {
-	/*
+public class AuthorityToUsersAction extends UserProfileFinderAction implements IAuthorityToUsersAction {
+	
 	@Override
 	public String addUser() {
 		IApsAuthority auth = this.getApsAuthority();
@@ -72,6 +81,10 @@ public class AuthorityToUsersAction extends org.entando.entando.apsadmin.user.Au
 		return authority;
 	}
 	
+	/**
+	 * Restituisce la lista degli utenti associati all'authority corrente.
+	 * @return La lista degli utenti associati all'authority corrente.
+	 */
 	public List<UserDetails> getAuthorizedUsers() {
 		IApsAuthority auth = this.getApsAuthority();
 		try {
@@ -82,6 +95,11 @@ public class AuthorityToUsersAction extends org.entando.entando.apsadmin.user.Au
 		}
 	}
 	
+	/**
+	 * Recupera l'utente corrente. Se non esiste restituisce null.
+	 * @return L'utente richiesto.
+	 * @throws ApsSystemException In caso di errore.
+	 */
 	protected UserDetails getUser() throws ApsSystemException {
 		String username = this.getUsername();
 		UserDetails user = null;
@@ -111,14 +129,14 @@ public class AuthorityToUsersAction extends org.entando.entando.apsadmin.user.Au
 	public void setAuthName(String authName) {
 		this._authName = authName;
 	}
-	
+	/*
 	public String getUsername() {
 		return _username;
 	}
 	public void setUsername(String username) {
 		this._username = username;
 	}
-	
+	*/
 	protected IApsAuthorityManager getAuthorizatorManager() {
 		return _authorizatorManager;
 	}
@@ -127,7 +145,7 @@ public class AuthorityToUsersAction extends org.entando.entando.apsadmin.user.Au
 	}
 	
 	private String _authName;
-	private String _username;
+	//private String _username;
 	private IApsAuthorityManager _authorizatorManager;
-	*/
+	
 }

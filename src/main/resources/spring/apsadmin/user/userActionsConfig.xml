@@ -13,13 +13,6 @@
         <property name="entityActionHelper" ref="entityActionHelper" />
     </bean>
     
-	<!--
-	<bean id="userFinderAction" scope="prototype" 
-			class="com.agiletec.apsadmin.user.UserFinderAction" parent="abstractBaseAction" >
-		<property name="userManager" ref="UserManager" />
-	</bean>
-	-->
-	
 	<bean id="userAction" scope="prototype" 
 			class="com.agiletec.apsadmin.user.UserAction" parent="abstractBaseAction" >
 		<property name="userManager" ref="UserManager" />
@@ -45,8 +38,10 @@
 	</bean>
 	
 	<bean id="abstractAuthorityToUsersAction" abstract="true" 
-			class="com.agiletec.apsadmin.user.AuthorityToUsersAction" parent="abstractBaseAction" >
-		<property name="userManager" ref="UserManager" />
+			class="org.entando.entando.apsadmin.user.AuthorityToUsersAction" parent="abstractBaseAction" >
+		<property name="userProfileManager" ref="UserProfileManager" />
+        <property name="userManager" ref="UserManager" />
+        <property name="entityActionHelper" ref="entityActionHelper" />
 	</bean>
 	
 </beans>

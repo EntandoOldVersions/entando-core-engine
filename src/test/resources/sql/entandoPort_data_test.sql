@@ -87,6 +87,12 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_MODEL', 
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_MODEL', 'it', 'modello pagina');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_TITLE', 'en', 'page title');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('PAGE_TITLE', 'it', 'titolo pagina');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_fullname', 'it', 'fullname');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_email', 'it', 'email');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_birthdate', 'it', 'birthdate');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_language', 'it', 'language');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_boolean1', 'it', 'boolean 1');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PFL_boolean2', 'it', 'boolean 2');
 
 
 

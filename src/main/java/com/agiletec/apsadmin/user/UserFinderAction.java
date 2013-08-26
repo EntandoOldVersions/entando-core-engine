@@ -17,23 +17,13 @@
 */
 package com.agiletec.apsadmin.user;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.beanutils.BeanComparator;
-
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.apsadmin.system.BaseAction;
-
 /**
  * Classe action delegate alla ricerca utenti.
  * @author E.Santoboni
  * @deprecated From Entando 3.3.1, use org.entando.entando.apsadmin.user.UserProfileFinderAction
  */
-public class UserFinderAction extends BaseAction implements IUserFinderAction {
-	
+public class UserFinderAction extends org.entando.entando.apsadmin.user.UserProfileFinderAction implements IUserFinderAction {
+	/*
 	public List<UserDetails> getUsers() {
 		try {
 			List<UserDetails> users = this.getUserManager().searchUsers(this.getText());
@@ -62,5 +52,5 @@ public class UserFinderAction extends BaseAction implements IUserFinderAction {
 	
 	private String _text;
 	private IUserManager _userManager;
-	
+	*/
 }

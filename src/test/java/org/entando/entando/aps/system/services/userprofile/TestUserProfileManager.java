@@ -51,7 +51,7 @@ public class TestUserProfileManager extends BaseTestCase {
 	
 	public void testAttributeSupportObjects() throws Throwable {
 		assertTrue(this._profileManager.getAttributeRoles().size()>=2);
-		assertTrue(this._profileManager.getAttributeDisablingCodes().isEmpty());
+		assertEquals(this._profileManager.getAttributeDisablingCodes().size(), 1);
 	}
 	
 	public void testAddProfile() throws Throwable {

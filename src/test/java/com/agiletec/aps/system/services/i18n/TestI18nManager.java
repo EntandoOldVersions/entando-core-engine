@@ -22,6 +22,8 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.util.ApsProperties;
+import org.entando.entando.aps.system.init.DatabaseManager;
+import org.entando.entando.aps.system.init.IDatabaseManager;
 
 /**
  * @version 1.0
@@ -29,8 +31,10 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class TestI18nManager extends BaseTestCase {
 	
+	@Override
 	protected void setUp() throws Exception {
         super.setUp();
+		
         this.init();
     }
 	
@@ -91,14 +95,14 @@ public class TestI18nManager extends BaseTestCase {
 		}
     }
     
-    public void testGetLabelsKey() {
-    	assertEquals(3, _i18nManager.getLabelGroups().size());
+    public void testGetLabelsKey() throws Throwable {
+		assertEquals(9, _i18nManager.getLabelGroups().size());
     	
     	assertEquals(0, _i18nManager.searchLabelsKey("*", false, false, null).size());
-		assertEquals(3, _i18nManager.searchLabelsKey("", false, false, null).size());
+		assertEquals(9, _i18nManager.searchLabelsKey("", false, false, null).size());
 		assertEquals(3, _i18nManager.searchLabelsKey("pag", false, false, null).size());
     	
-		assertEquals(3, _i18nManager.searchLabelsKey("age", true, false, null).size());
+		assertEquals(4, _i18nManager.searchLabelsKey("age", true, false, null).size());
 		
 		assertEquals(3, _i18nManager.searchLabelsKey("pag", false, true, "it").size());
     }
