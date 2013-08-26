@@ -27,11 +27,11 @@ import com.agiletec.aps.util.ApsProperties;
 /**
  * @author E.Santoboni
  */
-public class ApiMethodRelatedShowlet {
+public class ApiMethodRelatedWidget {
 	
-	protected ApiMethodRelatedShowlet() {}
+	protected ApiMethodRelatedWidget() {}
 	
-	protected ApiMethodRelatedShowlet(Element element) {
+	protected ApiMethodRelatedWidget(Element element) {
 		this.setShowletCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_CODE_ATTRIBUTE_NAME));
 		this.setMapping(new ApsProperties());
 		List<Element> mappingsElements = element.getChildren(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME);
@@ -44,8 +44,8 @@ public class ApiMethodRelatedShowlet {
 	}
 	
 	@Override
-	public ApiMethodRelatedShowlet clone() {
-		ApiMethodRelatedShowlet clone = new ApiMethodRelatedShowlet();
+	public ApiMethodRelatedWidget clone() {
+		ApiMethodRelatedWidget clone = new ApiMethodRelatedWidget();
 		clone.setShowletCode(this.getShowletCode());
 		clone.setMapping(new ApsProperties());
 		Iterator<Object> keyIter = this.getMapping().keySet().iterator();

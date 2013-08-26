@@ -41,11 +41,11 @@
 	</bean>
 	
 	<bean id="showletsViewerAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.ShowletsViewerAction" parent="abstractPortalAction">
+			class="com.agiletec.apsadmin.portal.WidgetsViewerAction" parent="abstractPortalAction">
 	</bean>
 	
 	<bean id="showletTypeAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.ShowletTypeAction" parent="abstractPortalAction">
+			class="com.agiletec.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
 	</bean>
 	
 </beans>

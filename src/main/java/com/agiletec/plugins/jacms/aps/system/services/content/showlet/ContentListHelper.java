@@ -54,7 +54,7 @@ import org.springframework.cache.annotation.Cacheable;
  * Classe helper per la showlet di erogazione contenuti in lista.
  * @author E.Santoboni
  */
-public class ContentListHelper extends BaseContentListHelper implements IContentListShowletHelper {
+public class ContentListHelper extends BaseContentListHelper implements IContentListWidgetHelper {
 	
 	@Override
 	public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, RequestContext reqCtx) {

@@ -31,7 +31,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
  * La classe è a servizio sia delle funzioni dell'area di amministrazione che di front-end.
  * @author E.Santoboni
  */
-public interface IContentListShowletHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper {
+public interface IContentListWidgetHelper extends com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper {
 	
 	/*
 	 * Ricerca la lista dei contenuti in base alla posizione della showlet nella pagina.
@@ -119,7 +119,7 @@ public interface IContentListShowletHelper extends com.agiletec.plugins.jacms.ap
 	public static final String SHOWLET_PARAM_CATEGORY = "category";
 	public static final String SHOWLET_PARAM_CATEGORIES = "categories";
 	public static final String SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER = "orClauseCategoryFilter";
-        public static final String SHOWLET_PARAM_FILTERS = "filters";
+    public static final String SHOWLET_PARAM_FILTERS = "filters";
 	public static final String SHOWLET_PARAM_TITLE = "title";
 	public static final String SHOWLET_PARAM_PAGE_LINK = "pageLink";
 	public static final String SHOWLET_PARAM_PAGE_LINK_DESCR = "linkDescr";

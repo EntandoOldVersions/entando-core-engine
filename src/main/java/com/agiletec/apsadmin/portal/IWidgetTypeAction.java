@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal;
 /**
  * @author E.Santoboni
  */
-public interface IShowletTypeAction {
+public interface IWidgetTypeAction {
 	
 	/**
 	 * Create of new user showlet.

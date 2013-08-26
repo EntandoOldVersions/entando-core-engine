@@ -23,7 +23,7 @@ import com.agiletec.aps.system.services.page.Widget;
  * Basic interface for the action classes which configure the showlets with parameters. 
  * @author E.Santoboni
  */
-public interface ISimpleShowletConfigAction {
+public interface ISimpleWidgetConfigAction {
 	
 	/**
 	 * Initialize the interface used for configuration management.

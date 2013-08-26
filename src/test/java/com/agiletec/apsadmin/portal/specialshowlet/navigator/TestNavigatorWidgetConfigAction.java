@@ -28,15 +28,15 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.apsadmin.portal.specialshowlet.navigator.INavigatorShowletConfigAction;
-import com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.navigator.INavigatorWidgetConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorWidgetConfigAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
  * @author E.Santoboni
  */
-public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
+public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -47,7 +47,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 	public void testInitConfigNavigator_1() throws Throwable {
 		String result = this.executeConfigNavigator("admin", "homepage", "1", "leftmenu");
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
@@ -56,7 +56,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 	public void testInitConfigNavigator_2() throws Throwable {
 		String result = this.executeConfigNavigator("admin", "pagina_1", "2", null);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -77,11 +77,11 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		params.put("frame", "0");
 		params.put("showletTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
-		params.put("movement", INavigatorShowletConfigAction.MOVEMENT_DOWN_CODE);
+		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_DOWN_CODE);
 		params.put("expressionIndex", "1");
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -100,11 +100,11 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		params.put("frame", "0");
 		params.put("showletTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
-		params.put("movement", INavigatorShowletConfigAction.MOVEMENT_UP_CODE);
+		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_UP_CODE);
 		params.put("expressionIndex", "2");
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -123,11 +123,11 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		params.put("frame", "0");
 		params.put("showletTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
-		params.put("movement", INavigatorShowletConfigAction.MOVEMENT_UP_CODE);
+		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_UP_CODE);
 		params.put("expressionIndex", "3");//INDICE SUPERIORE AL SIZE
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -149,7 +149,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		params.put("expressionIndex", "1");
 		String result = this.executeRemoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -171,7 +171,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		params.put("expressionIndex", "3");//INDICE SUPERIORE AL SIZE
 		String result = this.executeRemoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		INavigatorShowletConfigAction action = (INavigatorShowletConfigAction) this.getAction();
+		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -197,7 +197,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("specId").size());
 		
-		NavigatorShowletConfigAction navAction = (NavigatorShowletConfigAction) action;
+		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -219,7 +219,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
 		
-		NavigatorShowletConfigAction navAction = (NavigatorShowletConfigAction) action;
+		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -241,7 +241,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
 		
-		NavigatorShowletConfigAction navAction = (NavigatorShowletConfigAction) action;
+		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -265,7 +265,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		ActionSupport action = this.getAction();
 		assertEquals(2, action.getActionErrors().size());
 		
-		NavigatorShowletConfigAction navAction = (NavigatorShowletConfigAction) action;
+		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -285,7 +285,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeAddExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		
-		NavigatorShowletConfigAction action = (NavigatorShowletConfigAction) this.getAction();
+		NavigatorWidgetConfigAction action = (NavigatorWidgetConfigAction) this.getAction();
 		assertEquals("abs(1).subtree(2) + parent.children", action.getNavSpec());
 	}
 	
@@ -302,7 +302,7 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeAddExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		
-		NavigatorShowletConfigAction action = (NavigatorShowletConfigAction) this.getAction();
+		NavigatorWidgetConfigAction action = (NavigatorWidgetConfigAction) this.getAction();
 		assertEquals("abs(1).subtree(2)", action.getNavSpec());
 	}
 	
@@ -366,7 +366,13 @@ public class TestNavigatorShowletConfigAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(userName);
 		this.initAction("/do/Page/SpecialShowlet/Navigator", "addExpression");
 		this.addParameters(params);
-		return this.executeAction();
+		String result = null;
+		try { 
+			result = this.executeAction();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return result;
 	}
 	
 	private void init() throws Exception {

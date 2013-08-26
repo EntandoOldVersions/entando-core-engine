@@ -16,13 +16,13 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer;
 
-import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.ISimpleWidgetConfigAction;
 
 /**
  * Interfaccia base per le action gestori della configurazione della showlet erogatore contenuto singolo.
  * @author E.Santoboni
  */
-public interface IContentViewerWidgetAction extends ISimpleShowletConfigAction {
+public interface IContentViewerWidgetAction extends ISimpleWidgetConfigAction {
 	
 	/**
 	 * Esegue l'operazione di associazione di un contenuto alla showlet.

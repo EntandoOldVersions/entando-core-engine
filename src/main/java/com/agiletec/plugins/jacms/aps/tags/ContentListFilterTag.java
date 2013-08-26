@@ -26,7 +26,7 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
 
 /**
@@ -49,14 +49,14 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 		try {
 			if (!this.isRightKey()) {
 				String message = "";
-				for (int i=0; i < IContentListShowletHelper.allowedMetadataFilterKeys.length; i++) {
+				for (int i=0; i < IContentListWidgetHelper.allowedMetadataFilterKeys.length; i++) {
 					if (i!=0) message.concat(",");
-					message.concat(IContentListShowletHelper.allowedMetadataFilterKeys[i]);
+					message.concat(IContentListWidgetHelper.allowedMetadataFilterKeys[i]);
 				}
 				throw new RuntimeException("The key '" + this.getKey() + "' is unknown; " +
 						"Please use a valid one - " + message);
 			}
-			IContentListShowletHelper helper = (IContentListShowletHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
+			IContentListWidgetHelper helper = (IContentListWidgetHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			IContentListTagBean parent = (IContentListTagBean) findAncestorWithClass(this, IContentListTagBean.class);
 			String contentType = parent.getContentType();
 			EntitySearchFilter filter = helper.getFilter(contentType, (IEntityFilterBean) this, reqCtx);
@@ -74,8 +74,8 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 		if (this.isAttributeFilter()) {
 			return true;
 		} else {
-			for (int i = 0; i < IContentListShowletHelper.allowedMetadataFilterKeys.length; i++) {
-				if (IContentListShowletHelper.allowedMetadataFilterKeys[i].equals(this.getKey())) return true;
+			for (int i = 0; i < IContentListWidgetHelper.allowedMetadataFilterKeys.length; i++) {
+				if (IContentListWidgetHelper.allowedMetadataFilterKeys[i].equals(this.getKey())) return true;
 			}
 		}
 		return false;

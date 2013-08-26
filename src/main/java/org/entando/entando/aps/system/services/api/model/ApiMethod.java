@@ -89,7 +89,7 @@ public class ApiMethod implements Serializable {
             }
             Element relatedShowletElement = element.getChild(ApiResourcesDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
             if (null != relatedShowletElement) {
-                this.setRelatedShowlet(new ApiMethodRelatedShowlet(relatedShowletElement));
+                this.setRelatedShowlet(new ApiMethodRelatedWidget(relatedShowletElement));
             }
             if (this.getHttpMethod().equals(HttpMethod.POST) || this.getHttpMethod().equals(HttpMethod.PUT)) {
                 Element expectedTypeElement = element.getChild("expectedType");
@@ -328,11 +328,11 @@ public class ApiMethod implements Serializable {
         return null;
     }
 
-    public ApiMethodRelatedShowlet getRelatedShowlet() {
+    public ApiMethodRelatedWidget getRelatedShowlet() {
         return _relatedShowlet;
     }
 
-    protected void setRelatedShowlet(ApiMethodRelatedShowlet relatedShowlet) {
+    protected void setRelatedShowlet(ApiMethodRelatedWidget relatedShowlet) {
         this._relatedShowlet = relatedShowlet;
     }
     
@@ -366,6 +366,6 @@ public class ApiMethod implements Serializable {
     private String _springBeanMethod;
     private String _responseClassName;
     private List<ApiMethodParameter> _parameters;
-    private ApiMethodRelatedShowlet _relatedShowlet;
+    private ApiMethodRelatedWidget _relatedShowlet;
     
 }

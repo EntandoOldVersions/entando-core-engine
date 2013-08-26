@@ -21,7 +21,7 @@
 	</bean>
 	
 	<bean id="jacmsContentListViewerShowletAction" scope="prototype" 
-			class="com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.ContentListViewerShowletAction" parent="simpleShowletAction" >
+			class="com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.ContentListViewerWidgetAction" parent="simpleShowletAction" >
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="contentModelManager" ref="jacmsContentModelManager" />
 		<property name="categoryManager" ref="CategoryManager" />

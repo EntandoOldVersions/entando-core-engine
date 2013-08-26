@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
+import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedWidget;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 
@@ -87,7 +87,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
         List<ApiMethod> masterMethods = this.getMasterMethods(ApiMethod.HttpMethod.GET);
         for (int i = 0; i < masterMethods.size(); i++) {
             ApiMethod apiMethod = masterMethods.get(i);
-            ApiMethodRelatedShowlet relatedShowlet = apiMethod.getRelatedShowlet();
+            ApiMethodRelatedWidget relatedShowlet = apiMethod.getRelatedShowlet();
             if (null != relatedShowlet && relatedShowlet.getShowletCode().equals(showletCode)) {
                 return apiMethod.clone();
             }
@@ -102,7 +102,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             List<ApiMethod> masterMethods = this.getMasterMethods(ApiMethod.HttpMethod.GET);
             for (int i = 0; i < masterMethods.size(); i++) {
                 ApiMethod apiMethod = masterMethods.get(i);
-                ApiMethodRelatedShowlet relatedShowlet = apiMethod.getRelatedShowlet();
+                ApiMethodRelatedWidget relatedShowlet = apiMethod.getRelatedShowlet();
                 if (null != relatedShowlet) {
                     String showletCode = relatedShowlet.getShowletCode();
                     if (mapping.containsKey(showletCode)) {

@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListShowletHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
 
 /**
  * @author E.Santoboni
@@ -225,7 +225,7 @@ public class TestContentListHelper extends BaseTestCase {
     	try {
     		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
     		this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-    		this._helper = (IContentListShowletHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
+    		this._helper = (IContentListWidgetHelper) this.getApplicationContext().getBean(JacmsSystemConstants.CONTENT_LIST_HELPER);
     	} catch (Throwable t) {
             throw new Exception(t);
         }
@@ -233,6 +233,6 @@ public class TestContentListHelper extends BaseTestCase {
     
 	private IPageManager _pageManager = null;
 	private IWidgetTypeManager _showletTypeManager;
-	private IContentListShowletHelper _helper;
+	private IContentListWidgetHelper _helper;
 	
 }

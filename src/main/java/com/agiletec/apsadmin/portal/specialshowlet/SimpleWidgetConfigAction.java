@@ -33,7 +33,7 @@ import com.agiletec.apsadmin.portal.AbstractPortalAction;
  * This action class handles the configuration of the showlets with parameters.
  * @author E.Santoboni
  */
-public class SimpleWidgetConfigAction extends AbstractPortalAction implements ISimpleShowletConfigAction {
+public class SimpleWidgetConfigAction extends AbstractPortalAction implements ISimpleWidgetConfigAction {
 	
 	@Override
 	public String init() {

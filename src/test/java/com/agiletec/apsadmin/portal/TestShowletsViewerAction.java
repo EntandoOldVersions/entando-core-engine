@@ -25,7 +25,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
-import com.agiletec.apsadmin.portal.ShowletsViewerAction;
+import com.agiletec.apsadmin.portal.WidgetsViewerAction;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -125,20 +125,20 @@ public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
 	public void testGetShowletUtilizers_2() throws Throwable {
 		String result = this.executeViewShowletUtilizers("admin", "logic_type");
 		assertEquals(Action.SUCCESS, result);
-		ShowletsViewerAction action = (ShowletsViewerAction) this.getAction();
+		WidgetsViewerAction action = (WidgetsViewerAction) this.getAction();
 		List<IPage> pageUtilizers = action.getShowletUtilizers();
 		assertEquals(0, pageUtilizers.size());
 		
 		result = this.executeViewShowletUtilizers("admin", "leftmenu");
 		assertEquals(Action.SUCCESS, result);
-		action = (ShowletsViewerAction) this.getAction();
+		action = (WidgetsViewerAction) this.getAction();
 		pageUtilizers = action.getShowletUtilizers();
 		assertEquals(1, pageUtilizers.size());
 		assertEquals("pagina_1", pageUtilizers.get(0).getCode());
 		
 		result = this.executeViewShowletUtilizers("admin", "content_viewer");
 		assertEquals(Action.SUCCESS, result);
-		action = (ShowletsViewerAction) this.getAction();
+		action = (WidgetsViewerAction) this.getAction();
 		pageUtilizers = action.getShowletUtilizers();
 		assertEquals(7, pageUtilizers.size());
 		assertEquals("homepage", pageUtilizers.get(0).getCode());

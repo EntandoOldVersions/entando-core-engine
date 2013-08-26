@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
-import com.agiletec.aps.services.mock.MockShowletTypeDAO;
+import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
@@ -552,7 +552,7 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
 			this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-			this._mockShowletTypeDAO = new MockShowletTypeDAO();
+			this._mockShowletTypeDAO = new MockWidgetTypeDAO();
 			this._mockShowletTypeDAO.setDataSource(dataSource);
 		} catch (Throwable e) {
 			throw new Exception(e);
@@ -561,6 +561,6 @@ public class TestShowletTypeAction extends ApsAdminBaseTestCase {
     
 	private IPageManager _pageManager = null;
     private IWidgetTypeManager _showletTypeManager = null;
-    private MockShowletTypeDAO _mockShowletTypeDAO;
+    private MockWidgetTypeDAO _mockShowletTypeDAO;
 	
 }

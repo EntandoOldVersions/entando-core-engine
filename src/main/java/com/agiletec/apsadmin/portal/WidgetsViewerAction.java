@@ -28,7 +28,7 @@ import com.agiletec.aps.system.services.page.IPage;
 /**
  * @author E.Santoboni
  */
-public class ShowletsViewerAction extends AbstractPortalAction implements IShowletsViewerAction {
+public class WidgetsViewerAction extends AbstractPortalAction implements IWidgetsViewerAction {
 	
 	@Override
 	public String viewShowlets() {

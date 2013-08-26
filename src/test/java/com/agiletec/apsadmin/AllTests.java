@@ -38,7 +38,7 @@ import com.agiletec.apsadmin.portal.TestPageTreeAction;
 import com.agiletec.apsadmin.portal.TestShowletTypeAction;
 import com.agiletec.apsadmin.portal.TestShowletsViewerAction;
 import com.agiletec.apsadmin.portal.specialshowlet.TestSimpleShowletConfigAction;
-import com.agiletec.apsadmin.portal.specialshowlet.navigator.TestNavigatorShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.navigator.TestNavigatorWidgetConfigAction;
 import com.agiletec.apsadmin.system.entity.TestEntityManagersAction;
 import com.agiletec.apsadmin.system.services.TestShortcutManager;
 import org.entando.entando.apsadmin.user.TestAuthorityToUsersAction;
@@ -91,7 +91,7 @@ public class AllTests {
 		suite.addTestSuite(TestShowletsViewerAction.class);
 		suite.addTestSuite(TestShowletTypeAction.class);
 		suite.addTestSuite(TestSimpleShowletConfigAction.class);
-		suite.addTestSuite(TestNavigatorShowletConfigAction.class);
+		suite.addTestSuite(TestNavigatorWidgetConfigAction.class);
 		
 		//Entity
 		suite.addTestSuite(TestEntityManagersAction.class);

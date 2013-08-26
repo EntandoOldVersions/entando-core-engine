@@ -27,7 +27,7 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.services.mock.MockShowletsDAO;
+import com.agiletec.aps.services.mock.MockWidgetsDAO;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -169,17 +169,17 @@ public class TestPageManager extends BaseTestCase {
 	
 	private void deletePage() throws Throwable {
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-		MockShowletsDAO mockShowletsDAO = new MockShowletsDAO();
-		mockShowletsDAO.setDataSource(dataSource);
+		MockWidgetsDAO mockWidgetsDAO = new MockWidgetsDAO();
+		mockWidgetsDAO.setDataSource(dataSource);
         _pageManager.deletePage("temp");
 		_pageManager.deletePage("temp2");
 		IPage page = _pageManager.getPage("temp");
 		assertNull(page);
         boolean exists = true;
         try {
-            exists = mockShowletsDAO.exists("temp");
+            exists = mockWidgetsDAO.exists("temp");
             assertEquals(exists, false);
-            exists = mockShowletsDAO.exists("temp2");
+            exists = mockWidgetsDAO.exists("temp2");
             assertEquals(exists, false);
         } catch (Throwable e) {
             throw e;

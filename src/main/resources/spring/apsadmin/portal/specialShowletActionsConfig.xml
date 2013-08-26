@@ -11,7 +11,7 @@
 	</bean>
 	
 	<bean id="navigatorShowletAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorShowletConfigAction" parent="simpleShowletAction" >
+			class="com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorWidgetConfigAction" parent="simpleShowletAction" >
 		<property name="navigatorParser" ref="NavigatorParser" />
 	</bean>
 	

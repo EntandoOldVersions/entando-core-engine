@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal;
 /**
  * @author E.Santoboni
  */
-public interface IShowletsViewerAction {
+public interface IWidgetsViewerAction {
 	
 	/**
 	 * Show the showlet catalog.

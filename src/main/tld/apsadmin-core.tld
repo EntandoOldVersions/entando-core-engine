@@ -331,8 +331,8 @@
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property
 			using the "property" attribute.]]>
 		</description>
-		<name>showletType</name>
-		<tag-class>com.agiletec.apsadmin.tags.ShowletTypeInfoTag</tag-class>
+		<name>widgetType</name>
+		<tag-class>com.agiletec.apsadmin.tags.WidgetTypeInfoTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description><![CDATA[The code of the showlet type to return.]]></description>

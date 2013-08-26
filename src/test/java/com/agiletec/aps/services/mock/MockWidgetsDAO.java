@@ -27,7 +27,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 /**
  * @author M.Casari
  */
-public class MockShowletsDAO  extends AbstractDAO {
+public class MockWidgetsDAO  extends AbstractDAO {
 
     /**
      * Restituisce un booleano che attesta la presenza o meno della

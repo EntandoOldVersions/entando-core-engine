@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodParameter;
-import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedShowlet;
+import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedWidget;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -224,13 +224,13 @@ public class ApiServiceAction extends AbstractApiAction {
 		return SUCCESS;
 	}
 	
-	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedShowlet relatedShowlet, Widget masterShowlet) {
+	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedWidget relatedShowlet, Widget masterShowlet) {
 		ApsProperties showletProperties = (masterShowlet.getType().isLogic())
 				? masterShowlet.getType().getConfig() : masterShowlet.getConfig();
 		return this.extractParametersFromShowletProperties(relatedShowlet, showletProperties);
 	}
 
-	private ApsProperties extractParametersFromShowletProperties(ApiMethodRelatedShowlet relatedShowlet, ApsProperties showletProperties) {
+	private ApsProperties extractParametersFromShowletProperties(ApiMethodRelatedWidget relatedShowlet, ApsProperties showletProperties) {
 		ApsProperties parameters = new ApsProperties();
 		ApsProperties mapping = relatedShowlet.getMapping();
 		if (null != showletProperties && null != mapping) {

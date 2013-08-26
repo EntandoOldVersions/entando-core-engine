@@ -33,7 +33,7 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 /**
  * @author E.Santoboni
  */
-public class ShowletTypeAction extends AbstractPortalAction implements IShowletTypeAction {
+public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTypeAction {
 	
 	@Override
 	public void validate() {

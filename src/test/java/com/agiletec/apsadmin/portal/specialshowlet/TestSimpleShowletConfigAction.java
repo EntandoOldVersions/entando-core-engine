@@ -23,7 +23,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.ISimpleWidgetConfigAction;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -40,7 +40,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 	public void testInitConfigSimpleParameter_1() throws Throwable {
 		String result = this.executeConfigSimpleParameter("admin", "homepage", "1", "formAction");
 		assertEquals(Action.SUCCESS, result);
-		ISimpleShowletConfigAction action = (ISimpleShowletConfigAction) this.getAction();
+		ISimpleWidgetConfigAction action = (ISimpleWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
@@ -55,7 +55,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 	public void testInitConfigSimpleParameter_2() throws Throwable {
 		String result = this.executeConfigSimpleParameter("admin", "pagina_2", "2", null);
 		assertEquals(Action.SUCCESS, result);
-		ISimpleShowletConfigAction action = (ISimpleShowletConfigAction) this.getAction();
+		ISimpleWidgetConfigAction action = (ISimpleWidgetConfigAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();

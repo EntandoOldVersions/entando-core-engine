@@ -31,7 +31,7 @@ import com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction;
  * Classe action per la gestione della configurazione delle showlet tipo Navigatore.
  * @author E.Santoboni
  */
-public class NavigatorShowletConfigAction extends SimpleWidgetConfigAction implements INavigatorShowletConfigAction {
+public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implements INavigatorWidgetConfigAction {
 	
 	@Override
 	public void validate() {
@@ -115,14 +115,14 @@ public class NavigatorShowletConfigAction extends SimpleWidgetConfigAction imple
 		int elementIndex = this.getExpressionIndex();
 		if (elementIndex < 0 || elementIndex >= expressions.size()) return;
 		String movement = this.getMovement();
-		if (!(elementIndex==0 && movement.equals(INavigatorShowletConfigAction.MOVEMENT_UP_CODE)) && 
-				!(elementIndex == expressions.size()-1 && movement.equals(INavigatorShowletConfigAction.MOVEMENT_DOWN_CODE))) {
+		if (!(elementIndex==0 && movement.equals(INavigatorWidgetConfigAction.MOVEMENT_UP_CODE)) && 
+				!(elementIndex == expressions.size()-1 && movement.equals(INavigatorWidgetConfigAction.MOVEMENT_DOWN_CODE))) {
 			NavigatorExpression elementToMove = expressions.get(elementIndex);
 			expressions.remove(elementIndex);
-			if (movement.equals(INavigatorShowletConfigAction.MOVEMENT_UP_CODE)) {
+			if (movement.equals(INavigatorWidgetConfigAction.MOVEMENT_UP_CODE)) {
 				expressions.add(elementIndex-1, elementToMove);
 			} 
-			if (movement.equals(INavigatorShowletConfigAction.MOVEMENT_DOWN_CODE)) {
+			if (movement.equals(INavigatorWidgetConfigAction.MOVEMENT_DOWN_CODE)) {
 				expressions.add(elementIndex+1, elementToMove);
 			}
 		}

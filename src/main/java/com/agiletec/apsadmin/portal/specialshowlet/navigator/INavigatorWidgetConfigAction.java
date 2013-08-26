@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal.specialshowlet.navigator;
 import java.util.List;
 
 import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
-import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
+import com.agiletec.apsadmin.portal.specialshowlet.ISimpleWidgetConfigAction;
 
 /**
  * Interfaccia per la classe action dell'interfaccia 
@@ -28,7 +28,7 @@ import com.agiletec.apsadmin.portal.specialshowlet.ISimpleShowletConfigAction;
  * @version 1.0
  * @author E.Santoboni
  */
-public interface INavigatorShowletConfigAction extends ISimpleShowletConfigAction {
+public interface INavigatorWidgetConfigAction extends ISimpleWidgetConfigAction {
 	
 	/**
 	 * Esegue l'operazione di aggiunta di una espressione 

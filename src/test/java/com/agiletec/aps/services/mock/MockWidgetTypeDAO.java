@@ -25,7 +25,7 @@ import com.agiletec.aps.system.common.AbstractDAO;
 /**
  * @author E.Santoboni
  */
-public class MockShowletTypeDAO extends AbstractDAO {
+public class MockWidgetTypeDAO extends AbstractDAO {
 	
 	public void deleteShowletType(String showletTypeCode) {
 		Connection conn = null;

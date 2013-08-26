@@ -27,7 +27,7 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.ContentListViewerShowletAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.ContentListViewerWidgetAction;
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -38,7 +38,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testInitConfigListViewer_1() throws Throwable {
 		String result = this.executeConfigListViewer("admin", "homepage", "1", "content_viewer_list");
 		assertEquals(Action.SUCCESS, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
@@ -50,7 +50,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testInitConfigListViewer_2() throws Throwable {
 		String result = this.executeConfigListViewer("admin", "homepage", "0", null);
 		assertEquals(Action.SUCCESS, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
@@ -72,7 +72,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testFailureConfigContentType_1() throws Throwable {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "");
 		assertEquals(Action.INPUT, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -82,7 +82,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testFailureConfigContentType_2() throws Throwable {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "WRO");//Tipo contenuto inesistente
 		assertEquals(Action.INPUT, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
@@ -92,7 +92,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	public void testConfigContentType() throws Throwable {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "ART");
 		assertEquals(Action.SUCCESS, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
@@ -131,7 +131,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		paramsUp.put("filters", "(order=DESC;attributeFilter=true;likeOption=false;key=Date)+(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
 		String result = this.executeMovement("admin", "homepage", "0", "content_viewer_list", paramsUp);
 		assertEquals(Action.SUCCESS, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		List<Properties> filtersProperties = action.getFiltersProperties();
 		assertEquals(2, filtersProperties.size());
 		Properties firstFilter = filtersProperties.get(1);
@@ -146,7 +146,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		paramsDown.put("filters", "(order=ASC;attributeFilter=true;likeOption=false;key=Title)+(order=DESC;attributeFilter=true;likeOption=false;key=Date)");
 		result = this.executeMovement("admin", "homepage", "0", "content_viewer_list",paramsDown);
 		assertEquals(Action.SUCCESS, result);
-		action = (ContentListViewerShowletAction) this.getAction();
+		action = (ContentListViewerWidgetAction) this.getAction();
 		filtersProperties = action.getFiltersProperties();
 		assertEquals(2, filtersProperties.size());
 		firstFilter = filtersProperties.get(0);
@@ -182,7 +182,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		params.put("filters", "(order=DESC;attributeFilter=true;likeOption=false;key=Date)+(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
 		String result = this.executeDelFilter("admin", "homepage", "0", "content_viewer_list", params);
 		assertEquals(Action.SUCCESS, result);
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		List<Properties> filtersProperties = action.getFiltersProperties();
 		assertEquals(1, filtersProperties.size());
 		Properties firstFilter = filtersProperties.get(0);
@@ -209,7 +209,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
-		ContentListViewerShowletAction action = (ContentListViewerShowletAction) this.getAction();
+		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
 		Widget widget = action.getShowlet();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
