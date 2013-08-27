@@ -26,6 +26,10 @@ import java.util.List;
  */
 public interface IUserDAO {
 	
+	public List<String> loadUsernames();
+	
+	public List<String> searchUsernames(String text);
+	
 	/**
 	 * Carica e restituisce la lista completa di utenti.
 	 * @return La lista completa di utenti.

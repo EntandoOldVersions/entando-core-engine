@@ -38,6 +38,23 @@ public class UserManager extends AbstractService implements IUserManager, GroupU
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
 	}
 	
+	@Override
+	public List<String> getUsernames() throws ApsSystemException {
+		return this.searchUsernames(null);
+	}
+	
+	@Override
+	public List<String> searchUsernames(String text) throws ApsSystemException {
+		List<String> usernames = null;
+		try {
+			usernames = this.getUserDAO().searchUsernames(text);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "searchUsernames");
+			throw new ApsSystemException("Error loading the username list", t);
+		}
+		return usernames;
+	}
+	
 	/**
 	 * Restituisce la lista completa degli utenti (in oggetti User).
 	 * @return La lista completa degli utenti (in oggetti User).
@@ -45,17 +62,7 @@ public class UserManager extends AbstractService implements IUserManager, GroupU
 	 */
 	@Override
 	public List<UserDetails> getUsers() throws ApsSystemException {
-		List<UserDetails> users = null;
-		try {
-			users = this.getUserDAO().loadUsers();
-			for (int i=0; i<users.size(); i++) {
-				this.setUserCredentialCheckParams(users.get(i));
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUsers");
-			throw new ApsSystemException("Error loading the list of users", t);
-		}
-		return users;
+		return this.searchUsers(null);
 	}
 
 	@Override

@@ -26,7 +26,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Diana - E.Santoboni
  */
 public interface IUserManager {
-
+	
+	public List<String> getUsernames() throws ApsSystemException;
+	
+	public List<String> searchUsernames(String text) throws ApsSystemException;
+	
 	/**
 	 * Restituisce la lista completa degli utenti (in oggetti User).
 	 * @return La lista completa degli utenti (in oggetti User).
@@ -41,7 +45,7 @@ public interface IUserManager {
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	public List<UserDetails> searchUsers(String text) throws ApsSystemException;
-
+	
 	/**
 	 * Elimina un utente.
 	 * @param user L'utente da eliminare dal db.

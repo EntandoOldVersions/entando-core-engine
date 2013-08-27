@@ -37,33 +37,49 @@ import com.agiletec.aps.util.IApsEncrypter;
  */
 public class UserDAO extends AbstractDAO implements IUserDAO {
 	
-	/**
-	 * Carica e restituisce la lista completa di utenti presenti nel db.
-	 * @return La lista completa di utenti (oggetti User)
-	 */
 	@Override
-	public List<UserDetails> loadUsers() {
+	public List<String> loadUsernames() {
+		return this.searchUsernames(null);
+	}
+	
+	@Override
+	public List<String> searchUsernames(String text) {
+		if (null != text && text.trim().length() == 0) {
+			text = null;
+		}
 		Connection conn = null;
-		List<UserDetails> users = null;
-		Statement stat = null;
+		List<String> usernames = new ArrayList<String>();
+		PreparedStatement stat = null;
 		ResultSet res = null;
 		try {
 			conn = this.getConnection();
-			stat = conn.createStatement();
-			res = stat.executeQuery(LOAD_USERS);
-			users = this.loadUsers(res);
+			if (text == null) {
+				stat = conn.prepareStatement(LOAD_USERNAMES);
+			} else {
+				stat = conn.prepareStatement(SEARCH_USERNAMES_BY_TEXT);
+				stat.setString(1, "%"+text+"%");
+			}
+			res = stat.executeQuery();
+			while (res.next()) {
+				usernames.add(res.getString(1));
+			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading the users list", "loadUsersList");
+			processDaoException(t, "Error loading the usernames list", "loadUsernames");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
-		return users;
+		return usernames;
+	}
+	
+	@Override
+	public List<UserDetails> loadUsers() {
+		return this.searchUsers(null);
 	}
 	
 	@Override
 	public List<UserDetails> searchUsers(String text) {
-		if (null == text) {
-			text = "";
+		if (null != text && text.trim().length() == 0) {
+			text = null;
 		}
 		Connection conn = null;
 		List<UserDetails> users = null;
@@ -71,8 +87,12 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 		ResultSet res = null;
 		try {
 			conn = this.getConnection();
-			stat = conn.prepareStatement(SEARCH_USERS_BY_TEXT);
-			stat.setString(1, "%"+text+"%");
+			if (text == null) {
+				stat = conn.prepareStatement(LOAD_USERS);
+			} else {
+				stat = conn.prepareStatement(SEARCH_USERS_BY_TEXT);
+				stat.setString(1, "%"+text+"%");
+			}
 			res = stat.executeQuery();
 			users = this.loadUsers(res);
 		} catch (Throwable t) {
@@ -452,12 +472,21 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 	
 	private IApsEncrypter _encrypter;
 
+	private final String PREFIX_LOAD_USERNAMES = 
+		"SELECT authusers.username FROM authusers ";
+	
 	private final String PREFIX_LOAD_USERS = 
 		"SELECT authusers.username, authusers.passwd, authusers.registrationdate, " +
 		"authusers.lastaccess, authusers.lastpasswordchange, authusers.active FROM authusers ";
-
+	
+	private final String LOAD_USERNAMES =
+		PREFIX_LOAD_USERNAMES + "ORDER BY authusers.username";
+	
 	private final String LOAD_USERS =
 		PREFIX_LOAD_USERS + "ORDER BY authusers.username";
+	
+	private final String SEARCH_USERNAMES_BY_TEXT =
+		PREFIX_LOAD_USERNAMES + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
 
 	private final String SEARCH_USERS_BY_TEXT =
 		PREFIX_LOAD_USERS + " WHERE authusers.username LIKE ? ORDER BY authusers.username";
