@@ -5,7 +5,7 @@
 
 <struts>
 	
-    <package name="core_do/Front/CurrentUser/Profile" namespace="/do/Front/Currentuser/Profile" extends="entando-front-default">
+    <package name="core_do/Front/CurrentUser/Profile" namespace="/do/Front/CurrentUser/Profile" extends="entando-front-default">
     	
         <action name="edit" class="currentUserProfileAction" method="edit">
             <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/user/entryCurrentProfile.jsp</result>
