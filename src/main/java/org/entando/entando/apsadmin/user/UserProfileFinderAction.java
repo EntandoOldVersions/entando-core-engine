@@ -26,9 +26,7 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -67,7 +65,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
                     (null != super.getEntityTypeCode() && super.getEntityTypeCode().trim().length() > 0)) {
                 return profileSearchResult;
             }
-            List<String> usernames = this.executeSearchUsers();
+            List<String> usernames = this.getUserManager().searchUsernames(this.getUsername());
             searchResult = new ArrayList<String>();
             for (int i = 0; i < usernames.size(); i++) {
                 String username = usernames.get(i);
@@ -90,40 +88,15 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         return searchResult;
     }
     
-    private List<String> executeSearchUsers() {
-        List<String> usernames = new ArrayList<String>();
-        try {
-            List<UserDetails> users = this.getUserManager().searchUsers(this.getUsername());
-            if (null == users) return usernames;
-            for (int i = 0; i < users.size(); i++) {
-                UserDetails user = users.get(i);
-                usernames.add(user.getUsername());
-                this.getUserDetailsMap().put(user.getUsername(), user);
-            }
-            Collections.sort(usernames);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "executeSearchUsers");
-            throw new RuntimeException("Error searching users", t);
-        }
-        return usernames;
-    }
-    
     public UserDetails getUser(String username) {
         UserDetails user = null;
         try {
-            user = this.getUserDetailsMap().get(username);
-            if (null == user) {
-                user = this.getUserManager().getUser(username);
-            }
+            user = this.getUserManager().getUser(username);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getUser");
             throw new RuntimeException("Error extracting user " + username, t);
         }
         return user;
-    }
-    
-    public IUserProfile getUserProfile(UserDetails user) {
-        return (IUserProfile) user.getProfile();
     }
     
     public String getEmailAttributeValue(String username) {
@@ -181,20 +154,11 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         this._userProfileManager = userProfileManager;
     }
     
-    protected Map<String, UserDetails> getUserDetailsMap() {
-        return _userDetailsMap;
-    }
-    protected void setUserDetailsMap(Map<String, UserDetails> userDetailsMap) {
-        this._userDetailsMap = userDetailsMap;
-    }
-    
     private String _username;
     private Integer _withProfile;
     
     private IUserManager _userManager;
     private IUserProfileManager _userProfileManager;
-    
-    private Map<String, UserDetails> _userDetailsMap = new HashMap<String, UserDetails>();
     
     private static final int WITHOUT_PROFILE_CODE = 0;
     private static final int WITH_PROFILE_CODE = 1;
