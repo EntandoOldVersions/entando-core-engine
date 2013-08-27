@@ -119,5 +119,102 @@
             </parameters>
         </method>
     </resource>
+	
+	<!-- *********** User Profile *********** -->
+	
+	<resource name="myUserProfile" namespace="core">
+        <description>The User profile of the current user</description>
+        <source>core</source>
+        <method httpMethod="GET" active="true" requiredAuth="true">
+            <description>Return current user profile</description>
+            <springBean name="ApiMyProfileInterface" method="getMyUserProfile" />
+        </method>
+    </resource>
+    
+    <resource name="userProfileType" namespace="core">
+        <description>The rappresentation of the user profile type</description>
+        <source>core</source>
+        <method httpMethod="GET" active="true" requiredAuth="true">
+            <description>Return an user profile type</description>
+            <springBean name="ApiUserProfileTypeInterface" method="getUserProfileType" />
+            <responseClass>org.entando.entando.aps.system.services.userprofile.api.response.UserProfileTypeResponse</responseClass>
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of the type to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Add an user profile type</description>
+            <springBean name="ApiUserProfileTypeInterface" method="addUserProfileType" />
+            <expectedType>org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfileType</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Update an user profile type</description>
+            <springBean name="ApiUserProfileTypeInterface" method="updateUserProfileType" />
+            <expectedType>org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfileType</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+            <description>Delete an user profile type</description>
+            <springBean name="ApiUserProfileTypeInterface" method="deleteUserProfileType" />
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of the type to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="userProfiles" namespace="core">
+        <description>The list of usernames, composed using the specified filters to user profiles.</description>
+        <source>core</source>
+        <method httpMethod="GET" active="true">
+            <description>Returns a list of usernames, composed using the specified filters to user profiles.</description>
+            <springBean name="ApiUserProfileInterface" method="getUserProfiles" />
+            <responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+            <parameters>
+                <parameter key="typeCode" required="true">
+                    <description>The code of a user profile type.</description>
+                </parameter>
+                <parameter key="filters" required="false">
+                    <description>The filters (Example: "(order=DESC;attributeFilter=true;key=Date)+(order=ASC;attributeFilter=true;key=Title)" )</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
+    
+    <resource name="userProfile" namespace="core">
+        <description>The rappresentation of the user profile</description>
+        <source>core</source>
+        <method httpMethod="GET" active="true">
+            <description>Return a public user profile</description>
+            <springBean name="ApiUserProfileInterface" method="getUserProfile" />
+            <responseClass>org.entando.entando.aps.system.services.userprofile.api.response.UserProfileResponse</responseClass>
+            <parameters>
+                <parameter key="username" required="true">
+                    <description>The username of the profile to return</description>
+                </parameter>
+            </parameters>
+        </method>
+        <method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="editUserProfile">
+            <description>Add an user profile</description>
+            <springBean name="ApiUserProfileInterface" method="addUserProfile" />
+            <expectedType>org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfile</expectedType>
+        </method>
+        <method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="editUserProfile">
+            <description>Update an user profile</description>
+            <springBean name="ApiUserProfileInterface" method="updateUserProfile" />
+            <expectedType>org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfile</expectedType>
+        </method>
+        <method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="editUserProfile">
+            <description>Delete an user profile</description>
+            <springBean name="ApiUserProfileInterface" method="deleteUserProfile" />
+            <parameters>
+                <parameter key="username" required="true">
+                    <description>The username of the profile to delete</description>
+                </parameter>
+            </parameters>
+        </method>
+    </resource>
     
 </apiMethodDefinitions>

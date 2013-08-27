@@ -34,20 +34,20 @@
 	</bean>
     
     <!-- API -->
-    <!--
-    <bean id="jpuserprofileApiMyProfileInterface" 
-            class="org.entando.entando.plugins.jpuserprofile.aps.system.services.api.ApiMyUserProfileInterface" >
+    
+    <bean id="ApiMyProfileInterface" 
+            class="org.entando.entando.aps.system.services.userprofile.api.ApiMyUserProfileInterface" >
     </bean>
     
-    <bean id="jpuserprofileApiUserProfileTypeInterface" 
-            class="org.entando.entando.plugins.jpuserprofile.aps.system.services.api.ApiUserProfileTypeInterface" >
-        <property name="userProfileManager" ref="jpuserprofileUserProfileManager" />
+    <bean id="ApiUserProfileTypeInterface" 
+            class="org.entando.entando.aps.system.services.userprofile.api.ApiUserProfileTypeInterface" >
+        <property name="userProfileManager" ref="UserProfileManager" />
     </bean>
     
-    <bean id="jpuserprofileApiUserProfileInterface" 
-            class="org.entando.entando.plugins.jpuserprofile.aps.system.services.api.ApiUserProfileInterface" >
-        <property name="userProfileManager" ref="jpuserprofileUserProfileManager" />
+    <bean id="ApiUserProfileInterface" 
+            class="org.entando.entando.aps.system.services.userprofile.api.ApiUserProfileInterface" >
+        <property name="userProfileManager" ref="UserProfileManager" />
         <property name="groupManager" ref="GroupManager" />
     </bean>
-    -->
+    
 </beans>
