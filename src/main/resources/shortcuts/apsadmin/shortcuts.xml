@@ -183,6 +183,20 @@
 				<param name="namespace">/do/BaseAdmin</param>
 				<param name="actionName">reloadConfig</param>
 			</url>
-		</shortcut>		
+		</shortcut>
+		
+		<!--
+		<shortcut id="userprofile.profile.current.entry" requiredPermission="superuser" menusection="plugins" source="userprofile">
+			<description key="userprofile.shortcut.profile.current.entry.shortDesc" >Your Profile</description>
+			<longdesc key="userprofile.shortcut.profile.current.entry.longDesc">
+				<![CDATA[Edit your profile]]>
+			</longdesc>
+			<url>
+				<param name="namespace">/do/userprofile/MyProfile</param>
+				<param name="actionName">edit</param>
+			</url>
+		</shortcut>
+		-->
+		
 	</shortcuts>
 </shortcut-def>

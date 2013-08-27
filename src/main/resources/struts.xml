@@ -208,5 +208,7 @@
 	<include file="org/entando/entando/apsadmin/api/api.xml" />
 	
 	<include file="org/entando/entando/aps/internalservlet/api/api.xml" />
+    <include file="org/entando/entando/aps/internalservlet/user/common.xml"/>
+    <include file="org/entando/entando/aps/internalservlet/user/currentUserProfile.xml"/>
     
 </struts>
