@@ -108,10 +108,10 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			ApsProperties config = widget.getConfig();
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
-				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.SHOWLET_PARAM_TITLE, currentLang, this.getTitleVar());
-				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.SHOWLET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
+				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.WIDGET_PARAM_TITLE, currentLang, this.getTitleVar());
+				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
 				if (null != this.getPageLinkVar()) {
-					String pageLink = config.getProperty(ContentListHelper.SHOWLET_PARAM_PAGE_LINK);
+					String pageLink = config.getProperty(ContentListHelper.WIDGET_PARAM_PAGE_LINK);
 					if (null != pageLink) {
 						this.pageContext.setAttribute(this.getPageLinkVar(), pageLink);
 					}

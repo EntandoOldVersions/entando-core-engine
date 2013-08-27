@@ -69,7 +69,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 	}
 
 	protected void validateTitle() {
-		String titleParamPrefix = IContentListWidgetHelper.SHOWLET_PARAM_TITLE + "_";
+		String titleParamPrefix = IContentListWidgetHelper.WIDGET_PARAM_TITLE + "_";
 		if (this.isMultilanguageParamValued(titleParamPrefix)) {
 			Lang defaultLang = this.getLangManager().getDefaultLang();
 			String defaultTitleParam = titleParamPrefix + defaultLang.getCode();
@@ -82,12 +82,12 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 	}
 
 	protected void validateLink() {
-		String pageLink = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.SHOWLET_PARAM_PAGE_LINK);
+		String pageLink = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK);
 		boolean existsPageLink = pageLink != null && this.getPage(pageLink) != null;
-		String linkDescrParamPrefix = IContentListWidgetHelper.SHOWLET_PARAM_PAGE_LINK_DESCR + "_";
+		String linkDescrParamPrefix = IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK_DESCR + "_";
 		if (existsPageLink || this.isMultilanguageParamValued(linkDescrParamPrefix)) {
 			if (!existsPageLink) {
-				this.addFieldError(IContentListWidgetHelper.SHOWLET_PARAM_PAGE_LINK, this.getText("error.showlet.listViewer.pageLink.required"));
+				this.addFieldError(IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK, this.getText("error.showlet.listViewer.pageLink.required"));
 			}
 			Lang defaultLang = this.getLangManager().getDefaultLang();
 			String defaultLinkDescrParam = linkDescrParamPrefix + defaultLang.getCode();
@@ -130,7 +130,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 	public String configContentType() {
 		try {
 			Widget widget = super.createNewShowlet();
-			widget.getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_CONTENT_TYPE, this.getContentType());
+			widget.getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE, this.getContentType());
 			this.setShowlet(widget);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "init");
@@ -174,7 +174,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				categoryCodes.remove(category);
 			}
 			String categories = ContentListHelper.concatStrings(categoryCodes, IContentListWidgetHelper.CATEGORIES_SEPARATOR);
-			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_CATEGORIES, categories);
+			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES, categories);
 		} catch (Throwable t) {
 			String marker = (add) ? "adding" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "addRemoveCategory", "Error " + marker + " category : '" + this.getCategoryCode() + "'");
@@ -188,7 +188,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 		try {
 			types.add(new SelectItem(UserFilterOptionBean.KEY_FULLTEXT, this.getText("label.fulltext")));
 			types.add(new SelectItem(UserFilterOptionBean.KEY_CATEGORY, this.getText("label.category")));
-			String contentType = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.SHOWLET_PARAM_CONTENT_TYPE);
+			String contentType = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE);
 			Content prototype = this.getContentManager().createContentType(contentType);
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
@@ -209,7 +209,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 		try {
 			types.add(new SelectItem(IContentListFilterAction.METADATA_KEY_PREFIX + IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, this.getText("label.creationDate")));
 			types.add(new SelectItem(IContentListFilterAction.METADATA_KEY_PREFIX + IContentManager.CONTENT_MODIFY_DATE_FILTER_KEY, this.getText("label.lastModifyDate")));
-			String contentType = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.SHOWLET_PARAM_CONTENT_TYPE);
+			String contentType = this.getShowlet().getConfig().getProperty(IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE);
 			Content prototype = this.getContentManager().createContentType(contentType);
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
@@ -245,7 +245,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				userFiltersProperties.add(newUserFilter);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addUserFilter");
 			return FAILURE;
@@ -312,7 +312,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				userFiltersProperties.remove(filterIndex);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_USER_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "removeMoveUserFilter", "Error " + marker + " userFilter");
@@ -328,7 +328,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			List<Properties> properties = this.getFiltersProperties();
 			properties.add(this.getNewFilter());
 			String newShowletParam = FilterUtils.getShowletParam(properties);
-			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addFilter");
 			return FAILURE;
@@ -368,7 +368,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				userFiltersProperties.remove(filterIndex);
 			}
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
-			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.SHOWLET_PARAM_FILTERS, newShowletParam);
+			this.getShowlet().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
 			ApsSystemUtils.logThrowable(t, this, "removeMoveFilter", "Error " + marker + " filter");
@@ -393,21 +393,21 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 
 	private void extractFiltersProperties(ApsProperties config) {
 		if (null == config) return;
-		String filters = config.getProperty(IContentListWidgetHelper.SHOWLET_PARAM_FILTERS);
+		String filters = config.getProperty(IContentListWidgetHelper.WIDGET_PARAM_FILTERS);
 		List<Properties> properties = FilterUtils.getFiltersProperties(filters);
 		this.setFiltersProperties(properties);
 	}
 
 	private void extractUserFiltersProperties(ApsProperties config) {
 		if (null == config) return;
-		String filters = config.getProperty(IContentListWidgetHelper.SHOWLET_PARAM_USER_FILTERS);
+		String filters = config.getProperty(IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS);
 		List<Properties> properties = FilterUtils.getFiltersProperties(filters);
 		this.setUserFiltersProperties(properties);
 	}
 
 	protected void extractCategories(ApsProperties config) {
 		if (null == config) return;
-		String categories = config.getProperty(IContentListWidgetHelper.SHOWLET_PARAM_CATEGORIES);
+		String categories = config.getProperty(IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES);
 		if (null != categories) {
 			List<String> categoryCodes = ContentListHelper.splitValues(categories, IContentListWidgetHelper.CATEGORIES_SEPARATOR);
 			this.setCategoryCodes(categoryCodes);
@@ -421,7 +421,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 		}
 		if (null != this.getCategoryCodes() && this.getCategoryCodes().size() > 0) {
 			categories = ContentListHelper.concatStrings(this.getCategoryCodes(), IContentListWidgetHelper.CATEGORIES_SEPARATOR);
-			config.setProperty(IContentListWidgetHelper.SHOWLET_PARAM_CATEGORIES, categories);
+			config.setProperty(IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES, categories);
 		}
 	}
 

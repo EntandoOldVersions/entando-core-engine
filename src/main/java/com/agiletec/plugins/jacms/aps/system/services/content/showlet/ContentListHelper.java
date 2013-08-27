@@ -137,7 +137,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			ApsProperties config = widget.getConfig();
 			if (null == bean.getContentType() && null != config) {
-				bean.setContentType(config.getProperty(SHOWLET_PARAM_CONTENT_TYPE));
+				bean.setContentType(config.getProperty(WIDGET_PARAM_CONTENT_TYPE));
 			}
 			if (null == bean.getContentType()) {
 				throw new ApsSystemException("Tipo contenuto non definito");
@@ -145,7 +145,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			if (null == bean.getCategory() && null != config && null != config.getProperty(SHOWLET_PARAM_CATEGORY)) {
 				bean.setCategory(config.getProperty(SHOWLET_PARAM_CATEGORY));
 			}
-			this.addShowletFilters(bean, config, SHOWLET_PARAM_FILTERS, reqCtx);
+			this.addShowletFilters(bean, config, WIDGET_PARAM_FILTERS, reqCtx);
 			if (null != userFilters && userFilters.size() > 0) {
 				for (int i = 0; i < userFilters.size(); i++) {
 					UserFilterOptionBean userFilter = userFilters.get(i);
@@ -171,7 +171,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		if (null == config) {
 			return false;
 		}
-		String param = config.getProperty(SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER);
+		String param = config.getProperty(WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER);
 		if (null == param) {
 			return false;
 		}
@@ -210,7 +210,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 				codes.add(categories[i]);
 			}
 		}
-		String categoriesParam = (null != config) ? config.getProperty(SHOWLET_PARAM_CATEGORIES) : null;
+		String categoriesParam = (null != config) ? config.getProperty(WIDGET_PARAM_CATEGORIES) : null;
 		if (null != categoriesParam && categoriesParam.trim().length() > 0) {
 			List<String> categoryCodes = splitValues(categoriesParam, CATEGORIES_SEPARATOR);
 			for (int j = 0; j < categoryCodes.size(); j++) {
@@ -312,10 +312,10 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		try {
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			ApsProperties config = widget.getConfig();
-			if (null == config || null == config.getProperty(SHOWLET_PARAM_CONTENT_TYPE)) {
+			if (null == config || null == config.getProperty(WIDGET_PARAM_CONTENT_TYPE)) {
 				return null;
 			}
-			String contentTypeCode = config.getProperty(SHOWLET_PARAM_CONTENT_TYPE);
+			String contentTypeCode = config.getProperty(WIDGET_PARAM_CONTENT_TYPE);
 			IApsEntity prototype = this.getContentManager().getEntityPrototype(contentTypeCode);
 			if (null == prototype) {
 				ApsSystemUtils.getLogger().severe("Null content type by code '" + contentTypeCode + "'");
@@ -323,7 +323,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			}
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 			Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-			String userFilters = config.getProperty(SHOWLET_PARAM_USER_FILTERS);
+			String userFilters = config.getProperty(WIDGET_PARAM_USER_FILTERS);
 			if (null != userFilters && userFilters.length() > 0) {
 				userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, this.getUserFilterDateFormat(), reqCtx.getRequest());	
 			}

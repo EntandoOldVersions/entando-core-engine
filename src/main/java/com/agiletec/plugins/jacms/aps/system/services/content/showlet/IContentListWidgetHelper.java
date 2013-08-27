@@ -112,16 +112,48 @@ public interface IContentListWidgetHelper extends com.agiletec.plugins.jacms.aps
 	public static final String[] allowedMetadataUserFilterOptionKeys = 
 		{UserFilterOptionBean.KEY_CATEGORY, UserFilterOptionBean.KEY_FULLTEXT};
 	
-	public static final String SHOWLET_PARAM_CONTENT_TYPE = "contentType";
-	public static final String SHOWLET_PARAM_USER_FILTERS = "userFilters";
+	public static final String WIDGET_PARAM_CONTENT_TYPE = "contentType";
+	public static final String WIDGET_PARAM_USER_FILTERS = "userFilters";
+	public static final String WIDGET_PARAM_CATEGORIES = "categories";
+	public static final String WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER = "orClauseCategoryFilter";
+	public static final String WIDGET_PARAM_FILTERS = "filters";
+	public static final String WIDGET_PARAM_TITLE = "title";
+	public static final String WIDGET_PARAM_PAGE_LINK = "pageLink";
+	public static final String WIDGET_PARAM_PAGE_LINK_DESCR = "linkDescr";
 	
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_CONTENT_TYPE} instead
+	 */
+	public static final String SHOWLET_PARAM_CONTENT_TYPE = WIDGET_PARAM_CONTENT_TYPE;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_USER_FILTERS} instead
+	 */
+	public static final String SHOWLET_PARAM_USER_FILTERS = WIDGET_PARAM_USER_FILTERS;
 	@Deprecated(/** to maintain compatibility with versions prior to 2.2.0.1 */)
 	public static final String SHOWLET_PARAM_CATEGORY = "category";
-	public static final String SHOWLET_PARAM_CATEGORIES = "categories";
-	public static final String SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER = "orClauseCategoryFilter";
-    public static final String SHOWLET_PARAM_FILTERS = "filters";
-	public static final String SHOWLET_PARAM_TITLE = "title";
-	public static final String SHOWLET_PARAM_PAGE_LINK = "pageLink";
-	public static final String SHOWLET_PARAM_PAGE_LINK_DESCR = "linkDescr";
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_CATEGORIES} instead
+	 */
+	public static final String SHOWLET_PARAM_CATEGORIES = WIDGET_PARAM_CATEGORIES;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER} instead
+	 */
+	public static final String SHOWLET_PARAM_OR_CLAUSE_CATEGORY_FILTER = WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_FILTERS} instead
+	 */
+	public static final String SHOWLET_PARAM_FILTERS = WIDGET_PARAM_FILTERS;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_TITLE} instead
+	 */
+	public static final String SHOWLET_PARAM_TITLE = WIDGET_PARAM_TITLE;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_PAGE_LINK} instead
+	 */
+	public static final String SHOWLET_PARAM_PAGE_LINK = WIDGET_PARAM_PAGE_LINK;
+	/**
+	 * @deprecated Use {@link #WIDGET_PARAM_PAGE_LINK_DESCR} instead
+	 */
+	public static final String SHOWLET_PARAM_PAGE_LINK_DESCR = WIDGET_PARAM_PAGE_LINK_DESCR;
 	
 }
