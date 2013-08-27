@@ -9,26 +9,6 @@ ALTER TABLE showletconfig RENAME TO widgetconfig;
 ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
 -- transition from 'showlets' to 'widgets' - End
 
-CREATE TABLE contentattributeroles
-(
-  contentid character varying(16) NOT NULL,
-  attrname character varying(30) NOT NULL,
-  rolename character varying(50) NOT NULL,
-  CONSTRAINT contentattrroles_contid_fkey FOREIGN KEY (contentid)
-      REFERENCES contents (contentid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
-CREATE TABLE workcontentattributeroles
-(
-  contentid character varying(16) NOT NULL,
-  attrname character varying(30) NOT NULL,
-  rolename character varying(50) NOT NULL,
-  CONSTRAINT workcontentattrroles_contid_fkey FOREIGN KEY (contentid)
-      REFERENCES contents (contentid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
 ```
 
 ```sql
