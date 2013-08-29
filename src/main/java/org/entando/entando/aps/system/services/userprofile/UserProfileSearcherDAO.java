@@ -21,6 +21,9 @@ import java.sql.ResultSet;
 import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
+import org.entando.entando.aps.system.init.model.servdb.UserProfile;
+import org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole;
+import org.entando.entando.aps.system.init.model.servdb.UserProfileSearch;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
 
 /**
@@ -38,35 +41,35 @@ public class UserProfileSearcherDAO extends AbstractEntitySearcherDAO {
 		record.setPublicProfile(result.getInt("publicprofile") == 1);
 		return record;
 	}
-
+	
+	@Override
+	protected String getEntityMasterTableName() {
+		return "authuserprofiles";
+	}
+	
 	@Override
 	protected String getEntityMasterTableIdFieldName() {
 		return "username";
 	}
-
+	
 	@Override
 	protected String getEntityMasterTableIdTypeFieldName() {
 		return "profiletype";
 	}
-
+	
 	@Override
-	protected String getEntityMasterTableName() {
-		return "userprofile_authuserprofiles";
+	protected String getEntitySearchTableName() {
+		return "authuserprofilesearch";
 	}
-
+	
 	@Override
 	protected String getEntitySearchTableIdFieldName() {
 		return "username";
 	}
-
-	@Override
-	protected String getEntitySearchTableName() {
-		return "userprofile_profilesearch";
-	}
 	
 	@Override
 	protected String getEntityAttributeRoleTableName() {
-		return "userprofile_attroles";
+		return "authuserprofileattrroles";
 	}
 	
 	@Override

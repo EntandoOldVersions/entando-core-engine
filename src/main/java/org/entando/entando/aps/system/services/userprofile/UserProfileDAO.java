@@ -113,32 +113,32 @@ public class UserProfileDAO extends AbstractEntityDAO implements IUserProfileDAO
 	}
 	
 	private final String ADD_PROFILE_SEARCH_RECORD =
-		"INSERT INTO userprofile_profilesearch " +
+		"INSERT INTO authuserprofilesearch " +
 		"(username, attrname, textvalue, datevalue, numvalue, langcode) " +
 		"VALUES ( ? , ? , ? , ? , ? , ? ) ";
 	
 	private final String DELETE_PROFILE_SEARCH_RECORD =
-		"DELETE FROM userprofile_profilesearch WHERE username = ? ";
+		"DELETE FROM authuserprofilesearch WHERE username = ? ";
 	
 	private final String GET_ALL_ENTITY_ID = 
-		"SELECT username FROM userprofile_authuserprofiles";
+		"SELECT username FROM authuserprofiles";
 	
 	private final String INSERT_PROFILE = 
-		"INSERT INTO userprofile_authuserprofiles (username, profiletype, profilexml, publicprofile) values ( ? , ? , ? , ? ) ";
+		"INSERT INTO authuserprofiles (username, profiletype, profilexml, publicprofile) values ( ? , ? , ? , ? ) ";
 	
 	private final String DELETE_PROFILE_BY_USER = 
-		"DELETE FROM userprofile_authuserprofiles WHERE username = ? ";
+		"DELETE FROM authuserprofiles WHERE username = ? ";
 	
 	private final String GET_PROFILE_VO = 
-		"SELECT username, profiletype, profilexml, publicprofile FROM userprofile_authuserprofiles WHERE username = ? ";
+		"SELECT username, profiletype, profilexml, publicprofile FROM authuserprofiles WHERE username = ? ";
 	
 	private final String UPDATE_PROFILE = 
-		"UPDATE userprofile_authuserprofiles SET profiletype = ? , profilexml = ? , publicprofile = ? WHERE username = ? ";
+		"UPDATE authuserprofiles SET profiletype = ? , profilexml = ? , publicprofile = ? WHERE username = ? ";
 	
 	private final String ADD_ATTRIBUTE_ROLE_RECORD =
-		"INSERT INTO userprofile_attroles (username, attrname, rolename) VALUES ( ? , ? , ? )";
+		"INSERT INTO authuserprofileattrroles (username, attrname, rolename) VALUES ( ? , ? , ? )";
 	
 	private final String DELETE_ATTRIBUTE_ROLE_RECORD =
-		"DELETE FROM userprofile_attroles WHERE username = ? ";
+		"DELETE FROM authuserprofileattrroles WHERE username = ? ";
 	
 }

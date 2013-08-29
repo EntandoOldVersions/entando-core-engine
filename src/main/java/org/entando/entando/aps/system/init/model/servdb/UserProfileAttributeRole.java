@@ -61,6 +61,6 @@ public class UserProfileAttributeRole implements ExtendedColumnDefinition {
 				+ "REFERENCES " + profileTableName + " (username)"};
 	}
 	
-	public static final String TABLE_NAME = "userprofile_attroles";
+	public static final String TABLE_NAME = "authuserprofileattrroles";
 	
 }

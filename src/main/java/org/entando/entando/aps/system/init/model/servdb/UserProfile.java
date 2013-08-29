@@ -50,7 +50,7 @@ public class UserProfile {
 			canBeNull = false)
 	private short _publicProfile;
 	
-	public static final String TABLE_NAME = "userprofile_authuserprofiles";
+	public static final String TABLE_NAME = "authuserprofiles";
 	
 }
 /*
