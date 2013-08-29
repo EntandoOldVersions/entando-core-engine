@@ -35,8 +35,8 @@ import com.agiletec.apsadmin.common.TestShortcutConfigAction;
 import com.agiletec.apsadmin.portal.TestPageAction;
 import com.agiletec.apsadmin.portal.TestPageConfigAction;
 import com.agiletec.apsadmin.portal.TestPageTreeAction;
-import com.agiletec.apsadmin.portal.TestShowletTypeAction;
-import com.agiletec.apsadmin.portal.TestShowletsViewerAction;
+import com.agiletec.apsadmin.portal.TestWidgetTypeAction;
+import com.agiletec.apsadmin.portal.TestWidgetsViewerAction;
 import com.agiletec.apsadmin.portal.specialshowlet.TestSimpleWidgetConfigAction;
 import com.agiletec.apsadmin.portal.specialshowlet.navigator.TestNavigatorWidgetConfigAction;
 import com.agiletec.apsadmin.system.entity.TestEntityManagersAction;
@@ -88,8 +88,8 @@ public class AllTests {
 		suite.addTestSuite(TestPageAction.class);
 		suite.addTestSuite(TestPageConfigAction.class);
 		suite.addTestSuite(TestPageTreeAction.class);
-		suite.addTestSuite(TestShowletsViewerAction.class);
-		suite.addTestSuite(TestShowletTypeAction.class);
+		suite.addTestSuite(TestWidgetsViewerAction.class);
+		suite.addTestSuite(TestWidgetTypeAction.class);
 		suite.addTestSuite(TestSimpleWidgetConfigAction.class);
 		suite.addTestSuite(TestNavigatorWidgetConfigAction.class);
 		

@@ -7,13 +7,13 @@
 
     <package name="jacms_do/Page/SpecialWidget" namespace="/do/Page/SpecialWidget" extends="core_do/Page/SpecialWidget">
 
-    	<!-- ##### SHOWLET CONTENT VIEWER **** ENTRY POINT ##### -->
+    	<!-- ##### WIDGET CONTENT VIEWER **** ENTRY POINT ##### -->
     	<action name="viewerConfig" class="jacmsContentViewerShowletAction" method="init">
         	<result type="tiles">admin.jacms.page.showlet.contentViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
-    	<!-- ##### SHOWLET CONTENT LIST VIEWER **** ENTRY POINT ##### -->
+    	<!-- ##### WIDGET CONTENT LIST VIEWER **** ENTRY POINT ##### -->
     	<action name="listViewerConfig" class="jacmsContentListViewerShowletAction" method="init">
         	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>

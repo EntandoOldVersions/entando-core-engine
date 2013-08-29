@@ -31,7 +31,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
+public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 	
 	public void testViewShowlets() throws Throwable {
 		String result = this.executeViewShowlets("admin");
@@ -148,14 +148,14 @@ public class TestShowletsViewerAction extends ApsAdminBaseTestCase {
 	
 	private String executeViewShowlets(String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "viewShowlets");
+		this.initAction("/do/Portal/WidgetType", "viewShowlets");
 		String result = this.executeAction();
 		return result;
 	}
 	
 	private String executeViewShowletUtilizers(String username, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/ShowletType", "viewShowletUtilizers");
+		this.initAction("/do/Portal/WidgetType", "viewShowletUtilizers");
 		if (null != showletTypeCode) {
 			this.addParameter("showletTypeCode", showletTypeCode);
 		}

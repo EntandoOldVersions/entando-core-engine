@@ -148,7 +148,7 @@
 				<![CDATA[Manage the Showlets. See what Showlets are installed, grouped by component or Plugin]]>
 			</longdesc>
 			<url>
-				<param name="namespace">/do/Portal/ShowletType</param>
+				<param name="namespace">/do/Portal/WidgetType</param>
 				<param name="actionName">viewShowlets</param>
 			</url>
 		</shortcut>

@@ -5,7 +5,7 @@
 
 <struts>
 	
-    <package name="core_do/Portal/ShowletType" namespace="/do/Portal/ShowletType" extends="entando-default">
+    <package name="core_do/Portal/WidgetType" namespace="/do/Portal/WidgetType" extends="entando-default">
 		
 		<global-results>
 			<result name="pageTree" type="chain">

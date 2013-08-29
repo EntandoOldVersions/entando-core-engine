@@ -18,7 +18,7 @@
             </result>
 		</global-results>
 
-    	<!-- ##### SHOWLET WITH SIMPLE PARAMETERS **** START ##### -->
+    	<!-- ##### WIDGET WITH SIMPLE PARAMETERS **** START ##### -->
     	<action name="configSimpleParameter" class="simpleShowletAction" method="init">
         	<result type="tiles">admin.Page.Showlet.configSimpleParameter</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
@@ -26,9 +26,9 @@
     	<action name="saveConfigSimpleParameter" class="simpleShowletAction" method="save">
     		<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
-    	<!-- ##### SHOWLET WITH SIMPLE PARAMETERS **** END ##### -->
+    	<!-- ##### WIDGET WITH SIMPLE PARAMETERS **** END ##### -->
 
-    	<!-- ##### SHOWLET NAVIGATOR **** ENTRY POINT ##### -->
+    	<!-- ##### WIDGET NAVIGATOR **** ENTRY POINT ##### -->
     	<action name="navigatorConfig" class="navigatorShowletAction" method="init">
         	<result type="tiles">admin.Page.Showlet.Navigator.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
