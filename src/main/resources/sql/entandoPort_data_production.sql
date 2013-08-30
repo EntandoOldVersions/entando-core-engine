@@ -347,7 +347,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 	</ExtendendPrivacyModule>
 </Params>
 ');
-INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userprofileProfileType', 'User Profile Definitions', '<?xml version="1.0" encoding="UTF-8"?>
+INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userProfileTypes', 'User Profile Types Definitions', '<?xml version="1.0" encoding="UTF-8"?>
 <profiletypes>
 	<profiletype typecode="PFL" typedescr="Default user profile">
 		<attributes>

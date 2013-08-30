@@ -1,6 +1,6 @@
 SQL notes
 
-```sql
+```sql - port database
 
 -- transition from 'showlets' to 'widgets' - Start
 ALTER TABLE showletcatalog RENAME TO widgetcatalog;
@@ -9,9 +9,40 @@ ALTER TABLE showletconfig RENAME TO widgetconfig;
 ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
 -- transition from 'showlets' to 'widgets' - End
 
+
+-- for "User Profile" plugin - Start
+UPDATE sysconfig SET item = 'userProfileTypes' WHERE item = 'jpuserprofileProfileType';
+-- OR
+INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userProfileTypes', 'User Profile Types Definitions', '<?xml version="1.0" encoding="UTF-8"?>
+<profiletypes>
+	<profiletype typecode="PFL" typedescr="Default user profile">
+		<attributes>
+			<attribute name="fullname" attributetype="Monotext" searcheable="true">
+				<validations>
+					<required>true</required>
+				</validations>
+				<roles>
+					<role>userprofile:fullname</role>
+				</roles>
+			</attribute>
+			<attribute name="email" attributetype="Monotext" searcheable="true">
+				<validations>
+					<required>true</required>
+					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+				</validations>
+				<roles>
+					<role>userprofile:mail</role>
+				</roles>
+			</attribute>
+		</attributes>
+	</profiletype>
+</profiletypes>');
+-- for "User Profile" plugin - END
+
+
 ```
 
-```sql
+```sql - serv database
 
 INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Editing');

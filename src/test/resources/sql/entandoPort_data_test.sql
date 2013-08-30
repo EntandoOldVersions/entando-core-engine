@@ -387,7 +387,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 		<Param name="maxMonthsSinceLastPasswordChange">3</Param>
 	</ExtendendPrivacyModule>
 </Params>');
-INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userprofileProfileType', 'User Profile Definitions', '<profiletypes>
+INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfileTypes', 'User Profile Types Definitions', '<profiletypes>
 	<profiletype typecode="PFL" typedescr="Default user profile" >
 		<attributes>
 			<attribute name="fullname" attributetype="Monotext" searcheable="true" >
