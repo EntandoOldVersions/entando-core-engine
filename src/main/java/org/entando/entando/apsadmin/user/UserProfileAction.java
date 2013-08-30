@@ -72,13 +72,13 @@ public class UserProfileAction extends AbstractApsEntityAction {
             }
             if (null == profileTypeCode || profileTypeCode.trim().length() == 0) {
                 String[] args = {profileTypeCode};
-                this.addFieldError("profileTypeCode", this.getText("userprofile.error.new.invalidtype", args));
+                this.addFieldError("profileTypeCode", this.getText("error.newUserProfile.invalidProfileType", args));
                 return INPUT;
             }
             userProfile = (IUserProfile) this.getUserProfileManager().getEntityPrototype(profileTypeCode);
             if (null == userProfile) {
                 String[] args = {profileTypeCode};
-                this.addFieldError("profileTypeCode", this.getText("userprofile.error.new.invalidtype", args));
+                this.addFieldError("profileTypeCode", this.getText("error.newUserProfile.invalidProfileType", args));
                 return INPUT;
             }
             userProfile.setId(this.getUsername());
@@ -116,7 +116,7 @@ public class UserProfileAction extends AbstractApsEntityAction {
             IUserProfile userProfile = (IUserProfile) this.getUserProfileManager().getProfile(username);
             if (null == userProfile) {
                 String[] args = {username};
-                this.addFieldError("username", this.getText("userprofile.error.view.userWithoutProfile", args));
+                this.addFieldError("username", this.getText("error.viewUserProfile.userWithoutProfile", args));
                 return INPUT;
             }
         } catch (Throwable t) {
@@ -129,7 +129,7 @@ public class UserProfileAction extends AbstractApsEntityAction {
     private String checkUsername(String username) {
         if (null == username || username.trim().length() == 0) {
             String[] args = {username};
-            this.addFieldError("username", this.getText("userprofile.error.new.invalidusername", args));
+            this.addFieldError("username", this.getText("error.newUserProfile.invalidUsername", args));
             return INPUT;
         }
         return null;
