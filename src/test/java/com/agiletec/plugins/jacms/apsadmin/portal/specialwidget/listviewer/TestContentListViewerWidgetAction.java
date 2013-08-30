@@ -33,7 +33,7 @@ import com.opensymphony.xwork2.Action;
 /**
  * @author E.Santoboni
  */
-public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
+public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 	
 	public void testInitConfigListViewer_1() throws Throwable {
 		String result = this.executeConfigListViewer("admin", "homepage", "1", "content_viewer_list");
