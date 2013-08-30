@@ -4,6 +4,7 @@ SQL notes
 
 -- transition from 'showlets' to 'widgets' - Start
 ALTER TABLE showletcatalog RENAME TO widgetcatalog;
+ALTER TABLE showletconfig RENAME showletcode TO widgetcode;
 ALTER TABLE showletconfig RENAME TO widgetconfig;
 
 ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
@@ -12,6 +13,9 @@ ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
 
 -- for "User Profile" plugin - Start
 UPDATE sysconfig SET item = 'userProfileTypes' WHERE item = 'jpuserprofileProfileType';
+UPDATE widgetcatalog SET item = 'userprofile_editCurrentUser' WHERE item = 'jpuserprofile_editCurrentUser';
+UPDATE widgetcatalog SET item = 'userprofile_editCurrentUser_password' WHERE item = 'jpuserprofile_editCurrentUser_password';
+UPDATE widgetcatalog SET item = 'userprofile_editCurrentUser_profile' WHERE item = 'jpuserprofile_editCurrentUser_profile';
 -- OR
 INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userProfileTypes', 'User Profile Types Definitions', '<?xml version="1.0" encoding="UTF-8"?>
 <profiletypes>
@@ -37,6 +41,30 @@ INSERT INTO sysconfig (version, item, descr, config) values ('production', 'user
 		</attributes>
 	</profiletype>
 </profiletypes>');
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Edit Current User</property>
+<property key="it">Edita Utente Corrente</property>
+</properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="actionPath">/ExtStr2/do/Front/CurrentUser/edit.action</property>
+</properties>', 1);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser_password', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Edit Current User Password</property>
+<property key="it">Edita Password Utente Corrente</property>
+</properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="actionPath">/ExtStr2/do/Front/CurrentUser/editPassword.action</property>
+</properties>', 1);
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked) VALUES ('userprofile_editCurrentUser_profile', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Edit Current User Profile</property>
+<property key="it">Edita Profilo Utente Corrente</property>
+</properties>', NULL, NULL, 'formAction', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="actionPath">/ExtStr2/do/Front/CurrentUser/Profile/edit.action</property>
+</properties>', 1);
 -- for "User Profile" plugin - END
 
 
