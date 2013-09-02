@@ -75,13 +75,9 @@ removed iteration cycle (no list expected as it used to be in the original Strut
 <#--
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
-
-<#--
 <#if tag.contains(parameters.nameValue?default(''), itemKeyStr)>
  checked="checked"<#rt/>
 </#if>
--->
-
 <#if itemKey??>
  value="${itemKeyStr?html}"<#rt/>
 </#if>
