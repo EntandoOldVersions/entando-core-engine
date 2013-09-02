@@ -23,11 +23,13 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
@@ -118,6 +120,10 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
             throw new RuntimeException("Error extracting user " + username, t);
         }
         return user;
+    }
+    
+    public IUserProfile getUserProfile(UserDetails user) {
+        return (IUserProfile) user.getProfile();
     }
     
     public String getEmailAttributeValue(String username) {

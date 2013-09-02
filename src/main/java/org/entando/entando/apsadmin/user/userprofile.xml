@@ -30,8 +30,8 @@
 			</interceptor-ref>
 		</action>
         -->
-        <action name="view" class="UserProfileAction" method="view">
-            <result type="tiles">admin.userprofile.view</result>
+        <action name="view" class="userProfileAction" method="view">
+            <result type="tiles">admin.UserProfile.view</result>
             <result name="input" type="chain">list</result>
             <interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermissions">viewUsers,editUsers,editUserProfile</param>
@@ -39,9 +39,9 @@
 			</interceptor-ref>
         </action>
         
-        <action name="edit" class="UserProfileAction" method="edit">
-            <result type="tiles">admin.jpuserprofile.entry</result>
-            <result name="chooseType" type="tiles">admin.jpuserprofile.chooseType</result>
+        <action name="edit" class="userProfileAction" method="edit">
+            <result type="tiles">admin.UserProfile.entry</result>
+            <result name="chooseType" type="tiles">admin.UserProfile.chooseType</result>
             <result name="input" type="chain">list</result>
             <interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermissions">editUsers,editUserProfile</param>
@@ -49,39 +49,39 @@
 			</interceptor-ref>
         </action>
         
-        <action name="new" class="UserProfileAction" method="createNew" >
-            <result type="tiles">admin.jpuserprofile.entry</result>
-            <result name="edit" type="tiles">admin.jpuserprofile.entry</result>
-            <result name="input" type="tiles">admin.jpuserprofile.chooseType</result>
+        <action name="new" class="userProfileAction" method="createNew" >
+            <result type="tiles">admin.UserProfile.entry</result>
+            <result name="edit" type="tiles">admin.UserProfile.entry</result>
+            <result name="input" type="tiles">admin.UserProfile.chooseType</result>
             <interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermissions">editUsers,editUserProfile</param>
 				<param name="requestAuth.ORClause">true</param>
 			</interceptor-ref>
         </action>
         
-        <action name="save" class="UserProfileAction" method="save">
+        <action name="save" class="userProfileAction" method="save">
             <result type="redirectAction">
-                <param name="namespace">/do/jpuserprofile/Search</param>
+                <param name="namespace">/do/User</param>
                 <param name="actionName">list</param>
             </result>
-            <result name="input" type="tiles">admin.jpuserprofile.entry</result>
+            <result name="input" type="tiles">admin.UserProfile.entry</result>
             <interceptor-ref name="entandoValidationStack">
 				<param name="requestAuth.requiredPermissions">editUsers,editUserProfile</param>
 				<param name="requestAuth.ORClause">true</param>
 			</interceptor-ref>
         </action>
         
-        <action name="entryProfile" class="UserProfileAction">
-            <result type="tiles">admin.jpuserprofile.entry</result>
+        <action name="entryProfile" class="userProfileAction">
+            <result type="tiles">admin.UserProfile.entry</result>
             <interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermissions">editUsers,editUserProfile</param>
 				<param name="requestAuth.ORClause">true</param>
 			</interceptor-ref>
         </action>
     	
-    	<!-- ######## INIZIO GESTIONE ATTRIBUTI IN LISTA ######## -->
+    	<!-- ######## Attribute List Management - Start ######## -->
         
-        <action name="addListElement*" class="UserProfileListAttributeAction" method="addListElement">
+        <action name="addListElement*" class="userProfileListAttributeAction" method="addListElement">
             <result type="redirectActionWithAnchor">
                 <param name="actionName">entryProfile</param>
             </result>
@@ -91,7 +91,7 @@
 			</interceptor-ref>
         </action>
         
-        <action name="removeListElement*" class="UserProfileListAttributeAction" method="removeListElement">
+        <action name="removeListElement*" class="userProfileListAttributeAction" method="removeListElement">
             <result type="redirectAction">
                 <param name="actionName">entryProfile</param>
             </result>
@@ -101,7 +101,7 @@
 			</interceptor-ref>
         </action>
         
-        <action name="moveListElement*" class="UserProfileListAttributeAction" method="moveListElement">
+        <action name="moveListElement*" class="userProfileListAttributeAction" method="moveListElement">
             <result type="redirectAction">
                 <param name="actionName">entryProfile</param>
             </result>
@@ -111,7 +111,7 @@
 			</interceptor-ref>
         </action>
         
-        <!-- ######## FINE GESTIONE ATTRIBUTI IN LISTA ######## -->
+        <!-- ######## Attribute List Management - End ######## -->
     	
     </package>
 	

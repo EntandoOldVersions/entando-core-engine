@@ -7,12 +7,6 @@
 	
     <package name="core_do/User" namespace="/do/User" extends="entando-default">
 		
-		<!--
-		viewUsers
-		editUsers
-		editUserProfile
-		-->
-		
     	<action name="intro" class="userAction">
             <result type="tiles">admin.User.intro</result>
         	<interceptor-ref name="entandoDefaultStack">

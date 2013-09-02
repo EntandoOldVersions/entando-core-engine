@@ -23,7 +23,6 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 
-import org.entando.entando.aps.system.init.model.servdb.UserProfile;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
@@ -147,8 +146,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
         return userProfileTypes;
     }
     
-    public UserProfile getUserProfile() {
-        return (UserProfile) this.getApsEntity();
+    public IUserProfile getUserProfile() {
+        return (IUserProfile) this.getApsEntity();
     }
     
     public IUserProfile getUserProfile(String username) {

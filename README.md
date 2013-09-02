@@ -33,51 +33,42 @@ CREATE TABLE workcontentattributeroles
 
 ```sql
 
--- for "Address book" plugin - Start
-CREATE TABLE jpaddressbook_attroles
-(
-  contactkey character varying(40) NOT NULL,
-  attrname character varying(30) NOT NULL,
-  rolename character varying(50) NOT NULL,
-  CONSTRAINT jpaddressbook_attroles_fkey FOREIGN KEY (contactkey)
-      REFERENCES jpaddressbook_contacts (contactkey) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
--- for "Address book" plugin - End
-
+INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Editing');
+INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
 
 -- for "User Profile" plugin - Start
-CREATE TABLE jpuserprofile_attroles
-(
+ALTER TABLE jpuserprofile_authuserprofiles RENAME TO userprofile_authuserprofiles;
+ALTER TABLE jpuserprofile_profilesearch RENAME TO userprofile_profilesearch;
+ALTER TABLE jpuserprofile_attroles RENAME TO userprofile_attroles;
+-- OR
+CREATE TABLE userprofile_authuserprofiles (
+  username character varying(40) NOT NULL,
+  profiletype character varying(30) NOT NULL,
+  profilexml text NOT NULL,
+  publicprofile smallint NOT NULL,
+  CONSTRAINT userprofile_authuserprofiles_pkey PRIMARY KEY (username )
+);
+
+CREATE TABLE userprofile_profilesearch (
+  username character varying(40) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  textvalue character varying(255),
+  datevalue timestamp without time zone,
+  numvalue integer,
+  langcode character varying(3),
+  CONSTRAINT userprofile_search_fkey FOREIGN KEY (username)
+      REFERENCES userprofile_authuserprofiles (username);
+);
+
+CREATE TABLE userprofile_attroles (
   username character varying(40) NOT NULL,
   attrname character varying(30) NOT NULL,
   rolename character varying(50) NOT NULL,
-  CONSTRAINT jpuserprofile_attroles_fkey FOREIGN KEY (username)
-      REFERENCES jpuserprofile_authuserprofiles (username) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT userprofile_attroles_fkey FOREIGN KEY (username)
+      REFERENCES userprofile_authuserprofiles (username);
 );
--- for "User Profile" plugin - End
-
-
--- for "Web Dynamic Form" plugin - Start
-CREATE TABLE jpwebdynamicform_attroles
-(
-  messageid character varying(16) NOT NULL,
-  attrname character varying(30) NOT NULL,
-  rolename character varying(50) NOT NULL,
-  CONSTRAINT jpwebdynamicform_attroles_fkey FOREIGN KEY (messageid)
-      REFERENCES jpwebdynamicform_messages (messageid) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
-);
--- for "Web Dynamic Form" plugin - End
-
-
--- for "jpsurvey" plugin - Start
-ALTER TABLE jpsurvey ADD COLUMN checkusername smallint;
-update jpsurvey SET checkusername = 0;
-ALTER TABLE jpsurvey ALTER COLUMN checkusername SET NOT NULL;
--- for "jpsurvey" plugin - End
-
+-- for "User Profile" plugin - END
 
 ```
 
