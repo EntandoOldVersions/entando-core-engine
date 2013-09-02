@@ -58,9 +58,21 @@ removed iteration cycle (no list expected as it used to be in the original Strut
         </#if>
     </#if>
 -->
+
+<#-- added block for entando - start -->
+<#assign itemKey = stack.findValue('top')/>
+<#assign itemKeyStr = itemKey.toString() />
+<#assign itemValue = stack.findString('top')/>
+<#-- added block for entando - end -->
+
 <input type="radio"<#rt/>
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
+
+<#-- modified block for entando -->
+</#if> id="${parameters.id?html}"<#rt/>
+
+<#--
 </#if>
  id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
 <#if tag.contains(parameters.nameValue?default(''), itemKeyStr)>
@@ -69,6 +81,14 @@ removed iteration cycle (no list expected as it used to be in the original Strut
 <#if itemKey??>
  value="${itemKeyStr?html}"<#rt/>
 </#if>
+-->
+
+<#-- added block for entando - start -->
+<#if parameters.nameValue?exists>
+ value="${parameters.nameValue}"<#rt/>
+</#if>
+<#-- added block for entando - end -->
+
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
@@ -100,10 +120,24 @@ removed iteration cycle (no list expected as it used to be in the original Strut
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
+
+<#-- added block for entando - start -->
+<#if parameters.checked?? >
+ checked="checked"<#rt/>
+</#if>
+<#-- added block for entando - end -->
+
 /><#rt/>
+
+<#-- modified block for entando -->
+<label for="${parameters.id?html}"<#include "/${parameters.templateDir}/simple/css.ftl"/>><#rt/></label>
+
+<#--
 <label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/simple/css.ftl"/>><#rt/>
     ${itemValue}<#t/>
 </label>
+-->
+
 <#--
 </@s.iterator>
 -->
