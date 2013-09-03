@@ -39,10 +39,10 @@ public class TestLocaleStringFinderAction extends ApsAdminBaseTestCase {
 		LocaleStringFinderAction finderAction = (LocaleStringFinderAction) this.getAction();
 		
 		List<String> localeStrings = finderAction.getLocaleStrings();
-		assertEquals(3, localeStrings.size());
+		assertEquals(9, localeStrings.size());
 		
 		Map<String, ApsProperties> labels = finderAction.getLabels();
-		assertEquals(3, labels.size());
+		assertEquals(9, labels.size());
 		
 		String firstLocaleString = (String) localeStrings.get(0);
 		assertTrue(labels.containsKey(firstLocaleString));
@@ -55,7 +55,7 @@ public class TestLocaleStringFinderAction extends ApsAdminBaseTestCase {
 		String result = this.executeSearch("admin", "all", "");
 		assertEquals(Action.SUCCESS, result);
 		List<String> localeStrings = ((LocaleStringFinderAction) this.getAction()).getLocaleStrings();
-		assertEquals(3, localeStrings.size());
+		assertEquals(9, localeStrings.size());
 		
 		result = this.executeSearch("admin", "all", "XXXXXXX");
 		assertEquals(Action.SUCCESS, result);

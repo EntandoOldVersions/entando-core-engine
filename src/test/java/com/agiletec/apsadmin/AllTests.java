@@ -41,10 +41,10 @@ import com.agiletec.apsadmin.portal.specialshowlet.TestSimpleShowletConfigAction
 import com.agiletec.apsadmin.portal.specialshowlet.navigator.TestNavigatorShowletConfigAction;
 import com.agiletec.apsadmin.system.entity.TestEntityManagersAction;
 import com.agiletec.apsadmin.system.services.TestShortcutManager;
-import com.agiletec.apsadmin.user.TestAuthorityToUsersAction;
-import com.agiletec.apsadmin.user.TestUserAction;
+import org.entando.entando.apsadmin.user.TestAuthorityToUsersAction;
+import org.entando.entando.apsadmin.user.TestUserAction;
 import org.entando.entando.apsadmin.user.TestUserFinderAction;
-import com.agiletec.apsadmin.user.TestUserToAuthoritiesAction;
+import org.entando.entando.apsadmin.user.TestUserToAuthoritiesAction;
 import com.agiletec.apsadmin.user.group.TestGroupAction;
 import com.agiletec.apsadmin.user.group.TestGroupFinderAction;
 import com.agiletec.apsadmin.user.role.TestRoleAction;

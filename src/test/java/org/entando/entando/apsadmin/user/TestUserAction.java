@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
 
 import java.util.Collection;
 import java.util.Date;
@@ -31,7 +31,7 @@ import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.user.UserAction;
+import org.entando.entando.apsadmin.user.UserAction;
 import com.opensymphony.xwork2.Action;
 
 /**

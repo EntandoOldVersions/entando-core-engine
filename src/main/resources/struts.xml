@@ -197,7 +197,7 @@
 	<include file="com/agiletec/apsadmin/portal/specialshowlet/specialShowlet.xml" />
 	<include file="com/agiletec/apsadmin/portal/showletType.xml" />
 	
-	<include file="com/agiletec/apsadmin/user/user.xml" />
+	<include file="org/entando/entando/apsadmin/user/user.xml" />
 	<include file="org/entando/entando/apsadmin/user/userprofile.xml" />
 	<include file="com/agiletec/apsadmin/user/role/role.xml" />
 	<include file="com/agiletec/apsadmin/user/group/group.xml" />

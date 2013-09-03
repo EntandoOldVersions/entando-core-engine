@@ -25,16 +25,14 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.apsadmin.user.IAuthorityToUsersAction;
 
 /**
  * Classe action delegata alla gestione delle operazioni di associazione 
  * delle autorizzazioni agli utenti del sistema.
  * @author E.Mezzano - E.Santoboni
  */
-public class AuthorityToUsersAction extends UserProfileFinderAction implements IAuthorityToUsersAction {
+public class AuthorityToUsersAction extends UserProfileFinderAction {
 	
-	@Override
 	public String addUser() {
 		IApsAuthority auth = this.getApsAuthority();
 		try {
@@ -54,7 +52,6 @@ public class AuthorityToUsersAction extends UserProfileFinderAction implements I
 		return SUCCESS;
 	}
 	
-	@Override
 	public String removeUser() {
 		IApsAuthority auth = this.getApsAuthority();
 		try {
@@ -74,7 +71,6 @@ public class AuthorityToUsersAction extends UserProfileFinderAction implements I
 		return SUCCESS;
 	}
 	
-	@Override
 	public IApsAuthority getApsAuthority() {
 		String authName = this.getAuthName();
 		IApsAuthority authority = this.getAuthorizatorManager().getAuthority(authName);

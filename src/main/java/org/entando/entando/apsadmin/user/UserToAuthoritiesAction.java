@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
 
 import java.util.List;
 
@@ -37,9 +37,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * tra utenza e autorizzazioni.
  * @author E.Santoboni - E.Mezzano
  */
-public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthoritiesAction {
+public class UserToAuthoritiesAction extends BaseAction {
 	
-	@Override
 	public String edit() {
 		try {
 			String result = this.checkUser();
@@ -51,7 +50,7 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 			this.setUsername(user.getUsername());
 			UserAuthsFormBean userAuthsFormBean = new UserAuthsFormBean(username, roles, groups);
 			//FIXME MODIFICARE FUNZIONALITA' PER RIMUOVERE L'UTILIZZO DELLA SESSIONE
-			this.getRequest().getSession().setAttribute(IUserToAuthoritiesAction.CURRENT_FORM_USER_AUTHS_PARAM_NAME,  userAuthsFormBean);
+			this.getRequest().getSession().setAttribute(CURRENT_FORM_USER_AUTHS_PARAM_NAME,  userAuthsFormBean);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
@@ -59,7 +58,6 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 		return SUCCESS;
 	}
 	
-	@Override
 	public String save() {
 		try {
 			String result = this.checkUser();
@@ -96,7 +94,6 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 		return null;
 	}
 	
-	@Override
 	public String addGroup() {
 		try {
 			String groupName = this.getGroupName();
@@ -112,7 +109,6 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 		return SUCCESS;
 	}
 	
-	@Override
 	public String addRole() {
 		try {
 			String roleName = this.getRoleName();
@@ -128,7 +124,6 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 		return SUCCESS;
 	}
 	
-	@Override
 	public String removeGroup() {
 		try {
 			IApsAuthority group = this.getGroupManager().getGroup(this.getGroupName());
@@ -143,7 +138,6 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 		return SUCCESS;
 	}
 	
-	@Override
 	public String removeRole() {
 		try {
 			IApsAuthority role = this.getRoleManager().getRole(this.getRoleName());
@@ -175,7 +169,7 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 	}
 	
 	public UserAuthsFormBean getUserAuthsFormBean() {
-		return (UserAuthsFormBean) this.getRequest().getSession().getAttribute(IUserToAuthoritiesAction.CURRENT_FORM_USER_AUTHS_PARAM_NAME);
+		return (UserAuthsFormBean) this.getRequest().getSession().getAttribute(CURRENT_FORM_USER_AUTHS_PARAM_NAME);
 	}
 	
 	public List<Group> getGroups() {
@@ -248,5 +242,7 @@ public class UserToAuthoritiesAction extends BaseAction implements IUserToAuthor
 	
 	private static final String GROUP_SECTION = "groups";
 	private static final String ROLE_SECTION = "roles";
+	
+	public static final String CURRENT_FORM_USER_AUTHS_PARAM_NAME = "currentUserOnForm";
 	
 }

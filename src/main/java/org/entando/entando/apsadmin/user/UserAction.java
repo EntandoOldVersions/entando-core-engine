@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
 
 import java.util.Date;
 
@@ -34,7 +34,7 @@ import com.agiletec.apsadmin.system.BaseAction;
  * funzionalità apposite.
  * @author E.Santoboni
  */
-public class UserAction extends BaseAction implements IUserAction {
+public class UserAction extends BaseAction {
 	
 	@Override
 	public void validate() {
@@ -49,7 +49,7 @@ public class UserAction extends BaseAction implements IUserAction {
 					this.setUser(user);
 				}
 			} catch (Throwable t) {
-				throw new RuntimeException("Errore in estrazione utente " + this.getUsername(), t);
+				ApsSystemUtils.logThrowable(t, this, "validate", "Error validating user ");
 			}
 		}
 	}
@@ -65,18 +65,17 @@ public class UserAction extends BaseAction implements IUserAction {
 				String[] args = {username};
 				this.addFieldError("username", this.getText("error.user.duplicateUser", args));
 			}
-		} catch (Throwable e) {
-			ApsSystemUtils.getLogger().severe("Eccezione in controllo duplicazione UserName " + username);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, 
+					"checkDuplicatedUser", "Error checking duplicate user '" + username + "'");
 		}
 	}
 	
-	@Override
 	public String newUser() {
 		this.setStrutsAction(ApsAdminSystemConstants.ADD);
 		return SUCCESS;
 	}
 	
-	@Override
 	public String edit() {
 		this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		try {
@@ -84,7 +83,7 @@ public class UserAction extends BaseAction implements IUserAction {
 			if (null != result) return result;
 			String username = this.getUsername();
 			UserDetails user = this.getUserManager().getUser(username);
-			if (!user.isJapsUser()) {
+			if (!user.isEntandoUser()) {
 				this.addActionError(this.getText("error.user.notLocal"));
 				return "userList";
 			}
@@ -97,7 +96,6 @@ public class UserAction extends BaseAction implements IUserAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String save() {
 		User user = null;
 		try {
@@ -131,7 +129,6 @@ public class UserAction extends BaseAction implements IUserAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String trash() {
 		try {
 			String result = this.checkUserForDelete();
@@ -143,7 +140,6 @@ public class UserAction extends BaseAction implements IUserAction {
 		return SUCCESS;
 	}
 	
-	@Override
 	public String delete() {
 		try {
 			String result = this.checkUserForDelete();
@@ -168,8 +164,7 @@ public class UserAction extends BaseAction implements IUserAction {
 	 * @throws Throwable In caso di errore.
 	 */
 	protected boolean existsUser(String username) throws Throwable {
-		boolean exists = (username!=null && username.trim().length()>=0 && this.getUserManager().getUser(username)!=null);
-		return exists;
+		return (username != null && username.trim().length() >= 0 && null != this.getUserManager().getUser(username));
 	}
 	
 	/**
@@ -177,10 +172,15 @@ public class UserAction extends BaseAction implements IUserAction {
 	 * @param username Lo username dell'utente da verificare.
 	 * @return true in caso positivo, false nel caso contrario.
 	 * @throws Throwable In caso di errore.
+	 * @deprecated use isEntandoUser
 	 */
 	protected boolean isJapsUser(String username) throws Throwable {
+		return this.isEntandoUser(username);
+	}
+	
+	protected boolean isEntandoUser(String username) throws Throwable {
 		UserDetails user = this.getUserManager().getUser(username);
-		return (null != user && user.isJapsUser());
+		return (null != user && user.isEntandoUser());
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public class UserAction extends BaseAction implements IUserAction {
 			this.addActionError(this.getText("error.user.notExist"));
 			return "userList";
 		}
-		if (!this.isJapsUser(this.getUsername())) {
+		if (!this.isEntandoUser(this.getUsername())) {
 			this.addActionError(this.getText("error.user.notLocal"));
 			return "userList";
 		}
@@ -215,7 +215,7 @@ public class UserAction extends BaseAction implements IUserAction {
 		} else if (this.isCurrentUser()) {
 			this.addActionError(this.getText("error.user.cannotDeleteCurrentUser"));
 			return "userList";
-		} else if (!this.isJapsUser(this.getUsername())) {
+		} else if (!this.isEntandoUser(this.getUsername())) {
 			this.addActionError(this.getText("error.user.cannotDeleteNotLocalUser"));
 			return "userList";
 		}

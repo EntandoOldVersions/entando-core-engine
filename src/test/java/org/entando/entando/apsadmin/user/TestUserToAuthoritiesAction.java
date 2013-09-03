@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.user;
+package org.entando.entando.apsadmin.user;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,8 +31,8 @@ import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.apsadmin.user.UserAuthsFormBean;
-import com.agiletec.apsadmin.user.UserToAuthoritiesAction;
+import org.entando.entando.apsadmin.user.UserAuthsFormBean;
+import org.entando.entando.apsadmin.user.UserToAuthoritiesAction;
 import com.opensymphony.xwork2.Action;
 
 /**
