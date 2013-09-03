@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -23,8 +22,10 @@ import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
 import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
 
 /**
- * This class extends the org.apache.struts2.views.jsp.ui.TextFieldTag in order to handle auto-incrementing Tabindex 
+ * This class extends the org.apache.struts2.views.jsp.ui.TextFieldTag 
+ * in order to handle auto-incrementing Tabindex 
  * @author E.Santoboni
+ * @deprecated Use default struts2 s:textfield tag
  */
 public class TextFieldTag extends org.apache.struts2.views.jsp.ui.TextFieldTag implements IAutoIndexingTag {
 	

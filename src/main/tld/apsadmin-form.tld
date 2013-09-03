@@ -1,25 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	version="2.0"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
-
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
 	<description><![CDATA[Apsadmin Form Tag Library]]></description>
 	<display-name>Apsadmin Form Tag Library</display-name>
-	<tlib-version>2.2</tlib-version>
+	<tlib-version>2.3</tlib-version>
 	<short-name>wpsf</short-name>
 	<uri>/apsadmin-form</uri>
-
+	
 	<tag>
 		<description><![CDATA[Render a checkbox input field]]></description>
 		<name>checkbox</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.CheckboxTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -32,210 +23,6 @@
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
-			<name>accesskey</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The css class to use for element]]></description>
-			<name>cssClass</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The css style definitions for element to use]]></description>
-			<name>cssStyle</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
-			<name>disabled</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The actual HTML value attribute of the checkbox.]]></description>
-			<name>fieldValue</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
-			<name>key</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
-			<name>label</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Define label position of form element (top/left)]]></description>
-			<name>labelposition</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The name to set for element]]></description>
-			<name>name</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
-			<name>onblur</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
-			<name>onchange</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
-			<name>onclick</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
-			<name>ondblclick</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
-			<name>onfocus</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
-			<name>onkeydown</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
-			<name>onkeypress</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
-			<name>onkeyup</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
-			<name>onmousedown</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
-			<name>onmousemove</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
-			<name>onmouseout</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
-			<name>onmouseover</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
-			<name>onmouseup</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
-			<name>onselect</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The template (other than default) to use for rendering the element]]></description>
-			<name>template</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The template directory.]]></description>
-			<name>templateDir</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
-			<name>theme</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the html title attribute on rendered html element]]></description>
-			<name>title</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the tooltip of this particular component]]></description>
-			<name>tooltip</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
-			<name>tooltipConfig</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Preset the value of input element.]]></description>
-			<name>value</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<description><![CDATA[Render a hidden input field]]></description>
-		<name>hidden</name>
-		<tag-class>com.agiletec.apsadmin.tags.form.HiddenTag</tag-class>
-		<body-content>JSP</body-content>
 		<attribute>
 			<description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
 			<name>accesskey</name>
@@ -269,6 +56,18 @@
 		<attribute>
 			<description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
 			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The actual HTML value attribute of the checkbox.]]></description>
+			<name>fieldValue</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -400,13 +199,13 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -447,7 +246,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
@@ -479,16 +278,263 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render an HTML input tag of type password]]></description>
-		<name>password</name>
-		<tag-class>com.agiletec.apsadmin.tags.form.PasswordTag</tag-class>
+		<description><![CDATA[DEPRECATED, use default s:hidden struts2 tag. Render a hidden input field.]]></description>
+		<name>hidden</name>
+		<tag-class>com.agiletec.apsadmin.tags.form.HiddenTag</tag-class>
 		<body-content>JSP</body-content>
+		<attribute>
+			<description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
+			<name>accesskey</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css class to use for element]]></description>
+			<name>cssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css style definitions for element to use]]></description>
+			<name>cssStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
+			<name>disabled</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[HTML id attribute]]></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
+			<name>key</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
+			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Define label position of form element (top/left)]]></description>
+			<name>labelposition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name to set for element]]></description>
+			<name>name</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
+			<name>onblur</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
+			<name>onchange</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
+			<name>onclick</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
+			<name>ondblclick</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
+			<name>onfocus</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
+			<name>onkeydown</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
+			<name>onkeypress</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
+			<name>onkeyup</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
+			<name>onmousedown</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
+			<name>onmousemove</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
+			<name>onmouseout</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
+			<name>onmouseover</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
+			<name>onmouseup</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
+			<name>onselect</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
+			<name>requiredLabel</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Define required position of required form element (left|right)]]></description>
+			<name>requiredPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
 			<name>tabindex</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description><![CDATA[The template (other than default) to use for rendering the element]]></description>
+			<name>template</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The template directory.]]></description>
+			<name>templateDir</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
+			<name>theme</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html title attribute on rendered html element]]></description>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the tooltip of this particular component]]></description>
+			<name>tooltip</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
+			<name>tooltipConfig</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Preset the value of input element.]]></description>
+			<name>value</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
+	</tag>
+	<tag>
+		<description><![CDATA[DEPRECATED, use default s:password struts2 tag. Render an HTML input tag of type password.]]></description>
+		<name>password</name>
+		<tag-class>com.agiletec.apsadmin.tags.form.PasswordTag</tag-class>
+		<body-content>JSP</body-content>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -514,6 +560,18 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[The css style definitions for element to use]]></description>
 			<name>cssStyle</name>
 			<required>false</required>
@@ -526,8 +584,20 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -538,8 +608,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
 			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -659,13 +735,13 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -718,8 +794,32 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Specifies the html5 type element to display. e.g. text, email, url]]></description>
+			<name>type</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -729,18 +829,13 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render a HTML radio (map) input field]]></description>
+		<description><![CDATA[Renders a radio button input field]]></description>
 		<name>radio</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.RadioTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -790,6 +885,12 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
 			<required>false</required>
@@ -825,6 +926,44 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<!--
+		<attribute>
+			<description><![CDATA[Iterable source to populate from. If the list is a Map (key, value), the Map key will become the option 'value' parameter and the Map value will become the option body.]]></description>
+			<name>list</name>
+			<required>true</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get css class from]]></description>
+			<name>listCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get css style from]]></description>
+			<name>listCssStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[ Property of list objects to get field value from]]></description>
+			<name>listKey</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get title from]]></description>
+			<name>listTitle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get field content from]]></description>
+			<name>listValue</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		-->
 		<attribute>
 			<description><![CDATA[The name to set for element]]></description>
 			<name>name</name>
@@ -917,13 +1056,13 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -964,7 +1103,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
@@ -1008,16 +1147,10 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render a select element]]></description>
+		<description><![CDATA[DEPRECATED, use default s:select struts2 tag. Render a select element.]]></description>
 		<name>select</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.SelectTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -1043,6 +1176,18 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[The css style definitions for element to use]]></description>
 			<name>cssStyle</name>
 			<required>false</required>
@@ -1061,6 +1206,12 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[ Key for first item in list. Must not be empty! '-1' and '' is correct, '' is bad.]]></description>
 			<name>headerKey</name>
 			<required>false</required>
@@ -1073,8 +1224,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1085,8 +1242,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
 			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1103,8 +1266,26 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[Property of list objects to get css class from]]></description>
+			<name>listCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get css style from]]></description>
+			<name>listCssStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[ Property of list objects to get field value from]]></description>
 			<name>listKey</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Property of list objects to get title from]]></description>
+			<name>listTitle</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1115,7 +1296,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[ Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array (of appropriate types) via the value attribute. Passing a Collection may work too? Haven't tested this.]]></description>
+			<description><![CDATA[ Creates a multiple select. The tag will pre-select multiple values if the values are passed as an Array or a Collection(of appropriate types) via the value attribute. If one of the keys equals one of the values in the Collection or Array it wil be selected]]></description>
 			<name>multiple</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
@@ -1212,13 +1393,13 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1265,8 +1446,26 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1276,18 +1475,13 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render a submit button]]></description>
+		<description><![CDATA[DEPRECATED, use default s:submit struts2 tag. Render a submit button.]]></description>
 		<name>submit</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.SubmitTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -1325,6 +1519,18 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[The css style definitions for element to use]]></description>
 			<name>cssStyle</name>
 			<required>false</required>
@@ -1337,50 +1543,20 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[The text to display to the user if the is an error fetching the content]]></description>
-			<name>errorText</name>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Javascript code in the fetched content will be executed]]></description>
-			<name>executeScripts</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Function name used to filter the fields of the form.]]></description>
-			<name>formFilter</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Form id whose fields will be serialized and passed as parameters]]></description>
-			<name>formId</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Javascript function name that will make the request]]></description>
-			<name>handler</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The URL to call to obtain the content. Note: If used with ajax context, the value must be set as an url tag value.]]></description>
-			<name>href</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set indicator]]></description>
-			<name>indicator</name>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1391,26 +1567,20 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
 			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define label position of form element (top/left)]]></description>
 			<name>labelposition</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Topic that will trigger the remote call]]></description>
-			<name>listenTopics</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Text to be shown while content is being fetched]]></description>
-			<name>loadingText</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1423,18 +1593,6 @@
 		<attribute>
 			<description><![CDATA[The name to set for element]]></description>
 			<name>name</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Topics that will published when the remote call completes]]></description>
-			<name>notifyTopics</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Deprecated. Use 'notifyTopics'. Javascript code execute after reload]]></description>
-			<name>onLoadJS</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1523,32 +1681,20 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Deprecated. Use 'notifyTopics'. Javascript code execute before reload]]></description>
-			<name>preInvokeJS</name>
+			<description><![CDATA[Set template to use for opening the rendered html.]]></description>
+			<name>openTemplate</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Set whether errors will be shown or not]]></description>
-			<name>showErrorTransportText</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Show loading text on targets]]></description>
-			<name>showLoadingText</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1565,12 +1711,6 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Comma delimited list of ids of the elements whose content will be updated]]></description>
-			<name>targets</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
 			<description><![CDATA[The template (other than default) to use for rendering the element]]></description>
 			<name>template</name>
 			<required>false</required>
@@ -1582,8 +1722,14 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+	</tag>
+	<tag>
+		<description><![CDATA[Render a submit button]]></description>
+		<name>submit</name>
+		<tag-class>com.agiletec.apsadmin.tags.form.SubmitTag</tag-class>
+		<body-content>JSP</body-content>
 		<attribute>
-			<description><![CDATA[The theme to use for the element. <b>This tag will usually use the ajax theme.</b>]]></description>
+			<description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
 			<name>theme</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
@@ -1601,8 +1747,26 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1618,18 +1782,13 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render HTML textarea tag.]]></description>
+		<description><![CDATA[DEPRECATED, use default s:textarea struts2 tag. Render HTML textarea tag.]]></description>
 		<name>textarea</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.TextareaTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -1661,6 +1820,18 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
 			<description><![CDATA[The css style definitions for element to use]]></description>
 			<name>cssStyle</name>
 			<required>false</required>
@@ -1673,8 +1844,20 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1685,8 +1868,14 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
 			<name>label</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1794,13 +1983,13 @@
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1847,8 +2036,26 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
@@ -1864,18 +2071,13 @@
 			<required>false</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[Render an HTML input field of type text]]></description>
+		<description><![CDATA[DEPRECATED, use default s:textfield struts2 tag. Render an HTML input field of type text.]]></description>
 		<name>textfield</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.TextFieldTag</tag-class>
 		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
-			<name>tabindex</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
 		<attribute>
 			<description><![CDATA[Adds HTML tabindex auto increment. The value of the tabindex is automatic. Default value false]]></description>
 			<name>useTabindexAutoIncrement</name>
@@ -1892,218 +2094,279 @@
 			<description><![CDATA[Set the html accesskey attribute on rendered html element]]></description>
 			<name>accesskey</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The css class to use for element]]></description>
 			<name>cssClass</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[The css style definitions for element ro use]]></description>
+			<description><![CDATA[The css error class to use for element]]></description>
+			<name>cssErrorClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css error style definitions for element to use]]></description>
+			<name>cssErrorStyle</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The css style definitions for element to use]]></description>
 			<name>cssStyle</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html disabled attribute on rendered html element]]></description>
 			<name>disabled</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[id for referencing element. For UI and form tags it will be used as HTML id attribute]]></description>
+			<description><![CDATA[Define error position of form element (top|bottom)]]></description>
+			<name>errorPosition</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
+			<name>javascriptTooltip</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the key (name, value, label) for this particular component]]></description>
 			<name>key</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Label expression used for rendering a element specific label]]></description>
+			<description><![CDATA[Label expression used for rendering an element specific label]]></description>
 			<name>label</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[String that will be appended to the label]]></description>
+			<name>labelSeparator</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define label position of form element (top/left)]]></description>
 			<name>labelposition</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Deprecated. Use maxlength instead.]]></description>
 			<name>maxLength</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[HTML maxlength attribute]]></description>
 			<name>maxlength</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The name to set for element]]></description>
 			<name>name</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[ Set the html onblur attribute on rendered html element]]></description>
 			<name>onblur</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onchange attribute on rendered html element]]></description>
 			<name>onchange</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onclick attribute on rendered html element]]></description>
 			<name>onclick</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html ondblclick attribute on rendered html element]]></description>
 			<name>ondblclick</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onfocus attribute on rendered html element]]></description>
 			<name>onfocus</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onkeydown attribute on rendered html element]]></description>
 			<name>onkeydown</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onkeypress attribute on rendered html element]]></description>
 			<name>onkeypress</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onkeyup attribute on rendered html element]]></description>
 			<name>onkeyup</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onmousedown attribute on rendered html element]]></description>
 			<name>onmousedown</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onmousemove attribute on rendered html element]]></description>
 			<name>onmousemove</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onmouseout attribute on rendered html element]]></description>
 			<name>onmouseout</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onmouseover attribute on rendered html element]]></description>
 			<name>onmouseover</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onmouseup attribute on rendered html element]]></description>
 			<name>onmouseup</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html onselect attribute on rendered html element]]></description>
 			<name>onselect</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Whether the input is readonly]]></description>
 			<name>readonly</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[If set to true, the rendered element will indicate that input is required]]></description>
-			<name>required</name>
+			<name>requiredLabel</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Define required position of required form element (left|right)]]></description>
-			<name>requiredposition</name>
+			<name>requiredPosition</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[HTML size attribute]]></description>
 			<name>size</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Set the html tabindex attribute on rendered html element]]></description>
+			<name>tabindex</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The template (other than default) to use for rendering the element]]></description>
 			<name>template</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The template directory.]]></description>
 			<name>templateDir</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The theme (other than default) to use for rendering the element]]></description>
 			<name>theme</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the html title attribute on rendered html element]]></description>
 			<name>title</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Set the tooltip of this particular component]]></description>
 			<name>tooltip</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Set the tooltip configuration]]></description>
+			<description><![CDATA[Deprecated. Use individual tooltip configuration attributes instead.]]></description>
 			<name>tooltipConfig</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[CSS class applied to JavaScrip tooltips]]></description>
+			<name>tooltipCssClass</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Delay in milliseconds, before showing JavaScript tooltips ]]></description>
+			<name>tooltipDelay</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Icon path used for image that will have the tooltip]]></description>
+			<name>tooltipIconPath</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Specifies the html5 type element to display. e.g. text, email, url]]></description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Preset the value of input element.]]></description>
 			<name>value</name>
 			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
+			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 
 </taglib>

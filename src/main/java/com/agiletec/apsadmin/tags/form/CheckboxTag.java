@@ -23,9 +23,10 @@ import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
 import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
 
 /**
- * Estensione del tag CheckboxTag della libreria di Struts 
- * per la gestione del Tabindex autoincrementante.
+ * This class extends the org.apache.struts2.views.jsp.ui.CheckboxTag 
+ * in order to handle auto-incrementing Tabindex 
  * @author E.Santoboni
+ * @deprecated Use default struts2 s:checkbox tag
  */
 public class CheckboxTag extends org.apache.struts2.views.jsp.ui.CheckboxTag implements IAutoIndexingTag {
 	

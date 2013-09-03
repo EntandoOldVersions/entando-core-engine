@@ -25,9 +25,9 @@ import org.apache.struts2.components.Component;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * 
- * @version 1.0
+ * This class extends the org.apache.struts2.views.jsp.ui.HiddenTag 
  * @author M.Minnai
+ * @deprecated Use default struts2 s:hidden tag
  */
 public class HiddenTag extends org.apache.struts2.views.jsp.ui.HiddenTag {
 	

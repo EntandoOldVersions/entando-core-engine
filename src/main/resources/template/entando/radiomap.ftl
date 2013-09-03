@@ -1,6 +1,9 @@
+<#-- 
+removed iteration cycle (no list expected as it used to be in the original Struts2 template) added 'checked' 
+-->
 <#--
 /*
- * $Id: radiomap.ftl 720258 2008-11-24 19:05:16Z musachy $
+ * $Id: radiomap.ftl 1379561 2012-08-31 19:40:40Z lukaszlenart $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -20,21 +23,51 @@
  * under the License.
  */
 -->
-
-<#-- 
-         removed iteration cycle (no list expected as it used to be in the original Struts2 template)
-     added 'checked' 
+<#--
+<@s.iterator value="parameters.list">
+    <#if parameters.listKey??>
+        <#assign itemKey = stack.findValue(parameters.listKey)/>
+    <#else>
+        <#assign itemKey = stack.findValue('top')/>
+    </#if>
+    <#assign itemKeyStr = itemKey.toString() />
+    <#if parameters.listValue??>
+        <#assign itemValue = stack.findString(parameters.listValue)/>
+    <#else>
+        <#assign itemValue = stack.findString('top')/>
+    </#if>
+    <#if parameters.listCssClass??>
+        <#if stack.findString(parameters.listCssClass)??>
+          <#assign itemCssClass= stack.findString(parameters.listCssClass)/>
+        <#else>
+          <#assign itemCssClass = ''/>
+        </#if>
+    </#if>
+    <#if parameters.listCssStyle??>
+        <#if stack.findString(parameters.listCssStyle)??>
+          <#assign itemCssStyle= stack.findString(parameters.listCssStyle)/>
+        <#else>
+          <#assign itemCssStyle = ''/>
+        </#if>
+    </#if>
+    <#if parameters.listTitle??>
+        <#if stack.findString(parameters.listTitle)??>
+          <#assign itemTitle= stack.findString(parameters.listTitle)/>
+        <#else>
+          <#assign itemTitle = ''/>
+        </#if>
+    </#if>
 -->
-
-<input type="radio" <#rt/>
+<input type="radio"<#rt/>
 <#if parameters.name??>
  name="${parameters.name?html}"<#rt/>
 </#if>
-<#if parameters.id?exists>
- id="${parameters.id?html}"<#rt/>
+ id="${parameters.id?html}${itemKeyStr?html}"<#rt/>
+<#if tag.contains(parameters.nameValue?default(''), itemKeyStr)>
+ checked="checked"<#rt/>
 </#if>
-<#if parameters.nameValue?exists>
- value="${parameters.nameValue}"<#rt/>
+<#if itemKey??>
+ value="${itemKeyStr?html}"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
@@ -42,23 +75,35 @@
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.cssClass??>
+<#if itemCssClass?if_exists != "">
+ class="${itemCssClass?html}"<#rt/>
+<#else>
+    <#if parameters.cssClass??>
  class="${parameters.cssClass?html}"<#rt/>
+    </#if>
 </#if>
-<#if parameters.cssStyle??>
+<#if itemCssStyle?if_exists != "">
+ style="${itemCssStyle?html}"<#rt/>
+<#else>
+    <#if parameters.cssStyle??>
  style="${parameters.cssStyle?html}"<#rt/>
+    </#if>
 </#if>
-<#if parameters.title??>
+<#if itemTitle?if_exists != "">
+ title="${itemTitle?html}"<#rt/>
+<#else>
+    <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
+    </#if>
 </#if>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
-<#if parameters.checked?? >
- checked="checked"<#rt/>
-</#if>
+<#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 /><#rt/>
-<#if parameters.label?exists>
-        <label for="${parameters.id?html}"><#rt/>
-            ${parameters.label}<#t/>
-        </label>
-</#if>
+<label for="${parameters.id?html}${itemKeyStr?html}"<#include "/${parameters.templateDir}/simple/css.ftl"/>><#rt/>
+    ${itemValue}<#t/>
+</label>
+<#--
+</@s.iterator>
+-->
