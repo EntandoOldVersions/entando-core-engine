@@ -21,7 +21,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
 
 /**
  * Interfaccia base per i Servizi gestori della risoluzione dei link sinbolici.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public interface ILinkResolverManager {
 	

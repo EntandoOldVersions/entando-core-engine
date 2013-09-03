@@ -31,7 +31,7 @@ import com.agiletec.aps.system.services.controller.control.ControlServiceInterfa
  * ControlServiceInterface).<br>
  * Il controller costituisce la logica della servlet di control-dispatching.
  * Per ulteriori dettagli vedere il metodo service().
- * @author 
+ * @author M.Diana
  */
 public class ControllerManager extends AbstractService {
 	

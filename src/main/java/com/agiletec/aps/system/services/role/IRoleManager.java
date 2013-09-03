@@ -23,7 +23,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Interfaccia base per il servizio di gestione dei ruoli.
- * @author 
+ * @author E.Santoboni
  */
 public interface IRoleManager {
 

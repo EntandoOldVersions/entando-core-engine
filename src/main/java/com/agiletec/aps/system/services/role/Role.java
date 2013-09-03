@@ -26,7 +26,7 @@ import com.agiletec.aps.system.services.authorization.IApsAuthority;
 /**
  * Rappresentazione di un ruolo per gli utenti del portale. 
  * Il ruolo contiene i permessi che di cui disporrà l'utente.
- * @author
+ * @author M.Diana - E.Santoboni
  */
 public class Role implements IApsAuthority {
 	

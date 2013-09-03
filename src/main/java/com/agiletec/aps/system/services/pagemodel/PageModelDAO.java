@@ -30,7 +30,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Data Access Object per i modelli di pagina (PageModel)0
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 	
@@ -38,6 +38,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 	 * Carica e restituisce la mappa dei modelli di pagina.
 	 * @return La mappa dei modelli.
 	 */
+	@Override
 	public Map<String, PageModel> loadModels() {
 		Connection conn = null;
 		Statement stat = null;

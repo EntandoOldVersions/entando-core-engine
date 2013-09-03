@@ -26,10 +26,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Servizio di gestione dei modelli di pagina.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class PageModelManager extends AbstractService implements IPageModelManager {
 
+	@Override
 	public void init() throws Exception {
 		this.loadPageModels();
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized " 
@@ -49,6 +50,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 	 * @param name Il nome del modelo di pagina
 	 * @return Il modello di pagina richiesto
 	 */
+	@Override
 	public PageModel getPageModel(String name) {
 		return (PageModel) _models.get(name);
 	}
@@ -57,6 +59,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 	 * Restituisce la Collection completa di modelli.
 	 * @return la collection completa dei modelli disponibili in oggetti PageModel.
 	 */
+	@Override
 	public Collection<PageModel> getPageModels() {
 		return _models.values();
 	}

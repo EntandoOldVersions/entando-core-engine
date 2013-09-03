@@ -33,7 +33,7 @@ import com.agiletec.aps.system.RequestContext;
  * alle classi di livello superiore inserendole nel contesto di richiesta
  * (RequestContext). Le classi implementanti devono esporre i soli 
  * metodi previsti nell'interfaccia.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public interface ControlServiceInterface extends InitializingBean, Serializable {
 	

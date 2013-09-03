@@ -26,7 +26,7 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 
 /**
  * This is the representation of a portal page
- * @author
+ * @author M.Diana - E.Santoboni
  */
 public class Page extends TreeNode implements IPage {
 	

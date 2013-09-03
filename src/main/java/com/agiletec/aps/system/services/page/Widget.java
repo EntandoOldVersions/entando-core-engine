@@ -25,7 +25,7 @@ import com.agiletec.aps.util.ApsProperties;
 
 /**
  * This class represent an instance of a showlet configured in a page frame. 
- * @author
+ * @author M.Diana - E.Santoboni
  */
 public class Widget implements Serializable {
 

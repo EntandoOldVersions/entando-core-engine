@@ -32,8 +32,8 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Data Access Object per i tipi di showlet (WidgetType).
- * @author 
+ * Data Access Object per i tipi di widget (WidgetType).
+ * @author M.Diana - E.Santoboni
  */
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	

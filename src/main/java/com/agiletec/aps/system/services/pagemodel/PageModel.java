@@ -27,7 +27,7 @@ import com.agiletec.aps.system.services.page.Widget;
  * vera definizione del modello è in forma di jsp. Si assume che la jsp
  * associata abbia nome identico al codice del modello. I "frames" sono
  * le porzioni di pagina che possono ospitare una "showlet".
- * @author
+ * @author M.Diana
  */
 public class PageModel implements Serializable {
 	

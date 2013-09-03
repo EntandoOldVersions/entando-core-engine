@@ -23,7 +23,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Interfaccia base per i servizi di gestione delle lingue.
- * @author 
+ * @author E.Santoboni
  */
 public interface ILangManager {
 	

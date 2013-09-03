@@ -36,7 +36,7 @@ import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.IContent
  * Scopo di questa classe è l'individuazione in un testo di stringhe rappresentanti
  * link simbolici, e la loro traduzione e sostituzione nel testo con i 
  * corrispondenti URL.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class LinkResolverManager extends AbstractService implements ILinkResolverManager {
 	

@@ -33,18 +33,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**
- * Classe di supporto all'interpretazione dell'XML 
- * che rappresenta la configurazione di un tipo di showlet.
+ * Classe di supporto all'interpretazione dell'XML che rappresenta la configurazione di un tipo di widget.
  * @author E.Santoboni
- * <config>
-	<parameter name="contentId">
-		Content ID
-	</parameter>
-	<parameter name="modelId">
-		Content Model ID
-	</parameter>
-	<action name="viewerConfig"/>
-</config>
  */
 public class WidgetTypeDOM {
 	

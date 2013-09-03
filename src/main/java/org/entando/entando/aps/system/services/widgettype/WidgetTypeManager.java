@@ -36,8 +36,8 @@ import com.agiletec.aps.util.ApsProperties;
 /**
  * Servizio di gestione dei tipi di showlet (WidgetType) definiti
  * nel sistema. (Questo servizio non riguarda la configurazione delle
- * istanze di showlet nelle pagine)
- * @author 
+ * istanze di widget nelle pagine)
+ * @author M.Diana - E.Santoboni
  */
 public class WidgetTypeManager extends AbstractService 
 		implements IWidgetTypeManager, LangsChangedObserver, GroupUtilizer {

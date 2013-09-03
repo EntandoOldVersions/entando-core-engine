@@ -23,7 +23,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 /**
  * Interfaccia base per l'implementazione dei servizi 
  * di renderizzazione contenuti.
- * @author
+ * @author E.Santoboni
  */
 public interface IContentRenderer extends IEntityRenderer {
 	

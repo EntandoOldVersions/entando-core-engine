@@ -47,7 +47,7 @@ import com.agiletec.aps.system.services.page.PageUtils;
  * sotto forma di extra parametri, con i nomi "currentLang" e "currentPage",
  * ed il metodo service restituisce Controller.CONTINUE.
  * Se la richiesta non è valida, viene restituito lo stato di errore.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class RequestValidator extends AbstractControlService {
 	

@@ -31,7 +31,7 @@ import com.agiletec.aps.system.services.page.IPage;
  * Rappresenta un URL ad una pagina del sistema. Oggetti di questa classe
  * devono avere un ciclo di vita limitato ad una richiesta; non devono
  * essere memorizzati in modo permanente.
- * @author
+ * @author M.Diana
  */
 public class PageURL {
 	

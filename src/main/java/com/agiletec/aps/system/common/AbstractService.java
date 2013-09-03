@@ -29,7 +29,7 @@ import com.agiletec.aps.system.common.notify.INotifyManager;
  * Base class for implementation of the System Services.
  * Services are instantiated and initialized to the system boot 
  * or when prompted for the re-loading the entire system.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractService 
 		implements IManager, BeanNameAware, BeanFactoryAware {

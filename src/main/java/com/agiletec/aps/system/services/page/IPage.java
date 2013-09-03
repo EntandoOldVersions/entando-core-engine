@@ -24,7 +24,7 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 
 /**
  * This class describes a pages of the portal.
- * @author
+ * @author E.Santoboni
  */
 public interface IPage extends ITreeNode {
 

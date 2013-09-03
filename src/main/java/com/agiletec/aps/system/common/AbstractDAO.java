@@ -30,7 +30,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Classe contenente alcuni metodi di utilita per i DAO.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractDAO implements Serializable {
 	

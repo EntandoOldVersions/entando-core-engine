@@ -28,7 +28,7 @@ import com.agiletec.aps.util.ApsProperties;
  * pagina, in uno dei frames specificati dal modello di pagina.
  * A questa rappresentazione corrisponde una jsp che implementa
  * effettivamente l'oggetto visuale.
- * @author
+ * @author M.Diana - E.Santoboni
  */
 public class WidgetType implements Serializable {
 	

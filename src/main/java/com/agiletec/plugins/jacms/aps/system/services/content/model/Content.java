@@ -17,8 +17,6 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
-import java.io.Serializable;
-
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +34,7 @@ import java.io.Serializable;
  * dei contenuti; in tutte le altre occasioni un contenuto deve essere istanziato 
  * mediante richiesta al servizio, che lo otterrà mediante clonazione del prototipo
  * precedentemente costruito.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class Content extends ApsEntity implements Serializable {
 	

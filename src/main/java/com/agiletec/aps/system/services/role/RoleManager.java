@@ -31,10 +31,11 @@ import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthority
 
 /**
  * Servizio di gestione dei ruoli.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class RoleManager extends AbstractApsAutorityManager implements IRoleManager {
-
+	
+	@Override
 	public void init() throws Exception {
 		this.loadAuthConfiguration();
 		ApsSystemUtils.getLogger().config(
@@ -55,6 +56,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * Restituisce la lista dei ruoli esistenti.
 	 * @return La lista dei ruoli esistenti.
 	 */
+	@Override
 	public List<Role> getRoles() {
 		List<Role> roles = new ArrayList<Role>(this._roles.values());
 		return roles;
@@ -65,6 +67,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param roleName Il nome del ruolo richesto.
 	 * @return Il ruolo cercato.
 	 */
+	@Override
 	public Role getRole(String roleName) {
 		return (Role) this._roles.get(roleName);
 	}
@@ -74,6 +77,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param role Oggetto di tipo Role relativo al ruolo da rimuovere.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void removeRole(Role role) throws ApsSystemException {
 		try {
 			this.getRoleDAO().deleteRole(role);
@@ -89,6 +93,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param role Il ruolo da aggiornare.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void updateRole(Role role) throws ApsSystemException {
 		try {
 			this.getRoleDAO().updateRole(role);
@@ -105,6 +110,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param role Oggetto di tipo Role relativo al ruolo da aggiungere.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void addRole(Role role) throws ApsSystemException {
 		try {
 			this.getRoleDAO().addRole(role);
@@ -119,6 +125,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * Restituisce la lista ordinata (secondo il nome) dei permessi di autorizzazione.
 	 * @return La lista ordinata dei permessi
 	 */
+	@Override
 	public List<Permission> getPermissions() {
 		List<Permission> permissions = new ArrayList<Permission>(this._permissions.values());
 		Collections.sort(permissions);
@@ -135,6 +142,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param permissionName Il permesso da rimuovere dal ruolo.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void removePermission(String permissionName) throws ApsSystemException {
 		try {
 			this.getPermissionDAO().deletePermission(permissionName);
@@ -155,6 +163,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param permission Il permesso da aggiornare nel db.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void updatePermission(Permission permission) throws ApsSystemException {
 		try {
 			this.getPermissionDAO().updatePermission(permission);
@@ -170,6 +179,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @param permission Il permesso da aggiungere nel db.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public void addPermission(Permission permission) throws ApsSystemException {
 		try {
 			this.getPermissionDAO().addPermission(permission);
@@ -186,6 +196,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	 * @return Il numero di utenti che utilizzano quel ruolo.
 	 * @throws ApsSystemException in caso di errore nell'accesso al db.
 	 */
+	@Override
 	public int getRoleUses(Role role) throws ApsSystemException {
 		int number = 0;
 		try {
@@ -196,6 +207,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 		return number;
 	}
 
+	@Override
 	public List<Role> getRolesWithPermission(String permissionName) {
 		List<Role> rolesWithPerm = new ArrayList<Role>();
 		Iterator<Role> iter = this.getRoles().iterator();

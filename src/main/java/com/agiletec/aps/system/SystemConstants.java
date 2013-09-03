@@ -19,7 +19,7 @@ package com.agiletec.aps.system;
 
 /**
  * Interfaccia con le principali costanti di sistema.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public interface SystemConstants {
     

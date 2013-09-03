@@ -35,7 +35,7 @@ import java.net.URLDecoder;
 
 /**
  * Sottoservizio di controllo esecutore dell'autenticazione.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class Authenticator extends AbstractControlService {
     

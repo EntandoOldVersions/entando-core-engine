@@ -34,7 +34,7 @@ import org.springframework.beans.factory.BeanFactory;
  * Rappresenta un contenuto nella forma utilizzabile al servizio di renderizzazione. 
  * La classe estende HashMap per un agevole accesso agli attributi che
  * popolano il contenuto.
- * @author
+ * @author M.Diana - E.Santoboni
  */
 public class ContentWrapper extends EntityWrapper {
 	

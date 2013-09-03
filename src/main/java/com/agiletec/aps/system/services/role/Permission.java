@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 /**
  * Rappresentazione di un permesso, per il sistema di autorizzazione.
- * @author
+ * @author M.Diana
  */
 public class Permission implements Comparable, Serializable {
 	

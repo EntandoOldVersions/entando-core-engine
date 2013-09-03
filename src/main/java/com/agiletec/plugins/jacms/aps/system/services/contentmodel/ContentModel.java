@@ -29,7 +29,7 @@ import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
 /**
  * Rappresenta un modello di contenuto. 
  * L'attributo contentShape rappresenta come il contenuto è formattato (il template di velocity).
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 @XmlRootElement(name = "contentModel")
 @XmlType(propOrder = {"id", "contentType", "description", "contentShape", "stylesheet"})

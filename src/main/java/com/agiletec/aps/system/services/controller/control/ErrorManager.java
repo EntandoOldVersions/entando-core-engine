@@ -30,7 +30,7 @@ import com.agiletec.aps.system.services.url.PageURL;
 
 /**
  * Implementazione del sottoservizio di controllo che gestisce gli errori
- * @author 
+ * @author M.Diana
  */
 public class ErrorManager extends AbstractControlService {
 	

@@ -34,7 +34,7 @@ import com.agiletec.aps.util.FileTextReader;
 
 /**
  * Servizio di gestione delle lingue.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public class LangManager extends AbstractService implements ILangManager {
 	

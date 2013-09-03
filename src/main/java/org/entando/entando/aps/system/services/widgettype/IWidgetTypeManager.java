@@ -25,7 +25,7 @@ import com.agiletec.aps.util.ApsProperties;
 /**
  * Interfaccia base per i Servizi gestiori dei tipi di 
  * showlet (WidgetType) definiti nel sistema.
- * @author 
+ * @author E.Santoboni
  */
 public interface IWidgetTypeManager {
 	

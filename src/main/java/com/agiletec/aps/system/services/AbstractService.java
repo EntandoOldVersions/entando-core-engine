@@ -21,7 +21,7 @@ package com.agiletec.aps.system.services;
  * E' alla base dell'implementazione dei Servizi.<br>
  * I servizi sono istanziati e inizializzati all'avvio del sistema o quando 
  * viene richiesto il ri-caricamento di tutto il sistema.
- * @author 
+ * @author M.Diana - E.Santoboni
  * @deprecated use {@link com.agiletec.aps.system.common.AbstractService}
  */
 public abstract class AbstractService extends com.agiletec.aps.system.common.AbstractService {

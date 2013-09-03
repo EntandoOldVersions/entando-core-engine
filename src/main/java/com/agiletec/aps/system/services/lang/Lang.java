@@ -19,7 +19,7 @@ package com.agiletec.aps.system.services.lang;
 
 /**
  * Rappresentazione di una lingua
- * @author
+ * @author M.Diana
  */
 public class Lang implements Comparable {
 	

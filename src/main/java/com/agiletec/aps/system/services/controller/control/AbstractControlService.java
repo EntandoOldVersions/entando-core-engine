@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Classe di utilità che implementa un metodo per impostare una redirezione ed
  * un metodo per recuperare un parametro singolo dall'HttpServletRequest.
- * @author 
+ * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractControlService implements ControlServiceInterface {
 	
