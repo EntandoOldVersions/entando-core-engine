@@ -47,7 +47,7 @@ public class ParamMap extends Component {
 		}
 		Object object = this.findValue(this.getMap());
 		if (null == object) {
-			log.debug("Map not found in ValueStack");
+			log.info("Map not found in ValueStack");
 			return super.end(writer, body);
 		}
 		if (!(object instanceof Map)) {

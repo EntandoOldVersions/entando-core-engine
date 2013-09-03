@@ -204,12 +204,6 @@ public class SearchEngineManager extends AbstractService
 	}
 	
 	@Override
-	public List<String> searchId(String sectionCode, String langCode, 
-			String word, Collection<String> allowedGroups) throws ApsSystemException {
-		return this.searchEntityId(langCode, word, allowedGroups);
-	}
-    
-	@Override
 	public List<String> searchEntityId(String langCode, String word,
 			Collection<String> allowedGroups) throws ApsSystemException {
 		List<String> contentsId = new ArrayList<String>();
@@ -279,5 +273,5 @@ public class SearchEngineManager extends AbstractService
     private String _newTempSubDirectory;
     
     private IContentManager _contentManager;
-	
+    
 }

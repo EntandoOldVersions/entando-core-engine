@@ -191,7 +191,6 @@ public class IndexerDAO implements IIndexerDAO {
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
-	@Override
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}

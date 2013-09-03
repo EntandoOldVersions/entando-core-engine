@@ -17,10 +17,54 @@
 */
 package com.agiletec.aps.system.common.searchengine;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.exception.ApsSystemException;
+
 /**
- * @author E.Santoboni
- * @deprecated Since Entando 3.3.1, use org.entando.entando.aps.system.services.searchengine.ISearchEngineManager
+ * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
+ * di oggetti ricercabili tramite motore di ricerca.
+ * @version 1.0
+ * @author
  */
-public interface ISearchEngineManager extends org.entando.entando.aps.system.services.searchengine.ISearchEngineManager {
+public interface ISearchEngineManager {
 	
+	/**
+     * Aggiorna le indicizzazioni relative ad un contenuto.
+     * @param content Il contenuto di cui aggiornare le indicizzazioni.
+     * @throws ApsSystemException
+     */
+    public void updateIndexedEntity(IApsEntity entity) throws ApsSystemException;
+    
+    /**
+     * Cancella una entità in base all'identificativo.
+     * @param entityId L'identificativo dell'entità.
+     * @throws ApsSystemException
+     */
+    public void deleteIndexedEntity(String entityId) throws ApsSystemException;
+    
+    /**
+     * Aggiunge un documento relativo ad una entità 
+     * nel db del motore di ricerca.
+     * @param entity Il contenuto da cui estrarre il documento.
+     * @throws ApsSystemException
+     */
+    public void addEntityToIndex(IApsEntity entity) throws ApsSystemException;
+    
+    /**
+     * Ricerca una lista di identificativi di entità in base 
+     * alla chiave lingua corrente ed alla parola immessa.
+     * @param langCode Il codice della lingua corrente.
+     * @param word La parola in base al quale fare la ricerca. Nel caso venissero 
+     * inserite stringhe di ricerca del tipo "Venice Amsterdam" viene considerato come 
+     * se fosse "Venice OR Amsterdam".
+     * @param allowedGroups I gruppi autorizzati alla visualizzazione.
+     * @throws ApsSystemException
+     */
+	public List<String> searchEntityId(String langCode, 
+			String word, Collection<String> allowedGroups) throws ApsSystemException;
+	
+    
 }

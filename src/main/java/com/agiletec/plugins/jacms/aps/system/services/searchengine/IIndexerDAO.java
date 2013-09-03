@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
@@ -55,8 +54,6 @@ public interface IIndexerDAO {
     public void delete(String name, String value) throws ApsSystemException;
     
     public void close();
-	
-	public void setLangManager(ILangManager langManager);
     
     public static final String CONTENT_ID_FIELD_NAME = "id";
     public static final String CONTENT_GROUP_FIELD_NAME = "group";

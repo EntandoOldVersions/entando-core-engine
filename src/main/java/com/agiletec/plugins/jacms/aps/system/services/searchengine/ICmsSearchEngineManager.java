@@ -16,15 +16,15 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
+import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
  * di oggetti ricercabili tramite motore di ricerca.
  * @author W.Ambu - E.Santoboni
  */
-public interface ICmsSearchEngineManager extends IEntitySearchEngineManager {
+public interface ICmsSearchEngineManager extends ISearchEngineManager {
 	
 	/**
      * Ricarica in blocco le indicizzazioni dei contenuti 

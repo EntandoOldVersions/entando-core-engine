@@ -211,7 +211,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
 			if (modelId.equals("list")) {
 				modelId = this.getContentManager().getListModel(contentId);
 			}
-			if (modelId.equals("default")) {
+			if (null != modelId && modelId.equals("default")) {
 				modelId = this.getContentManager().getDefaultModel(contentId);
 			}
 		}

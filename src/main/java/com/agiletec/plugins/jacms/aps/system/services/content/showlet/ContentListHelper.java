@@ -33,6 +33,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -46,7 +47,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.Filte
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -341,15 +341,15 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		this._userFilterDateFormat = userFilterDateFormat;
 	}
 	
-	protected IEntitySearchEngineManager getSearchEngineManager() {
+	protected ISearchEngineManager getSearchEngineManager() {
 		return _searchEngineManager;
 	}
-	public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
+	public void setSearchEngineManager(ISearchEngineManager searchEngineManager) {
 		this._searchEngineManager = searchEngineManager;
 	}
 	
 	private String _userFilterDateFormat;
 	
-	private IEntitySearchEngineManager _searchEngineManager;
+	private ISearchEngineManager _searchEngineManager;
 	
 }
