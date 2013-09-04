@@ -26,6 +26,7 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 /**
  * Print the style of the back-office. Can be normal|advanced.
+ * @deprecated Unnecessary for UX Backoffice of entando 4.0.0
  * @author E.Santoboni
  */
 public class BackendGuiClientTag extends TagSupport {
