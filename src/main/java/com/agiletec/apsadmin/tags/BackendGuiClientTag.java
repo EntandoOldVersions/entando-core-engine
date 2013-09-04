@@ -25,8 +25,7 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 /**
- * Print the current value of the counter.
- * The counter should be used inside the tabindex attribute in HTML tags that allow its use.
+ * Print the style of the back-office. Can be normal|advanced.
  * @author E.Santoboni
  */
 public class BackendGuiClientTag extends TagSupport {

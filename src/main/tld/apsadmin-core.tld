@@ -52,8 +52,7 @@
 	</tag>
 	<tag>
 		<description>
-			<![CDATA[Print the current value of the counter.
-			The counter should be used inside the tabindex attribute in HTML tags that allow its use.]]>
+			<![CDATA[Print the style of the back-office. Can be normal|advanced.]]>
 		</description>
 		<name>backendGuiClient</name>
 		<tag-class>com.agiletec.apsadmin.tags.BackendGuiClientTag</tag-class>
