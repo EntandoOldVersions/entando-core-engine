@@ -26,8 +26,22 @@ import java.util.Map;
  */
 public class ResourceIconUtil {
 	
+	/**
+	 * Return an icon filename by resource filename
+	 * @param fileName The file of resource
+	 * @return The icon filename
+	 * @deprecated use getIconByFilename(String filename)
+	 */
 	public String getIconFile(String fileName) {
-		String extension = fileName.substring(fileName.lastIndexOf('.')+1).trim();
+		return this.getDefaultResourceIcon();
+	}
+	
+	public String getIconByFilename(String filename) {
+		String extension = filename.substring(filename.lastIndexOf('.')+1).trim();
+		return this.getIconByExtension(extension);
+	}
+	
+	public String getIconByExtension(String extension) {
 		if (null != extension && extension.length()>0) {
 			Iterator<String> iter = this.getResourceTypesIconFiles().keySet().iterator();
 			while (iter.hasNext()) {

@@ -28,6 +28,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
 
+import java.net.URLConnection;
+
 /**
  * Classe Action delegata alla gestione delle operazioni di ricerca risorse.
  * @author E.Santoboni
@@ -46,9 +48,18 @@ public class ResourceFinderAction extends AbstractResourceAction implements IRes
         return resources;
     }
     
-    public String getIconFile(String fileName) {
-        return this.getResourceIconUtil().getIconFile(fileName);
+    public String getIconFile(String filename) {
+		String extension = this.getFileExtension(filename);
+        return this.getResourceIconUtil().getIconByExtension(extension);
     }
+	
+	public String getFileExtension(String filename) {
+		return filename.substring(filename.lastIndexOf('.')+1).trim();
+	}
+	
+	public String getMimetype(String filename) {
+		return URLConnection.guessContentTypeFromName(filename);
+	}
     
     public List<ImageResourceDimension> getImageDimensions() {
         Map<Integer, ImageResourceDimension> master = this.getImageDimensionManager().getImageDimensions();
