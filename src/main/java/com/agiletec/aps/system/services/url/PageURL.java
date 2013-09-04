@@ -26,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Rappresenta un URL ad una pagina del sistema. Oggetti di questa classe
@@ -127,17 +129,29 @@ public class PageURL {
 	}
 	
 	/**
-	 * Ripete i parametri della request precedente settandoli nella mappa dei parametri.
+	 * Repaat the parameters extracted from the request.
 	 */
 	public void setParamRepeat() {
-		if (null == this._reqCtx) return;
+		this.setParamRepeat(null);
+	}
+	
+	/**
+	 * Repaat the parameters extracted from the request.
+	 * @param parametersToExclude The parameters to exclude.
+	 */
+	public void setParamRepeat(List<String> parametersToExclude) {
+		if (null == this._reqCtx) {
+			return;
+		}
 		HttpServletRequest req = this._reqCtx.getRequest();
 		Map params = req.getParameterMap();
 		if (null != params && !params.isEmpty()) {
 			Iterator keyIter = params.keySet().iterator();
 			while (keyIter.hasNext()) {
 				String key = (String) keyIter.next();
-				this.addParam(key, req.getParameter(key));
+				if (null == parametersToExclude || !parametersToExclude.contains(key)) {
+					this.addParam(key, req.getParameter(key));
+				}
 			}
 		}
 	}

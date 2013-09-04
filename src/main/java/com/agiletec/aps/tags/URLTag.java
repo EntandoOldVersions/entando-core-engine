@@ -17,10 +17,6 @@
 */
 package com.agiletec.aps.tags;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -28,6 +24,14 @@ import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.aps.tags.util.IParameterParentTag;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * Generates the URL to a portal page. The URL is either displayed or placed in a variable.
@@ -54,8 +58,9 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 			if (_langCode != null) {
 				_pageUrl.setLangCode(_langCode);
 			}
-			if (_paramRepeat) {
-				_pageUrl.setParamRepeat();
+			if (this.isParamRepeat()) {
+				List<String> exclusion = this.getParametersToExclude();
+				_pageUrl.setParamRepeat(exclusion);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doStartTag");
@@ -87,6 +92,25 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	@Override
 	public void addParameter(String name, String value) {
 		this._pageUrl.addParam(name, value);
+	}
+	
+	protected List<String> getParametersToExclude() {
+		List<String> parameters = new ArrayList<String>();
+		String csv = this.getExcludeParameters();
+		if (null != csv && csv.trim().length() > 0) {
+			parameters = Arrays.asList(csv.split(","));
+		}
+		parameters.add(SystemConstants.LOGIN_PASSWORD_PARAM_NAME);
+		return parameters;
+	}
+	
+	@Override
+	public void release() {
+		this._langCode = null;
+		this._pageCode = null;
+		this._varName = null;
+		this._paramRepeat = false;
+		this._pageUrl = null;
 	}
 	
 	/**
@@ -153,12 +177,22 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 		this._paramRepeat = paramRepeat;
 	}
 	
-	public void release() {
-		_langCode = null;
-		_pageCode = null;
-		_varName = null;
-		_paramRepeat = false;
-		_pageUrl = null;
+	/**
+     * Gets list of parameter names (comma separated) to exclude from repeating.
+	 * By default, this attribute excludes only the password parameter of the login form.
+     * @return the exclude list.
+     */
+	public String getExcludeParameters() {
+		return _excludeParameters;
+	}
+	
+	/**
+     * Sets the list of parameter names (comma separated) to exclude from repeating.
+	 * By default, this attribute excludes only the password parameter of the login form.
+     * @param excludeParameters the excludes list (comma separated).
+     */
+	public void setExcludeParameters(String excludeParameters) {
+		this._excludeParameters = excludeParameters;
 	}
 	
 	private String _langCode;
@@ -166,5 +200,6 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 	private String _varName;
 	private boolean _paramRepeat;
 	private PageURL _pageUrl;
-
+	private String _excludeParameters;
+	
 }

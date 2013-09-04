@@ -580,6 +580,14 @@
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
+		<attribute>
+			<description><![CDATA[Sets the list of parameter names (comma separated) to exclude from repeating. 
+				By default, this attribute excludes only the password parameter of the login form. 
+				Used only when paramRepeat="true".]]></description>
+			<name>excludeParameters</name>
+			<required>no</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
 	</tag>
 	<tag>
 		<description><![CDATA[This is the sub-tag of the "url" tag.<br/>

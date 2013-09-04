@@ -67,8 +67,8 @@ public class Authenticator extends AbstractControlService {
         }
         try {
             HttpServletRequest req = reqCtx.getRequest();
-            String username = req.getParameter("username");
-            String password = req.getParameter("password");
+            String username = req.getParameter(SystemConstants.LOGIN_USERNAME_PARAM_NAME);
+            String password = req.getParameter(SystemConstants.LOGIN_PASSWORD_PARAM_NAME);
             HttpSession session = req.getSession();
             //Punto 1
             if (username != null && password != null) {

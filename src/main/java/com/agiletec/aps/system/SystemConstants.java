@@ -289,7 +289,10 @@ public interface SystemConstants {
      * con diritti di accesso minimi ad elementi del sistema.
      */
     public static final String GUEST_USER_NAME = "guest";
-    
+	
+	public static final String LOGIN_USERNAME_PARAM_NAME = "username";
+	public static final String LOGIN_PASSWORD_PARAM_NAME = "password";
+	
 	/**
 	 * Code of default type of UserProfile Object
 	 */
