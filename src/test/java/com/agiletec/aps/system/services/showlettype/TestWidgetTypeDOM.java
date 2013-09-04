@@ -29,7 +29,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 /**
  * @author M.Diana
  */
-public class TestShowletTypeDOM extends BaseTestCase {
+public class TestWidgetTypeDOM extends BaseTestCase {
 	
     public void testParseConfig() throws ApsSystemException {
 		String framesXml = "<config>" +

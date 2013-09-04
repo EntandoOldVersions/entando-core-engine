@@ -51,9 +51,9 @@ import com.agiletec.aps.system.services.pagemodel.TestPageModelManager;
 import com.agiletec.aps.system.services.role.TestPermissionDAO;
 import com.agiletec.aps.system.services.role.TestRoleDAO;
 import com.agiletec.aps.system.services.role.TestRoleManager;
-import com.agiletec.aps.system.services.showlettype.TestShowletTypeDAO;
-import com.agiletec.aps.system.services.showlettype.TestShowletTypeDOM;
-import com.agiletec.aps.system.services.showlettype.TestShowletTypeManager;
+import com.agiletec.aps.system.services.showlettype.TestWidgetTypeDAO;
+import com.agiletec.aps.system.services.showlettype.TestWidgetTypeDOM;
+import com.agiletec.aps.system.services.showlettype.TestWidgetTypeManager;
 import com.agiletec.aps.system.services.url.TestURLManager;
 import com.agiletec.aps.system.services.user.TestAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.TestUserDAO;
@@ -112,9 +112,9 @@ public class AllTests {
 		suite.addTestSuite(TestRoleManager.class);
 		
 		//
-		suite.addTestSuite(TestShowletTypeDAO.class);
-		suite.addTestSuite(TestShowletTypeDOM.class);
-		suite.addTestSuite(TestShowletTypeManager.class);
+		suite.addTestSuite(TestWidgetTypeDAO.class);
+		suite.addTestSuite(TestWidgetTypeDOM.class);
+		suite.addTestSuite(TestWidgetTypeManager.class);
 		//
 		suite.addTestSuite(TestURLManager.class);
 		//

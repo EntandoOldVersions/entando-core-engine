@@ -31,7 +31,7 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 /**
  * @author M.Diana
  */
-public class TestShowletTypeDAO extends BaseTestCase {
+public class TestWidgetTypeDAO extends BaseTestCase {
 	
     public void testLoadShowletTypes() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");

@@ -38,7 +38,7 @@ import com.agiletec.aps.util.ApsProperties;
 /**
  * @author M.Diana - E.Santoboni
  */
-public class TestShowletTypeManager extends BaseTestCase {
+public class TestWidgetTypeManager extends BaseTestCase {
 	
 	@Override
     protected void setUp() throws Exception {
