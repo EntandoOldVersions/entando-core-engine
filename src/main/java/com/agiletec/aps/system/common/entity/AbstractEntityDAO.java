@@ -142,8 +142,10 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteEntitySearchRecord(id, conn);
+			this.deleteRecordsByEntityId(id, this.getRemovingSearchRecordQuery(), conn);
+			this.deleteRecordsByEntityId(id, this.getRemovingAttributeRoleRecordQuery(), conn);
 			this.addEntitySearchRecord(id, entity, conn);
+			this.addEntityAttributeRoleRecord(id, entity, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
