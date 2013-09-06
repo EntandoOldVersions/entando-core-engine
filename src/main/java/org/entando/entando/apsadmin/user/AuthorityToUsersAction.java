@@ -37,14 +37,14 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	public String addUser() {
 		IApsAuthority auth = this.getApsAuthority();
 		try {
-			if (SystemConstants.ADMIN_USER_NAME.equals(this.getUsername())) {
+			if (SystemConstants.ADMIN_USER_NAME.equals(this.getUsernameToSet())) {
 				this.addActionError(this.getText("error.user.cannotModifyAdminUser"));
 				return INPUT;
 			}
 			UserDetails user = this.getUser();
 			if (user != null && !this.hasUserAuthority()) {
 				IApsAuthorityManager authorizatorManager = this.getAuthorizatorManager();
-				authorizatorManager.setUserAuthorization(this.getUsername(), auth);
+				authorizatorManager.setUserAuthorization(this.getUsernameToSet(), auth);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addUser");
@@ -56,14 +56,14 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	public String removeUser() {
 		IApsAuthority auth = this.getApsAuthority();
 		try {
-			if (SystemConstants.ADMIN_USER_NAME.equals(this.getUsername())) {
+			if (SystemConstants.ADMIN_USER_NAME.equals(this.getUsernameToSet())) {
 				this.addActionError(this.getText("error.user.cannotModifyAdminUser"));
 				return INPUT;
 			}
 			UserDetails user = this.getUser();
 			if (user != null) {
 				IApsAuthorityManager authorizatorManager = this.getAuthorizatorManager();
-				authorizatorManager.removeUserAuthorization(this.getUsername(), auth);
+				authorizatorManager.removeUserAuthorization(this.getUsernameToSet(), auth);
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "removeUser");
@@ -93,14 +93,14 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	}
 	
 	/**
-	 * Recupera l'utente corrente. Se non esiste restituisce null.
+	 * Recupera l'utente richiesto. Se non esiste restituisce null.
 	 * @return L'utente richiesto.
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	protected UserDetails getUser() throws ApsSystemException {
-		String username = this.getUsername();
+		String username = this.getUsernameToSet();
 		UserDetails user = null;
-		if (username!=null && username.trim().length()>=0) {
+		if (username != null && username.trim().length()>=0) {
 			user = this.getUserManager().getUser(username);
 		}
 		return user;
@@ -108,7 +108,7 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	
 	//TODO TROVARE IL MODO DI ELIMINARE QUESTO METODO
 	protected boolean hasUserAuthority() throws ApsSystemException {
-		String username = this.getUsername();
+		String username = this.getUsernameToSet();
 		List<UserDetails> users = this.getAuthorizatorManager().getUsersByAuthority(this.getApsAuthority());
 		Iterator<UserDetails> usersIter = users.iterator();
 		while (usersIter.hasNext()) {
@@ -126,14 +126,14 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	public void setAuthName(String authName) {
 		this._authName = authName;
 	}
-	/*
-	public String getUsername() {
-		return _username;
+	
+	public String getUsernameToSet() {
+		return _usernameToSet;
 	}
-	public void setUsername(String username) {
-		this._username = username;
+	public void setUsernameToSet(String usernameToSet) {
+		this._usernameToSet = usernameToSet;
 	}
-	*/
+	
 	protected IApsAuthorityManager getAuthorizatorManager() {
 		return _authorizatorManager;
 	}
@@ -142,7 +142,7 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 	}
 	
 	private String _authName;
-	//private String _username;
+	private String _usernameToSet;
 	private IApsAuthorityManager _authorizatorManager;
 	
 }

@@ -154,14 +154,14 @@ public class TestAuthorityToUsersAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/Group/Auth", "addUser");
 		this.addParameter("authName", groupName);
-		this.addParameter("username", username);
+		this.addParameter("usernameToSet", username);
 		return this.executeAction();
 	}
 	
 	private String executeRemoveUserToGroup(String currentUser, String groupName, String username) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/Group/Auth", "removeUser");
-		this.addParameter("username", username);
+		this.addParameter("usernameToSet", username);
 		this.addParameter("authName", groupName);
 		return this.executeAction();
 	}
@@ -170,14 +170,14 @@ public class TestAuthorityToUsersAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/Role/Auth", "addUser");
 		this.addParameter("authName", roleName);
-		this.addParameter("username", username);
+		this.addParameter("usernameToSet", username);
 		return this.executeAction();
 	}
 	
 	private String executeRemoveUserToRole(String currentUser, String roleName, String username) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/Role/Auth", "removeUser");
-		this.addParameter("username", username);
+		this.addParameter("usernameToSet", username);
 		this.addParameter("authName", roleName);
 		return this.executeAction();
 	}
