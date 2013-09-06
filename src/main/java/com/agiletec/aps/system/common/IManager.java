@@ -23,7 +23,7 @@ import java.io.Serializable;
  * Base interface for implementing Services.
  * @author E.Santoboni
  */
-public interface IManager extends Serializable {
+public interface IManager extends RefreshableBean, Serializable {
 	
 	/**
 	 * Service initialization.
@@ -35,13 +35,6 @@ public interface IManager extends Serializable {
 	 * Destroy method invoked on bean factory shutdown.
 	 */
 	public void destroy();
-	
-	/**
-	 * Method to invoke when service restart is needed.
-	 * @throws Throwable In the case of error when service is initialized.
-	 */
-	public void refresh() throws Throwable;
-	
 	
 	/** 
 	 * Return the service name.

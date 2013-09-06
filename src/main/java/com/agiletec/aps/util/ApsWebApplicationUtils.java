@@ -30,8 +30,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.common.IManager;
-import org.springframework.beans.factory.BeanFactory;
+import com.agiletec.aps.system.common.RefreshableBean;
 
 /**
  * Classe di utilità.
@@ -146,9 +145,9 @@ public class ApsWebApplicationUtils {
 	}
 	
 	private static void executeSystemRefresh(WebApplicationContext wac) throws Throwable {
-		IManager configManager = (IManager) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
+		RefreshableBean configManager = (RefreshableBean) wac.getBean(SystemConstants.BASE_CONFIG_MANAGER);
 		configManager.refresh();
-		String[] defNames = wac.getBeanNamesForType(IManager.class);
+		String[] defNames = wac.getBeanNamesForType(RefreshableBean.class);
 		for (int i=0; i<defNames.length; i++) {
 			Object bean = null;
 			try {
@@ -158,7 +157,7 @@ public class ApsWebApplicationUtils {
 				bean = null;
 			}
 			if (bean != null) {
-				((IManager) bean).refresh();
+				((RefreshableBean) bean).refresh();
 			}
 		}
 	}

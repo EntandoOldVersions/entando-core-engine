@@ -8,7 +8,7 @@
 			http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd">
 	
 	<bean id="jacmsImageDimensionReader" class="com.agiletec.plugins.jacms.aps.system.services.resource.model.util.ImageDimensionReader" 
-			parent="abstractService" >
+			init-method="init" >
 		<property name="configManager" ref="BaseConfigManager"/>
 	</bean>
 	

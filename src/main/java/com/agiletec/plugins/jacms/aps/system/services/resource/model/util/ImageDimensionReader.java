@@ -19,12 +19,13 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model.util;
 import java.util.Map;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.RefreshableBean;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ImageDimensionDOM;
+
 import java.io.Serializable;
 
 /**
@@ -32,14 +33,13 @@ import java.io.Serializable;
  * delle dimensioni per il redimensionamento delle immagini.
  * @author E.Santoboni
  */
-public class ImageDimensionReader extends AbstractService implements IImageDimensionReader, Serializable {
+public class ImageDimensionReader implements IImageDimensionReader, RefreshableBean, Serializable {
 	
 	/**
 	 * Inizializzazione della classe.
 	 * Effettua il caricamento delle dimensioni di resize delle immagini.
 	 * @throws Exception In caso di errore.
 	 */
-	@Override
 	public void init() throws Exception {
 		try {
     		String xml = this.getConfigManager().getConfigItem(JacmsSystemConstants.CONFIG_ITEM_IMAGE_DIMENSIONS);
@@ -52,6 +52,11 @@ public class ImageDimensionReader extends AbstractService implements IImageDimen
     		ApsSystemUtils.logThrowable(t, this, "init");
     		throw new ApsSystemException("Error loading dimensions", t);
     	}
+	}
+	
+	@Override
+	public void refresh() throws Throwable {
+		this.init();
 	}
 	
 	/**
