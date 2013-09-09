@@ -66,13 +66,9 @@ public class TestActionLoggerDAO extends BaseTestCase {
 				DateConverter.parseDate("01/01/2009 10:01", "dd/MM/yyyy HH:mm"));
 		ids = this._actionLoggerDAO.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 2 }, ids);
-
-		searchBean = this._helper.createSearchBean("name 1 2 3", "Name 1 2 3", "space 1 2 3", "arams 1 2 3", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), 
-				DateConverter.parseDate("02/01/2009 12:00", "dd/MM/yyyy HH:mm"));
-		ids = this._actionLoggerDAO.getActionRecords(searchBean);
-		this.compareIds(new Integer [] { 3 }, ids);
+		
 	}
-
+	
 	public void testAddGetDeleteActionRecord() {
 		ActionRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
@@ -92,7 +88,7 @@ public class TestActionLoggerDAO extends BaseTestCase {
 		this._actionLoggerDAO.deleteActionRecord(record2.getId());
 		assertNull(this._actionLoggerDAO.getActionRecord(record2.getId()));
 	}
-
+	
 	private void compareIds(Integer[] expected, List<Integer> received) {
 		assertEquals(expected.length, received.size());
 		for (Integer id : expected) {
