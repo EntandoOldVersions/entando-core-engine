@@ -103,7 +103,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private String executeConfigListViewer(String userName, String pageCode, String frame, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet", "listViewerConfig");
+		this.initAction("/do/Page/SpecialWidget", "listViewerConfig");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
@@ -114,7 +114,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private String executeConfigContentType(String userName, String pageCode, String frame, String showletTypeCode, String contentType) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "configListViewer");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "configListViewer");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		this.addParameter("showletTypeCode", showletTypeCode);
@@ -158,7 +158,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private String executeMovement(String username, String pageCode, String frame, String showletCode, Map<String, String> params) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "moveFilter?movement=UP;filterIndex=1");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "moveFilter?movement=UP;filterIndex=1");
 		this.addParameters(params);
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
@@ -168,7 +168,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private String executeDelFilter(String username, String pageCode, String frame, String showletCode, Map<String, String> params) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "removeFilter");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "removeFilter");
 		this.addParameters(params);
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
@@ -203,7 +203,7 @@ public class TestContentListViewerShowletAction extends ApsAdminBaseTestCase {
 		List<Properties> temp = FilterUtils.getFiltersProperties("(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
 		assertEquals(1, temp.size());
 		Properties newFilter = temp.get(0);
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "addFilter");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "addFilter");
 		this.addParameters(params);
 		this.addParameter("newFilter", newFilter);
 		String result = this.executeAction();

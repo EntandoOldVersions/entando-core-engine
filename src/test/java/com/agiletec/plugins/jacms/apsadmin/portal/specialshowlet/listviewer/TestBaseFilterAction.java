@@ -32,7 +32,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 	
 	public void testNewFilter() throws Throwable {
 		this.setUserOnSession("admin");
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "newFilter");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "newFilter");
 		this.addParameter("pageCode", "homepage");
 		this.addParameter("frame", "1");
 		this.addParameter("showletTypeCode", "content_viewer_list");
@@ -49,7 +49,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		parameters.put("contentType", "EVN");
 		parameters.put("filterKey", "Titolo");
 		
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "setFilterType");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "setFilterType");
 		this.addParameters(parameters);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -57,7 +57,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		assertEquals(BaseFilterAction.TEXT_ATTRIBUTE_FILTER_TYPE, action.getFilterTypeId());
 		
 		parameters.put("filterKey", "DataInizio");
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "setFilterType");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "setFilterType");
 		this.addParameters(parameters);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
@@ -77,7 +77,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		parameters.put("order", "ASC");
 		parameters.put("filters", "(order=DESC;attributeFilter=true;key=DataInizio)");
 		
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", "saveFilter");
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "saveFilter");
 		this.addParameters(parameters);
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);

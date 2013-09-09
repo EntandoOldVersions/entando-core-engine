@@ -9,9 +9,9 @@
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -30,13 +30,13 @@ import com.opensymphony.xwork2.Action;
  * @version 1.0
  * @author E.Santoboni
  */
-public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
-	
+public class TestSimpleWidgetConfigAction extends ApsAdminBaseTestCase {
+
 	protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
-	
+
 	public void testInitConfigSimpleParameter_1() throws Throwable {
 		String result = this.executeConfigSimpleParameter("admin", "homepage", "1", "formAction");
 		assertEquals(Action.SUCCESS, result);
@@ -45,13 +45,13 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
 	}
-	
+
 	public void testInitConfigSimpleParameter_withNoShowletCode() throws Throwable {
 		String result = this.executeConfigSimpleParameter("admin", "homepage", "1", null);
 		assertEquals("pageTree", result);
 		assertEquals(1, this.getAction().getActionErrors().size());
 	}
-	
+
 	public void testInitConfigSimpleParameter_2() throws Throwable {
 		String result = this.executeConfigSimpleParameter("admin", "pagina_2", "2", null);
 		assertEquals(Action.SUCCESS, result);
@@ -63,11 +63,11 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		String value = props.getProperty("actionPath");
 		assertEquals("/do/login", value);
 	}
-	
-	private String executeConfigSimpleParameter(String userName, 
+
+	private String executeConfigSimpleParameter(String userName,
 			String pageCode, String frame, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet", "configSimpleParameter");
+		this.initAction("/do/Page/SpecialWidget", "configSimpleParameter");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
@@ -75,7 +75,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		}
 		return this.executeAction();
 	}
-	
+
 	public void testSave() throws Throwable {
 		String pageCode = "pagina_2";
 		int frame = 0;
@@ -84,7 +84,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
-			this.initAction("/do/Page/SpecialShowlet", "saveConfigSimpleParameter");
+			this.initAction("/do/Page/SpecialWidget", "saveConfigSimpleParameter");
 			this.addParameter("pageCode", pageCode);
 			this.addParameter("frame", String.valueOf(frame));
 			this.addParameter("showletTypeCode", "formAction");
@@ -105,7 +105,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
 			this._pageManager.updatePage(page);
 		}
 	}
-	
+
 	private void init() throws Exception {
     	try {
     		_pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
@@ -113,7 +113,7 @@ public class TestSimpleShowletConfigAction extends ApsAdminBaseTestCase {
             throw new Exception(t);
         }
     }
-    
+
     private IPageManager _pageManager = null;
 
 }

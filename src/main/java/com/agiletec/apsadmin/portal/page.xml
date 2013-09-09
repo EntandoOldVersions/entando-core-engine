@@ -109,7 +109,7 @@
         
         <action name="editFrame" class="pageConfigAction" method="editFrame">
         	<result name="configureSpecialShowlet" type="chain">
-        		<param name="namespace">/do/Page/SpecialShowlet</param>
+        		<param name="namespace">/do/Page/SpecialWidget</param>
     			<param name="actionName">${showletAction}</param>
             </result>
         	<result type="tiles">admin.Page.editFrame</result>
@@ -119,7 +119,7 @@
         <action name="joinShowlet" class="pageConfigAction" method="joinShowlet">
         	<result name="input" type="tiles">admin.Page.editFrame</result>
         	<result name="configureSpecialShowlet" type="chain">
-        		<param name="namespace">/do/Page/SpecialShowlet</param>
+        		<param name="namespace">/do/Page/SpecialWidget</param>
     			<param name="actionName">${showletAction}</param>
             </result>
         	<result type="tiles">admin.Page.configure</result>

@@ -9,9 +9,9 @@
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -37,13 +37,13 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
-	
+
 	@Override
 	protected void setUp() throws Exception {
         super.setUp();
         this.init();
     }
-	
+
 	public void testInitConfigNavigator_1() throws Throwable {
 		String result = this.executeConfigNavigator("admin", "homepage", "1", "leftmenu");
 		assertEquals(Action.SUCCESS, result);
@@ -52,7 +52,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
 	}
-	
+
 	public void testInitConfigNavigator_2() throws Throwable {
 		String result = this.executeConfigNavigator("admin", "pagina_1", "2", null);
 		assertEquals(Action.SUCCESS, result);
@@ -70,7 +70,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.OPERATOR_SUBTREE_ID, expression.getOperatorId());
 		assertEquals(2, expression.getOperatorSubtreeLevel());
 	}
-	
+
 	public void testExecuteMoveExpression_1() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -93,7 +93,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, expression1.getSpecId());
 		assertTrue(expression1.getOperatorId()<0);
 	}
-	
+
 	public void testExecuteMoveExpression_2() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -116,7 +116,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, expression1.getSpecId());
 		assertTrue(expression1.getOperatorId()<0);
 	}
-	
+
 	public void testExecuteMoveExpression_3() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -139,7 +139,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, expression2.getSpecId());
 		assertTrue(expression2.getOperatorId()<0);
 	}
-	
+
 	public void testExecuteRemoveExpression_1() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -161,7 +161,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, expression1.getSpecId());
 		assertTrue(expression1.getOperatorId()<0);
 	}
-	
+
 	public void testExecuteRemoveExpression_2() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -183,7 +183,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(NavigatorExpression.SPEC_CURRENT_PAGE_ID, expression2.getSpecId());
 		assertTrue(expression2.getOperatorId()<0);
 	}
-	
+
 	public void testFailureAddExpression_1() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -196,7 +196,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, List<String>> fieldErrors = action.getFieldErrors();
 		assertEquals(1, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("specId").size());
-		
+
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
@@ -205,7 +205,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals("parent.subtree(2)+abs(1).subtree(2)+current", navAction.getNavSpec());
 		assertEquals(3, navAction.getExpressions().size());
 	}
-	
+
 	public void testFailureAddExpression_2() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -218,7 +218,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
-		
+
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
@@ -227,7 +227,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals("parent.subtree(2)+abs(1).subtree(2)+current", navAction.getNavSpec());
 		assertEquals(3, navAction.getExpressions().size());
 	}
-	
+
 	public void testFailureAddExpression_3() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -240,7 +240,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
-		
+
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
@@ -249,7 +249,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals("parent.subtree(2)+current", navAction.getNavSpec());
 		assertEquals(2, navAction.getExpressions().size());
 	}
-	
+
 	public void testFailureAddExpression_4() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -264,7 +264,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
 		assertEquals(2, action.getActionErrors().size());
-		
+
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
 		Widget widget = navAction.getShowlet();
 		assertNotNull(widget);
@@ -273,7 +273,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals("", navAction.getNavSpec());
 		assertEquals(0, navAction.getExpressions().size());
 	}
-	
+
 	public void testExecuteAddExpression_1() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -284,11 +284,11 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		params.put("operatorId", String.valueOf(NavigatorExpression.OPERATOR_CHILDREN_ID));
 		String result = this.executeAddExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		
+
 		NavigatorWidgetConfigAction action = (NavigatorWidgetConfigAction) this.getAction();
 		assertEquals("abs(1).subtree(2) + parent.children", action.getNavSpec());
 	}
-	
+
 	public void testExecuteAddExpression_2() throws Throwable {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
@@ -301,11 +301,11 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		params.put("operatorSubtreeLevel", "2");
 		String result = this.executeAddExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
-		
+
 		NavigatorWidgetConfigAction action = (NavigatorWidgetConfigAction) this.getAction();
 		assertEquals("abs(1).subtree(2)", action.getNavSpec());
 	}
-	
+
 	public void testSave() throws Throwable {
 		String pageCode = "pagina_2";
 		int frame = 0;
@@ -314,7 +314,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
-			this.initAction("/do/Page/SpecialShowlet/Navigator", "saveNavigatorConfig");
+			this.initAction("/do/Page/SpecialWidget/Navigator", "saveNavigatorConfig");
 			this.addParameter("pageCode", pageCode);
 			this.addParameter("frame", String.valueOf(frame));
 			this.addParameter("showletTypeCode", "leftmenu");
@@ -335,11 +335,11 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 			this._pageManager.updatePage(page);
 		}
 	}
-	
-	private String executeConfigNavigator(String userName, 
+
+	private String executeConfigNavigator(String userName,
 			String pageCode, String frame, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet", "navigatorConfig");
+		this.initAction("/do/Page/SpecialWidget", "navigatorConfig");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
@@ -347,34 +347,34 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		}
 		return this.executeAction();
 	}
-	
+
 	private String executeMoveExpression(String userName, Map<String, String> params) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet/Navigator", "moveExpression");
+		this.initAction("/do/Page/SpecialWidget/Navigator", "moveExpression");
 		this.addParameters(params);
 		return this.executeAction();
 	}
-	
+
 	private String executeRemoveExpression(String userName, Map<String, String> params) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet/Navigator", "removeExpression");
+		this.initAction("/do/Page/SpecialWidget/Navigator", "removeExpression");
 		this.addParameters(params);
 		return this.executeAction();
 	}
-	
+
 	private String executeAddExpression(String userName, Map<String, String> params) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet/Navigator", "addExpression");
+		this.initAction("/do/Page/SpecialWidget/Navigator", "addExpression");
 		this.addParameters(params);
 		String result = null;
-		try { 
+		try {
 			result = this.executeAction();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 		return result;
 	}
-	
+
 	private void init() throws Exception {
     	try {
     		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
@@ -382,7 +382,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
             throw new Exception(t);
         }
     }
-    
+
     private IPageManager _pageManager = null;
-	
+
 }

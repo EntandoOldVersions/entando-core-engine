@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.ActionSupport;
 /**
  * @author E.Santoboni
  */
-public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
+public class TestContentViewerWidgetAction extends ApsAdminBaseTestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -72,7 +72,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	private String executeConfigViewer(String userName, 
 			String pageCode, String frame, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(userName);
-		this.initAction("/do/Page/SpecialShowlet", "viewerConfig");
+		this.initAction("/do/Page/SpecialWidget", "viewerConfig");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
@@ -152,7 +152,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 	
 	private String executeJoinContent(String currentUserName, String pageCode, String frame, String contentId) throws Throwable {
 		this.setUserOnSession(currentUserName);
-		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "executeJoinContent");
+		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "executeJoinContent");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		this.addParameter("showletTypeCode", "content_viewer");
@@ -170,7 +170,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
-			this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "saveViewerConfig");
+			this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "saveViewerConfig");
 			this.addParameter("pageCode", pageCode);
 			this.addParameter("frame", String.valueOf(frame));
 			this.addParameter("showletTypeCode", "content_viewer");
@@ -226,7 +226,7 @@ public class TestContentViewerShowletAction extends ApsAdminBaseTestCase {
 		Widget widget = page.getShowlets()[frame];
 		assertNull(widget);
 		this.setUserOnSession("admin");
-		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "saveViewerConfig");
+		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "saveViewerConfig");
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", pageCode);
 		params.put("frame", String.valueOf(frame));

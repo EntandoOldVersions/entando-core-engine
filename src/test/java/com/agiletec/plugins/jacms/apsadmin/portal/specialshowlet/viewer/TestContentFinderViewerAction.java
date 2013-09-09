@@ -133,7 +133,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 	
 	private String executeParametrizedSearchContents(String currentUserName, String pageCode, String frame, String partialId) throws Throwable {
 		this.setUserOnSession(currentUserName);
-		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "searchContents");
+		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "searchContents");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		this.addParameter("showletTypeCode", "content_viewer");
@@ -145,7 +145,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 	}
 	
 	private void executeChangeOrder(String currentUserName, Map<String, String> params) throws Throwable {
-		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "changeContentListOrder");
+		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "changeContentListOrder");
 		this.setUserOnSession(currentUserName);
 		this.addParameters(params);
 		String result = this.executeAction();
@@ -154,7 +154,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 	
 	private String executeJoinContent(String currentUserName, String pageCode, String frame, String contentId) throws Throwable {
 		this.setUserOnSession(currentUserName);
-		this.initAction("/do/jacms/Page/SpecialShowlet/Viewer", "joinContent");
+		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "joinContent");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		this.addParameter("showletTypeCode", "content_viewer");

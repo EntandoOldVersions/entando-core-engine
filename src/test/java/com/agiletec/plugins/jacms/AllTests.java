@@ -69,7 +69,7 @@ import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.Test
 import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestNumberAttributeFilterAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestTextAttributeFilterAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.TestContentFinderViewerAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.TestContentViewerShowletAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.TestContentViewerWidgetAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttributeConfigAction;
@@ -163,7 +163,7 @@ public class AllTests {
 		suite.addTestSuite(TestNumberAttributeFilterAction.class);
 		suite.addTestSuite(TestTextAttributeFilterAction.class);
 		suite.addTestSuite(TestContentFinderViewerAction.class);
-		suite.addTestSuite(TestContentViewerShowletAction.class);
+		suite.addTestSuite(TestContentViewerWidgetAction.class);
 		suite.addTestSuite(TestPageAction.class);
 		suite.addTestSuite(TestTrashReferencedPage.class);
 		

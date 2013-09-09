@@ -39,7 +39,7 @@ public abstract class TestAbstractAttributeFilterAction extends ApsAdminBaseTest
 	
 	protected String executeAddFilter(String username, Map<String, String> params, String actionName) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/jacms/Page/SpecialShowlet/ListViewer", actionName);
+		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", actionName);
 		this.addParameters(params);
 		return this.executeAction();
 	}
