@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -223,6 +224,16 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			} else {
 				stat.setString(index, (String) object);
 			}
+		} 
+		/*
+		else if (object instanceof Timestamp) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Timestamp) object);
+			if (dateDelay != null) {
+				calendar.add(Calendar.DATE, dateDelay);
+			}
+			Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+			stat.setTimestamp(index, timestamp);
 		} else if (object instanceof Date) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime((Date) object);
@@ -231,7 +242,23 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			}
 			Date data = calendar.getTime();
 			stat.setDate(index, new java.sql.Date(data.getTime()));
-		} else if (object instanceof BigDecimal) {
+		}
+		*/
+		else if (object instanceof Date) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) object);
+			if (dateDelay != null) {
+				calendar.add(Calendar.DATE, dateDelay);
+			}
+			if (object instanceof Timestamp) {
+				Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+				stat.setTimestamp(index, timestamp);
+			} else {
+				Date data = calendar.getTime();
+				stat.setDate(index, new java.sql.Date(data.getTime()));
+			}
+		}
+		else if (object instanceof BigDecimal) {
 			stat.setBigDecimal(index, (BigDecimal) object);
 		} else if (object instanceof Boolean) {
 			stat.setString(index, ((Boolean) object).toString());
