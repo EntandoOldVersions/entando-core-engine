@@ -201,4 +201,14 @@
 		</property>
 	</bean>
 	
+	<bean id="ActionLoggerManager" class="org.entando.entando.aps.system.services.actionlogger.ActionLoggerManager" 
+			parent="abstractService" >
+		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
+		<property name="actionLoggerDAO">
+			<bean class="org.entando.entando.aps.system.services.actionlogger.ActionLoggerDAO">
+				<property name="dataSource" ref="servDataSource" />
+			</bean>
+		</property>
+	</bean>
+	
 </beans>

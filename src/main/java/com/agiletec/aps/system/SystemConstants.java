@@ -184,6 +184,8 @@ public interface SystemConstants {
     public static final String CACHE_MANAGER = "CacheManager";
     
     public static final String CACHE_INFO_MANAGER = "CacheInfoManager";
+	
+	public static final String ACTION_LOGGER_MANAGER = "ActionLoggerManager";
     
     public static final String AUTHENTICATION_PROVIDER_MANAGER = "AuthenticationProviderManager";
     
