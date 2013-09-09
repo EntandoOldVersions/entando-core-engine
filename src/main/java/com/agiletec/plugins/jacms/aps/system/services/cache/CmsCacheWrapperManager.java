@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.ContentModelChangedObserver;

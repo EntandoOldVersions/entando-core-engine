@@ -73,7 +73,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	protected List<IPage> createPages(ResultSet res) throws Throwable {
 		List<IPage> pages = new ArrayList<IPage>();
 		Page page = null;
-		Widget showlets[] = null;
+		Widget widgets[] = null;
 		int numFrames = 0;
 		String prevCode = "...no previous code...";
 		while (res.next()) {
@@ -84,14 +84,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 				}
 				page = this.createPage(code, res);
 				numFrames = page.getModel().getFrames().length;
-				showlets = new Widget[numFrames];
-				page.setWidgets(showlets);
+				widgets = new Widget[numFrames];
+				page.setWidgets(widgets);
 				prevCode = code;
 			}
 			int pos = res.getInt(9);
 			if (pos >= 0 && pos < numFrames) {
 				Widget widget = this.createShowlet(page, pos, res);//this.createShowlet(record, page);
-				showlets[pos] = widget;
+				widgets[pos] = widget;
 			} else {
 				ApsSystemUtils.getLogger().info("The position read from the database exceeds " +
 						"the numer of frames defined in the model of the page '"+ page.getCode()+"'");
@@ -261,7 +261,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	protected void deleteShowlets(String codePage, Connection conn) throws ApsSystemException {
 		PreparedStatement stat = null;
 		try {
-			stat = conn.prepareStatement(DELETE_SHOWLETS_FOR_PAGE);
+			stat = conn.prepareStatement(DELETE_WIDGETS_FOR_PAGE);
 			stat.setString(1, codePage);
 			stat.executeUpdate();
 		} catch (Throwable t) {
@@ -384,7 +384,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		PreparedStatement stat = null;
 		try {
 			Widget[] widgets = page.getWidgets();
-			stat = conn.prepareStatement(ADD_SHOWLET_FOR_PAGE);
+			stat = conn.prepareStatement(ADD_WIDGET_FOR_PAGE);
 			for (int i = 0; i < widgets.length; i++) {
 				Widget widget = widgets[i];
 				if (widget != null) {
@@ -421,7 +421,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(REMOVE_SHOWLET_FROM_FRAME);
+			stat = conn.prepareStatement(REMOVE_WIDGET_FROM_FRAME);
 			stat.setString(1, pageCode);
 			stat.setInt(2, pos);
 			stat.executeUpdate();
@@ -451,7 +451,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(ADD_SHOWLET_FOR_PAGE);
+			stat = conn.prepareStatement(ADD_WIDGET_FOR_PAGE);
 			this.valueAddShowletStatement(pageCode, pos, widget, stat);
 			stat.executeUpdate();
 			conn.commit();
@@ -513,11 +513,11 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	private static final String DELETE_PAGE = 
 		"DELETE FROM pages WHERE code = ? ";
 
-	private static final String DELETE_SHOWLETS_FOR_PAGE = 
+	private static final String DELETE_WIDGETS_FOR_PAGE = 
 		"DELETE FROM widgetconfig WHERE pagecode = ? ";
 
-	private static final String REMOVE_SHOWLET_FROM_FRAME = 
-		DELETE_SHOWLETS_FOR_PAGE + " AND framepos = ? ";
+	private static final String REMOVE_WIDGET_FROM_FRAME = 
+		DELETE_WIDGETS_FOR_PAGE + " AND framepos = ? ";
 
 	private static final String MOVE_UP = 
 		"UPDATE pages SET pos = (pos - 1) WHERE code = ? ";
@@ -531,7 +531,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	private static final String SHIFT_PAGE = 
 		"UPDATE pages SET pos = (pos - 1) WHERE parentcode = ? AND pos > ? ";
 
-	private static final String ADD_SHOWLET_FOR_PAGE = 
+	private static final String ADD_WIDGET_FOR_PAGE = 
 		"INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
 
 }

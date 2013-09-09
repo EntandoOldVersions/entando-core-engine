@@ -116,13 +116,13 @@
         <property name="contentManager" ref="jacmsContentManager" />
     </bean>
     
-    <bean id="jacmsContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper" >
+    <bean id="jacmsContentListHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper" >
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="searchEngineManager" ref="jacmsSearchEngineManager" />
         <property name="userFilterDateFormat"><value>${jacms.frontend.userfilter.dateFormat}</value></property>
     </bean>
     
-    <bean id="jacmsContentViewerHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper" >
+    <bean id="jacmsContentViewerHelper" class="com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelper" >
         <property name="contentDispenser" ref="jacmsBaseContentDispenser" />
         <property name="contentManager" ref="jacmsContentManager" />
         <property name="contentModelManager" ref="jacmsContentModelManager" />

@@ -34,10 +34,10 @@ import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 

@@ -24,7 +24,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 import javax.servlet.http.HttpServletRequest;

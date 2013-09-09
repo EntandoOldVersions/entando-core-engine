@@ -30,9 +30,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.TestValidateConten
 import com.agiletec.plugins.jacms.aps.system.services.content.authorization.TestContentAuthorization;
 import com.agiletec.plugins.jacms.aps.system.services.content.entity.TestContentEntityManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.TestContentDOM;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.TestContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.TestContentViewerHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.util.TestContentAttributeIterator;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.TestContentViewerHelper;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.TestContentModelDAO;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.TestContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.TestContentPageMapperManager;

@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet.util;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget.util;
 
 import java.util.List;
 import java.util.Properties;

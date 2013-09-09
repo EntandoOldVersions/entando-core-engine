@@ -34,10 +34,10 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
  * Loads a list of contents IDs by applying the filters (if any).

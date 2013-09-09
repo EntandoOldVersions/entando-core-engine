@@ -24,11 +24,10 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
-
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
  * ContentListTag" sub-tag, it creates a custom user filter to restrict the result of the content search by front-end user.

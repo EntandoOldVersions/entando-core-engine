@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +43,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.util.FilterUtils;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
@@ -98,12 +98,12 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	
 	@Override
 	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
-			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
-			condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).isUserFilterExecuted(#bean)")
+			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
+			condition = "#bean.cacheable && !T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).isUserFilterExecuted(#bean)")
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
-			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
+			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx)", 
 			beforeInvocation = true, 
-			condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.showlet.ContentListHelper).buildCacheKey(#bean, #reqCtx))")
+			condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper).buildCacheKey(#bean, #reqCtx))")
 	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentListCacheGroupsCsv(#bean, #reqCtx)", expiresInMinute = 30)
 	public List<String> getContentsId(IContentListTagBean bean, RequestContext reqCtx) throws Throwable {
 		List<String> contentsId = null;

@@ -33,7 +33,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.PublicContentAuthorizationInfo;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentViewerHelper;
 
 /**
  * Return an information of a specified content.

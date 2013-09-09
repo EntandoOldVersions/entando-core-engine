@@ -15,14 +15,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
  * @author E.Santoboni

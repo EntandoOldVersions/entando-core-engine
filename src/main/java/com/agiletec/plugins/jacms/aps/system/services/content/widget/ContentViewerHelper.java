@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.logging.Logger;
 
@@ -38,7 +38,7 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderiza
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 
 /**
- * Classe helper per la showlet di erogazione contenuti singoli.
+ * Classe helper per i Widget di erogazione contenuti singoli.
  * @author W.Ambu - E.Santoboni
  */
 public class ContentViewerHelper implements IContentViewerHelper {
@@ -49,12 +49,12 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	}
     
 	/**
-     * Restituisce il contenuto da visualizzare nella showlet.
+     * Restituisce il contenuto da visualizzare nel widget.
      * @param contentId L'identificativo del contenuto ricavato dal tag.
      * @param modelId Il modello del contenuto ricavato dal tag.
      * @param publishExtraTitle 
      * @param reqCtx Il contesto della richiesta.
-     * @return Il contenuto da visualizzare nella showlet.
+     * @return Il contenuto da visualizzare nella widget.
      * @throws ApsSystemException In caso di errore.
      */
 	@Override
@@ -79,9 +79,9 @@ public class ContentViewerHelper implements IContentViewerHelper {
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String langCode = currentLang.getCode();
             Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-            ApsProperties showletConfig = widget.getConfig();
-			contentId = this.extractContentId(contentId, showletConfig, reqCtx);
-			modelId = this.extractModelId(contentId, modelId, showletConfig, reqCtx);
+            ApsProperties widgetConfig = widget.getConfig();
+			contentId = this.extractContentId(contentId, widgetConfig, reqCtx);
+			modelId = this.extractModelId(contentId, modelId, widgetConfig, reqCtx);
 			if (contentId != null && modelId != null) {   
  	            long longModelId = new Long(modelId).longValue();
 	            this.setStylesheet(longModelId, reqCtx);
@@ -143,18 +143,18 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * Metodo che determina con che ordine viene ricercato l'identificativo del contenuto.
 	 * L'ordine con cui viene cercato è questo:
 	 * 1) Nel parametro specificato all'interno del tag.
-	 * 2) Tra i parametri di configurazione della showlet
+	 * 2) Tra i parametri di configurazione della widget
 	 * 3) Nella Request.
 	 * @param contentId L'identificativo del contenuto specificato nel tag. 
 	 * Può essere null o una Stringa alfanumerica.
-	 * @param showletConfig I parametri di configurazione della showlet corrente.
+	 * @param widgetConfig I parametri di configurazione della widget corrente.
 	 * @param reqCtx Il contesto della richiesta.
 	 * @return L'identificativo del contenuto da erogare.
 	 */
-	protected String extractContentId(String contentId, ApsProperties showletConfig, RequestContext reqCtx) {
+	protected String extractContentId(String contentId, ApsProperties widgetConfig, RequestContext reqCtx) {
 		if (null == contentId) {
-			if (null != showletConfig) {
-				contentId = (String) showletConfig.get("contentId");
+			if (null != widgetConfig) {
+				contentId = (String) widgetConfig.get("contentId");
 			}
 			if (null == contentId) {
 				contentId = reqCtx.getRequest().getParameter(SystemConstants.K_CONTENT_ID_PARAM);
@@ -173,7 +173,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * l'identificativo del modello di contenuto.
 	 * L'ordine con cui viene cercato è questo:
 	 * 1) Nel parametro specificato all'interno del tag.
-	 * 2) Tra i parametri di configurazione della showlet
+	 * 2) Tra i parametri di configurazione della widget
 	 * Nel caso non venga trovato nessun ideentificativo, viene restituito l'identificativo 
 	 * del modello di default specificato nella configurazione del tipo di contenuto.
 	 * @param contentId L'identificativo del contenuto da erogare.
@@ -181,14 +181,14 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * (in tal caso viene restituito il modello per le liste definito nella configurazione del tipo di contenuto) 
 	 * o 'default' (in tal caso viene restituito il modello di default definito nella configurazione del tipo di contenuto).
 	 * @param modelId L'identificativo del modello specificato nel tag. Può essere null.
-	 * @param showletConfig La configurazione della showlet corrente 
+	 * @param widgetConfig La configurazione della widget corrente 
 	 * nel qual è inserito il tag erogatore del contenuti.
 	 * @param reqCtx Il contesto della richiesta.
 	 * @return L'identificativo del modello 
 	 * con il quale renderizzare il contenuto.
 	 */
-	protected String extractModelId(String contentId, String modelId, ApsProperties showletConfig, RequestContext reqCtx) {
-		modelId = this.extractConfiguredModelId(contentId, modelId, showletConfig);
+	protected String extractModelId(String contentId, String modelId, ApsProperties widgetConfig, RequestContext reqCtx) {
+		modelId = this.extractConfiguredModelId(contentId, modelId, widgetConfig);
 		if (null == modelId) {
 			modelId = reqCtx.getRequest().getParameter("modelId");
 		}
@@ -198,15 +198,15 @@ public class ContentViewerHelper implements IContentViewerHelper {
 		return modelId;
 	}
 	
-	protected String extractModelId(String contentId, String modelId, ApsProperties showletConfig) {
-		modelId = this.extractConfiguredModelId(contentId, modelId, showletConfig);
+	protected String extractModelId(String contentId, String modelId, ApsProperties widgetConfig) {
+		modelId = this.extractConfiguredModelId(contentId, modelId, widgetConfig);
 		if (null == modelId && null != contentId) {
 			modelId = this.getContentManager().getDefaultModel(contentId);
 		}
 		return modelId;
 	}
 	
-	private String extractConfiguredModelId(String contentId, String modelId, ApsProperties showletConfig) {
+	private String extractConfiguredModelId(String contentId, String modelId, ApsProperties widgetConfig) {
 		if (null != modelId && null != contentId) {
 			if (modelId.equals("list")) {
 				modelId = this.getContentManager().getListModel(contentId);
@@ -215,8 +215,8 @@ public class ContentViewerHelper implements IContentViewerHelper {
 				modelId = this.getContentManager().getDefaultModel(contentId);
 			}
 		}
-		if (null == modelId && null != showletConfig) {
-			modelId = (String) showletConfig.get("modelId");
+		if (null == modelId && null != widgetConfig) {
+			modelId = (String) widgetConfig.get("modelId");
 		}
 		return modelId;
 	}

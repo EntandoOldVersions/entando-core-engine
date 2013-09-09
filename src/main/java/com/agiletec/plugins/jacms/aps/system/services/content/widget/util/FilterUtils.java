@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet.util;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +31,9 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.lang.Lang;
-
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.UserFilterOptionBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
  * Provides utility methods for content filters for showlet.

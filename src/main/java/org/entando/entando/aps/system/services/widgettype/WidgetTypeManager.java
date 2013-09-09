@@ -64,8 +64,8 @@ public class WidgetTypeManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadShowletTypes");
-			throw new ApsSystemException("Error loading showlets types", t);
+			ApsSystemUtils.logThrowable(t, this, "loadWidgetTypes");
+			throw new ApsSystemException("Error loading widgets types", t);
 		}
 	}
 	
@@ -104,8 +104,8 @@ public class WidgetTypeManager extends AbstractService
 		List<WidgetType> types = new ArrayList<WidgetType>();
 		Iterator<WidgetType> masterTypesIter = this._widgetTypes.values().iterator();
 		while (masterTypesIter.hasNext()) {
-			WidgetType showletType = masterTypesIter.next();
-			types.add(showletType.clone());
+			WidgetType widgetType = masterTypesIter.next();
+			types.add(widgetType.clone());
 		}
 		return types;
 	}
@@ -184,7 +184,7 @@ public class WidgetTypeManager extends AbstractService
 			this.updateWidgetType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
-			throw new ApsSystemException("Error updating Widget type titles : type code" + showletTypeCode, t);
+			throw new ApsSystemException("Error updating Showlet type titles : type code" + showletTypeCode, t);
 		}
 	}
 	
@@ -233,7 +233,7 @@ public class WidgetTypeManager extends AbstractService
 			type.setTitles(titles);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
-			throw new ApsSystemException("Error updating Widget type titles : type code" + showletTypeCode, t);
+			throw new ApsSystemException("Error updating Showlet type titles : type code" + showletTypeCode, t);
 		}
 	}
 	

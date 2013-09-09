@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.plugins.jacms.aps.system.services.content.showlet;
+package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
 
 /**
  * @author E.Santoboni

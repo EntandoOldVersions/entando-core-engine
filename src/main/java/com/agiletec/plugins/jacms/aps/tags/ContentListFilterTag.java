@@ -26,8 +26,8 @@ import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListWidgetHelper;
-import com.agiletec.plugins.jacms.aps.system.services.content.showlet.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
+import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper;
 
 /**
  * ContentListTag" sub-tag, it creates a filter to restrict the result of the content search.
