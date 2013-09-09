@@ -6,12 +6,12 @@
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	
 	<bean id="simpleShowletAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.specialshowlet.SimpleWidgetConfigAction" parent="abstractPortalAction" >
+			class="com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction" parent="abstractPortalAction" >
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	
 	<bean id="navigatorShowletAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.specialshowlet.navigator.NavigatorWidgetConfigAction" parent="simpleShowletAction" >
+			class="com.agiletec.apsadmin.portal.specialwidget.navigator.NavigatorWidgetConfigAction" parent="simpleShowletAction" >
 		<property name="navigatorParser" ref="NavigatorParser" />
 	</bean>
 	

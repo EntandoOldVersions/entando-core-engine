@@ -19,6 +19,7 @@ package com.agiletec.plugins.jacms;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import com.agiletec.plugins.jacms.aps.system.TestApplicationContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestCategoryUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestContentDAO;
@@ -63,19 +64,20 @@ import com.agiletec.plugins.jacms.apsadmin.content.model.TestContentModelAction;
 import com.agiletec.plugins.jacms.apsadmin.content.model.TestContentModelFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.TestPageAction;
 import com.agiletec.plugins.jacms.apsadmin.portal.TestTrashReferencedPage;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestBaseFilterAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestContentListViewerShowletAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestDateAttributeFilterAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestNumberAttributeFilterAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.listviewer.TestTextAttributeFilterAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.TestContentFinderViewerAction;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialshowlet.viewer.TestContentViewerWidgetAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestBaseFilterAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestContentListViewerShowletAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestDateAttributeFilterAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestNumberAttributeFilterAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.TestTextAttributeFilterAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestContentFinderViewerAction;
+import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.TestContentViewerWidgetAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.TestResourceFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttributeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityManagersAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityTypeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.user.group.TestTrashReferencedGroup;
+
 import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestSaveBooleanAttributes;
 import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAttributes;

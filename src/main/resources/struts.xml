@@ -194,8 +194,8 @@
 	<include file="com/agiletec/apsadmin/category/category.xml" />
     
 	<include file="com/agiletec/apsadmin/portal/page.xml" />
-	<include file="com/agiletec/apsadmin/portal/specialshowlet/specialShowlet.xml" />
-	<include file="com/agiletec/apsadmin/portal/showletType.xml" />
+	<include file="com/agiletec/apsadmin/portal/specialwidget/specialWidget.xml" />
+	<include file="com/agiletec/apsadmin/portal/widgetType.xml" />
 	
 	<include file="org/entando/entando/apsadmin/user/user.xml" />
 	<include file="org/entando/entando/apsadmin/user/userprofile.xml" />

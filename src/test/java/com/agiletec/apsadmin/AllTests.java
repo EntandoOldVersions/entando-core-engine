@@ -21,6 +21,7 @@ import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import com.agiletec.apsadmin.admin.TestBaseAdminAction;
 import com.agiletec.apsadmin.admin.TestSystemParamsUtils;
 import com.agiletec.apsadmin.admin.lang.TestLangAction;
@@ -37,8 +38,8 @@ import com.agiletec.apsadmin.portal.TestPageConfigAction;
 import com.agiletec.apsadmin.portal.TestPageTreeAction;
 import com.agiletec.apsadmin.portal.TestWidgetTypeAction;
 import com.agiletec.apsadmin.portal.TestWidgetsViewerAction;
-import com.agiletec.apsadmin.portal.specialshowlet.TestSimpleWidgetConfigAction;
-import com.agiletec.apsadmin.portal.specialshowlet.navigator.TestNavigatorWidgetConfigAction;
+import com.agiletec.apsadmin.portal.specialwidget.TestSimpleWidgetConfigAction;
+import com.agiletec.apsadmin.portal.specialwidget.navigator.TestNavigatorWidgetConfigAction;
 import com.agiletec.apsadmin.system.entity.TestEntityManagersAction;
 import com.agiletec.apsadmin.system.services.TestShortcutManager;
 import org.entando.entando.apsadmin.user.TestAuthorityToUsersAction;
