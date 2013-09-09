@@ -19,18 +19,22 @@ package org.entando.entando.aps.system.services.actionlogger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import java.util.Arrays;
 
 import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
 import org.entando.entando.aps.system.services.actionlogger.model.IActionRecordSearchBean;
 
-public class ActionLoggerDAO extends AbstractDAO implements IActionLoggerDAO {
+/**
+ * @author E.Santoboni
+ */
+public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLoggerDAO {
 	
 	@Override
 	public void addActionRecord(ActionRecord actionRecord) {
@@ -59,125 +63,60 @@ public class ActionLoggerDAO extends AbstractDAO implements IActionLoggerDAO {
 	
 	@Override
 	public List<Integer> getActionRecords(IActionRecordSearchBean searchBean) {
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
 		List<Integer> actionRecords = new ArrayList<Integer>();
 		try {
-			conn = this.getConnection();
-			stat = this.buildStatement(searchBean, conn);
-			res = stat.executeQuery();
-			while (res.next()) {
-				int id = res.getInt(1);
-				actionRecords.add(new Integer(id));
+			FieldSearchFilter[] filters = this.createFilters(searchBean);
+			List<String> ids = super.searchId(filters);
+			if (null != ids) {
+				for (int i = 0; i < ids.size(); i++) {
+					String id = ids.get(i);
+					actionRecords.add(Integer.parseInt(id));
+				}
 			}
 		} catch (Throwable t) {
 			processDaoException(t, "Error loading actionlogger records", "getActionRecords");
-		} finally {
-			closeDaoResources(res, stat, conn);
 		}
 		return actionRecords;
 	}
 	
-	protected PreparedStatement buildStatement(IActionRecordSearchBean searchBean, Connection conn) {
-		String query = this.createQueryString(searchBean).toString();
-		PreparedStatement stat = null;
-		try {
-			stat = conn.prepareStatement(query);
-			int index = 0;
-			index = this.addSearchFilters(searchBean, index, stat);
-		} catch (Throwable t) {
-			processDaoException(t, "Error creating search statement", "buildStatement");
-		}
-		return stat;
-	}
-	
-	protected StringBuffer createQueryString(IActionRecordSearchBean searchBean) {
-		StringBuffer query = new StringBuffer(SELECT_ACTION_RECORDS);
-		if (searchBean!=null) {
-			boolean appendWhere = true;
+	protected FieldSearchFilter[] createFilters(IActionRecordSearchBean searchBean) {
+		FieldSearchFilter[] filters = new FieldSearchFilter[0];
+		if (null != searchBean) {
 			String username = searchBean.getUsername();
-			if (username != null && username.length()>0) {
-				query.append(APPEND_WHERE);
-				query.append(APPEND_USERNAME_CLAUSE);
-				appendWhere = false;
+			if (null != username && username.trim().length() > 0) {
+				FieldSearchFilter filter = new FieldSearchFilter("username", this.extractSearchValues(username), true);
+				filters = super.addFilter(filters, filter);
 			}
 			String namespace = searchBean.getNamespace();
-			if (namespace!=null && namespace.length()>0) {
-				query.append(appendWhere ? APPEND_WHERE : APPEND_AND);
-				query.append(APPEND_NAMESPACE_CLAUSE);
-				appendWhere = false;
+			if (null != namespace && namespace.trim().length() > 0) {
+				FieldSearchFilter filter = new FieldSearchFilter("namespace", this.extractSearchValues(namespace), true);
+				filters = super.addFilter(filters, filter);
 			}
 			String actionName = searchBean.getActionName();
-			if (actionName!=null && actionName.length()>0) {
-				query.append(appendWhere ? APPEND_WHERE : APPEND_AND);
-				query.append(APPEND_ACTIONNAME_CLAUSE);
-				appendWhere = false;
+			if (null != actionName && actionName.trim().length() > 0) {
+				FieldSearchFilter filter = new FieldSearchFilter("actionname", this.extractSearchValues(actionName), true);
+				filters = super.addFilter(filters, filter);
 			}
-			String params = searchBean.getParams();
-			if (params!=null && params.length()>0) {
-				query.append(appendWhere ? APPEND_WHERE : APPEND_AND);
-				query.append(APPEND_PARAMS_CLAUSE);
-				appendWhere = false;
+			String parameters = searchBean.getParams();
+			if (null != parameters && parameters.trim().length() > 0) {
+				FieldSearchFilter filter = new FieldSearchFilter("parameters", this.extractSearchValues(parameters), true);
+				filters = super.addFilter(filters, filter);
 			}
 			Date start = searchBean.getStart();
 			Date end = searchBean.getEnd();
-			if (start != null || end != null) {
-				query.append(appendWhere ? APPEND_WHERE : APPEND_AND);
-				if (end == null) {
-					query.append(APPEND_DATE_START_CLAUSE);
-				} else if (start == null) {
-					query.append(APPEND_DATE_END_CLAUSE);
-				} else {
-					query.append(APPEND_DATE_BETWEEN_CLAUSE);
-				}
-				appendWhere = false;
+			if (null != start || null != end) {
+				Timestamp tsStart = (null != start) ? new Timestamp(start.getTime()) : null;
+				Timestamp tsEnd = (null != end) ? new Timestamp(end.getTime()) : null;
+				FieldSearchFilter filter = new FieldSearchFilter("actiondate", tsStart, tsEnd);
+				filters = super.addFilter(filters, filter);
 			}
 		}
-		query.append(APPEND_ORDERBY_CLAUSE);
-		return query;
+		return filters;
 	}
 	
-	protected int addSearchFilters(IActionRecordSearchBean searchBean, int index, PreparedStatement stat) throws SQLException {
-		if (searchBean != null) {
-			String username = searchBean.getUsername();
-			if (username != null && username.length()>0) {
-				stat.setString(++index, this.searchLikeString(username));
-			}
-			String namespace = searchBean.getNamespace();
-			if (namespace!=null && namespace.length()>0) {
-				stat.setString(++index, this.searchLikeString(namespace));
-			}
-			String actionName = searchBean.getActionName();
-			if (actionName!=null && actionName.length()>0) {
-				stat.setString(++index, this.searchLikeString(actionName));
-			}
-			String params = searchBean.getParams();
-			if (params!=null && params.length()>0) {
-				stat.setString(++index, this.searchLikeString(params));
-			}
-			Date start = searchBean.getStart();
-			if (start != null) {
-				stat.setTimestamp(++index, new Timestamp(start.getTime()));
-			}
-			Date end = searchBean.getEnd();
-			if (end != null) {
-				stat.setTimestamp(++index, new Timestamp(end.getTime()));
-			}
-		}
-		return index;
-	}
-	
-	protected String searchLikeString(String searchValue) {
-		String result = "";
-		searchValue.trim();
-		String[] titleSplit = searchValue.split(" ");
-		for ( int i = 0;  i < titleSplit.length; i++) {
-			if ( titleSplit[i].length() > 0 ) {
-				result += "%" + titleSplit[i];
-			}
-		}
-		return result + "%" ;
+	protected List<String> extractSearchValues(String text) {
+		String[] titleSplit = text.trim().split(" ");
+		return (List<String>) Arrays.asList(titleSplit);
 	}
 	
 	@Override
@@ -233,20 +172,25 @@ public class ActionLoggerDAO extends AbstractDAO implements IActionLoggerDAO {
 		}
 	}
 	
-	private final String SELECT_ACTION_RECORDS = 
-		"SELECT id FROM actionloggerrecords ";
+	@Override
+	protected String getMasterTableName() {
+		return "actionloggerrecords";
+	}
+
+	@Override
+	protected String getMasterTableIdFieldName() {
+		return "id";
+	}
 	
-	private final String APPEND_WHERE = "WHERE ";
-	private final String APPEND_AND = "AND ";
-	private final String APPEND_USERNAME_CLAUSE  = "username LIKE ? ";
-	private final String APPEND_NAMESPACE_CLAUSE  = "namespace LIKE ? ";
-	private final String APPEND_ACTIONNAME_CLAUSE  = "actionname LIKE ? ";
-	private final String APPEND_PARAMS_CLAUSE  = "parameters LIKE ? ";
-	private final String APPEND_DATE_START_CLAUSE  = "actiondate >= ? ";
-	private final String APPEND_DATE_END_CLAUSE  = "actiondate <= ? ";
-	private final String APPEND_DATE_BETWEEN_CLAUSE  = "( actiondate BETWEEN ? AND ? ) ";
+	@Override
+	protected String getTableFieldName(String metadataFieldKey) {
+		return metadataFieldKey;
+	}
 	
-	private final String APPEND_ORDERBY_CLAUSE = "ORDER BY actiondate DESC ";
+	@Override
+	protected boolean isForceCaseInsensitiveLikeSearch() {
+		return true;
+	}
 	
 	private static final String ADD_ACTION_RECORD = 
 		"INSERT INTO actionloggerrecords ( id, username, actiondate, namespace, actionname, parameters ) " +
