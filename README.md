@@ -1,6 +1,6 @@
 SQL notes
 
-```sql - port database
+```sql
 
 -- transition from 'showlets' to 'widgets' - Start
 ALTER TABLE showletcatalog RENAME TO widgetcatalog;
@@ -70,7 +70,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 ```
 
-```sql - serv database
+```sql
 
 INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Editing');
