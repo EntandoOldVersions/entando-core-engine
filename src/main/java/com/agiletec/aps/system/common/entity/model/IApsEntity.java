@@ -25,6 +25,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.IGroupManager;
+import java.io.Serializable;
 
 /**
  * This class represents an Entity.
@@ -36,7 +37,7 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  * defined in the configuration.
  * @author E. Santoboni
  */
-public interface IApsEntity {
+public interface IApsEntity extends Serializable{
     
     /**
      * Add an attribute to the list of the attributes of the entity.

@@ -16,13 +16,14 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
+import java.io.Serializable;
 import org.jdom.Element;
 
 /**
  * Rappresenta uno dei file costituenti una risorsa.
  * @author W.Ambu - E.Santoboni
  */
-public class ResourceInstance {
+public class ResourceInstance implements Serializable{
 	
 	/**
      * Restituisce la lunghezza del file relativo all'istanza.

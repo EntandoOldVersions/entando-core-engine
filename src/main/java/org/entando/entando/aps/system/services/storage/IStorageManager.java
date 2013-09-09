@@ -19,11 +19,12 @@ package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.InputStream;
+import java.io.Serializable;
 
 /**
  * @author E.Santoboni
  */
-public interface IStorageManager {
+public interface IStorageManager extends Serializable {
 	
 	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException;
 	

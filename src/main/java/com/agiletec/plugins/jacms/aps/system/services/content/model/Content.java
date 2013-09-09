@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
+
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +26,6 @@ import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.plugins.jacms.aps.system.services.content.parse.ContentDOM;
-import java.io.Serializable;
 
 /**
  * Rappresenta un contenuto informativo. 
@@ -36,7 +36,7 @@ import java.io.Serializable;
  * precedentemente costruito.
  * @author M.Diana - E.Santoboni
  */
-public class Content extends ApsEntity implements Serializable {
+public class Content extends ApsEntity {
 	
 	/**
 	 * Restituisce lo stato del contenuto.

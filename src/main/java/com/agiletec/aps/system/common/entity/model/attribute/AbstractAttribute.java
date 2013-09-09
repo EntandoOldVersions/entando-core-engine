@@ -515,7 +515,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     private boolean _searcheable;
     private String _indexingType;
     private IApsEntity _parentEntity;
-    private AttributeHandlerInterface _handler;
+    private transient AttributeHandlerInterface _handler;
     private String[] _disablingCodes;
     private String[] _roles;
     private boolean _active = true;

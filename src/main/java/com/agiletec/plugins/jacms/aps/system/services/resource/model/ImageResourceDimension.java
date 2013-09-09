@@ -16,11 +16,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
+import java.io.Serializable;
+
 /**
  * Classe rappresentante una dimensione di resize di una risorsa immagine.
  * @author E.Santoboni
  */
-public class ImageResourceDimension {
+public class ImageResourceDimension implements Serializable {
 
     /**
      * Setta l'identificativo del resize.

@@ -121,6 +121,6 @@ public abstract class AbstractService
 	
 	private BeanFactory _beanFactory;
 	
-	private INotifyManager _notifyManager;
+	private transient INotifyManager _notifyManager;
 	
 }

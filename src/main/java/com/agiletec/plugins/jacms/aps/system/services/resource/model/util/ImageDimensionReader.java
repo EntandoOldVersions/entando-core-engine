@@ -25,13 +25,14 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ImageDimensionDOM;
+import java.io.Serializable;
 
 /**
  * Classe delegata al caricamento 
  * delle dimensioni per il redimensionamento delle immagini.
  * @author E.Santoboni
  */
-public class ImageDimensionReader extends AbstractService implements IImageDimensionReader {
+public class ImageDimensionReader extends AbstractService implements IImageDimensionReader, Serializable {
 	
 	/**
 	 * Inizializzazione della classe.
@@ -76,6 +77,6 @@ public class ImageDimensionReader extends AbstractService implements IImageDimen
      */
     private Map<Integer, ImageResourceDimension> _imageDimensions;
     
-    private ConfigInterface _configManager;
+    private transient ConfigInterface _configManager;
 	
 }
