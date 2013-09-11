@@ -9,13 +9,13 @@
 
     	<!-- ##### WIDGET CONTENT VIEWER **** ENTRY POINT ##### -->
     	<action name="viewerConfig" class="jacmsContentViewerWidgetAction" method="init">
-        	<result type="tiles">admin.jacms.page.showlet.contentViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
     	<!-- ##### WIDGET CONTENT LIST VIEWER **** ENTRY POINT ##### -->
     	<action name="listViewerConfig" class="jacmsContentListViewerWidgetAction" method="init">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
@@ -35,30 +35,30 @@
 		</global-results>
 
 		<action name="searchContents" class="jacmsContentFinderViewerWidgetAction">
-            <result name="input" type="tiles">admin.jacms.page.showlet.contentViewer.searchContents</result>
-        	<result type="tiles">admin.jacms.page.showlet.contentViewer.searchContents</result>
+            <result name="input" type="tiles">admin.jacms.page.widget.contentViewer.searchContents</result>
+        	<result type="tiles">admin.jacms.page.widget.contentViewer.searchContents</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
         <action name="changeContentListOrder" class="jacmsContentFinderViewerWidgetAction" method="changeOrder">
-            <result type="tiles">admin.jacms.page.showlet.contentViewer.searchContents</result>
+            <result type="tiles">admin.jacms.page.widget.contentViewer.searchContents</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="joinContent" class="jacmsContentFinderViewerWidgetAction" method="joinContent">
-			<result type="tiles" name="input">admin.jacms.page.showlet.contentViewer.searchContents</result>
+			<result type="tiles" name="input">admin.jacms.page.widget.contentViewer.searchContents</result>
             <result type="chain">executeJoinContent</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="executeJoinContent" class="jacmsContentViewerWidgetAction" method="joinContent">
-        	<result type="tiles" name="input">admin.jacms.page.showlet.contentViewer.searchContents</result>
-            <result type="tiles">admin.jacms.page.showlet.contentViewer.config</result>
+        	<result type="tiles" name="input">admin.jacms.page.widget.contentViewer.searchContents</result>
+            <result type="tiles">admin.jacms.page.widget.contentViewer.config</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveViewerConfig" class="jacmsContentViewerWidgetAction" method="save">
-    		<result type="tiles" name="input">admin.jacms.page.showlet.contentViewer.config</result>
+    		<result type="tiles" name="input">admin.jacms.page.widget.contentViewer.config</result>
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
@@ -78,106 +78,106 @@
 		</global-results>
 
 		<action name="configListViewer" class="jacmsContentListViewerWidgetAction" method="configContentType">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
-            <result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
+            <result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
         <action name="changeContentType" class="jacmsContentListViewerWidgetAction" method="changeContentType">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="addCategory" class="jacmsContentListViewerWidgetAction" method="addCategory">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="removeCategory*" class="jacmsContentListViewerWidgetAction" method="removeCategory">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="removeUserFilter*" class="jacmsContentListViewerWidgetAction" method="removeUserFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="moveUserFilter*" class="jacmsContentListViewerWidgetAction" method="moveUserFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="addUserFilter" class="jacmsContentListViewerWidgetAction" method="addUserFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
-            <result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
-            <result name="userfiltercategory" type="tiles">admin.jacms.page.showlet.contentListViewer.config.userfilter.category</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
+            <result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
+            <result name="userfiltercategory" type="tiles">admin.jacms.page.widget.contentListViewer.config.userfilter.category</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="removeFilter*" class="jacmsContentListViewerWidgetAction" method="removeFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="moveFilter*" class="jacmsContentListViewerWidgetAction" method="moveFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveListViewerConfig" class="jacmsContentListViewerWidgetAction" method="save">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="newFilter" class="jacmsContentListFilterAction" method="newFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="setFilterType" class="jacmsContentListFilterAction" method="setFilterType">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="setFilterOption" class="jacmsContentListFilterAction" method="setFilterOption">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
 			<result name="addFilter" type="chain">addFilter</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveFilter" class="jacmsContentListFilterAction" method="saveFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <result type="chain">addFilter</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveTextFilter" class="jacmsContentListTextFilterAction" method="saveFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <result type="chain">addFilter</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveNumberFilter" class="jacmsContentListNumberFilterAction" method="saveFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <result type="chain">addFilter</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveBooleanFilter" class="jacmsContentListBooleanFilterAction" method="saveFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <result type="chain">addFilter</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="saveDateFilter" class="jacmsContentListDateFilterAction" method="saveFilter">
-        	<result name="input" type="tiles">admin.jacms.page.showlet.contentListViewer.entryFilter</result>
+        	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.entryFilter</result>
             <result type="chain">addFilter</result>
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 		<action name="addFilter" class="jacmsContentListViewerWidgetAction" method="addFilter">
-        	<result type="tiles">admin.jacms.page.showlet.contentListViewer.config</result>
+        	<result type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
             <interceptor-ref name="entandoDefaultStack">
             	<param name="requestAuth.requiredPermission">managePages</param>
             	<param name="chain.includeParameters">newFilter</param>
