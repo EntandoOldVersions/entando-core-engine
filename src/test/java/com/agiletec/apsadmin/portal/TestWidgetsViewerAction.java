@@ -59,7 +59,7 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		List<SelectItem> userShowlets = showletFlavours.get(0);
 		assertEquals(2, userShowlets.size());
 		SelectItem userType = userShowlets.get(1);
-		assertEquals(AbstractPortalAction.USER_SHOWLETS_CODE, userType.getOptgroup());
+		assertEquals(AbstractPortalAction.USER_WIDGETS_CODE, userType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("logic_type", userType.getKey());
 			assertEquals("Tipo logico per test", userType.getValue());
@@ -71,7 +71,7 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		List<SelectItem> customWidgets = showletFlavours.get(1);
 		assertEquals(1, customWidgets.size());
 		SelectItem customType = customWidgets.get(0);
-		assertEquals(AbstractPortalAction.CUSTOM_SHOWLETS_CODE, customType.getOptgroup());
+		assertEquals(AbstractPortalAction.CUSTOM_WIDGETS_CODE, customType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("leftmenu", customType.getKey());
 			assertEquals("Menu di navigazione verticale", customType.getValue());
@@ -92,7 +92,7 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		List<SelectItem> stockWidgets = showletFlavours.get(showletFlavours.size()-1);
 		assertEquals(4, stockWidgets.size());
 		SelectItem stockType = stockWidgets.get(3);
-		assertEquals(AbstractPortalAction.STOCK_SHOWLETS_CODE, stockType.getOptgroup());
+		assertEquals(AbstractPortalAction.STOCK_WIDGETS_CODE, stockType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("login_form", stockType.getKey());
 			assertEquals("Widget di Login", stockType.getValue());

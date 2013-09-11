@@ -60,7 +60,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		try {
 			conn = this.getConnection();
 			stat = conn.createStatement();
-			res = stat.executeQuery(ALL_SHOWLET_TYPES);
+			res = stat.executeQuery(ALL_WIDGET_TYPES);
 			while (res.next()) {
 				WidgetType showletType = this.showletTypeFromResultSet(res);
 				showletTypes.put(showletType.getCode(), showletType);
@@ -128,7 +128,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(ADD_SHOWLET_TYPE);
+			stat = conn.prepareStatement(ADD_WIDGET_TYPE);
 			//(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked)
 			stat.setString(1, showletType.getCode());
 			stat.setString(2, showletType.getTitles().toXml());
@@ -176,7 +176,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(DELETE_SHOWLET_TYPE);
+			stat = conn.prepareStatement(DELETE_WIDGET_TYPE);
 			stat.setString(1, showletTypeCode);
 			stat.setInt(2, 0);
 			stat.executeUpdate();
@@ -251,7 +251,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(UPDATE_SHOWLET_TYPE);
+			stat = conn.prepareStatement(UPDATE_WIDGET_TYPE);
 			stat.setString(1, titles.toXml());
 			if (null == defaultConfig || defaultConfig.size() == 0) {
 				stat.setNull(2, Types.VARCHAR);
@@ -279,21 +279,21 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	
 	private ILangManager _langManager;
 	
-	private final String ALL_SHOWLET_TYPES = 
+	private final String ALL_WIDGET_TYPES = 
 		"SELECT code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup FROM widgetcatalog";
 	
-	private final String ADD_SHOWLET_TYPE = 
+	private final String ADD_WIDGET_TYPE = 
 		"INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) " +
 		"VALUES ( ? , ? , ? , ? , ? , ? , ? , ?)";
 	
-	private final String DELETE_SHOWLET_TYPE = 
+	private final String DELETE_WIDGET_TYPE = 
 		"DELETE FROM widgetcatalog WHERE code = ? AND locked = ? ";
 	
 	@Deprecated
 	private final String UPDATE_SHOWLET_TYPE_DEPRECATED = 
 		"UPDATE widgetcatalog SET titles = ? , defaultconfig = ? WHERE code = ? ";
 	
-	private final String UPDATE_SHOWLET_TYPE = 
+	private final String UPDATE_WIDGET_TYPE = 
 		"UPDATE widgetcatalog SET titles = ? , defaultconfig = ? , maingroup = ? WHERE code = ? ";
 	
 	@Deprecated

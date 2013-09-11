@@ -87,7 +87,7 @@ public class ApiMethod implements Serializable {
                     this.getParameters().add(parameter);
                 }
             }
-            Element relatedShowletElement = element.getChild(ApiResourcesDefDOM.RELATED_SHOWLET_ELEMENT_NAME);
+            Element relatedShowletElement = element.getChild(ApiResourcesDefDOM.RELATED_WIDGET_ELEMENT_NAME);
             if (null != relatedShowletElement) {
                 this.setRelatedShowlet(new ApiMethodRelatedWidget(relatedShowletElement));
             }

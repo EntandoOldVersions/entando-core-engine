@@ -206,10 +206,31 @@ public class ApiResourcesDefDOM {
     public static final String PARAMETER_TYPE_ATTRIBUTE_NAME = "type";
     public static final String PARAMETER_OVERRIDE_ATTRIBUTE_NAME = "override";
     public static final String PARAMETER_DESCRIPTION_ELEMENT_NAME = "description";
-    public static final String RELATED_SHOWLET_ELEMENT_NAME = "relatedShowlet";
-    public static final String RELATED_SHOWLET_CODE_ATTRIBUTE_NAME = "code";
-    public static final String RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME = "mapParameter";
-    public static final String RELATED_SHOWLET_MAP_PARAMETER_SHOWLET_ATTRIBUTE_NAME = "showlet";
-    public static final String RELATED_SHOWLET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME = "method";
+    public static final String RELATED_WIDGET_ELEMENT_NAME = "relatedShowlet";
+    public static final String RELATED_WIDGET_CODE_ATTRIBUTE_NAME = "code";
+    public static final String RELATED_WIDGET_MAP_PARAMETER_ELEMENT_NAME = "mapParameter";
+    public static final String RELATED_WIDGET_MAP_PARAMETER_WIDGET_ATTRIBUTE_NAME = "showlet";
+    public static final String RELATED_WIDGET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME = "method";
+        
+	/**
+	 * @deprecated Use {@link #RELATED_WIDGET_ELEMENT_NAME} instead
+	 */
+	public static final String RELATED_SHOWLET_ELEMENT_NAME = RELATED_WIDGET_ELEMENT_NAME;
+	/**
+	 * @deprecated Use {@link #RELATED_WIDGET_CODE_ATTRIBUTE_NAME} instead
+	 */
+	public static final String RELATED_SHOWLET_CODE_ATTRIBUTE_NAME = RELATED_WIDGET_CODE_ATTRIBUTE_NAME;
+	/**
+	 * @deprecated Use {@link #RELATED_WIDGET_MAP_PARAMETER_ELEMENT_NAME} instead
+	 */
+	public static final String RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME = RELATED_WIDGET_MAP_PARAMETER_ELEMENT_NAME;
+	/**
+	 * @deprecated Use {@link #RELATED_WIDGET_MAP_PARAMETER_WIDGET_ATTRIBUTE_NAME} instead
+	 */
+	public static final String RELATED_SHOWLET_MAP_PARAMETER_SHOWLET_ATTRIBUTE_NAME = RELATED_WIDGET_MAP_PARAMETER_WIDGET_ATTRIBUTE_NAME;
+	/**
+	 * @deprecated Use {@link #RELATED_WIDGET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME} instead
+	 */
+	public static final String RELATED_SHOWLET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME = RELATED_WIDGET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME;
 	
 }

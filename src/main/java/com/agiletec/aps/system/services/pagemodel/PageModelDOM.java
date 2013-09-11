@@ -96,7 +96,7 @@ public class PageModelDOM {
 				if (null != frameDescrElement) {
 					_frames[pos] = frameDescrElement.getText();
 				}
-				Element defaultShowletElement = frameElement.getChild(TAB_DEFAULT_SHOWLET);
+				Element defaultShowletElement = frameElement.getChild(TAB_DEFAULT_WIDGET);
 				if (null != defaultShowletElement) {
 					this.buildDefaultShowlet(defaultShowletElement, pos, showletTypeManager);
 				}
@@ -160,7 +160,7 @@ public class PageModelDOM {
 	private final String ATTRIBUTE_POS = "pos";
 	private final String ATTRIBUTE_MAIN = "main";
 	private final String TAB_DESCR = "descr";
-	private final String TAB_DEFAULT_SHOWLET = "defaultShowlet";
+	private final String TAB_DEFAULT_WIDGET = "defaultShowlet";
 	private final String ATTRIBUTE_CODE = "code";
 	private final String TAB_PROPERTIES = "properties";
 	private final String TAB_PROPERTY = "property";

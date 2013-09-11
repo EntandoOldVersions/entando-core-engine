@@ -129,6 +129,7 @@ public interface IContentListWidgetHelper extends com.agiletec.plugins.jacms.aps
 	 * @deprecated Use {@link #WIDGET_PARAM_USER_FILTERS} instead
 	 */
 	public static final String SHOWLET_PARAM_USER_FILTERS = WIDGET_PARAM_USER_FILTERS;
+	
 	@Deprecated(/** to maintain compatibility with versions prior to 2.2.0.1 */)
 	public static final String SHOWLET_PARAM_CATEGORY = "category";
 	/**

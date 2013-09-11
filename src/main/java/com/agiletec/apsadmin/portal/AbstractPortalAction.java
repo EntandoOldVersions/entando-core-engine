@@ -49,13 +49,13 @@ public abstract class AbstractPortalAction extends BaseAction {
 		Map<String, List<SelectItem>> mapping = this.getShowletFlavoursMapping(pluginCodes);
 		List<List<SelectItem>> group = new ArrayList<List<SelectItem>>();
 		try {
-			this.addGroup(USER_SHOWLETS_CODE, mapping, group);
-			this.addGroup(CUSTOM_SHOWLETS_CODE, mapping, group);
+			this.addGroup(USER_WIDGETS_CODE, mapping, group);
+			this.addGroup(CUSTOM_WIDGETS_CODE, mapping, group);
 			for (int i = 0; i < pluginCodes.size(); i++) {
 				String pluginCode = pluginCodes.get(i);
 				this.addGroup(pluginCode, mapping, group);
 			}
-			this.addGroup(STOCK_SHOWLETS_CODE, mapping, group);
+			this.addGroup(STOCK_WIDGETS_CODE, mapping, group);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getShowletFlavours");
 			throw new RuntimeException("Error extracting Widget groups", t);
@@ -77,13 +77,13 @@ public abstract class AbstractPortalAction extends BaseAction {
 				this.addFlavourShowletType(pluginCode, type, mapping);
 			} else if (type.isUserType()) {
 				//is a user showlet
-				this.addFlavourShowletType(USER_SHOWLETS_CODE, type, mapping);
+				this.addFlavourShowletType(USER_WIDGETS_CODE, type, mapping);
 			} else {
 				//is a core showlet
 				if (this.getStockShowletCodes().contains(type.getCode())) {
-					this.addFlavourShowletType(STOCK_SHOWLETS_CODE, type, mapping);
+					this.addFlavourShowletType(STOCK_WIDGETS_CODE, type, mapping);
 				} else {
-					this.addFlavourShowletType(CUSTOM_SHOWLETS_CODE, type, mapping);
+					this.addFlavourShowletType(CUSTOM_WIDGETS_CODE, type, mapping);
 				}
 			}
 		}
@@ -267,8 +267,23 @@ public abstract class AbstractPortalAction extends BaseAction {
 	 */
 	public static final String VIRTUAL_ROOT_CODE = "VIRTUAL_PAGE_ROOT";
 	
-	public static final String STOCK_SHOWLETS_CODE = "stockShowletCode";
-	public static final String CUSTOM_SHOWLETS_CODE = "customShowletCode";
-	public static final String USER_SHOWLETS_CODE = "userShowletCode";
+	public static final String USER_WIDGETS_CODE = "userShowletCode";
+	public static final String CUSTOM_WIDGETS_CODE = "customShowletCode";
+	public static final String STOCK_WIDGETS_CODE = "stockShowletCode";
+
+	/**
+	 * @deprecated Use {@link #USER_WIDGETS_CODE} instead
+	 */
+	public static final String USER_SHOWLETS_CODE = USER_WIDGETS_CODE;
+
+	/**
+	 * @deprecated Use {@link #CUSTOM_WIDGETS_CODE} instead
+	 */
+	public static final String CUSTOM_SHOWLETS_CODE = CUSTOM_WIDGETS_CODE;
+
+	/**
+	 * @deprecated Use {@link #STOCK_WIDGETS_CODE} instead
+	 */
+	public static final String STOCK_SHOWLETS_CODE = STOCK_WIDGETS_CODE;
 	
 }

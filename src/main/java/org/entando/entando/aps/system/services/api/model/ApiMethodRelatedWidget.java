@@ -32,13 +32,13 @@ public class ApiMethodRelatedWidget {
 	protected ApiMethodRelatedWidget() {}
 	
 	protected ApiMethodRelatedWidget(Element element) {
-		this.setShowletCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_CODE_ATTRIBUTE_NAME));
+		this.setShowletCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_WIDGET_CODE_ATTRIBUTE_NAME));
 		this.setMapping(new ApsProperties());
-		List<Element> mappingsElements = element.getChildren(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_ELEMENT_NAME);
+		List<Element> mappingsElements = element.getChildren(ApiResourcesDefDOM.RELATED_WIDGET_MAP_PARAMETER_ELEMENT_NAME);
 		for (int i = 0; i < mappingsElements.size(); i++) {
 			Element mappingsElement = mappingsElements.get(i);
-			String showletParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_SHOWLET_ATTRIBUTE_NAME);
-			String methodParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_SHOWLET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME);
+			String showletParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_WIDGET_MAP_PARAMETER_WIDGET_ATTRIBUTE_NAME);
+			String methodParam = mappingsElement.getAttributeValue(ApiResourcesDefDOM.RELATED_WIDGET_MAP_PARAMETER_METHOD_ATTRIBUTE_NAME);
 			this.getMapping().put(showletParam, methodParam);
 		}
 	}
