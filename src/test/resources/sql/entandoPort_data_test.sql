@@ -404,7 +404,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
 				</validations>
 				<roles>
-					<role>userprofile:mail</role>
+					<role>userprofile:email</role>
 				</roles>
 			</attribute>
 			<attribute name="birthdate" attributetype="Date" required="true" searcheable="true"/>

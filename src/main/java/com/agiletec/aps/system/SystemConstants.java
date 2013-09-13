@@ -308,7 +308,7 @@ public interface SystemConstants {
 	/**
 	 * The name of the attribute that contains the mail address
 	 */
-	public static final String USER_PROFILE_ATTRIBUTE_ROLE_MAIL = "userprofile:mail";
+	public static final String USER_PROFILE_ATTRIBUTE_ROLE_MAIL = "userprofile:email";
 	
 	public static final String USER_PROFILE_ATTRIBUTE_DISABLING_CODE_ON_EDIT = "userprofile:onEdit";
 	
