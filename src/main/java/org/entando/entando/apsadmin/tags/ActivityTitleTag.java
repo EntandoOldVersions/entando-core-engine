@@ -34,22 +34,17 @@ public class ActivityTitleTag extends TextTag {
 	
 	protected String createLabelKey() {
 		StringBuilder builder = new StringBuilder("label.activity.");
-		
 		String evaluatedActionName = (String) super.findValue(this.getActionName());
 		String evaluatedNamespace = (String) super.findValue(this.getNamespace());
 		Integer evaluatedActionType = (null != this.getActionType()) ? (Integer) super.findValue(this.getActionType()) : null;
-		
 		String namespace = (evaluatedNamespace.startsWith("/")) ? evaluatedNamespace.substring(1) : evaluatedNamespace;
 		builder.append(namespace).append("/").append(evaluatedActionName);
 		if (null != evaluatedActionType) {
 			builder.append(".").append(evaluatedActionType);
 		}
-		
 		String labelKey = builder.toString();
 		labelKey = labelKey.trim().replace(' ', '_');
-		labelKey = labelKey.replaceAll("/", "_");
-		System.out.println("LABEL KEY - " + labelKey);
-		return labelKey;
+		return labelKey.replaceAll("/", "_");
 	}
 	
 	public String getActionName() {
