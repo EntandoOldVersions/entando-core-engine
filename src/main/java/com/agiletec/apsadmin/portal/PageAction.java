@@ -257,6 +257,14 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		asi.addLinkParameter("selectedNode", page.getCode());
 		asi.setLinkAuthGroup(page.getGroup());
 		asi.setLinkAuthPermission(Permission.MANAGE_PAGES);
+		List<String> groups = new ArrayList<String>();
+		if (null != page.getExtraGroups()) {
+			groups.addAll(page.getExtraGroups());
+		}
+		if (!groups.contains(page.getGroup())) {
+			groups.add(page.getGroup());
+		}
+		asi.setGroups(groups);
 		super.addActivityStreamInfo(asi);
 	}
 	
