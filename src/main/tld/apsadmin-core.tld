@@ -259,43 +259,6 @@
 		</attribute>
 	</tag>
 	<tag>
-		<description><![CDATA[Assigns a value to a variable in a specified scope<br/>
-		<b>DEPRECATED</b> - use the original s:set tag.]]></description>
-		<name>set</name>
-		<tag-class>org.apache.struts2.views.jsp.SetTag</tag-class>
-		<body-content>JSP</body-content>
-		<attribute>
-			<description><![CDATA[Deprecated. Use 'var' instead.]]></description>
-			<name>id</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Deprecated. Use 'var' instead.]]></description>
-			<name>name</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The scope of the variable. Can be <b>application</b>, <b>session</b>, <b>request</b>, <b>page</b>, or <b>action</b>.]]></description>
-			<name>scope</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The value assigned to the variable.]]></description>
-			<name>value</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Name used to reference the value pushed into the Value Stack.]]></description>
-			<name>var</name>
-			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
 		<description>
 			<![CDATA[Returns a shortcut (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property using the "property" attribute.]]>
@@ -442,5 +405,80 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-
+	
+	<tag>
+		<description>
+			<![CDATA[Return the list (of integer) for the activity stream of the current user.]]>
+		</description>
+		<name>activityStream</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ActivityStreamTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name used to reference the list (of integer) for the activity stream of the current user.]]></description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>
+			<![CDATA[Returns a single record of Action Logger Manager (or one of its property) through the code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
+			The names of the available property of "ActivityStream": "id", "actionDate", "username", "namespace", "actionName", "parameters", "activityStreamInfo".]]>
+		</description>
+		<name>actionLogRecord</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ActionLogRecordTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The id of the action log record to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the logger info (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+				"id", "actionDate", "username", "namespace", "actionName", "parameters", "activityStreamInfo".]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description><![CDATA[Render a title of the traced activity]]></description>
+		<name>activityTitle</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ActivityTitleTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name of the executed action and traced by the log.]]></description>
+			<name>actionName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Namespace of the executed action and traced by the log.]]></description>
+			<name>namespace</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Type of the executed action and traced by the log.]]></description>
+			<name>actionType</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	
 </taglib>
