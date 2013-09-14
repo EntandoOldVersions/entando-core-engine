@@ -76,10 +76,29 @@ INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View U
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Editing');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
 
+CREATE TABLE actionlogrecords
+(
+  id integer NOT NULL,
+  username character varying(20),
+  actiondate timestamp without time zone,
+  namespace text,
+  actionname character varying(250),
+  parameters text,
+  activitystreaminfo text,
+  CONSTRAINT actionlogrecords_pkey PRIMARY KEY (id )
+);
+CREATE TABLE actionlogrelations
+(
+  recordid integer NOT NULL,
+  refgroup character varying(20),
+  CONSTRAINT actionlogrelations_recid_fkey FOREIGN KEY (recordid)
+      REFERENCES actionlogrecords (id)
+);
+
 -- for "User Profile" plugin - Start
 ALTER TABLE jpuserprofile_authuserprofiles RENAME TO authuserprofiles;
-ALTER TABLE jpuserprofile_profilesearch RENAME TO userprofile_profilesearch;
-ALTER TABLE jpuserprofile_attroles RENAME TO userprofile_attroles;
+ALTER TABLE jpuserprofile_profilesearch RENAME TO authuserprofilesearch;
+ALTER TABLE jpuserprofile_attroles RENAME TO authuserprofileattrroles;
 -- OR
 CREATE TABLE authuserprofiles (
   username character varying(40) NOT NULL,
