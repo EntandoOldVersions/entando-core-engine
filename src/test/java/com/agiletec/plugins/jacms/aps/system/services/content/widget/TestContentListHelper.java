@@ -54,7 +54,7 @@ public class TestContentListHelper extends BaseTestCase {
     	assertEquals(DateConverter.parseDate("21/10/2007", "dd/MM/yyyy"), filter.getStart());
     	assertNull(filter.getEnd());
     	assertNull(filter.getValue());
-    	assertEquals("DESC", filter.getOrder());
+    	assertEquals("DESC", filter.getOrder().toString());
     }
 	
 	public void testGetFilters_OneDefinition() {
@@ -72,7 +72,7 @@ public class TestContentListHelper extends BaseTestCase {
 		assertEquals("Titolo", entitySearchFilter.getKey());
 		assertEquals("START", entitySearchFilter.getStart());
 		assertEquals("END", entitySearchFilter.getEnd());
-		assertEquals("ASC", entitySearchFilter.getOrder());
+		assertEquals("ASC", entitySearchFilter.getOrder().toString());
 
 		contentType = "ART";
 		showletParam = "(key=Titolo;attributeFilter=TRUE;start=START;end=END;like=FALSE;order=DESC)";
@@ -87,7 +87,7 @@ public class TestContentListHelper extends BaseTestCase {
 		assertEquals("Titolo", entitySearchFilter.getKey());
 		assertEquals("START", entitySearchFilter.getStart());
 		assertEquals("END", entitySearchFilter.getEnd());
-		assertEquals("DESC", entitySearchFilter.getOrder());
+		assertEquals("DESC", entitySearchFilter.getOrder().toString());
 		
 		
 		contentType = "ART";
@@ -103,7 +103,7 @@ public class TestContentListHelper extends BaseTestCase {
 		assertEquals("descr", entitySearchFilter.getKey());
 		assertEquals(null, entitySearchFilter.getStart());
 		assertEquals(null, entitySearchFilter.getEnd());
-		assertEquals("ASC", entitySearchFilter.getOrder());
+		assertEquals("ASC", entitySearchFilter.getOrder().toString());
 	}
 	
 	public void testGetFilters_TwoDefinition() {
@@ -121,7 +121,7 @@ public class TestContentListHelper extends BaseTestCase {
 		assertEquals("Titolo", entitySearchFilter.getKey());
 		assertEquals("START", entitySearchFilter.getStart());
 		assertEquals("END", entitySearchFilter.getEnd());
-		assertEquals("ASC", entitySearchFilter.getOrder());
+		assertEquals("ASC", entitySearchFilter.getOrder().toString());
 		assertEquals(null, entitySearchFilter.getValue());
 		assertTrue(entitySearchFilter.isAttributeFilter());
 		
@@ -131,7 +131,7 @@ public class TestContentListHelper extends BaseTestCase {
 		assertEquals("descr", entitySearchFilter.getKey());
 		assertEquals(null, entitySearchFilter.getStart());
 		assertEquals(null, entitySearchFilter.getEnd());
-		assertEquals("ASC", entitySearchFilter.getOrder());
+		assertEquals("ASC", entitySearchFilter.getOrder().toString());
 		assertFalse(entitySearchFilter.isAttributeFilter());
 		Object obj = entitySearchFilter.getValue();
 		assertNotNull(obj);

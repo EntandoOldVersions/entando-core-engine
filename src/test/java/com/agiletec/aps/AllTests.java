@@ -64,6 +64,9 @@ import org.entando.entando.aps.system.services.actionlog.TestActionLogDAO;
 import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
 import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
+/**
+ * @author W.Ambu
+ */
 public class AllTests {
 	
 	public static Test suite() {
