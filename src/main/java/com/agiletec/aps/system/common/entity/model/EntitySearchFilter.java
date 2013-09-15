@@ -41,7 +41,7 @@ import java.util.*;
  * This class implements a filter to search among entities.
  * @author E.Santoboni
  */
-public class EntitySearchFilter extends FieldSearchFilter implements Serializable {
+public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializable {
 	
 	protected EntitySearchFilter() {}
 	
@@ -126,7 +126,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 	 * This option can be used to filter by the value of a string attribute (or metadata). It can be
 	 * used only with string and with allowed values not null.
 	 */
-	public EntitySearchFilter(String key, boolean isAttributeFilter, List<Object> allowedValues, boolean useLikeOption) {
+	public EntitySearchFilter(String key, boolean isAttributeFilter, List<T> allowedValues, boolean useLikeOption) {
 		this(key, isAttributeFilter);
 		this.setAllowedValues(allowedValues);
 		this.setLikeOption(useLikeOption);
@@ -139,12 +139,12 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		return filter;
 	}
 	
-	public static EntitySearchFilter createRoleFilter(String roleName, Object value, boolean useLikeOption) {
+	public static <T> EntitySearchFilter createRoleFilter(String roleName, Object value, boolean useLikeOption) {
 		EntitySearchFilter filter = new EntitySearchFilter();
 		filter.setAttributeFilter(true);
 		filter.setRoleName(roleName);
 		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
-			List<Object> allowedValues = new ArrayList<Object>();
+			List<T> allowedValues = new ArrayList<T>();
 			allowedValues.addAll((Collection) value);
 			filter.setAllowedValues(allowedValues);
 			if (allowedValues.get(0) instanceof String) {
@@ -171,7 +171,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 		return filter;
 	}
 	
-	public static EntitySearchFilter createRoleFilter(String roleName, List<Object> allowedValues, boolean useLikeOption) {
+	public static <T> EntitySearchFilter createRoleFilter(String roleName, List<T> allowedValues, boolean useLikeOption) {
 		EntitySearchFilter filter = new EntitySearchFilter();
 		filter.setAttributeFilter(true);
 		filter.setRoleName(roleName);
@@ -319,9 +319,7 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 			if (null == key && null == roleName) {
 				return null;
 			}
-			//pkjkljkljljkl
 			boolean isAttributeFilter = Boolean.parseBoolean(props.getProperty(FILTER_TYPE_PARAM));
-			//filter = new EntitySearchFilter(key, isAttributeFilter);
 			filter = new EntitySearchFilter();
 			boolean isDateAttribute = false;
             if (!isAttributeFilter) {
@@ -341,7 +339,6 @@ public class EntitySearchFilter extends FieldSearchFilter implements Serializabl
 					filter.setRoleName(roleName);
 				}
 				filter.setAttributeFilter(true);
-				//AttributeInterface attr = (AttributeInterface) prototype.getAttribute(key);
 				if (null != attr && null != prototype) {
 					String dataType = null;
 					if (attr instanceof DateAttribute) {

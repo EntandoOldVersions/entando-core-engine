@@ -443,7 +443,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 				}
 				if (filter.isAttributeFilter()) {
 					String tableName = this.getEntitySearchTableName() + i;
-					this.addAttributeOrderQueryBlock(tableName, query, filter, filter.getOrder());
+					this.addAttributeOrderQueryBlock(tableName, query, filter, filter.getOrder().toString());
 				} else {
 					String fieldName = this.getTableFieldName(filter.getKey());
 					query.append(this.getEntityMasterTableName()).append(".").append(fieldName).append(" ").append(filter.getOrder());

@@ -26,7 +26,7 @@ import java.util.List;
  * This class implements a filter to search among database field.
  * @author E.Santoboni
  */
-public class FieldSearchFilter implements Serializable {
+public class FieldSearchFilter<T> implements Serializable {
 	
 	protected FieldSearchFilter() {}
 	
@@ -53,7 +53,7 @@ public class FieldSearchFilter implements Serializable {
 	public FieldSearchFilter(String key, Object value, boolean useLikeOption) {
 		this(key);
 		if (null != value && value instanceof Collection && ((Collection) value).size() > 0) {
-			List<Object> allowedValues = new ArrayList<Object>();
+			List<T> allowedValues = new ArrayList<T>();
 			allowedValues.addAll((Collection) value);
 			this.setAllowedValues(allowedValues);
 			if (allowedValues.get(0) instanceof String) {
@@ -95,7 +95,7 @@ public class FieldSearchFilter implements Serializable {
 	 * This option can be used to filter by the value of a string metadata. It can be
 	 * used only with string and with allowed values not null.
 	 */
-	public FieldSearchFilter(String key, List<Object> allowedValues, boolean useLikeOption) {
+	public FieldSearchFilter(String key, List<T> allowedValues, boolean useLikeOption) {
 		this(key);
 		this.setAllowedValues(allowedValues);
 		if (null != allowedValues && allowedValues.size() > 0 && (allowedValues.get(0) instanceof String)) {
@@ -154,12 +154,11 @@ public class FieldSearchFilter implements Serializable {
 	}
 	
 	/**
-	 * Return the order to use to sort results found when the filter is applied. It can assume the values
-	 * "ASC" or "DESC" and depends on the field specified in the filter.
+	 * Return the order to use to sort results found when the filter is applied.
 	 * @return The order used to sort results found applying the filter.
 	 */
-	public String getOrder() {
-		return _order;
+	public Order getOrder() {
+		return this._order;
 	}
 	
 	/**
@@ -171,6 +170,14 @@ public class FieldSearchFilter implements Serializable {
 		if (null != order && !(order.equals(ASC_ORDER) || order.equals(DESC_ORDER))) {
 			throw new RuntimeException("Error: the 'order' clause cannot be null and must be comparable using the constants ASC_ORDER or DESC_ORDER");
 		}
+		this._order = Enum.valueOf(Order.class, order);
+	}
+	
+	/**
+	 * Set up the order to use to sort results found when the filter is applied.
+	 * @param order The order used to sort results found applying the filter.
+	 */
+	public void setOrder(Order order) {
 		this._order = order;
 	}
 	
@@ -184,7 +191,7 @@ public class FieldSearchFilter implements Serializable {
 	}
 	protected void setLikeOption(boolean likeOption) {
 		if (likeOption && ((null == this.getValue() || !(this.getValue() instanceof String)) 
-					&& (null == this.getAllowedValues() || this.getAllowedValues().size() == 0 || !(this.getAllowedValues().get(0) instanceof String)))) {
+					&& (null == this.getAllowedValues() || this.getAllowedValues().isEmpty() || !(this.getAllowedValues().get(0) instanceof String)))) {
 			throw new RuntimeException("Error: The 'like' clause cannot be applied on a null value or on a not string type");
 		}
 		this._likeOption = likeOption;
@@ -201,10 +208,10 @@ public class FieldSearchFilter implements Serializable {
 		this._nullOption = nullOption;
 	}
 	
-	public List<Object> getAllowedValues() {
+	public List<T> getAllowedValues() {
 		return _allowedValues;
 	}
-	protected void setAllowedValues(List<Object> allowedValues) {
+	protected void setAllowedValues(List<T> allowedValues) {
 		this._allowedValues = allowedValues;
 	}
 	
@@ -233,20 +240,22 @@ public class FieldSearchFilter implements Serializable {
 	
 	private Object _value;
 	
-	private String _order;
+	private Order _order;
 	private Object _start;
 	private Object _end;
 	
 	private boolean _likeOption;
 	private boolean _nullOption;
 	
-	private List<Object> _allowedValues;
+	private List<T> _allowedValues;
 	
 	private Integer _startDateDelay;
 	private Integer _endDateDelay;
 	private Integer _valueDateDelay;
 	
-	public static final String ASC_ORDER = "ASC";
-	public static final String DESC_ORDER = "DESC";
+	public static final String ASC_ORDER = Order.ASC.toString();
+	public static final String DESC_ORDER = Order.DESC.toString();
+	
+	public enum Order {ASC, DESC}
 	
 }

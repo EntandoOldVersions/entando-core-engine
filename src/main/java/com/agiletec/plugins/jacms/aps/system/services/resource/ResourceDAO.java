@@ -196,7 +196,7 @@ public class ResourceDAO extends AbstractSearcherDAO implements IResourceDAO {
     		filters = super.addFilter(filters, filterToAdd);
     	}
     	if (groupCodes != null && groupCodes.size() > 0) {
-    		List<Object> allowedValues = new ArrayList<Object>();
+    		List<String> allowedValues = new ArrayList<String>();
     		allowedValues.addAll(groupCodes);
     		FieldSearchFilter filterToAdd = new FieldSearchFilter("maingroup", allowedValues, false);
     		filters = super.addFilter(filters, filterToAdd);

@@ -28,12 +28,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
 
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
-import org.opensaml.saml2.metadata.provider.EntityRoleFilter;
 
 /**
  * @author E.Santoboni
@@ -102,8 +99,8 @@ public class TestUserProfileManager extends BaseTestCase {
 	}
 	
 	public void testRemoveInsesistentUser() throws ApsSystemException {
-		assertNull(this._profileManager.getProfile("pippo"));
-		this._profileManager.deleteProfile("pippo");
+		assertNull(this._profileManager.getProfile("missing_user"));
+		this._profileManager.deleteProfile("missing_user");
 	}
 	
 	public void testSearchProfiles_1() throws Throwable {
@@ -111,7 +108,7 @@ public class TestUserProfileManager extends BaseTestCase {
 		assertNotNull(usernames);
     	assertEquals(4, usernames.size());
 		EntitySearchFilter usernameFilter1 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false);
-    	usernameFilter1.setOrder(EntitySearchFilter.ASC_ORDER);
+    	usernameFilter1.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters1 = {usernameFilter1};
 		usernames = this._profileManager.searchId(filters1);
 		assertNotNull(usernames);
@@ -119,7 +116,7 @@ public class TestUserProfileManager extends BaseTestCase {
     	assertEquals(expected1.length, usernames.size());
     	this.verifyOrder(usernames, expected1);
 		EntitySearchFilter usernameFilter2 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false, "oa", true);
-    	usernameFilter2.setOrder(EntitySearchFilter.ASC_ORDER);
+    	usernameFilter2.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters2 = {usernameFilter2};
 		usernames = this._profileManager.searchId(filters2);
 		assertNotNull(usernames);
@@ -130,7 +127,7 @@ public class TestUserProfileManager extends BaseTestCase {
 	
 	public void testSearchProfiles_2() throws Throwable {
 		EntitySearchFilter fullnameRoleFilter = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
-		fullnameRoleFilter.setOrder(EntitySearchFilter.ASC_ORDER);
+		fullnameRoleFilter.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters1 = {fullnameRoleFilter};
 		List<String> usernames = this._profileManager.searchId(filters1);
 		assertNotNull(usernames);
@@ -139,7 +136,7 @@ public class TestUserProfileManager extends BaseTestCase {
     	this.verifyOrder(usernames, expected1);
 		
 		EntitySearchFilter fullnameRoleFilter2 = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME, "se", true);
-		fullnameRoleFilter2.setOrder(EntitySearchFilter.ASC_ORDER);
+		fullnameRoleFilter2.setOrder(EntitySearchFilter.Order.ASC);
 		
 		EntitySearchFilter[] filters2 = {fullnameRoleFilter2};
 		usernames = this._profileManager.searchId(filters2);
@@ -150,7 +147,7 @@ public class TestUserProfileManager extends BaseTestCase {
 		
 		EntitySearchFilter fullnameRoleFilter3 = EntitySearchFilter.createRoleFilter(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME, "se", true);
 		EntitySearchFilter usernameFilter3 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false);
-    	usernameFilter3.setOrder(EntitySearchFilter.ASC_ORDER);
+    	usernameFilter3.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters3 = {fullnameRoleFilter3, usernameFilter3};
 		usernames = this._profileManager.searchId(filters3);
 		assertNotNull(usernames);
@@ -165,7 +162,7 @@ public class TestUserProfileManager extends BaseTestCase {
     	assertEquals(4, records.size());
 		
 		EntitySearchFilter usernameFilter1 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false);
-    	usernameFilter1.setOrder(EntitySearchFilter.ASC_ORDER);
+    	usernameFilter1.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters1 = {usernameFilter1};
 		records = this._profileManager.searchRecords(filters1);
 		assertNotNull(records);
@@ -174,7 +171,7 @@ public class TestUserProfileManager extends BaseTestCase {
     	this.verifyRecordOrder(records, expected1);
 		
 		EntitySearchFilter usernameFilter2 = new EntitySearchFilter(IUserProfileManager.ENTITY_ID_FILTER_KEY, false, "oa", true);
-    	usernameFilter2.setOrder(EntitySearchFilter.ASC_ORDER);
+    	usernameFilter2.setOrder(EntitySearchFilter.Order.ASC);
 		EntitySearchFilter[] filters2 = {usernameFilter2};
 		records = this._profileManager.searchRecords(filters2);
 		assertNotNull(records);

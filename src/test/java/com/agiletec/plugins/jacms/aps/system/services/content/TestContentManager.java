@@ -450,7 +450,7 @@ public class TestContentManager extends BaseTestCase {
 		assertEquals("EVN193", contents.get(0));
 		assertEquals("EVN192", contents.get(1));
 		
-		filter2 = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, null, false);
+		filter2 = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false);
 		filter2.setOrder(EntitySearchFilter.DESC_ORDER);
 		
 		EntitySearchFilter[] filters2 = {filter, filter2};
@@ -568,7 +568,7 @@ public class TestContentManager extends BaseTestCase {
 	public void testLoadPublicEvents_5() throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDates = new ArrayList<Object>();
+		List<Date> allowedDates = new ArrayList<Date>();
 		allowedDates.add(DateConverter.parseDate("1999-04-14", "yyyy-MM-dd"));//EVN192
 		allowedDates.add(DateConverter.parseDate("2008-02-13", "yyyy-MM-dd"));//EVN23
 		EntitySearchFilter filter = new EntitySearchFilter("DataInizio", true, allowedDates, false);
@@ -590,7 +590,7 @@ public class TestContentManager extends BaseTestCase {
 	protected void testLoadPublicEvents_6(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDescription = new ArrayList<Object>();
+		List<String> allowedDescription = new ArrayList<String>();
 		allowedDescription.add("Mostra");//EVN21, EVN20
 		allowedDescription.add("Collezione");//EVN23
 		EntitySearchFilter filter = (useRoleFilter) 
@@ -615,7 +615,7 @@ public class TestContentManager extends BaseTestCase {
 	protected void testLoadPublicEvents_7(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDescription = new ArrayList<Object>();
+		List<String> allowedDescription = new ArrayList<String>();
 		allowedDescription.add("Mostra Zootecnica");//EVN20
 		allowedDescription.add("Title B - Event 2");//EVN192
 		EntitySearchFilter filter1 = (useRoleFilter) 
@@ -641,7 +641,7 @@ public class TestContentManager extends BaseTestCase {
 	protected void testLoadPublicEvents_8(boolean useRoleFilter) throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDescription = new ArrayList<Object>();
+		List<String> allowedDescription = new ArrayList<String>();
 		allowedDescription.add("Castello");//EVN24
 		allowedDescription.add("dei bambini");//EVN24
 		EntitySearchFilter filter = (useRoleFilter) 
@@ -739,7 +739,7 @@ public class TestContentManager extends BaseTestCase {
 	public void testLoadWorkEvents_1_a() throws ApsSystemException {
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDescription = new ArrayList<Object>();
+		List<String> allowedDescription = new ArrayList<String>();
 		allowedDescription.add("descrizione");//"ART179" "ART180" "ART187"
 		allowedDescription.add("on line");//"ART179"
 		allowedDescription.add("customers");//"ART102" "RAH101" ...but not included because the standard search is case sensitive
@@ -762,7 +762,7 @@ public class TestContentManager extends BaseTestCase {
 		
     	List<String> groups = new ArrayList<String>();
 		groups.add(Group.ADMINS_GROUP_NAME);
-		List<Object> allowedDescription = new ArrayList<Object>();
+		List<String> allowedDescription = new ArrayList<String>();
 		allowedDescription.add("descrizione");//"ART179" "ART180" "ART187"
 		allowedDescription.add("on line");//"ART179"
 		allowedDescription.add("customers");//"ART102" "RAH101"
@@ -779,7 +779,7 @@ public class TestContentManager extends BaseTestCase {
     }
     
     public void testLoadOrderedPublicEvents_1() throws ApsSystemException {
-    	EntitySearchFilter filterForDescr = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, null, false);
+    	EntitySearchFilter filterForDescr = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false);
     	filterForDescr.setOrder(EntitySearchFilter.ASC_ORDER);
     	EntitySearchFilter[] filters = {filterForDescr};
 		List<String> contents = _contentManager.loadPublicContentsId("EVN", null, filters, null);
@@ -801,7 +801,7 @@ public class TestContentManager extends BaseTestCase {
     }
     
     public void testLoadOrderedPublicEvents_2() throws ApsSystemException {
-    	EntitySearchFilter filterForCreation = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false, null, false);
+    	EntitySearchFilter filterForCreation = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
     	filterForCreation.setOrder(EntitySearchFilter.ASC_ORDER);
     	EntitySearchFilter[] filters = {filterForCreation};
     	
@@ -822,9 +822,9 @@ public class TestContentManager extends BaseTestCase {
     }
     
     public void testLoadOrderedPublicEvents_3() throws ApsSystemException {
-    	EntitySearchFilter filterForCreation = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false, null, false);
+    	EntitySearchFilter filterForCreation = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
     	filterForCreation.setOrder(EntitySearchFilter.DESC_ORDER);
-    	EntitySearchFilter filterForDate = new EntitySearchFilter("DataInizio", true, null, false);
+    	EntitySearchFilter filterForDate = new EntitySearchFilter("DataInizio", true);
     	filterForDate.setOrder(EntitySearchFilter.DESC_ORDER);
     	EntitySearchFilter[] filters = {filterForCreation, filterForDate};
     	
@@ -857,7 +857,7 @@ public class TestContentManager extends BaseTestCase {
     		this._contentManager.insertOnLineContent(masterContent);
 			this.waitNotifyingThread();
 			
-			EntitySearchFilter filterForDate = new EntitySearchFilter("DataInizio", true, null, false);
+			EntitySearchFilter filterForDate = new EntitySearchFilter("DataInizio", true);
 			filterForDate.setOrder(EntitySearchFilter.DESC_ORDER);
 			EntitySearchFilter[] filters = {filterForDate};
 			
