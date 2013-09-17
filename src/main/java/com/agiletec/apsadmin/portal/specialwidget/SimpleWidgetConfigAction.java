@@ -30,7 +30,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 
 /**
- * This action class handles the configuration of the showlets with parameters.
+ * This action class handles the configuration of the widgets with parameters.
  * @author E.Santoboni
  */
 public class SimpleWidgetConfigAction extends AbstractPortalAction implements ISimpleWidgetConfigAction {
@@ -50,7 +50,7 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 				widget = this.createNewShowlet();
 			} catch (Exception e) {
 				log.severe(e.getMessage());
-				//TODO METTI MESSAGGIO DI ERRORE NON PREVISO... Vai in pageTree con messaggio di errore Azione non prevista o cosa del genere
+				//TODO METTI MESSAGGIO DI ERRORE NON PREVISTO... Vai in pageTree con messaggio di errore Azione non prevista o cosa del genere
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
 			}
@@ -156,14 +156,12 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
-	@Override
 	public Widget getShowlet() {
 		return _showlet;
 	}
 	public void setShowlet(Widget widget) {
 		this._showlet = widget;
 	}
-	
 	public String getShowletTypeCode() {
 		return _showletTypeCode;
 	}

@@ -31,7 +31,7 @@
         </xs:choice>
         <xs:element minOccurs="0" ref="parameters"/>
         <xs:choice>
-          <xs:element ref="relatedShowlet"/>
+          <xs:element ref="relatedWidget"/>
           <xs:element minOccurs="0" maxOccurs="unbounded" ref="parameter"/>
         </xs:choice>
       </xs:sequence>
@@ -60,7 +60,7 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
-  <xs:element name="relatedShowlet">
+  <xs:element name="relatedWidget">
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="unbounded" ref="mapParameter"/>
@@ -71,7 +71,7 @@
   <xs:element name="mapParameter">
     <xs:complexType>
       <xs:attribute name="method" use="required" type="xs:NCName"/>
-      <xs:attribute name="showlet" use="required" type="xs:NCName"/>
+      <xs:attribute name="widget" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="description" type="xs:string"/>

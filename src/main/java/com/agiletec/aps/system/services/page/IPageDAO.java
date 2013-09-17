@@ -64,12 +64,12 @@ public interface IPageDAO {
 	public void joinShowlet(String pageCode, Widget widget, int pos);
 
 	/**
-	 * Setta la widget (comprensiva della sua configurazione) nella pagina e nel frame specificato.
-	 * Nel caso che la posizione specificata sia già occupata, la widget corrente 
+	 * Setta il widget (comprensiva della sua configurazione) nella pagina e nel frame specificato.
+	 * Nel caso che la posizione specificata sia già occupata, il widget corrente 
 	 * sarà sostituita da quella specificata. 
-	 * @param pageCode Il codice della pagina in cui settare la widget.
-	 * @param widget La widget da settare.
-	 * @param pos La posizione della pagina su cui settare la widget.
+	 * @param pageCode Il codice della pagina in cui settare il widget.
+	 * @param widget il widget da settare.
+	 * @param pos La posizione della pagina su cui settare il widget.
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	public void joinWidget(String pageCode, Widget widget, int pos);
@@ -81,7 +81,7 @@ public interface IPageDAO {
 
 	/**
 	 * Rimuove una widget nella pagina specificata.
-	 * @param pageCode Il codice della pagina nel quale rimuovere la widget.
+	 * @param pageCode Il codice della pagina nel quale rimuovere il widget.
 	 * @param pos La posizione dal liberare.
 	 * @throws ApsSystemException In caso di errore.
 	 */

@@ -20,7 +20,7 @@ package com.agiletec.apsadmin.portal.specialwidget;
 import com.agiletec.aps.system.services.page.Widget;
 
 /**
- * Basic interface for the action classes which configure the showlets with parameters. 
+ * Basic interface for the action classes which configure the widget with parameters. 
  * @author E.Santoboni
  */
 public interface ISimpleWidgetConfigAction {
@@ -40,6 +40,7 @@ public interface ISimpleWidgetConfigAction {
 	/**
 	 * Return the configuration of the showlet currently on edit.   
 	 * @return The showlet currently on edit.
+	 * @Deprecated
 	 */
 	public Widget getShowlet();
 	

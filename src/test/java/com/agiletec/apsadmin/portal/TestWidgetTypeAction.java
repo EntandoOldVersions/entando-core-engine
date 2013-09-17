@@ -66,41 +66,41 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 
 	public void testUpdateTitles() throws Throwable {
     	String widgetTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+    	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewShowletType(widgetTypeCode);
-			this._showletTypeManager.addWidgetType(type);
+			this._widgetTypeManager.addWidgetType(type);
 			String result = this.executeUpdate(widgetTypeCode, "", "english title", "admin");
 			assertEquals(Action.INPUT, result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getFieldErrors().size());
 			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin");
 			assertEquals(Action.SUCCESS, result);
-			WidgetType extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
-				this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+				this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 			}
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
 	public void testUpdate() throws Throwable {
     	String widgetTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+    	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewShowletType(widgetTypeCode);
-			this._showletTypeManager.addWidgetType(type);
+			this._widgetTypeManager.addWidgetType(type);
 			ApsProperties newProperties = new ApsProperties();
 			newProperties.put("contentId", "EVN191");
 			String result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
 			assertEquals(Action.SUCCESS, result);
-			WidgetType extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
@@ -109,7 +109,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			newProperties.put("contentId", "EVN194");
 			result = this.executeUpdate(widgetTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties);
 			assertEquals(Action.SUCCESS, result);
-			extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato 2", extracted.getTitles().get("it"));
 			assertEquals("Modified title 2", extracted.getTitles().get("en"));
@@ -117,10 +117,10 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
-				this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+				this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 			}
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
@@ -141,25 +141,25 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	
 	public void testFailureTrashType_2() throws Throwable {
     	String widgetTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+    	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewShowletType(widgetTypeCode);
 			type.setLocked(true);
-			this._showletTypeManager.addWidgetType(type);
-			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			this._widgetTypeManager.addWidgetType(type);
+			assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 			String result = this.executeTrash(widgetTypeCode, "admin");
 			assertEquals("inputShowletTypes", result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getActionErrors().size());
-			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
-				this._mockShowletTypeDAO.deleteShowletType(widgetTypeCode);
+			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+				this._mockWidgetTypeDAO.deleteShowletType(widgetTypeCode);
 			}
-			((IManager) this._showletTypeManager).refresh();
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			((IManager) this._widgetTypeManager).refresh();
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
@@ -167,11 +167,11 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		String widgetTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+    	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewShowletType(widgetTypeCode);
-			this._showletTypeManager.addWidgetType(type);
-			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			this._widgetTypeManager.addWidgetType(type);
+			assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 			
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
 			assertNull(pagina_1.getWidgets()[frame]);
@@ -194,16 +194,16 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			result = this.executeDelete(widgetTypeCode, "admin");
 			assertEquals(Action.SUCCESS, result);
 			
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		} catch (Throwable t) {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
 			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
-			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
-				this._mockShowletTypeDAO.deleteShowletType(widgetTypeCode);
+			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+				this._mockWidgetTypeDAO.deleteShowletType(widgetTypeCode);
 			}
-			((IManager) this._showletTypeManager).refresh();
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			((IManager) this._widgetTypeManager).refresh();
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 			throw t;
 		}
 	}
@@ -264,7 +264,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     	titles.put("it", "Titolo");
     	titles.put("en", "Title");
     	type.setTitles(titles);
-    	WidgetType parent = this._showletTypeManager.getWidgetType("content_viewer");
+    	WidgetType parent = this._widgetTypeManager.getWidgetType("content_viewer");
     	assertNotNull(parent);
     	type.setParentType(parent);
     	type.setPluginCode("jacms");
@@ -346,7 +346,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "customers_page", null);
 			assertEquals(Action.INPUT, result);
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
@@ -363,7 +363,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			result = this.executeAddWidgetType("admin", widgetTypeCode, "en", "it", "logic_type");
 			assertEquals(Action.INPUT, result);
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
@@ -391,7 +391,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			assertEquals(1, fieldErrors.get("showletTypeCode").size());
 			assertEquals(1, fieldErrors.get("englishTitle").size());
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
@@ -421,21 +421,21 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
     
 	public void testPasteNewWidgetType_1() throws Throwable {
 		String widgetTypeCode = "randomShowletCode_1";
 		try {
-			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 			String result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "customers_page", "2");
 			assertEquals(Action.SUCCESS, result);
 			
 			Widget copiedShowlet = this._pageManager.getPage("customers_page").getWidgets()[2];
 			assertNotNull(copiedShowlet);
 			assertNotNull(copiedShowlet.getConfig());
-			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			WidgetType addedType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			Iterator<Object> keysIter = config.keySet().iterator();
@@ -446,7 +446,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
 	
@@ -478,7 +478,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			Widget newWidget = this._pageManager.getPage(pageDest).getWidgets()[frameDest];
 			assertNotNull(newWidget);
 			assertNotNull(newWidget.getConfig());
-			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			WidgetType addedType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
 			assertEquals(newWidget.getType().getCode(), addedType.getCode());
 			ApsProperties config = addedType.getConfig();
@@ -492,7 +492,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} finally {
 			page.getWidgets()[frameDest] = null;
 			this._pageManager.updatePage(page);
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
     
@@ -511,7 +511,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			
-			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
+			WidgetType addedType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			assertEquals(2, config.size());
@@ -520,7 +520,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
 	
@@ -550,17 +550,17 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	private void init() throws Exception {
 		try {
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
-			this._showletTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+			this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-			this._mockShowletTypeDAO = new MockWidgetTypeDAO();
-			this._mockShowletTypeDAO.setDataSource(dataSource);
+			this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
+			this._mockWidgetTypeDAO.setDataSource(dataSource);
 		} catch (Throwable e) {
 			throw new Exception(e);
 		}
 	}
     
 	private IPageManager _pageManager = null;
-    private IWidgetTypeManager _showletTypeManager = null;
-    private MockWidgetTypeDAO _mockShowletTypeDAO;
+    private IWidgetTypeManager _widgetTypeManager = null;
+    private MockWidgetTypeDAO _mockWidgetTypeDAO;
 	
 }

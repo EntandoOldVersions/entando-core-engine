@@ -143,11 +143,11 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * Metodo che determina con che ordine viene ricercato l'identificativo del contenuto.
 	 * L'ordine con cui viene cercato è questo:
 	 * 1) Nel parametro specificato all'interno del tag.
-	 * 2) Tra i parametri di configurazione della widget
+	 * 2) Tra i parametri di configurazione del widget
 	 * 3) Nella Request.
 	 * @param contentId L'identificativo del contenuto specificato nel tag. 
 	 * Può essere null o una Stringa alfanumerica.
-	 * @param widgetConfig I parametri di configurazione della widget corrente.
+	 * @param widgetConfig I parametri di configurazione del widget corrente.
 	 * @param reqCtx Il contesto della richiesta.
 	 * @return L'identificativo del contenuto da erogare.
 	 */
@@ -173,7 +173,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * l'identificativo del modello di contenuto.
 	 * L'ordine con cui viene cercato è questo:
 	 * 1) Nel parametro specificato all'interno del tag.
-	 * 2) Tra i parametri di configurazione della widget
+	 * 2) Tra i parametri di configurazione del widget
 	 * Nel caso non venga trovato nessun ideentificativo, viene restituito l'identificativo 
 	 * del modello di default specificato nella configurazione del tipo di contenuto.
 	 * @param contentId L'identificativo del contenuto da erogare.
@@ -181,7 +181,7 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	 * (in tal caso viene restituito il modello per le liste definito nella configurazione del tipo di contenuto) 
 	 * o 'default' (in tal caso viene restituito il modello di default definito nella configurazione del tipo di contenuto).
 	 * @param modelId L'identificativo del modello specificato nel tag. Può essere null.
-	 * @param widgetConfig La configurazione della widget corrente 
+	 * @param widgetConfig La configurazione del widget corrente 
 	 * nel qual è inserito il tag erogatore del contenuti.
 	 * @param reqCtx Il contesto della richiesta.
 	 * @return L'identificativo del modello 

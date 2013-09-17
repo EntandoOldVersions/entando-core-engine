@@ -20,7 +20,7 @@ package org.entando.entando.aps.system.services.widgettype;
 import java.io.Serializable;
 
 /**
- * Rappresenta un parametro di configurazione della Widget.
+ * Rappresenta un parametro di configurazione del widget.
  * @author E.Santoboni
  */
 public class WidgetTypeParameter implements Serializable {

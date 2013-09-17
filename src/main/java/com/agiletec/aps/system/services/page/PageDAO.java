@@ -173,7 +173,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			this.addPageRecord(page, conn);
-			this.addShowletForPage(page, conn);
+			this.addWidgetForPage(page, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -228,7 +228,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteShowlets(page.getCode(), conn);
+			this.deleteWidgets(page.getCode(), conn);
 			this.deletePageRecord(page.getCode(), conn);
 			this.shiftPages(page.getParentCode(), page.getPosition(), conn);
 			conn.commit();
@@ -254,18 +254,26 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	}
 
 	/**
-	 * Delete the showlets associated to a page.
-	 * @param codePage The code of the page containing the showlets to delete.
 	 * @throws ApsSystemException In case of database error
+	 * @deprecated Use {@link #deleteWidgets(String,Connection)} instead
 	 */
 	protected void deleteShowlets(String codePage, Connection conn) throws ApsSystemException {
+		deleteWidgets(codePage, conn);
+	}
+
+	/**
+	 * Delete the widget associated to a page.
+	 * @param codePage The code of the page containing the widget to delete.
+	 * @throws ApsSystemException In case of database error
+	 */
+	protected void deleteWidgets(String codePage, Connection conn) throws ApsSystemException {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(DELETE_WIDGETS_FOR_PAGE);
 			stat.setString(1, codePage);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error while deleting showlets", "deleteShowlets");
+			processDaoException(t, "Error while deleting showlets", "deleteWidgets");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -334,9 +342,9 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteShowlets(page.getCode(), conn);
+			this.deleteWidgets(page.getCode(), conn);
 			this.updatePageRecord(page, conn);
-			this.addShowletForPage(page, conn);
+			this.addWidgetForPage(page, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -379,7 +387,14 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		return new PageExtraConfigDOM();
 	}
 	
+	/**
+	 * @deprecated Use {@link #addWidgetForPage(IPage,Connection)} instead
+	 */
 	protected void addShowletForPage(IPage page, Connection conn) throws ApsSystemException {
+		addWidgetForPage(page, conn);
+	}
+
+	protected void addWidgetForPage(IPage page, Connection conn) throws ApsSystemException {
 		if (null == page.getWidgets()) return;
 		PreparedStatement stat = null;
 		try {
@@ -390,7 +405,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 				if (widget != null) {
 					if (null == widget.getType()) {
 						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
-								"showlet on frame '" + i + "' of page '" + page.getCode() + "'");
+								"widget on frame '" + i + "' of page '" + page.getCode() + "'");
 						continue;
 					}
 					this.valueAddShowletStatement(page.getCode(), i, widget, stat);
@@ -400,7 +415,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			}
 			stat.executeBatch();
 		} catch (Throwable t) {
-			processDaoException(t, "Error while inserting the showlets in a page", "addShowletForPage");
+			processDaoException(t, "Error while inserting the showlets in a page", "addWidgetForPage");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -429,7 +444,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			processDaoException(t, "" +
-					"Error removing the showlet in the page '" +pageCode + "' in the frame " + pos, "removeShowlet");
+					"Error removing the widget in the page '" +pageCode + "' in the frame " + pos, "removeWidget");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -457,7 +472,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error adding a showlet in the frame " +pos+" of the page '"+pageCode+"'", "joinShowlet");
+			processDaoException(t, "Error adding a widget in the frame " +pos+" of the page '"+pageCode+"'", "joinWidget");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
