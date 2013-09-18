@@ -157,7 +157,7 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "viewWidgetUtilizers");
 		if (null != widgetTypeCode) {
-			this.addParameter("showletTypeCode", widgetTypeCode);
+			this.addParameter("widgetTypeCode", widgetTypeCode);
 		}
 		String result = this.executeAction();
 		return result;

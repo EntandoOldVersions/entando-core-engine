@@ -82,7 +82,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 		params.put("groupBy", "lastModified");
 		params.put("pageCode", "pagina_11");
 		params.put("frame", "1");
-		params.put("showletTypeCode", "content_viewer");
+		params.put("widgetTypeCode", "content_viewer");
 		this.executeChangeOrder("admin", params);
 		action = (ContentFinderViewerAction) this.getAction();
 		contents = action.getContents();
@@ -109,7 +109,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 		params.put("pageCode", "pagina_11");
 		params.put("contentIdToken", "VN1");
 		params.put("frame", "1");
-		params.put("showletTypeCode", "content_viewer");
+		params.put("widgetTypeCode", "content_viewer");
 		this.executeChangeOrder("admin", params);
 		action = (ContentFinderViewerAction) this.getAction();
 		contents = action.getContents();
@@ -135,7 +135,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "searchContents");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
-		this.addParameter("showletTypeCode", "content_viewer");
+		this.addParameter("widgetTypeCode", "content_viewer");
 		// optional search value
 		if (null != partialId) {
 			this.addParameter("contentIdToken", partialId);
@@ -156,7 +156,7 @@ public class TestContentFinderViewerAction extends ApsAdminBaseTestCase {
 		this.initAction("/do/jacms/Page/SpecialWidget/Viewer", "joinContent");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
-		this.addParameter("showletTypeCode", "content_viewer");
+		this.addParameter("widgetTypeCode", "content_viewer");
 		if (null != contentId) {
 			this.addParameter("contentId", contentId);
 		}

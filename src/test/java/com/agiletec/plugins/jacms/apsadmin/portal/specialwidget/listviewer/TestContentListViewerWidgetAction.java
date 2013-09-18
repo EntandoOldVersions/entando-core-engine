@@ -39,7 +39,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigListViewer("admin", "homepage", "1", "content_viewer_list");
 		assertEquals(Action.SUCCESS, result);
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
 		List<Properties> filtersProperties = action.getFiltersProperties();
@@ -51,7 +51,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigListViewer("admin", "homepage", "0", null);
 		assertEquals(Action.SUCCESS, result);
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
 		ApsProperties props = widget.getConfig();
@@ -73,7 +73,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "");
 		assertEquals(Action.INPUT, result);
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -83,7 +83,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "WRO");//Tipo contenuto inesistente
 		assertEquals(Action.INPUT, result);
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -93,7 +93,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigContentType("admin", "homepage", "1", "content_viewer_list", "ART");
 		assertEquals(Action.SUCCESS, result);
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
 		ApsProperties props = widget.getConfig();
@@ -107,7 +107,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
-			this.addParameter("showletTypeCode", showletTypeCode);
+			this.addParameter("widgetTypeCode", showletTypeCode);
 		}
 		return this.executeAction();
 	}
@@ -117,7 +117,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "configListViewer");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		if (null != contentType && contentType.trim().length()>0) {
 			this.addParameter("contentType", contentType);
 		}
@@ -162,7 +162,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		this.addParameters(params);
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
-		this.addParameter("showletTypeCode", showletCode);
+		this.addParameter("widgetTypeCode", showletCode);
 		return this.executeAction();
 	}
 	
@@ -172,7 +172,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		this.addParameters(params);
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
-		this.addParameter("showletTypeCode", showletCode);
+		this.addParameter("widgetTypeCode", showletCode);
 		return this.executeAction();
 	}
 	
@@ -197,7 +197,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "homepage");
 		params.put("frame", "1");
-		params.put("showletTypeCode", "content_viewer_list");
+		params.put("widgetTypeCode", "content_viewer_list");
 		params.put("contentType", "NEW");
 		params.put("filters", "(order=DESC;attributeFilter=true;likeOption=false;key=Date)");
 		List<Properties> temp = FilterUtils.getFiltersProperties("(order=ASC;attributeFilter=true;likeOption=false;key=Title)");
@@ -210,7 +210,7 @@ public class TestContentListViewerWidgetAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.SUCCESS, result);
 		
 		ContentListViewerWidgetAction action = (ContentListViewerWidgetAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals("content_viewer_list", widget.getType().getCode());
 		ApsProperties props = widget.getConfig();

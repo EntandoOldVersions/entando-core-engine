@@ -48,7 +48,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigNavigator("admin", "homepage", "1", "leftmenu");
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
 	}
@@ -57,7 +57,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigNavigator("admin", "pagina_1", "2", null);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -75,14 +75,14 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_DOWN_CODE);
 		params.put("expressionIndex", "1");
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -98,14 +98,14 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_UP_CODE);
 		params.put("expressionIndex", "2");
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -121,14 +121,14 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("movement", INavigatorWidgetConfigAction.MOVEMENT_UP_CODE);
 		params.put("expressionIndex", "3");//INDICE SUPERIORE AL SIZE
 		String result = this.executeMoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -144,13 +144,13 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("expressionIndex", "1");
 		String result = this.executeRemoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -166,13 +166,13 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("expressionIndex", "3");//INDICE SUPERIORE AL SIZE
 		String result = this.executeRemoveExpression("admin", params);
 		assertEquals(Action.SUCCESS, result);
 		INavigatorWidgetConfigAction action = (INavigatorWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -188,7 +188,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		String result = this.executeAddExpression("admin", params);
 		assertEquals(Action.INPUT, result);
@@ -198,7 +198,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, fieldErrors.get("specId").size());
 
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
-		Widget widget = navAction.getShowlet();
+		Widget widget = navAction.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -210,7 +210,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+abs(1).subtree(2)+current");
 		params.put("specId", "3");
 		params.put("specSuperLevel", "-2");
@@ -220,7 +220,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, action.getActionErrors().size());
 
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
-		Widget widget = navAction.getShowlet();
+		Widget widget = navAction.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -232,7 +232,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "parent.subtree(2)+current");
 		params.put("specId", "4");
 		params.put("specAbsLevel", "-1");
@@ -242,7 +242,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, action.getActionErrors().size());
 
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
-		Widget widget = navAction.getShowlet();
+		Widget widget = navAction.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -254,7 +254,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "");
 		params.put("specId", "5");
 		params.put("specCode", "  ");
@@ -266,7 +266,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(2, action.getActionErrors().size());
 
 		NavigatorWidgetConfigAction navAction = (NavigatorWidgetConfigAction) action;
-		Widget widget = navAction.getShowlet();
+		Widget widget = navAction.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(0, props.size());
@@ -278,7 +278,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "abs(1).subtree(2)");
 		params.put("specId", String.valueOf(NavigatorExpression.SPEC_PARENT_PAGE_ID));
 		params.put("operatorId", String.valueOf(NavigatorExpression.OPERATOR_CHILDREN_ID));
@@ -293,7 +293,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "pagina_2");
 		params.put("frame", "0");
-		params.put("showletTypeCode", "leftmenu");
+		params.put("widgetTypeCode", "leftmenu");
 		params.put("navSpec", "");
 		params.put("specId", String.valueOf(NavigatorExpression.SPEC_ABS_ID));
 		params.put("specAbsLevel", "1");
@@ -317,7 +317,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 			this.initAction("/do/Page/SpecialWidget/Navigator", "saveNavigatorConfig");
 			this.addParameter("pageCode", pageCode);
 			this.addParameter("frame", String.valueOf(frame));
-			this.addParameter("showletTypeCode", "leftmenu");
+			this.addParameter("widgetTypeCode", "leftmenu");
 			this.addParameter("navSpec", "parent.subtree(2)");
 			String result = this.executeAction();
 			assertEquals("configure", result);
@@ -343,7 +343,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
-			this.addParameter("showletTypeCode", showletTypeCode);
+			this.addParameter("widgetTypeCode", showletTypeCode);
 		}
 		return this.executeAction();
 	}

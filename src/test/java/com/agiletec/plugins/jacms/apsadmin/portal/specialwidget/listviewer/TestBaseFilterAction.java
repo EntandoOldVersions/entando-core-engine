@@ -34,7 +34,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		this.initAction("/do/jacms/Page/SpecialWidget/ListViewer", "newFilter");
 		this.addParameter("pageCode", "homepage");
 		this.addParameter("frame", "1");
-		this.addParameter("showletTypeCode", "content_viewer_list");
+		this.addParameter("widgetTypeCode", "content_viewer_list");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
@@ -44,7 +44,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("pageCode", "homepage");
 		parameters.put("frame", "1");
-		parameters.put("showletTypeCode", "content_viewer_list");
+		parameters.put("widgetTypeCode", "content_viewer_list");
 		parameters.put("contentType", "EVN");
 		parameters.put("filterKey", "Titolo");
 		
@@ -69,7 +69,7 @@ public class TestBaseFilterAction extends ApsAdminBaseTestCase {
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("pageCode", "homepage");
 		parameters.put("frame", "1");
-		parameters.put("showletTypeCode", "content_viewer_list");
+		parameters.put("widgetTypeCode", "content_viewer_list");
 		parameters.put("contentType", "EVN");
 		parameters.put("filterKey", "created");
 		parameters.put("attributeFilter", "false");

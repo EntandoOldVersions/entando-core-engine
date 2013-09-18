@@ -193,7 +193,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(username);
 		this.initAction("/do/Page", "joinWidget");
 		this.addParameter("pageCode", pageCode);
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		this.addParameter("frame", String.valueOf(frame));
 		return this.executeAction();
 	}

@@ -37,11 +37,16 @@ public interface ISimpleWidgetConfigAction {
 	 */
 	public String save();
 	
+	/** 
+	 * @return The showlet currently on edit.
+	 * @deprecated Use {@link #getWidget()} instead
+	 */
+	public Widget getShowlet();
+
 	/**
 	 * Return the configuration of the showlet currently on edit.   
 	 * @return The showlet currently on edit.
-	 * @Deprecated
 	 */
-	public Widget getShowlet();
+	public Widget getWidget();
 	
 }

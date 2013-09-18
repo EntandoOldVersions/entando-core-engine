@@ -50,13 +50,13 @@ public class WidgetsViewerAction extends AbstractPortalAction implements IWidget
 		return getWidgetUtilizers(showletTypeCode);
 	}
 
-	public List<IPage> getWidgetUtilizers(String showletTypeCode) {
+	public List<IPage> getWidgetUtilizers(String widgetTypeCode) {
 		List<IPage> utilizers = null;
 		try {
-			utilizers = this.getPageManager().getWidgetUtilizers(showletTypeCode);
+			utilizers = this.getPageManager().getWidgetUtilizers(widgetTypeCode);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers");
-			throw new RuntimeException("Error on extracting widgetUtilizers : widget type code " + showletTypeCode, t);
+			throw new RuntimeException("Error on extracting widgetUtilizers : widget type code " + widgetTypeCode, t);
 		}
 		return utilizers;
 	}
@@ -83,20 +83,34 @@ public class WidgetsViewerAction extends AbstractPortalAction implements IWidget
 	}
 	
 	public List<IPage> getShowletUtilizers() {
-		return this.getWidgetUtilizers(this.getShowletTypeCode());
+		return this.getWidgetUtilizers(this.getWidgetTypeCode());
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
 		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
+	@Deprecated
 	public String getShowletTypeCode() {
-		return _showletTypeCode;
+//		return _showletTypeCode;
+		return this.getWidgetTypeCode();
 	}
+	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
-		this._showletTypeCode = showletTypeCode;
+//		this._showletTypeCode = showletTypeCode;
+		this._widgetTypeCode = showletTypeCode;
 	}
 	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+
+	@Deprecated
 	private String _showletTypeCode;
+	private String _widgetTypeCode;
 	
 }

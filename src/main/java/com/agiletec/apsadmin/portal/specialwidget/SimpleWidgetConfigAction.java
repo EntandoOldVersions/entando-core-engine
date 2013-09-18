@@ -42,7 +42,7 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	}
 	
 	protected String extractInitConfig() {
-		if (null != this.getShowlet()) return SUCCESS;
+		if (null != this.getWidget()) return SUCCESS;
 		Widget widget = this.getCurrentPage().getWidgets()[this.getFrame()];
 		Logger log = ApsSystemUtils.getLogger();
 		if (null == widget) {
@@ -54,7 +54,7 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
 			}
-			log.info("Configurating new Widget " + this.getShowletTypeCode() + 
+			log.info("Configurating new Widget " + this.getWidgetTypeCode() + 
 					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
 		} else {
 			log.info("Edit Widget config " + widget.getType().getCode() + 
@@ -66,11 +66,11 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	}
 	
 	protected Widget createNewShowlet() throws Exception {
-		if (this.getShowletTypeCode() == null || this.getShowletType(this.getShowletTypeCode()) == null) {
-			throw new Exception("Widget Code missin or invalid : " + this.getShowletTypeCode());
+		if (this.getWidgetTypeCode() == null || this.getShowletType(this.getWidgetTypeCode()) == null) {
+			throw new Exception("Widget Code missin or invalid : " + this.getWidgetTypeCode());
 		}
 		Widget widget = new Widget();
-		WidgetType type = this.getShowletType(this.getShowletTypeCode());
+		WidgetType type = this.getShowletType(this.getWidgetTypeCode());
 		widget.setType(type);
 		widget.setConfig(new ApsProperties());
 		return widget;
@@ -92,8 +92,8 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 		try {
 			this.checkBaseParams();
 			this.createValuedShowlet();
-			this.getPageManager().joinWidget(this.getPageCode(), this.getShowlet(), this.getFrame());
-			log.finest("Saving Widget - code = " + this.getShowlet().getType().getCode() + 
+			this.getPageManager().joinWidget(this.getPageCode(), this.getWidget(), this.getFrame());
+			log.finest("Saving Widget - code = " + this.getWidget().getType().getCode() + 
 					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
@@ -156,22 +156,44 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
+	/**
+	 * @deprecated Use {@link #getWidget()} instead
+	 */
 	public Widget getShowlet() {
+		return getWidget();
+	}
+
+	public Widget getWidget() {
 		return _showlet;
 	}
 	public void setShowlet(Widget widget) {
 		this._showlet = widget;
 	}
+	@Deprecated
 	public String getShowletTypeCode() {
+		System.out.println("### getShowletTypeCode ###");
 		return _showletTypeCode;
 	}
+	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
+		System.out.println("### setShowletTypeCode ###");
 		this._showletTypeCode = showletTypeCode;
 	}
 	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+
+
 	private String _pageCode;
 	private int _frame = -1;
+	@Deprecated
 	private String _showletTypeCode;
+	private String _widgetTypeCode;
 	
 	private Widget _showlet;
 	

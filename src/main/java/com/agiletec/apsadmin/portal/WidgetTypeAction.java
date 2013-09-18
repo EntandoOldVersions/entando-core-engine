@@ -101,13 +101,13 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			ApsProperties titles = new ApsProperties();
 			titles.put("it", this.getItalianTitle());
 			titles.put("en", this.getEnglishTitle());
-			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getWidgetTypeCode());
 			String mainGroupToSet = (this.hasCurrentUserPermission(Permission.SUPERUSER)) ? this.getMainGroup() : type.getMainGroup();
 			ApsProperties configToSet = type.getConfig();
 			if (type.isLogic() && type.isUserType() && !type.isLocked() && this.hasCurrentUserPermission(Permission.SUPERUSER)) {
 				configToSet = this.extractWidgetTypeConfig(type.getParentType().getTypeParameters());
 			}
-			this.getWidgetTypeManager().updateWidgetType(this.getShowletTypeCode(), titles, configToSet, mainGroupToSet);
+			this.getWidgetTypeManager().updateWidgetType(this.getWidgetTypeCode(), titles, configToSet, mainGroupToSet);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
@@ -138,7 +138,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			
 			this.getWidgetTypeManager().addWidgetType(newType);
 			if (this.isReplaceOnPage()) {
-				WidgetType type = this.getShowletType(this.getShowletTypeCode());
+				WidgetType type = this.getShowletType(this.getWidgetTypeCode());
 				Widget widget = new Widget();
 				widget.setType(type);
 				IPage page = this.getPageManager().getPage(this.getPageCode());
@@ -205,7 +205,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	
 	private WidgetType createNewWidgetType() {
 		WidgetType type = new WidgetType();
-		type.setCode(this.getShowletTypeCode());
+		type.setCode(this.getWidgetTypeCode());
 		ApsProperties titles = new ApsProperties();
 		titles.setProperty("it", this.getItalianTitle());
 		titles.setProperty("en", this.getEnglishTitle());
@@ -241,7 +241,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			String check = this.checkShowletType();
 			if (null != check) return check;
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
-			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getWidgetTypeCode());
 			ApsProperties titles = type.getTitles();
 			this.setItalianTitle(titles.getProperty("it"));
 			this.setEnglishTitle(titles.getProperty("en"));
@@ -254,9 +254,9 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	}
 	
 	private String checkShowletType() {
-		WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
+		WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getWidgetTypeCode());
 		if (null == type) {
-			this.addActionError(this.getText("error.widgetType.invalid.null", new String[]{this.getShowletTypeCode()}));
+			this.addActionError(this.getText("error.widgetType.invalid.null", new String[]{this.getWidgetTypeCode()}));
 			return "inputShowletTypes";
 		}
 		return null;
@@ -279,7 +279,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		try {
 			String check = this.checkDeleteShowletType();
 			if (null != check) return check;
-			this.getWidgetTypeManager().deleteWidgetType(this.getShowletTypeCode());
+			this.getWidgetTypeManager().deleteWidgetType(this.getWidgetTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
@@ -291,19 +291,19 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		try {
 			String check = this.checkShowletType();
 			if (null != check) return check;
-			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
+			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getWidgetTypeCode());
 			if (type.isLocked()) {
-				this.addActionError(this.getText("error.widgetType.locked.undeletable", new String[]{this.getShowletTypeCode()}));
+				this.addActionError(this.getText("error.widgetType.locked.undeletable", new String[]{this.getWidgetTypeCode()}));
 				return "inputShowletTypes";
 			}
-			List<IPage> utilizers = this.getPageManager().getWidgetUtilizers(this.getShowletTypeCode());
+			List<IPage> utilizers = this.getPageManager().getWidgetUtilizers(this.getWidgetTypeCode());
 			if (null != utilizers && utilizers.size() > 0) {
-				this.addActionError(this.getText("error.widgetType.used.undeletable", new String[]{this.getShowletTypeCode()}));
+				this.addActionError(this.getText("error.widgetType.used.undeletable", new String[]{this.getWidgetTypeCode()}));
 				return "inputShowletTypes";
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "checkDeleteShowletType");
-			throw new RuntimeException("Error on checking delete operatione : showlet type code " + this.getShowletTypeCode(), t);
+			throw new RuntimeException("Error on checking delete operatione : showlet type code " + this.getWidgetTypeCode(), t);
 		}
 		return null;
 	}
@@ -331,11 +331,17 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		this._strutsAction = strutsAction;
 	}
 	
+	@Deprecated
 	public String getShowletTypeCode() {
-		return _showletTypeCode;
+//		System.out.println(">>>> getShowletTypeCode <<<<");
+//		return _showletTypeCode;
+		return this.getWidgetTypeCode();
 	}
+	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
-		this._showletTypeCode = showletTypeCode;
+//		System.out.println(">>>> setShowletTypeCode <<<<");
+//		this._showletTypeCode = showletTypeCode;
+		this.setWidgetTypeCode(showletTypeCode);
 	}
 	
 	public String getEnglishTitle() {
@@ -359,10 +365,14 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		this._mainGroup = mainGroup;
 	}
 	
+	@Deprecated
 	public String getParentShowletTypeCode() {
+		System.out.println(">>>> getParentShowletTypeCode <<<<");
 		return _parentShowletTypeCode;
 	}
+	@Deprecated
 	public void setParentShowletTypeCode(String parentShowletTypeCode) {
+		System.out.println(">>>> setParentShowletTypeCode <<<<");
 		this._parentShowletTypeCode = parentShowletTypeCode;
 	}
 	
@@ -394,15 +404,29 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		this._replaceOnPage = replaceOnPage;
 	}
 	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+
 	private int _strutsAction;
 	
+	@Deprecated
 	private String _showletTypeCode;
+	
+	private String _widgetTypeCode;
+	
 	private String _englishTitle;
 	private String _italianTitle;
 	
 	private String _mainGroup;
 	
+	@Deprecated
 	private String _parentShowletTypeCode;
+	
 	
 	private String _pageCode;
 	private Integer _framePos;

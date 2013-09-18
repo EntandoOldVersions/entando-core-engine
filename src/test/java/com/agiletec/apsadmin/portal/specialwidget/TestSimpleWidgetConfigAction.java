@@ -41,7 +41,7 @@ public class TestSimpleWidgetConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigSimpleParameter("admin", "homepage", "1", "formAction");
 		assertEquals(Action.SUCCESS, result);
 		ISimpleWidgetConfigAction action = (ISimpleWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		assertEquals(0, widget.getConfig().size());
 	}
@@ -56,7 +56,7 @@ public class TestSimpleWidgetConfigAction extends ApsAdminBaseTestCase {
 		String result = this.executeConfigSimpleParameter("admin", "pagina_2", "2", null);
 		assertEquals(Action.SUCCESS, result);
 		ISimpleWidgetConfigAction action = (ISimpleWidgetConfigAction) this.getAction();
-		Widget widget = action.getShowlet();
+		Widget widget = action.getWidget();
 		assertNotNull(widget);
 		ApsProperties props = widget.getConfig();
 		assertEquals(1, props.size());
@@ -71,7 +71,7 @@ public class TestSimpleWidgetConfigAction extends ApsAdminBaseTestCase {
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", frame);
 		if (null != showletTypeCode && showletTypeCode.trim().length()>0) {
-			this.addParameter("showletTypeCode", showletTypeCode);
+			this.addParameter("widgetTypeCode", showletTypeCode);
 		}
 		return this.executeAction();
 	}
@@ -87,7 +87,7 @@ public class TestSimpleWidgetConfigAction extends ApsAdminBaseTestCase {
 			this.initAction("/do/Page/SpecialWidget", "saveConfigSimpleParameter");
 			this.addParameter("pageCode", pageCode);
 			this.addParameter("frame", String.valueOf(frame));
-			this.addParameter("showletTypeCode", "formAction");
+			this.addParameter("widgetTypeCode", "formAction");
 			this.addParameter("actionPath", "/WEB-INF/pippo.jsp");
 			String result = this.executeAction();
 			assertEquals("configure", result);

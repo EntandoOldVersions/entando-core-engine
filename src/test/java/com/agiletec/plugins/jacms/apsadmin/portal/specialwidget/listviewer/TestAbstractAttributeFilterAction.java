@@ -31,7 +31,7 @@ public abstract class TestAbstractAttributeFilterAction extends ApsAdminBaseTest
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("pageCode", "homepage");
 		params.put("frame", "1");
-		params.put("showletTypeCode", "advancedListViewer");
+		params.put("widgetTypeCode", "advancedListViewer");
 		params.put("contentType", contentTypeCode);
 		params.put("filters", "");
 		return params;

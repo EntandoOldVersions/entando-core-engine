@@ -115,6 +115,6 @@ public interface IPageManager extends ITreeNodeManager {
 	 */
 	public List<IPage> getShowletUtilizers(String showletTypeCode) throws ApsSystemException;
 
-	public List<IPage> getWidgetUtilizers(String showletTypeCode) throws ApsSystemException;
+	public List<IPage> getWidgetUtilizers(String widgetTypeCode) throws ApsSystemException;
 	
 }

@@ -47,7 +47,7 @@ public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implem
 		try {
 			String result = super.extractInitConfig();
 			if (!result.equals(SUCCESS)) return result;
-			Widget widget = this.getShowlet();
+			Widget widget = this.getWidget();
 			String navSpec = null;
 			if (null != widget.getConfig()) {
 				navSpec = widget.getConfig().getProperty("navSpec");

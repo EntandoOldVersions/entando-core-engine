@@ -212,7 +212,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		this.setUserOnSession(username);
 		this.initAction("/do/Page", "joinWidget");
 		this.addParameter("pageCode", pageCode);
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		this.addParameter("frame", String.valueOf(frame));
 		return this.executeAction();
 	}
@@ -233,7 +233,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			String englishTitle, String username, ApsProperties properties) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("strutsAction", ApsAdminSystemConstants.EDIT);
@@ -246,14 +246,14 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	private String executeTrash(String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "trash");
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		return this.executeAction();
 	}
 
 	private String executeDelete(String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "delete");
-		this.addParameter("showletTypeCode", showletTypeCode);
+		this.addParameter("widgetTypeCode", showletTypeCode);
 		return this.executeAction();
 	}
 	
@@ -465,7 +465,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			
 			this.setUserOnSession("admin");
 			this.initAction("/do/Portal/WidgetType", "save");
-			this.addParameter("showletTypeCode", widgetTypeCode);
+			this.addParameter("widgetTypeCode", widgetTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
 			this.addParameter("pageCode", pageDest);
@@ -501,7 +501,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		try {
 			this.setUserOnSession("admin");
 			this.initAction("/do/Portal/WidgetType", "save");
-			this.addParameter("showletTypeCode", widgetTypeCode);
+			this.addParameter("widgetTypeCode", widgetTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
 			this.addParameter("parentShowletTypeCode", "content_viewer_list");
@@ -527,7 +527,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	private String executePasteWidgetType(String username, String code, String englishTitle, String italianTitle, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
-		this.addParameter("showletTypeCode", code);
+		this.addParameter("widgetTypeCode", code);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("pageCode", pageCode);
@@ -539,7 +539,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	private String executeAddWidgetType(String username, String code, String englishTitle, String italianTitle, String parentShowletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
-		this.addParameter("showletTypeCode", code);
+		this.addParameter("widgetTypeCode", code);
 		this.addParameter("englishTitle", englishTitle);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("parentShowletTypeCode", parentShowletTypeCode);

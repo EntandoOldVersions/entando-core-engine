@@ -80,13 +80,13 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
-			if (null != this.getShowletTypeCode() && this.getShowletTypeCode().length() == 0) {
+			if (null != this.getWidgetTypeCode() && this.getWidgetTypeCode().length() == 0) {
 				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
 			}
-			log.finest("code=" + this.getShowletTypeCode() + ", pageCode=" 
+			log.finest("code=" + this.getWidgetTypeCode() + ", pageCode=" 
 					+ this.getPageCode() + ", frame=" + this.getFrame());
-			WidgetType widgetType = this.getShowletType(this.getShowletTypeCode());
+			WidgetType widgetType = this.getShowletType(this.getWidgetTypeCode());
 			if (null == widgetType) {
 				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
@@ -203,11 +203,14 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	public void setShowletAction(String showletAction) {
 		this._showletAction = showletAction;
 	}
-	
+	@Deprecated
 	public String getShowletTypeCode() {
+		System.out.println("°°° getShowletTypeCode °°°");
 		return _showletTypeCode;
 	}
+	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
+		System.out.println("°°° setShowletTypeCode °°°");
 		this._showletTypeCode = showletTypeCode;
 	}
 	
@@ -218,10 +221,20 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		this._showlet = widget;
 	}
 	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+
 	private String _pageCode;
 	private int _frame = -1;
 	private String _showletAction;
+	@Deprecated
 	private String _showletTypeCode;
+	private String _widgetTypeCode;
 	
 	private Widget _showlet;
 	
