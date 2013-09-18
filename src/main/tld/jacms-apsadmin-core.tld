@@ -89,7 +89,8 @@
 			<![CDATA[Returns a content type (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
 			The names of the available property of "Content Type": "typeCode", "typeDescr",
-			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes).]]>
+			"attributeMap" (map of attributes indexed by the name), "attributeList" (list of attributes).
+			The special property "isAuthToEdit" return true if the current user is allowed to edit a content of the given type.]]>
 		</description>
 		<name>contentType</name>
 		<tag-class>com.agiletec.plugins.jacms.apsadmin.tags.ContentTypeInfoTag</tag-class>

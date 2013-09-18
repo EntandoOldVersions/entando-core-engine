@@ -159,6 +159,33 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>
+			<![CDATA[Returns the list of entity types through the code and the entity service name. 
+				This tag can be used only in jsp rendered by Struts2 context.]]>
+		</description>
+		<name>entityTypes</name>
+		<tag-class>org.entando.entando.apsadmin.tags.EntityTypesInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The entity manager name.]]></description>
+			<name>entityManagerName</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the list of entity types pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The property of the entity type that will be used to order the required list. default value "typeDescr".]]></description>
+			<name>orderBy</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<description><![CDATA[Defines a hookpoint]]></description>
 		<name>hookPoint</name>
 		<tag-class>com.agiletec.apsadmin.tags.HookPointTag</tag-class>
