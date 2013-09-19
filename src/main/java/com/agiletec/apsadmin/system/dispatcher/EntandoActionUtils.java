@@ -30,11 +30,9 @@ public class EntandoActionUtils {
 		if (null != enumeration) {
 			while (enumeration.hasMoreElements()) {
 				String paramName = enumeration.nextElement().toString();
-				//System.out.println("attribute names - " + paramName);
 				if (paramName.startsWith("entandoaction:")) {
 					entandoActionName = paramName.substring("entandoaction:".length());
 					// Strip off the image button location info, if found
-					System.out.println("entandoAction names - " + entandoActionName);
 					if (entandoActionName.endsWith(".x") || entandoActionName.endsWith(".y")) {
 						entandoActionName = entandoActionName.substring(0, entandoActionName.length() - 2);
 					}

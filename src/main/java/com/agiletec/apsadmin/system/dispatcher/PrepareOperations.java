@@ -29,7 +29,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 /**
  * @author E.Santoboni
  */
-public class PrepareOperations  extends org.apache.struts2.dispatcher.ng.PrepareOperations {
+public class PrepareOperations extends org.apache.struts2.dispatcher.ng.PrepareOperations {
 	
 	public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
         super(servletContext, dispatcher);
@@ -43,47 +43,12 @@ public class PrepareOperations  extends org.apache.struts2.dispatcher.ng.Prepare
         if (mapping == null || forceLookup) {
             try {
 				Container container = dispatcher.getContainer();
-				
 				ActionMapper mapper = container.getInstance(ActionMapper.class);
-				/*
-				String entandoActionName = null;
-				Enumeration enumeration = request.getParameterNames();
-				if (null != enumeration) {
-					while (enumeration.hasMoreElements()) {
-						String paramName = enumeration.nextElement().toString();
-						//System.out.println("attribute names - " + paramName);
-						if (paramName.startsWith("entandoaction:")) {
-							entandoActionName = paramName.substring("entandoaction:".length());
-							// Strip off the image button location info, if found
-							System.out.println("entandoAction names - " + entandoActionName);
-							if (entandoActionName.endsWith(".x") || entandoActionName.endsWith(".y")) {
-								entandoActionName = entandoActionName.substring(0, entandoActionName.length() - 2);
-							}
-							break;
-						}
-					}
-				}
-				*/
 				String entandoActionName = EntandoActionUtils.extractEntandoActionName(request);
 				mapping = mapper.getMapping(request, dispatcher.getConfigurationManager());
 				if (null != entandoActionName) {
-					//String actionName = mapping.getNamespace() + "/" + entandoActionName;
-					//mapping = mapper.getMappingFromActionName(entandoActionName);
-				//} else {
 					mapping.setName(entandoActionName);
 				}
-                
-				
-				//System.out.println("------------------------------------------------");
-				
-				//System.out.println("name - " + mapping.getName());
-				//System.out.println("method - " + mapping.getMethod());
-				
-				//System.out.println("namespace - " + mapping.getNamespace());
-				//System.out.println("name - " + mapping.getName());
-				//System.out.println("method - " + mapping.getMethod());
-				//System.out.println("------------------------------------------------");
-			
                 if (mapping != null) {
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
@@ -91,7 +56,6 @@ public class PrepareOperations  extends org.apache.struts2.dispatcher.ng.Prepare
                 dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             }
         }
-
         return mapping;
     }
 	
