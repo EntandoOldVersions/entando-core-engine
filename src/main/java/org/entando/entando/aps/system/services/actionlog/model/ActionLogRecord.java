@@ -16,12 +16,13 @@
 */
 package org.entando.entando.aps.system.services.actionlog.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLogRecord {
+public class ActionLogRecord implements Serializable {
 	
 	public void setId(int id) {
 		this._id = id;

@@ -31,6 +31,9 @@ import com.agiletec.aps.system.services.user.UserDetails;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -56,6 +59,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
 	public void deleteActionRecord(int id) throws ApsSystemException {
 		try {
 			this.getActionLogDAO().deleteActionRecord(id);
@@ -78,6 +82,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
 	public ActionLogRecord getActionRecord(int id) throws ApsSystemException {
 		ActionLogRecord record = null;
 		try {

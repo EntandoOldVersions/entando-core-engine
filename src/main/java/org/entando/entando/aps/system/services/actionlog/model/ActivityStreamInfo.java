@@ -16,6 +16,7 @@
 */
 package org.entando.entando.aps.system.services.actionlog.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Properties;
 
@@ -30,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "activityStreamInfo")
 @XmlType(propOrder = {"objectTitles", "objectTitleLabel", "groups", "actionType", 
 	"linkNamespace", "linkActionName", "linkParameters", "linkAuthPermission", "linkAuthGroup"})
-public class ActivityStreamInfo {
+public class ActivityStreamInfo implements Serializable {
 	
 	public ActivityStreamInfo() {}
 	
