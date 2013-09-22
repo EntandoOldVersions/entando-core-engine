@@ -202,14 +202,13 @@
 	<include file="org/entando/entando/apsadmin/user/userprofile.xml" />
 	<include file="com/agiletec/apsadmin/user/role/role.xml" />
 	<include file="com/agiletec/apsadmin/user/group/group.xml" />
-        
+    
 	<include file="com/agiletec/apsadmin/system/entity/entity.xml"/>
 	<include file="com/agiletec/apsadmin/system/entity/type/entity.xml"/>
 	
 	<include file="org/entando/entando/apsadmin/api/api.xml" />
 	
 	<include file="org/entando/entando/aps/internalservlet/api/api.xml" />
-	<include file="org/entando/entando/aps/internalservlet/user/common.xml"/>
 	<include file="org/entando/entando/aps/internalservlet/user/currentUserProfile.xml"/>
     
 </struts>

@@ -5,6 +5,26 @@
 
 <struts>
 	
+    <package name="core_do/Front/CurrentUser" namespace="/do/Front/CurrentUser" extends="entando-front-default">
+    	
+        <action name="edit">
+        	<result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/user/editCurrentUser.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="editPassword" class="baseCommonAction" method="editPassword">
+        	<result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/user/entryUserPassword.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeStack"></interceptor-ref>
+        </action>
+        
+        <action name="changePassword" class="baseCommonAction" method="changePassword">
+        	<result name="input" type="dispatcher">/WEB-INF/aps/jsp/internalservlet/user/entryUserPassword.jsp</result>
+        	<result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/user/passwordChangingConfirm.jsp</result>
+        	<interceptor-ref name="entandoFrontEndFreeValidationStack"></interceptor-ref>
+        </action>
+        
+    </package>
+    
     <package name="core_do/Front/CurrentUser/Profile" namespace="/do/Front/CurrentUser/Profile" extends="entando-front-default">
     	
         <action name="edit" class="currentUserProfileAction" method="edit">

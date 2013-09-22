@@ -142,7 +142,7 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
                 this.getUserProfileManager().updateProfile(user.getUsername(), profile);
             }
             this.getRequest().getSession().removeAttribute(SESSION_PARAM_NAME_CURRENT_PROFILE);
-			this.addActionMessage(this.getText("jpuserprofile.message.profileChanged"));
+			this.addActionMessage(this.getText("message.profileUpdated"));
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
