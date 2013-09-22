@@ -35,6 +35,14 @@
 		<property name="i18nManager" ref="I18nManager" />
 	</bean>
 	
+	<bean id="currentUserAvatarAction" 
+			class="org.entando.entando.apsadmin.common.currentuser.CurrentAvatarAction" 
+			scope="prototype" parent="abstractBaseAction" >
+		<property name="configManager" ref="BaseConfigManager" />
+		<property name="gravatarUrl"><value>http://www.gravatar.com/avatar/</value></property>
+		<property name="defaultAvatarSubPath"><value>administration/img/avatar-default.png</value></property>
+	</bean>
+	
 	<bean id="currentUserProfileListAttributeAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.common.currentuser.attribute.action.list.ListAttributeAction" 
 			parent="abstractBaseAction" >
