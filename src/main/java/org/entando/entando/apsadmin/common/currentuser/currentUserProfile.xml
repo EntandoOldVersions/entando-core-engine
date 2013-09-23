@@ -10,8 +10,7 @@
 		<action name="avatarStream" class="currentUserAvatarAction" method="returnAvatarStream" >
 			<result type="stream">
 				<param name="contentDisposition">inline;filename="avatar.png"</param>
-				<param name="contentType">image/png</param>
-				<param name="inputName">inputStream</param>
+				<param name="contentType">${mimeType}</param>
 			</result>
 			<interceptor-ref name="entandoFreeStack"></interceptor-ref>
     	</action>

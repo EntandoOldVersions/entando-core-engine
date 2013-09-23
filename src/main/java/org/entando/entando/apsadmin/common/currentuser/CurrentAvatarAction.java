@@ -18,14 +18,10 @@ package org.entando.entando.apsadmin.common.currentuser;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.net.URL;
 import java.security.MessageDigest;
 
 import org.apache.http.HttpResponse;
@@ -34,6 +30,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 /**
  * @author E.Santoboni
@@ -92,13 +90,8 @@ public class CurrentAvatarAction extends BaseAction /* implements ServletRespons
 	
 	protected String extractDefaultAvatarStream() {
 		try {
-			ConfigInterface configManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, this.getRequest());
-			String url = configManager.getParam(SystemConstants.PAR_RESOURCES_ROOT_URL) + this.getDefaultAvatarSubPath();
-			InputStream is = new URL(url).openStream();
-			if (null == is) {
-				this.setInputStream(new ByteArrayInputStream(url.getBytes("UTF-8")));
-			}
-			this.setInputStream(is);
+			Resource resource = new ClassPathResource("avatar-default.png");
+			this.setInputStream(resource.getInputStream());
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "extractDefaultAvatarStream");
             return FAILURE;
@@ -106,18 +99,15 @@ public class CurrentAvatarAction extends BaseAction /* implements ServletRespons
 		return SUCCESS;
 	}
 	
+	public String getMimeType() {
+		return "image/png";
+	}
+	
 	protected String getGravatarUrl() {
 		return _gravatarUrl;
 	}
 	public void setGravatarUrl(String gravatarUrl) {
 		this._gravatarUrl = gravatarUrl;
-	}
-	
-	protected String getDefaultAvatarSubPath() {
-		return _defaultAvatarSubPath;
-	}
-	public void setDefaultAvatarSubPath(String defaultAvatarSubPath) {
-		this._defaultAvatarSubPath = defaultAvatarSubPath;
 	}
 	
 	public String getGravatarExtension() {
@@ -141,21 +131,11 @@ public class CurrentAvatarAction extends BaseAction /* implements ServletRespons
 		this._inputStream = inputStream;
 	}
 	
-	protected ConfigInterface getConfigManager() {
-		return _configManager;
-	}
-	public void setConfigManager(ConfigInterface configManager) {
-		this._configManager = configManager;
-	}
-	
 	private String _gravatarUrl;
-	private String _defaultAvatarSubPath;
 	
 	private String _gravatarExtension = "png";
 	private String _gravatarSize = "34";
 	
 	private InputStream _inputStream;
-	
-	private ConfigInterface _configManager;
 	
 }
