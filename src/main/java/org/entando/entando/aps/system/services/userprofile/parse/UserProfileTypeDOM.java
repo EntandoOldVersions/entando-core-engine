@@ -36,7 +36,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public class UserProfileTypeDOM extends EntityTypeDOM {
 	
 	@Override
-	@Deprecated (/** inserted to guaranted compatibility with previsous version of jpuserprofile 1.6 plugin (of jAPS 2.2.0) */)
+	@Deprecated (/** inserted to guarantee compatibility with previous version of jpuserprofile 1.6 plugin (of jAPS 2.2.0) */)
 	protected void doParsing(Document document, Class entityClass, IApsEntityDOM entityDom) throws ApsSystemException {
 		List<Element> contentElements = document.getRootElement().getChildren();
 		for (int i=0; i<contentElements.size(); i++) {
@@ -53,7 +53,7 @@ public class UserProfileTypeDOM extends EntityTypeDOM {
 		}
 	}
 	
-	@Deprecated (/** inserted to guaranted compatibility with previsous version of jpuserprofile 1.6 plugin (of jAPS 2.2.0) */)
+	@Deprecated (/** inserted to guarantee compatibility with previous version of jpuserprofile 1.6 plugin (of jAPS 2.2.0) */)
 	private void extractRole(Element contentElem, 
 			IApsEntity userProfile, String xmlAttribute, String roleName) throws ApsSystemException {
 		if (null == userProfile.getAttributeByRole(roleName)) {

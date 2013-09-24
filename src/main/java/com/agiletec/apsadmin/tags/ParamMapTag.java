@@ -27,7 +27,7 @@ import com.agiletec.apsadmin.tags.util.ParamMap;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
- * Tag used to parameterise other tags with a map of parameters.
+ * Tag used to parameterize other tags with a map of parameters.
  * @author E.Santoboni
  */
 public class ParamMapTag extends ComponentTagSupport {
