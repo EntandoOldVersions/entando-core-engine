@@ -22,6 +22,8 @@ import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.services.user.AbstractUser;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
@@ -101,6 +103,12 @@ public class UserProfileAction extends AbstractApsEntityAction {
             } else {
                 this.getUserProfileManager().updateProfile(username, userProfile);
             }
+			UserDetails currentUser = super.getCurrentUser();
+			if (null != currentUser 
+					&& currentUser.getUsername().equals(username)
+					&& (currentUser instanceof AbstractUser)) {
+				((AbstractUser) currentUser).setProfile(userProfile);
+			}
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
