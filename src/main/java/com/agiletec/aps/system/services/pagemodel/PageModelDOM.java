@@ -97,6 +97,11 @@ public class PageModelDOM {
 					_frames[pos] = frameDescrElement.getText();
 				}
 				Element defaultWidgetElement = frameElement.getChild(TAB_DEFAULT_WIDGET);
+				//to guaranted compatibility with previsous version of Entamdo 3.3.1 *** Start Block
+				if (null == defaultWidgetElement) {
+					defaultWidgetElement = frameElement.getChild("defaultShowlet");
+				}
+				//to guaranted compatibility with previsous version of Entamdo 3.3.1 *** End Block
 				if (null != defaultWidgetElement) {
 					this.buildDefaultWidget(defaultWidgetElement, pos, widgetTypeManager);
 				}
@@ -176,4 +181,5 @@ public class PageModelDOM {
 	private int _mainFrame;
 	private String[] _frames;
 	private Widget[] _defaultWidget;
+	
 }

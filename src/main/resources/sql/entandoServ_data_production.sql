@@ -52,7 +52,7 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<?xml version
 	<box pos="4">jacms.content.list</box>
 	<box pos="5">jacms.contentType</box>
 	<box pos="6">core.portal.pageTree</box>
-	<box pos="7">core.portal.showletType</box>
+	<box pos="7">core.portal.widgetType</box>
 	<box pos="8">core.tools.entities</box>
 	<box pos="9">core.tools.setting</box>
 </shortcuts>

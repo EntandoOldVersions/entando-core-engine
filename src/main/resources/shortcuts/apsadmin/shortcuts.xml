@@ -135,17 +135,17 @@
 		<shortcut id="core.portal.pageTree" requiredPermission="managePages" menusection="portal" source="core">
 			<description key="core.shortcut.portal.pageTree.shortDesc" >Pages</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.portal.pageTree.longDesc">
-				<![CDATA[Manage Pages: inspect the Page Tree, create, delete, modify Pages, publish a content or place Showlets on Pages.]]>
+				<![CDATA[Manage Pages: inspect the Page Tree, create, delete, modify Pages, publish a content or place Widgets on Pages.]]>
 			</longdesc>
 			<url>
 				<param name="namespace">/do/Page</param>
 				<param name="actionName">viewTree</param>
 			</url>
 		</shortcut>
-		<shortcut id="core.portal.showletType" requiredPermission="managePages" menusection="portal" source="core">
-			<description key="core.shortcut.portal.widgetType.shortDesc" >Showlets</description><!-- key e corpo alternativo -->
+		<shortcut id="core.portal.widgetType" requiredPermission="managePages" menusection="portal" source="core">
+			<description key="core.shortcut.portal.widgetType.shortDesc" >Widgets</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.portal.widgetType.longDesc">
-				<![CDATA[Manage the Showlets. See what Showlets are installed, grouped by component or Plugin]]>
+				<![CDATA[Manage the Widgets. See what Widgets are installed, grouped by component or Plugin]]>
 			</longdesc>
 			<url>
 				<param name="namespace">/do/Portal/WidgetType</param>
