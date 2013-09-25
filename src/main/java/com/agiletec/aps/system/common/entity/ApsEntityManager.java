@@ -256,7 +256,7 @@ public abstract class ApsEntityManager extends AbstractService
 				return;
 			}
 			String[] oldRoles = (null != oldAttribute.getRoles()) ? oldAttribute.getRoles() : new String[0];
-			String[] newRoles = (null != newAttribute.getRoles()) ? newAttribute.getRoles() : new String[0];
+			String[] newRoles = (null != newAttribute && null != newAttribute.getRoles()) ? newAttribute.getRoles() : new String[0];
 			if ((newRoles.length == 0 && oldRoles.length == 0)) {
 				continue;
 			} else if (newRoles.length != oldRoles.length) {
