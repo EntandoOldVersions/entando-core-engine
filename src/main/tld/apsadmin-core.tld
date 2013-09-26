@@ -514,6 +514,27 @@
 		</attribute>
 	</tag>
 	<tag>
+		<description>
+			<![CDATA[Returns the list of like records (ActivityStreamLikeInfo objects) of an activity through the code. 
+			Availables properties: "username", "displayName"]]>
+		</description>
+		<name>activityStreamLikeRecords</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ActivityStreamLikeRecordsTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The id of the action log record.]]></description>
+			<name>recordId</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the info pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<description><![CDATA[Render a title of the traced activity]]></description>
 		<name>activityTitle</name>
 		<tag-class>org.entando.entando.apsadmin.tags.ActivityTitleTag</tag-class>

@@ -18,8 +18,6 @@
 package org.entando.entando.aps.system.services.userprofile.model;
 
 import com.agiletec.aps.system.SystemConstants;
-import java.util.List;
-
 import com.agiletec.aps.system.common.entity.model.ApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractComplexAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -27,6 +25,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
+
+import java.util.List;
 import java.io.Serializable;
 
 /**
@@ -39,6 +39,20 @@ public class UserProfile extends ApsEntity implements IUserProfile, Serializable
 	@Override
 	public String getUsername() {
 		return this.getId();
+	}
+	
+	@Override
+	public String getDisplayName() {
+		String displayName = (String) this.getValueByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
+		if (null == displayName) {
+			displayName = this.getUsername();
+		}
+		return displayName;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getDisplayName();
 	}
 	
 	@Override

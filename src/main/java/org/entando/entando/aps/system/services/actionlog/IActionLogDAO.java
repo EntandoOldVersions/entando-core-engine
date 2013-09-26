@@ -19,6 +19,7 @@ package org.entando.entando.aps.system.services.actionlog;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
@@ -35,5 +36,13 @@ public interface IActionLogDAO {
 	public void deleteActionRecord(int id);
 	
 	public List<Integer> getActivityStream(List<String> userGroupCodes);
+	
+	public void editActionLikeRecord(int id, String username, boolean add);
+	
+	public void addActionLikeRecord(int id, String username);
+	
+	public void deleteActionLikeRecord(int id, String username);
+	
+	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id);
 	
 }

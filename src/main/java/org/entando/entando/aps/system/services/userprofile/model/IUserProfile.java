@@ -31,6 +31,8 @@ public interface IUserProfile extends IApsEntity {
 	 */
 	public String getUsername();
 	
+	public String getDisplayName();
+	
 	/**
 	 * Returns the value of an attribute identified by his key. 
 	 * The value can be of any type.

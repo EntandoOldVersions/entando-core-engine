@@ -22,15 +22,12 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 
-import javax.ws.rs.core.MediaType;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.api.UnmarshalUtils;
-import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
 
 /**
  * @author E.Santoboni

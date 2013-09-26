@@ -19,9 +19,8 @@ package org.entando.entando.aps.system.services.actionlog;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
-import java.sql.BatchUpdateException;
 
+import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +34,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfos;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
@@ -284,7 +286,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecord(id, conn, DELETE_LOG_RECORD_RELATION);
+			this.deleteRecord(id, conn, DELETE_LOG_LIKE_RECORDS);
+			this.deleteRecord(id, conn, DELETE_LOG_RECORD_RELATIONS);
 			this.deleteRecord(id, conn, DELETE_LOG_RECORD);
 			conn.commit();
 		} catch (Throwable t) {
@@ -292,6 +295,57 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			processDaoException(t, "Error on delete record: " + id , "deleteActionRecord");
 		} finally {
 			closeConnection(conn);
+		}
+	}
+	
+	@Override
+	public void editActionLikeRecord(int id, String username, boolean add) {
+		if (add) {
+			this.addActionLikeRecord(id, username);
+		} else {
+			this.deleteActionLikeRecord(id, username);
+		}
+	}
+	
+	@Override
+	public void addActionLikeRecord(int id, String username) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(ADD_ACTION_LIKE_RECORD);
+			stat.setInt(1, id);
+			stat.setString(2, username);
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			stat.setTimestamp(3, timestamp);
+			stat.executeUpdate();
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error on insert actionlogger like record", "addActionLikeRecord");
+		} finally {
+			closeDaoResources(null, stat, conn);
+		}
+	}
+	
+	@Override
+	public void deleteActionLikeRecord(int id, String username) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(DELETE_LOG_LIKE_RECORD);
+			stat.setInt(1, id);
+			stat.setString(2, username);
+			stat.executeUpdate();
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error on delete like record: " + id , "deleteActionLikeRecord");
+		} finally {
+			closeDaoResources(null, stat, conn);
 		}
 	}
 	
@@ -306,6 +360,30 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} finally {
 			closeDaoResources(null, stat);
 		}
+	}
+	
+	@Override
+	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) {
+		List<ActivityStreamLikeInfo> infos = new ActivityStreamLikeInfos();
+		Connection conn = null;
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			stat = conn.prepareStatement(GET_ACTION_LIKE_RECORDS);
+			stat.setInt(1, id);
+			result = stat.executeQuery();
+			while (result.next()) {
+				ActivityStreamLikeInfo asli = new ActivityStreamLikeInfo();
+				asli.setUsername(result.getString(1));
+				infos.add(asli);
+			}
+		} catch (Throwable t) {
+			processDaoException(t, "Error while loading activity stream like records", "getActionLikeRecords");
+		} finally {
+			closeDaoResources(result, stat, conn);
+		}
+		return infos;
 	}
 	
 	@Override
@@ -332,18 +410,28 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
 		"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 	
+	private static final String ADD_ACTION_LIKE_RECORD = 
+		"INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
+	
 	private static final String GET_ACTION_RECORD = 
-		"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo " +
-		"FROM actionlogrecords " +
-		"WHERE id = ?";
+		"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
 	
 	private static final String DELETE_LOG_RECORD = 
 		"DELETE from actionlogrecords where id = ?";
 	
-	private static final String DELETE_LOG_RECORD_RELATION = 
+	private static final String DELETE_LOG_RECORD_RELATIONS = 
 		"DELETE from actionlogrelations where recordid = ?";
 	
 	private final String ADD_LOG_RECORD_RELATION =
 		"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
+	
+	private static final String DELETE_LOG_LIKE_RECORDS = 
+		"DELETE from actionloglikerecords where recordid = ? ";
+	
+	private static final String DELETE_LOG_LIKE_RECORD = 
+		DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
+	
+	private static final String GET_ACTION_LIKE_RECORDS = 
+		"SELECT username from actionloglikerecords where recordid = ? ";
 	
 }

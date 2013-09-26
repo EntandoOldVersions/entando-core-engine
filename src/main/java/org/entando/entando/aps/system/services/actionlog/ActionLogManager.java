@@ -30,8 +30,11 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -107,6 +110,39 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
+	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException {
+		try {
+			this.getActionLogDAO().editActionLikeRecord(id, username, add);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "editActionLikeRecord");
+			throw new ApsSystemException("Error editing activity stream like records", t);
+		}
+	}
+	
+	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
+	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException {
+		List<ActivityStreamLikeInfo> infos = null;
+		try {
+			infos = this.getActionLogDAO().getActionLikeRecords(id);
+			if (null != infos) {
+				for (int i = 0; i < infos.size(); i++) {
+					ActivityStreamLikeInfo asli = infos.get(i);
+					String username = asli.getUsername();
+					IUserProfile profile = this.getUserProfileManager().getProfile(username);
+					String displayName = (null != profile) ? profile.getDisplayName() : username;
+					asli.setDisplayName(displayName);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
+			throw new ApsSystemException("Error extracting activity stream like records", t);
+		}
+		return infos;
+	}
+	
+	@Override
 	public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException {
 		List<String> userGroupCodes = this.extractUserGroupCodes(loggedUser);
 		return this.getActivityStream(userGroupCodes);
@@ -143,15 +179,15 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		this._keyGeneratorManager = keyGeneratorManager;
 	}
 	
-	protected IGroupManager getGroupManager() {
-		return _groupManager;
+	protected IUserProfileManager getUserProfileManager() {
+		return _userProfileManager;
 	}
-	public void setGroupManager(IGroupManager groupManager) {
-		this._groupManager = groupManager;
+	public void setUserProfileManager(IUserProfileManager userProfileManager) {
+		this._userProfileManager = userProfileManager;
 	}
 	
 	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
-	private IGroupManager _groupManager;
+	private IUserProfileManager _userProfileManager;
 	
 }
