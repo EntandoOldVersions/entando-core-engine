@@ -8,6 +8,114 @@ ALTER TABLE showletconfig RENAME showletcode TO widgetcode;
 ALTER TABLE showletconfig RENAME TO widgetconfig;
 
 ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
+
+
+--- Bundle widgets rename // start ---
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-language_choose', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Choose a Language</property>
+<property key="it">Choose a Language</property>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-login_form', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Dropdown Sign In</property>
+<property key="it">Dropdown Sign In</property>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-navigation_bar', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Navigation - Bar</property>
+<property key="it">Navigazione - Barra Orizzontale</property>
+</properties>', '<config>
+    <parameter name="navSpec">Rules for the Page List auto-generation</parameter>
+    <action name="navigatorConfig" />
+</config>', NULL, NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-navigation_breadcrumbs', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Navigation - Breadcrumbs</property>
+<property key="it">Navigazione - Briciole di Pane</property>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-navigation_menu', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Navigation - Vertical Menu</property>
+<property key="it">Navigazione - Menù Verticale</property>
+</properties>', '<config>
+    <parameter name="navSpec">Rules for the Page List auto-generation</parameter>
+    <action name="navigatorConfig" />
+</config>', NULL, NULL, NULL, 1, NULL);
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-search_form', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Search Form</property>
+<property key="it">Search Form</property>
+</properties>', NULL, NULL, NULL, NULL, 1, NULL);
+
+--- Update widget config ---
+UPDATE widgetconfig SET widgetcode= 'entando-widget-language_choose' WHERE widgetcode='entando-showlet-language_choose';
+UPDATE widgetconfig SET widgetcode= 'entando-widget-navigation_bar' WHERE widgetcode='entando-showlet-navigation_bar';
+UPDATE widgetconfig SET widgetcode= 'entando-widget-search_form' WHERE widgetcode='entando-showlet-search_form';
+UPDATE widgetconfig SET widgetcode= 'entando-widget-login_form' WHERE widgetcode='entando-showlet-login_form';
+UPDATE widgetconfig SET widgetcode= 'entando-widget-navigation_breadcrumbs' WHERE widgetcode='entando-showlet-navigation_breadcrumbs';
+UPDATE widgetconfig SET widgetcode= 'entando-widget-navigation_menu' WHERE widgetcode='entando-showlet-navigation_menu';
+
+--- delete showlets ---
+DELETE FROM widgetcatalog WHERE code='entando-showlet-language_choose';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-navigation_bar';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-search_form';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-login_form';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-navigation_breadcrumbs';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-navigation_menu';
+
+--- components // start ---
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-language_choose', 'entando-widget-language_choose') WHERE item = 'entandoComponentsReport';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-navigation_bar', 'entando-widget-navigation_bar') WHERE item = 'entandoComponentsReport';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-search_form', 'entando-widget-search_form') WHERE item = 'entandoComponentsReport';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-login_form', 'entando-widget-login_form') WHERE item = 'entandoComponentsReport';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-navigation_breadcrumbs', 'entando-widget-navigation_breadcrumbs') WHERE item = 'entandoComponentsReport';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-navigation_menu', 'entando-widget-navigation_menu') WHERE item = 'entandoComponentsReport';
+--- components // end ---
+
+--- page model // start ---
+--- widget
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-language_choose', 'entando-widget-language_choose');
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-navigation_bar', 'entando-widget-navigation_bar');
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-search_form', 'entando-widget-search_form');
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-login_form', 'entando-widget-login_form');
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-navigation_breadcrumbs', 'entando-widget-navigation_breadcrumbs');
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-navigation_menu', 'entando-widget-navigation_menu');
+--- defaultWidget
+UPDATE pagemodels SET frames = replace(frames, 'defaultShowlet', 'defaultWidget');
+--- page model // start ---
+
+--- Bundle widgets rename // end ---
+
+--- plugin My Portal configuration // start ---
+
+UPDATE sysconfig SET config = replace(config, '<showlets>', '<widgets>') WHERE item = 'jpmyportalplus_config';
+UPDATE sysconfig SET config = replace(config, '</showlets>', '</widgets>') WHERE item = 'jpmyportalplus_config';
+UPDATE sysconfig SET config = replace(config, '<showlet', '<widget') WHERE item = 'jpmyportalplus_config';
+
+--- plugin My Portal configuration // end ---
+
+--- plugin Share with configuration // start ---
+
+INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked, maingroup) VALUES ('entando-widget-sharewith', '<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+<property key="en">Share With...</property>
+<property key="it">Condividi con...</property>
+</properties>', 
+NULL, NULL, NULL, NULL, 1, NULL);
+UPDATE widgetconfig SET widgetcode= 'entando-widget-sharewith' WHERE widgetcode='entando-showlet-sharewith';
+DELETE FROM widgetcatalog WHERE code='entando-showlet-sharewith';
+UPDATE sysconfig SET config = replace(config, 'entando-showlet-sharewith', 'entando-widget-sharewith') WHERE item = 'entandoComponentsReport';
+UPDATE pagemodels SET frames = replace(frames, 'entando-showlet-sharewith', 'entando-widget-sharewith');
+
+--- plugin Share with configuration // end ---
+
+
 -- transition from 'showlets' to 'widgets' - End
 
 
