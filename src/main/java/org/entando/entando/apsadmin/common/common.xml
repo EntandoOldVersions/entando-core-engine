@@ -29,4 +29,16 @@
 		
 	</package>
 	
+	<package name="core_do/user/avatar" namespace="/do/user/avatar" extends="entando-default">
+		
+		<action name="avatarStream" class="userAvatarAction" method="returnAvatarStream" >
+			<result type="stream">
+				<param name="contentDisposition">inline;filename="avatar.png"</param>
+				<param name="contentType">${mimeType}</param>
+			</result>
+			<interceptor-ref name="entandoFreeStack"></interceptor-ref>
+    	</action>
+		
+	</package>
+	
 </struts>

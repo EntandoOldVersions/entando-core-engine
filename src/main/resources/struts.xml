@@ -190,6 +190,7 @@
 	<include file="com/agiletec/apsadmin/admin/localestring/localeString.xml" />
     
 	<include file="com/agiletec/apsadmin/common/common.xml" />
+	<include file="org/entando/entando/apsadmin/common/common.xml"/>
 	<include file="org/entando/entando/apsadmin/common/currentuser/currentUserProfile.xml" />
 	
 	<include file="com/agiletec/apsadmin/category/category.xml" />
@@ -210,7 +211,5 @@
 	
 	<include file="org/entando/entando/aps/internalservlet/api/api.xml" />
 	<include file="org/entando/entando/aps/internalservlet/user/currentUserProfile.xml"/>
-	
-	<include file="org/entando/entando/apsadmin/common/activityStream.xml"/>
     
 </struts>

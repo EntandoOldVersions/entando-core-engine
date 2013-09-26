@@ -27,14 +27,13 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 
 import java.util.List;
-import java.io.Serializable;
 
 /**
  * A IUserProfile implementation. 
  * It contains a set of attributes specified in the configuration of ProfileManager.
  * @author E.Santoboni
  */
-public class UserProfile extends ApsEntity implements IUserProfile, Serializable {
+public class UserProfile extends ApsEntity implements IUserProfile {
 	
 	@Override
 	public String getUsername() {
