@@ -210,6 +210,12 @@
 				<property name="dataSource" ref="servDataSource" />
 			</bean>
 		</property>
+		<property name="managerConfiguration" ref="ActionLogManagerConfiguration" />
+	</bean>
+	
+	<bean id="ActionLogManagerConfiguration" class="org.entando.entando.aps.system.services.actionlog.model.ManagerConfiguration" >
+		<property name="cleanOldActivities"><value>true</value></property>
+		<property name="maxActivitySizeByGroup"><value>10</value></property>
 	</bean>
 	
 </beans>

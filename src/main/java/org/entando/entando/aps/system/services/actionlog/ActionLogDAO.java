@@ -24,14 +24,19 @@ import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
@@ -84,11 +89,13 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		if (null == groups || groups.isEmpty()) {
 			return;
 		}
+		Set<String> codes = new HashSet<String>(groups);
+		Iterator<String> iterator = codes.iterator();
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(ADD_LOG_RECORD_RELATION);
-			for (int i = 0; i < groups.size(); i++) {
-				String groupCode = groups.get(i);
+			while (iterator.hasNext()) {
+				String groupCode = iterator.next();
 				stat.setInt(1, recordId);
 				stat.setString(2, groupCode);
 				stat.addBatch();
@@ -148,7 +155,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		return idList;
 	}
 	
-	private PreparedStatement buildStatement(FieldSearchFilter[] filters, List<String> groupCodes, Connection conn) {
+	private PreparedStatement buildStatement(FieldSearchFilter[] filters, Collection<String> groupCodes, Connection conn) {
 		String query = this.createQueryString(filters, groupCodes);
 		PreparedStatement stat = null;
 		try {
@@ -286,15 +293,23 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecord(id, conn, DELETE_LOG_LIKE_RECORDS);
-			this.deleteRecord(id, conn, DELETE_LOG_RECORD_RELATIONS);
-			this.deleteRecord(id, conn, DELETE_LOG_RECORD);
+			this.deleteActionRecord(id, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			processDaoException(t, "Error on delete record: " + id , "deleteActionRecord");
 		} finally {
 			closeConnection(conn);
+		}
+	}
+	
+	private void deleteActionRecord(int id, Connection conn) {
+		try {
+			this.deleteRecord(id, conn, DELETE_LOG_LIKE_RECORDS);
+			this.deleteRecord(id, conn, DELETE_LOG_RECORD_RELATIONS);
+			this.deleteRecord(id, conn, DELETE_LOG_RECORD);
+		} catch (Throwable t) {
+			processDaoException(t, "Error on delete record: " + id , "deleteActionRecord");
 		}
 	}
 	
@@ -406,32 +421,118 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		return true;
 	}
 	
+	@Override
+	public synchronized void cleanOldActivityStreamLogs(int maxActivitySizeByGroup) {
+		Connection conn = null;
+		try {
+			Set<Integer> recordsToDelete = new HashSet<Integer>();
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			Map<String, Integer> occurrences = this.getOccurrences(maxActivitySizeByGroup, conn);
+			Iterator<String> groupIter = occurrences.keySet().iterator();
+			while (groupIter.hasNext()) {
+				String groupName = groupIter.next();
+				this.extractRecordToDelete(groupName, maxActivitySizeByGroup, recordsToDelete, conn);
+			}
+			Iterator<Integer> idIter = recordsToDelete.iterator();
+			while (idIter.hasNext()) {
+				Integer id = idIter.next();
+				this.deleteActionRecord(id, conn);
+			}
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error cleaning old Stream logs" , "cleanOldActivityStreamLogs");
+		} finally {
+			closeConnection(conn);
+		}
+	}
+	
+	private Map<String, Integer> getOccurrences(Integer maxActivitySizeByGroup, Connection conn) {
+		Map<String, Integer> occurrences = new HashMap<String, Integer>();
+		Statement stat = null;
+		ResultSet res = null;
+		try {
+			stat = conn.createStatement();
+			res = stat.executeQuery(GET_GROUP_OCCURRENCES);
+			if (res.next()) {
+				String groupName = res.getString(1);
+				Integer integer = res.getInt(2);
+				if (null != maxActivitySizeByGroup && integer > maxActivitySizeByGroup) {
+					occurrences.put(groupName, integer);
+				}
+			}
+		} catch (Throwable t) {
+			processDaoException(t, "Error loading actionlogger occurrences", "getOccurrences");
+		} finally {
+			closeDaoResources(res, stat);
+		}
+		return occurrences;
+	}
+	
+	private void extractRecordToDelete(String groupName, 
+			Integer maxActivitySizeByGroup, Set<Integer> recordIds, Connection conn) {
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			List<Integer> idList = new ArrayList<Integer>();
+			conn = this.getConnection();
+			FieldSearchFilter filter1 = new FieldSearchFilter("actiondate");
+			filter1.setOrder(FieldSearchFilter.Order.DESC);
+			FieldSearchFilter filter2 = new FieldSearchFilter("activitystreaminfo");
+			FieldSearchFilter[] filters = {filter1, filter2};
+			List<String> groupCodes = new ArrayList<String>();
+			groupCodes.add(groupName);
+			stat = this.buildStatement(filters, groupCodes, conn);
+			result = stat.executeQuery();
+			while (result.next()) {
+				Integer id = result.getInt(1);
+				if (!idList.contains(id)) {
+					idList.add(id);
+				}
+			}
+			if (idList.size() > maxActivitySizeByGroup) {
+				for (int i = maxActivitySizeByGroup; i < idList.size(); i++) {
+					Integer id = idList.get(i);
+					recordIds.add(id);
+				}
+			}
+		} catch (Throwable t) {
+			processDaoException(t, "Error while loading activity stream records to delete : group " + groupName, "extractRecordToDelete");
+		} finally {
+			closeDaoResources(result, stat);
+		}
+	}
+	
 	private static final String ADD_ACTION_RECORD = 
-		"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
-		"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
+			"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
+			"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 	
 	private static final String ADD_ACTION_LIKE_RECORD = 
-		"INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
+			"INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
 	
 	private static final String GET_ACTION_RECORD = 
-		"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
+			"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
 	
 	private static final String DELETE_LOG_RECORD = 
-		"DELETE from actionlogrecords where id = ?";
+			"DELETE from actionlogrecords where id = ?";
 	
 	private static final String DELETE_LOG_RECORD_RELATIONS = 
-		"DELETE from actionlogrelations where recordid = ?";
+			"DELETE from actionlogrelations where recordid = ?";
 	
 	private final String ADD_LOG_RECORD_RELATION =
-		"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
+			"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
 	
 	private static final String DELETE_LOG_LIKE_RECORDS = 
-		"DELETE from actionloglikerecords where recordid = ? ";
+			"DELETE from actionloglikerecords where recordid = ? ";
 	
 	private static final String DELETE_LOG_LIKE_RECORD = 
-		DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
+			DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
 	
 	private static final String GET_ACTION_LIKE_RECORDS = 
-		"SELECT username from actionloglikerecords where recordid = ? ";
+			"SELECT username from actionloglikerecords where recordid = ? ";
+	
+	private static final String GET_GROUP_OCCURRENCES = 
+			"SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
 	
 }

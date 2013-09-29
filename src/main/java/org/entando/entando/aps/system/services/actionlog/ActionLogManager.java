@@ -27,10 +27,12 @@ import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.aps.util.DateConverter;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ManagerConfiguration;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -57,7 +59,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			this.getActionLogDAO().addActionRecord(actionRecord);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addActionRecord");
-			throw new ApsSystemException("Error adding an jpactionlogger record", t);
+			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
 	
@@ -68,7 +70,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			this.getActionLogDAO().deleteActionRecord(id);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteActionRecord");
-			throw new ApsSystemException("Error deleting the jpactionlogger record: " + id, t);
+			throw new ApsSystemException("Error deleting the actionlogger record: " + id, t);
 		}
 	}
 	
@@ -101,6 +103,14 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		List<Integer> recordIds = null;
 		try {
 			recordIds = this.getActionLogDAO().getActivityStream(userGroupCodes);
+			ManagerConfiguration config = this.getManagerConfiguration();
+			if (null != recordIds && null != config && 
+					config.getCleanOldActivities() && config.getMaxActivitySizeByGroup() < recordIds.size()) {
+				ActivityStreamCleanerThread thread = new ActivityStreamCleanerThread(config.getMaxActivitySizeByGroup(), this.getActionLogDAO());
+				String threadName = "ActivityStreamCleanerThread_" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+    			thread.setName(threadName);
+    			thread.start();
+			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getActivityStream");
 			throw new ApsSystemException("Error loading activity stream records", t);
@@ -164,6 +174,13 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		return codes;
 	}
 	
+	protected ManagerConfiguration getManagerConfiguration() {
+		return _managerConfiguration;
+	}
+	public void setManagerConfiguration(ManagerConfiguration managerConfiguration) {
+		this._managerConfiguration = managerConfiguration;
+	}
+	
 	protected IActionLogDAO getActionLogDAO() {
 		return _actionLogDAO;
 	}
@@ -184,6 +201,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	public void setUserProfileManager(IUserProfileManager userProfileManager) {
 		this._userProfileManager = userProfileManager;
 	}
+	
+	private ManagerConfiguration _managerConfiguration;
 	
 	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;

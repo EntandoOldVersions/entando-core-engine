@@ -45,4 +45,6 @@ public interface IActionLogDAO {
 	
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id);
 	
+	public void cleanOldActivityStreamLogs(int maxActivitySizeByGroup);
+	
 }
