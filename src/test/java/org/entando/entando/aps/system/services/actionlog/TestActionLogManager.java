@@ -14,16 +14,17 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
 import java.util.List;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
-public class TestActionLoggerManager extends BaseTestCase {
+public class TestActionLogManager extends BaseTestCase {
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -106,7 +107,7 @@ public class TestActionLoggerManager extends BaseTestCase {
 	}
 	
 	private void init() {
-		this._actionLoggerManager = (IActionLoggerManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
+		this._actionLoggerManager = (IActionLogManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
 		this._helper = new ActionLoggerTestHelper(this.getApplicationContext());
 	}
 	
@@ -116,7 +117,7 @@ public class TestActionLoggerManager extends BaseTestCase {
 		super.tearDown();
 	}
 	
-	private IActionLoggerManager _actionLoggerManager;
+	private IActionLogManager _actionLoggerManager;
 	private ActionLoggerTestHelper _helper;
 	
 }

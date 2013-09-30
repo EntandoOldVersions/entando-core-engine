@@ -26,7 +26,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -43,10 +43,10 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertNull;
 
-import org.entando.entando.aps.system.services.actionlogger.ActionLoggerTestHelper;
-import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.ActionLoggerTestHelper;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -204,7 +204,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 	}
 	
 	private void init() {
-		this._actionLoggerManager = (IActionLoggerManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
+		this._actionLoggerManager = (IActionLogManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
 		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
 		this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
 		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
@@ -217,7 +217,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 		super.tearDown();
 	}
 	
-	private IActionLoggerManager _actionLoggerManager;
+	private IActionLogManager _actionLoggerManager;
 	private IPageManager _pageManager = null;
 	private ILangManager _langManager = null;
 	private IContentManager _contentManager = null;

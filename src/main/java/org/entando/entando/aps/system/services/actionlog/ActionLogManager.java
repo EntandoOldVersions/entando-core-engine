@@ -14,14 +14,13 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
@@ -29,15 +28,14 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-import javax.servlet.http.HttpServletRequest;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLoggerManager extends AbstractService implements IActionLoggerManager {
+public class ActionLogManager extends AbstractService implements IActionLogManager {
 	
 	@Override
 	public void init() throws Exception {
@@ -50,7 +48,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 			int key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
 			actionRecord.setId(key);
 			actionRecord.setActionDate(new Date());
-			this.getActionLoggerDAO().addActionRecord(actionRecord);
+			this.getActionLogDAO().addActionRecord(actionRecord);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addActionRecord");
 			throw new ApsSystemException("Error adding an jpactionlogger record", t);
@@ -60,7 +58,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	@Override
 	public void deleteActionRecord(int id) throws ApsSystemException {
 		try {
-			this.getActionLoggerDAO().deleteActionRecord(id);
+			this.getActionLogDAO().deleteActionRecord(id);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "deleteActionRecord");
 			throw new ApsSystemException("Error deleting the jpactionlogger record: " + id, t);
@@ -71,7 +69,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException {
 		List<Integer> records = new ArrayList<Integer>();
 		try {
-			records = this.getActionLoggerDAO().getActionRecords(searchBean);
+			records = this.getActionLogDAO().getActionRecords(searchBean);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger records", t);
@@ -83,7 +81,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	public ActionLogRecord getActionRecord(int id) throws ApsSystemException {
 		ActionLogRecord record = null;
 		try {
-			record = this.getActionLoggerDAO().getActionRecord(id);
+			record = this.getActionLogDAO().getActionRecord(id);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger record with id: " + id, t);
@@ -95,7 +93,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException {
 		List<Integer> recordIds = null;
 		try {
-			recordIds = this.getActionLoggerDAO().getActivityStream(userGroupCodes);
+			recordIds = this.getActionLogDAO().getActivityStream(userGroupCodes);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getActivityStream");
 			throw new ApsSystemException("Error loading activity stream records", t);
@@ -126,11 +124,11 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 		return codes;
 	}
 	
-	protected IActionLoggerDAO getActionLoggerDAO() {
-		return _actionLoggerDAO;
+	protected IActionLogDAO getActionLogDAO() {
+		return _actionLogDAO;
 	}
-	public void setActionLoggerDAO(IActionLoggerDAO actionLoggerDAO) {
-		this._actionLoggerDAO = actionLoggerDAO;
+	public void setActionLogDAO(IActionLogDAO actionLogDAO) {
+		this._actionLogDAO = actionLogDAO;
 	}
 	
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
@@ -147,7 +145,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 		this._groupManager = groupManager;
 	}
 	
-	private IActionLoggerDAO _actionLoggerDAO;
+	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
 	private IGroupManager _groupManager;
 	

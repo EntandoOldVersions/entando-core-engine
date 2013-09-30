@@ -14,8 +14,10 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
+import org.entando.entando.aps.system.services.actionlog.ActionLogDAO;
+import org.entando.entando.aps.system.services.actionlog.IActionLogDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Date;
@@ -26,8 +28,8 @@ import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -38,7 +40,7 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		DataSource dataSource = (DataSource) applicationContext.getBean("servDataSource");
 		this.setDataSource(dataSource);
 		
-		ActionLoggerDAO actionLoggerDAO = new ActionLoggerDAO();
+		ActionLogDAO actionLoggerDAO = new ActionLogDAO();
 		actionLoggerDAO.setDataSource(dataSource);
 		this._actionLoggerDAO = actionLoggerDAO;
 	}
@@ -104,6 +106,6 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 	private static final String DELETE_LOG_RECORD_RELATIONS = 
 		"DELETE from actionlogrelations";
 	
-	private IActionLoggerDAO _actionLoggerDAO;
+	private IActionLogDAO _actionLoggerDAO;
 	
 }

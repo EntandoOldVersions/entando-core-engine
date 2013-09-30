@@ -14,18 +14,20 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
+import org.entando.entando.aps.system.services.actionlog.ActionLogDAO;
+import org.entando.entando.aps.system.services.actionlog.IActionLogDAO;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.util.DateConverter;
 import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
-public class TestActionLoggerDAO extends BaseTestCase {
+public class TestActionLogDAO extends BaseTestCase {
 
 	@Override
 	protected void setUp() throws Exception {
@@ -109,7 +111,7 @@ public class TestActionLoggerDAO extends BaseTestCase {
 	}
 
 	private void init() {
-		ActionLoggerDAO actionLoggerDAO = new ActionLoggerDAO();
+		ActionLogDAO actionLoggerDAO = new ActionLogDAO();
 		DataSource dataSource = (DataSource) this.getApplicationContext().getBean("servDataSource");
 		actionLoggerDAO.setDataSource(dataSource);
 		this._actionLoggerDAO = actionLoggerDAO;
@@ -123,7 +125,7 @@ public class TestActionLoggerDAO extends BaseTestCase {
 		super.tearDown();
 	}
 
-	private IActionLoggerDAO _actionLoggerDAO;
+	private IActionLogDAO _actionLoggerDAO;
 	private ActionLoggerTestHelper _helper;
 
 }

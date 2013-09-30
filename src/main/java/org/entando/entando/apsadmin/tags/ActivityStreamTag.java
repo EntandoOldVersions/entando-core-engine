@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
-import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 
 /**
  * Return the list (of integer) for the activity stream of the current user.
@@ -40,7 +40,7 @@ public class ActivityStreamTag extends StrutsBodyTagSupport {
 	public int doEndTag() throws JspException {
 		HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 		try {
-			IActionLoggerManager loggerManager = (IActionLoggerManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
+			IActionLogManager loggerManager = (IActionLogManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
 			UserDetails currentUser = (UserDetails) request.getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 			List<Integer> ids = loggerManager.getActivityStream(currentUser);
 			if (null != this.getVar()) {

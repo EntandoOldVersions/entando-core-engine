@@ -14,12 +14,12 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
-import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import java.sql.BatchUpdateException;
 
 import java.sql.Connection;
@@ -34,13 +34,13 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
  */
-public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLoggerDAO {
+public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	
 	@Override
 	public void addActionRecord(ActionLogRecord actionRecord) {

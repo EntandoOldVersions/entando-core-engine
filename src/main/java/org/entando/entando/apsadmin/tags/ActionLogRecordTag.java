@@ -20,7 +20,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.apsadmin.tags.*;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
-import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 
 /**
  * Returns a single record of Action Logger Manager (or one of its property) through the code.
@@ -32,7 +32,7 @@ public class ActionLogRecordTag extends AbstractObjectInfoTag {
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
-		IActionLoggerManager loggerManager = (IActionLoggerManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
+		IActionLogManager loggerManager = (IActionLogManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
 		return loggerManager.getActionRecord(Integer.parseInt(keyValue));
 	}
 	

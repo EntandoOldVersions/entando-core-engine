@@ -14,17 +14,17 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger;
+package org.entando.entando.aps.system.services.actionlog;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
-public interface IActionLoggerDAO {
+public interface IActionLogDAO {
 	
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean);
 	

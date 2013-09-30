@@ -14,7 +14,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger.model;
+package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
 

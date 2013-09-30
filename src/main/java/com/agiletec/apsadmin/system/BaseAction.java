@@ -36,7 +36,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 import com.opensymphony.xwork2.ActionSupport;
 

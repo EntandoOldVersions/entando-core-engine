@@ -28,7 +28,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
@@ -104,22 +104,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		return SUCCESS;
 	}
 	
-	public String configureMainGroup() {
-		Content content = this.updateContentOnSession();
-		try {
-			if (null == content.getId() && null == content.getMainGroup()) {
-				String mainGroup = this.getRequest().getParameter("mainGroup");
-				if (mainGroup != null && null != this.getGroupManager().getGroup(mainGroup)) {
-					content.setMainGroup(mainGroup);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
 	@Override
 	@Deprecated (/** From jAPS 2.0 version 2.1, use joinCategory of {@link IContentCategoryAction} action */)
 	public String joinCategory() {
@@ -182,24 +166,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "removeGroup");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	@Override
-	public String saveAndContinue() {
-		try {
-			Content currentContent = this.updateContentOnSession();
-			if (null != currentContent) {
-				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
-					this.addFieldError("descr", this.getText("error.content.descr.required"));
-				} else {
-					this.getContentManager().saveContent(currentContent);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
 			return FAILURE;
 		}
 		return SUCCESS;

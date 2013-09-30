@@ -14,32 +14,29 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package org.entando.entando.aps.system.services.actionlogger.model;
+package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
+public class ActionLogRecord {
 	
-	@Override
-	public Date getStart() {
-		return _start;
+	public void setId(int id) {
+		this._id = id;
 	}
-	public void setStart(Date start) {
-		this._start = start;
-	}
-	
-	@Override
-	public Date getEnd() {
-		return _end;
-	}
-	public void setEnd(Date end) {
-		this._end = end;
+	public int getId() {
+		return _id;
 	}
 	
-	@Override
+	public Date getActionDate() {
+		return _actionDate;
+	}
+	public void setActionDate(Date actionDate) {
+		this._actionDate = actionDate;
+	}
+	
 	public String getUsername() {
 		return _username;
 	}
@@ -47,7 +44,6 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 		this._username = username;
 	}
 	
-	@Override
 	public String getNamespace() {
 		return _namespace;
 	}
@@ -55,7 +51,6 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 		this._namespace = namespace;
 	}
 	
-	@Override
 	public String getActionName() {
 		return _actionName;
 	}
@@ -63,19 +58,26 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 		this._actionName = actionName;
 	}
 	
-	@Override
-	public String getParams() {
-		return _params;
+	public String getParameters() {
+		return _parameters;
 	}
-	public void setParams(String params) {
-		this._params = params;
+	public void setParameters(String parameters) {
+		this._parameters = parameters;
 	}
 	
-	private Date _start;
-	private Date _end;
+	public ActivityStreamInfo getActivityStreamInfo() {
+		return _activityStreamInfo;
+	}
+	public void setActivityStreamInfo(ActivityStreamInfo activityStreamInfo) {
+		this._activityStreamInfo = activityStreamInfo;
+	}
+	
+	private int _id;
+	private Date _actionDate;
 	private String _username;
 	private String _namespace;
 	private String _actionName;
-	private String _params;
+	private String _parameters;
+	private ActivityStreamInfo _activityStreamInfo;
 	
 }

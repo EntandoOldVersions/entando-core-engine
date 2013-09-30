@@ -31,13 +31,13 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.BaseAction;
-import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
-import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -158,8 +158,8 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 		return ServletActionContext.getRequest();
 	}
 	
-	private IActionLoggerManager getActionLoggerManager() {
-		return (IActionLoggerManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.getRequest());
+	private IActionLogManager getActionLoggerManager() {
+		return (IActionLogManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.getRequest());
 	}
 	
 	public String getExcludeRequestParameters() {
