@@ -146,6 +146,11 @@
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
+        <action name="saveAndContinue" class="jacmsContentAction" method="saveAndContinue">
+        	<result type="tiles">admin.jacms.content.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
         <action name="saveAndApprove" class="jacmsContentAction" method="saveAndApprove">
         	<result name="input" type="tiles">admin.jacms.content.entry</result>
             <result type="redirectAction">list</result>

@@ -64,6 +64,8 @@ public interface IContentAction {
 	 */
 	public String removeGroup();
 	
+	public String saveAndContinue();
+	
 	/**
 	 * Esegue l'azione di salvataggio del contenuto in fase di redazione.
 	 * @return Il codice del risultato dell'azione.
