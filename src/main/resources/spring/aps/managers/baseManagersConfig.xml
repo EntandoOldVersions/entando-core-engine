@@ -201,11 +201,11 @@
 		</property>
 	</bean>
 	
-	<bean id="ActionLogManager" class="org.entando.entando.aps.system.services.actionlog.ActionLogManager" 
+	<bean id="ActionLoggerManager" class="org.entando.entando.aps.system.services.actionlogger.ActionLoggerManager" 
 			parent="abstractService" >
 		<property name="keyGeneratorManager" ref="KeyGeneratorManager" />
-		<property name="actionLogDAO">
-			<bean class="org.entando.entando.aps.system.services.actionlog.ActionLogDAO">
+		<property name="actionLoggerDAO">
+			<bean class="org.entando.entando.aps.system.services.actionlogger.ActionLoggerDAO">
 				<property name="dataSource" ref="servDataSource" />
 			</bean>
 		</property>

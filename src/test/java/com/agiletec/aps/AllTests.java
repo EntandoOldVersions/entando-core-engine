@@ -60,8 +60,8 @@ import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
 import com.agiletec.aps.util.TestHtmlHandler;
-import org.entando.entando.aps.system.services.actionlog.TestActionLogDAO;
-import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
+import org.entando.entando.aps.system.services.actionlogger.TestActionLoggerDAO;
+import org.entando.entando.aps.system.services.actionlogger.TestActionLoggerManager;
 import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 public class AllTests {
@@ -132,8 +132,8 @@ public class AllTests {
 		suite.addTestSuite(TestUserProfileManager.class);
 		suite.addTestSuite(org.entando.entando.aps.system.services.userprofile.TestUserManager.class);
 		
-		suite.addTestSuite(TestActionLogDAO.class);
-		suite.addTestSuite(TestActionLogManager.class);
+		suite.addTestSuite(TestActionLoggerDAO.class);
+		suite.addTestSuite(TestActionLoggerManager.class);
 		
 		return suite;
 	}
