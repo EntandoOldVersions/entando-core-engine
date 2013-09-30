@@ -224,7 +224,27 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			} else {
 				stat.setString(index, (String) object);
 			}
+		} 
+		/*
+		else if (object instanceof Timestamp) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Timestamp) object);
+			if (dateDelay != null) {
+				calendar.add(Calendar.DATE, dateDelay);
+			}
+			Timestamp timestamp = new Timestamp(calendar.getTime().getTime());
+			stat.setTimestamp(index, timestamp);
 		} else if (object instanceof Date) {
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime((Date) object);
+			if (dateDelay != null) {
+				calendar.add(Calendar.DATE, dateDelay);
+			}
+			Date data = calendar.getTime();
+			stat.setDate(index, new java.sql.Date(data.getTime()));
+		}
+		*/
+		else if (object instanceof Date) {
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime((Date) object);
 			if (dateDelay != null) {
