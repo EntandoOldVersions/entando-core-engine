@@ -17,7 +17,6 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model;
 
-
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
