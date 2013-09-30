@@ -150,10 +150,10 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			ApiMethod masterMethod = this.getMethod(this.getNamespace(), this.getResourceName());
 			if (null != this.getShowletTypeCode() && null != masterMethod.getRelatedShowlet()) {
-				WidgetType type = this.getWidgetTypeManager().getShowletType(this.getShowletTypeCode());
+				WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
 				if (null != type && type.isLogic()) {
 					ApsProperties parameters =
-							this.extractParametersFromShowletProperties(masterMethod.getRelatedShowlet(), type.getConfig());
+							this.extractParametersFromWidgetProperties(masterMethod.getRelatedShowlet(), type.getConfig());
 					this.setApiParameterValues(parameters);
 				}
 			}
@@ -182,11 +182,18 @@ public class ApiServiceAction extends AbstractApiAction {
 	}
 	
 	/**
-	 * Copy an exist showlet (physic and with parameters, joined with a exist api method) 
+	 * @deprecated Use {@link #copyFromWidget()} instead
+	 */
+	public String copyFromShowlet() {
+		return copyFromWidget();
+	}
+
+	/**
+	 * Copy an exist widget (physic and with parameters, joined with a exist api method) 
 	 * and value the form of creation of new api service.
 	 * @return The result code.
 	 */
-	public String copyFromShowlet() {
+	public String copyFromWidget() {
 		try {
 			String check = this.checkMasterMethod(this.getNamespace(), this.getResourceName());
 			if (null != check) {
@@ -198,47 +205,47 @@ public class ApiServiceAction extends AbstractApiAction {
 				this.addFieldError("pageCode", this.getText("error.service.paste.invalidPageCode", new String[]{this.getPageCode()}));
 				return INPUT;
 			}
-			Widget[] showlets = page.getShowlets();
-			if (null == this.getFramePos() || this.getFramePos() > showlets.length || null == showlets[this.getFramePos()]) {
+			Widget[] widgets = page.getWidgets();
+			if (null == this.getFramePos() || this.getFramePos() > widgets.length || null == widgets[this.getFramePos()]) {
 				String framePosString = (null != this.getFramePos()) ? this.getFramePos().toString() : "null";
 				this.addFieldError("framePos", this.getText("error.service.paste.invalidFramePos", new String[]{this.getPageCode(), framePosString}));
 				return INPUT;
 			}
-			Widget masterShowlet = showlets[this.getFramePos()];
-			WidgetType type = (masterShowlet.getType().isLogic()) ? masterShowlet.getType().getParentType() : masterShowlet.getType();
+			Widget masterWidget = widgets[this.getFramePos()];
+			WidgetType type = (masterWidget.getType().isLogic()) ? masterWidget.getType().getParentType() : masterWidget.getType();
 			if (null == masterMethod.getRelatedShowlet()
 					|| !masterMethod.getRelatedShowlet().getShowletCode().equals(type.getCode())) {
 				this.addFieldError("framePos", this.getText("error.service.paste.invalidShowlet",
-						new String[]{masterShowlet.getType().getCode(), masterMethod.getResourceName()}));
+						new String[]{masterWidget.getType().getCode(), masterMethod.getResourceName()}));
 				return INPUT;
 			}
-			ApsProperties parameters = this.extractParametersFromShowlet(masterMethod.getRelatedShowlet(), masterShowlet);
+			ApsProperties parameters = this.extractParametersFromWidget(masterMethod.getRelatedShowlet(), masterWidget);
 			this.setApiParameterValues(parameters);
 			this.setApiParameters(masterMethod.getParameters());
 			this.setStrutsAction(ApsAdminSystemConstants.PASTE);
 			this.setServiceKey(this.buildTempKey(masterMethod.getResourceName()));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "copyFromShowlet");
+			ApsSystemUtils.logThrowable(t, this, "copyFromWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 	
-	private ApsProperties extractParametersFromShowlet(ApiMethodRelatedWidget relatedShowlet, Widget masterShowlet) {
-		ApsProperties showletProperties = (masterShowlet.getType().isLogic())
-				? masterShowlet.getType().getConfig() : masterShowlet.getConfig();
-		return this.extractParametersFromShowletProperties(relatedShowlet, showletProperties);
+	private ApsProperties extractParametersFromWidget(ApiMethodRelatedWidget relatedWidget, Widget masterWidget) {
+		ApsProperties showletProperties = (masterWidget.getType().isLogic())
+				? masterWidget.getType().getConfig() : masterWidget.getConfig();
+		return this.extractParametersFromWidgetProperties(relatedWidget, showletProperties);
 	}
 
-	private ApsProperties extractParametersFromShowletProperties(ApiMethodRelatedWidget relatedShowlet, ApsProperties showletProperties) {
+	private ApsProperties extractParametersFromWidgetProperties(ApiMethodRelatedWidget relatedWidget, ApsProperties widgetProperties) {
 		ApsProperties parameters = new ApsProperties();
-		ApsProperties mapping = relatedShowlet.getMapping();
-		if (null != showletProperties && null != mapping) {
-			Iterator<Object> keyIter = showletProperties.keySet().iterator();
+		ApsProperties mapping = relatedWidget.getMapping();
+		if (null != widgetProperties && null != mapping) {
+			Iterator<Object> keyIter = widgetProperties.keySet().iterator();
 			while (keyIter.hasNext()) {
 				Object key = keyIter.next();
 				if (null != mapping.get(key)) {
-					parameters.put(mapping.get(key), showletProperties.get(key));
+					parameters.put(mapping.get(key), widgetProperties.get(key));
 				}
 			}
 		}

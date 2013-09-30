@@ -40,9 +40,19 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	/**
 	 * Carica e restituisce il Map dei tipi di showlet.
 	 * @return Il map dei tipi di showlet
+	 * @deprecated Use {@link #loadWidgetTypes()} instead
 	 */
 	@Override
 	public Map<String, WidgetType> loadShowletTypes() {
+		return loadWidgetTypes();
+	}
+
+	/**
+	 * Carica e restituisce il Map dei tipi di showlet.
+	 * @return Il map dei tipi di showlet
+	 */
+	@Override
+	public Map<String, WidgetType> loadWidgetTypes() {
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
@@ -151,8 +161,16 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #deleteWidgetType(String)} instead
+	 */
 	@Override
 	public void deleteShowletType(String showletTypeCode) {
+		deleteWidgetType(showletTypeCode);
+	}
+
+	@Override
+	public void deleteWidgetType(String showletTypeCode) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -218,8 +236,16 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #updateWidgetType(String,ApsProperties,ApsProperties,String)} instead
+	 */
 	@Override
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) {
+		updateWidgetType(showletTypeCode, titles, defaultConfig, mainGroup);
+	}
+
+	@Override
+	public void updateWidgetType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {

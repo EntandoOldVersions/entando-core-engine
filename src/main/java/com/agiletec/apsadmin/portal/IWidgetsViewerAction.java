@@ -23,15 +23,25 @@ package com.agiletec.apsadmin.portal;
 public interface IWidgetsViewerAction {
 	
 	/**
-	 * Show the showlet catalog.
-	 * @return The code describing the result of the operation.
+	 * @deprecated Use {@link #viewWidgets()} instead
 	 */
 	public String viewShowlets();
-	
+
 	/**
-	 * Show the list of pages where a single showlet is published.
+	 * Show the widget catalog.
 	 * @return The code describing the result of the operation.
 	 */
+	public String viewWidgets();
+	
+	/**
+	 * @deprecated Use {@link #viewWidgetUtilizers()} instead
+	 */
 	public String viewShowletUtilizers();
+
+	/**
+	 * Show the list of pages where a single widget is published.
+	 * @return The code describing the result of the operation.
+	 */
+	public String viewWidgetUtilizers();
 	
 }

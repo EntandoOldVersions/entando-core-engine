@@ -36,7 +36,7 @@ public class WidgetTypeInfoTag extends AbstractObjectInfoTag {
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
 		IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.pageContext);
-		return showletTypeManager.getShowletType(keyValue);
+		return showletTypeManager.getWidgetType(keyValue);
 	}
 	
 }

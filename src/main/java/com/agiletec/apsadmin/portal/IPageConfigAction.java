@@ -32,8 +32,15 @@ public interface IPageConfigAction {
 	/**
 	 * Associate a showlet to a frame of the page on edit.
 	 * @return The result code
+	 * @deprecated Use {@link #joinWidget()} instead
 	 */
 	public String joinShowlet();
+
+	/**
+	 * Associate a widget to a frame of the page on edit.
+	 * @return The result code
+	 */
+	public String joinWidget();
 
 	/**
 	 * Remove a showlet from those defined in the current page.
@@ -43,16 +50,26 @@ public interface IPageConfigAction {
 	public String removeShowlet() ;
 	
 	/**
-	 * Executes the specific action to trash a showlet from a page. This does NOT perform any operation.
-	 * @return The result code
+	 * @deprecated Use {@link #trashWidget()} instead
 	 */
 	public String trashShowlet() ;
-	
+
 	/**
-	 * Forces the deletion of a showlet from a page.
+	 * Executes the specific action to trash a widget from a page. This does NOT perform any operation.
 	 * @return The result code
 	 */
+	public String trashWidget() ;
+	
+	/**
+	 * @deprecated Use {@link #deleteWidget()} instead
+	 */
 	public String deleteShowlet() ;
+
+	/**
+	 * Forces the deletion of a widget from a page.
+	 * @return The result code
+	 */
+	public String deleteWidget() ;
 	
 	/**
 	 * Start the configuration of a single page frame. 

@@ -87,12 +87,12 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	public void testJoinShowlet() throws Throwable {
+	public void testJoinWidget() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
 		try {
-			assertNull(pagina_1.getShowlets()[frame]);
+			assertNull(pagina_1.getWidgets()[frame]);
 			String result = this.executeJoinShowlet(pageCode, frame, "content_viewer", "admin");
 			assertEquals("configureSpecialShowlet", result);
 			result = this.executeJoinShowlet(pageCode, frame, "content_viewer", "pageManagerCoach");
@@ -101,43 +101,43 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 		}
 	}
 	
-	public void testJoinRemoveShowlet() throws Throwable {
-		this.testJoinRemoveShowlet("login_form");
-		this.testJoinRemoveShowlet("logic_type");
+	public void testJoinRemoveWidget() throws Throwable {
+		this.testJoinRemoveWidget("login_form");
+		this.testJoinRemoveWidget("logic_type");
 	}
 	
-	private void testJoinRemoveShowlet(String showletTypeCode) throws Throwable {
+	private void testJoinRemoveWidget(String showletTypeCode) throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
 		try {
-			assertNull(pagina_1.getShowlets()[frame]);
+			assertNull(pagina_1.getWidgets()[frame]);
 			String result = this.executeJoinShowlet(pageCode, frame, showletTypeCode, "pageManagerCoach");
 			assertEquals("pageTree", result);
 			result = this.executeJoinShowlet(pageCode, frame, showletTypeCode, "admin");
 			assertEquals(Action.SUCCESS, result);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			assertNotNull(pagina_1.getShowlets()[frame]);
-			assertEquals(showletTypeCode, pagina_1.getShowlets()[frame].getType().getCode());
+			assertNotNull(pagina_1.getWidgets()[frame]);
+			assertEquals(showletTypeCode, pagina_1.getWidgets()[frame].getType().getCode());
 			
 			result = this.executeTrashShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			assertNotNull(pagina_1.getShowlets()[frame]);
+			assertNotNull(pagina_1.getWidgets()[frame]);
 			
 			result = this.executeDeleteShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			assertNull(pagina_1.getShowlets()[frame]);
+			assertNull(pagina_1.getWidgets()[frame]);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 		}
 	}
@@ -146,7 +146,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "contentview";
 		int frame = 1;
 		IPage contentview = this._pageManager.getPage(pageCode);
-		Widget widget = contentview.getShowlets()[frame];
+		Widget widget = contentview.getWidgets()[frame];
 		try {
 			assertNotNull(widget);
 			String result = this.executeTrashShowlet(pageCode, frame, "pageManagerCoach");
@@ -155,11 +155,11 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 			result = this.executeTrashShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			IPage modifiedContentview = this._pageManager.getPage(pageCode);
-			Widget[] modifiedShowlets = modifiedContentview.getShowlets();
+			Widget[] modifiedShowlets = modifiedContentview.getWidgets();
 			assertNotNull(modifiedShowlets[frame]);
 		} catch (Throwable t) {
 			contentview = this._pageManager.getPage(pageCode);
-			contentview.getShowlets()[frame] = widget;
+			contentview.getWidgets()[frame] = widget;
 			this._pageManager.updatePage(contentview);
 			throw t;
 		}
@@ -169,7 +169,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "contentview";
 		int frame = 1;
 		IPage contentview = this._pageManager.getPage(pageCode);
-		Widget widget = contentview.getShowlets()[frame];
+		Widget widget = contentview.getWidgets()[frame];
 		try {
 			assertNotNull(widget);
 			String result = this.executeDeleteShowlet(pageCode, frame, "pageManagerCoach");
@@ -178,20 +178,20 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 			result = this.executeDeleteShowlet(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			IPage modifiedContentview = this._pageManager.getPage(pageCode);
-			Widget[] modifiedShowlets = modifiedContentview.getShowlets();
+			Widget[] modifiedShowlets = modifiedContentview.getWidgets();
 			assertNull(modifiedShowlets[frame]);
 		} catch (Throwable t) {
 			throw t;
 		} finally {
 			contentview = this._pageManager.getPage(pageCode);
-			contentview.getShowlets()[frame] = widget;
+			contentview.getWidgets()[frame] = widget;
 			this._pageManager.updatePage(contentview);
 		}
 	}
 	
 	private String executeJoinShowlet(String pageCode, int frame, String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "joinShowlet");
+		this.initAction("/do/Page", "joinWidget");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("showletTypeCode", showletTypeCode);
 		this.addParameter("frame", String.valueOf(frame));
@@ -200,7 +200,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 	
 	private String executeTrashShowlet(String pageCode, int frame, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "trashShowletFromPage");
+		this.initAction("/do/Page", "trashWidgetFromPage");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", String.valueOf(frame));
 		return this.executeAction();
@@ -208,7 +208,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 	
 	private String executeDeleteShowlet(String pageCode, int frame, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "deleteShowletFromPage");
+		this.initAction("/do/Page", "deleteWidgetFromPage");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", String.valueOf(frame));
 		return this.executeAction();

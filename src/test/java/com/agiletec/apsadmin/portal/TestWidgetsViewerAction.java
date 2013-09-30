@@ -33,22 +33,22 @@ import com.opensymphony.xwork2.Action;
  */
 public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 	
-	public void testViewShowlets() throws Throwable {
-		String result = this.executeViewShowlets("admin");
+	public void testViewWidgets() throws Throwable {
+		String result = this.executeViewWidgets("admin");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executeViewShowlets("pageManagerCustomers");
+		result = this.executeViewWidgets("pageManagerCustomers");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executeViewShowlets("editorCustomers");
+		result = this.executeViewWidgets("editorCustomers");
 		assertEquals("userNotAllowed", result);
 		
-		result = this.executeViewShowlets(null);
+		result = this.executeViewWidgets(null);
 		assertEquals("apslogin", result);
 	}
 	
-	public void testGetShowletFlavours() throws Throwable {
-		String result = this.executeViewShowlets("admin");
+	public void testGetWidgetFlavours() throws Throwable {
+		String result = this.executeViewWidgets("admin");
 		assertEquals(Action.SUCCESS, result);
 		AbstractPortalAction action = (AbstractPortalAction) this.getAction();
 		List<List<SelectItem>> showletFlavours = action.getShowletFlavours();
@@ -68,9 +68,9 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 			assertEquals("Logic type for test", userType.getValue());
 		}
 		
-		List<SelectItem> customShowlets = showletFlavours.get(1);
-		assertEquals(1, customShowlets.size());
-		SelectItem customType = customShowlets.get(0);
+		List<SelectItem> customWidgets = showletFlavours.get(1);
+		assertEquals(1, customWidgets.size());
+		SelectItem customType = customWidgets.get(0);
 		assertEquals(AbstractPortalAction.CUSTOM_SHOWLETS_CODE, customType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("leftmenu", customType.getKey());
@@ -80,18 +80,18 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 			assertEquals("Vertical Navigation Menu", customType.getValue());
 		}
 		
-		List<SelectItem> jacmsShowlets = showletFlavours.get(2);
-		assertEquals(3, jacmsShowlets.size());
-		SelectItem jacmsShowletsType = jacmsShowlets.get(1);
+		List<SelectItem> jacmsWidgets = showletFlavours.get(2);
+		assertEquals(3, jacmsWidgets.size());
+		SelectItem jacmsShowletsType = jacmsWidgets.get(1);
 		assertEquals("jacms", jacmsShowletsType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("content_viewer_list", jacmsShowletsType.getKey());
 			assertEquals("Contenuti - Pubblica una Lista di Contenuti", jacmsShowletsType.getValue());
 		}
 		
-		List<SelectItem> stockShowlets = showletFlavours.get(showletFlavours.size()-1);
-		assertEquals(4, stockShowlets.size());
-		SelectItem stockType = stockShowlets.get(3);
+		List<SelectItem> stockWidgets = showletFlavours.get(showletFlavours.size()-1);
+		assertEquals(4, stockWidgets.size());
+		SelectItem stockType = stockWidgets.get(3);
 		assertEquals(AbstractPortalAction.STOCK_SHOWLETS_CODE, stockType.getOptgroup());
 		if (currentLang.getCode().equals("it")) {
 			assertEquals("login_form", stockType.getKey());
@@ -102,41 +102,41 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
-	public void testGetShowletUtilizers_1() throws Throwable {
-		String result = this.executeViewShowletUtilizers("admin", null);
+	public void testGetWidgetUtilizers_1() throws Throwable {
+		String result = this.executeViewWidgetUtilizers("admin", null);
 		assertEquals(Action.INPUT, result);
 		Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 		assertEquals(1, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("showletTypeCode").size());
 
-		result = this.executeViewShowletUtilizers("admin", "");
+		result = this.executeViewWidgetUtilizers("admin", "");
 		assertEquals(Action.INPUT, result);
 		fieldErrors = this.getAction().getFieldErrors();
 		assertEquals(1, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("showletTypeCode").size());
 
-		result = this.executeViewShowletUtilizers("admin", "invalidShowletCode");
+		result = this.executeViewWidgetUtilizers("admin", "invalidShowletCode");
 		assertEquals(Action.INPUT, result);
 		fieldErrors = this.getAction().getFieldErrors();
 		assertEquals(1, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("showletTypeCode").size());
 	}
 	
-	public void testGetShowletUtilizers_2() throws Throwable {
-		String result = this.executeViewShowletUtilizers("admin", "logic_type");
+	public void testGetWidgetUtilizers_2() throws Throwable {
+		String result = this.executeViewWidgetUtilizers("admin", "logic_type");
 		assertEquals(Action.SUCCESS, result);
 		WidgetsViewerAction action = (WidgetsViewerAction) this.getAction();
 		List<IPage> pageUtilizers = action.getShowletUtilizers();
 		assertEquals(0, pageUtilizers.size());
 		
-		result = this.executeViewShowletUtilizers("admin", "leftmenu");
+		result = this.executeViewWidgetUtilizers("admin", "leftmenu");
 		assertEquals(Action.SUCCESS, result);
 		action = (WidgetsViewerAction) this.getAction();
 		pageUtilizers = action.getShowletUtilizers();
 		assertEquals(1, pageUtilizers.size());
 		assertEquals("pagina_1", pageUtilizers.get(0).getCode());
 		
-		result = this.executeViewShowletUtilizers("admin", "content_viewer");
+		result = this.executeViewWidgetUtilizers("admin", "content_viewer");
 		assertEquals(Action.SUCCESS, result);
 		action = (WidgetsViewerAction) this.getAction();
 		pageUtilizers = action.getShowletUtilizers();
@@ -146,18 +146,18 @@ public class TestWidgetsViewerAction extends ApsAdminBaseTestCase {
 		assertEquals("customer_subpage_2", pageUtilizers.get(6).getCode());
 	}
 	
-	private String executeViewShowlets(String username) throws Throwable {
+	private String executeViewWidgets(String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/WidgetType", "viewShowlets");
+		this.initAction("/do/Portal/WidgetType", "viewWidgets");
 		String result = this.executeAction();
 		return result;
 	}
 	
-	private String executeViewShowletUtilizers(String username, String showletTypeCode) throws Throwable {
+	private String executeViewWidgetUtilizers(String username, String widgetTypeCode) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Portal/WidgetType", "viewShowletUtilizers");
-		if (null != showletTypeCode) {
-			this.addParameter("showletTypeCode", showletTypeCode);
+		this.initAction("/do/Portal/WidgetType", "viewWidgetUtilizers");
+		if (null != widgetTypeCode) {
+			this.addParameter("showletTypeCode", widgetTypeCode);
 		}
 		String result = this.executeAction();
 		return result;

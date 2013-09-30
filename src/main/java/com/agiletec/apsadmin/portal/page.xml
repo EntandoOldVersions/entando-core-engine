@@ -116,7 +116,7 @@
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
-        <action name="joinShowlet" class="pageConfigAction" method="joinShowlet">
+        <action name="joinWidget" class="pageConfigAction" method="joinWidget">
         	<result name="input" type="tiles">admin.Page.editFrame</result>
         	<result name="configureSpecialShowlet" type="chain">
         		<param name="namespace">/do/Page/SpecialWidget</param>
@@ -126,12 +126,12 @@
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
-        <action name="trashShowletFromPage" class="pageConfigAction" method="trashShowlet">
+        <action name="trashWidgetFromPage" class="pageConfigAction" method="trashWidget">
         	<result type="tiles">admin.Page.showlet.trash</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
-        <action name="deleteShowletFromPage" class="pageConfigAction" method="deleteShowlet">
+        <action name="deleteWidgetFromPage" class="pageConfigAction" method="deleteWidget">
         	<result type="tiles">admin.Page.configure</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>

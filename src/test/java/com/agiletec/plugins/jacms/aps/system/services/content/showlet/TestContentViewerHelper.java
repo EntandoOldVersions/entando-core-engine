@@ -102,7 +102,7 @@ public class TestContentViewerHelper extends BaseTestCase {
             Widget widget = new Widget();
             IWidgetTypeManager showletTypeMan = 
             	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-            WidgetType showletType = showletTypeMan.getShowletType("content_viewer");
+            WidgetType showletType = showletTypeMan.getWidgetType("content_viewer");
             widget.setType(showletType);
             widget.setConfig(new ApsProperties());
             _requestContext.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);

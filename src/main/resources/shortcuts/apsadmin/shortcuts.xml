@@ -149,7 +149,7 @@
 			</longdesc>
 			<url>
 				<param name="namespace">/do/Portal/WidgetType</param>
-				<param name="actionName">viewShowlets</param>
+				<param name="actionName">viewWidgets</param>
 			</url>
 		</shortcut>
 		

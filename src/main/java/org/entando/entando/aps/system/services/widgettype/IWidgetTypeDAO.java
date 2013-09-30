@@ -28,14 +28,24 @@ import com.agiletec.aps.util.ApsProperties;
 public interface IWidgetTypeDAO {
 	
 	/**
+	 * @deprecated Use {@link #loadWidgetTypes()} instead
+	 */
+	public Map<String, WidgetType> loadShowletTypes();
+
+	/**
 	 * Carica e restituisce il Map dei tipi di showlet.
 	 * @return Il map dei tipi di showlet
 	 */
-	public Map<String, WidgetType> loadShowletTypes();
+	public Map<String, WidgetType> loadWidgetTypes();
 	
 	public void addShowletType(WidgetType showletType);
 	
+	/**
+	 * @deprecated Use {@link #deleteWidgetType(String)} instead
+	 */
 	public void deleteShowletType(String showletTypeCode);
+
+	public void deleteWidgetType(String showletTypeCode);
 	
 	@Deprecated
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles);
@@ -43,6 +53,11 @@ public interface IWidgetTypeDAO {
 	@Deprecated
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig);
 	
+	/**
+	 * @deprecated Use {@link #updateWidgetType(String,ApsProperties,ApsProperties,String)} instead
+	 */
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup);
+
+	public void updateWidgetType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup);
 	
 }

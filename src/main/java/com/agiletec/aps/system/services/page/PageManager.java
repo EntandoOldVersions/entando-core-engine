@@ -248,14 +248,26 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 	 * @param pageCode the code of the showlet to remove from the page
 	 * @param pos The position in the page to free
 	 * @throws ApsSystemException In case of error
+	 * @deprecated Use {@link #removeWidget(String,int)} instead
 	 */
 	@Override
 	public void removeShowlet(String pageCode, int pos) throws ApsSystemException {
+		removeWidget(pageCode, pos);
+	}
+
+	/**
+	 * Remove a showlet from the given page.
+	 * @param pageCode the code of the showlet to remove from the page
+	 * @param pos The position in the page to free
+	 * @throws ApsSystemException In case of error
+	 */
+	@Override
+	public void removeWidget(String pageCode, int pos) throws ApsSystemException {
 		this.checkPagePos(pageCode, pos);
 		try {
-			this.getPageDAO().removeShowlet(pageCode, pos);
+			this.getPageDAO().removeWidget(pageCode, pos);
 			IPage currentPage = this.getPage(pageCode);
-			currentPage.getShowlets()[pos] = null;
+			currentPage.getWidgets()[pos] = null;
 			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error removing the showlet from the page '" + pageCode + "' in the frame "+ pos;
@@ -265,28 +277,37 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 	}
 
 	/**
-	 * Set the showlet -including its configuration- in the given page in the desidered position.
-	 * If the position is already occupied by another showlet this will be substituted with the
-	 * new one.
-	 * @param pageCode the code of the page where to set the showlet
-	 * @param widget The showlet to set
-	 * @param pos The position where to place the showlet in
 	 * @throws ApsSystemException In case of error.
+	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
 	 */
 	@Override
 	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException {
+		joinWidget(pageCode, widget, pos);
+	}
+
+	/**
+	 * Set the widget -including its configuration- in the given page in the desired position.
+	 * If the position is already occupied by another widget this will be substituted with the
+	 * new one.
+	 * @param pageCode the code of the page where to set the widget
+	 * @param widget The widget to set
+	 * @param pos The position where to place the widget in
+	 * @throws ApsSystemException In case of error.
+	 */
+	@Override
+	public void joinWidget(String pageCode, Widget widget, int pos) throws ApsSystemException {
 		this.checkPagePos(pageCode, pos);
 		if (null == widget || null == widget.getType()) {
 			throw new ApsSystemException("Invalid null value found in either the Widget or the showletType");
 		}
 		try {
-			this.getPageDAO().joinShowlet(pageCode, widget, pos);
+			this.getPageDAO().joinWidget(pageCode, widget, pos);
 			IPage currentPage = this.getPage(pageCode);
-			currentPage.getShowlets()[pos] = widget;
+			currentPage.getWidgets()[pos] = widget;
 			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error during the assignation of a showlet to the frame " + pos +" in the page code "+pageCode;
-			ApsSystemUtils.logThrowable(t, this, "joinShowlet", message);
+			ApsSystemUtils.logThrowable(t, this, "joinWidget", message);
 			throw new ApsSystemException(message, t);
 		}
 	}
@@ -413,28 +434,36 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #getWidgetUtilizers(String)} instead
+	 */
 	@Override
 	public List<IPage> getShowletUtilizers(String showletTypeCode) throws ApsSystemException {
+		return getWidgetUtilizers(showletTypeCode);
+	}
+
+	@Override
+	public List<IPage> getWidgetUtilizers(String widgetTypeCode) throws ApsSystemException {
 		List<IPage> pages = new ArrayList<IPage>();
 		try {
-			if (null == this._pages || this._pages.isEmpty() || null == showletTypeCode) {
+			if (null == this._pages || this._pages.isEmpty() || null == widgetTypeCode) {
 				return pages; 
 			}
 			IPage root = this.getRoot();
-			this.getShowletUtilizers(root, showletTypeCode, pages);
+			this.getWidgetUtilizers(root, widgetTypeCode, pages);
 		} catch (Throwable t) {
-			String message = "Error during searching page utilizers of showlet with code " + showletTypeCode;
-			ApsSystemUtils.logThrowable(t, this, "getShowletUtilizers", message);
+			String message = "Error during searching page utilizers of widget with code " + widgetTypeCode;
+			ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers", message);
 			throw new ApsSystemException(message, t);
 		}
 		return pages;
 	}
 	
-	private void getShowletUtilizers(IPage page, String showletTypeCode, List<IPage> showletUtilizers) {
-		Widget[] showlets = page.getShowlets();
-		for (int i = 0; i < showlets.length; i++) {
-			Widget widget = showlets[i];
-			if (null != widget && null != widget.getType() && showletTypeCode.equals(widget.getType().getCode())) {
+	private void getWidgetUtilizers(IPage page, String widgetTypeCode, List<IPage> showletUtilizers) {
+		Widget[] widgets = page.getWidgets();
+		for (int i = 0; i < widgets.length; i++) {
+			Widget widget = widgets[i];
+			if (null != widget && null != widget.getType() && widgetTypeCode.equals(widget.getType().getCode())) {
 				showletUtilizers.add(page);
 				break;
 			}
@@ -442,7 +471,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		IPage[] children = page.getChildren();
 		for (int i = 0; i < children.length; i++) {
 			IPage child = children[i];
-			this.getShowletUtilizers(child, showletTypeCode, showletUtilizers);
+			this.getWidgetUtilizers(child, widgetTypeCode, showletUtilizers);
 		}
 	}
 

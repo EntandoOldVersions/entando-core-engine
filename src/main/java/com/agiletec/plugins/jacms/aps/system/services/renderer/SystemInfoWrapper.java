@@ -69,7 +69,7 @@ public class SystemInfoWrapper {
     	IPage page = null;
     	try {
             IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.getReqCtx().getRequest());
-    		List<IPage> pages = pageManager.getShowletUtilizers(widgetCode);
+    		List<IPage> pages = pageManager.getWidgetUtilizers(widgetCode);
     		if (null != pages && !pages.isEmpty()) {
     			page = pages.get(0);
     		}

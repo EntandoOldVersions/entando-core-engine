@@ -102,7 +102,7 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getWidgetTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
 	public IPage getCurrentPage() {

@@ -310,7 +310,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		String pageCode = "pagina_2";
 		int frame = 0;
 		IPage page = this._pageManager.getPage(pageCode);
-		Widget widget = page.getShowlets()[frame];
+		Widget widget = page.getWidgets()[frame];
 		assertNull(widget);
 		try {
 			this.setUserOnSession("admin");
@@ -322,7 +322,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals("configure", result);
 			page = this._pageManager.getPage(pageCode);
-			widget = page.getShowlets()[frame];
+			widget = page.getWidgets()[frame];
 			assertNotNull(widget);
 			assertEquals("leftmenu", widget.getType().getCode());
 			assertEquals(1, widget.getConfig().size());
@@ -331,7 +331,7 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 			throw t;
 		} finally {
 			page = this._pageManager.getPage(pageCode);
-			page.getShowlets()[frame] = null;
+			page.getWidgets()[frame] = null;
 			this._pageManager.updatePage(page);
 		}
 	}

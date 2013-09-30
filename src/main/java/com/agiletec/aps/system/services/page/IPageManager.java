@@ -59,6 +59,11 @@ public interface IPageManager extends ITreeNodeManager {
 	public boolean movePage(String pageCode, boolean moveUp) throws ApsSystemException;
 
 	/**
+	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
+	 */
+	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException;
+
+	/**
 	 * Set the showlet -including its configuration- in the given page in the desidered position.
 	 * If the position is already occupied by another showlet this will be substituted with the
 	 * new one.
@@ -67,15 +72,20 @@ public interface IPageManager extends ITreeNodeManager {
 	 * @param pos The position where to place the showlet in
 	 * @throws ApsSystemException In case of error.
 	 */
-	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException;
+	public void joinWidget(String pageCode, Widget widget, int pos) throws ApsSystemException;
 
 	/**
-	 * Remove a showlet from the given page.
-	 * @param pageCode the code of the showlet to remove from the page
+	 * @deprecated Use {@link #removeWidget(String,int)} instead
+	 */
+	public void removeShowlet(String pageCode, int pos) throws ApsSystemException;
+
+	/**
+	 * Remove a widget from the given page.
+	 * @param pageCode the code of the widget to remove from the page
 	 * @param pos The position in the page to free
 	 * @throws ApsSystemException In case of error
 	 */
-	public void removeShowlet(String pageCode, int pos) throws ApsSystemException;
+	public void removeWidget(String pageCode, int pos) throws ApsSystemException;
 
 	/**
 	 * Return the root of the pages tree.
@@ -100,6 +110,11 @@ public interface IPageManager extends ITreeNodeManager {
 	 */
 	public List<IPage> searchPages(String pageCodeToken, List<String> allowedGroups) throws ApsSystemException;
 	
+	/**
+	 * @deprecated Use {@link #getWidgetUtilizers(String)} instead
+	 */
 	public List<IPage> getShowletUtilizers(String showletTypeCode) throws ApsSystemException;
+
+	public List<IPage> getWidgetUtilizers(String showletTypeCode) throws ApsSystemException;
 	
 }

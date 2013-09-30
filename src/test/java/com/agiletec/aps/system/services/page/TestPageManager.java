@@ -80,7 +80,7 @@ public class TestPageManager extends BaseTestCase {
 		showletType.setCode("content_viewer");
 		widget.setType(showletType);
 		Widget[] showlets = {widget};
-		page.setShowlets(showlets);
+		page.setWidgets(showlets);
 		_pageManager.addPage(page);
 		parentPage = _pageManager.getPage("service");
 		page.setParent(parentPage);		
@@ -98,7 +98,7 @@ public class TestPageManager extends BaseTestCase {
 		assertEquals(extractedPage.getTitle("it"), "pagina temporanea");
 		assertEquals(extractedPage.getModel().getCode(), "service");
 		assertEquals(extractedPage.isShowable(), true);
-		showlets = extractedPage.getShowlets();
+		showlets = extractedPage.getWidgets();
 		boolean contains = showlets[0].getConfig().contains("temp");
 		assertEquals(contains, true);
 		assertEquals(showlets[0].getPublishedContent(), "ART1");
@@ -133,7 +133,7 @@ public class TestPageManager extends BaseTestCase {
 		showletType.setCode("content_viewer");
 		widget.setType(showletType);
 		Widget[] showlets = {widget};
-		page.setShowlets(showlets);
+		page.setWidgets(showlets);
 		_pageManager.updatePage(page);
 		
 		IPage extractedPage = _pageManager.getPage("temp");
@@ -143,7 +143,7 @@ public class TestPageManager extends BaseTestCase {
 		assertEquals(extractedPage.getTitle("it"), "pagina temporanea1");
 		assertEquals(extractedPage.getModel().getCode(), "service");
 		assertEquals(extractedPage.isShowable(), false);
-		showlets = extractedPage.getShowlets();
+		showlets = extractedPage.getWidgets();
 		boolean contains = showlets[0].getConfig().contains("temp1");
 		assertEquals(contains, true);
 		assertEquals(showlets[0].getPublishedContent(), "ART1");
@@ -190,8 +190,8 @@ public class TestPageManager extends BaseTestCase {
 		String pageCode = "wrongPageCode";
 		int frame = 2;
 		try {
-			Widget widget = this.getShowletForTest("login", null);
-			this._pageManager.joinShowlet(pageCode, widget, frame);
+			Widget widget = this.getWidgetForTest("login", null);
+			this._pageManager.joinWidget(pageCode, widget, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per pagina inesistente
@@ -204,10 +204,10 @@ public class TestPageManager extends BaseTestCase {
 		String pageCode = "pagina_1";
 		int frame = 6;
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
-		assertTrue(pagina_1.getShowlets().length<=frame);
+		assertTrue(pagina_1.getWidgets().length<=frame);
 		try {
-			Widget widget = this.getShowletForTest("login", null);
-			this._pageManager.joinShowlet(pageCode, widget, frame);
+			Widget widget = this.getWidgetForTest("login", null);
+			this._pageManager.joinWidget(pageCode, widget, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per frame errato in modello
@@ -218,11 +218,11 @@ public class TestPageManager extends BaseTestCase {
 		}
 	}
 	
-	public void testFailureRemoveShowlet_1() throws Throwable {
+	public void testFailureRemoveWidget_1() throws Throwable {
 		String pageCode = "wrongPageCode";
 		int frame = 2;
 		try {
-			this._pageManager.removeShowlet(pageCode, frame);
+			this._pageManager.removeWidget(pageCode, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per pagina inesistente
@@ -231,13 +231,13 @@ public class TestPageManager extends BaseTestCase {
 		}
 	}
 	
-	public void testFailureRemoveShowlet_2() throws Throwable {
+	public void testFailureRemoveWidget_2() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 6;
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
-		assertTrue(pagina_1.getShowlets().length<=frame);
+		assertTrue(pagina_1.getWidgets().length<=frame);
 		try {
-			this._pageManager.removeShowlet(pageCode, frame);
+			this._pageManager.removeWidget(pageCode, frame);
 			fail();
 		} catch (ApsSystemException e) {
 			//Errore per frame errato in modello
@@ -246,25 +246,25 @@ public class TestPageManager extends BaseTestCase {
 		}
 	}
 	
-	public void testJoinRemoveShowlet() throws Throwable {
+	public void testJoinRemoveWidget() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
 		IPage pagina_1 = this._pageManager.getPage(pageCode);
-		assertNull(pagina_1.getShowlets()[frame]);
+		assertNull(pagina_1.getWidgets()[frame]);
 		try {
-			Widget widget = this.getShowletForTest("login_form", null);
-			this._pageManager.joinShowlet(pageCode, widget, frame);
+			Widget widget = this.getWidgetForTest("login_form", null);
+			this._pageManager.joinWidget(pageCode, widget, frame);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			Widget extracted = pagina_1.getShowlets()[frame];
+			Widget extracted = pagina_1.getWidgets()[frame];
 			assertNotNull(extracted);
 			assertEquals("login_form", extracted.getType().getCode());
 			
-			this._pageManager.removeShowlet(pageCode, frame);
+			this._pageManager.removeWidget(pageCode, frame);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			extracted = pagina_1.getShowlets()[frame];
+			extracted = pagina_1.getWidgets()[frame];
 			assertNull(extracted);
 		} catch (Throwable t) {
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 			throw t;
 		}
@@ -298,21 +298,21 @@ public class TestPageManager extends BaseTestCase {
 		}
 	}
 	
-	public void testGetShowletUtilizers() throws Throwable {
-		List<IPage> pageUtilizers1 = this._pageManager.getShowletUtilizers(null);
+	public void testGetWidgetUtilizers() throws Throwable {
+		List<IPage> pageUtilizers1 = this._pageManager.getWidgetUtilizers(null);
 		assertNotNull(pageUtilizers1);
 		assertEquals(0, pageUtilizers1.size());
 		
-		List<IPage> pageUtilizers2 = this._pageManager.getShowletUtilizers("logic_type");
+		List<IPage> pageUtilizers2 = this._pageManager.getWidgetUtilizers("logic_type");
 		assertNotNull(pageUtilizers2);
 		assertEquals(0, pageUtilizers2.size());
 		
-		List<IPage> pageUtilizers3 = this._pageManager.getShowletUtilizers("leftmenu");
+		List<IPage> pageUtilizers3 = this._pageManager.getWidgetUtilizers("leftmenu");
 		assertNotNull(pageUtilizers3);
 		assertEquals(1, pageUtilizers3.size());
 		assertEquals("pagina_1", pageUtilizers3.get(0).getCode());
 		
-		List<IPage> pageUtilizers4 = this._pageManager.getShowletUtilizers("content_viewer");
+		List<IPage> pageUtilizers4 = this._pageManager.getWidgetUtilizers("content_viewer");
 		assertNotNull(pageUtilizers4);
 		assertEquals(7, pageUtilizers4.size());
 		assertEquals("homepage", pageUtilizers4.get(0).getCode());
@@ -324,8 +324,8 @@ public class TestPageManager extends BaseTestCase {
 		assertEquals("customer_subpage_2", pageUtilizers4.get(6).getCode());
 	}
 	
-	private Widget getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
-		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
+	private Widget getWidgetForTest(String showletTypeCode, ApsProperties config) throws Throwable {
+		WidgetType type = this._showletTypeManager.getWidgetType(showletTypeCode);
 		Widget widget = new Widget();
 		widget.setType(type);
 		if (null != config) {

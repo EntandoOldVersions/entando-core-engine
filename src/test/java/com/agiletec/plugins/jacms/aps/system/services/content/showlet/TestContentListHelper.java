@@ -160,7 +160,7 @@ public class TestContentListHelper extends BaseTestCase {
 			throw t;
 		} finally {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 		}
 	}
@@ -187,7 +187,7 @@ public class TestContentListHelper extends BaseTestCase {
 			throw t;
 		} finally {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 		}
 	}
@@ -196,15 +196,15 @@ public class TestContentListHelper extends BaseTestCase {
 		RequestContext reqCtx = this.getRequestContext();
 		try {
 			Widget showletToAdd = this.getShowletForTest("content_viewer_list", null);
-			this._pageManager.joinShowlet(pageCode, showletToAdd, frame);
+			this._pageManager.joinWidget(pageCode, showletToAdd, frame);
 			IPage page = this._pageManager.getPage(pageCode);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, page);
-			Widget widget = page.getShowlets()[frame];
+			Widget widget = page.getWidgets()[frame];
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
 		} catch (Throwable t) {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
 			throw t;
 		}
@@ -212,7 +212,7 @@ public class TestContentListHelper extends BaseTestCase {
     }
 	
 	private Widget getShowletForTest(String showletTypeCode, ApsProperties config) throws Throwable {
-		WidgetType type = this._showletTypeManager.getShowletType(showletTypeCode);
+		WidgetType type = this._showletTypeManager.getWidgetType(showletTypeCode);
 		Widget widget = new Widget();
 		widget.setType(type);
 		if (null != config) {

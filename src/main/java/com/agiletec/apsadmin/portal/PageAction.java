@@ -255,12 +255,12 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			page.setModel(pageModel);
 			if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 				IPage copyPage = this.getPageManager().getPage(this.getCopyPageCode());
-				page.setShowlets(copyPage.getShowlets());
+				page.setWidgets(copyPage.getWidgets());
 			} else {
 				if (this.isDefaultShowlet()) {
 					this.setDefaultShowlets(page);
 				} else {
-					page.setShowlets(new Widget[pageModel.getFrames().length]);
+					page.setWidgets(new Widget[pageModel.getFrames().length]);
 				}
 			}
 			page.setTitles(this.getTitles());
@@ -307,7 +307,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				//Ho cambiato modello e allora cancello tutte le showlets Precedenti
 				PageModel model = this.getPageModelManager().getPageModel(this.getModel());
 				page.setModel(model);
-				page.setShowlets(new Widget[model.getFrames().length]);
+				page.setWidgets(new Widget[model.getFrames().length]);
 			}
 			if (this.isDefaultShowlet()) {
 				this.setDefaultShowlets(page);
@@ -351,7 +351,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 					showlets[i] = defaultShowlet;
 				}
 			}
-			page.setShowlets(showlets);
+			page.setWidgets(showlets);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "setDefaultShowlets");
 			throw new ApsSystemException("Error setting default showlet to page '" + page.getCode() + "'", t);

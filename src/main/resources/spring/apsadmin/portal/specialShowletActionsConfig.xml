@@ -5,13 +5,13 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	
-	<bean id="simpleShowletAction" scope="prototype" 
+	<bean id="simpleWidgetAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction" parent="abstractPortalAction" >
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	
-	<bean id="navigatorShowletAction" scope="prototype" 
-			class="com.agiletec.apsadmin.portal.specialwidget.navigator.NavigatorWidgetConfigAction" parent="simpleShowletAction" >
+	<bean id="navigatorWidgetAction" scope="prototype" 
+			class="com.agiletec.apsadmin.portal.specialwidget.navigator.NavigatorWidgetConfigAction" parent="simpleWidgetAction" >
 		<property name="navigatorParser" ref="NavigatorParser" />
 	</bean>
 	

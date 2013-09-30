@@ -17,7 +17,6 @@
 */
 package com.agiletec.apsadmin.portal;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -46,7 +45,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
-			Widget widget = this.getCurrentPage().getShowlets()[this.getFrame()];// può essere null
+			Widget widget = this.getCurrentPage().getWidgets()[this.getFrame()];// può essere null
 			this.setShowlet(widget);
 			if (widget != null) {
 				WidgetType showletType = widget.getType();
@@ -67,8 +66,16 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		return SUCCESS;
 	}
 	
+	/**
+	 * @deprecated Use {@link #joinWidget()} instead
+	 */
 	@Override
 	public String joinShowlet() {
+		return joinWidget();
+	}
+
+	@Override
+	public String joinWidget() {
 		Logger log = ApsSystemUtils.getLogger();
 		try {
 			String result = this.checkBaseParams();
@@ -79,19 +86,19 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			}
 			log.finest("code=" + this.getShowletTypeCode() + ", pageCode=" 
 					+ this.getPageCode() + ", frame=" + this.getFrame());
-			WidgetType showletType = this.getShowletType(this.getShowletTypeCode());
-			if (null == showletType) {
+			WidgetType widgetType = this.getShowletType(this.getShowletTypeCode());
+			if (null == widgetType) {
 				this.addActionError(this.getText("error.page.showletTypeCodeUnknown"));
 				return INPUT;
 			}
-			if (null == showletType.getConfig() && null != showletType.getAction()) {
-				this.setShowletAction(showletType.getAction());
-				//continua con la configurazione di showlet
+			if (null == widgetType.getConfig() && null != widgetType.getAction()) {
+				this.setShowletAction(widgetType.getAction());
+				//continua con la configurazione di widget
 				return "configureSpecialShowlet";
 			}
 			Widget widget = new Widget();
-			widget.setType(showletType);
-			this.getPageManager().joinShowlet(this.getPageCode(), widget, this.getFrame());
+			widget.setType(widgetType);
+			this.getPageManager().joinWidget(this.getPageCode(), widget, this.getFrame());
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "joinShowlet");
 			return FAILURE;
@@ -102,11 +109,19 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	@Override
 	@Deprecated
 	public String removeShowlet() {
-		return this.trashShowlet();
+		return this.trashWidget();
 	}
 	
+	/**
+	 * @deprecated Use {@link #trashWidget()} instead
+	 */
 	@Override
 	public String trashShowlet() {
+		return trashWidget();
+	}
+
+	@Override
+	public String trashWidget() {
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
@@ -117,20 +132,28 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		return SUCCESS;
 	}
 	
+	/**
+	 * @deprecated Use {@link #deleteWidget()} instead
+	 */
 	@Override
 	public String deleteShowlet() {
+		return deleteWidget();
+	}
+
+	@Override
+	public String deleteWidget() {
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
-			this.getPageManager().removeShowlet(this.getPageCode(), this.getFrame());
+			this.getPageManager().removeWidget(this.getPageCode(), this.getFrame());
 		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "deleteShowlet");
+			ApsSystemUtils.logThrowable(e, this, "deleteWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
 	
-	//TODO METODO COMUNE ALLA CONFIG SPECIAL SHOWLET
+	//TODO METODO COMUNE ALLA CONFIG SPECIAL WIDGET
 	protected String checkBaseParams() {
 		Logger log = ApsSystemUtils.getLogger();
 		IPage page = this.getPage(this.getPageCode());
@@ -144,7 +167,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			this.addActionError(this.getText("error.page.invalidPageCode"));
 			return "pageTree";
 		}
-		if (this.getFrame() == -1 || this.getFrame() >= page.getShowlets().length) {
+		if (this.getFrame() == -1 || this.getFrame() >= page.getWidgets().length) {
 			log.info("Mandatory frame id or invalid - '" + this.getFrame() + "'");
 			this.addActionError(this.getText("error.page.invalidPageFrame"));
 			return "pageTree";
@@ -153,7 +176,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getWidgetTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
 	public IPage getCurrentPage() {

@@ -65,51 +65,51 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	}
 
 	public void testUpdateTitles() throws Throwable {
-    	String showletTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+    	String widgetTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
     	try {
-			WidgetType type = this.createNewShowletType(showletTypeCode);
-			this._showletTypeManager.addShowletType(type);
-			String result = this.executeUpdate(showletTypeCode, "", "english title", "admin");
+			WidgetType type = this.createNewShowletType(widgetTypeCode);
+			this._showletTypeManager.addWidgetType(type);
+			String result = this.executeUpdate(widgetTypeCode, "", "english title", "admin");
 			assertEquals(Action.INPUT, result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getFieldErrors().size());
-			result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin");
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin");
 			assertEquals(Action.SUCCESS, result);
-			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
-				this._showletTypeManager.deleteShowletType(showletTypeCode);
+			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
+				this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 			}
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
 	public void testUpdate() throws Throwable {
-    	String showletTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+    	String widgetTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
     	try {
-			WidgetType type = this.createNewShowletType(showletTypeCode);
-			this._showletTypeManager.addShowletType(type);
+			WidgetType type = this.createNewShowletType(widgetTypeCode);
+			this._showletTypeManager.addWidgetType(type);
 			ApsProperties newProperties = new ApsProperties();
 			newProperties.put("contentId", "EVN191");
-			String result = this.executeUpdate(showletTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
+			String result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
 			assertEquals(Action.SUCCESS, result);
-			WidgetType extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
 			assertEquals("EVN191", extracted.getConfig().getProperty("contentId"));
 			
 			newProperties.put("contentId", "EVN194");
-			result = this.executeUpdate(showletTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties);
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties);
 			assertEquals(Action.SUCCESS, result);
-			extracted = this._showletTypeManager.getShowletType(showletTypeCode);
+			extracted = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato 2", extracted.getTitles().get("it"));
 			assertEquals("Modified title 2", extracted.getTitles().get("en"));
@@ -117,10 +117,10 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
-				this._showletTypeManager.deleteShowletType(showletTypeCode);
+			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
+				this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 			}
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
@@ -140,47 +140,47 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	}
 	
 	public void testFailureTrashType_2() throws Throwable {
-    	String showletTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+    	String widgetTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
     	try {
-			WidgetType type = this.createNewShowletType(showletTypeCode);
+			WidgetType type = this.createNewShowletType(widgetTypeCode);
 			type.setLocked(true);
-			this._showletTypeManager.addShowletType(type);
-			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
-			String result = this.executeTrash(showletTypeCode, "admin");
+			this._showletTypeManager.addWidgetType(type);
+			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			String result = this.executeTrash(widgetTypeCode, "admin");
 			assertEquals("inputShowletTypes", result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getActionErrors().size());
-			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
-				this._mockShowletTypeDAO.deleteShowletType(showletTypeCode);
+			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
+				this._mockShowletTypeDAO.deleteShowletType(widgetTypeCode);
 			}
 			((IManager) this._showletTypeManager).refresh();
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 		}
     }
 	
 	public void testTrashType() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
-		String showletTypeCode = "test_showletType";
-    	assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+		String widgetTypeCode = "test_showletType";
+    	assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
     	try {
-			WidgetType type = this.createNewShowletType(showletTypeCode);
-			this._showletTypeManager.addShowletType(type);
-			assertNotNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			WidgetType type = this.createNewShowletType(widgetTypeCode);
+			this._showletTypeManager.addWidgetType(type);
+			assertNotNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 			
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
-			assertNull(pagina_1.getShowlets()[frame]);
-			String result = this.executeJoinShowlet(pageCode, frame, showletTypeCode, "admin");
+			assertNull(pagina_1.getWidgets()[frame]);
+			String result = this.executeJoinShowlet(pageCode, frame, widgetTypeCode, "admin");
 			assertEquals(Action.SUCCESS, result);
 			pagina_1 = this._pageManager.getPage(pageCode);
-			assertNotNull(pagina_1.getShowlets()[frame]);
+			assertNotNull(pagina_1.getWidgets()[frame]);
 			
-			result = this.executeTrash(showletTypeCode, "admin");
+			result = this.executeTrash(widgetTypeCode, "admin");
 			assertEquals("inputShowletTypes", result);
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getActionErrors().size());
@@ -188,29 +188,29 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			result = this.executeDeleteShowletFromPage(pageCode, frame, "admin");
 			assertEquals(Action.SUCCESS, result);
 			
-			result = this.executeTrash(showletTypeCode, "admin");
+			result = this.executeTrash(widgetTypeCode, "admin");
 			assertEquals(Action.SUCCESS, result);
 			
-			result = this.executeDelete(showletTypeCode, "admin");
+			result = this.executeDelete(widgetTypeCode, "admin");
 			assertEquals(Action.SUCCESS, result);
 			
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 		} catch (Throwable t) {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
-			pagina_1.getShowlets()[frame] = null;
+			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
-			if (null != this._showletTypeManager.getShowletType(showletTypeCode)) {
-				this._mockShowletTypeDAO.deleteShowletType(showletTypeCode);
+			if (null != this._showletTypeManager.getWidgetType(widgetTypeCode)) {
+				this._mockShowletTypeDAO.deleteShowletType(widgetTypeCode);
 			}
 			((IManager) this._showletTypeManager).refresh();
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
 			throw t;
 		}
 	}
 	
 	private String executeJoinShowlet(String pageCode, int frame, String showletTypeCode, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "joinShowlet");
+		this.initAction("/do/Page", "joinWidget");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("showletTypeCode", showletTypeCode);
 		this.addParameter("frame", String.valueOf(frame));
@@ -219,7 +219,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	
 	private String executeDeleteShowletFromPage(String pageCode, int frame, String username) throws Throwable {
 		this.setUserOnSession(username);
-		this.initAction("/do/Page", "deleteShowletFromPage");
+		this.initAction("/do/Page", "deleteWidgetFromPage");
 		this.addParameter("pageCode", pageCode);
 		this.addParameter("frame", String.valueOf(frame));
 		return this.executeAction();
@@ -264,7 +264,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     	titles.put("it", "Titolo");
     	titles.put("en", "Title");
     	type.setTitles(titles);
-    	WidgetType parent = this._showletTypeManager.getShowletType("content_viewer");
+    	WidgetType parent = this._showletTypeManager.getWidgetType("content_viewer");
     	assertNotNull(parent);
     	type.setParentType(parent);
     	type.setPluginCode("jacms");
@@ -274,30 +274,30 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     	return type;
     }
 	
-	public void testCopyShowletType() throws Throwable {
-		String result = this.executeCopyShowletType("editorCustomers", "customers_page", "2");
+	public void testCopyWidgetType() throws Throwable {
+		String result = this.executeCopyWidgetType("editorCustomers", "customers_page", "2");
 		assertEquals("userNotAllowed", result);
 		
-		result = this.executeCopyShowletType("admin", "customers_page", "12");
+		result = this.executeCopyWidgetType("admin", "customers_page", "12");
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeCopyShowletType("admin", "invalidPage", "2");
+		result = this.executeCopyWidgetType("admin", "invalidPage", "2");
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeCopyShowletType("admin", "customers_page", null);
+		result = this.executeCopyWidgetType("admin", "customers_page", null);
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeCopyShowletType("admin", "customers_page", "3");
+		result = this.executeCopyWidgetType("admin", "customers_page", "3");
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeCopyShowletType("admin", "customers_page", "2");
+		result = this.executeCopyWidgetType("admin", "customers_page", "2");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executeCopyShowletType("admin", "customers_page", "2");
+		result = this.executeCopyWidgetType("admin", "customers_page", "2");
 		assertEquals(Action.SUCCESS, result);
 	}
     
-	private String executeCopyShowletType(String username, String pageCode, String framePos) throws Throwable {
+	private String executeCopyWidgetType(String username, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "copy");
 		this.addParameter("pageCode", pageCode);
@@ -306,24 +306,24 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	public void testNewShowletType() throws Throwable {
-		String result = this.executeNewShowletType("editorCustomers", "content_viewer_list");
+	public void testNewWidgetType() throws Throwable {
+		String result = this.executeNewWidgetType("editorCustomers", "content_viewer_list");
 		assertEquals("userNotAllowed", result);
 		
-		result = this.executeNewShowletType("admin", "messages_system");
+		result = this.executeNewWidgetType("admin", "messages_system");
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeNewShowletType("admin", "logic_type");
+		result = this.executeNewWidgetType("admin", "logic_type");
 		assertEquals("inputShowletTypes", result);
 		
-		result = this.executeNewShowletType("admin", "content_viewer_list");
+		result = this.executeNewWidgetType("admin", "content_viewer_list");
 		assertEquals(Action.SUCCESS, result);
 		
-		result = this.executeNewShowletType("admin", "content_viewer_list");
+		result = this.executeNewWidgetType("admin", "content_viewer_list");
 		assertEquals(Action.SUCCESS, result);
 	}
     
-	private String executeNewShowletType(String username, String parentShowletTypeCode) throws Throwable {
+	private String executeNewWidgetType(String username, String parentShowletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "new");
 		this.addParameter("parentShowletTypeCode", parentShowletTypeCode);
@@ -331,88 +331,88 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 
-	public void testFailurePasteShowletType() throws Throwable {
-		String showletTypeCode = "randomShowletCode";
+	public void testFailurePasteWidgetType() throws Throwable {
+		String widgetTypeCode = "randomShowletCode";
 		try {
-			String result = this.executePasteShowletType("editorCustomers", showletTypeCode, "en", "it", "customers_page", "2");
+			String result = this.executePasteWidgetType("editorCustomers", widgetTypeCode, "en", "it", "customers_page", "2");
 			assertEquals("userNotAllowed", result);
 			
-			result = this.executePasteShowletType("admin", showletTypeCode, "en", "it", "customers_page", "12");
+			result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "customers_page", "12");
 			assertEquals(Action.INPUT, result);
 			
-			result = this.executePasteShowletType("admin", showletTypeCode, "en", "it", "invalidPage", "2");
+			result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "invalidPage", "2");
 			assertEquals(Action.INPUT, result);
 			
-			result = this.executePasteShowletType("admin", showletTypeCode, "en", "it", "customers_page", null);
+			result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "customers_page", null);
 			assertEquals(Action.INPUT, result);
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
     
-	public void testFailureAddNewShowletType() throws Throwable {
-		String showletTypeCode = "randomShowletCode";
+	public void testFailureAddNewWidgetType() throws Throwable {
+		String widgetTypeCode = "randomShowletCode";
 		try {
-			String result = this.executeAddShowletType("editorCustomers", showletTypeCode, "en", "it", "content_viewer_list");
+			String result = this.executeAddWidgetType("editorCustomers", widgetTypeCode, "en", "it", "content_viewer_list");
 			assertEquals("userNotAllowed", result);
 			
-			result = this.executeAddShowletType("admin", showletTypeCode, "en", "it", "messages_system");
+			result = this.executeAddWidgetType("admin", widgetTypeCode, "en", "it", "messages_system");
 			assertEquals(Action.INPUT, result);
 			
-			result = this.executeAddShowletType("admin", showletTypeCode, "en", "it", "logic_type");
+			result = this.executeAddWidgetType("admin", widgetTypeCode, "en", "it", "logic_type");
 			assertEquals(Action.INPUT, result);
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
     
-	public void testValidatePasteShowletType() throws Throwable {
-		String showletTypeCode = "randomShowletCode";
+	public void testValidatePasteWidgetType() throws Throwable {
+		String widgetTypeCode = "randomShowletCode";
 		try {
-			String result = this.executePasteShowletType("admin", showletTypeCode, "en", null, "customers_page", "2");
+			String result = this.executePasteWidgetType("admin", widgetTypeCode, "en", null, "customers_page", "2");
 			assertEquals(Action.INPUT, result);
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(1, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
-			result = this.executePasteShowletType("admin", "ty &", "en", null, "customers_page", "2");
+			result = this.executePasteWidgetType("admin", "ty &", "en", null, "customers_page", "2");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("showletTypeCode").size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
-			result = this.executePasteShowletType("admin", "content_viewer_list", null, "it", "customers_page", "2");
+			result = this.executePasteWidgetType("admin", "content_viewer_list", null, "it", "customers_page", "2");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("showletTypeCode").size());
 			assertEquals(1, fieldErrors.get("englishTitle").size());
 		} catch (Throwable t) {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 			throw t;
 		}
 	}
 	
-	public void testValidateAddNewShowletType() throws Throwable {
-		String showletTypeCode = "randomShowletCode";
+	public void testValidateAddNewWidgetType() throws Throwable {
+		String widgetTypeCode = "randomShowletCode";
 		try {
-			String result = this.executeAddShowletType("admin", showletTypeCode, "enTitle", "", "content_viewer_list");
+			String result = this.executeAddWidgetType("admin", widgetTypeCode, "enTitle", "", "content_viewer_list");
 			assertEquals(Action.INPUT, result);
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(1, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
-			result = this.executeAddShowletType("admin", "ht$", "enTitle", "", "content_viewer_list");
+			result = this.executeAddWidgetType("admin", "ht$", "enTitle", "", "content_viewer_list");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("showletTypeCode").size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
-			result = this.executeAddShowletType("admin", "messages_system", null, "it", "content_viewer_list");
+			result = this.executeAddWidgetType("admin", "messages_system", null, "it", "content_viewer_list");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
@@ -421,21 +421,21 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
     
-	public void testPasteNewShowletType_1() throws Throwable {
-		String showletTypeCode = "randomShowletCode_1";
+	public void testPasteNewWidgetType_1() throws Throwable {
+		String widgetTypeCode = "randomShowletCode_1";
 		try {
-			assertNull(this._showletTypeManager.getShowletType(showletTypeCode));
-			String result = this.executePasteShowletType("admin", showletTypeCode, "en", "it", "customers_page", "2");
+			assertNull(this._showletTypeManager.getWidgetType(widgetTypeCode));
+			String result = this.executePasteWidgetType("admin", widgetTypeCode, "en", "it", "customers_page", "2");
 			assertEquals(Action.SUCCESS, result);
 			
-			Widget copiedShowlet = this._pageManager.getPage("customers_page").getShowlets()[2];
+			Widget copiedShowlet = this._pageManager.getPage("customers_page").getWidgets()[2];
 			assertNotNull(copiedShowlet);
 			assertNotNull(copiedShowlet.getConfig());
-			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			Iterator<Object> keysIter = config.keySet().iterator();
@@ -446,26 +446,26 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
 	
-	public void testPasteNewShowletType_2() throws Throwable {
-		String showletTypeCode = "randomShowletCode_2";
+	public void testPasteNewWidgetType_2() throws Throwable {
+		String widgetTypeCode = "randomShowletCode_2";
 		String pageDest = "pagina_1";
 		int frameDest = 1;
-		Widget temp = this._pageManager.getPage("pagina_11").getShowlets()[2];
+		Widget temp = this._pageManager.getPage("pagina_11").getWidgets()[2];
 		assertNotNull(temp);
 		assertEquals("content_viewer", temp.getType().getCode());
 		IPage page = this._pageManager.getPage(pageDest);
 		try {
-			assertNull(page.getShowlets()[frameDest]);
-			page.getShowlets()[frameDest] = temp;
+			assertNull(page.getWidgets()[frameDest]);
+			page.getWidgets()[frameDest] = temp;
 			this._pageManager.updatePage(page);
 			
 			this.setUserOnSession("admin");
 			this.initAction("/do/Portal/WidgetType", "save");
-			this.addParameter("showletTypeCode", showletTypeCode);
+			this.addParameter("showletTypeCode", widgetTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
 			this.addParameter("pageCode", pageDest);
@@ -475,33 +475,33 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals("replaceOnPage", result);
 			
-			Widget newShowlet = this._pageManager.getPage(pageDest).getShowlets()[frameDest];
-			assertNotNull(newShowlet);
-			assertNotNull(newShowlet.getConfig());
-			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			Widget newWidget = this._pageManager.getPage(pageDest).getWidgets()[frameDest];
+			assertNotNull(newWidget);
+			assertNotNull(newWidget.getConfig());
+			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
-			assertEquals(newShowlet.getType().getCode(), addedType.getCode());
+			assertEquals(newWidget.getType().getCode(), addedType.getCode());
 			ApsProperties config = addedType.getConfig();
 			Iterator<Object> keysIter = config.keySet().iterator();
 			while (keysIter.hasNext()) {
 				String key = (String) keysIter.next();
-				assertEquals(newShowlet.getConfig().getProperty(key), config.getProperty(key));
+				assertEquals(newWidget.getConfig().getProperty(key), config.getProperty(key));
 			}
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			page.getShowlets()[frameDest] = null;
+			page.getWidgets()[frameDest] = null;
 			this._pageManager.updatePage(page);
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
     
-	public void testAddNewShowletType() throws Throwable {
-		String showletTypeCode = "randomShowletCode_3";
+	public void testAddNewWidgetType() throws Throwable {
+		String widgetTypeCode = "randomShowletCode_3";
 		try {
 			this.setUserOnSession("admin");
 			this.initAction("/do/Portal/WidgetType", "save");
-			this.addParameter("showletTypeCode", showletTypeCode);
+			this.addParameter("showletTypeCode", widgetTypeCode);
 			this.addParameter("englishTitle", "en");
 			this.addParameter("italianTitle", "it");
 			this.addParameter("parentShowletTypeCode", "content_viewer_list");
@@ -511,7 +511,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			String result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			
-			WidgetType addedType = this._showletTypeManager.getShowletType(showletTypeCode);
+			WidgetType addedType = this._showletTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(addedType);
 			ApsProperties config = addedType.getConfig();
 			assertEquals(2, config.size());
@@ -520,11 +520,11 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			this._showletTypeManager.deleteShowletType(showletTypeCode);
+			this._showletTypeManager.deleteWidgetType(widgetTypeCode);
 		}
 	}
 	
-	private String executePasteShowletType(String username, String code, String englishTitle, String italianTitle, String pageCode, String framePos) throws Throwable {
+	private String executePasteWidgetType(String username, String code, String englishTitle, String italianTitle, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
 		this.addParameter("showletTypeCode", code);
@@ -536,7 +536,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	private String executeAddShowletType(String username, String code, String englishTitle, String italianTitle, String parentShowletTypeCode) throws Throwable {
+	private String executeAddWidgetType(String username, String code, String englishTitle, String italianTitle, String parentShowletTypeCode) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
 		this.addParameter("showletTypeCode", code);

@@ -59,22 +59,32 @@ public interface IPageDAO {
 	public void updatePosition(IPage pageDown, IPage pageUp);
 
 	/**
-	 * Setta la showlet (comprensiva della sua configurazione) nella pagina e nel frame specificato.
-	 * Nel caso che la posizione specificata sia già occupata, la showlet corrente 
-	 * sarà sostituita da quella specificata. 
-	 * @param pageCode Il codice della pagina in cui settare la showlet.
-	 * @param widget La showlet da settare.
-	 * @param pos La posizione della pagina su cui settare la showlet.
-	 * @throws ApsSystemException In caso di errore.
+	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
 	 */
 	public void joinShowlet(String pageCode, Widget widget, int pos);
 
 	/**
-	 * Rimuove una showlet nella pagina specificata.
-	 * @param pageCode Il codice della pagina nel quale rimuovere la showlet.
+	 * Setta la widget (comprensiva della sua configurazione) nella pagina e nel frame specificato.
+	 * Nel caso che la posizione specificata sia già occupata, la widget corrente 
+	 * sarà sostituita da quella specificata. 
+	 * @param pageCode Il codice della pagina in cui settare la widget.
+	 * @param widget La widget da settare.
+	 * @param pos La posizione della pagina su cui settare la widget.
+	 * @throws ApsSystemException In caso di errore.
+	 */
+	public void joinWidget(String pageCode, Widget widget, int pos);
+
+	/**
+	 * @deprecated Use {@link #removeWidget(String,int)} instead
+	 */
+	public void removeShowlet(String pageCode, int pos);
+
+	/**
+	 * Rimuove una widget nella pagina specificata.
+	 * @param pageCode Il codice della pagina nel quale rimuovere la widget.
 	 * @param pos La posizione dal liberare.
 	 * @throws ApsSystemException In caso di errore.
 	 */
-	public void removeShowlet(String pageCode, int pos);
+	public void removeWidget(String pageCode, int pos);
 
 }

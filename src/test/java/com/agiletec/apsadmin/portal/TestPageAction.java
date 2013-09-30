@@ -93,7 +93,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(customers_page.getModel().getCode(), action.getModel());
 		assertTrue(action.isShowable());
 		assertTrue(action.isGroupSelectLock());
-		Widget widget = customers_page.getShowlets()[customers_page.getModel().getMainFrame()];
+		Widget widget = customers_page.getWidgets()[customers_page.getModel().getMainFrame()];
 		if (null != widget) {
 			assertEquals("content_viewer", widget.getType().getCode());
 			assertTrue(null != widget.getConfig() && !widget.getConfig().isEmpty());
@@ -151,7 +151,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 		assertEquals(page.isShowable(), pageToShow.isShowable());
 		assertEquals("Publicazione Contenuto", pageToShow.getTitles().getProperty("it"));
 		assertEquals("Content Publishing", pageToShow.getTitles().getProperty("en"));
-		Widget widget = page.getShowlets()[page.getModel().getMainFrame()];
+		Widget widget = page.getWidgets()[page.getModel().getMainFrame()];
 		if (null != widget) {
 			assertEquals("content_viewer", widget.getType().getCode());
 			assertTrue(null == widget.getConfig() || widget.getConfig().isEmpty());
@@ -398,7 +398,7 @@ public class TestPageAction extends ApsAdminBaseTestCase {
 			IPage addedPage = this._pageManager.getPage(pageCode);
 			assertNotNull(addedPage);
 			assertEquals("Pagina Test 2", addedPage.getTitles().getProperty("it"));
-			Widget[] showlets = addedPage.getShowlets();
+			Widget[] showlets = addedPage.getWidgets();
 			assertEquals(addedPage.getModel().getFrames().length, showlets.length);
 			for (int i = 0; i < showlets.length; i++) {
 				Widget widget = showlets[i];

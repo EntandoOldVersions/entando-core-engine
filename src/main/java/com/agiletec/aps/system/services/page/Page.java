@@ -158,20 +158,35 @@ public class Page extends TreeNode implements IPage {
 	}
 
 	/**
-	 * Return the showlets configured in this page.
-	 * @return all the showlets of the current page
+	 * @deprecated Use {@link #getWidgets()} instead
 	 */
 	@Override
 	public Widget[] getShowlets() {
-		return _showlets;
+		return getWidgets();
 	}
 
 	/**
-	 * Assign a set of showlets to the current page.
-	 * @param the showlets to assign.
+	 * Return the widgets configured in this page.
+	 * @return all the widgets of the current page
 	 */
-	public void setShowlets(Widget[] showlets) {
-		this._showlets = showlets;
+	@Override
+	public Widget[] getWidgets() {
+		return _widgets;
+	}
+
+	/**
+	 * @deprecated Use {@link #setWidgets(Widget[])} instead
+	 */
+	public void setShowlets(Widget[] widgets) {
+		setWidgets(widgets);
+	}
+
+	/**
+	 * Assign a set of widgets to the current page.
+	 * @param the widgets to assign.
+	 */
+	public void setWidgets(Widget[] widgets) {
+		this._widgets = widgets;
 	}
 	
 	@Override
@@ -200,10 +215,10 @@ public class Page extends TreeNode implements IPage {
 	
 	public boolean isVoid() {
 		boolean isVoid = true;
-		Widget[] showlets = this.getShowlets();
-		if (null != showlets) {
-			for (int i = 0; i < showlets.length; i++) {
-				if (null != showlets[i]) {
+		Widget[] widgets = this.getWidgets();
+		if (null != widgets) {
+			for (int i = 0; i < widgets.length; i++) {
+				if (null != widgets[i]) {
 					isVoid = false;
 					break;
 				}
@@ -237,7 +252,7 @@ public class Page extends TreeNode implements IPage {
 	/**
 	 * The showlet of the current page
 	 */
-	private Widget[] _showlets;
+	private Widget[] _widgets;
 	
 	private boolean _useExtraTitles = false;
 	

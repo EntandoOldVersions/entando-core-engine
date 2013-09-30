@@ -34,7 +34,7 @@ import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Servizio di gestione dei tipi di showlet (WidgetType) definiti
+ * Servizio di gestione dei tipi di widget (WidgetType) definiti
  * nel sistema. (Questo servizio non riguarda la configurazione delle
  * istanze di widget nelle pagine)
  * @author M.Diana - E.Santoboni
@@ -44,23 +44,23 @@ public class WidgetTypeManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
-		this.loadShowletTypes();
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized " + this._showletTypes.size() + " showlet types");
+		this.loadWidgetTypes();
+		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized " + this._widgetTypes.size() + " widget types");
 	}
 	
 	/**
-	 * Caricamento da db del catalogo dei tipi di showlet.
+	 * Caricamento da db del catalogo dei tipi di widget.
 	 * @throws ApsSystemException In caso di errori di lettura da db.
 	 */
-	private void loadShowletTypes() throws ApsSystemException {
+	private void loadWidgetTypes() throws ApsSystemException {
 		try {
-			this._showletTypes = this.getWidgetTypeDAO().loadShowletTypes();
-			Iterator<WidgetType> iter = this._showletTypes.values().iterator();
+			this._widgetTypes = this.getWidgetTypeDAO().loadWidgetTypes();
+			Iterator<WidgetType> iter = this._widgetTypes.values().iterator();
 			while (iter.hasNext()) {
 				WidgetType type = iter.next();
 				String mainTypeCode = type.getParentTypeCode();
 				if (null != mainTypeCode) {
-					type.setParentType(this._showletTypes.get(mainTypeCode));
+					type.setParentType(this._widgetTypes.get(mainTypeCode));
 				}
 			}
 		} catch (Throwable t) {
@@ -78,15 +78,31 @@ public class WidgetTypeManager extends AbstractService
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #getWidgetType(String)} instead
+	 */
 	@Override
 	public WidgetType getShowletType(String code) {
-		return this._showletTypes.get(code);
+		return getWidgetType(code);
+	}
+
+	@Override
+	public WidgetType getWidgetType(String code) {
+		return this._widgetTypes.get(code);
 	}
 	
+	/**
+	 * @deprecated Use {@link #getWidgetTypes()} instead
+	 */
 	@Override
 	public List<WidgetType> getShowletTypes() {
+		return getWidgetTypes();
+	}
+
+	@Override
+	public List<WidgetType> getWidgetTypes() {
 		List<WidgetType> types = new ArrayList<WidgetType>();
-		Iterator<WidgetType> masterTypesIter = this._showletTypes.values().iterator();
+		Iterator<WidgetType> masterTypesIter = this._widgetTypes.values().iterator();
 		while (masterTypesIter.hasNext()) {
 			WidgetType showletType = masterTypesIter.next();
 			types.add(showletType.clone());
@@ -94,49 +110,65 @@ public class WidgetTypeManager extends AbstractService
 		return types;
 	}
 	
+	/**
+	 * @deprecated Use {@link #addWidgetType(WidgetType)} instead
+	 */
 	@Override
 	public void addShowletType(WidgetType showletType) throws ApsSystemException {
+		addWidgetType(showletType);
+	}
+
+	@Override
+	public void addWidgetType(WidgetType widgetType) throws ApsSystemException {
 		try {
-			WidgetType type = this._showletTypes.get(showletType.getCode());
+			WidgetType type = this._widgetTypes.get(widgetType.getCode());
 			if (null != type) {
-				ApsSystemUtils.getLogger().severe("Type already exists : type code" + showletType.getCode());
+				ApsSystemUtils.getLogger().severe("Type already exists : type code" + widgetType.getCode());
 				return;
 			}
-			String parentTypeCode = showletType.getParentTypeCode();
-			if (null != parentTypeCode && null == this._showletTypes.get(parentTypeCode)) {
+			String parentTypeCode = widgetType.getParentTypeCode();
+			if (null != parentTypeCode && null == this._widgetTypes.get(parentTypeCode)) {
 				throw new ApsSystemException("ERROR : Parent type '" + parentTypeCode + "' doesn't exists");
 			}
-			if (null == parentTypeCode && null != showletType.getConfig()) {
+			if (null == parentTypeCode && null != widgetType.getConfig()) {
 				throw new ApsSystemException("ERROR : Parent type null and default config not null");
 			}
-			if (null != showletType.getTypeParameters() && null != showletType.getConfig()) {
+			if (null != widgetType.getTypeParameters() && null != widgetType.getConfig()) {
 				throw new ApsSystemException("ERROR : Params not null and config not null");
 			}
-			this.getWidgetTypeDAO().addShowletType(showletType);
-			this._showletTypes.put(showletType.getCode(), showletType);
+			this.getWidgetTypeDAO().addShowletType(widgetType);
+			this._widgetTypes.put(widgetType.getCode(), widgetType);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addShowletType");
+			ApsSystemUtils.logThrowable(t, this, "addWidgetType");
 			throw new ApsSystemException("Error adding a Widget Type", t);
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #deleteWidgetType(String)} instead
+	 */
 	@Override
 	public void deleteShowletType(String showletTypeCode) throws ApsSystemException {
+		deleteWidgetType(showletTypeCode);
+	}
+
+	@Override
+	public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException {
 		try {
-			WidgetType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
+				ApsSystemUtils.getLogger().severe("Type not exists : type code" + widgetTypeCode);
 				return;
 			}
 			if (type.isLocked()) {
-				ApsSystemUtils.getLogger().severe("A loked showlet can't be deleted - type " + showletTypeCode);
+				ApsSystemUtils.getLogger().severe("A loked widget can't be deleted - type " + widgetTypeCode);
 				return;
 			}
-			this.getWidgetTypeDAO().deleteShowletType(showletTypeCode);
-			this._showletTypes.remove(showletTypeCode);
+			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
+			this._widgetTypes.remove(widgetTypeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteShowletType");
-			throw new ApsSystemException("Error deleting showlet type", t);
+			ApsSystemUtils.logThrowable(t, this, "deleteWidgetType");
+			throw new ApsSystemException("Error deleting widget type", t);
 		}
 	}
 	
@@ -144,39 +176,47 @@ public class WidgetTypeManager extends AbstractService
 	@Deprecated
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) throws ApsSystemException {
 		try {
-			WidgetType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
 			}
-			this.updateShowletType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
+			this.updateWidgetType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
 			throw new ApsSystemException("Error updating Widget type titles : type code" + showletTypeCode, t);
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #updateWidgetType(String,ApsProperties,ApsProperties,String)} instead
+	 */
 	@Override
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException {
+		updateWidgetType(showletTypeCode, titles, defaultConfig, mainGroup);
+	}
+
+	@Override
+	public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException {
 		try {
-			WidgetType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
+				ApsSystemUtils.getLogger().severe("Type not exists : type code" + widgetTypeCode);
 				return;
 			}
 			if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
 				defaultConfig = type.getConfig();
 			}
-			this.getWidgetTypeDAO().updateShowletType(showletTypeCode, titles, defaultConfig, mainGroup);
+			this.getWidgetTypeDAO().updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup);
 			type.setTitles(titles);
 			type.setConfig(defaultConfig);
 			type.setMainGroup(mainGroup);
 			WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
-			event.setShowletTypeCode(showletTypeCode);
+			event.setShowletTypeCode(widgetTypeCode);
 			this.notifyEvent(event);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
-			throw new ApsSystemException("Error updating Widget type titles : type code" + showletTypeCode, t);
+			ApsSystemUtils.logThrowable(t, this, "updateWidgetType");
+			throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
 		}
 	}
 	
@@ -184,7 +224,7 @@ public class WidgetTypeManager extends AbstractService
 	@Deprecated
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles) throws ApsSystemException {
 		try {
-			WidgetType type = this._showletTypes.get(showletTypeCode);
+			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
 				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
 				return;
@@ -202,7 +242,7 @@ public class WidgetTypeManager extends AbstractService
 		List<WidgetType> utilizers = null;
 		try {
 			boolean freeTypes = (null == groupName || groupName.equals(Group.FREE_GROUP_NAME));
-			List<WidgetType> allTypes = this.getShowletTypes();
+			List<WidgetType> allTypes = this.getWidgetTypes();
 			for (int i = 0; i < allTypes.size(); i++) {
 				WidgetType type = allTypes.get(i);
 				String typeGroup = type.getMainGroup();
@@ -227,8 +267,12 @@ public class WidgetTypeManager extends AbstractService
 	public void setWidgetTypeDAO(IWidgetTypeDAO widgetTypeDAO) {
 		this._widgetTypeDAO = widgetTypeDAO;
 	}
+	
+	public void setWidgetTypes(Map<String, WidgetType> widgetTypes) {
+		this._widgetTypes = widgetTypes;
+	}
 
-	private Map<String, WidgetType> _showletTypes;
+	private Map<String, WidgetType> _widgetTypes;
 	
 	private IWidgetTypeDAO _widgetTypeDAO;
 	

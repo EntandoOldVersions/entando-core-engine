@@ -85,7 +85,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 				page = this.createPage(code, res);
 				numFrames = page.getModel().getFrames().length;
 				showlets = new Widget[numFrames];
-				page.setShowlets(showlets);
+				page.setWidgets(showlets);
 				prevCode = code;
 			}
 			int pos = res.getInt(9);
@@ -140,7 +140,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 			return null;
 		}
 		Widget widget = new Widget();
-		WidgetType type = this.getWidgetTypeManager().getShowletType(typeCode);
+		WidgetType type = this.getWidgetTypeManager().getWidgetType(typeCode);
 		widget.setType(type);
 		ApsProperties config = new ApsProperties();
 		String configText = res.getString(11);
@@ -380,13 +380,13 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	}
 	
 	protected void addShowletForPage(IPage page, Connection conn) throws ApsSystemException {
-		if (null == page.getShowlets()) return;
+		if (null == page.getWidgets()) return;
 		PreparedStatement stat = null;
 		try {
-			Widget[] showlets = page.getShowlets();
+			Widget[] widgets = page.getWidgets();
 			stat = conn.prepareStatement(ADD_SHOWLET_FOR_PAGE);
-			for (int i = 0; i < showlets.length; i++) {
-				Widget widget = showlets[i];
+			for (int i = 0; i < widgets.length; i++) {
+				Widget widget = widgets[i];
 				if (widget != null) {
 					if (null == widget.getType()) {
 						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
@@ -406,8 +406,16 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link #removeWidget(String,int)} instead
+	 */
 	@Override
 	public void removeShowlet(String pageCode, int pos) {
+		removeWidget(pageCode, pos);
+	}
+
+	@Override
+	public void removeWidget(String pageCode, int pos) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -427,9 +435,17 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 		}
 	}
 
+	/**
+	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
+	 */
 	@Override
 	public void joinShowlet(String pageCode, Widget widget, int pos) {
-		this.removeShowlet(pageCode, pos);
+		joinWidget(pageCode, widget, pos);
+	}
+
+	@Override
+	public void joinWidget(String pageCode, Widget widget, int pos) {
+		this.removeWidget(pageCode, pos);
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {

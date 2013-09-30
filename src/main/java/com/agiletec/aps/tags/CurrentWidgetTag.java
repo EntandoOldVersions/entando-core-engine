@@ -104,7 +104,7 @@ public class CurrentWidgetTag extends OutSupport {
 			widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
 		} else {
 			IPage currentPage = (IPage) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_PAGE));
-			Widget[] showlets = currentPage.getShowlets();
+			Widget[] showlets = currentPage.getWidgets();
 			if (showlets.length > this.getFrame()) {
 				widget = showlets[this.getFrame()];
 			}

@@ -30,18 +30,33 @@ import com.agiletec.aps.system.services.page.IPage;
  */
 public class WidgetsViewerAction extends AbstractPortalAction implements IWidgetsViewerAction {
 	
+	/**
+	 * @deprecated Use {@link #viewWidgets()} instead
+	 */
 	@Override
 	public String viewShowlets() {
+		return viewWidgets();
+	}
+
+	@Override
+	public String viewWidgets() {
 		return SUCCESS;
 	}
 	
+	/**
+	 * @deprecated Use {@link #getWidgetUtilizers(String)} instead
+	 */
 	public List<IPage> getShowletUtilizers(String showletTypeCode) {
+		return getWidgetUtilizers(showletTypeCode);
+	}
+
+	public List<IPage> getWidgetUtilizers(String showletTypeCode) {
 		List<IPage> utilizers = null;
 		try {
-			utilizers = this.getPageManager().getShowletUtilizers(showletTypeCode);
+			utilizers = this.getPageManager().getWidgetUtilizers(showletTypeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getShowletUtilizers");
-			throw new RuntimeException("Error on extracting showletUtilizers : showlet type code " + showletTypeCode, t);
+			ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers");
+			throw new RuntimeException("Error on extracting widgetUtilizers : widget type code " + showletTypeCode, t);
 		}
 		return utilizers;
 	}
@@ -54,17 +69,25 @@ public class WidgetsViewerAction extends AbstractPortalAction implements IWidget
 		return group;
 	}
 	
+	/**
+	 * @deprecated Use {@link #viewWidgetUtilizers()} instead
+	 */
 	@Override
 	public String viewShowletUtilizers() {
+		return viewWidgetUtilizers();
+	}
+
+	@Override
+	public String viewWidgetUtilizers() {
 		return SUCCESS;
 	}
 	
 	public List<IPage> getShowletUtilizers() {
-		return this.getShowletUtilizers(this.getShowletTypeCode());
+		return this.getWidgetUtilizers(this.getShowletTypeCode());
 	}
 	
 	public WidgetType getShowletType(String typeCode) {
-		return this.getWidgetTypeManager().getShowletType(typeCode);
+		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
 	
 	public String getShowletTypeCode() {

@@ -23,38 +23,43 @@ package com.agiletec.apsadmin.portal;
 public interface IWidgetTypeAction {
 	
 	/**
-	 * Create of new user showlet.
-	 * @return The result code.
+	 * @deprecated Use {@link #newUserWidget()} instead
 	 */
 	public String newUserShowlet();
+
+	/**
+	 * Create of new user widget.
+	 * @return The result code.
+	 */
+	public String newUserWidget();
 	
 	/**
-	 * Copy an exist showlet (physic and with parameters) and value the form 
-	 * of creation of new user showlet.
+	 * Copy an existing widget (physic and with parameters) and value the form 
+	 * of creation of new user widget.
 	 * @return The result code.
 	 */
 	public String copy();
 	
 	/**
-	 * Edit an exist showlet type.
+	 * Edit an exist widget type.
 	 * @return The result code.
 	 */
 	public String edit();
 	
 	/**
-	 * Update an exist showlet type.
+	 * Update an exist widget type.
 	 * @return The result code.
 	 */
 	public String save();
 	
 	/**
-	 * Start the deletion operations for the given showlet type.
+	 * Start the deletion operations for the given widget type.
 	 * @return The result code.
 	 */
 	public String trash();
 	
 	/**
-	 * Delete a showlet type from the system.
+	 * Delete a widget type from the system.
 	 * @return The result code.
 	 */
 	public String delete();

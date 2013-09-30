@@ -110,7 +110,7 @@ public class PageModelDOM {
 	private void buildDefaultShowlet(Element defaultShowletElement, int pos, IWidgetTypeManager showletTypeManager) {
 		Widget widget = new Widget();
 		String showletCode = defaultShowletElement.getAttributeValue(ATTRIBUTE_CODE);
-		WidgetType type = showletTypeManager.getShowletType(showletCode);
+		WidgetType type = showletTypeManager.getWidgetType(showletCode);
 		if (null == type) {
 			throw new RuntimeException("The code of the default showlet '" + showletCode + "' unknown");
 		}

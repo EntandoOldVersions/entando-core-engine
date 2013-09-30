@@ -42,7 +42,7 @@ public class PageWithWidgetTag extends TagSupport {
 	public int doStartTag() throws JspException {
 		IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext); 
 		try {
-			List<IPage> pages = pageManager.getShowletUtilizers(this.getWidgetTypeCode());
+			List<IPage> pages = pageManager.getWidgetUtilizers(this.getWidgetTypeCode());
 			if (StringUtils.isNotBlank(this.getFilterParamName()) && StringUtils.isNotBlank(this.getFilterParamValue())) {
 				pages = this.filterByConfigParamValue(pages);
 			}
@@ -63,7 +63,7 @@ public class PageWithWidgetTag extends TagSupport {
 		Iterator<IPage> it = pages.iterator();
 		while (it.hasNext()) {
 			IPage currentPage = it.next();
-			Widget[] showlets = currentPage.getShowlets();
+			Widget[] showlets = currentPage.getWidgets();
 			for (int i = 0; i < showlets.length; i++) {
 				Widget currentWidget = showlets[i];
 				if (null != currentWidget && currentWidget.getType().getCode().equals(this.getWidgetTypeCode())) {

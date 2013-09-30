@@ -37,8 +37,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ContentPreviewExecWidgetTag extends ExecWidgetTag {
 	
+	/**
+	 * @deprecated Use {@link #includeWidget(RequestContext,Widget,List<IFrameDecoratorContainer>)} instead
+	 */
 	@Override
 	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
+		includeWidget(reqCtx, widget, decorators);
+	}
+
+	@Override
+	protected void includeWidget(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
 		HttpServletRequest request = reqCtx.getRequest();
 		String contentOnSessionMarker = (String) request.getAttribute("contentOnSessionMarker");
 		if (null == contentOnSessionMarker || contentOnSessionMarker.trim().length() == 0) {
@@ -57,7 +65,7 @@ public class ContentPreviewExecWidgetTag extends ExecWidgetTag {
 				return;
 			}
 		}
-		super.includeShowlet(reqCtx, widget, decorators);
+		super.includeWidget(reqCtx, widget, decorators);
 	}
 	
 	private final String CONTENT_VIEWER_JSP="/WEB-INF/plugins/jacms/apsadmin/jsp/content/preview/content_viewer.jsp";

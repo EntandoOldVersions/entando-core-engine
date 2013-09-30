@@ -102,7 +102,7 @@
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action> 
 		
-        <action name="copyFromShowlet" class="apiServiceAction" method="copyFromShowlet">
+        <action name="copyFromWidget" class="apiServiceAction" method="copyFromWidget">
             <result name="input" type="chain">list</result>
             <result type="tiles">admin.api.service.entry</result>
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>

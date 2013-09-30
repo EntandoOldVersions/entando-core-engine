@@ -128,9 +128,9 @@ public class SymbolicLinkErrorMessenger implements ISymbolicLinkErrorMessenger {
 	 * che anche un frame sia occupato da una showlet.
 	 */
 	protected boolean isVoidPage(IPage page) {
-		Widget[] showlets = page.getShowlets();
-		for (int i = 0; i < showlets.length; i++) {
-			if (null != showlets[i]) {
+		Widget[] widgets = page.getWidgets();
+		for (int i = 0; i < widgets.length; i++) {
+			if (null != widgets[i]) {
 				return false;
 			}
 		}

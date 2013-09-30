@@ -65,7 +65,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	
 	protected Map<String, List<SelectItem>> getShowletFlavoursMapping(List<String> pluginCodes) {
 		Map<String, List<SelectItem>> mapping = new HashMap<String, List<SelectItem>>();
-		List<WidgetType> types = this.getWidgetTypeManager().getShowletTypes();
+		List<WidgetType> types = this.getWidgetTypeManager().getWidgetTypes();
 		for (int i = 0; i < types.size(); i++) {
 			WidgetType type = types.get(i);
 			String pluginCode = type.getPluginCode();

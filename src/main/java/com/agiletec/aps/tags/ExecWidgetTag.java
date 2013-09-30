@@ -58,7 +58,7 @@ import org.springframework.web.context.WebApplicationContext;
 public class ExecWidgetTag extends TagSupport {
 
 	/**
-	 * Invoke the showlet configured in the page.
+	 * Invoke the widget configured in the page.
 	 *
 	 * @throws JspException In case of errors in this method or in the included
 	 * JSPs
@@ -70,9 +70,9 @@ public class ExecWidgetTag extends TagSupport {
 		try {
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_HEAD_INFO_CONTAINER, new HeadInfoContainer());
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-			String[] showletOutput = new String[page.getShowlets().length];
-			reqCtx.addExtraParam("ShowletOutput", showletOutput);
-			this.buildShowletOutput(page, showletOutput);
+			String[] widgetOutput = new String[page.getWidgets().length];
+			reqCtx.addExtraParam("ShowletOutput", widgetOutput);
+			this.buildWidgetOutput(page, widgetOutput);
 			String redirect = (String) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXTERNAL_REDIRECT);
 			if (null != redirect) {
 				HttpServletResponse response = (HttpServletResponse) this.pageContext.getResponse();
@@ -81,34 +81,48 @@ public class ExecWidgetTag extends TagSupport {
 			}
 			this.pageContext.popBody();
 		} catch (Throwable t) {
-			String msg = "Error detected during showlet preprocessing";
+			String msg = "Error detected during widget preprocessing";
 			ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			throw new JspException(msg, t);
 		}
 		return super.doEndTag();
 	}
 
+	/**
+	 * @deprecated Use {@link #buildWidgetOutput(IPage,String[])} instead
+	 */
 	protected void buildShowletOutput(IPage page, String[] showletOutput) throws JspException {
+		buildWidgetOutput(page, showletOutput);
+	}
+
+	protected void buildWidgetOutput(IPage page, String[] widgetOutput) throws JspException {
 		ServletRequest req = this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 		try {
 			List<IFrameDecoratorContainer> decorators = this.extractDecorators();
 			BodyContent body = this.pageContext.pushBody();
-			Widget[] showlets = page.getShowlets();
-			for (int frame = 0; frame < showlets.length; frame++) {
+			Widget[] widgets = page.getWidgets();
+			for (int frame = 0; frame < widgets.length; frame++) {
 				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME, new Integer(frame));
-				Widget widget = showlets[frame];
+				Widget widget = widgets[frame];
 				body.clearBody();
-				this.includeShowlet(reqCtx, widget, decorators);
-				showletOutput[frame] = body.getString();
+				this.includeWidget(reqCtx, widget, decorators);
+				widgetOutput[frame] = body.getString();
 			}
 		} catch (Throwable t) {
-			String msg = "Error detected during showlet preprocessing";
+			String msg = "Error detected during widget preprocessing";
 			throw new JspException(msg, t);
 		}
 	}
 	
+	/**
+	 * @deprecated Use {@link #includeWidget(RequestContext,Widget,List<IFrameDecoratorContainer>)} instead
+	 */
 	protected void includeShowlet(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
+		includeWidget(reqCtx, widget, decorators);
+	}
+
+	protected void includeWidget(RequestContext reqCtx, Widget widget, List<IFrameDecoratorContainer> decorators) throws Throwable {
 		if (null != widget && this.isUserAllowed(reqCtx, widget)) {
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET, widget);
 		} else {
@@ -121,9 +135,9 @@ public class ExecWidgetTag extends TagSupport {
 				showletType = showletType.getParentType();
 			}
 			String pluginCode = showletType.getPluginCode();
-			boolean isPluginShowlet = (null != pluginCode && pluginCode.trim().length() > 0);
+			boolean isPluginWidget = (null != pluginCode && pluginCode.trim().length() > 0);
 			StringBuilder jspPath = new StringBuilder("/WEB-INF/");
-			if (isPluginShowlet) {
+			if (isPluginWidget) {
 				jspPath.append("plugins/").append(pluginCode.trim()).append("/");
 			}
 			jspPath.append(WIDGET_LOCATION).append(showletType.getCode()).append(".jsp");
@@ -147,14 +161,14 @@ public class ExecWidgetTag extends TagSupport {
 			BeanComparator comparator = new BeanComparator("order");
 			Collections.sort(containters, comparator);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractDecorators", "Error extracting showlet decorators");
-			throw new ApsSystemException("Error extracting showlet decorators", t);
+			ApsSystemUtils.logThrowable(t, this, "extractDecorators", "Error extracting widget decorators");
+			throw new ApsSystemException("Error extracting widget decorators", t);
 		}
 		return containters;
 	}
 	
 	protected void includeDecorators(Widget widget, 
-			List<IFrameDecoratorContainer> decorators, boolean isShowletDecorator, boolean includeHeader) throws Throwable {
+			List<IFrameDecoratorContainer> decorators, boolean isWidgetDecorator, boolean includeHeader) throws Throwable {
 		if (null == decorators || decorators.isEmpty()) {
 			return;
 		}
@@ -163,7 +177,7 @@ public class ExecWidgetTag extends TagSupport {
 			IFrameDecoratorContainer decoratorContainer = (includeHeader)
 					? decorators.get(i)
 					: decorators.get(decorators.size() - i - 1);
-			if ((isShowletDecorator != decoratorContainer.isShowletDecorator()) 
+			if ((isWidgetDecorator != decoratorContainer.isShowletDecorator()) 
 					|| !decoratorContainer.needsDecoration(widget, reqCtx)) {
 				continue;
 			}

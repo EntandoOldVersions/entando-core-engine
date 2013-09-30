@@ -83,10 +83,10 @@ public class ContentPageMapperManager extends AbstractService
     private void searchPublishedContents(IPage page) {
     	PageModel pageModel = page.getModel();
         int mainFrame = pageModel.getMainFrame();
-        Widget[] showlets = page.getShowlets();
+        Widget[] widgets = page.getWidgets();
         Widget widget = null;
-        if (null != showlets && mainFrame != -1){
-            widget = showlets[mainFrame];
+        if (null != widgets && mainFrame != -1){
+            widget = widgets[mainFrame];
         }
         String contentId = null;
         if (null != widget) {

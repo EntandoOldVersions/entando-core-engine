@@ -5,13 +5,13 @@
 		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
 	
-	<bean id="jacmsContentViewerShowletAction" scope="prototype" 
-			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.ContentViewerWidgetAction" parent="simpleShowletAction" >
+	<bean id="jacmsContentViewerWidgetAction" scope="prototype" 
+			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.ContentViewerWidgetAction" parent="simpleWidgetAction" >
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="contentModelManager" ref="jacmsContentModelManager" />
 	</bean>
 	
-	<bean id="jacmsContentFinderViewerShowletAction" scope="prototype" 
+	<bean id="jacmsContentFinderViewerWidgetAction" scope="prototype" 
 			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.ContentFinderViewerAction" parent="abstractBaseAction" >
 		<property name="contentManager" ref="jacmsContentManager"/>
 		<property name="groupManager" ref="GroupManager"/>
@@ -20,15 +20,15 @@
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 	</bean>
 	
-	<bean id="jacmsContentListViewerShowletAction" scope="prototype" 
-			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.ContentListViewerWidgetAction" parent="simpleShowletAction" >
+	<bean id="jacmsContentListViewerWidgetAction" scope="prototype" 
+			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.ContentListViewerWidgetAction" parent="simpleWidgetAction" >
 		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="contentModelManager" ref="jacmsContentModelManager" />
 		<property name="categoryManager" ref="CategoryManager" />
 	</bean>
 	
 	<bean id="jacmsContentListFilterAction" scope="prototype" 
-			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.BaseFilterAction" parent="simpleShowletAction" >
+			class="com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.BaseFilterAction" parent="simpleWidgetAction" >
 		<property name="contentManager" ref="jacmsContentManager" />
 	</bean>
 	

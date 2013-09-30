@@ -185,10 +185,10 @@ public class ContentModelManager extends AbstractService implements IContentMode
      * @param page La pagina nel qual cercare il modello di contenuto
      */
     private void searchReferencingPages(long modelId, Map<String, List<IPage>> utilizers, IPage page) {
-    	Widget[] showlets = page.getShowlets();
-    	if (null != showlets) {
-    		for (int i=0; i<showlets.length; i++) {
-    			Widget widget = showlets[i];
+    	Widget[] widgets = page.getWidgets();
+    	if (null != widgets) {
+    		for (int i=0; i<widgets.length; i++) {
+    			Widget widget = widgets[i];
     			if (null != widget) {
         			if (null != widget.getConfig()) {
         				String id = widget.getConfig().getProperty("modelId");

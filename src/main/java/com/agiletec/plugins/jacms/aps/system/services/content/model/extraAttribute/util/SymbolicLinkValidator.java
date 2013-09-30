@@ -133,17 +133,17 @@ public class SymbolicLinkValidator {
     }
     
     /**
-     * Metodo di servizio: verifica che la pagina abbia delle showlet configurate.
+     * Metodo di servizio: verifica che la pagina abbia delle widget configurate.
      * Restituisce true nel caso tutti i frame siano vuoti, false in caso che 
-     * anche un frame sia occupato da una showlet.
+     * anche un frame sia occupato da una widget.
      * @param page La pagina da controllare.
      * @return true nel caso tutti i frame siano vuoti, false in caso 
-     * che anche un frame sia occupato da una showlet.
+     * che anche un frame sia occupato da una widget.
      */
     protected boolean isVoidPage(IPage page) {
-        Widget[] showlets = page.getShowlets();
-        for (int i = 0; i < showlets.length; i++) {
-            if (null != showlets[i]) {
+        Widget[] widgets = page.getWidgets();
+        for (int i = 0; i < widgets.length; i++) {
+            if (null != widgets[i]) {
                 return false;
             }
         }

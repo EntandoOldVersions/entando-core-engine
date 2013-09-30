@@ -91,7 +91,7 @@ public class NavigatorTarget {
 	 */
 	public boolean isVoidPage() {
 		boolean isVoid = true;
-		Widget[] showlets = this.getPage().getShowlets();
+		Widget[] showlets = this.getPage().getWidgets();
 		for (int i = 0; i < showlets.length; i++) {
 			if (null != showlets[i]) {
 				isVoid = false;

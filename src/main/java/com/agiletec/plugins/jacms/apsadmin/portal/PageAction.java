@@ -85,7 +85,7 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		Page page = new Page();
 		page.setGroup(this.getGroup());
 		page.setExtraGroups(this.getExtraGroups());
-		page.setShowlets(pageOnEdit.getShowlets());
+		page.setWidgets(pageOnEdit.getWidgets());
 		page.setCode(this.getPageCode());
 		return page;
 	}
@@ -119,13 +119,13 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 			IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.getRequest());
 			Widget viewer = new Widget();
 			viewer.setConfig(new ApsProperties());
-			WidgetType type = showletTypeManager.getShowletType(this.getViewerShowletCode());
+			WidgetType type = showletTypeManager.getWidgetType(this.getViewerShowletCode());
 			if (null == type) {
 				throw new RuntimeException("Widget 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerShowletCode());
 			}
 			viewer.setType(type);
-			Widget[] showlets = page.getShowlets();
-			showlets[mainFrame] = viewer;
+			Widget[] widgets = page.getWidgets();
+			widgets[mainFrame] = viewer;
 		}
 	}
 	
@@ -134,9 +134,9 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		try {
 			IPage page = this.getPage(pageCode);
 			if (null == page) return contents;
-			Widget[] showlets = page.getShowlets();
-			for (int i=0; i<showlets.length; i++) {
-				Widget widget = showlets[i];
+			Widget[] widgets = page.getWidgets();
+			for (int i=0; i<widgets.length; i++) {
+				Widget widget = widgets[i];
 				if (null != widget) {
 					String contentId = widget.getPublishedContent();
 					if (null != contentId) {

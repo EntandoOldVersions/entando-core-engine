@@ -92,7 +92,7 @@ public class TestPageDAO extends BaseTestCase {
 			assertEquals(extractedPage.getTitle("it"), "pagina temporanea");
 			assertEquals(extractedPage.getModel().getCode(), "service");
 			assertTrue(extractedPage.isShowable());
-			Widget[] showlets = extractedPage.getShowlets();
+			Widget[] showlets = extractedPage.getWidgets();
 			boolean contains = showlets[0].getConfig().contains("temp");
 			assertEquals(contains, true);
 			assertEquals(showlets[0].getPublishedContent(), "ART1");
@@ -119,7 +119,7 @@ public class TestPageDAO extends BaseTestCase {
 		showletType.setCode("content_viewer");
 		widget.setType(showletType);
 		Widget[] modifiesShowlets = {widget};
-		pageToUpdate.setShowlets(modifiesShowlets);
+		pageToUpdate.setWidgets(modifiesShowlets);
 		try {
 			pageDAO.updatePage(pageToUpdate);
 			List<IPage> pages = pageDAO.loadPages();
@@ -136,7 +136,7 @@ public class TestPageDAO extends BaseTestCase {
 			assertEquals(extractedPage.getTitle("it"), "pagina temporanea1");
 			assertEquals(extractedPage.getModel().getCode(), "service");
 			assertFalse(extractedPage.isShowable());
-			Widget[] showlets = extractedPage.getShowlets();
+			Widget[] showlets = extractedPage.getWidgets();
 			assertTrue(showlets[0].getConfig().contains("temp1"));
 			assertEquals(showlets[0].getPublishedContent(), "ART11");
 			assertEquals(showlets[0].getType().getCode(), "content_viewer");
@@ -194,7 +194,7 @@ public class TestPageDAO extends BaseTestCase {
 		showletType.setCode("content_viewer");
 		widget.setType(showletType);
 		Widget[] showlets = {widget};
-		page.setShowlets(showlets);
+		page.setWidgets(showlets);
 		return page;
 	}
 	

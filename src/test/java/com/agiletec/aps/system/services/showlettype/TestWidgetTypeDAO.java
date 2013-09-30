@@ -33,15 +33,15 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  */
 public class TestWidgetTypeDAO extends BaseTestCase {
 	
-    public void testLoadShowletTypes() throws Throwable {
+    public void testLoadWidgetTypes() throws Throwable {
     	DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
-    	WidgetTypeDAO showletTypeDao = new WidgetTypeDAO();
-    	showletTypeDao.setDataSource(dataSource);
+    	WidgetTypeDAO widgetTypeDao = new WidgetTypeDAO();
+    	widgetTypeDao.setDataSource(dataSource);
     	ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
-    	showletTypeDao.setLangManager(langManager);
+    	widgetTypeDao.setLangManager(langManager);
     	Map<String, WidgetType> types = null;
 		try {
-			types = showletTypeDao.loadShowletTypes();
+			types = widgetTypeDao.loadWidgetTypes();
 		} catch (Throwable t) {
             throw t;
         }

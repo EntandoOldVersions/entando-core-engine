@@ -30,22 +30,42 @@ import com.agiletec.aps.util.ApsProperties;
 public interface IWidgetTypeManager {
 	
 	/**
+	 * @deprecated Use {@link #getWidgetType(String)} instead
+	 */
+	public WidgetType getShowletType(String code);
+
+	/**
 	 * Restituisce la definizione di un tipo di showlet in base al codice.
 	 * @param code Il codice univoco del tipo
 	 * @return La definizione del tipo di showlet
 	 */
-	public WidgetType getShowletType(String code);
+	public WidgetType getWidgetType(String code);
 	
+	/**
+	 * @deprecated Use {@link #getWidgetTypes()} instead
+	 */
+	public List<WidgetType> getShowletTypes();
+
 	/**
 	 * Restituisce la lista completa (ordinata per descrizione) dei tipi di showlet.
 	 * @return la lista completa delle showlet (ordinata per la descrizione del tipo) 
 	 * disponibili in oggetti WidgetType.
 	 */
-	public List<WidgetType> getShowletTypes();
+	public List<WidgetType> getWidgetTypes();
 	
+	/**
+	 * @deprecated Use {@link #addWidgetType(WidgetType)} instead
+	 */
 	public void addShowletType(WidgetType showletType) throws ApsSystemException;
+
+	public void addWidgetType(WidgetType widgetType) throws ApsSystemException;
 	
+	/**
+	 * @deprecated Use {@link #deleteWidgetType(String)} instead
+	 */
 	public void deleteShowletType(String showletTypeCode) throws ApsSystemException;
+
+	public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException;
 	
 	@Deprecated
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles) throws ApsSystemException;
@@ -53,6 +73,11 @@ public interface IWidgetTypeManager {
 	@Deprecated
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) throws ApsSystemException;
 
+	/**
+	 * @deprecated Use {@link #updateWidgetType(String,ApsProperties,ApsProperties,String)} instead
+	 */
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException;
+
+	public void updateWidgetType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException;
 	
 }

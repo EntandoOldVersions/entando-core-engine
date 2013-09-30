@@ -40,11 +40,11 @@
 			class="com.agiletec.apsadmin.portal.PageConfigAction" parent="abstractPortalAction">
 	</bean>
 	
-	<bean id="showletsViewerAction" scope="prototype" 
+	<bean id="widgetsViewerAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.WidgetsViewerAction" parent="abstractPortalAction">
 	</bean>
 	
-	<bean id="showletTypeAction" scope="prototype" 
+	<bean id="widgetTypeAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
 	</bean>
 	

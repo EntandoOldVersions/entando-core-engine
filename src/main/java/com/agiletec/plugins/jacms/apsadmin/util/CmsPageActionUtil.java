@@ -78,14 +78,14 @@ public class CmsPageActionUtil {
 	/**
 	 * Check whether the page can publish free content.
 	 * @param page The page to check.
-	 * @param viewerShowletCode The code of the viewer showlet (optional)
+	 * @param viewerShowletCode The code of the viewer widget (optional)
 	 * @return True if the page can publish free content, false else.
 	 */
 	public static boolean isFreeViewerPage(IPage page, String viewerShowletCode) {
 		try {
 			int mainFrame = page.getModel().getMainFrame();
 			if (mainFrame < 0) return false;
-			Widget viewer = page.getShowlets()[mainFrame];
+			Widget viewer = page.getWidgets()[mainFrame];
 			if (null == viewer) return false;
 			boolean isRightCode = null == viewerShowletCode || viewer.getType().getCode().equals(viewerShowletCode);
 			String actionName = viewer.getType().getAction();

@@ -90,10 +90,15 @@ public interface IPage extends ITreeNode {
 	public boolean isUseExtraTitles();
 	
 	/**
-	 * Return the showlets configured in this page.
-	 * @return all the showlets of the current page
+	 * @deprecated Use {@link #getWidgets()} instead
 	 */
 	public Widget[] getShowlets();
+
+	/**
+	 * Return the widgets configured in this page.
+	 * @return all the widgets of the current page
+	 */
+	public Widget[] getWidgets();
 	
 	/**
 	 * Return the mimetype configured for this page.
