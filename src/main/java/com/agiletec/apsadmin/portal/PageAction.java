@@ -34,10 +34,12 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseActionHelper;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
 
 /**
  * Main action for pages handling
@@ -227,21 +229,35 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	@Override
 	public String save() {
 		Logger log = ApsSystemUtils.getLogger();
+		IPage page = null;
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
-				IPage page = this.getUpdatedPage();
+				page = this.getUpdatedPage();
 				this.getPageManager().updatePage(page);
 				log.finest("Updating page " + page.getCode());
 			} else {
-				IPage page = this.buildNewPage();
+				page = this.buildNewPage();
 				this.getPageManager().addPage(page);
 				log.finest("Adding new page");
 			}
+			this.addActivityStreamInfo(page);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	protected void addActivityStreamInfo(IPage page) {
+		ActivityStreamInfo asi = new ActivityStreamInfo();
+		asi.setActionType(this.getStrutsAction());
+		asi.setObjectTitles(page.getTitles());
+		asi.setLinkActionName("edit");
+		asi.setLinkNamespace("/do/Page");
+		asi.addLinkParameter("selectedNode", page.getCode());
+		asi.setLinkAuthGroup(page.getGroup());
+		asi.setLinkAuthPermission(Permission.MANAGE_PAGES);
+		super.addActivityStreamInfo(asi);
 	}
 	
 	protected IPage buildNewPage() throws ApsSystemException {
