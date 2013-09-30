@@ -143,8 +143,8 @@
 			</url>
 		</shortcut>
 		<shortcut id="core.portal.showletType" requiredPermission="managePages" menusection="portal" source="core">
-			<description key="core.shortcut.portal.showletType.shortDesc" >Showlets</description><!-- key e corpo alternativo -->
-			<longdesc key="core.shortcut.portal.showletType.longDesc">
+			<description key="core.shortcut.portal.widgetType.shortDesc" >Showlets</description><!-- key e corpo alternativo -->
+			<longdesc key="core.shortcut.portal.widgetType.longDesc">
 				<![CDATA[Manage the Showlets. See what Showlets are installed, grouped by component or Plugin]]>
 			</longdesc>
 			<url>

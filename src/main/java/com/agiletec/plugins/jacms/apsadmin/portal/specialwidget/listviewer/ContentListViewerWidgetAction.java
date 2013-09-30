@@ -53,7 +53,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 		try {
 			if (null == this.getFieldErrors().get("contentType")) {
 				if (null == this.getContentManager().createContentType(this.getContentType())) {
-					this.addFieldError("contentType", this.getText("error.showlet.listViewer.invalidContentType", new String[]{this.getContentType()}));
+					this.addFieldError("contentType", this.getText("error.widget.listViewer.invalidContentType", new String[]{this.getContentType()}));
 				}
 			}
 			if (this.getActionErrors().size()>0 || this.getFieldErrors().size()>0) {
@@ -76,7 +76,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			String defaultTitle = this.getShowlet().getConfig().getProperty(defaultTitleParam);
 			if (defaultTitle == null || defaultTitle.length() == 0) {
 				String[] args = {defaultLang.getDescr()};
-				this.addFieldError(defaultTitleParam, this.getText("error.showlet.listViewer.defaultLangTitle.required", args));
+				this.addFieldError(defaultTitleParam, this.getText("error.widget.listViewer.defaultLangTitle.required", args));
 			}
 		}
 	}
@@ -87,14 +87,14 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 		String linkDescrParamPrefix = IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK_DESCR + "_";
 		if (existsPageLink || this.isMultilanguageParamValued(linkDescrParamPrefix)) {
 			if (!existsPageLink) {
-				this.addFieldError(IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK, this.getText("error.showlet.listViewer.pageLink.required"));
+				this.addFieldError(IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK, this.getText("error.widget.listViewer.pageLink.required"));
 			}
 			Lang defaultLang = this.getLangManager().getDefaultLang();
 			String defaultLinkDescrParam = linkDescrParamPrefix + defaultLang.getCode();
 			String defaultLinkDescr = this.getShowlet().getConfig().getProperty(defaultLinkDescrParam);
 			if (defaultLinkDescr == null || defaultLinkDescr.length() == 0) {
 				String[] args = {defaultLang.getDescr()};
-				this.addFieldError(defaultLinkDescrParam, this.getText("error.showlet.listViewer.defaultLangLink.required", args));
+				this.addFieldError(defaultLinkDescrParam, this.getText("error.widget.listViewer.defaultLangLink.required", args));
 			}
 		}
 	}
@@ -237,7 +237,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			}
 			Properties newUserFilter = this.createUserFilterProperties();
 			if (null == newUserFilter) {
-				this.addFieldError("userFilterKey", this.getText("error.showlet.listViewer.invalidUserFilter"));
+				this.addFieldError("userFilterKey", this.getText("error.widget.listViewer.invalidUserFilter"));
 				return INPUT;
 			}
 			List<Properties> userFiltersProperties = this.getUserFiltersProperties();

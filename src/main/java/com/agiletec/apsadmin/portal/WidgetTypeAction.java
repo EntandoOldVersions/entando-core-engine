@@ -164,11 +164,11 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	private String checkNewShowlet() throws Throwable {
 		WidgetType parentType = this.getWidgetTypeManager().getWidgetType(this.getParentShowletTypeCode());
 		if (null == parentType) {
-			this.addActionError(this.getText("error.showletType.invalid.null", new String[]{this.getParentShowletTypeCode()}));
+			this.addActionError(this.getText("error.widgetType.invalid.null", new String[]{this.getParentShowletTypeCode()}));
 			return "inputShowletTypes";
 		}
 		if (null == parentType.getTypeParameters() || parentType.getTypeParameters().isEmpty()) {
-			this.addActionError(this.getText("error.showletType.invalid.typeWithNoParameters", new String[]{this.getParentShowletTypeCode()}));
+			this.addActionError(this.getText("error.widgetType.invalid.typeWithNoParameters", new String[]{this.getParentShowletTypeCode()}));
 			return "inputShowletTypes";
 		}
 		return null;
@@ -195,7 +195,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 		}
 		Widget widget = widgets[this.getFramePos()];
 		if (null == widget) {
-			this.addActionError(this.getText("error.page.nullShowletOnFrame", 
+			this.addActionError(this.getText("error.page.nullWidgetOnFrame", 
 					new String[]{this.getPageCode(), this.getFramePos().toString()}));
 			return "inputShowletTypes";
 		}
@@ -256,7 +256,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	private String checkShowletType() {
 		WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
 		if (null == type) {
-			this.addActionError(this.getText("error.showletType.invalid.null", new String[]{this.getShowletTypeCode()}));
+			this.addActionError(this.getText("error.widgetType.invalid.null", new String[]{this.getShowletTypeCode()}));
 			return "inputShowletTypes";
 		}
 		return null;
@@ -293,12 +293,12 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			if (null != check) return check;
 			WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
 			if (type.isLocked()) {
-				this.addActionError(this.getText("error.showletType.locked.undeletable", new String[]{this.getShowletTypeCode()}));
+				this.addActionError(this.getText("error.widgetType.locked.undeletable", new String[]{this.getShowletTypeCode()}));
 				return "inputShowletTypes";
 			}
 			List<IPage> utilizers = this.getPageManager().getWidgetUtilizers(this.getShowletTypeCode());
 			if (null != utilizers && utilizers.size() > 0) {
-				this.addActionError(this.getText("error.showletType.used.undeletable", new String[]{this.getShowletTypeCode()}));
+				this.addActionError(this.getText("error.widgetType.used.undeletable", new String[]{this.getShowletTypeCode()}));
 				return "inputShowletTypes";
 			}
 		} catch (Throwable t) {

@@ -215,7 +215,7 @@ public class ApiServiceAction extends AbstractApiAction {
 			WidgetType type = (masterWidget.getType().isLogic()) ? masterWidget.getType().getParentType() : masterWidget.getType();
 			if (null == masterMethod.getRelatedShowlet()
 					|| !masterMethod.getRelatedShowlet().getShowletCode().equals(type.getCode())) {
-				this.addFieldError("framePos", this.getText("error.service.paste.invalidShowlet",
+				this.addFieldError("framePos", this.getText("error.service.paste.invalidWidget",
 						new String[]{masterWidget.getType().getCode(), masterMethod.getResourceName()}));
 				return INPUT;
 			}

@@ -16,7 +16,7 @@
 	<field name="dateValueType">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 1 && (dateValueType < 2 || dateValueType > 3))]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateValueType" />
+			<message key="error.widget.listViewer.filter.requiredDateValueType" />
 		</field-validator>
 	</field>
 	
@@ -24,7 +24,7 @@
 	<field name="dateValue">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 1 && dateValueType == 3 && dateValue == null)]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateValue" />
+			<message key="error.widget.listViewer.filter.requiredDateValue" />
 		</field-validator>
 	</field>
 	
@@ -36,7 +36,7 @@
 	<field name="dateStartType">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 2 && (dateStartType < 1 || dateStartType > 3))]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateStartType" />
+			<message key="error.widget.listViewer.filter.requiredDateStartType" />
 		</field-validator>
 	</field>
 	
@@ -44,7 +44,7 @@
 	<field name="dateStart">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 2 && dateStartType == 3 && dateStart == null)]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateStart" />
+			<message key="error.widget.listViewer.filter.requiredDateStart" />
 		</field-validator>
 	</field>
 	
@@ -52,7 +52,7 @@
 	<field name="dateEndType">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 2 && (dateEndType < 1 || dateEndType > 3))]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateEndType" />
+			<message key="error.widget.listViewer.filter.requiredDateEndType" />
 		</field-validator>
 	</field>
 	
@@ -60,12 +60,12 @@
 	<field name="dateEnd">
 		<field-validator type="fieldexpression" short-circuit="true">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 2 && dateEndType == 3 && dateEnd == null)]]></param>
-			<message key="error.showlet.listViewer.filter.requiredDateEnd" />
+			<message key="error.widget.listViewer.filter.requiredDateEnd" />
 		</field-validator>
 		<field-validator type="fieldexpression" short-circuit="true">
 			<param name="expression"><![CDATA[!(filterTypeId == 4 && filterOptionId == 2 && dateEndType == 3 && dateEnd != null 
 				&& dateStartType == 3 && dateStart != null && dateStart.after(dateEnd))]]></param>
-			<message key="error.showlet.listViewer.filter.dateStartAfterDateEnd" />
+			<message key="error.widget.listViewer.filter.dateStartAfterDateEnd" />
 		</field-validator>
 	</field>
 	

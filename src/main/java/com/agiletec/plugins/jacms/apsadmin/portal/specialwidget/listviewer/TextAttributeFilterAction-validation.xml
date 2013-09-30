@@ -14,7 +14,7 @@
 	<field name="stringValue">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 1 && filterOptionId == 1 && (stringValue == null || stringValue.trim().length() == 0))]]></param>
-			<message key="error.showlet.listViewer.filter.requiredStringValue" />
+			<message key="error.widget.listViewer.filter.requiredStringValue" />
 		</field-validator>
 	</field>
 	
@@ -23,7 +23,7 @@
 		<field-validator type="fieldexpression" short-circuit="true">
 			<param name="expression"><![CDATA[!(filterTypeId == 1 && filterOptionId == 2 && 
 					(stringStart == null || stringStart.trim().length() == 0) && (stringEnd == null || stringEnd.trim().length() == 0))]]></param>
-			<message key="error.showlet.listViewer.filter.requiredOneOfStringRange" />
+			<message key="error.widget.listViewer.filter.requiredOneOfStringRange" />
 		</field-validator>
 	</field>
 	

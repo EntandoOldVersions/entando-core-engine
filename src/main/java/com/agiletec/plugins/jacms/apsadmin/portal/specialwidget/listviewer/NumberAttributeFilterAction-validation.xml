@@ -14,7 +14,7 @@
 	<field name="numberValue">
 		<field-validator type="fieldexpression">
 			<param name="expression"><![CDATA[!(filterTypeId == 2 && filterOptionId == 1 && numberValue == null)]]></param>
-			<message key="error.showlet.listViewer.filter.requiredNumberValue" />
+			<message key="error.widget.listViewer.filter.requiredNumberValue" />
 		</field-validator>
 	</field>
 	

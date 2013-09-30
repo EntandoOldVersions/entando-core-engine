@@ -42,7 +42,7 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 			try {
 				Content publishingContent = this.getContentManager().loadContent(this.getContentId(), true);
 				if (null == publishingContent) {
-					this.addFieldError("contentId", this.getText("error.showlet.viewer.nullContent"));
+					this.addFieldError("contentId", this.getText("error.widget.viewer.nullContent"));
 				} else {
 					IPage currentPage = this.getCurrentPage();
 					if (!CmsPageActionUtil.isContentPublishableOnPage(publishingContent, currentPage)) {
@@ -51,7 +51,7 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 						if (null != currentPage.getExtraGroups()) {
 							pageGroups.addAll(currentPage.getExtraGroups());
 						}
-						this.addFieldError("contentId", this.getText("error.showlet.viewer.invalidContent", new String[]{pageGroups.toString()}));
+						this.addFieldError("contentId", this.getText("error.widget.viewer.invalidContent", new String[]{pageGroups.toString()}));
 					}
 				}
 			} catch (Throwable t) {

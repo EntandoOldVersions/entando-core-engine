@@ -81,14 +81,14 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			String result = this.checkBaseParams();
 			if (null != result) return result;
 			if (null != this.getShowletTypeCode() && this.getShowletTypeCode().length() == 0) {
-				this.addActionError(this.getText("error.page.showletTypeCodeUnknown"));
+				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
 			}
 			log.finest("code=" + this.getShowletTypeCode() + ", pageCode=" 
 					+ this.getPageCode() + ", frame=" + this.getFrame());
 			WidgetType widgetType = this.getShowletType(this.getShowletTypeCode());
 			if (null == widgetType) {
-				this.addActionError(this.getText("error.page.showletTypeCodeUnknown"));
+				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
 			}
 			if (null == widgetType.getConfig() && null != widgetType.getAction()) {
