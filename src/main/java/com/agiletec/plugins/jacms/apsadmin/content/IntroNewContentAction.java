@@ -2,9 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -22,8 +22,11 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
 
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import static com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction.buildContentOnSessionMarker;
+import static com.opensymphony.xwork2.Action.SUCCESS;
 
 /**
  * Action gestore delle operazioni di creazione nuovo contenuto.
@@ -38,9 +41,7 @@ public class IntroNewContentAction extends AbstractContentAction {
 	 * @return Il risultato dell'azione.
 	 */
 	public String openNew() {
-		//HttpServletRequest request = this.getRequest();
 		try {
-			//request.getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT);
 			this.setContentStatus(Content.STATUS_DRAFT);
 			if (this.getAuthorizationManager().isAuthOnGroup(this.getCurrentUser(), Group.FREE_GROUP_NAME)) {
 				this.setContentMainGroup(Group.FREE_GROUP_NAME);
@@ -57,7 +58,6 @@ public class IntroNewContentAction extends AbstractContentAction {
 	 * @return Il risultato dell'azione.
 	 */
 	public String createNewVoid() {
-		HttpServletRequest request = this.getRequest();
 		try {
 			Content prototype = this.getContentManager().createContentType(this.getContentTypeCode());
 			prototype.setDescr(this.getContentDescription());
@@ -65,7 +65,25 @@ public class IntroNewContentAction extends AbstractContentAction {
 			prototype.setMainGroup(this.getContentMainGroup());
 			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 			super.setContentOnSessionMarker(marker);
-			request.getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
+			ApsSystemUtils.getLogger().finest("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "createNewVoid");
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+	
+	public String createNew() {
+		try {
+			Content prototype = this.getContentManager().createContentType(this.getContentTypeCode());
+			if (null == prototype) {
+				this.addFieldError("contentTypeCode", this.getText("error.content.type.invalid"));
+				return INPUT;
+			}
+			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
+			super.setContentOnSessionMarker(marker);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
 			ApsSystemUtils.getLogger().finest("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createNewVoid");

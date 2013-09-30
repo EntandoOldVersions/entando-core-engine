@@ -2,9 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -34,6 +35,7 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.entity.EntityActionHelper;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
@@ -66,6 +68,13 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 	            	if (mainGroup != null) content.setMainGroup(mainGroup);
 	            }
 	            super.updateEntity(content, request);
+				String description = content.getDescr();
+				if (null == description || description.trim().length() == 0) {
+					ITextAttribute titleAttribute = (ITextAttribute) content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
+					if (null != titleAttribute && null != titleAttribute.getText() && titleAttribute.getText().trim().length() > 0) {
+						content.setDescr(titleAttribute.getText());
+					}
+				}
             }
         } catch (Throwable t) {
         	ApsSystemUtils.getLogger().throwing("ContentActionHelper", "updateContent", t);

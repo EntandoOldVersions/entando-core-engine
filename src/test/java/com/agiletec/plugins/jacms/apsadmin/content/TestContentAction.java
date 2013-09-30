@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -20,6 +19,8 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import java.util.List;
 import java.util.Map;
 
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
@@ -31,7 +32,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -487,14 +489,18 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, master);
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
+			this.addParameter("it_Titolo", "");
 			this.addParameter("descr", "");
 			String result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
-			assertEquals(1, fieldErrors.size());
+			assertEquals(2, fieldErrors.size());
+			assertEquals(1, fieldErrors.get("descr").size());
+			assertEquals(1, fieldErrors.get("it_Titolo").size());
 			
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
-			this.addParameter("descr", descr);
+			//this.addParameter("descr", descr);
+			this.addParameter("it_Titolo", descr);
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 		} catch (Throwable t) {

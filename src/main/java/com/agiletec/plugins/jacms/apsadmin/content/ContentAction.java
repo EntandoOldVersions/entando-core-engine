@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -31,12 +30,17 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.SelectItem;
+
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
+
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
+
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
+import static com.opensymphony.xwork2.Action.SUCCESS;
 
 /**
  * Action principale per la redazione contenuti.
@@ -98,6 +102,22 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	public String forwardToEntryContent() {
+		return SUCCESS;
+	}
+	
+	public String configureMainGroup() {
+		Content content = this.updateContentOnSession();
+		try {
+			if (null == content.getId() && null == content.getMainGroup()) {
+				String mainGroup = this.getRequest().getParameter("mainGroup");
+				if (mainGroup != null && null != this.getGroupManager().getGroup(mainGroup)) {
+					content.setMainGroup(mainGroup);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
+			return FAILURE;
+		}
 		return SUCCESS;
 	}
 	
@@ -170,7 +190,19 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	
 	@Override
 	public String saveAndContinue() {
-		this.updateContentOnSession();
+		try {
+			Content currentContent = this.updateContentOnSession();
+			if (null != currentContent) {
+				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
+					this.addFieldError("descr", this.getText("error.content.descr.required"));
+				} else {
+					this.getContentManager().saveContent(currentContent);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
+			return FAILURE;
+		}
 		return SUCCESS;
 	}
 	

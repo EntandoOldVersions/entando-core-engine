@@ -103,7 +103,21 @@
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
-        <action name="entryContent*" class="jacmsContentAction" method="forwardToEntryContent">
+        <action name="createNew" class="jacmsIntroNewContentAction" method="createNew">
+            <result name="input" type="tiles">admin.jacms.content.new</result>
+        	<result type="redirectAction">
+				<param name="actionName">entryContent</param>
+				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
+			</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+		<action name="entryContent*" class="jacmsContentAction" method="forwardToEntryContent">
+            <result type="tiles">admin.jacms.content.entry</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+		
+        <action name="configureMainGroup" class="jacmsContentAction" method="configureMainGroup">
             <result type="tiles">admin.jacms.content.entry</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
