@@ -50,7 +50,7 @@
 	<!-- ************** CONTENT TYPES ************** -->
 	
     <resource name="contentType" namespace="jacms">
-        <description>The rappresentation of the content type</description>
+        <description>The representation of the content type</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true">
             <description>Return a content type</description>
@@ -86,7 +86,7 @@
 	<!-- ************** CONTENTS ************** -->
     
     <resource name="content" namespace="jacms">
-        <description>The rappresentation of the content</description>
+        <description>The representation of the content</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true" canSpawnOthers="true">
             <description>Return a public content</description>
@@ -185,7 +185,7 @@
 	</resource>
 	
     <resource name="contentModel" namespace="jacms">
-        <description>The rappresentation of the content model</description>
+        <description>The representation of the content model</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true">
             <description>Return a content model</description>
@@ -221,7 +221,7 @@
 	<!-- ************** IMAGE RESOURCE ************** -->
     
     <resource name="image" namespace="jacms">
-        <description>The rappresentation of an image resource</description>
+        <description>The representation of an image resource</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true" canSpawnOthers="true">
             <description>Return an image resource</description>
@@ -277,7 +277,7 @@
 	<!-- ************** ATTACHMENT RESOURCE ************** -->
 	
     <resource name="attachment" namespace="jacms">
-        <description>The rappresentation of an attachment resource</description>
+        <description>The representation of an attachment resource</description>
         <source pluginCode="jacms">plugins</source>
         <method httpMethod="GET" active="true" canSpawnOthers="true">
             <description>Return an attachment resource</description>

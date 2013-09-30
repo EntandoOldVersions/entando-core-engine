@@ -6,3 +6,4 @@ nb-configuration.xml
 nbactions.xml
 .settings/*
 .DS_Store
+/target

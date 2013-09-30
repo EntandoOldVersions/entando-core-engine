@@ -26,7 +26,7 @@ import com.agiletec.aps.system.services.page.Widget;
  * solo la descrizione e la definizione dei "frames" disponibili. La
  * vera definizione del modello è in forma di jsp. Si assume che la jsp
  * associata abbia nome identico al codice del modello. I "frames" sono
- * le porzioni di pagina che possono ospitare una "showlet".
+ * le porzioni di pagina che possono ospitare un "widget".
  * @author M.Diana
  */
 public class PageModel implements Serializable {
@@ -98,19 +98,33 @@ public class PageModel implements Serializable {
 	}
 	
 	/**
-	 * Restituisce la configurazione delle showlet di default.
-	 * @return Le showlet di default.
+	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
 	public Widget[] getDefaultShowlet() {
-		return _defaultShowlet;
+		return getDefaultWidget();
 	}
 
 	/**
-	 * Setta la configurazione delle showlet di default.
-	 * @param defaultShowlet Le showlet di default.
+	 * Restituisce la configurazione dei widget di default.
+	 * @return Le showlet di default.
+	 */
+	public Widget[] getDefaultWidget() {
+		return _defaultWidget;
+	}
+
+	/**
+	 * @deprecated Use {@link #setDefaultWidget(Widget[])} instead
 	 */
 	public void setDefaultShowlet(Widget[] defaultShowlet) {
-		this._defaultShowlet = defaultShowlet;
+		setDefaultWidget(defaultShowlet);
+	}
+
+	/**
+	 * Setta la configurazione dei widget di default.
+	 * @param widgetShowlet Le showlet di default.
+	 */
+	public void setDefaultWidget(Widget[] widgetShowlet) {
+		this._defaultWidget = widgetShowlet;
 	}
 	
 	/**
@@ -152,9 +166,9 @@ public class PageModel implements Serializable {
 	private int _mainFrame = -1;
 	
 	/**
-	 * L'insieme delle showlet di default.
+	 * L'insieme dei widget di default.
 	 */
-	private Widget[] _defaultShowlet;
+	private Widget[] _defaultWidget;
 	
 	/**
 	 * The code of the plugin owner of page model.

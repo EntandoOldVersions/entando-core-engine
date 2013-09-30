@@ -120,7 +120,7 @@ public class SymbolicLinkErrorMessenger implements ISymbolicLinkErrorMessenger {
 	}
 	
 	/**
-	 * Metodo di servizio: verifica che la pagina abbia delle showlet configurate.
+	 * Metodo di servizio: verifica che la pagina abbia dei widget configurate.
 	 * Restituisce true nel caso tutti i frame siano vuoti, false in caso che 
 	 * anche un frame sia occupato da una showlet.
 	 * @param page La pagina da controllare.

@@ -133,7 +133,7 @@ public class SymbolicLinkValidator {
     }
     
     /**
-     * Metodo di servizio: verifica che la pagina abbia delle widget configurate.
+     * Metodo di servizio: verifica che la pagina abbia dei widget configurate.
      * Restituisce true nel caso tutti i frame siano vuoti, false in caso che 
      * anche un frame sia occupato da una widget.
      * @param page La pagina da controllare.

@@ -47,7 +47,7 @@ public class TestPageModelManager extends BaseTestCase {
 		String descr = pageModel.getDescr();
 		assertEquals(code, "home");
 		assertEquals(descr, "Modello home page");
-		Widget[] showlets = pageModel.getDefaultShowlet();
+		Widget[] showlets = pageModel.getDefaultWidget();
 		for (int i = 0; i < showlets.length; i++) {
 			Widget widget = showlets[i]; 
 			assertEquals(widget, null);
@@ -78,10 +78,10 @@ public class TestPageModelManager extends BaseTestCase {
 		PageModel model = this._pageModelManager.getPageModel("internal");
 		assertNotNull(model);
 		assertEquals(9, model.getFrames().length);
-		Widget[] defaultShowlets = model.getDefaultShowlet();
-		assertEquals(model.getFrames().length, defaultShowlets.length);
-		for (int i = 0; i < defaultShowlets.length; i++) {
-			Widget widget = defaultShowlets[i];
+		Widget[] defaultWidgets = model.getDefaultWidget();
+		assertEquals(model.getFrames().length, defaultWidgets.length);
+		for (int i = 0; i < defaultWidgets.length; i++) {
+			Widget widget = defaultWidgets[i];
 			if (i==3) {
 				assertNotNull(widget);
 				WidgetType type = widget.getType();

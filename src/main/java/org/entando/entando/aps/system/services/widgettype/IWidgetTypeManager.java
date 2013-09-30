@@ -48,7 +48,7 @@ public interface IWidgetTypeManager {
 
 	/**
 	 * Restituisce la lista completa (ordinata per descrizione) dei tipi di showlet.
-	 * @return la lista completa delle showlet (ordinata per la descrizione del tipo) 
+	 * @return la lista completa dei widget (ordinata per la descrizione del tipo) 
 	 * disponibili in oggetti WidgetType.
 	 */
 	public List<WidgetType> getWidgetTypes();

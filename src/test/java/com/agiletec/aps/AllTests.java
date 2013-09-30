@@ -21,6 +21,7 @@ import org.entando.entando.aps.system.services.api.TestApiCatalogManager;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
 import com.agiletec.aps.system.TestApplicationContext;
 import com.agiletec.aps.system.common.entity.TestEntityManager;
 import com.agiletec.aps.system.services.authorization.TestAuthorityManager;
@@ -51,16 +52,15 @@ import com.agiletec.aps.system.services.pagemodel.TestPageModelManager;
 import com.agiletec.aps.system.services.role.TestPermissionDAO;
 import com.agiletec.aps.system.services.role.TestRoleDAO;
 import com.agiletec.aps.system.services.role.TestRoleManager;
-import com.agiletec.aps.system.services.showlettype.TestWidgetTypeDAO;
-import com.agiletec.aps.system.services.showlettype.TestWidgetTypeDOM;
-import com.agiletec.aps.system.services.showlettype.TestWidgetTypeManager;
 import com.agiletec.aps.system.services.url.TestURLManager;
 import com.agiletec.aps.system.services.user.TestAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.TestUserDAO;
 import com.agiletec.aps.system.services.user.TestUserManager;
+import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
+import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
+import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
 import com.agiletec.aps.util.TestHtmlHandler;
-import org.entando.entando.aps.system.services.actionlogger.TestActionLoggerDAO;
-import org.entando.entando.aps.system.services.actionlogger.TestActionLoggerManager;
+
 import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 public class AllTests {

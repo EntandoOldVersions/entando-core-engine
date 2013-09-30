@@ -30,7 +30,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
 
 /**
  * Classe Action che cerca i contenuti per 
- * la configurazione delle showlet di tipo "Pubblica contenuto singolo".
+ * la configurazione dei widget di tipo "Pubblica contenuto singolo".
  * @author E.Santoboni
  */
 public class ContentFinderViewerAction extends ContentFinderAction implements IContentFinderViewerAction {

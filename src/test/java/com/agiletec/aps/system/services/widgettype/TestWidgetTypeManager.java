@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.aps.system.services.showlettype;
+package com.agiletec.aps.system.services.widgettype;
 
 import java.util.HashMap;
 import java.util.Iterator;

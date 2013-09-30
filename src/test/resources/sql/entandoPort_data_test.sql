@@ -123,11 +123,11 @@ INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('internal', 'In
 	</frame>
 	<frame pos="3">
 		<descr>First Column: Box 1</descr>
-		<defaultShowlet code="leftmenu">
+		<defaultWidget code="leftmenu">
 			<properties>
 				<property key="navSpec">code(homepage).subtree(1)</property>
 			</properties>
-		</defaultShowlet>
+		</defaultWidget>
 	</frame>
 	<frame pos="4">
 		<descr>First Column: Box 2</descr>

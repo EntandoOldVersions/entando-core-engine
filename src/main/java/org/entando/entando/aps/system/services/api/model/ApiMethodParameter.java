@@ -22,7 +22,7 @@ import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 import org.jdom.Element;
 
 /**
- * The rappresentation of an API parameter
+ * The representation of an API parameter
  * @author E.Santoboni
  */
 public class ApiMethodParameter implements Serializable {

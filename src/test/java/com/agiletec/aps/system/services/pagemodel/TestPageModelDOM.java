@@ -21,6 +21,7 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 
 /**
@@ -30,19 +31,22 @@ import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 public class TestPageModelDOM extends BaseTestCase {
 	
     public void testGetFrames() throws Throwable {
-		String framesXml = "<frames>" 
-				+ "<frame pos=\"0\"><descr>Box sinistra alto</descr></frame>"
-				+ "<frame pos=\"1\"><descr>Box sinistra basso</descr></frame>"
-				+ "<frame pos=\"2\" main=\"true\"><descr>Box centrale 1</descr></frame>"
-				+ "<frame pos=\"3\"><descr>Box centrale 2</descr></frame>"
-				+ "<frame pos=\"4\"><descr>Box destra alto</descr></frame>"
-				+ "<frame pos=\"5\"><descr>Box destra basso</descr></frame>"
-				+ "</frames>";
-		IWidgetTypeManager showletTypeManager = 
+		IWidgetTypeManager widgetTypeManager = 
         	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
-        PageModelDOM pageModelDOM = new PageModelDOM(framesXml, showletTypeManager);
+        PageModelDOM pageModelDOM = new PageModelDOM(FRAMES_XML, widgetTypeManager);
         String[] frames = pageModelDOM.getFrames();
         assertEquals(frames[0].equals("Box sinistra alto"), true);
-	}   
+        Widget[] defaultWidgets = pageModelDOM.getDefaultWidget();
+        assertEquals("content_viewer", defaultWidgets[1].getType().getCode());
+	} 
+    
+    public final static String FRAMES_XML = "<frames>" 
+			+ "<frame pos=\"0\"><descr>Box sinistra alto</descr></frame>"
+			+ "<frame pos=\"1\"><descr>Box sinistra basso</descr><defaultWidget code=\"content_viewer\" /></frame>"
+			+ "<frame pos=\"2\" main=\"true\"><descr>Box centrale 1</descr></frame>"
+			+ "<frame pos=\"3\"><descr>Box centrale 2</descr></frame>"
+			+ "<frame pos=\"4\"><descr>Box destra alto</descr></frame>"
+			+ "<frame pos=\"5\"><descr>Box destra basso</descr></frame>"
+			+ "</frames>";
 			
 }

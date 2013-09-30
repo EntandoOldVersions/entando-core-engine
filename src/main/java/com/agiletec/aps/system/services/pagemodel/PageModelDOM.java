@@ -42,12 +42,12 @@ public class PageModelDOM {
 	/**
 	 * Costruttore della classe.
 	 * @param xmlText La stringa xml da interpretare.
-	 * @param showletTypeManager Il manager gestore dei tipi di showlet.
+	 * @param widgetTypeManager Il manager gestore dei tipi di widget.
 	 * @throws ApsSystemException
 	 */
-	public PageModelDOM(String xmlText, IWidgetTypeManager showletTypeManager) throws ApsSystemException {
+	public PageModelDOM(String xmlText, IWidgetTypeManager widgetTypeManager) throws ApsSystemException {
 		this.decodeDOM(xmlText);
-		this.buildFrames(showletTypeManager);
+		this.buildFrames(widgetTypeManager);
 	}
 	
 	private void decodeDOM(String xmlText) throws ApsSystemException {
@@ -73,19 +73,19 @@ public class PageModelDOM {
 		return prop;
 	}
 	
-	private void buildFrames(IWidgetTypeManager showletTypeManager) throws ApsSystemException {
+	private void buildFrames(IWidgetTypeManager widgetTypeManager) throws ApsSystemException {
 		List<Element> frameElements = this._doc.getRootElement().getChildren(TAB_FRAME);
 		if (null != frameElements && frameElements.size() > 0) {
 			int framesNumber = frameElements.size();
 			_frames = new String[framesNumber];
-			_defaultShowlet = new Widget[framesNumber];
+			_defaultWidget = new Widget[framesNumber];
 			_existMainFrame = false;
 			Iterator<Element> frameElementsIter = frameElements.iterator();
 			while (frameElementsIter.hasNext()) {
 				Element frameElement = frameElementsIter.next();
 				int pos = Integer.parseInt(frameElement.getAttributeValue(ATTRIBUTE_POS));
 				if(pos >= framesNumber) {
-					throw new ApsSystemException("The position 'pos' exceeds the number of frames defined in the page model");
+					throw new ApsSystemException("The position '" + pos + "' exceeds the number of frames defined in the page model");
 				}
 				String main = frameElement.getAttributeValue(ATTRIBUTE_MAIN);
 				if (null != main && main.equals("true")) {
@@ -96,33 +96,33 @@ public class PageModelDOM {
 				if (null != frameDescrElement) {
 					_frames[pos] = frameDescrElement.getText();
 				}
-				Element defaultShowletElement = frameElement.getChild(TAB_DEFAULT_WIDGET);
-				if (null != defaultShowletElement) {
-					this.buildDefaultShowlet(defaultShowletElement, pos, showletTypeManager);
+				Element defaultWidgetElement = frameElement.getChild(TAB_DEFAULT_WIDGET);
+				if (null != defaultWidgetElement) {
+					this.buildDefaultWidget(defaultWidgetElement, pos, widgetTypeManager);
 				}
 			}
 		} else {
 			_frames = new String[0];
-			_defaultShowlet = new Widget[0];
+			_defaultWidget = new Widget[0];
 		}
 	}
 	
-	private void buildDefaultShowlet(Element defaultShowletElement, int pos, IWidgetTypeManager showletTypeManager) {
+	private void buildDefaultWidget(Element defaultWidgetElement, int pos, IWidgetTypeManager widgetTypeManager) {
 		Widget widget = new Widget();
-		String showletCode = defaultShowletElement.getAttributeValue(ATTRIBUTE_CODE);
-		WidgetType type = showletTypeManager.getWidgetType(showletCode);
+		String widgetCode = defaultWidgetElement.getAttributeValue(ATTRIBUTE_CODE);
+		WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
 		if (null == type) {
-			throw new RuntimeException("The code of the default showlet '" + showletCode + "' unknown");
+			throw new RuntimeException("The code of the default widget '" + widgetCode + "' unknown");
 		}
 		widget.setType(type);
-		Element propertiesElement = defaultShowletElement.getChild(TAB_PROPERTIES);
+		Element propertiesElement = defaultWidgetElement.getChild(TAB_PROPERTIES);
 		if (null != propertiesElement) {
 			ApsProperties prop = this.buildProperties(propertiesElement);
 			widget.setConfig(prop);
 		} else {
 			widget.setConfig(new ApsProperties());
 		}
-		_defaultShowlet[pos] = widget;
+		_defaultWidget[pos] = widget;
 	}
 	
 	/**
@@ -148,11 +148,18 @@ public class PageModelDOM {
 	}
 	
 	/**
-	 * Restituisce la configurazione delle showlet di default.
-	 * @return Le showlet di default.
+	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
 	public Widget[] getDefaultShowlet() {
-		return this._defaultShowlet;
+		return getDefaultWidget();
+	}
+
+	/**
+	 * Restituisce la configurazione dei widget di default.
+	 * @return Il widget di default.
+	 */
+	public Widget[] getDefaultWidget() {
+		return this._defaultWidget;
 	}
 	
 	private Document _doc;
@@ -160,7 +167,7 @@ public class PageModelDOM {
 	private final String ATTRIBUTE_POS = "pos";
 	private final String ATTRIBUTE_MAIN = "main";
 	private final String TAB_DESCR = "descr";
-	private final String TAB_DEFAULT_WIDGET = "defaultShowlet";
+	private final String TAB_DEFAULT_WIDGET = "defaultWidget";
 	private final String ATTRIBUTE_CODE = "code";
 	private final String TAB_PROPERTIES = "properties";
 	private final String TAB_PROPERTY = "property";
@@ -168,5 +175,5 @@ public class PageModelDOM {
 	private boolean _existMainFrame;
 	private int _mainFrame;
 	private String[] _frames;
-	private Widget[] _defaultShowlet;
+	private Widget[] _defaultWidget;
 }

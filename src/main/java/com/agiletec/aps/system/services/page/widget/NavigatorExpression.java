@@ -18,7 +18,7 @@
 package com.agiletec.aps.system.services.page.widget;
 
 /**
- * Oggetto di utilità per la configurazione delle showlet navigatore.
+ * Oggetto di utilità per la configurazione dei widget navigatore.
  * Ogni espressione in forma di stringa ha la forma:<br>
  * <code>page_spec</code><br>
  * oppure:<br>

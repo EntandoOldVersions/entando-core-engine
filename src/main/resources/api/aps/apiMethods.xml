@@ -87,7 +87,7 @@
 	<!-- *********** I18N Labels *********** -->
 	
 	<resource name="i18nlabel" namespace="core">
-		<description>The rappresentation of the i18n label resource</description>
+		<description>The representation of the i18n label resource</description>
         <source>core</source>
         <method httpMethod="GET" active="true">
             <description>Return an i18n label</description>
@@ -132,7 +132,7 @@
     </resource>
     
     <resource name="userProfileType" namespace="core">
-        <description>The rappresentation of the user profile type</description>
+        <description>The representation of the user profile type</description>
         <source>core</source>
         <method httpMethod="GET" active="true" requiredAuth="true">
             <description>Return an user profile type</description>
@@ -184,7 +184,7 @@
     </resource>
     
     <resource name="userProfile" namespace="core">
-        <description>The rappresentation of the user profile</description>
+        <description>The representation of the user profile</description>
         <source>core</source>
         <method httpMethod="GET" active="true">
             <description>Return a public user profile</description>

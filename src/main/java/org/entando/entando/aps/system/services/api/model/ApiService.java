@@ -20,7 +20,7 @@ import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
 
 /**
- * The rappresentation of a service
+ * The representation of a service
  * @author E.Santoboni
  */
 public class ApiService implements Serializable {

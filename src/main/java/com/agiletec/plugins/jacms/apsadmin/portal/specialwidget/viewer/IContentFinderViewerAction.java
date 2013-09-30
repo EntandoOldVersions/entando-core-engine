@@ -20,7 +20,7 @@ import com.agiletec.plugins.jacms.apsadmin.content.IContentFinderAction;
 
 /**
  * Interfaccia base per la classe Action che cerca i contenuti per 
- * la configurazione delle showlet di tipo "Pubblica contenuto singolo".
+ * la configurazione dei widget di tipo "Pubblica contenuto singolo".
  * @author E.Santoboni
  */
 public interface IContentFinderViewerAction extends IContentFinderAction {

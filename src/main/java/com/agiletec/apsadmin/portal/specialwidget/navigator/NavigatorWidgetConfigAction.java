@@ -28,7 +28,7 @@ import com.agiletec.aps.system.services.page.widget.NavigatorExpression;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 
 /**
- * Classe action per la gestione della configurazione delle showlet tipo Navigatore.
+ * Classe action per la gestione della configurazione dei widget tipo Navigatore.
  * @author E.Santoboni
  */
 public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implements INavigatorWidgetConfigAction {

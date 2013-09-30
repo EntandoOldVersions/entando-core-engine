@@ -79,7 +79,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 				PageModelDOM pageModelDOM = new PageModelDOM(xmlFrames, this.getWidgetTypeManager());
 				pageModel.setFrames(pageModelDOM.getFrames());
 				pageModel.setMainFrame(pageModelDOM.getMainFrame());
-				pageModel.setDefaultShowlet(pageModelDOM.getDefaultShowlet());
+				pageModel.setDefaultWidget(pageModelDOM.getDefaultWidget());
 			}
 			pageModel.setPluginCode(res.getString(4));
 		} catch (Throwable t) {
