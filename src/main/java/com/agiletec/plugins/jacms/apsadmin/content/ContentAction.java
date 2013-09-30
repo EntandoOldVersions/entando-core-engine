@@ -169,6 +169,12 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	@Override
+	public String saveAndContinue() {
+		this.updateContentOnSession();
+		return SUCCESS;
+	}
+	
+	@Override
 	public String saveContent() {
 		return this.saveContent(false);
 	}
