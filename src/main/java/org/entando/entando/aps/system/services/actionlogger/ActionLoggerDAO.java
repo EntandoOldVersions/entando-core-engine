@@ -20,16 +20,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
-import java.util.Arrays;
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfoDOM;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -37,7 +40,7 @@ import org.entando.entando.aps.system.services.actionlogger.model.IActionRecordS
 public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLoggerDAO {
 	
 	@Override
-	public void addActionRecord(ActionRecord actionRecord) {
+	public void addActionRecord(ActionLoggerRecord actionRecord) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -50,7 +53,13 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 			stat.setTimestamp(3, timestamp);
 			stat.setString(4, actionRecord.getNamespace());
 			stat.setString(5, actionRecord.getActionName());
-			stat.setString(6, actionRecord.getParams());
+			stat.setString(6, actionRecord.getParameters());
+			ActivityStreamInfo asi = actionRecord.getActivityStreamInfo();
+			if (null != asi) {
+				stat.setString(7, ActivityStreamInfoDOM.marshalInfo(asi));
+			} else {
+				stat.setNull(7, Types.VARCHAR);
+			}
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -62,7 +71,7 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	}
 	
 	@Override
-	public List<Integer> getActionRecords(IActionRecordSearchBean searchBean) {
+	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean) {
 		List<Integer> actionRecords = new ArrayList<Integer>();
 		try {
 			FieldSearchFilter[] filters = this.createFilters(searchBean);
@@ -79,7 +88,7 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 		return actionRecords;
 	}
 	
-	protected FieldSearchFilter[] createFilters(IActionRecordSearchBean searchBean) {
+	protected FieldSearchFilter[] createFilters(IActionLoggerRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = new FieldSearchFilter[0];
 		if (null != searchBean) {
 			String username = searchBean.getUsername();
@@ -120,27 +129,30 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	}
 	
 	@Override
-	public ActionRecord getActionRecord(int id) {
+	public ActionLoggerRecord getActionRecord(int id) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
-		ActionRecord actionRecord = null;
+		ActionLoggerRecord actionRecord = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(GET_ACTION_RECORD);
 			stat.setInt(1, id);
 			res = stat.executeQuery();
-			if (null != res) {
-				if (res.next()) {
-					actionRecord = new ActionRecord();
-					actionRecord.setId(id);
-					Timestamp timestamp = res.getTimestamp("actiondate");
-					actionRecord.setActionDate(new Date(timestamp.getTime()));
-					actionRecord.setActionName(res.getString("actionname"));
-					actionRecord.setNamespace(res.getString("namespace"));
-					actionRecord.setParams(res.getString("parameters"));
-					actionRecord.setUsername(res.getString("username"));
+			if (res.next()) {
+				actionRecord = new ActionLoggerRecord();
+				actionRecord.setId(id);
+				Timestamp timestamp = res.getTimestamp("actiondate");
+				actionRecord.setActionDate(new Date(timestamp.getTime()));
+				actionRecord.setActionName(res.getString("actionname"));
+				actionRecord.setNamespace(res.getString("namespace"));
+				actionRecord.setParameters(res.getString("parameters"));
+				actionRecord.setUsername(res.getString("username"));
+				String asiXml = res.getString("activitystreaminfo");
+				if (null != asiXml && asiXml.trim().length() > 0) {
+					ActivityStreamInfo asi = ActivityStreamInfoDOM.unmarshalInfo(asiXml);
+					actionRecord.setActivityStreamInfo(asi);
 				}
 			}
 			conn.commit();
@@ -193,11 +205,11 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	}
 	
 	private static final String ADD_ACTION_RECORD = 
-		"INSERT INTO actionloggerrecords ( id, username, actiondate, namespace, actionname, parameters ) " +
-		"VALUES (?, ?, ?, ?, ?, ?)";
+		"INSERT INTO actionloggerrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
+		"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 	
 	private static final String GET_ACTION_RECORD = 
-		"SELECT username, actiondate, namespace, actionname, parameters " +
+		"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo " +
 		"FROM actionloggerrecords " +
 		"WHERE id = ?";
 	

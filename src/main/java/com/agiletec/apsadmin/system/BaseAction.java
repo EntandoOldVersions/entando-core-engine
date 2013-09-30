@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin.system;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -34,6 +36,8 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -51,8 +55,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	protected boolean isCurrentUserMemberOf(String groupName) {
 		UserDetails currentUser = this.getCurrentUser();
 		IAuthorizationManager authManager = this.getAuthorizationManager();
-		boolean isAuth = authManager.isAuthOnGroup(currentUser, groupName) || authManager.isAuthOnGroup(currentUser, Group.ADMINS_GROUP_NAME);
-		return isAuth;
+		return authManager.isAuthOnGroup(currentUser, groupName) || authManager.isAuthOnGroup(currentUser, Group.ADMINS_GROUP_NAME);
 	}
 	
 	/**
@@ -64,8 +67,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	protected boolean hasCurrentUserPermission(String permissionName) {
 		UserDetails currentUser = this.getCurrentUser();
 		IAuthorizationManager authManager = this.getAuthorizationManager();
-		boolean isAuth = authManager.isAuthOnPermission(currentUser, permissionName) || authManager.isAuthOnPermission(currentUser, Permission.SUPERUSER);
-		return isAuth;
+		return authManager.isAuthOnPermission(currentUser, permissionName) || authManager.isAuthOnPermission(currentUser, Permission.SUPERUSER);
 	}
 	
 	protected UserDetails getCurrentUser() {
@@ -73,6 +75,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		return currentUser;
 	}
 	
+	@Override
 	public void setParameters(Map<String, String[]> params) {
 		this._params = params;
 	}
@@ -130,10 +133,29 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		return title;
 	}
 	
+	/**
+	 * Return the Activity informations (showable to the dashboard) joined to executed action.
+	 * this method has to be extended for custom action.
+	 * @return The Activity informations
+	 */
+	public List<ActivityStreamInfo> getActivityStreamInfos() {
+		return this._activityStreamInfos;
+	}
+	
+	protected void addActivityStreamInfo(ActivityStreamInfo asi) {
+		if (null == asi) {
+			return;
+		}
+		if (null == this._activityStreamInfos) {
+			this._activityStreamInfos = new ArrayList<ActivityStreamInfo>();
+		}
+		this._activityStreamInfos.add(asi);
+	}
+	
+	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this._request = request;
 	}
-	
 	protected HttpServletRequest getRequest() {
 		return _request;
 	}
@@ -166,5 +188,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	private Map<String, String[]> _params;
 	
 	public static final String USER_NOT_ALLOWED = "userNotAllowed";
+	
+	private List<ActivityStreamInfo> _activityStreamInfos;
 	
 }

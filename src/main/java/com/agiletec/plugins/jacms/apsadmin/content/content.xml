@@ -157,6 +157,7 @@
         <action name="save" class="jacmsContentAction" method="saveContent">
         	<result name="input" type="tiles">admin.jacms.content.entry</result>
             <result type="redirectAction">list</result>
+			<interceptor-ref name="entandoActionLogger" />
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         

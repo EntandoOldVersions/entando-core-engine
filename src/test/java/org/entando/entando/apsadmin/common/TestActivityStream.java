@@ -1,0 +1,183 @@
+/*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
+package org.entando.entando.apsadmin.common;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+
+import com.opensymphony.xwork2.Action;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.entando.entando.aps.system.services.actionlogger.ActionLoggerTestHelper;
+import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
+
+/**
+ * @author E.Santoboni
+ */
+public class TestActivityStream extends ApsAdminBaseTestCase {
+    
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.init();
+		this._helper.cleanRecords();
+	}
+	
+	public void testLogAddPage() throws Throwable {
+		String pageCode = "activity_stream_test_test";
+		try {
+			this.addPage(pageCode);
+			ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
+			assertEquals(1, ids.size());
+			ActionLoggerRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
+			assertEquals("/do/Page", record.getNamespace());
+			assertEquals("save", record.getActionName());
+			ActivityStreamInfo asi = record.getActivityStreamInfo();
+			assertNotNull(asi);
+			assertEquals(1, asi.getActionType());
+			assertEquals("edit", asi.getLinkActionName());
+			assertEquals("/do/Page", asi.getLinkNamespace());
+			Properties parameters = asi.getLinkParameters();
+			assertEquals(1, parameters.size());
+			assertEquals(pageCode, parameters.getProperty("selectedNode"));
+			
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._pageManager.deletePage(pageCode);
+		}
+	}
+	
+	private void addPage(String pageCode) throws Throwable {
+		assertNull(this._pageManager.getPage(pageCode));
+		try {
+			IPage root = this._pageManager.getRoot();
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("strutsAction", String.valueOf(ApsAdminSystemConstants.ADD));
+			params.put("parentPageCode", root.getCode());
+			List<Lang> langs = this._langManager.getLangs();
+			for (int i = 0; i < langs.size(); i++) {
+				Lang lang = langs.get(i);
+				params.put("lang" + lang.getCode(), "Page " + lang.getDescr());
+			}
+			params.put("model", "home");
+			params.put("group", Group.FREE_GROUP_NAME);
+			params.put("pageCode", pageCode);
+			String result = this.executeSave(params, "admin");
+			assertEquals(Action.SUCCESS, result);
+			IPage addedPage = this._pageManager.getPage(pageCode);
+			assertNotNull(addedPage);
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
+	
+	private String executeSave(Map<String, String> params, String username) throws Throwable {
+		this.setUserOnSession(username);
+		this.initAction("/do/Page", "save");
+		this.addParameters(params);
+		String result = this.executeAction();
+		return result;
+	}
+	
+	// ----------------------------------------------
+	
+	public void testSaveNewContent() throws Throwable {
+		Content content = this._contentManager.loadContent("ART1", false);
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
+		content.setId(null);
+		String contentId = null;
+		try {
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			String result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			
+			ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
+			assertEquals(1, ids.size());
+			ActionLoggerRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
+			assertEquals("/do/jacms/Content", record.getNamespace());
+			assertEquals("save", record.getActionName());
+			ActivityStreamInfo asi = record.getActivityStreamInfo();
+			assertNotNull(asi);
+			assertEquals(1, asi.getActionType());
+			assertEquals(Permission.CONTENT_EDITOR, asi.getLinkAuthPermission());
+			assertEquals(content.getMainGroup(), asi.getLinkAuthGroup());
+			assertEquals("edit", asi.getLinkActionName());
+			assertEquals("/do/jacms/Content", asi.getLinkNamespace());
+			//assertEquals(1, asi.getLinkParameters().size());
+			Properties parameters = asi.getLinkParameters();
+			assertEquals(1, parameters.size());
+			assertEquals(contentId, parameters.getProperty("contentId"));
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._contentManager.deleteContent(content);
+			assertNull(this._contentManager.loadContent(contentId, false));
+		}
+	}
+	
+	protected void initContentAction(String namespace, String name, String contentOnSessionMarker) throws Exception {
+		this.initAction(namespace, name);
+		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
+	}
+	
+	private void init() {
+		this._actionLoggerManager = (IActionLoggerManager) this.getService(SystemConstants.ACTION_LOGGER_MANAGER);
+		this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
+		this._langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
+		this._contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
+		this._helper = new ActionLoggerTestHelper(this.getApplicationContext());
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		this._helper.cleanRecords();
+		super.tearDown();
+	}
+	
+	private IActionLoggerManager _actionLoggerManager;
+	private IPageManager _pageManager = null;
+	private ILangManager _langManager = null;
+	private IContentManager _contentManager = null;
+	private ActionLoggerTestHelper _helper;
+	
+}

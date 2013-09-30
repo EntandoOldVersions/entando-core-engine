@@ -34,10 +34,12 @@ import com.agiletec.aps.system.services.page.Page;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseActionHelper;
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
 
 /**
  * Main action for pages handling
@@ -227,21 +229,35 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	@Override
 	public String save() {
 		Logger log = ApsSystemUtils.getLogger();
+		IPage page = null;
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
-				IPage page = this.getUpdatedPage();
+				page = this.getUpdatedPage();
 				this.getPageManager().updatePage(page);
 				log.finest("Updating page " + page.getCode());
 			} else {
-				IPage page = this.buildNewPage();
+				page = this.buildNewPage();
 				this.getPageManager().addPage(page);
 				log.finest("Adding new page");
 			}
+			this.addActivityStreamInfo(page);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	protected void addActivityStreamInfo(IPage page) {
+		ActivityStreamInfo asi = new ActivityStreamInfo();
+		asi.setActionType(this.getStrutsAction());
+		asi.setObjectTitles(page.getTitles());
+		asi.setLinkActionName("edit");
+		asi.setLinkNamespace("/do/Page");
+		asi.addLinkParameter("selectedNode", page.getCode());
+		asi.setLinkAuthGroup(page.getGroup());
+		asi.setLinkAuthPermission(Permission.MANAGE_PAGES);
+		super.addActivityStreamInfo(asi);
 	}
 	
 	protected IPage buildNewPage() throws ApsSystemException {
@@ -255,12 +271,12 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			page.setModel(pageModel);
 			if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 				IPage copyPage = this.getPageManager().getPage(this.getCopyPageCode());
-				page.setWidgets(copyPage.getWidgets());
+				page.setShowlets(copyPage.getShowlets());
 			} else {
 				if (this.isDefaultShowlet()) {
 					this.setDefaultShowlets(page);
 				} else {
-					page.setWidgets(new Widget[pageModel.getFrames().length]);
+					page.setShowlets(new Widget[pageModel.getFrames().length]);
 				}
 			}
 			page.setTitles(this.getTitles());
@@ -307,7 +323,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				//Ho cambiato modello e allora cancello tutte le showlets Precedenti
 				PageModel model = this.getPageModelManager().getPageModel(this.getModel());
 				page.setModel(model);
-				page.setWidgets(new Widget[model.getFrames().length]);
+				page.setShowlets(new Widget[model.getFrames().length]);
 			}
 			if (this.isDefaultShowlet()) {
 				this.setDefaultShowlets(page);
@@ -351,7 +367,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 					showlets[i] = defaultShowlet;
 				}
 			}
-			page.setWidgets(showlets);
+			page.setShowlets(showlets);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "setDefaultShowlets");
 			throw new ApsSystemException("Error setting default showlet to page '" + page.getCode() + "'", t);

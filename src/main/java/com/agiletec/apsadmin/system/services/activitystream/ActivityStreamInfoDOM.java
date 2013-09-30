@@ -1,0 +1,67 @@
+/*
+*
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+* This file is part of Entando Enterprise Edition software.
+* You can redistribute it and/or modify it
+* under the terms of the Entando's EULA
+* 
+* See the file License for the specific language governing permissions   
+* and limitations under the License
+* 
+* 
+* 
+* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+*
+*/
+package com.agiletec.apsadmin.system.services.activitystream;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
+
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+
+import javax.ws.rs.core.MediaType;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
+import org.entando.entando.aps.system.services.api.UnmarshalUtils;
+import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
+
+/**
+ * @author E.Santoboni
+ */
+public class ActivityStreamInfoDOM {
+	
+	public static String marshalInfo(ActivityStreamInfo activityStreamInfo) throws ApsSystemException {
+		StringWriter writer = new StringWriter();
+		try {
+			JAXBContext context = JAXBContext.newInstance(ActivityStreamInfo.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.marshal(activityStreamInfo, writer);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, ActivityStreamInfoDOM.class, "bindInfo", "Error binding object");
+			throw new ApsSystemException("Error binding object", t);
+		}
+		return writer.toString();
+	}
+	
+	public static ActivityStreamInfo unmarshalInfo(String xml) throws ApsSystemException {
+		ActivityStreamInfo bodyObject = null;
+		try {
+			JAXBContext context = JAXBContext.newInstance(ActivityStreamInfo.class);
+			Unmarshaller unmarshaller = context.createUnmarshaller();
+			ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes());
+			bodyObject = (ActivityStreamInfo) unmarshaller.unmarshal(is);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshalInfo");
+			throw new ApsSystemException("Error unmarshalling activity stream info config", t);
+		}
+		return bodyObject;
+	}
+	
+}

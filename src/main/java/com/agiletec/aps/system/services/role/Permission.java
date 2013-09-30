@@ -56,7 +56,8 @@ public class Permission implements Comparable, Serializable {
 	public void setDescription(String description) {
 		this._description = description;
 	}
-
+	
+	@Override
 	public int compareTo(Object permission) {
 		return this.getName().compareTo(((Permission)permission).getName());
 	}
@@ -74,14 +75,28 @@ public class Permission implements Comparable, Serializable {
 	 */
 	public static final String BACKOFFICE = "enterBackend";
 
+	public static final String CONTENT_EDITOR = "editContents";
+	public static final String CONTENT_SUPERVISOR = "validateContents";
+	
+	public static final String VIEW_USERS = "viewUsers";
+	public static final String MANAGE_USERS = "editUsers";
+	public static final String MANAGE_USER_PROFILES = "editUserProfile";
+	
+	public static final String MANAGE_RESOURCES = "manageResources";
+	public static final String MANAGE_PAGES = "managePages";
+	public static final String MANAGE_CATEGORIES = "manageCategories";
+	public static final String ENTER_BACKEND = "enterBackend";
+	
 	/**
 	 * Nome del permesso di Supervisore contenuto
+	 * @deprecated use CONTENT_SUPERVISOR
 	 */
-	public static final String SUPERVISOR = "validateContents";
-
+	public static final String SUPERVISOR = CONTENT_SUPERVISOR;
+	
 	/**
 	 * Nome del permesso di configurazione pagine portale
+	 * @deprecated user MANAGE_PAGES
 	 */
-	public static final String CONFIG = "managePages";
-
+	public static final String CONFIG = MANAGE_PAGES;
+	
 }

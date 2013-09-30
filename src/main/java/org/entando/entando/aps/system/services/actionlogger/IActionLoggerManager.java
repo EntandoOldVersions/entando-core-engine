@@ -19,40 +19,40 @@ package org.entando.entando.aps.system.services.actionlogger;
 import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
 
 /**
- * Interface for the service that manages the {@link ActionRecord}
- *
+ * Interface for the service that manages the {@link ActionLoggerRecord}
+ * @author E.Santoboni - S.Puddu
  */
 public interface IActionLoggerManager {
 	
 	/**
-	 * Load a list of {@link ActionRecord} codes that match the search criteria rapresented by the searchBean
+	 * Load a list of {@link ActionLoggerRecord} codes that match the search criteria rapresented by the searchBean
 	 * @param searchBean object containing the search criteria
 	 * @return a list of codes
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public List<Integer> getActionRecords(IActionRecordSearchBean searchBean) throws ApsSystemException;
+	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean) throws ApsSystemException;
 	
 	/**
-	 * Save a new {@link ActionRecord}
+	 * Save a new {@link ActionLoggerRecord}
 	 * @param actionRecord
 	 * @throws ApsSystemException
 	 */
-	public void addActionRecord(ActionRecord actionRecord) throws ApsSystemException;
+	public void addActionRecord(ActionLoggerRecord actionRecord) throws ApsSystemException;
 	
 	/**
-	 * Load a {@link ActionRecord}
+	 * Load a {@link ActionLoggerRecord}
 	 * @param id the code of the record to load
-	 * @return an {@link ActionRecord} 
+	 * @return an {@link ActionLoggerRecord} 
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public ActionRecord getActionRecord(int id) throws ApsSystemException;
+	public ActionLoggerRecord getActionRecord(int id) throws ApsSystemException;
 	
 	/**
-	 * Delete a {@link ActionRecord}
+	 * Delete a {@link ActionLoggerRecord}
 	 * @param id the code of the record to delete
 	 * @throws ApsSystemException if an error occurs
 	 */

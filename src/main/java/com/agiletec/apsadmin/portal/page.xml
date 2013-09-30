@@ -78,6 +78,7 @@
         <action name="save" class="pageAction" method="save">
             <result name="input" type="tiles">admin.Page.entry</result>
             <result type="chain">viewTree</result>
+			<interceptor-ref name="entandoActionLogger" />
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 		

@@ -62,6 +62,11 @@ public class ActionLoggerRecord {
 			canBeNull = true)
 	private String _parameters;
 	
+	@DatabaseField(columnName = "activitystreaminfo", 
+			dataType = DataType.LONG_STRING, 
+			canBeNull = true)
+	private String _activitystreaminfo;
+	
 	public static final String TABLE_NAME = "actionloggerrecords";
 	
 }
@@ -74,6 +79,7 @@ CREATE TABLE actionloggerrecords
   namespace character varying,
   actionname character varying(255),
   parameters character varying,
+  activitystreaminfo character varying,
   CONSTRAINT actionloggerrecords_pkey PRIMARY KEY (id)
 )
  */

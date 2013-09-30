@@ -27,20 +27,19 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
-
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
-
+import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
-import static com.opensymphony.xwork2.Action.SUCCESS;
+import java.util.Properties;
 
 /**
  * Action principale per la redazione contenuti.
@@ -102,22 +101,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	public String forwardToEntryContent() {
-		return SUCCESS;
-	}
-	
-	public String configureMainGroup() {
-		Content content = this.updateContentOnSession();
-		try {
-			if (null == content.getId() && null == content.getMainGroup()) {
-				String mainGroup = this.getRequest().getParameter("mainGroup");
-				if (mainGroup != null && null != this.getGroupManager().getGroup(mainGroup)) {
-					content.setMainGroup(mainGroup);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
-			return FAILURE;
-		}
 		return SUCCESS;
 	}
 	
@@ -189,24 +172,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	@Override
-	public String saveAndContinue() {
-		try {
-			Content currentContent = this.updateContentOnSession();
-			if (null != currentContent) {
-				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
-					this.addFieldError("descr", this.getText("error.content.descr.required"));
-				} else {
-					this.getContentManager().saveContent(currentContent);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	@Override
 	public String saveContent() {
 		return this.saveContent(false);
 	}
@@ -221,6 +186,10 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		try {
 			Content currentContent = this.getContent();
 			if (null != currentContent) {
+				int strutsAction = (null == currentContent.getId()) ? ApsAdminSystemConstants.ADD : ApsAdminSystemConstants.EDIT;
+				if (approve) {
+					strutsAction += 10;
+				}
 				if (!this.getContentActionHelper().isUserAllowed(currentContent, this.getCurrentUser())) {
 					log.info("Utente non abilitato al salvataggio del contenuto " + currentContent.getId());
 					return USER_NOT_ALLOWED;
@@ -231,6 +200,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				} else {
 					this.getContentManager().saveContent(currentContent);
 				}
+				this.addActivityStreamInfo(currentContent, strutsAction);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
 				log.info("Salvato contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
@@ -242,6 +212,21 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	protected void addActivityStreamInfo(Content content, int strutsAction) {
+		ActivityStreamInfo asi = new ActivityStreamInfo();
+		asi.setActionType(strutsAction);
+		Lang defaultLang = this.getLangManager().getDefaultLang();
+		Properties titles = new Properties();
+		titles.setProperty(defaultLang.getCode(), content.getDescr());
+		asi.setObjectTitles(titles);
+		asi.setLinkActionName("edit");
+		asi.setLinkNamespace("/do/jacms/Content");
+		asi.addLinkParameter("contentId", content.getId());
+		asi.setLinkAuthGroup(content.getMainGroup());
+		asi.setLinkAuthPermission(Permission.CONTENT_EDITOR);
+		super.addActivityStreamInfo(asi);
 	}
 	
 	@Override
