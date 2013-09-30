@@ -26,8 +26,8 @@ import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -43,30 +43,41 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		this._actionLoggerDAO = actionLoggerDAO;
 	}
 	
-	public void addActionRecord(ActionLoggerRecord actionRecord) {
+	public void addActionRecord(ActionLogRecord actionRecord) {
 		this._actionLoggerDAO.addActionRecord(actionRecord);
 	}
 	
 	public void cleanRecords() {
 		Connection conn = null;
-		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(CLEAN_RECORDS);
-			stat.executeUpdate();
+			this.deleteRecords(conn, DELETE_LOG_RECORD_RELATIONS);
+			this.deleteRecords(conn, DELETE_LOG_RECORDS);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			this.processDaoException(t, "Error cleaning actionRecords table", "cleanRecords");
+			processDaoException(t, "Error on delete records" , "cleanRecords");
 		} finally {
-			closeDaoResources(null, stat, conn);
+			closeConnection(conn);
 		}
 	}
 	
-	public ActionLoggerRecord createActionRecord(int id, String username, 
+	public void deleteRecords(Connection conn, String query) {
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(query);
+			stat.executeUpdate();
+		} catch (Throwable t) {
+			processDaoException(t, "Error on delete records", "deleteRecords");
+		} finally {
+			closeDaoResources(null, stat);
+		}
+	}
+	
+	public ActionLogRecord createActionRecord(int id, String username, 
 			String actionName, String namespace, Date date, String parameter) {
-		ActionLoggerRecord record = new ActionLoggerRecord();
+		ActionLogRecord record = new ActionLogRecord();
 		record.setId(id);
 		record.setUsername(username);
 		record.setActionName(actionName);
@@ -76,9 +87,9 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		return record;
 	}
 	
-	public ActionLoggerRecordSearchBean createSearchBean(String username, String actionName, 
+	public ActionLogRecordSearchBean createSearchBean(String username, String actionName, 
 			String namespace, String params, Date start, Date end) {
-		ActionLoggerRecordSearchBean searchBean = new ActionLoggerRecordSearchBean();
+		ActionLogRecordSearchBean searchBean = new ActionLogRecordSearchBean();
 		searchBean.setUsername(username);
 		searchBean.setActionName(actionName);
 		searchBean.setNamespace(namespace);
@@ -88,8 +99,10 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		return searchBean;
 	}
 	
-	private static final String CLEAN_RECORDS = 
-		"DELETE FROM actionloggerrecords";
+	private static final String DELETE_LOG_RECORDS = 
+		"DELETE from actionlogrecords";
+	private static final String DELETE_LOG_RECORD_RELATIONS = 
+		"DELETE from actionlogrelations";
 	
 	private IActionLoggerDAO _actionLoggerDAO;
 	

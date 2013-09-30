@@ -23,9 +23,10 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
+import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -38,11 +39,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 
 import org.entando.entando.aps.system.services.actionlogger.ActionLoggerTestHelper;
 import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -60,10 +64,10 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 		String pageCode = "activity_stream_test_test";
 		try {
 			this.addPage(pageCode);
-			ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
 			assertEquals(1, ids.size());
-			ActionLoggerRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
+			ActionLogRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
 			assertEquals("/do/Page", record.getNamespace());
 			assertEquals("save", record.getActionName());
 			ActivityStreamInfo asi = record.getActivityStreamInfo();
@@ -116,7 +120,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 	
 	// ----------------------------------------------
 	
-	public void testSaveNewContent() throws Throwable {
+	public void testSaveNewContent_1() throws Throwable {
 		Content content = this._contentManager.loadContent("ART1", false);
 		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
 		content.setId(null);
@@ -130,10 +134,16 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			contentId = content.getId();
 			assertNotNull(this._contentManager.loadContent(contentId, false));
 			
-			ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
 			assertEquals(1, ids.size());
-			ActionLoggerRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
+			
+			UserDetails currentUser = (UserDetails) super.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+			List<Integer> activityStream = this._actionLoggerManager.getActivityStream(currentUser);
+			assertEquals(activityStream.size(), ids.size());
+			assertEquals(activityStream.get(0), ids.get(0));
+			
+			ActionLogRecord record = this._actionLoggerManager.getActionRecord(ids.get(0));
 			assertEquals("/do/jacms/Content", record.getNamespace());
 			assertEquals("save", record.getActionName());
 			ActivityStreamInfo asi = record.getActivityStreamInfo();
@@ -147,6 +157,39 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			Properties parameters = asi.getLinkParameters();
 			assertEquals(1, parameters.size());
 			assertEquals(contentId, parameters.getProperty("contentId"));
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._contentManager.deleteContent(content);
+			assertNull(this._contentManager.loadContent(contentId, false));
+		}
+	}
+	
+	public void testSaveNewContent_2() throws Throwable {
+		Content content = this._contentManager.loadContent("EVN41", false);//"coach" group
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
+		content.setId(null);
+		String contentId = null;
+		try {
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			String result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			
+			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
+			assertEquals(1, ids.size());
+			
+			UserDetails editorCustomers = super.getUser("editorCustomers");
+			List<Integer> activityStreamCustomerUser = this._actionLoggerManager.getActivityStream(editorCustomers);
+			assertEquals(0, activityStreamCustomerUser.size());
+			
+			UserDetails editorCoach = super.getUser("editorCoach");
+			List<Integer> activityStreamCoachUser = this._actionLoggerManager.getActivityStream(editorCoach);
+			assertEquals(1, activityStreamCoachUser.size());
 		} catch (Throwable t) {
 			throw t;
 		} finally {

@@ -16,13 +16,12 @@
 */
 package org.entando.entando.aps.system.services.actionlogger.model;
 
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
 import java.util.Date;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLoggerRecord {
+public class ActionLogRecord {
 	
 	public void setId(int id) {
 		this._id = id;

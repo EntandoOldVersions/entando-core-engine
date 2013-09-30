@@ -31,13 +31,13 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.BaseAction;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
 
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 import org.entando.entando.aps.system.services.actionlogger.IActionLoggerManager;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -46,7 +46,7 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
-		ActionLoggerRecord actionRecord = null;
+		ActionLogRecord actionRecord = null;
 		String result = null;
 		try {
 			actionRecord = this.buildActionRecord(invocation);
@@ -62,7 +62,7 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 			} else {
 				for (int i = 0; i < asiList.size(); i++) {
 					ActivityStreamInfo asi = asiList.get(i);
-					ActionLoggerRecord clone = this.createClone(actionRecord);
+					ActionLogRecord clone = this.createClone(actionRecord);
 					clone.setActivityStreamInfo(asi);
 					this.getActionLoggerManager().addActionRecord(clone);
 				}
@@ -73,8 +73,8 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 		return result;
 	}
 	
-	private ActionLoggerRecord createClone(ActionLoggerRecord record) {
-		ActionLoggerRecord clone = new ActionLoggerRecord();
+	private ActionLogRecord createClone(ActionLogRecord record) {
+		ActionLogRecord clone = new ActionLogRecord();
 		clone.setActionDate(new Date());
 		clone.setActionName(record.getActionName());
 		clone.setId(-1);
@@ -89,8 +89,8 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 	 * @param invocation
 	 * @return an {@link ActionLoggerRecord} for the current action
 	 */
-	private ActionLoggerRecord buildActionRecord(ActionInvocation invocation) {
-		ActionLoggerRecord record = new ActionLoggerRecord();
+	private ActionLogRecord buildActionRecord(ActionInvocation invocation) {
+		ActionLogRecord record = new ActionLogRecord();
 		String username = this.getCurrentUsername();
 		String namespace = invocation.getProxy().getNamespace();
 		String actionName = invocation.getProxy().getActionName();

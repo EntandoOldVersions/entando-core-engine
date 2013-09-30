@@ -16,11 +16,6 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -33,13 +28,18 @@ import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 /**
  * Action principale per la redazione contenuti.
@@ -101,22 +101,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	public String forwardToEntryContent() {
-		return SUCCESS;
-	}
-	
-	public String configureMainGroup() {
-		Content content = this.updateContentOnSession();
-		try {
-			if (null == content.getId() && null == content.getMainGroup()) {
-				String mainGroup = this.getRequest().getParameter("mainGroup");
-				if (mainGroup != null && null != this.getGroupManager().getGroup(mainGroup)) {
-					content.setMainGroup(mainGroup);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
-			return FAILURE;
-		}
 		return SUCCESS;
 	}
 	
@@ -188,24 +172,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	@Override
-	public String saveAndContinue() {
-		try {
-			Content currentContent = this.updateContentOnSession();
-			if (null != currentContent) {
-				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
-					this.addFieldError("descr", this.getText("error.content.descr.required"));
-				} else {
-					this.getContentManager().saveContent(currentContent);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	@Override
 	public String saveContent() {
 		return this.saveContent(false);
 	}
@@ -260,6 +226,10 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		asi.addLinkParameter("contentId", content.getId());
 		asi.setLinkAuthGroup(content.getMainGroup());
 		asi.setLinkAuthPermission(Permission.CONTENT_EDITOR);
+		List<String> groupCodes = new ArrayList<String>();
+		groupCodes.add(content.getMainGroup());
+		groupCodes.addAll(content.getGroups());
+		asi.setGroups(groupCodes);
 		super.addActivityStreamInfo(asi);
 	}
 	

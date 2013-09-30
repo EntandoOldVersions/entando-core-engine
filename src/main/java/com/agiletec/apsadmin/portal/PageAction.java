@@ -39,7 +39,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseActionHelper;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
 
 /**
  * Main action for pages handling

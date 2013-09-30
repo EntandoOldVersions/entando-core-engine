@@ -14,11 +14,13 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.system.services.activitystream;
+package org.entando.entando.aps.system.services.actionlogger.model;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -26,7 +28,7 @@ import javax.xml.bind.annotation.XmlType;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "activityStreamInfo")
-@XmlType(propOrder = {"objectTitles", "objectTitleLabel", "actionType", 
+@XmlType(propOrder = {"objectTitles", "objectTitleLabel", "groups", "actionType", 
 	"linkNamespace", "linkActionName", "linkParameters", "linkAuthPermission", "linkAuthGroup"})
 public class ActivityStreamInfo {
 	
@@ -105,6 +107,15 @@ public class ActivityStreamInfo {
 		this._linkAuthGroup = linkAuthGroup;
 	}
 	
+	@XmlElement(name = "group", required = true)
+    @XmlElementWrapper(name = "groups")
+    public List<String> getGroups() {
+		return _groups;
+	}
+	public void setGroups(List<String> groups) {
+		this._groups = groups;
+	}
+	
 	private Properties _objectTitles;
 	private String _objectTitleLabel;
 	private int _actionType;
@@ -113,5 +124,7 @@ public class ActivityStreamInfo {
 	private Properties _linkParameters;
 	private String _linkAuthPermission;
 	private String _linkAuthGroup;
+	
+	private List<String> _groups;
 	
 }

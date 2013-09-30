@@ -25,10 +25,10 @@ import java.util.Date;
 /**
  * @author E.Santoboni
  */
-@DatabaseTable(tableName = ActionLoggerRecord.TABLE_NAME)
-public class ActionLoggerRecord {
+@DatabaseTable(tableName = ActionLogRecord.TABLE_NAME)
+public class ActionLogRecord {
 	
-	public ActionLoggerRecord() {}
+	public ActionLogRecord() {}
 	
 	@DatabaseField(columnName = "id", 
 			dataType = DataType.INTEGER, 
@@ -67,7 +67,7 @@ public class ActionLoggerRecord {
 			canBeNull = true)
 	private String _activitystreaminfo;
 	
-	public static final String TABLE_NAME = "actionloggerrecords";
+	public static final String TABLE_NAME = "actionlogrecords";
 	
 }
 /*
@@ -80,6 +80,6 @@ CREATE TABLE actionloggerrecords
   actionname character varying(255),
   parameters character varying,
   activitystreaminfo character varying,
-  CONSTRAINT actionloggerrecords_pkey PRIMARY KEY (id)
+  CONSTRAINT actionlogrecords_pkey PRIMARY KEY (id)
 )
  */
