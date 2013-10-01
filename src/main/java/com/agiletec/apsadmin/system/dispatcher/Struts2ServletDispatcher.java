@@ -70,7 +70,11 @@ public class Struts2ServletDispatcher extends HttpServlet implements StrutsStati
             request = prepareDispatcherAndWrapRequest(request, response);
             ActionMapping mapping;
             try {
+				String entandoActionName = EntandoActionUtils.extractEntandoActionName(request);
                 mapping = actionMapper.getMapping(request, dispatcher.getConfigurationManager());
+				if (null != entandoActionName) {
+					mapping.setName(entandoActionName);
+				}
             } catch (Exception ex) {
                 LOG.error("error getting ActionMapping", ex);
                 dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);

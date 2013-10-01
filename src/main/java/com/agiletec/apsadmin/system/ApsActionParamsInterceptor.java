@@ -42,28 +42,32 @@ public class ApsActionParamsInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		String apsParam = null;
+		String entandoActionName = null;
 		Enumeration params = request.getParameterNames();
         while (params.hasMoreElements()) {
         	String pname = (String) params.nextElement();
         	if (pname.startsWith("action:")) {
-        		apsParam = pname.substring("action:".length());
+        		entandoActionName = pname.substring("action:".length());
+        		break;
+        	}
+        	if (pname.startsWith("entandoaction:")) {
+        		entandoActionName = pname.substring("entandoaction:".length());
         		break;
         	}
         }
-        if (null != apsParam) {
-        	if (apsParam.endsWith(".x") || apsParam.endsWith(".y")) {
-            	apsParam =  apsParam.substring(0, apsParam.length()-2);
+        if (null != entandoActionName) {
+        	if (entandoActionName.endsWith(".x") || entandoActionName.endsWith(".y")) {
+            	entandoActionName = entandoActionName.substring(0, entandoActionName.length()-2);
             }
-        	if (apsParam.indexOf("?") >= 0 ) {
-        		this.createApsActionParam(apsParam, invocation);
+        	if (entandoActionName.indexOf("?") >= 0 ) {
+        		this.createApsActionParam(entandoActionName, invocation);
         	}
         }
         return invocation.invoke();
 	}
 	
-	private void createApsActionParam(String apsParam, ActionInvocation invocation) {
-		String[] blocks = apsParam.split("[?]");
+	private void createApsActionParam(String entandoActionName, ActionInvocation invocation) {
+		String[] blocks = entandoActionName.split("[?]");
 		if (blocks.length == 2) {
 			String paramBlock = blocks[1];
 			String[] params = paramBlock.split(";");

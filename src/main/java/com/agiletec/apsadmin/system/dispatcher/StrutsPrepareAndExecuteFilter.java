@@ -22,7 +22,6 @@ import javax.servlet.ServletException;
 
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.ng.ExecuteOperations;
-import org.apache.struts2.dispatcher.ng.PrepareOperations;
 import org.apache.struts2.dispatcher.ng.filter.FilterHostConfig;
 
 /**

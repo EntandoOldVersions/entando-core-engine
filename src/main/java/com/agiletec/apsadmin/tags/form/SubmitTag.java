@@ -17,16 +17,22 @@
 */
 package com.agiletec.apsadmin.tags.form;
 
-import javax.servlet.jsp.JspException;
-
 import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
 import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
+import com.agiletec.apsadmin.tags.util.Submit;
+
+import com.opensymphony.xwork2.util.ValueStack;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+
+import org.apache.struts2.components.Component;
 
 /**
  * This class extends the org.apache.struts2.views.jsp.ui.SubmitTag 
  * in order to handle auto-incrementing Tabindex 
  * @author E.Santoboni
- * @deprecated Use default struts2 s:submit tag
  */
 public class SubmitTag extends org.apache.struts2.views.jsp.ui.SubmitTag implements IAutoIndexingTag {
 	
@@ -38,6 +44,11 @@ public class SubmitTag extends org.apache.struts2.views.jsp.ui.SubmitTag impleme
 		}
 		return super.doStartTag();
 	}
+	
+	@Override
+    public Component getBean(ValueStack stack, HttpServletRequest request, HttpServletResponse response) {
+		return new Submit(stack, request, response);
+    }
 	
 	@Override
 	public String getCurrentIndex() {
