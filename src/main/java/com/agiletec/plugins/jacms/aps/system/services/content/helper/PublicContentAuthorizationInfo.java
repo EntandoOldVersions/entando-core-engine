@@ -93,7 +93,7 @@ public class PublicContentAuthorizationInfo implements Serializable {
 	 * Verifica i permessi dell'utente in accesso al contenuto.
 	 * Restituisce true se l'utente specificato è abilitato 
 	 * ad accedere al contenuto, false in caso contrario.
-	 * @param user L'utente di cui verificarne l'abilitazione.
+	 * @param userGroups I gruppi dell'utente di cui verificarne l'abilitazione.
 	 * @return true se l'utente specificato è abilitato ad accedere 
 	 * al contenuto, false in caso contrario.
 	 */

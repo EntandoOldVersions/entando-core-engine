@@ -24,13 +24,13 @@ import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 /**
- * Interface for the service that manages the {@link ActionLoggerRecord}
+ * Interface for the service that manages the {@link ActionLogRecord}
  * @author E.Santoboni - S.Puddu
  */
 public interface IActionLogManager {
 	
 	/**
-	 * Load a list of {@link ActionLoggerRecord} codes that match the search criteria rapresented by the searchBean
+	 * Load a list of {@link ActionLogRecord} codes that match the search criteria rapresented by the searchBean
 	 * @param searchBean object containing the search criteria
 	 * @return a list of codes
 	 * @throws ApsSystemException if an error occurs
@@ -38,22 +38,22 @@ public interface IActionLogManager {
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException;
 	
 	/**
-	 * Save a new {@link ActionLoggerRecord}
+	 * Save a new {@link ActionLogRecord}
 	 * @param actionRecord
 	 * @throws ApsSystemException
 	 */
 	public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException;
 	
 	/**
-	 * Load a {@link ActionLoggerRecord}
+	 * Load a {@link ActionLogRecord}
 	 * @param id the code of the record to load
-	 * @return an {@link ActionLoggerRecord} 
+	 * @return an {@link ActionLogRecord} 
 	 * @throws ApsSystemException if an error occurs
 	 */
 	public ActionLogRecord getActionRecord(int id) throws ApsSystemException;
 	
 	/**
-	 * Delete a {@link ActionLoggerRecord}
+	 * Delete a {@link ActionLogRecord}
 	 * @param id the code of the record to delete
 	 * @throws ApsSystemException if an error occurs
 	 */

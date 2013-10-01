@@ -100,14 +100,14 @@ public class ContentInfoTag extends AbstractObjectInfoTag {
 	
 	/**
 	 * Indicates if the record of the entity object must be returned.
-	 * @return
+	 * @return true if the record of the entity object must be returned
 	 */
 	protected boolean isRecord() {
 		return _record;
 	}
 	/**
 	 * Decide if the record of the entity object must be returned.
-	 * @param record
+	 * @param record true if the record of the entity object must be returned
 	 */
 	public void setRecord(boolean record) {
 		this._record = record;

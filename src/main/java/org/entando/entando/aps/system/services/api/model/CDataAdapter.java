@@ -23,11 +23,11 @@ public class CDataAdapter  {
 	
 	/**
 	 * Check whether a string is a CDATA string
-	 * @param s the string to check
-	 * @return
+	 * @param string the string to check
+	 * @return true if the given strings is a CDATA string
 	 */
-	public static boolean isCdata(String s) {
-		s = s.trim();
+	public static boolean isCdata(String string) {
+		String s = string.trim();
 		return (s.startsWith(CDATA_START) && s.endsWith(CDATA_STOP));
 	}
 	
@@ -35,24 +35,24 @@ public class CDataAdapter  {
 	 * Parse a CDATA String.
 	 * If is a CDATA, removes leading and trailing string
 	 * Otherwise does nothing
-	 * @param s the string to parse
+	 * @param string the string to parse
 	 * @return the parsed string
 	 */
-	public static String parse(String s)  {
-		if (isCdata(s)) {
-			StringBuilder sb = new StringBuilder(s.trim());
+	public static String parse(String string)  {
+		if (isCdata(string)) {
+			StringBuilder sb = new StringBuilder(string.trim());
 			sb.replace(0, CDATA_START.length(), "");
 			int stopIndex = sb.lastIndexOf(CDATA_STOP);
 			sb.replace(stopIndex, (stopIndex + CDATA_STOP.length()),"");
-			s = sb.toString();
+			string = sb.toString();
 		}
-		return s;
+		return string;
 	}
 	
 	/**
 	 * Add CDATA leading and trailing to a string if not already a CDATA
-	 * @param string
-	 * @return
+	 * @param string The string to add.
+	 * @return The new String
 	 */
 	public static String print(String string) {
 		if (isCdata(string)) {

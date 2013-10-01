@@ -46,7 +46,6 @@ public interface IContentActionHelper extends IEntityActionHelper {
 	 * deve essere necessariamente associato (ed il perchè) per salvaguardare le precedenti relazioni. 
 	 * @param content Il contenuto da analizzare.
 	 * @param action L'action da valorizzare con i messaggi di errore.
-	 * @return I messaggi di errore relativi alle eventuali referenziazioni errate.
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	public void scanReferences(Content content, ActionSupport action) throws ApsSystemException;

@@ -46,7 +46,7 @@ public class SymbolicLinkValidator {
      * In caso di link a pagina ed a contenuto controlla 
      * la validità dell'elemento referenziato.
      * @param symbLink Il link simbolico da verificare.
-     * @param Il contenuto corrente in fase di verifica.
+     * @param content Il contenuto corrente in fase di verifica.
      * @return Il codice di errore.
      */
     public String scan(SymbolicLink symbLink, Content content) {

@@ -39,13 +39,13 @@ public interface IContentModelDAO {
 	
 	/**
 	 * Rimuove un modello di contenuto dal db.
-	 * @param group Il modello di contenuto da rimuovere.
+	 * @param model Il modello di contenuto da rimuovere.
 	 */
 	public void deleteContentModel(ContentModel model);
 	
 	/**
 	 * Aggiorna un modello di contenuto nel db.
-	 * @param group Il modello di contenuto da aggiornare.
+	 * @param model Il modello di contenuto da aggiornare.
 	 */
 	public void updateContentModel(ContentModel model);
 	

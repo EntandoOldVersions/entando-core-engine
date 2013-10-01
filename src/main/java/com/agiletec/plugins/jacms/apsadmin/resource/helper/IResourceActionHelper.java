@@ -43,7 +43,7 @@ public interface IResourceActionHelper {
 	
 	/**
 	 * Return the map (indexed by the Key of the manager) of the list of the object that reference the given resource.
-	 * @param resourceId The resource.
+	 * @param resource The resource.
 	 * @param request The request
 	 * @return The References of the given resource.
 	 * @throws ApsSystemException In case of exception
