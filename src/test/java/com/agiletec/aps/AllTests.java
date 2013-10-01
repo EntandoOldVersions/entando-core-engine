@@ -20,9 +20,6 @@ package com.agiletec.aps;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.entando.entando.aps.system.services.api.TestApiCatalogManager;
-import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
-
 import com.agiletec.aps.system.TestApplicationContext;
 import com.agiletec.aps.system.common.entity.TestEntityManager;
 import com.agiletec.aps.system.services.authorization.TestAuthorityManager;
@@ -61,6 +58,11 @@ import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
 import com.agiletec.aps.util.TestHtmlHandler;
+
+import org.entando.entando.aps.system.services.actionlog.TestActionLogDAO;
+import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
+import org.entando.entando.aps.system.services.api.TestApiCatalogManager;
+import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 /**
  * @author W.Ambu
