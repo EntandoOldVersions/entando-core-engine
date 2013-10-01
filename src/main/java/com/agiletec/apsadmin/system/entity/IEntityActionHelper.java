@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -34,6 +35,28 @@ public interface IEntityActionHelper {
 	
 	public void scanEntity(IApsEntity currentEntity, ActionSupport action);
 	
+	/**
+	 * Return the entity (attribute) search filter.
+	 * @param entityFinderAction The finder action
+	 * @param prototype The entity prototype
+	 * @return the entity search filter.
+	 * @deprecated use getAttributeFilters(AbstractApsEntityFinderAction, IApsEntity)
+	 */
 	public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype);
+	
+	/**
+	 * Return the entity role search filter.
+	 * @param entityFinderAction The finder action
+	 * @return the search filter.
+	 */
+	public EntitySearchFilter[] getRoleFilters(AbstractApsEntityFinderAction entityFinderAction);
+	
+	/**
+	 * Return the entity attribute search filter.
+	 * @param entityFinderAction The finder action
+	 * @param prototype The entity prototype
+	 * @return the search filter.
+	 */
+	public EntitySearchFilter[] getAttributeFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype);
 	
 }

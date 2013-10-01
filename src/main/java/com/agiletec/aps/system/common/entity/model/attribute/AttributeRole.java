@@ -37,7 +37,9 @@ public class AttributeRole implements Serializable {
 	public AttributeRole clone() {
 		List<String> allowedTypes = new ArrayList<String>();
 		allowedTypes.addAll(this.getAllowedAttributeTypes());
-		return new AttributeRole(this.getName(), this.getDescription(), allowedTypes);
+		AttributeRole clone = new AttributeRole(this.getName(), this.getDescription(), allowedTypes);
+		clone.setFormFieldType(this.getFormFieldType());
+		return clone;
 	}
 	
 	public String getName() {
@@ -50,8 +52,18 @@ public class AttributeRole implements Serializable {
 		return _allowedAttributeTypes;
 	}
 	
+	public FormFieldTypes getFormFieldType() {
+		return _formFieldType;
+	}
+	public void setFormFieldType(FormFieldTypes formFieldType) {
+		this._formFieldType = formFieldType;
+	}
+	
 	private String _name;
 	private String _description;
 	private List<String> _allowedAttributeTypes;
+	private FormFieldTypes _formFieldType = FormFieldTypes.TEXT;
+	
+	public enum FormFieldTypes {TEXT, DATE, NUMBER, BOOLEAN}
 	
 }

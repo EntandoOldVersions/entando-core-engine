@@ -45,6 +45,7 @@ public class DefaultApsEntityFinderAction extends AbstractApsEntityFinderAction 
 		// Operation Not Supported
 	}
 	
+	@Override
 	protected IEntityManager getEntityManager() {
 		String entityManagerName = this.getEntityManagerName();
 		return (IEntityManager) this.getBeanFactory().getBean(entityManagerName);

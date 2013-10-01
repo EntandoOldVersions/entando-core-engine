@@ -13,10 +13,12 @@
         <xs:element ref="name"/>
         <xs:element ref="description"/>
         <xs:element ref="allowedTypes"/>
+        <xs:element minOccurs="0" ref="formFieldType"/>
       </xs:sequence>
     </xs:complexType>
   </xs:element>
   <xs:element name="name" type="xs:NMTOKEN"/>
   <xs:element name="description" type="xs:string"/>
   <xs:element name="allowedTypes" type="xs:string"/>
+  <xs:element name="formFieldType" type="xs:string"/>
 </xs:schema>

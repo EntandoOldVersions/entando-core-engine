@@ -62,8 +62,10 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         try {
             Integer withProfile = this.getWithProfile();
             List<String> profileSearchResult = super.getSearchResult();
-            if ((null != withProfile && withProfile.intValue() == WITH_PROFILE_CODE) || 
+            if (super.isAddedAttributeFilter() || 
+					(null != withProfile && withProfile.intValue() == WITH_PROFILE_CODE) || 
                     (null != super.getEntityTypeCode() && super.getEntityTypeCode().trim().length() > 0)) {
+				this.setWithProfile(WITH_PROFILE_CODE);
                 return profileSearchResult;
             }
             List<String> usernames = this.getUserManager().searchUsernames(this.getUsername());

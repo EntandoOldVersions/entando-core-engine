@@ -25,13 +25,11 @@ import com.opensymphony.xwork2.Action;
 
 import java.util.List;
 
-import org.entando.entando.apsadmin.user.UserProfileFinderAction;
-
 /**
  * @author f.deidda
  */
 public class TestUserProfileFinderAction extends ApsAdminBaseTestCase {
-
+	
     public void testSearchSuperUser() throws Throwable {
         try {
             this.setUserOnSession("admin");
@@ -101,13 +99,14 @@ public class TestUserProfileFinderAction extends ApsAdminBaseTestCase {
     }
     
     /*
-     * CAMPI TESTO
+	 * Filter by attribute
+	 * 
+     * Field Text
      * INPUT_FIELD: "<ATTRIBUTE_NAME>_textFieldName"
      * 
-     * CAMPI DATA
+     * Field DATA
      * START INPUT_FIELD: "<ATTRIBUTE_NAME>_dateStartFieldName"
      * END INPUT_FIELD: "<ATTRIBUTE_NAME>_dateEndFieldName"
-     * 
      */
     public void testFindByName() throws Throwable {
         try {
@@ -328,4 +327,37 @@ public class TestUserProfileFinderAction extends ApsAdminBaseTestCase {
         }
     }
     
+	/*
+	 * Filter by role
+	 * 
+     * Field Text
+     * INPUT_FIELD: "<ROLE_NAME>_textFieldName"
+     * 
+     * Field DATA
+     * START INPUT_FIELD: "<ROLE_NAME>_dateStartFieldName"
+     * END INPUT_FIELD: "<ROLE_NAME>_dateEndFieldName"
+     */
+    
+	public void testSearchByRole() throws Throwable {
+		String fullNameRole = SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME;
+		try {
+			this.setUserOnSession("admin");
+			this.initAction("/do/User", "search");
+			this.addParameter(fullNameRole + "_textFieldName", "se");
+			String result = this.executeAction();
+			UserProfileFinderAction action = (UserProfileFinderAction) this.getAction();
+			List<String> searchResult = action.getSearchResult();
+			assertEquals(Action.SUCCESS, result);
+			assertNotNull(searchResult);
+			String[] expected = {"editorCustomers", "mainEditor"};
+			assertEquals(expected.length, searchResult.size());
+			for (int i = 0; i < expected.length; i++) {
+				String expectedUsername = expected[i];
+				assertEquals(expectedUsername, searchResult.get(i));
+			}
+		} catch (Throwable t) {
+			throw t;
+		}
+	}
+	
 }

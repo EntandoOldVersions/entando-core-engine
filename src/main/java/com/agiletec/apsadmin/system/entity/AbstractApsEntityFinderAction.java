@@ -29,6 +29,7 @@ import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.apsadmin.system.BaseAction;
 
 /**
@@ -49,13 +50,17 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 	
 	protected void createBaseFilters() {
 		try {
+			int initSize = this.getFilters().length;
+			EntitySearchFilter[] roleFilters = this.getEntityActionHelper().getRoleFilters(this);
+			this.addFilters(roleFilters);
 			IApsEntity prototype = this.getEntityPrototype();
 			if (null != prototype) {
 				EntitySearchFilter filterToAdd = new EntitySearchFilter(IEntityManager.ENTITY_TYPE_CODE_FILTER_KEY, false, prototype.getTypeCode(), false);
 				this.addFilter(filterToAdd);
-				EntitySearchFilter[] filters = this.getEntityActionHelper().getSearchFilters(this, prototype);
+				EntitySearchFilter[] filters = this.getEntityActionHelper().getAttributeFilters(this, prototype);
 				this.addFilters(filters);
 			}
+			this.setAddedAttributeFilter(this.getFilters().length > initSize);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createBaseFilters");
 			throw new RuntimeException("Error while creating entity filters", t);
@@ -168,7 +173,9 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 	public List<AttributeInterface> getSearcheableAttributes() {
 		List<AttributeInterface> searcheableAttributes = new ArrayList<AttributeInterface>();
 		IApsEntity prototype = this.getEntityPrototype();
-		if (null == prototype) return searcheableAttributes;
+		if (null == prototype) {
+			return searcheableAttributes;
+		}
 		List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 		for (int i=0; i<contentAttributes.size(); i++) {
 			AttributeInterface attribute = contentAttributes.get(i);
@@ -177,6 +184,10 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			}
 		}
 		return searcheableAttributes;
+	}
+	
+	public List<AttributeRole> getAttributeRoles() {
+		return this.getEntityManager().getAttributeRoles();
 	}
 	
 	protected abstract IEntityManager getEntityManager();
@@ -195,6 +206,13 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 		this._entityTypeCode = entityTypeCode;
 	}
 	
+	protected boolean isAddedAttributeFilter() {
+		return _addedAttributeFilter;
+	}
+	protected void setAddedAttributeFilter(boolean addedAttributeFilter) {
+		this._addedAttributeFilter = addedAttributeFilter;
+	}
+	
 	protected IEntityActionHelper getEntityActionHelper() {
 		return _entityActionHelper;
 	}
@@ -211,6 +229,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 	
 	private String _entityId;
 	private String _entityTypeCode;
+	
+	private boolean _addedAttributeFilter;
 	
 	private IEntityActionHelper _entityActionHelper;
 	

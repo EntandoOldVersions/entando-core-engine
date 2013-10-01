@@ -40,7 +40,7 @@ public class AttributeDisablingCodesDOM extends AbstractAttributeSupportObjectDO
 	
 	@Override
 	protected String getSchemaFileName() {
-		return "attributeDisablingCodes-2.2.xsd";
+		return "attributeDisablingCodes-4.0.xsd";
 	}
 	
 	private Map<String, String> extractDisablingCodes(Document document) {

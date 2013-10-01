@@ -17,19 +17,13 @@
 */
 package com.agiletec.apsadmin.system.entity;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -39,7 +33,15 @@ import com.agiletec.apsadmin.system.BaseActionHelper;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AbstractAttributeManager;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AttributeManagerInterface;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
+
 import com.opensymphony.xwork2.ActionSupport;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -51,50 +53,52 @@ import org.springframework.beans.factory.BeanFactoryAware;
  */
 public class EntityActionHelper extends BaseActionHelper implements IEntityActionHelper, BeanFactoryAware {
     
-    public void updateEntity(IApsEntity currentEntity, HttpServletRequest request) {
-        try {
-            List<AttributeInterface> attributes = currentEntity.getAttributeList();
-            for (int i = 0; i < attributes.size(); i++) {
-                AttributeInterface attribute = attributes.get(i);
-                if (attribute.isActive()) {
-                    AttributeManagerInterface attributeManager = this.getManager(attribute);
-                    if (attributeManager != null) {
-                        attributeManager.updateEntityAttribute(attribute, request);
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateEntity");
-            throw new RuntimeException("Error updating Entity", t);
-        }
-    }
+	@Override
+	public void updateEntity(IApsEntity currentEntity, HttpServletRequest request) {
+		try {
+			List<AttributeInterface> attributes = currentEntity.getAttributeList();
+			for (int i = 0; i < attributes.size(); i++) {
+				AttributeInterface attribute = attributes.get(i);
+				if (attribute.isActive()) {
+					AttributeManagerInterface attributeManager = this.getManager(attribute);
+					if (attributeManager != null) {
+						attributeManager.updateEntityAttribute(attribute, request);
+					}
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateEntity");
+			throw new RuntimeException("Error updating Entity", t);
+		}
+	}
     
-    public void scanEntity(IApsEntity currentEntity, ActionSupport action) {
-        try {
-            List<AttributeInterface> attributes = currentEntity.getAttributeList();
-            for (int i = 0; i < attributes.size(); i++) {
-                AttributeInterface entityAttribute = attributes.get(i);
-                if (entityAttribute.isActive()) {
-                    List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer());
-                    if (null != errors && errors.size() > 0) {
-                        for (int j = 0; j < errors.size(); j++) {
-                            AttributeFieldError attributeFieldError = errors.get(j);
-                            AttributeTracer tracer = attributeFieldError.getTracer();
-                            AttributeInterface attribute = attributeFieldError.getAttribute();
-                            String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
-                            AttributeManagerInterface attributeManager = this.getManager(attribute);
-                            String errorMessage = attributeManager.getErrorMessage(attributeFieldError, action);
-                            String formFieldName = tracer.getFormFieldName(attributeFieldError.getAttribute());
-                            action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + errorMessage);
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "scanEntity");
-            throw new RuntimeException("Error scanning Entity", t);
-        }
-    }
+	@Override
+	public void scanEntity(IApsEntity currentEntity, ActionSupport action) {
+		try {
+			List<AttributeInterface> attributes = currentEntity.getAttributeList();
+			for (int i = 0; i < attributes.size(); i++) {
+				AttributeInterface entityAttribute = attributes.get(i);
+				if (entityAttribute.isActive()) {
+					List<AttributeFieldError> errors = entityAttribute.validate(new AttributeTracer());
+					if (null != errors && errors.size() > 0) {
+						for (int j = 0; j < errors.size(); j++) {
+							AttributeFieldError attributeFieldError = errors.get(j);
+							AttributeTracer tracer = attributeFieldError.getTracer();
+							AttributeInterface attribute = attributeFieldError.getAttribute();
+							String messageAttributePositionPrefix = this.createErrorMessageAttributePositionPrefix(action, attribute, tracer);
+							AttributeManagerInterface attributeManager = this.getManager(attribute);
+							String errorMessage = attributeManager.getErrorMessage(attributeFieldError, action);
+							String formFieldName = tracer.getFormFieldName(attributeFieldError.getAttribute());
+							action.addFieldError(formFieldName, messageAttributePositionPrefix + " " + errorMessage);
+						}
+					}
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "scanEntity");
+			throw new RuntimeException("Error scanning Entity", t);
+		}
+	}
     
     private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer) {
         if (tracer.isMonoListElement()) {
@@ -137,54 +141,103 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         return null;
     }
 	
-    public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
-        EntitySearchFilter[] filters = new EntitySearchFilter[0];
-        List<AttributeInterface> contentAttributes = prototype.getAttributeList();
-        for (int i = 0; i < contentAttributes.size(); i++) {
-            AttributeInterface attribute = contentAttributes.get(i);
-            if (attribute.isActive() && attribute.isSearcheable()) {
-                if (attribute instanceof ITextAttribute) {
-                    String insertedText = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_textFieldName");
-                    if (null != insertedText && insertedText.trim().length() > 0) {
-                        EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, insertedText.trim(), true);
-                        filters = this.addFilter(filters, filterToAdd);
-                    }
-                } else if (attribute instanceof DateAttribute) {
-                    Date dateStart = this.getDateSearchFormValue(entityFinderAction, attribute, "_dateStartFieldName", true);
-                    Date dateEnd = this.getDateSearchFormValue(entityFinderAction, attribute, "_dateEndFieldName", false);
-                    if (null != dateStart || null != dateEnd) {
-                        EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, dateStart, dateEnd);
-                        filters = this.addFilter(filters, filterToAdd);
-                    }
-                } else if (attribute instanceof BooleanAttribute) {
-                    String booleanValue = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_booleanFieldName");
-                    if (null != booleanValue && booleanValue.trim().length() > 0) {
-                        EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, booleanValue, false);
-                        filters = this.addFilter(filters, filterToAdd);
-                    }
-                } else if (attribute instanceof NumberAttribute) {
-                    BigDecimal numberStart = this.getNumberSearchFormValue(entityFinderAction, attribute, "_numberStartFieldName", true);
-                    BigDecimal numberEnd = this.getNumberSearchFormValue(entityFinderAction, attribute, "_numberEndFieldName", false);
-                    if (null != numberStart || null != numberEnd) {
-                        EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, numberStart, numberEnd);
-                        filters = this.addFilter(filters, filterToAdd);
-                    }
-                }
-            }
-        }
-        return filters;
-    }
-
+	@Override
+	@Deprecated
+	public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
+		return this.getAttributeFilters(entityFinderAction, prototype);
+	}
+	
+	@Override
+	public EntitySearchFilter[] getRoleFilters(AbstractApsEntityFinderAction entityFinderAction) {
+		EntitySearchFilter[] filters = new EntitySearchFilter[0];
+		List<AttributeRole> attributeRoles = entityFinderAction.getAttributeRoles();
+		if (null != attributeRoles) {
+			for (int i = 0; i < attributeRoles.size(); i++) {
+				AttributeRole attributeRole = attributeRoles.get(i);
+				if (AttributeRole.FormFieldTypes.TEXT.equals(attributeRole.getFormFieldType())) {
+					String insertedText = entityFinderAction.getSearchFormFieldValue(attributeRole.getName() + "_textFieldName");
+					if (null != insertedText && insertedText.trim().length() > 0) {
+						EntitySearchFilter filterToAdd = EntitySearchFilter.createRoleFilter(attributeRole.getName(), insertedText.trim(), true);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (AttributeRole.FormFieldTypes.DATE.equals(attributeRole.getFormFieldType())) {
+					Date dateStart = this.getDateSearchFormValue(entityFinderAction, attributeRole.getName(), "_dateStartFieldName", true);
+					Date dateEnd = this.getDateSearchFormValue(entityFinderAction, attributeRole.getName(), "_dateEndFieldName", false);
+					if (null != dateStart || null != dateEnd) {
+						EntitySearchFilter filterToAdd = EntitySearchFilter.createRoleFilter(attributeRole.getName(), dateStart, dateEnd);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (AttributeRole.FormFieldTypes.BOOLEAN.equals(attributeRole.getFormFieldType())) {
+					String booleanValue = entityFinderAction.getSearchFormFieldValue(attributeRole.getName() + "_booleanFieldName");
+					if (null != booleanValue && booleanValue.trim().length() > 0) {
+						EntitySearchFilter filterToAdd = EntitySearchFilter.createRoleFilter(attributeRole.getName(), booleanValue, false);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (AttributeRole.FormFieldTypes.NUMBER.equals(attributeRole.getFormFieldType())) {
+					BigDecimal numberStart = this.getNumberSearchFormValue(entityFinderAction, attributeRole.getName(), "_numberStartFieldName", true);
+					BigDecimal numberEnd = this.getNumberSearchFormValue(entityFinderAction, attributeRole.getName(), "_numberEndFieldName", false);
+					if (null != numberStart || null != numberEnd) {
+						EntitySearchFilter filterToAdd = EntitySearchFilter.createRoleFilter(attributeRole.getName(), numberStart, numberEnd);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				}
+			}
+		}
+		return filters;
+	}
+	
+	@Override
+	public EntitySearchFilter[] getAttributeFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
+		EntitySearchFilter[] filters = new EntitySearchFilter[0];
+		if (null == prototype) {
+			return filters;
+		}
+		List<AttributeInterface> contentAttributes = prototype.getAttributeList();
+		for (int i = 0; i < contentAttributes.size(); i++) {
+			AttributeInterface attribute = contentAttributes.get(i);
+			if (attribute.isActive() && attribute.isSearcheable()) {
+				if (attribute instanceof ITextAttribute) {
+					String insertedText = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_textFieldName");
+					if (null != insertedText && insertedText.trim().length() > 0) {
+						EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, insertedText.trim(), true);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (attribute instanceof DateAttribute) {
+					Date dateStart = this.getDateSearchFormValue(entityFinderAction, attribute.getName(), "_dateStartFieldName", true);
+					Date dateEnd = this.getDateSearchFormValue(entityFinderAction, attribute.getName(), "_dateEndFieldName", false);
+					if (null != dateStart || null != dateEnd) {
+						EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, dateStart, dateEnd);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (attribute instanceof BooleanAttribute) {
+					String booleanValue = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_booleanFieldName");
+					if (null != booleanValue && booleanValue.trim().length() > 0) {
+						EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, booleanValue, false);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				} else if (attribute instanceof NumberAttribute) {
+					BigDecimal numberStart = this.getNumberSearchFormValue(entityFinderAction, attribute.getName(), "_numberStartFieldName", true);
+					BigDecimal numberEnd = this.getNumberSearchFormValue(entityFinderAction, attribute.getName(), "_numberEndFieldName", false);
+					if (null != numberStart || null != numberEnd) {
+						EntitySearchFilter filterToAdd = new EntitySearchFilter(attribute.getName(), true, numberStart, numberEnd);
+						filters = this.addFilter(filters, filterToAdd);
+					}
+				}
+			}
+		}
+		return filters;
+	}
+	
     private Date getDateSearchFormValue(AbstractApsEntityFinderAction entityFinderAction,
-            AttributeInterface attribute, String dateFieldNameSuffix, boolean start) {
-        String inputFormName = attribute.getName() + dateFieldNameSuffix;
+            String fieldName, String dateFieldNameSuffix, boolean start) {
+        String inputFormName = fieldName + dateFieldNameSuffix;
         String insertedDate = entityFinderAction.getSearchFormFieldValue(inputFormName);
         Date date = null;
         if (insertedDate != null && insertedDate.trim().length() > 0) {
             if (CheckFormatUtil.isValidDate(insertedDate.trim())) {
                 date = DateConverter.parseDate(insertedDate.trim(), "dd/MM/yyyy");
             } else {
-                String[] args = {attribute.getName()};
+                String[] args = {fieldName};
                 if (start) {
                     entityFinderAction.addFieldError(inputFormName, entityFinderAction.getText("error.attribute.startDate.invalid", args));
                 } else {
@@ -196,15 +249,15 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
     }
 
     private BigDecimal getNumberSearchFormValue(AbstractApsEntityFinderAction entityFinderAction,
-            AttributeInterface attribute, String numberFieldNameSuffix, boolean start) {
-        String inputFormName = attribute.getName() + numberFieldNameSuffix;
+            String fieldName, String numberFieldNameSuffix, boolean start) {
+        String inputFormName = fieldName + numberFieldNameSuffix;
         String insertedNumberString = entityFinderAction.getSearchFormFieldValue(inputFormName);
         BigDecimal bigdecimal = null;
         if (insertedNumberString != null && insertedNumberString.trim().length() > 0) {
             if (CheckFormatUtil.isValidNumber(insertedNumberString.trim())) {
                 bigdecimal = new BigDecimal(Integer.parseInt(insertedNumberString.trim()));
             } else {
-                String[] args = {attribute.getName()};
+                String[] args = {fieldName};
                 if (start) {
                     entityFinderAction.addFieldError(inputFormName, entityFinderAction.getText("error.attribute.startNumber.invalid", args));
                 } else {
@@ -214,7 +267,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         }
         return bigdecimal;
     }
-
+	
     private EntitySearchFilter[] addFilter(EntitySearchFilter[] filters, EntitySearchFilter filterToAdd) {
         int len = filters.length;
         EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
@@ -224,30 +277,11 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         newFilters[len] = filterToAdd;
         return newFilters;
     }
-    /*
-    protected Map<String, AttributeManagerInterface> getAttributeManagers() {
-        return _attributeManagers;
-    }
-    public void setAttributeManagers(Map<String, AttributeManagerInterface> attributeManagers) {
-        this._attributeManagers = attributeManagers;
-    }
     
-    public void setExtraAttributeManagers(Map<String, AttributeManagerInterface> extraAttributeManagers) {
-        this.getAttributeManagers().putAll(extraAttributeManagers);
-    }
-    
-    private Map<String, AttributeManagerInterface> _attributeManagers;
-    */
-	/*
-	@Override
-	public void setBeanFactory(BeanFactory bf) throws BeansException {
-		throw new UnsupportedOperationException("Not supported yet.");
-	}
-	*/
-	
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
 	}
+	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this._beanFactory = beanFactory;
 	}

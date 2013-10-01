@@ -17,6 +17,9 @@
 */
 package com.agiletec.aps.system.common.entity.parse;
 
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
+import com.agiletec.aps.system.exception.ApsSystemException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +27,6 @@ import java.util.Map;
 
 import org.jdom.Document;
 import org.jdom.Element;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Dom class parser of Attribute Role definitions.
@@ -42,7 +42,7 @@ public class AttributeRoleDOM extends AbstractAttributeSupportObjectDOM {
 	
 	@Override
 	protected String getSchemaFileName() {
-		return "attributeRoles-2.2.xsd";
+		return "attributeRoles-4.0.xsd";
 	}
 	
 	private Map<String, AttributeRole> extractRoles(Document document) {
@@ -56,8 +56,13 @@ public class AttributeRoleDOM extends AbstractAttributeSupportObjectDOM {
 			String[] array = allowedTypesCSV.split(",");
 			List<String> allowedTypes = Arrays.asList(array);
 			AttributeRole role = new AttributeRole(name, description, allowedTypes);
+			String formFieldTypeText = roleElement.getChildText("formFieldType");
+			if (null != formFieldTypeText) {
+				role.setFormFieldType(Enum.valueOf(AttributeRole.FormFieldTypes.class, formFieldTypeText.toUpperCase()));
+			}
 			roles.put(name, role);
 		}
 		return roles;
 	}
+	
 }
