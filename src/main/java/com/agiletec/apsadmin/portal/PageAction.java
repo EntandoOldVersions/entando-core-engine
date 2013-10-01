@@ -240,32 +240,12 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				this.getPageManager().addPage(page);
 				log.finest("Adding new page");
 			}
-			this.addActivityStreamInfo(page);
+			this.addActivityStreamInfo(page, this.getStrutsAction(), true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
-	}
-	
-	protected void addActivityStreamInfo(IPage page) {
-		ActivityStreamInfo asi = new ActivityStreamInfo();
-		asi.setActionType(this.getStrutsAction());
-		asi.setObjectTitles(page.getTitles());
-		asi.setLinkActionName("edit");
-		asi.setLinkNamespace("/do/Page");
-		asi.addLinkParameter("selectedNode", page.getCode());
-		asi.setLinkAuthGroup(page.getGroup());
-		asi.setLinkAuthPermission(Permission.MANAGE_PAGES);
-		List<String> groups = new ArrayList<String>();
-		if (null != page.getExtraGroups()) {
-			groups.addAll(page.getExtraGroups());
-		}
-		if (!groups.contains(page.getGroup())) {
-			groups.add(page.getGroup());
-		}
-		asi.setGroups(groups);
-		super.addActivityStreamInfo(asi);
 	}
 	
 	protected IPage buildNewPage() throws ApsSystemException {
@@ -297,8 +277,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				}
 			}
 			if (null == page.getCode()) {
+				String defaultLangCode = this.getLangManager().getDefaultLang().getCode();
 				String pageCode = 
-					this.getHelper().buildCode(page.getTitle(this.getLangManager().getDefaultLang().getCode()), "page", 25);
+					this.getPageActionHelper().buildCode(page.getTitle(defaultLangCode), "page", 25);
 				page.setCode(pageCode);
 			}
 			String charset = this.getCharset();
@@ -391,7 +372,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				return check;
 			}
 			IPage currentPage = this.getPageManager().getPage(selectedNode);
-			Map references = this.getHelper().getReferencingObjects(currentPage, this.getRequest());
+			Map references = this.getPageActionHelper().getReferencingObjects(currentPage, this.getRequest());
 			if (references.size()>0) {
 				this.setReferences(references);
 				return "references";
@@ -412,7 +393,9 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			if (null != check) {
 				return check;
 			}
+			IPage pageToDelete = this.getPageManager().getPage(this.getNodeToBeDelete());
 			this.getPageManager().deletePage(this.getNodeToBeDelete());
+			this.addActivityStreamInfo(pageToDelete, ApsAdminSystemConstants.DELETE, false);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
@@ -439,12 +422,18 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		return null;
 	}
 	
+	protected void addActivityStreamInfo(IPage page, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = this.getPageActionHelper().createActivityStreamInfo(page, 
+				strutsAction, addLink, "edit");
+		super.addActivityStreamInfo(asi);
+	}
+	
 	/**
 	 * Return the list of allowed groups.
 	 * @return The list of allowed groups.
 	 */
 	public List<Group> getAllowedGroups() {
-		return this.getHelper().getAllowedGroups(this.getCurrentUser());
+		return this.getPageActionHelper().getAllowedGroups(this.getCurrentUser());
 	}
 	
 	/**
@@ -602,11 +591,19 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 		this._allowedMimeTypesCSV = allowedMimeTypesCSV;
 	}
 	
+	@Deprecated
 	protected IPageActionHelper getHelper() {
-		return _helper;
+		return this.getPageActionHelper();
 	}
+	@Deprecated
 	public void setHelper(IPageActionHelper helper) {
-		this._helper = helper;
+		this.setPageActionHelper(helper);
+	}
+	protected IPageActionHelper getPageActionHelper() {
+		return _pageActionHelper;
+	}
+	public void setPageActionHelper(IPageActionHelper pageActionHelper) {
+		this._pageActionHelper = pageActionHelper;
 	}
 	
 	protected IPageModelManager getPageModelManager() {
@@ -642,6 +639,6 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 	private String _allowedCharsetsCSV;
 	
 	private IPageModelManager _pageModelManager;
-	private IPageActionHelper _helper;
+	private IPageActionHelper _pageActionHelper;
 	
 }

@@ -17,17 +17,19 @@
 */
 package com.agiletec.apsadmin.portal.specialwidget;
 
-import java.util.List;
-import java.util.logging.Logger;
-
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 /**
  * This action class handles the configuration of the widgets with parameters.
@@ -92,14 +94,24 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 		try {
 			this.checkBaseParams();
 			this.createValuedShowlet();
+			IPage page = this.getPage(this.getPageCode());
+			int strutsAction = (null != page.getWidgets()[this.getFrame()]) ? ApsAdminSystemConstants.ADD : ApsAdminSystemConstants.EDIT;
 			this.getPageManager().joinWidget(this.getPageCode(), this.getWidget(), this.getFrame());
 			log.finest("Saving Widget - code = " + this.getWidget().getType().getCode() + 
 					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
+			this.addActivityStreamInfo(strutsAction, true);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return "configure";
+	}
+	
+	protected void addActivityStreamInfo(int strutsAction, boolean addLink) {
+		IPage page = this.getPage(this.getPageCode());
+		ActivityStreamInfo asi = super.getPageActionHelper()
+				.createConfigFrameActivityStreamInfo(page, this.getFrame(), strutsAction, true);
+		super.addActivityStreamInfo(asi);
 	}
 	
 	protected void createValuedShowlet() throws Exception {
@@ -159,10 +171,12 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	/**
 	 * @deprecated Use {@link #getWidget()} instead
 	 */
+	@Override
 	public Widget getShowlet() {
 		return getWidget();
 	}
-
+	
+	@Override
 	public Widget getWidget() {
 		return _showlet;
 	}
@@ -171,28 +185,23 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	}
 	@Deprecated
 	public String getShowletTypeCode() {
-		System.out.println("### getShowletTypeCode ###");
-		return _showletTypeCode;
+		return this.getWidgetTypeCode();
 	}
 	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
-		System.out.println("### setShowletTypeCode ###");
-		this._showletTypeCode = showletTypeCode;
+		this.setWidgetTypeCode(showletTypeCode);
 	}
 	
 	public String getWidgetTypeCode() {
 		return _widgetTypeCode;
 	}
-
 	public void setWidgetTypeCode(String widgetTypeCode) {
 		this._widgetTypeCode = widgetTypeCode;
 	}
-
-
+	
 	private String _pageCode;
 	private int _frame = -1;
-	@Deprecated
-	private String _showletTypeCode;
+	
 	private String _widgetTypeCode;
 	
 	private Widget _showlet;

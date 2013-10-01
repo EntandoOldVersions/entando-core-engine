@@ -26,22 +26,23 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.entity.EntityActionHelper;
-import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
 import com.opensymphony.xwork2.ActionSupport;
+import java.util.Properties;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Classe Helper della ContentAction.
@@ -68,13 +69,6 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 	            	if (mainGroup != null) content.setMainGroup(mainGroup);
 	            }
 	            super.updateEntity(content, request);
-				String description = content.getDescr();
-				if (null == description || description.trim().length() == 0) {
-					ITextAttribute titleAttribute = (ITextAttribute) content.getAttributeByRole(JacmsSystemConstants.ATTRIBUTE_ROLE_TITLE);
-					if (null != titleAttribute && null != titleAttribute.getText() && titleAttribute.getText().trim().length() > 0) {
-						content.setDescr(titleAttribute.getText());
-					}
-				}
             }
         } catch (Throwable t) {
         	ApsSystemUtils.getLogger().throwing("ContentActionHelper", "updateContent", t);
@@ -188,7 +182,6 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 	 * deve essere necessariamente associato (ed il perchè) per salvaguardare le precedenti relazioni. 
 	 * @param content Il contenuto da analizzare.
 	 * @param action L'action da valorizzare con i messaggi di errore.
-	 * @return I messaggi di errore relativi alle eventuali referenziazioni errate.
 	 * @throws ApsSystemException In caso di errore.
 	 */
 	@Override
@@ -223,6 +216,28 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 				}
 			}
 		}
+	}
+	
+	@Override
+	public ActivityStreamInfo createActivityStreamInfo(Content content, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = new ActivityStreamInfo();
+		asi.setActionType(strutsAction);
+		Lang defaultLang = this.getLangManager().getDefaultLang();
+		Properties titles = new Properties();
+		titles.setProperty(defaultLang.getCode(), content.getDescr());
+		asi.setObjectTitles(titles);
+		if (addLink) {
+			asi.setLinkNamespace("/do/jacms/Content");
+			asi.setLinkActionName("edit");
+			asi.addLinkParameter("contentId", content.getId());
+			asi.setLinkAuthGroup(content.getMainGroup());
+			asi.setLinkAuthPermission(Permission.CONTENT_EDITOR);
+		}
+		List<String> groupCodes = new ArrayList<String>();
+		groupCodes.add(content.getMainGroup());
+		groupCodes.addAll(content.getGroups());
+		asi.setGroups(groupCodes);
+		return asi;
 	}
 	
 	protected IContentManager getContentManager() {

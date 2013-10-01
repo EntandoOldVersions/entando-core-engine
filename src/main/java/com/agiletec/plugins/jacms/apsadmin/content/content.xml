@@ -50,12 +50,14 @@
         <action name="approveContentGroup" class="jacmsContentFinderAction" method="insertOnLine">
         	<result name="input" type="chain">list</result>
         	<result type="chain">list</result>
+        	<interceptor-ref name="entandoActionLogger" />
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">validateContents</param></interceptor-ref>
         </action>
         
         <action name="suspendContentGroup" class="jacmsContentFinderAction" method="removeOnLine">
         	<result name="input" type="chain">list</result>
         	<result type="chain">list</result>
+        	<interceptor-ref name="entandoActionLogger" />
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">validateContents</param></interceptor-ref>
         </action>
         
@@ -69,6 +71,7 @@
         <action name="deleteContentGroup" class="jacmsContentFinderAction" method="delete">
         	<result name="input" type="chain">list</result>
         	<result type="chain">list</result>
+        	<interceptor-ref name="entandoActionLogger" />
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>
         
@@ -177,6 +180,7 @@
         	<result name="input" type="tiles">admin.jacms.content.entry</result>
             <result name="references" type="tiles">admin.jacms.content.references</result>
             <result type="redirectAction">list</result>
+        	<interceptor-ref name="entandoActionLogger" />
         	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">validateContents</param></interceptor-ref>
         </action>
 		

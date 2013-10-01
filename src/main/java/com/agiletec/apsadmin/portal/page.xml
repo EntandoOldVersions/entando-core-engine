@@ -37,7 +37,8 @@
         
         <action name="delete" class="pageAction" method="delete">
         	<result type="chain">viewTree</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        	<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
         <action name="moveUp" class="pageTreeAction" method="moveUp">
@@ -109,7 +110,7 @@
         </action>
         
         <action name="editFrame" class="pageConfigAction" method="editFrame">
-        	<result name="configureSpecialShowlet" type="chain">
+        	<result name="configureSpecialWidget" type="chain">
         		<param name="namespace">/do/Page/SpecialWidget</param>
     			<param name="actionName">${showletAction}</param>
             </result>
@@ -119,12 +120,13 @@
         
         <action name="joinWidget" class="pageConfigAction" method="joinWidget">
         	<result name="input" type="tiles">admin.Page.editFrame</result>
-        	<result name="configureSpecialShowlet" type="chain">
+        	<result name="configureSpecialWidget" type="chain">
         		<param name="namespace">/do/Page/SpecialWidget</param>
-    			<param name="actionName">${showletAction}</param>
+    			<param name="actionName">${widgetAction}</param>
             </result>
         	<result type="tiles">admin.Page.configure</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        	<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
         <action name="trashWidgetFromPage" class="pageConfigAction" method="trashWidget">
@@ -134,7 +136,8 @@
         
         <action name="deleteWidgetFromPage" class="pageConfigAction" method="deleteWidget">
         	<result type="tiles">admin.Page.configure</result>
-        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        	<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
         
         <!-- ######### FINE OPERAZIONI CONFIGURAZIONE FRAME PAGINA ######### -->

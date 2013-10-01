@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -36,6 +35,7 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.system.BaseAction;
 
 /**
@@ -44,9 +44,14 @@ import com.agiletec.apsadmin.system.BaseAction;
  */
 public abstract class AbstractPortalAction extends BaseAction {
 	
+	@Deprecated
 	public List<List<SelectItem>> getShowletFlavours() {
+		return this.getWidgetFlavours();
+	}
+	
+	public List<List<SelectItem>> getWidgetFlavours() {
 		List<String> pluginCodes = new ArrayList<String>();
-		Map<String, List<SelectItem>> mapping = this.getShowletFlavoursMapping(pluginCodes);
+		Map<String, List<SelectItem>> mapping = this.getWidgetFlavoursMapping(pluginCodes);
 		List<List<SelectItem>> group = new ArrayList<List<SelectItem>>();
 		try {
 			this.addGroup(USER_WIDGETS_CODE, mapping, group);
@@ -63,27 +68,32 @@ public abstract class AbstractPortalAction extends BaseAction {
 		return group;
 	}
 	
+	@Deprecated
 	protected Map<String, List<SelectItem>> getShowletFlavoursMapping(List<String> pluginCodes) {
+		return this.getWidgetFlavoursMapping(pluginCodes);
+	}
+	
+	protected Map<String, List<SelectItem>> getWidgetFlavoursMapping(List<String> pluginCodes) {
 		Map<String, List<SelectItem>> mapping = new HashMap<String, List<SelectItem>>();
 		List<WidgetType> types = this.getWidgetTypeManager().getWidgetTypes();
 		for (int i = 0; i < types.size(); i++) {
 			WidgetType type = types.get(i);
 			String pluginCode = type.getPluginCode();
 			if (null != pluginCode && pluginCode.trim().length() > 0) {
-				//is a plugin's showlet
+				//is a plugin's widgets
 				if (!pluginCodes.contains(pluginCode)) {
 					pluginCodes.add(pluginCode);
 				}
-				this.addFlavourShowletType(pluginCode, type, mapping);
+				this.addFlavourWidgetType(pluginCode, type, mapping);
 			} else if (type.isUserType()) {
-				//is a user showlet
-				this.addFlavourShowletType(USER_WIDGETS_CODE, type, mapping);
+				//is a user widgets
+				this.addFlavourWidgetType(USER_WIDGETS_CODE, type, mapping);
 			} else {
-				//is a core showlet
-				if (this.getStockShowletCodes().contains(type.getCode())) {
-					this.addFlavourShowletType(STOCK_WIDGETS_CODE, type, mapping);
+				//is a core widgets
+				if (this.getStockWidgetCodes().contains(type.getCode())) {
+					this.addFlavourWidgetType(STOCK_WIDGETS_CODE, type, mapping);
 				} else {
-					this.addFlavourShowletType(CUSTOM_WIDGETS_CODE, type, mapping);
+					this.addFlavourWidgetType(CUSTOM_WIDGETS_CODE, type, mapping);
 				}
 			}
 		}
@@ -91,15 +101,20 @@ public abstract class AbstractPortalAction extends BaseAction {
 		return mapping;
 	}
 	
+	@Deprecated
 	protected void addFlavourShowletType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
-		List<SelectItem> showletTypes = mapping.get(mapCode);
-		if (null == showletTypes) {
-			showletTypes = new ArrayList<SelectItem>();
-			mapping.put(mapCode, showletTypes);
+		this.addFlavourWidgetType(mapCode, type, mapping);
+	}
+	
+	protected void addFlavourWidgetType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
+		List<SelectItem> widgetTypes = mapping.get(mapCode);
+		if (null == widgetTypes) {
+			widgetTypes = new ArrayList<SelectItem>();
+			mapping.put(mapCode, widgetTypes);
 		}
 		String title = super.getTitle(type.getCode(), type.getTitles());
 		SelectItem item = new SelectItem(type.getCode(), title, mapCode);
-		showletTypes.add(item);
+		widgetTypes.add(item);
 	}
 	
 	private void addGroup(String code, Map<String, List<SelectItem>> mapping, List<List<SelectItem>> group) {
@@ -215,11 +230,20 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._selectedNode = selectedNode;
 	}
 	
+	@Deprecated
 	protected String getStockShowletCodes() {
-		return _stockShowletCodes;
+		return this.getStockWidgetCodes();
 	}
+	@Deprecated
 	public void setStockShowletCodes(String stockShowletCodes) {
-		this._stockShowletCodes = stockShowletCodes;
+		this.setStockWidgetCodes(stockShowletCodes);
+	}
+	
+	protected String getStockWidgetCodes() {
+		return _stockWidgetCodes;
+	}
+	public void setStockWidgetCodes(String stockWidgetCodes) {
+		this._stockWidgetCodes = stockWidgetCodes;
 	}
 	
 	protected IPageManager getPageManager() {
@@ -236,6 +260,13 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._groupManager = groupManager;
 	}
 	
+	protected IPageActionHelper getPageActionHelper() {
+		return _pageActionHelper;
+	}
+	public void setPageActionHelper(IPageActionHelper pageActionHelper) {
+		this._pageActionHelper = pageActionHelper;
+	}
+	
 	protected IApiCatalogManager getApiCatalogManager() {
 		return _apiCatalogManager;
 	}
@@ -243,20 +274,21 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this._apiCatalogManager = apiCatalogManager;
 	}
 	
-	public IWidgetTypeManager getWidgetTypeManager() {
+	protected IWidgetTypeManager getWidgetTypeManager() {
 		return _widgetTypeManager;
 	}
-
 	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
 		this._widgetTypeManager = widgetTypeManager;
 	}
-
+	
 	private String _selectedNode;
 	
-	private String _stockShowletCodes;
+	private String _stockWidgetCodes;
 	
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;
+	
+	private IPageActionHelper _pageActionHelper;
 	
 	private IWidgetTypeManager _widgetTypeManager;
 	private IApiCatalogManager _apiCatalogManager;

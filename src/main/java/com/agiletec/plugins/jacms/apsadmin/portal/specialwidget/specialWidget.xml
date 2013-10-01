@@ -59,7 +59,8 @@
 
 		<action name="saveViewerConfig" class="jacmsContentViewerWidgetAction" method="save">
     		<result type="tiles" name="input">admin.jacms.page.widget.contentViewer.config</result>
-        	<interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        	<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 	</package>
@@ -127,6 +128,7 @@
 
 		<action name="saveListViewerConfig" class="jacmsContentListViewerWidgetAction" method="save">
         	<result name="input" type="tiles">admin.jacms.page.widget.contentListViewer.config</result>
+            <interceptor-ref name="entandoActionLogger" />
             <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 

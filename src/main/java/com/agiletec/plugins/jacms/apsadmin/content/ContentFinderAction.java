@@ -2,9 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -30,12 +30,14 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Action per la ricerca contenuti.
@@ -170,6 +172,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 				ApsSystemUtils.getLogger().info("Published content " + contentToPublish.getId() 
 						+ " by user " + this.getCurrentUser().getUsername());
 				publishedContents.add(contentToPublish);
+				this.addActivityStreamInfo(contentToPublish, (ApsAdminSystemConstants.ADD + 10), true);
 			}
 			// RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.publishedContents", publishedContents);
@@ -212,6 +215,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 				ApsSystemUtils.getLogger().info("Suspended Content '" + contentToSuspend.getId() 
 						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
 				removedContents.add(contentToSuspend);
+				this.addActivityStreamInfo(contentToSuspend, (ApsAdminSystemConstants.DELETE + 10), true);
 			}
 			// RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.suspendedContents", removedContents);
@@ -293,6 +297,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 				ApsSystemUtils.getLogger().info("Deleted Content '" + contentToDelete.getId() 
 						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
 				deletedContents.add(contentToDelete);
+				this.addActivityStreamInfo(contentToDelete, ApsAdminSystemConstants.DELETE, false);
 			}
 			//RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.deletedContents", deletedContents);
@@ -358,6 +363,11 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			items.add(item);
 		}
 		return items;
+	}
+	
+	protected void addActivityStreamInfo(Content content, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = this.getContentActionHelper().createActivityStreamInfo(content, strutsAction, addLink);
+		super.addActivityStreamInfo(asi);
 	}
 	
 	/**

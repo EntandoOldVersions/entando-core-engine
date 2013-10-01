@@ -16,10 +16,6 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -33,11 +29,22 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+
 /**
  * Action Astratta Base per la gestione contenuti.
  * @author E.Santoboni
  */
 public abstract class AbstractContentAction extends BaseAction {
+	
+	protected void addActivityStreamInfo(Content content, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = this.getContentActionHelper().createActivityStreamInfo(content, strutsAction, addLink);
+		super.addActivityStreamInfo(asi);
+	}
 	
 	/**
 	 * Restituisce il contenuto vo in base all'identificativo.

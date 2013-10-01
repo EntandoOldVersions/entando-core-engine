@@ -24,7 +24,8 @@
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
     	<action name="saveConfigSimpleParameter" class="simpleWidgetAction" method="save">
-    		<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+    		<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
     	<!-- ##### WIDGET WITH SIMPLE PARAMETERS **** END ##### -->
 
@@ -66,7 +67,8 @@
         </action>
 
 		<action name="saveNavigatorConfig" class="navigatorWidgetAction" method="save">
-    		<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+    		<interceptor-ref name="entandoActionLogger" />
+            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
 
 	</package>

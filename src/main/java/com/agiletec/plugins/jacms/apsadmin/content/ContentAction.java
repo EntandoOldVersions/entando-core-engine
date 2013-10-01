@@ -22,13 +22,10 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.services.content.ContentUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
@@ -38,7 +35,6 @@ import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 /**
@@ -101,22 +97,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	public String forwardToEntryContent() {
-		return SUCCESS;
-	}
-	
-	public String configureMainGroup() {
-		Content content = this.updateContentOnSession();
-		try {
-			if (null == content.getId() && null == content.getMainGroup()) {
-				String mainGroup = this.getRequest().getParameter("mainGroup");
-				if (mainGroup != null && null != this.getGroupManager().getGroup(mainGroup)) {
-					content.setMainGroup(mainGroup);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
-			return FAILURE;
-		}
 		return SUCCESS;
 	}
 	
@@ -188,24 +168,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 	
 	@Override
-	public String saveAndContinue() {
-		try {
-			Content currentContent = this.updateContentOnSession();
-			if (null != currentContent) {
-				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
-					this.addFieldError("descr", this.getText("error.content.descr.required"));
-				} else {
-					this.getContentManager().saveContent(currentContent);
-				}
-			}
-		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
-			return FAILURE;
-		}
-		return SUCCESS;
-	}
-	
-	@Override
 	public String saveContent() {
 		return this.saveContent(false);
 	}
@@ -234,7 +196,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				} else {
 					this.getContentManager().saveContent(currentContent);
 				}
-				this.addActivityStreamInfo(currentContent, strutsAction);
+				this.addActivityStreamInfo(currentContent, strutsAction, true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
 				log.info("Salvato contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
@@ -246,25 +208,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 			return FAILURE;
 		}
 		return SUCCESS;
-	}
-	
-	protected void addActivityStreamInfo(Content content, int strutsAction) {
-		ActivityStreamInfo asi = new ActivityStreamInfo();
-		asi.setActionType(strutsAction);
-		Lang defaultLang = this.getLangManager().getDefaultLang();
-		Properties titles = new Properties();
-		titles.setProperty(defaultLang.getCode(), content.getDescr());
-		asi.setObjectTitles(titles);
-		asi.setLinkActionName("edit");
-		asi.setLinkNamespace("/do/jacms/Content");
-		asi.addLinkParameter("contentId", content.getId());
-		asi.setLinkAuthGroup(content.getMainGroup());
-		asi.setLinkAuthPermission(Permission.CONTENT_EDITOR);
-		List<String> groupCodes = new ArrayList<String>();
-		groupCodes.add(content.getMainGroup());
-		groupCodes.addAll(content.getGroups());
-		asi.setGroups(groupCodes);
-		super.addActivityStreamInfo(asi);
 	}
 	
 	@Override
@@ -283,6 +226,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 					return "references";
 				}
 				this.getContentManager().removeOnLineContent(currentContent);
+				this.addActivityStreamInfo(currentContent, (ApsAdminSystemConstants.DELETE + 10), true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
 				log.info("Sospeso contenuto " + currentContent.getId() + 
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
@@ -293,7 +237,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-
+	
 	public int[] getLinkDestinations() {
 		return SymbolicLink.getDestinationTypes();
 	}

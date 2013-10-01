@@ -29,6 +29,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.ITreeNodeBaseActionHelper;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Interface for the helper classes handling the portal pages.
@@ -50,14 +51,6 @@ public interface IPageActionHelper extends ITreeNodeBaseActionHelper {
 	public ITreeNode getAllowedTreeRoot(UserDetails user, boolean alsoFreeViewPages) throws ApsSystemException;
 	
 	/**
-	 * Return the root node of the page tree respecting the given groups. 
-	 * @param groupCodes The groups list used when building the page tree.
-	 * @return The root of the page tree.
-	 * @throws ApsSystemException In case of error
-	 */
-	public ITreeNode getAllowedTreeRoot(Collection<String> groupCodes) throws ApsSystemException;
-	
-	/**
 	 * Return the root node of the page tree respecting the given permissions. 
 	 * @param groupCodes The groups list used when building the page tree.
 	 * @param alsoFreeViewPages Indicate if include also only free view pages
@@ -65,5 +58,9 @@ public interface IPageActionHelper extends ITreeNodeBaseActionHelper {
 	 * @throws ApsSystemException In case of error
 	 */
 	public ITreeNode getAllowedTreeRoot(Collection<String> groupCodes, boolean alsoFreeViewPages) throws ApsSystemException;
+	
+	public ActivityStreamInfo createActivityStreamInfo(IPage page, int strutsAction, boolean addLink, String entryAction);
+	
+	public ActivityStreamInfo createConfigFrameActivityStreamInfo(IPage page, int framePos, int strutsAction, boolean addLink);
 	
 }

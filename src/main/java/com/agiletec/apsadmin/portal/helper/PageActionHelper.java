@@ -36,10 +36,13 @@ import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.aps.system.services.page.PageUtilizer;
+import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.apsadmin.system.TreeNodeBaseActionHelper;
+
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Classe Helper per la gestione pagine.
@@ -195,6 +198,48 @@ public class PageActionHelper extends TreeNodeBaseActionHelper implements IPageA
 	@Override
 	protected ITreeNode getRoot() {
 		return (ITreeNode) this.getPageManager().getRoot();
+	}
+	
+	@Override
+	public ActivityStreamInfo createActivityStreamInfo(IPage page, 
+			int strutsAction, boolean addLink, String entryPageAction) {
+		ActivityStreamInfo asi = this.createBaseActivityStreamInfo(page, strutsAction, addLink);
+		if (addLink) {
+			asi.setLinkNamespace("/do/Page");
+			asi.setLinkActionName(entryPageAction);
+			asi.addLinkParameter("selectedNode", page.getCode());
+		}
+		return asi;
+	}
+	
+	@Override
+	public ActivityStreamInfo createConfigFrameActivityStreamInfo(IPage page, 
+			int framePos, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = this.createBaseActivityStreamInfo(page, strutsAction, addLink);
+		if (addLink) {
+			asi.setLinkNamespace("/do/Page");
+			asi.setLinkActionName("editFrame");
+			asi.addLinkParameter("pageCode", page.getCode());
+			asi.addLinkParameter("frame", String.valueOf(framePos));
+		}
+		return asi;
+	}
+	
+	private ActivityStreamInfo createBaseActivityStreamInfo(IPage page, int strutsAction, boolean addLink) {
+		ActivityStreamInfo asi = new ActivityStreamInfo();
+		asi.setActionType(strutsAction);
+		asi.setObjectTitles(page.getTitles());
+		List<String> groupCodes = new ArrayList<String>();
+		groupCodes.add(page.getGroup());
+		if (null != page.getExtraGroups()) {
+			groupCodes.addAll(page.getExtraGroups());
+		}
+		asi.setGroups(groupCodes);
+		if (addLink) {
+			asi.setLinkAuthGroup(page.getGroup());
+			asi.setLinkAuthPermission(Permission.MANAGE_PAGES);
+		}
+		return asi;
 	}
 	
 	protected IPageManager getPageManager() {

@@ -63,7 +63,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, this.getAction().getActionErrors().size());
 		
 		result = this.executeEditFrame("coach_page", 2, "pageManagerCoach");
-		assertEquals("configureSpecialShowlet", result);
+		assertEquals("configureSpecialWidget", result);
 		assertEquals(0, this.getAction().getActionErrors().size());
 		
 		result = this.executeEditFrame("contentview", 2, "pageManagerCoach");//user not allowed
@@ -71,7 +71,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		assertEquals(1, this.getAction().getActionErrors().size());
 		
 		result = this.executeEditFrame("contentview", 2, "admin");
-		assertEquals("configureSpecialShowlet", result);
+		assertEquals("configureSpecialWidget", result);
 		assertEquals(0, this.getAction().getActionErrors().size());
 		
 		result = this.executeEditFrame("contentview", 1, "admin");
@@ -94,7 +94,7 @@ public class TestPageConfigAction extends ApsAdminBaseTestCase {
 		try {
 			assertNull(pagina_1.getWidgets()[frame]);
 			String result = this.executeJoinShowlet(pageCode, frame, "content_viewer", "admin");
-			assertEquals("configureSpecialShowlet", result);
+			assertEquals("configureSpecialWidget", result);
 			result = this.executeJoinShowlet(pageCode, frame, "content_viewer", "pageManagerCoach");
 			assertEquals("pageTree", result);
 			assertEquals(1, this.getAction().getActionErrors().size());

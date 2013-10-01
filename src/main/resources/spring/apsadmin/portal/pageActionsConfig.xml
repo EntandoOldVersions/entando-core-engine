@@ -10,7 +10,8 @@
 		<property name="pageManager" ref="PageManager" />
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="apiCatalogManager" ref="ApiCatalogManager" />
-		<property name="stockShowletCodes"><value>${showlets.stock}</value></property>
+		<property name="pageActionHelper" ref="pageActionHelper" />
+		<property name="stockWidgetCodes"><value>${showlets.stock}</value></property>
 	</bean>
 	
 	<bean id="pageActionHelper" class="com.agiletec.apsadmin.portal.helper.PageActionHelper" parent="abstractBaseActionHelper">
@@ -31,7 +32,7 @@
 	<bean id="pageAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.PageAction" parent="abstractPortalAction">
 		<property name="pageModelManager" ref="PageModelManager" />
-		<property name="helper" ref="pageActionHelper" />
+		<property name="pageActionHelper" ref="pageActionHelper" />
 		<property name="allowedMimeTypesCSV"><value>${page.mimeType.allowedValues}</value></property>
 		<property name="allowedCharsetsCSV"><value>${page.charset.allowedValues}</value></property>
 	</bean>

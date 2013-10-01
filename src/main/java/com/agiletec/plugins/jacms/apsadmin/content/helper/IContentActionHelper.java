@@ -2,9 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -28,6 +28,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.IEntityActionHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.ActionSupport;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Interfaccia per gli Helper della ContentAction.
@@ -63,5 +64,7 @@ public interface IContentActionHelper extends IEntityActionHelper {
 	public Map getReferencingObjects(Content content, HttpServletRequest request) throws ApsSystemException;
 	
 	public EntitySearchFilter getOrderFilter(String groupBy, String lastOrder);
+	
+	public ActivityStreamInfo createActivityStreamInfo(Content content, int strutsAction, boolean addLink);
 	
 }
