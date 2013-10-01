@@ -120,6 +120,7 @@
 			class="com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.LinkAttributeAction" 
 			parent="abstractBaseAction" >
 		<property name="pageManager" ref="PageManager" />
+		<property name="contentManager" ref="jacmsContentManager" />
 		<property name="contentActionHelper" ref="jacmsContentActionHelper"/>
 		<property name="linkAttributeHelper" ref="jacmsLinkAttributeActionHelper" />
 	</bean>

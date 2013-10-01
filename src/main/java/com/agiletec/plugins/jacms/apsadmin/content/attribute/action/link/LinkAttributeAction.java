@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -23,7 +22,9 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 import com.agiletec.apsadmin.system.BaseAction;
+import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
@@ -101,7 +102,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	}
 	
 	public String getEntryContentAnchorDestFromRemove() {
-		StringBuffer buffer = new StringBuffer("contentedit_");
+		StringBuilder buffer = new StringBuilder("contentedit_");
 		buffer.append(this.getLangCode());
 		buffer.append("_");
 		if (null != this.getParentAttributeName()) {
@@ -136,6 +137,16 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		return this.getPageManager().getPage(pageCode);
 	}
 	
+	public ContentRecordVO getContentVo(String contentId) {
+		ContentRecordVO contentVo = null;
+		try {
+			contentVo = this.getContentManager().loadContentVO(contentId);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getContentVo");
+		}
+		return contentVo;
+	}
+	
 	public int getLinkType() {
 		return _linkType;
 	}
@@ -148,6 +159,13 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
+	}
+	
+	protected IContentManager getContentManager() {
+		return _contentManager;
+	}
+	public void setContentManager(IContentManager contentManager) {
+		this._contentManager = contentManager;
 	}
 	
 	@Override
@@ -236,6 +254,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	private String _entryContentAnchorDest;
 	
 	private IPageManager _pageManager;
+	private IContentManager _contentManager;
 	
 	private IContentActionHelper _contentActionHelper;
 	private ILinkAttributeActionHelper _linkAttributeHelper;
