@@ -28,7 +28,6 @@
 			<result name="input">/WEB-INF/apsadmin/jsp/common/login.jsp</result>
 			<result type="redirectAction">main</result>
 			<interceptor-ref name="entandoLoginStack" />
-			<interceptor-ref name="backendGuiClient" />
 		</action>
 		
 		<action name="logout" class="dispatchAction" method="doLogout">
@@ -38,7 +37,6 @@
 		<action name="main" class="myShortcutConfigAction">
 			<result type="tiles">admin.intro</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">enterBackend</param></interceptor-ref>
-			<interceptor-ref name="backendGuiClient" />
 		</action>
 		
 		<action name="editPassword" class="baseCommonAction" method="editPassword">

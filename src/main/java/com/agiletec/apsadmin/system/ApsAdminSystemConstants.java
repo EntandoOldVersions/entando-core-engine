@@ -55,8 +55,4 @@ public interface ApsAdminSystemConstants {
 	public static final String MOVEMENT_UP_CODE = "UP";
 	public static final String MOVEMENT_DOWN_CODE = "DOWN";
 	
-	public static final String SESSION_PARAM_BACKEND_GUI_CLIENT = "backend_client_gui";
-	
-	public static final String BACKEND_GUI_CLIENT_NORMAL = "normal";
-	
 }

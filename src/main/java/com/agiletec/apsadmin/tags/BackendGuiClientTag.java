@@ -17,12 +17,10 @@
 */
 package com.agiletec.apsadmin.tags;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 /**
  * Print the style of the back-office. Can be normal|advanced.
@@ -34,11 +32,8 @@ public class BackendGuiClientTag extends TagSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		try {
-			HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-			String client = (String) request.getSession().getAttribute(ApsAdminSystemConstants.SESSION_PARAM_BACKEND_GUI_CLIENT);
-			if (null == client || client.trim().length() == 0) {
-				client = ApsAdminSystemConstants.BACKEND_GUI_CLIENT_NORMAL;
-			}
+			String BACKEND_GUI_CLIENT_NORMAL = "normal";
+			String client = BACKEND_GUI_CLIENT_NORMAL;
 			if (null != this.getVar() && this.getVar().trim().length() > 0) {
 				this.pageContext.getRequest().setAttribute(this.getVar(), client);
 			} else {

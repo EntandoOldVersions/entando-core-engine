@@ -27,7 +27,6 @@
 			<interceptor name="apsActionParams" class="com.agiletec.apsadmin.system.ApsActionParamsInterceptor" />
 			<interceptor name="chain" class="com.agiletec.apsadmin.system.ChainingInterceptor" />
 			<interceptor name="apsFileUpload" class="com.agiletec.apsadmin.system.ApsFileUploadInterceptor" />
-			<interceptor name="backendGuiClient" class="com.agiletec.apsadmin.system.BackendGuiClientInterceptor" />
 			<interceptor name="entandoActionLogger" class="org.entando.entando.apsadmin.system.ActionLoggerInterceptor" />
 			
 			<interceptor-stack name="entandoFreeStack">
@@ -43,7 +42,6 @@
 				<interceptor-ref name="staticParams"/>
 				<interceptor-ref name="params"/>
 				<interceptor-ref name="conversionError"/>
-				<interceptor-ref name="backendGuiClient" />
 			</interceptor-stack>
 			
 			<interceptor-stack name="entandoFreeValidationStack">
