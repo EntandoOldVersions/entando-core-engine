@@ -61,15 +61,15 @@ public class TestShortcutManager extends BaseTestCase {
     
     public void testSaveShortcutConfig_1() throws Throwable {
     	String username = "admin";
-    	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.showletType", null, "core.tools.setting", null, null};
-    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.showletType", null, "core.tools.setting", null, null};
+    	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
+    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, true);
     }
     
     public void testSaveShortcutConfig_2() throws Throwable {
     	String username = "admin";
-    	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.showletType", null, "core.tools.setting", "shortcut.invalid", null};
-    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.showletType", null, "core.tools.setting", null, null};
+    	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", "shortcut.invalid", null};
+    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, true);
     }
     

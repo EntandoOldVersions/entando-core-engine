@@ -284,6 +284,6 @@ public class TestShortcutConfigAction extends ApsAdminBaseTestCase {
     private IShortcutManager _shortcutManager = null;
     
     private final String[] ADMIN_CONFIG = {null, "core.component.user.list", "jacms.content.new", "jacms.content.list", "core.portal.pageTree", 
-    		"core.portal.showletType", "core.tools.setting", "core.tools.entities", null, null};
+    		"core.portal.widgetType", "core.tools.setting", "core.tools.entities", null, null};
     
 }
