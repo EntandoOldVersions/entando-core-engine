@@ -18,20 +18,22 @@ package org.entando.entando.aps.system.services.actionlogger;
 
 import java.util.List;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
 public interface IActionLoggerDAO {
 	
-	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean);
+	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean);
 	
-	public void addActionRecord(ActionLoggerRecord actionRecord);
+	public void addActionRecord(ActionLogRecord actionRecord);
 	
-	public ActionLoggerRecord getActionRecord(int id);
+	public ActionLogRecord getActionRecord(int id);
 	
 	public void deleteActionRecord(int id);
+	
+	public List<Integer> getActivityStream(List<String> userGroupCodes);
 	
 }

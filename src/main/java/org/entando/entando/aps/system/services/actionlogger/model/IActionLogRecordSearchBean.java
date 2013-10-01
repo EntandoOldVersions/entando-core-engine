@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  * @author E.Santoboni - S.Puddu
  */
-public interface IActionLoggerRecordSearchBean {
+public interface IActionLogRecordSearchBean {
 	
 	public Date getStart();
 	

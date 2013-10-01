@@ -19,8 +19,9 @@ package org.entando.entando.aps.system.services.actionlogger;
 import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
+import com.agiletec.aps.system.services.user.UserDetails;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
 
 /**
  * Interface for the service that manages the {@link ActionLoggerRecord}
@@ -34,14 +35,14 @@ public interface IActionLoggerManager {
 	 * @return a list of codes
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean) throws ApsSystemException;
+	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException;
 	
 	/**
 	 * Save a new {@link ActionLoggerRecord}
 	 * @param actionRecord
 	 * @throws ApsSystemException
 	 */
-	public void addActionRecord(ActionLoggerRecord actionRecord) throws ApsSystemException;
+	public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException;
 	
 	/**
 	 * Load a {@link ActionLoggerRecord}
@@ -49,7 +50,7 @@ public interface IActionLoggerManager {
 	 * @return an {@link ActionLoggerRecord} 
 	 * @throws ApsSystemException if an error occurs
 	 */
-	public ActionLoggerRecord getActionRecord(int id) throws ApsSystemException;
+	public ActionLogRecord getActionRecord(int id) throws ApsSystemException;
 	
 	/**
 	 * Delete a {@link ActionLoggerRecord}
@@ -57,5 +58,9 @@ public interface IActionLoggerManager {
 	 * @throws ApsSystemException if an error occurs
 	 */
 	public void deleteActionRecord(int id) throws ApsSystemException;
+	
+	public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException;
+	
+	public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException;
 	
 }

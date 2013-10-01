@@ -21,7 +21,7 @@ import java.util.Date;
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLoggerRecordSearchBean implements IActionLoggerRecordSearchBean {
+public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 	
 	@Override
 	public Date getStart() {

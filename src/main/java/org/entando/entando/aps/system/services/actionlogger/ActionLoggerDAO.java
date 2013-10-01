@@ -16,6 +16,12 @@
 */
 package org.entando.entando.aps.system.services.actionlogger;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.services.group.Group;
+import org.entando.entando.aps.system.services.actionlogger.model.ActivityStreamInfo;
+import java.sql.BatchUpdateException;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,16 +29,13 @@ import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfo;
-import com.agiletec.apsadmin.system.services.activitystream.ActivityStreamInfoDOM;
-
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
@@ -40,7 +43,7 @@ import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerR
 public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLoggerDAO {
 	
 	@Override
-	public void addActionRecord(ActionLoggerRecord actionRecord) {
+	public void addActionRecord(ActionLogRecord actionRecord) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -61,6 +64,7 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 				stat.setNull(7, Types.VARCHAR);
 			}
 			stat.executeUpdate();
+			this.addLogRecordRelations(actionRecord.getId(), asi, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -70,8 +74,36 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 		}
 	}
 	
+	private void addLogRecordRelations(int recordId, ActivityStreamInfo asi, Connection conn) {
+		if (asi == null) {
+			return;
+		}
+		List<String> groups = asi.getGroups();
+		if (null == groups || groups.isEmpty()) {
+			return;
+		}
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(ADD_LOG_RECORD_RELATION);
+			for (int i = 0; i < groups.size(); i++) {
+				String groupCode = groups.get(i);
+				stat.setInt(1, recordId);
+				stat.setString(2, groupCode);
+				stat.addBatch();
+				stat.clearParameters();
+			}
+			stat.executeBatch();
+		} catch (BatchUpdateException e) {
+			processDaoException(e.getNextException(), "Error adding relations for record - " + recordId, "addLogRecordRelations");
+		} catch (Throwable t) {
+			processDaoException(t, "Error adding relations for record - " + recordId, "addLogRecordRelations");
+		} finally {
+			closeDaoResources(null, stat);
+		}
+	}
+	
 	@Override
-	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean) {
+	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
 		List<Integer> actionRecords = new ArrayList<Integer>();
 		try {
 			FieldSearchFilter[] filters = this.createFilters(searchBean);
@@ -88,7 +120,88 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 		return actionRecords;
 	}
 	
-	protected FieldSearchFilter[] createFilters(IActionLoggerRecordSearchBean searchBean) {
+	@Override
+	public List<Integer> getActivityStream(List<String> userGroupCodes) {
+		Connection conn = null;
+		List<Integer> idList = new ArrayList<Integer>();
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			FieldSearchFilter filter1 = new FieldSearchFilter("actiondate");
+			filter1.setOrder(FieldSearchFilter.DESC_ORDER);
+			FieldSearchFilter filter2 = new FieldSearchFilter("activitystreaminfo");
+			FieldSearchFilter[] filters = {filter1, filter2};
+			List<String> groupCodes = (null != userGroupCodes && userGroupCodes.contains(Group.ADMINS_GROUP_NAME)) ? null : userGroupCodes;
+			stat = this.buildStatement(filters, groupCodes, conn);
+			result = stat.executeQuery();
+			while (result.next()) {
+				idList.add(result.getInt(1));
+			}
+		} catch (Throwable t) {
+			processDaoException(t, "Error while loading activity stream records", "getActivityStream");
+		} finally {
+			closeDaoResources(result, stat, conn);
+		}
+		return idList;
+	}
+	
+	private PreparedStatement buildStatement(FieldSearchFilter[] filters, List<String> groupCodes, Connection conn) {
+		String query = this.createQueryString(filters, groupCodes);
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(query);
+			int index = 0;
+			index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
+			index = this.addGroupStatementBlock(groupCodes, index, stat);
+		} catch (Throwable t) {
+			processDaoException(t, "Error while creating the statement", "buildStatement");
+		}
+		return stat;
+	}
+	
+	protected String createQueryString(FieldSearchFilter[] filters, Collection<String> groupCodes) {
+		StringBuffer query = this.createBaseQueryBlock(filters, false);
+		this.appendJoinTableRefQueryBlock(query, groupCodes);
+		boolean hasAppendWhereClause = this.appendMetadataFieldFilterQueryBlocks(filters, query, false);
+		if (null != groupCodes && !groupCodes.isEmpty()) {
+			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
+			query.append(" ( ");
+			int size = groupCodes.size();
+			for (int i=0; i<size; i++) {
+				if (i!=0) query.append("OR ");
+				query.append("actionlogrelations.refgroup = ? ");
+			}
+			query.append(") ");
+		}
+		boolean ordered = appendOrderQueryBlocks(filters, query, false);
+		return query.toString();
+	}
+	
+	private void appendJoinTableRefQueryBlock(StringBuffer query, Collection<String> groupCodes) {
+		if (null == groupCodes || groupCodes.isEmpty()) {
+			return;
+		}
+		String masterTableName = this.getMasterTableName();
+		String masterTableIdFieldName = this.getMasterTableIdFieldName();
+			query.append("INNER JOIN ");
+			query.append("actionlogrelations").append(" ON ")
+				.append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
+				.append("actionlogrelations").append(".").append("recordid").append(" ");
+	}
+	
+	protected int addGroupStatementBlock(Collection<String> groupCodes, int index, PreparedStatement stat) throws Throwable {
+		if (null != groupCodes && !groupCodes.isEmpty()) {
+			Iterator<String> groupIter = groupCodes.iterator();
+			while (groupIter.hasNext()) {
+				String groupName = groupIter.next();
+				stat.setString(++index, groupName);
+			}
+		}
+		return index;
+	}
+	
+	protected FieldSearchFilter[] createFilters(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = new FieldSearchFilter[0];
 		if (null != searchBean) {
 			String username = searchBean.getUsername();
@@ -129,11 +242,11 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	}
 	
 	@Override
-	public ActionLoggerRecord getActionRecord(int id) {
+	public ActionLogRecord getActionRecord(int id) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
-		ActionLoggerRecord actionRecord = null;
+		ActionLogRecord actionRecord = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
@@ -141,7 +254,7 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 			stat.setInt(1, id);
 			res = stat.executeQuery();
 			if (res.next()) {
-				actionRecord = new ActionLoggerRecord();
+				actionRecord = new ActionLogRecord();
 				actionRecord.setId(id);
 				Timestamp timestamp = res.getTimestamp("actiondate");
 				actionRecord.setActionDate(new Date(timestamp.getTime()));
@@ -168,25 +281,36 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	@Override
 	public void deleteActionRecord(int id) {
 		Connection conn = null;
-		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(DELETE_RECORD);
-			stat.setInt(1, id);
-			stat.executeUpdate();
+			this.deleteRecord(id, conn, DELETE_LOG_RECORD_RELATION);
+			this.deleteRecord(id, conn, DELETE_LOG_RECORD);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			processDaoException(t, "Error on delete record: " + id , "deleteActionRecord");
 		} finally {
-			closeDaoResources(null, stat, conn);
+			closeConnection(conn);
+		}
+	}
+	
+	public void deleteRecord(int id, Connection conn, String query) {
+		PreparedStatement stat = null;
+		try {
+			stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			stat.executeUpdate();
+		} catch (Throwable t) {
+			processDaoException(t, "Error on delete record: " + id , "deleteRecord");
+		} finally {
+			closeDaoResources(null, stat);
 		}
 	}
 	
 	@Override
 	protected String getMasterTableName() {
-		return "actionloggerrecords";
+		return "actionlogrecords";
 	}
 
 	@Override
@@ -205,15 +329,21 @@ public class ActionLoggerDAO extends AbstractSearcherDAO implements IActionLogge
 	}
 	
 	private static final String ADD_ACTION_RECORD = 
-		"INSERT INTO actionloggerrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
+		"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
 		"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 	
 	private static final String GET_ACTION_RECORD = 
 		"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo " +
-		"FROM actionloggerrecords " +
+		"FROM actionlogrecords " +
 		"WHERE id = ?";
 	
-	private static final String DELETE_RECORD = 
-		"DELETE from actionloggerrecords where id = ?";
+	private static final String DELETE_LOG_RECORD = 
+		"DELETE from actionlogrecords where id = ?";
+	
+	private static final String DELETE_LOG_RECORD_RELATION = 
+		"DELETE from actionlogrelations where recordid = ?";
+	
+	private final String ADD_LOG_RECORD_RELATION =
+		"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
 	
 }

@@ -20,8 +20,8 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
 import java.util.List;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLogRecordSearchBean;
 
 public class TestActionLoggerManager extends BaseTestCase {
 	
@@ -36,11 +36,11 @@ public class TestActionLoggerManager extends BaseTestCase {
 		List<Integer> ids = this._actionLoggerManager.getActionRecords(null);
 		this.compareIds(new Integer [] {}, ids);
 		
-		ActionLoggerRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
+		ActionLogRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
-		ActionLoggerRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
+		ActionLogRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
 				"namespace2", DateConverter.parseDate("01/01/2009 10:00", "dd/MM/yyyy HH:mm"), "params2");
-		ActionLoggerRecord record3 = this._helper.createActionRecord(3, "username123", "actionName123", 
+		ActionLogRecord record3 = this._helper.createActionRecord(3, "username123", "actionName123", 
 				"namespace123", DateConverter.parseDate("02/01/2009 12:00", "dd/MM/yyyy HH:mm"), "params123");
 		this._helper.addActionRecord(record1);
 		this._helper.addActionRecord(record2);
@@ -49,7 +49,7 @@ public class TestActionLoggerManager extends BaseTestCase {
 		ids = this._actionLoggerManager.getActionRecords(null);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 		
-		ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);
+		ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);
 		ids = this._actionLoggerManager.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 		
@@ -69,14 +69,14 @@ public class TestActionLoggerManager extends BaseTestCase {
 	}
 	
 	public void testAddGetDeleteActionRecord() throws Throwable {
-		ActionLoggerRecord record1 = this._helper.createActionRecord(0, "username1", "actionName1", "namespace1", null, "params1");
-		ActionLoggerRecord record2 = this._helper.createActionRecord(0, "username2", "actionName2", "namespace2", null, "params2");
+		ActionLogRecord record1 = this._helper.createActionRecord(0, "username1", "actionName1", "namespace1", null, "params1");
+		ActionLogRecord record2 = this._helper.createActionRecord(0, "username2", "actionName2", "namespace2", null, "params2");
 		
 		this._actionLoggerManager.addActionRecord(record1);
 		this._actionLoggerManager.addActionRecord(record2);
-		ActionLoggerRecord addedRecord1 = this._actionLoggerManager.getActionRecord(record1.getId());
+		ActionLogRecord addedRecord1 = this._actionLoggerManager.getActionRecord(record1.getId());
 		this.compareActionRecords(record1, addedRecord1);
-		ActionLoggerRecord addedRecord2 = this._actionLoggerManager.getActionRecord(record2.getId());
+		ActionLogRecord addedRecord2 = this._actionLoggerManager.getActionRecord(record2.getId());
 		this.compareActionRecords(record2, addedRecord2);
 		
 		this._actionLoggerManager.deleteActionRecord(record1.getId());
@@ -95,7 +95,7 @@ public class TestActionLoggerManager extends BaseTestCase {
 		}
 	}
 	
-	private void compareActionRecords(ActionLoggerRecord expected, ActionLoggerRecord received) {
+	private void compareActionRecords(ActionLogRecord expected, ActionLogRecord received) {
 		assertEquals(expected.getId(), received.getId());
 		assertEquals(expected.getUsername(), received.getUsername());
 		assertEquals(expected.getActionName(), received.getActionName());
