@@ -75,6 +75,8 @@ public class TestActionLogManager extends BaseTestCase {
 		
 		this._actionLoggerManager.addActionRecord(record1);
 		this._actionLoggerManager.addActionRecord(record2);
+		super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+		
 		ActionLogRecord addedRecord1 = this._actionLoggerManager.getActionRecord(record1.getId());
 		this.compareActionRecords(record1, addedRecord1);
 		ActionLogRecord addedRecord2 = this._actionLoggerManager.getActionRecord(record2.getId());

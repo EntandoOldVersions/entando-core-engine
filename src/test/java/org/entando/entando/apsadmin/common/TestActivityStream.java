@@ -64,6 +64,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 		String pageCode = "activity_stream_test_test";
 		try {
 			this.addPage(pageCode);
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
 			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
 			assertEquals(1, ids.size());
@@ -133,6 +134,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			assertEquals(Action.SUCCESS, result);
 			contentId = content.getId();
 			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
 			
 			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
@@ -178,6 +180,7 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			assertEquals(Action.SUCCESS, result);
 			contentId = content.getId();
 			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
 			
 			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);

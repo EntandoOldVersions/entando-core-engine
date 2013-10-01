@@ -22,12 +22,14 @@ import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
+import static org.entando.entando.aps.system.services.actionlog.IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
@@ -53,12 +55,31 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	@Override
 	public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException {
 		try {
-			int key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
+			ActionLogAppenderThread thread = new ActionLogAppenderThread(actionRecord, this);
+			String threadName = LOG_APPENDER_THREAD_NAME_PREFIX + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+			thread.setName(threadName);
+			thread.start();
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "addActionRecord");
+			throw new ApsSystemException("Error adding an actionlogger record", t);
+		}
+	}
+	
+	protected synchronized void addActionRecordByThread(ActionLogRecord actionRecord) throws ApsSystemException {
+		try {
+			Integer key = null;
+			List<Integer> ids = null;
+			do {
+				key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
+				FieldSearchFilter filter = new FieldSearchFilter("id", key, true);
+				FieldSearchFilter[] filters = {filter};
+				ids = this.getActionLogDAO().getActionRecords(filters);
+			} while (!ids.isEmpty());
 			actionRecord.setId(key);
 			actionRecord.setActionDate(new Date());
 			this.getActionLogDAO().addActionRecord(actionRecord);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addActionRecord");
+			ApsSystemUtils.logThrowable(t, this, "addActionRecordByThread");
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
@@ -107,7 +128,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			if (null != recordIds && null != config && 
 					config.getCleanOldActivities() && config.getMaxActivitySizeByGroup() < recordIds.size()) {
 				ActivityStreamCleanerThread thread = new ActivityStreamCleanerThread(config.getMaxActivitySizeByGroup(), this.getActionLogDAO());
-				String threadName = "ActivityStreamCleanerThread_" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
+				String threadName = LOG_CLEANER_THREAD_NAME_PREFIX + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
     			thread.setName(threadName);
     			thread.start();
 			}

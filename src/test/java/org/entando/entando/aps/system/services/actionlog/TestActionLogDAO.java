@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
 public class TestActionLogDAO extends BaseTestCase {
 
@@ -35,9 +36,10 @@ public class TestActionLogDAO extends BaseTestCase {
 		this.init();
 		this._helper.cleanRecords();
 	}
-
+	
 	public void testGetActionRecords() {
-		List<Integer> ids = this._actionLoggerDAO.getActionRecords(null);
+		IActionLogRecordSearchBean bean = null;
+		List<Integer> ids = this._actionLoggerDAO.getActionRecords(bean);
 		this.compareIds(new Integer [] {}, ids);
 		ActionLogRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
@@ -48,8 +50,8 @@ public class TestActionLogDAO extends BaseTestCase {
 		this._helper.addActionRecord(record1);
 		this._helper.addActionRecord(record2);
 		this._helper.addActionRecord(record3);
-
-		ids = this._actionLoggerDAO.getActionRecords(null);
+		
+		ids = this._actionLoggerDAO.getActionRecords(bean);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 
 		ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);

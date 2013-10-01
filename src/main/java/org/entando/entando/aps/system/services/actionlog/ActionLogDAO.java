@@ -113,9 +113,14 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	
 	@Override
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
+		FieldSearchFilter[] filters = this.createFilters(searchBean);
+		return this.getActionRecords(filters);
+	}
+	
+	@Override
+	public List<Integer> getActionRecords(FieldSearchFilter[] filters) {
 		List<Integer> actionRecords = new ArrayList<Integer>();
 		try {
-			FieldSearchFilter[] filters = this.createFilters(searchBean);
 			List<String> ids = super.searchId(filters);
 			if (null != ids) {
 				for (int i = 0; i < ids.size(); i++) {

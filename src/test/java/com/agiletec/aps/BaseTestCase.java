@@ -82,19 +82,23 @@ public class BaseTestCase extends TestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		this.waitNotifyingThread();
+		this.waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
 		super.tearDown();
 		this.getConfigUtils().closeDataSources(this.getApplicationContext());
 		this.getConfigUtils().destroyContext(this.getApplicationContext());
 	}
     
 	protected void waitNotifyingThread() throws InterruptedException {
+		this.waitThreads(NotifyManager.NOTIFYING_THREAD_NAME);
+	}
+	
+	protected void waitThreads(String threadNamePrefix) throws InterruptedException {
 		Thread[] threads = new Thread[20];
 	    Thread.enumerate(threads);
 	    for (int i=0; i<threads.length; i++) {
 	    	Thread currentThread = threads[i];
-	    	if (currentThread != null && 
-	    			currentThread.getName().startsWith(NotifyManager.NOTIFYING_THREAD_NAME)) {
+			if (currentThread != null && 
+	    			currentThread.getName().startsWith(threadNamePrefix)) {
 	    		currentThread.join();
 	    	}
 	    }

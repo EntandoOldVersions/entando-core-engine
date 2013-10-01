@@ -312,4 +312,6 @@ public interface SystemConstants {
 	
 	public static final String USER_PROFILE_ATTRIBUTE_DISABLING_CODE_ON_EDIT = "userprofile:onEdit";
 	
+	public static final String ENTANDO_THREAD_NAME_PREFIX = "EntandoThread_";
+	
 }

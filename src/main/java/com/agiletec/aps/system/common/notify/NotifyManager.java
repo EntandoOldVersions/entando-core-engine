@@ -32,6 +32,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
 
 /**
@@ -102,6 +103,6 @@ public class NotifyManager implements INotifyManager, ApplicationListener,
 	
 	private BeanFactory _beanFactory;
 	
-	public static final String NOTIFYING_THREAD_NAME = "NotifyingThreadName";
+	public static final String NOTIFYING_THREAD_NAME = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "NotifyingThreadName";
 	
 }

@@ -16,6 +16,7 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
+import com.agiletec.aps.system.SystemConstants;
 import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -67,5 +68,8 @@ public interface IActionLogManager {
 	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException;
 	
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException;
+	
+	public static final String LOG_APPENDER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActionRecordAppender_";
+	public static final String LOG_CLEANER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActivityStreamCleanerThread_";
 	
 }

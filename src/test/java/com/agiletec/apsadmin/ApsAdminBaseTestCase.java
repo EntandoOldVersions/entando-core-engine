@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -115,19 +114,22 @@ public class ApsAdminBaseTestCase extends TestCase {
 	
 	@Override
 	protected void tearDown() throws Exception {
-		this.waitNotifyingThread();
+		this.waitThreads(SystemConstants.ENTANDO_THREAD_NAME_PREFIX);
 		super.tearDown();
 		this.getConfigUtils().closeDataSources(this.getApplicationContext());
-		//this.getConfigUtils().destroyContext(this.getApplicationContext());
 	}
     
 	protected void waitNotifyingThread() throws InterruptedException {
+		this.waitThreads(NotifyManager.NOTIFYING_THREAD_NAME);
+	}
+	
+	protected void waitThreads(String threadNamePrefix) throws InterruptedException {
 		Thread[] threads = new Thread[20];
 	    Thread.enumerate(threads);
 	    for (int i=0; i<threads.length; i++) {
 	    	Thread currentThread = threads[i];
-	    	if (currentThread != null && 
-	    			currentThread.getName().startsWith(NotifyManager.NOTIFYING_THREAD_NAME)) {
+			if (currentThread != null && 
+	    			currentThread.getName().startsWith(threadNamePrefix)) {
 	    		currentThread.join();
 	    	}
 	    }
