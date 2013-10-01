@@ -26,9 +26,12 @@ import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
 
+/**
+ * @author E.Santoboni
+ */
 public class ActionLoggerTestHelper extends AbstractDAO {
 	
 	public ActionLoggerTestHelper(ApplicationContext applicationContext) {
@@ -40,7 +43,7 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		this._actionLoggerDAO = actionLoggerDAO;
 	}
 	
-	public void addActionRecord(ActionRecord actionRecord) {
+	public void addActionRecord(ActionLoggerRecord actionRecord) {
 		this._actionLoggerDAO.addActionRecord(actionRecord);
 	}
 	
@@ -61,21 +64,21 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		}
 	}
 	
-	public ActionRecord createActionRecord(int id, String username, 
-			String actionName, String namespace, Date date, String params) {
-		ActionRecord record = new ActionRecord();
+	public ActionLoggerRecord createActionRecord(int id, String username, 
+			String actionName, String namespace, Date date, String parameter) {
+		ActionLoggerRecord record = new ActionLoggerRecord();
 		record.setId(id);
 		record.setUsername(username);
 		record.setActionName(actionName);
 		record.setNamespace(namespace);
 		record.setActionDate(date);
-		record.setParams(params);
+		record.setParameters(parameter);
 		return record;
 	}
 	
-	public ActionRecordSearchBean createSearchBean(String username, String actionName, 
+	public ActionLoggerRecordSearchBean createSearchBean(String username, String actionName, 
 			String namespace, String params, Date start, Date end) {
-		ActionRecordSearchBean searchBean = new ActionRecordSearchBean();
+		ActionLoggerRecordSearchBean searchBean = new ActionLoggerRecordSearchBean();
 		searchBean.setUsername(username);
 		searchBean.setActionName(actionName);
 		searchBean.setNamespace(namespace);

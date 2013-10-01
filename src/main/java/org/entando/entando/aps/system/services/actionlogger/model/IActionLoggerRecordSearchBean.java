@@ -18,7 +18,10 @@ package org.entando.entando.aps.system.services.actionlogger.model;
 
 import java.util.Date;
 
-public interface IActionRecordSearchBean {
+/**
+ * @author E.Santoboni - S.Puddu
+ */
+public interface IActionLoggerRecordSearchBean {
 	
 	public Date getStart();
 	

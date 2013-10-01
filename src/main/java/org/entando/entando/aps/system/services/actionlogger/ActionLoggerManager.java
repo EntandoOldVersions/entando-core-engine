@@ -25,9 +25,12 @@ import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.IActionRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.IActionLoggerRecordSearchBean;
 
+/**
+ * @author E.Santoboni - S.Puddu
+ */
 public class ActionLoggerManager extends AbstractService implements IActionLoggerManager {
 	
 	@Override
@@ -36,7 +39,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	}
 	
 	@Override
-	public void addActionRecord(ActionRecord actionRecord) throws ApsSystemException {
+	public void addActionRecord(ActionLoggerRecord actionRecord) throws ApsSystemException {
 		try {
 			int key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
 			actionRecord.setId(key);
@@ -59,7 +62,7 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	}
 	
 	@Override
-	public List<Integer> getActionRecords(IActionRecordSearchBean searchBean) throws ApsSystemException {
+	public List<Integer> getActionRecords(IActionLoggerRecordSearchBean searchBean) throws ApsSystemException {
 		List<Integer> records = new ArrayList<Integer>();
 		try {
 			records = this.getActionLoggerDAO().getActionRecords(searchBean);
@@ -71,8 +74,8 @@ public class ActionLoggerManager extends AbstractService implements IActionLogge
 	}
 	
 	@Override
-	public ActionRecord getActionRecord(int id) throws ApsSystemException {
-		ActionRecord record = null;
+	public ActionLoggerRecord getActionRecord(int id) throws ApsSystemException {
+		ActionLoggerRecord record = null;
 		try {
 			record = this.getActionLoggerDAO().getActionRecord(id);
 		} catch (Throwable t) {

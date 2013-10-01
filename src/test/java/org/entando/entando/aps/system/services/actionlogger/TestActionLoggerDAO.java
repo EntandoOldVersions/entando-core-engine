@@ -22,8 +22,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecord;
-import org.entando.entando.aps.system.services.actionlogger.model.ActionRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecord;
+import org.entando.entando.aps.system.services.actionlogger.model.ActionLoggerRecordSearchBean;
 
 public class TestActionLoggerDAO extends BaseTestCase {
 
@@ -37,11 +37,11 @@ public class TestActionLoggerDAO extends BaseTestCase {
 	public void testGetActionRecords() {
 		List<Integer> ids = this._actionLoggerDAO.getActionRecords(null);
 		this.compareIds(new Integer [] {}, ids);
-		ActionRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
+		ActionLoggerRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
-		ActionRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
+		ActionLoggerRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
 				"namespace2", DateConverter.parseDate("01/01/2009 10:00", "dd/MM/yyyy HH:mm"), "params2");
-		ActionRecord record3 = this._helper.createActionRecord(3, "username123", "actionName123", 
+		ActionLoggerRecord record3 = this._helper.createActionRecord(3, "username123", "actionName123", 
 				"namespace123", DateConverter.parseDate("02/01/2009 12:00", "dd/MM/yyyy HH:mm"), "params123");
 		this._helper.addActionRecord(record1);
 		this._helper.addActionRecord(record2);
@@ -50,7 +50,7 @@ public class TestActionLoggerDAO extends BaseTestCase {
 		ids = this._actionLoggerDAO.getActionRecords(null);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 
-		ActionRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);
+		ActionLoggerRecordSearchBean searchBean = this._helper.createSearchBean("name", "Name", "space", "arams", null, null);
 		ids = this._actionLoggerDAO.getActionRecords(searchBean);
 		this.compareIds(new Integer [] { 1, 2, 3 }, ids);
 
@@ -70,16 +70,16 @@ public class TestActionLoggerDAO extends BaseTestCase {
 	}
 	
 	public void testAddGetDeleteActionRecord() {
-		ActionRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
+		ActionLoggerRecord record1 = this._helper.createActionRecord(1, "username1", "actionName1", 
 				"namespace1", DateConverter.parseDate("01/01/2009 00:00", "dd/MM/yyyy HH:mm"), "params1");
-		ActionRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
+		ActionLoggerRecord record2 = this._helper.createActionRecord(2, "username2", "actionName2", 
 				"namespace2", DateConverter.parseDate("01/02/2009 00:00", "dd/MM/yyyy HH:mm"), "params2");
 
 		this._actionLoggerDAO.addActionRecord(record1);
 		this._actionLoggerDAO.addActionRecord(record2);
-		ActionRecord addedRecord1 = this._actionLoggerDAO.getActionRecord(record1.getId());
+		ActionLoggerRecord addedRecord1 = this._actionLoggerDAO.getActionRecord(record1.getId());
 		this.compareActionRecords(record1, addedRecord1);
-		ActionRecord addedRecord2 = this._actionLoggerDAO.getActionRecord(record2.getId());
+		ActionLoggerRecord addedRecord2 = this._actionLoggerDAO.getActionRecord(record2.getId());
 		this.compareActionRecords(record2, addedRecord2);
 
 		this._actionLoggerDAO.deleteActionRecord(record1.getId());
@@ -97,13 +97,13 @@ public class TestActionLoggerDAO extends BaseTestCase {
 			}
 		}
 	}
-
-	private void compareActionRecords(ActionRecord expected, ActionRecord received) {
+	
+	private void compareActionRecords(ActionLoggerRecord expected, ActionLoggerRecord received) {
 		assertEquals(expected.getId(), received.getId());
 		assertEquals(expected.getUsername(), received.getUsername());
 		assertEquals(expected.getActionName(), received.getActionName());
 		assertEquals(expected.getNamespace(), received.getNamespace());
-		assertEquals(expected.getParams(), received.getParams());
+		assertEquals(expected.getParameters(), received.getParameters());
 		assertEquals(DateConverter.getFormattedDate(expected.getActionDate(), "ddMMyyyyHHmm"), 
 				DateConverter.getFormattedDate(received.getActionDate(), "ddMMyyyyHHmm"));
 	}

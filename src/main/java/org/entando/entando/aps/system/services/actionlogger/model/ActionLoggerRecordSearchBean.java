@@ -18,22 +18,28 @@ package org.entando.entando.aps.system.services.actionlogger.model;
 
 import java.util.Date;
 
-public class ActionRecord {
+/**
+ * @author E.Santoboni - S.Puddu
+ */
+public class ActionLoggerRecordSearchBean implements IActionLoggerRecordSearchBean {
 	
-	public void setId(int id) {
-		this._id = id;
+	@Override
+	public Date getStart() {
+		return _start;
 	}
-	public int getId() {
-		return _id;
-	}
-	
-	public Date getActionDate() {
-		return _actionDate;
-	}
-	public void setActionDate(Date actionDate) {
-		this._actionDate = actionDate;
+	public void setStart(Date start) {
+		this._start = start;
 	}
 	
+	@Override
+	public Date getEnd() {
+		return _end;
+	}
+	public void setEnd(Date end) {
+		this._end = end;
+	}
+	
+	@Override
 	public String getUsername() {
 		return _username;
 	}
@@ -41,6 +47,7 @@ public class ActionRecord {
 		this._username = username;
 	}
 	
+	@Override
 	public String getNamespace() {
 		return _namespace;
 	}
@@ -48,6 +55,7 @@ public class ActionRecord {
 		this._namespace = namespace;
 	}
 	
+	@Override
 	public String getActionName() {
 		return _actionName;
 	}
@@ -55,6 +63,7 @@ public class ActionRecord {
 		this._actionName = actionName;
 	}
 	
+	@Override
 	public String getParams() {
 		return _params;
 	}
@@ -62,8 +71,8 @@ public class ActionRecord {
 		this._params = params;
 	}
 	
-	private int _id;
-	private Date _actionDate;
+	private Date _start;
+	private Date _end;
 	private String _username;
 	private String _namespace;
 	private String _actionName;
