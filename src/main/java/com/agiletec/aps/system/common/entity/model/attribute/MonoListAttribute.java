@@ -101,9 +101,7 @@ public class MonoListAttribute extends AbstractListAttribute {
      */
     @Override
     public Element getJDOMElement() {
-        Element monolistElement = new Element("list");
-        monolistElement.setAttribute("attributetype", this.getType());
-        monolistElement.setAttribute("name", this.getName());
+		Element monolistElement = this.createRootElement("list");
         monolistElement.setAttribute("nestedtype", this.getNestedAttributeTypeCode());
         for (int i = 0; i < this.getAttributes().size(); i++) {
             AttributeInterface attribute = (AttributeInterface) this.getAttributes().get(i);

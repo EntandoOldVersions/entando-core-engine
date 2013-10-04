@@ -21,9 +21,6 @@ import java.util.List;
 
 import org.jdom.CDATA;
 import org.jdom.Element;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
@@ -33,11 +30,11 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * This class describes an "Enumerator" Attribute.
  * @author E.Santoboni
  */
-public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactoryAware {
+public class EnumeratorAttribute extends MonoTextAttribute {
     
+	@Override
     public Object getAttributePrototype() {
         EnumeratorAttribute prototype = (EnumeratorAttribute) super.getAttributePrototype();
-        prototype.setBeanFactory(this.getBeanFactory());
         prototype.setItems(this.getItems());
         prototype.setStaticItems(this.getStaticItems());
         prototype.setExtractorBeanName(this.getExtractorBeanName());
@@ -45,6 +42,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         return prototype;
     }
     
+    @Override
     public void setAttributeConfig(Element attributeElement) throws ApsSystemException {
         super.setAttributeConfig(attributeElement);
         String separator = this.extractXmlAttribute(attributeElement, "separator", false);
@@ -89,6 +87,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         }
     }
     
+    @Override
     public Element getJDOMConfigElement() {
         Element configElement = super.getJDOMConfigElement();
         this.setConfig(configElement);
@@ -130,6 +129,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         this.setItems(values);
     }
     
+    @Override
     public JAXBEnumeratorAttributeType getJAXBAttributeType() {
         JAXBEnumeratorAttributeType jaxbAttribute = (JAXBEnumeratorAttributeType) super.getJAXBAttributeType();
         jaxbAttribute.setCustomSeparator(this.getCustomSeparator());
@@ -138,6 +138,7 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         return jaxbAttribute;
     }
     
+    @Override
     protected DefaultJAXBAttributeType getJAXBAttributeTypeInstance() {
         return new JAXBEnumeratorAttributeType();
     }
@@ -173,18 +174,10 @@ public class EnumeratorAttribute extends MonoTextAttribute implements BeanFactor
         this._customSeparator = customSeparator;
     }
     
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this._beanFactory = beanFactory;
-    }
-    protected BeanFactory getBeanFactory() {
-        return this._beanFactory;
-    }
-    
     private String[] _items;
     private String _staticItems;
     private String _extractorBeanName;
     private String _customSeparator;
-    private BeanFactory _beanFactory;
     private final String DEFAULT_ITEM_SEPARATOR = ",";
     
 }

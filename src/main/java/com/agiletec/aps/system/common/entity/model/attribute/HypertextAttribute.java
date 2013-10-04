@@ -33,6 +33,7 @@ import java.util.List;
  */
 public class HypertextAttribute extends TextAttribute {
     
+    @Override
     public boolean needToConvertSpecialCharacter() {
         return false;
     }
@@ -41,6 +42,7 @@ public class HypertextAttribute extends TextAttribute {
      * Return the field to index after having eventually removed the HTML tags.
      * @return The text field to index
      */
+    @Override
     public String getIndexeableFieldValue() {
         HtmlHandler htmlhandler = new HtmlHandler();
         String parsedText = htmlhandler.getParsedText(super.getText());
@@ -87,10 +89,9 @@ public class HypertextAttribute extends TextAttribute {
     	return head;
     }
     
+    @Override
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         Iterator<String> langIter = this.getTextMap().keySet().iterator();
         while (langIter.hasNext()) {
             String currentLangCode = langIter.next();
@@ -111,18 +112,22 @@ public class HypertextAttribute extends TextAttribute {
      * always return false.
      * @return Return always false.
      */
+    @Override
     public boolean isSearcheable() {
         return false;
     }
     
+    @Override
     public boolean isSearchableOptionSupported() {
         return false;
     }
     
+    @Override
     protected JAXBHypertextAttribute getJAXBAttributeInstance() {
         return new JAXBHypertextAttribute();
     }
     
+    @Override
     public JAXBHypertextAttribute getJAXBAttribute(String langCode) {
         if (null == this.getValue()) {
             return null;
@@ -141,6 +146,7 @@ public class HypertextAttribute extends TextAttribute {
         return jaxbAttribute;
     }
     
+    @Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         super.valueFrom(jaxbAttribute);
         JAXBHypertextAttribute jaxbHypertextAttribute = (JAXBHypertextAttribute) jaxbAttribute;

@@ -67,9 +67,7 @@ public class NumberAttribute extends AbstractAttribute {
     }
     
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         String number = this.getNumber();
         if (null != number && number.trim().length() > 0) {
             Element numberElement = new Element("number");

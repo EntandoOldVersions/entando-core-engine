@@ -107,9 +107,7 @@ public abstract class AbstractResourceAttribute extends TextAttribute
     
 	@Override
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         Iterator<String> langIter = this.getResources().keySet().iterator();
         while (langIter.hasNext()) {
             String currentLangCode = (String) langIter.next();

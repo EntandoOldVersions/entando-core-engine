@@ -115,9 +115,7 @@ public class ListAttribute extends AbstractListAttribute {
 
     @Override
     public Element getJDOMElement() {
-        Element listElement = new Element("list");
-        listElement.setAttribute("attributetype", this.getType());
-        listElement.setAttribute("name", this.getName());
+		Element listElement = this.createRootElement("list");
         listElement.setAttribute("nestedtype", this.getNestedAttributeTypeCode());
         Iterator<String> langIter = _listMap.keySet().iterator();
         while (langIter.hasNext()) {

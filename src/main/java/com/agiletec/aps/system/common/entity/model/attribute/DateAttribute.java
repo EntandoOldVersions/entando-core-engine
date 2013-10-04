@@ -112,9 +112,7 @@ public class DateAttribute extends AbstractAttribute {
 	
     @Override
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         if (null != this.getDate()) {
             Element dateElement = new Element("date");
             dateElement.setText(this.getFormattedDate(SystemConstants.SYSTEM_DATE_FORMAT));

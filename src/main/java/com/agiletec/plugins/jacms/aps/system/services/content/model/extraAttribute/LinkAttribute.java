@@ -46,10 +46,9 @@ import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolver
  */
 public class LinkAttribute extends TextAttribute implements IReferenceableAttribute {
     
+	@Override
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         if (null != this.getSymbolicLink()) {
             Element linkElement = new Element("link");
             attributeElement.addContent(linkElement);
@@ -114,10 +113,12 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
      * questo tipo di attributo non può mai essere "searcheable", restituisce sempre false.
      * @return Restituisce sempre false
      */
+	@Override
     public boolean isSearcheable() {
         return false;
     }
     
+	@Override
     public boolean isSearchableOptionSupported() {
         return false;
     }
@@ -133,10 +134,12 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         return refs;
     }
     
+	@Override
     public Object getValue() {
         return this.getSymbolicLink();
     }
     
+	@Override
     protected JAXBLinkValue getJAXBValue(String langCode) {
         Object text = super.getJAXBValue(langCode);
         JAXBLinkValue value = new JAXBLinkValue();
@@ -146,6 +149,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         return value;
     }
     
+	@Override
     public void valueFrom(DefaultJAXBAttribute jaxbAttribute) {
         JAXBLinkValue value = (JAXBLinkValue) jaxbAttribute.getValue();
         if (null == value) return;
@@ -159,6 +163,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         return (ILinkResolverManager) this.getBeanFactory().getBean(JacmsSystemConstants.LINK_RESOLVER_MANAGER, ILinkResolverManager.class);
     }
     
+	@Override
     public Status getStatus() {
         Status textStatus = super.getStatus();
         Status linkStatus = (null != this.getSymbolicLink()) ? Status.VALUED : Status.EMPTY;
@@ -167,6 +172,7 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
         return Status.EMPTY;
     }
     
+	@Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
         List<AttributeFieldError> errors = super.validate(tracer);
         try {

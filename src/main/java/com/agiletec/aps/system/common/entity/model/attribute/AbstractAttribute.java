@@ -251,10 +251,8 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     
     @Override
     public Element getJDOMConfigElement() {
-        Element configElement = new Element(this.getTypeConfigElementName());
-        configElement.setAttribute("name", this.getName());
-        configElement.setAttribute("attributetype", this.getType());
-		if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
+        Element configElement = this.createRootElement(this.getTypeConfigElementName());
+        if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
 			configElement.setAttribute("description", this.getDescription());
 		}
         if (this.isSearcheable()) {
@@ -271,6 +269,13 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         this.addArrayElement(configElement, this.getRoles(), "roles", "role");
         return configElement;
     }
+	
+	protected Element createRootElement(String elementName) {
+		Element attributeElement = new Element(this.getTypeConfigElementName());
+        attributeElement.setAttribute("name", this.getName());
+        attributeElement.setAttribute("attributetype", this.getType());
+		return attributeElement;
+	}
 
     private void addArrayElement(Element configElement, String[] values, String elementName, String subElementName) {
         if (null != values) {

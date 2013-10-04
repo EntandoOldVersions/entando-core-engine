@@ -35,9 +35,7 @@ public class BooleanAttribute extends AbstractAttribute {
 	
 	@Override
 	public Element getJDOMElement() {
-		Element attributeElement = new Element("attribute");
-		attributeElement.setAttribute("name", this.getName());
-		attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
 		if (this.saveBooleanJDOMElement()) {
 			Element booleanElement = new Element("boolean");
 			booleanElement.setText(this.getValue().toString());

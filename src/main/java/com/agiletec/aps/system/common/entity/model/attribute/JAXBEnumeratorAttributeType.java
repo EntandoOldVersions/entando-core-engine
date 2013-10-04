@@ -48,6 +48,7 @@ public class JAXBEnumeratorAttributeType extends DefaultJAXBAttributeType {
         this._customSeparator = customSeparator;
     }
     
+    @Override
     public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
         EnumeratorAttribute attribute = (EnumeratorAttribute) super.createAttribute(attributes);
         attribute.setStaticItems(this.getStaticItems());

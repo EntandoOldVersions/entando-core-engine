@@ -32,6 +32,7 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 @XmlSeeAlso({DefaultJAXBAttributeType.class, JAXBCompositeAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBListAttributeType extends DefaultJAXBAttributeType {
     
+    @Override
     public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
         AbstractListAttribute listAttribute = (AbstractListAttribute) super.createAttribute(attributes);
         DefaultJAXBAttributeType jaxbNestedType = this.getNestedType();

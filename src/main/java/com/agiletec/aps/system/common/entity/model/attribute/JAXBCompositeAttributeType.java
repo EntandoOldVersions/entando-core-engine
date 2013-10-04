@@ -38,6 +38,7 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 @XmlSeeAlso({DefaultJAXBAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBCompositeAttributeType extends DefaultJAXBAttributeType {
     
+    @Override
     public AttributeInterface createAttribute(Map<String, AttributeInterface> attributes) throws ApiException {
         CompositeAttribute compositeAttribute = (CompositeAttribute) super.createAttribute(attributes);
         List<Object> jaxbElementTypes = this.getElementTypes();

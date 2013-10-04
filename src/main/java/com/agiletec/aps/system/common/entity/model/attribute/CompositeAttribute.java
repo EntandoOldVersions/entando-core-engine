@@ -89,9 +89,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
 
 	@Override
 	public Element getJDOMElement() {
-		Element attributeElement = new Element("composite");
-		attributeElement.setAttribute("name", this.getName());
-		attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("composite");
 		Iterator<AttributeInterface> iter = this.getAttributes().iterator();
 		while (iter.hasNext()) {
 			AttributeInterface attribute = iter.next();
@@ -233,7 +231,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
 			for (int i = 0; i < value.size(); i++) {
 				DefaultJAXBAttribute jaxbAttributeElement = value.get(i);
 				AttributeInterface attributeElement = this.getAttributeMap().get(jaxbAttributeElement.getName());
-				if (null != attributeElement && null != jaxbAttributeElement
+				if (null != attributeElement 
 						&& attributeElement.getType().equals(jaxbAttributeElement.getType())) {
 					attributeElement.valueFrom(jaxbAttributeElement);
 				}

@@ -29,13 +29,7 @@ import java.util.Map;
 import org.jdom.Element;
 
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
-import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-import com.agiletec.aps.system.common.entity.model.FieldError;
-import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
-import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class implements the Text Attribute. It can support multiple languages.
@@ -50,6 +44,7 @@ public class TextAttribute extends AbstractTextAttribute {
         this._textMap = new HashMap<String, String>();
     }
     
+    @Override
     public boolean isMultilingual() {
         return true;
     }
@@ -58,6 +53,7 @@ public class TextAttribute extends AbstractTextAttribute {
      * Return the text field to index.
      * @return The text field to index.
      */
+    @Override
     public String getIndexeableFieldValue() {
         return this.getText();
     }
@@ -67,6 +63,7 @@ public class TextAttribute extends AbstractTextAttribute {
      * or the default language if the former is not available.
      * @return The requested text.
      */
+    @Override
     public String getText() {
         String text = (String) this.getTextMap().get(this.getRenderingLang());
         if (text == null) {
@@ -78,6 +75,7 @@ public class TextAttribute extends AbstractTextAttribute {
         return text;
     }
 
+    @Override
     public String getTextForLang(String langCode) {
         return (String) this.getTextMap().get(langCode);
     }
@@ -87,10 +85,12 @@ public class TextAttribute extends AbstractTextAttribute {
      * @param text The text string to set up.
      * @param langCode The code of the native language of the given text. 
      */
+    @Override
     public void setText(String text, String langCode) {
         this.getTextMap().put(langCode, text);
     }
 
+    @Override
     public boolean needToConvertSpecialCharacter() {
         return true;
     }
@@ -113,10 +113,12 @@ public class TextAttribute extends AbstractTextAttribute {
         this._textMap = textMap;
     }
 
+    @Override
     public boolean isSearchableOptionSupported() {
         return true;
     }
 
+    @Override
     public List<AttributeSearchInfo> getSearchInfos(List<Lang> systemLangs) {
         List<AttributeSearchInfo> infos = null;
         if (null != this.getTextMap() && this.getTextMap().size() > 0) {
@@ -140,11 +142,10 @@ public class TextAttribute extends AbstractTextAttribute {
         }
         return infos;
     }
-
+	
+    @Override
     public Element getJDOMElement() {
-        Element attributeElement = new Element("attribute");
-        attributeElement.setAttribute("name", this.getName());
-        attributeElement.setAttribute("attributetype", this.getType());
+		Element attributeElement = this.createRootElement("attribute");
         this.addTextElements(attributeElement);
         return attributeElement;
     }
