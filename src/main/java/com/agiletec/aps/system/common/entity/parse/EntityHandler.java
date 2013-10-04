@@ -65,6 +65,7 @@ public class EntityHandler extends DefaultHandler {
         return handler;
     }
     
+	@Override
     public void characters(char[] buf, int offset, int length) throws SAXException {
         String s = new String(buf, offset, length);
         if (_textBuffer == null) {
@@ -74,6 +75,7 @@ public class EntityHandler extends DefaultHandler {
         }
     }
     
+	@Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         this._textBuffer = null;
         try {
@@ -138,6 +140,7 @@ public class EntityHandler extends DefaultHandler {
         //default: do nothing
     }
     
+	@Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         try {
             if (this.isIntoAttributes()) {
@@ -256,11 +259,12 @@ public class EntityHandler extends DefaultHandler {
     }
     
     private void startAttribute(Attributes attributes, String qName) throws SAXException {
-        if (null == _currentAttr) {
+        if (null == this._currentAttr) {
             String attributeName = this.extractXmlAttribute(attributes, "name", qName, false);
             if (null != attributeName) {
+				String attributeType = this.extractXmlAttribute(attributes, "attributetype", qName, false);
                 this._currentAttr = (AttributeInterface) this._currentEntity.getAttribute(attributeName);
-                if (null != _currentAttr) {
+                if (null != this._currentAttr && this._currentAttr.getType().equals(attributeType)) {
                     this._parserModule = this._currentAttr.getHandler();
                     this._parserModule.setCurrentAttr(this._currentAttr);
                 }
