@@ -1478,7 +1478,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:submit struts2 tag. Render a submit button.]]></description>
+		<description><![CDATA[Render a submit button.]]></description>
 		<name>submit</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.SubmitTag</tag-class>
 		<body-content>JSP</body-content>
@@ -1552,7 +1552,7 @@
 			<description><![CDATA[HTML id attribute]]></description>
 			<name>id</name>
 			<required>false</required>
-			<rtexprvalue>false</rtexprvalue>
+			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[Use JavaScript to generate tooltips]]></description>
