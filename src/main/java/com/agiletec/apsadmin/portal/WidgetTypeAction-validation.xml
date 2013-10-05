@@ -9,8 +9,8 @@
             <message key="requiredstring" />
         </field-validator>
         <field-validator type="regex" short-circuit="true">
-           <param name="regex"><![CDATA[([a-zA-Z0-9_])*]]></param>
-           <message key="wrongCharacters" />
+           <param name="regex"><![CDATA[([a-zA-Z0-9_\-])*]]></param>
+           <message key="error.widgetType.typeCode.wrongCharacters" />
         </field-validator>
         <field-validator type="fieldexpression" short-circuit="true">
 			<param name="expression"><![CDATA[!(strutsAction != 2 && getShowletType(showletTypeCode) != null)]]></param>

@@ -333,14 +333,10 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	
 	@Deprecated
 	public String getShowletTypeCode() {
-//		System.out.println(">>>> getShowletTypeCode <<<<");
-//		return _showletTypeCode;
 		return this.getWidgetTypeCode();
 	}
 	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
-//		System.out.println(">>>> setShowletTypeCode <<<<");
-//		this._showletTypeCode = showletTypeCode;
 		this.setWidgetTypeCode(showletTypeCode);
 	}
 	
@@ -367,13 +363,18 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	
 	@Deprecated
 	public String getParentShowletTypeCode() {
-		System.out.println(">>>> getParentShowletTypeCode <<<<");
-		return _parentShowletTypeCode;
+		return this.getParentWidgetTypeCode();
 	}
 	@Deprecated
 	public void setParentShowletTypeCode(String parentShowletTypeCode) {
-		System.out.println(">>>> setParentShowletTypeCode <<<<");
-		this._parentShowletTypeCode = parentShowletTypeCode;
+		this.setParentWidgetTypeCode(parentShowletTypeCode);
+	}
+	
+	public String getParentWidgetTypeCode() {
+		return _parentWidgetTypeCode;
+	}
+	public void setParentWidgetTypeCode(String parentWidgetTypeCode) {
+		this._parentWidgetTypeCode = parentWidgetTypeCode;
 	}
 	
 	public String getPageCode() {
@@ -407,15 +408,11 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	public String getWidgetTypeCode() {
 		return _widgetTypeCode;
 	}
-
 	public void setWidgetTypeCode(String widgetTypeCode) {
 		this._widgetTypeCode = widgetTypeCode;
 	}
 
 	private int _strutsAction;
-	
-	@Deprecated
-	private String _showletTypeCode;
 	
 	private String _widgetTypeCode;
 	
@@ -424,9 +421,7 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 	
 	private String _mainGroup;
 	
-	@Deprecated
-	private String _parentShowletTypeCode;
-	
+	private String _parentWidgetTypeCode;
 	
 	private String _pageCode;
 	private Integer _framePos;

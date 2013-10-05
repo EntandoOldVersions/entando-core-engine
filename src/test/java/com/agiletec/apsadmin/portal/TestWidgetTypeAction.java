@@ -451,7 +451,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	}
 	
 	public void testPasteNewWidgetType_2() throws Throwable {
-		String widgetTypeCode = "randomShowletCode_2";
+		String widgetTypeCode = "randomShowletCode-2";
 		String pageDest = "pagina_1";
 		int frameDest = 1;
 		Widget temp = this._pageManager.getPage("pagina_11").getWidgets()[2];
