@@ -3,6 +3,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
+* Entando is a free software; 
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -21,6 +22,7 @@ import java.io.IOException;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.lang.ILangManager;
 
 /**
  * Data Access Object dedita alla indicizzazione di documenti.
@@ -54,6 +56,8 @@ public interface IIndexerDAO {
     public void delete(String name, String value) throws ApsSystemException;
     
     public void close();
+	
+	public void setLangManager(ILangManager langManager);
     
     public static final String CONTENT_ID_FIELD_NAME = "id";
     public static final String CONTENT_GROUP_FIELD_NAME = "group";

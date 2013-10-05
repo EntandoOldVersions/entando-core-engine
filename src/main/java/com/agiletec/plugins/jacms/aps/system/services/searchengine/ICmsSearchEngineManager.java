@@ -3,6 +3,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
+* Entando is a free software; 
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -16,15 +17,15 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
-import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 
  * di oggetti ricercabili tramite motore di ricerca.
  * @author W.Ambu - E.Santoboni
  */
-public interface ICmsSearchEngineManager extends ISearchEngineManager {
+public interface ICmsSearchEngineManager extends IEntitySearchEngineManager {
 	
 	/**
      * Ricarica in blocco le indicizzazioni dei contenuti 

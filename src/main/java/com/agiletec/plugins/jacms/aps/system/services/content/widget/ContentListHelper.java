@@ -33,7 +33,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.common.searchengine.ISearchEngineManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -42,11 +41,22 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
+import static com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper.getAllowedGroupCodes;
+import static com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper.splitValues;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
+import static com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper.CATEGORIES_SEPARATOR;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper.buildCacheKey;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.SHOWLET_PARAM_CATEGORY;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_FILTERS;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER;
+import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -341,15 +351,15 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		this._userFilterDateFormat = userFilterDateFormat;
 	}
 	
-	protected ISearchEngineManager getSearchEngineManager() {
+	protected IEntitySearchEngineManager getSearchEngineManager() {
 		return _searchEngineManager;
 	}
-	public void setSearchEngineManager(ISearchEngineManager searchEngineManager) {
+	public void setSearchEngineManager(IEntitySearchEngineManager searchEngineManager) {
 		this._searchEngineManager = searchEngineManager;
 	}
 	
 	private String _userFilterDateFormat;
 	
-	private ISearchEngineManager _searchEngineManager;
+	private IEntitySearchEngineManager _searchEngineManager;
 	
 }

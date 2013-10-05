@@ -3,6 +3,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
+* Entando is a free software; 
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -204,6 +205,12 @@ public class SearchEngineManager extends AbstractService
 	}
 	
 	@Override
+	public List<String> searchId(String sectionCode, String langCode, 
+			String word, Collection<String> allowedGroups) throws ApsSystemException {
+		return this.searchEntityId(langCode, word, allowedGroups);
+	}
+    
+	@Override
 	public List<String> searchEntityId(String langCode, String word,
 			Collection<String> allowedGroups) throws ApsSystemException {
 		List<String> contentsId = new ArrayList<String>();
@@ -273,5 +280,5 @@ public class SearchEngineManager extends AbstractService
     private String _newTempSubDirectory;
     
     private IContentManager _contentManager;
-    
+	
 }
