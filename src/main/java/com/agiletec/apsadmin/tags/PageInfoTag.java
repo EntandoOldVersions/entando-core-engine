@@ -27,7 +27,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * The names of the available property of "Page": "code" (the code page), "parent (the parent page), "children" (the list of child pages), 
  * "position" (the position relative to other pages), "titles" (map of titles indexed by the system languages), "model" (the page model), 
  * "group" (the code of the owner group), "extraGroups" (the list of extra group codes), "showable" (whether to be displayed in the menu), 
- * "useExtraTitles" (if the page must use any extra titles), "showlets" (the showlets applied to the page).
+ * "useExtraTitles" (if the page must use any extra titles), "widgets" (the widgets applied to the page).
  * @author E.Santoboni
  */
 public class PageInfoTag extends AbstractObjectInfoTag {

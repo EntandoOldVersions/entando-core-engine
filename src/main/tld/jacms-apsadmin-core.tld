@@ -75,9 +75,9 @@
 	</tag>
 	<tag>
 		<description>
-			<![CDATA[This tag allows the preliminary execution of the showlet so to show the preview of the contents
+			<![CDATA[This tag allows the preliminary execution of the widget so to show the preview of the contents
 			within the content administration pages in the backend.
-			This tag class comes directly from the ExecShowletTag class used in the front-end to build the
+			This tag class comes directly from the ExecWidgetTag class used in the front-end to build the
 			pages of the portal.]]>
 		</description>
 		<name>contentPreviewExecWidget</name>

@@ -251,7 +251,7 @@
 			"extraGroups" (the list of extra group codes)<br/>
 			"showable" (whether to be displayed in the menu)<br/>
 			"useExtraTitles" (if the page must use any extra titles)<br/>
-			"showlets" (the showlets applied to the page).]]></description>
+			"widgets" (the widgets applied to the page).]]></description>
 			<name>property</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
@@ -353,7 +353,7 @@
 	</tag>
 	<tag>
 		<description>
-			<![CDATA[Returns a showlet type (or one of its property) given its code.
+			<![CDATA[Returns a widget type (or one of its property) given its code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property
 			using the "property" attribute.]]>
 		</description>
@@ -361,22 +361,57 @@
 		<tag-class>com.agiletec.apsadmin.tags.WidgetTypeInfoTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description><![CDATA[The code of the showlet type to return.]]></description>
+			<description><![CDATA[The code of the widget type to return.]]></description>
 			<name>key</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description><![CDATA[Name used to reference the showlet type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<description><![CDATA[Name used to reference the widget type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
 			<name>var</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
-			The available properties of "ShowletType" are:
+			The available properties of "WidgetType" are:
 			"code"<br/> "titles" (map of titles indexed by the system languages)<br/>
-			"parameters" (list of object "ShowletTypeParameter")<br/>
+			"parameters" (list of object "WidgetTypeParameter")<br/>
+			"action" (the code of the action used to manage the type)<br/>
+			"pluginCode"<br/> "parentTypeCode"<br/>
+			"config" (map of default parameter values indexed by the key)<br/>
+			"locked".]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>
+			<![CDATA[<b>DEPRECATED</b>; Since Entando 4.0.0, use "widgetType" instead.<br />Returns a widget type (or one of its property) given its code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property
+			using the "property" attribute.]]>
+		</description>
+		<name>showletType</name>
+		<tag-class>com.agiletec.apsadmin.tags.WidgetTypeInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the widget type to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the widget type (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+			The available properties of "WidgetType" are:
+			"code"<br/> "titles" (map of titles indexed by the system languages)<br/>
+			"parameters" (list of object "WidgetTypeParameter")<br/>
 			"action" (the code of the action used to manage the type)<br/>
 			"pluginCode"<br/> "parentTypeCode"<br/>
 			"config" (map of default parameter values indexed by the key)<br/>
