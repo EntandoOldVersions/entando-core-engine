@@ -126,11 +126,12 @@ public interface SystemConstants {
      */
     public static final String PAGE_MODEL_MANAGER = "PageModelManager";
     
-    
     /**
      * Nome del servizio che gestisce le pagine del portale.
      */
     public static final String PAGE_MANAGER = "PageManager";
+	
+	public static final String NAVIGATOR_PARSER = "NavigatorParser";
     
     /**
      * Nome del servizio di gestione dei gruppi.
@@ -277,9 +278,19 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_ERROR_PAGE_CODE = "errorPageCode";
     
     public static final String CONFIG_PARAM_LOGIN_PAGE_CODE = "loginPageCode";
-    
-    public static final String NAVIGATOR_PARSER = "NavigatorParser";
-    
+	
+	public static final String CONFIG_PARAM_GROUPS_ON_DEMAND = "groupsOnDemand";
+	
+	public static final String CONFIG_PARAM_CATEGORIES_ON_DEMAND = "categoriesOnDemand";
+	
+	public static final String CONFIG_PARAM_CONTENT_TYPES_ON_DEMAND = "contentTypesOnDemand";
+	
+	public static final String CONFIG_PARAM_CONTENT_MODELS_ON_DEMAND = "contentModelsOnDemand";
+	
+	public static final String CONFIG_PARAM_APIS_ON_DEMAND = "apisOnDemand";
+	
+	public static final String CONFIG_PARAM_RESOURCE_ARCHIVES_ON_DEMAND = "resourceArchivesOnDemand";
+	
     /**
      * Lo username dell'utente amministratore, utente di default 
      * con diritti massimi nel sistema.

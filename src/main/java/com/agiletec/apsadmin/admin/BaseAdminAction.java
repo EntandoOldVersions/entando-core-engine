@@ -41,6 +41,7 @@ import com.agiletec.apsadmin.system.BaseAction;
  */
 public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
     
+    @Override
     public String reloadConfig() {
         try {
             ApsWebApplicationUtils.executeSystemRefresh(this.getRequest());
@@ -53,6 +54,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         return SUCCESS;
     }
     
+    @Override
     public String reloadEntitiesReferences() {
         try {
             ReloadingEntitiesReferencesEvent event = new ReloadingEntitiesReferencesEvent();
@@ -74,6 +76,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         this._reloadingResult = reloadingResult;
     }
     
+	@Override
     public String configSystemParams() {
         try {
             this.initLocalMap();
@@ -84,6 +87,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         return SUCCESS;
     }
     
+    @Override
     public String updateSystemParams() {
         try {
             this.initLocalMap();
@@ -177,6 +181,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         this._pageManager = pageManager;
     }
     
+	@Override
     public Map<String, String> getSystemParams() {
         return _systemParams;
     }

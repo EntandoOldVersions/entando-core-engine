@@ -340,6 +340,14 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 		<Param name="errorPageCode">errorpage</Param>
 		<Param name="loginPageCode">login</Param>
 	</SpecialPages>
+	<FeaturesOnDemand>
+		<Param name="groupsOnDemand">false</Param>
+		<Param name="categoriesOnDemand">false</Param>
+		<Param name="contentTypesOnDemand">false</Param>
+		<Param name="contentModelsOnDemand">false</Param>
+		<Param name="apisOnDemand">false</Param>
+		<Param name="resourceArchivesOnDemand">false</Param>
+	</FeaturesOnDemand>
 	<ExtendendPrivacyModule>
 		<Param name="extendedPrivacyModuleEnabled">false</Param>
 		<Param name="maxMonthsSinceLastAccess">6</Param>
