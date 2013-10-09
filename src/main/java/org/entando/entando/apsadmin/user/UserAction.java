@@ -21,11 +21,15 @@ import java.util.Date;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.User;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
+
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * Action base delegata alla gestione utenze.
@@ -108,6 +112,7 @@ public class UserAction extends BaseAction {
 				if (null != this.getPassword() && this.getPassword().trim().length()>0) {
 					user.setPassword(this.getPassword());
 				}
+				this.checkUserProfile(user, false);
 			}
 			user.setDisabled(!this.isActive());
 			if (this.isReset()) {
@@ -116,6 +121,7 @@ public class UserAction extends BaseAction {
 			}
 			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
 				this.getUserManager().addUser(user);
+				this.checkUserProfile(user, true);
 			} else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
 				this.getUserManager().updateUser(user);
 				if (null != this.getPassword() && this.getPassword().trim().length()>0) {
@@ -127,6 +133,23 @@ public class UserAction extends BaseAction {
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	private void checkUserProfile(User user, boolean add) throws ApsSystemException {
+		String username = user.getUsername();
+		try {
+			IUserProfile userProfile = this.getUserProfileManager().getProfile(username);
+			if (null == userProfile) {
+				userProfile = this.getUserProfileManager().getDefaultProfileType();
+				if (null != userProfile) {
+					userProfile.setId(username);
+					this.getUserProfileManager().addProfile(username, userProfile);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "checkUserProfile");
+			throw new ApsSystemException("Error adding default profile for user " + username, t);
+		}
 	}
 	
 	public String trash() {
@@ -278,7 +301,15 @@ public class UserAction extends BaseAction {
 		this._userManager = userManager;
 	}
 	
+	protected IUserProfileManager getUserProfileManager() {
+		return _userProfileManager;
+	}
+	public void setUserProfileManager(IUserProfileManager userProfileManager) {
+		this._userProfileManager = userProfileManager;
+	}
+	
 	private IUserManager _userManager;
+	private IUserProfileManager _userProfileManager;
 	
 	private int _strutsAction;
 	private String _username;
