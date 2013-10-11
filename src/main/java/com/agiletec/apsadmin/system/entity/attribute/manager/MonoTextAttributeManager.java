@@ -19,6 +19,7 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
+
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -35,101 +37,12 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
     
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected Object getValue(AttributeInterface attribute) {
-        String text = ((MonoTextAttribute) attribute).getText();
-        if (null != text && text.trim().length() > 0) {
-            return text;
-        }
-        return null;
-    }
-    
+	@Override
     protected void setValue(AttributeInterface attribute, String value) {
         ((MonoTextAttribute) attribute).setText(value);
     }
     
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkSingleAttribute(action, attribute, tracer, entity);
-        this.checkTextLengths(action, attribute, tracer);
-        this.checkRegExp(action, attribute, tracer);
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkListElement(action, attribute, tracer, entity);
-        this.checkTextLengths(action, attribute, tracer);
-        this.checkRegExp(action, attribute, tracer);
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkMonoListCompositeElement(action, attribute, tracer, entity);
-        this.checkTextLengths(action, attribute, tracer);
-        this.checkRegExp(action, attribute, tracer);
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkMonoListElement(action, attribute, tracer, entity);
-        this.checkTextLengths(action, attribute, tracer);
-        this.checkRegExp(action, attribute, tracer);
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkTextLengths(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        int maxLength = ((ITextAttribute) attribute).getMaxLength();
-        int minLength = ((ITextAttribute) attribute).getMinLength();
-        if (maxLength != -1 || minLength != -1) {
-            String text = this.getTextForCheckLength(attribute);
-            if (text != null) {
-                text = text.trim();
-                if (maxLength != -1 && text.length() > maxLength && text.length() > 0) {
-                    String[] args = {String.valueOf(text.length()), String.valueOf(maxLength)};
-                    super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMaxLength", args);
-                }
-                if (minLength != -1 && text.length() < minLength && text.length() > 0) {
-                    String[] args = {String.valueOf(text.length()), String.valueOf(minLength)};
-                    super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidMinLength", args);
-                }
-            }
-        }
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkRegExp(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        String value = (String) this.getValue(attribute);
-        ITextAttribute textAttribute = (ITextAttribute) attribute;
-        if (null != value && null != textAttribute.getRegexp()) {
-            Pattern pattern = Pattern.compile(textAttribute.getRegexp());
-            Matcher matcher = pattern.matcher(value);
-            if (!matcher.matches()) {
-                super.addFieldError(action, attribute, tracer, "MonotextAttribute.fieldError.invalidInsertedText", null);
-            }
-        }
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected String getTextForCheckLength(AttributeInterface attribute) {
-        return (String) this.getValue(attribute);
-    }
-    
+	@Override
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         AttributeInterface attribute = attributeFieldError.getAttribute();
         TextAttributeValidationRules valRules = (TextAttributeValidationRules) attribute.getValidationRules();
@@ -149,6 +62,5 @@ public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
         }
         return action.getText(this.getInvalidAttributeMessage());
     }
-    
     
 }

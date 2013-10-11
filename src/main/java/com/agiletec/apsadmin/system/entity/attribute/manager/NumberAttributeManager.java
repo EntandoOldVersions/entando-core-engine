@@ -34,6 +34,7 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
     
+	@Override
     protected void setValue(AttributeInterface attribute, String value) {
         NumberAttribute numberAttribute = (NumberAttribute) attribute;
         BigDecimal number = null;
@@ -52,96 +53,8 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
         numberAttribute.setValue(number);
     }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected Object getValue(AttributeInterface attribute) {
-        return ((NumberAttribute) attribute).getValue();
-    }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        int state = super.getState(attribute, tracer);
-        boolean valuedString = ((NumberAttribute) attribute).getFailedNumberString() != null;
-        if (state == VALUED_ATTRIBUTE_STATE || valuedString) {
-            return this.VALUED_ATTRIBUTE_STATE;
-        }
-        return this.EMPTY_ATTRIBUTE_STATE;
-    }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkSingleAttribute(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkSingleAttribute(action, attribute, tracer, entity);
-        this.checkNumber(action, attribute, tracer);
-        this.validateNumber(action, attribute, tracer);
-    }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkListElement(action, attribute, tracer, entity);
-        this.checkNumber(action, attribute, tracer);
-        this.validateNumber(action, attribute, tracer);
-    }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkMonoListCompositeElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkMonoListCompositeElement(action, attribute, tracer, entity);
-        this.checkNumber(action, attribute, tracer);
-        this.validateNumber(action, attribute, tracer);
-    }
-
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected void checkMonoListElement(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, IApsEntity entity) {
-        super.checkMonoListElement(action, attribute, tracer, entity);
-        this.checkNumber(action, attribute, tracer);
-        this.validateNumber(action, attribute, tracer);
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    private void checkNumber(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && !this.hasRightValue(attribute)) {
-            this.addFieldError(action, attribute, tracer, "NumberAttribute.fieldError.invalidNumber", null);
-        }
-    }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    private void validateNumber(ActionSupport action, AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        if (this.getState(attribute, tracer) == VALUED_ATTRIBUTE_STATE && this.hasRightValue(attribute)) {
-            NumberAttributeValidationRules valRules = (NumberAttributeValidationRules) attribute.getValidationRules();
-            Integer attributeValue = ((NumberAttribute) attribute).getValue().intValue();
-            Integer startValue = (valRules.getRangeStart() != null) ? (Integer) valRules.getRangeStart() : this.getOtherAttributeValue(attribute, valRules.getRangeStartAttribute());
-            if (null != startValue && attributeValue < startValue) {
-                String[] args = {startValue.toString()};
-                this.addFieldError(action, attribute, tracer, "NumberAttribute.fieldError.lessValue", args);
-            }
-            Integer endValue = (valRules.getRangeEnd() != null) ? (Integer) valRules.getRangeEnd() : this.getOtherAttributeValue(attribute, valRules.getRangeEndAttribute());
-            if (null != endValue && attributeValue > endValue) {
-                String[] args = {endValue.toString()};
-                this.addFieldError(action, attribute, tracer, "NumberAttribute.fieldError.greaterValue", args);
-            }
-            Integer value = (valRules.getValue() != null) ? (Integer) valRules.getValue() : this.getOtherAttributeValue(attribute, valRules.getValueAttribute());
-            if (null != value && attributeValue != value) {
-                String[] args = {value.toString()};
-                this.addFieldError(action, attribute, tracer, "NumberAttribute.fieldError.wrongValue", args);
-            }
-        }
-    }
-    
+	
+	@Override
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         AttributeInterface attribute = attributeFieldError.getAttribute();
         NumberAttributeValidationRules valRules = (NumberAttributeValidationRules) attribute.getValidationRules();
@@ -171,21 +84,8 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
         return null;
     }
-
-    /**
-     * Check for the coherency of the data of the attribute. 
-     * @param attribute The attribute to check.
-     * @return true if the attribute is properly valued, false otherwise.
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    private boolean hasRightValue(AttributeInterface attribute) {
-        if (this.getValue(attribute) != null) {
-            return true;
-        }
-        String insertedNumberString = ((NumberAttribute) attribute).getFailedNumberString();
-        return CheckFormatUtil.isValidNumber(insertedNumberString);
-    }
-    
+	
+	@Override
     protected String getInvalidAttributeMessage() {
         return "NumberAttribute.fieldError.invalidNumber";
     }

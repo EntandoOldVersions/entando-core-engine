@@ -21,7 +21,9 @@ import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.TimestampAttribute;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
+
 import java.util.Calendar;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -48,7 +50,6 @@ public class TimestampAttributeManager extends DateAttributeManager {
 	
 	protected void setValue(AttributeInterface attribute, String value, String valueType) {
 		TimestampAttribute timestampAttribute = (TimestampAttribute) attribute;
-		//Date data = null;
 		if (value != null) {
 			value = value.trim();
 		}
@@ -60,8 +61,6 @@ public class TimestampAttributeManager extends DateAttributeManager {
 				this.setError(timestampAttribute, value, valueType);
 				throw new RuntimeException("Error while parsing the number - " + value + " -", ex);
 			}
-			//data = dataF.parse(value);
-			//dateAttribute.setFailedDateString(null);
 			int max = (valueType.equalsIgnoreCase(VALUE_HOUR)) ? 23 : 59;
 			if (number > max) {
 				this.setError(timestampAttribute, value, valueType);
@@ -73,7 +72,6 @@ public class TimestampAttributeManager extends DateAttributeManager {
 			this.setError(timestampAttribute, value, valueType);
 			return;
 		}
-		
 		if (null != number && null != timestampAttribute.getDate()) {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(timestampAttribute.getDate());
@@ -117,4 +115,5 @@ public class TimestampAttributeManager extends DateAttributeManager {
 	private static final String VALUE_HOUR = "h";
 	private static final String VALUE_MINUTE = "m";
 	private static final String VALUE_SECOND = "s";
+	
 }

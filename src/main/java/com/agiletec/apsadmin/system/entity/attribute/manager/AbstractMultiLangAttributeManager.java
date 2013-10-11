@@ -31,13 +31,7 @@ import com.agiletec.aps.system.services.lang.Lang;
  */
 public abstract class AbstractMultiLangAttributeManager extends AbstractAttributeManager {
     
-    /**
-     * @deprecated As of version 2.4.1 of Entando, use updateAttribute(AttributeInterface, AttributeTracer, HttpServletRequest).
-     */
-    protected void updateAttribute(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer, HttpServletRequest request) {
-        this.updateAttribute(attribute, (AttributeTracer) tracer, request);
-    }
-    
+	@Override
     protected void updateAttribute(AttributeInterface attribute, AttributeTracer tracer, HttpServletRequest request) {
         List<Lang> langs = this.getLangManager().getLangs();
         for (int i = 0; i < langs.size(); i++) {
@@ -53,34 +47,6 @@ public abstract class AbstractMultiLangAttributeManager extends AbstractAttribut
             }
         }
     }
-    
-    /**
-     * @deprecated As of version 2.4.1 of Entando, moved validation within single attribute.
-     */
-    protected int getState(AttributeInterface attribute, com.agiletec.apsadmin.system.entity.attribute.AttributeTracer tracer) {
-        Lang defaultLang = this.getLangManager().getDefaultLang();
-        boolean valued = this.getValue(attribute, defaultLang) != null;
-        if (valued) {
-            return this.VALUED_ATTRIBUTE_STATE;
-        }
-        return this.EMPTY_ATTRIBUTE_STATE;
-    }
-    
-    /**
-     * Return the value held by the given attribute. 
-     * This method is invoked by the getStatus when the request is null, that is when the
-     * validation process is triggered by the approval of the list of contents.
-     * This value can be referred to as the value typed in the form in the previous save or 
-     * approval process; eg. for multi-language text attributes will be returned the text in
-     * the specified language, for attributes of type image, the text in the specified
-     * language and not the resource itself will be returned.
-     * 
-     * @param attribute The current attribute (simple or composed) which holds the desired value
-     * @param lang The localization desired for the returned value.
-     * @return The value held by the attribute.
-     * @deprecated 
-     */
-    protected abstract Object getValue(AttributeInterface attribute, Lang lang);
     
     /**
      * Set the value of the specified attribute.
