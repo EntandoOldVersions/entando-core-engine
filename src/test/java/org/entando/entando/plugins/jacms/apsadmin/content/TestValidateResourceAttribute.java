@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -54,16 +53,17 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			AttributeTracer tracer = this.getTracer();
 			AttributeInterface resourceAttribute = (AttributeInterface) content.getAttribute(attributeName);
 			String formFieldName = tracer.getFormFieldName(resourceAttribute);
+			String resourceFieldName = resourceAttribute.getType() + ":" + attributeName;
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(0, attributeName);
+			this.checkFieldErrors(0, resourceFieldName);
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formFieldName, "resourceDescription");
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(1, attributeName);
+			this.checkFieldErrors(1, resourceFieldName);
 			
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			AbstractResourceAttribute attachAttribute = (AbstractResourceAttribute) content.getAttribute(attributeName);
@@ -72,7 +72,7 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(0, attributeName);
+			this.checkFieldErrors(0, resourceFieldName);
 		} catch (Throwable t) {
 			this.deleteTestContent();
 			throw t;
@@ -94,6 +94,7 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolistAttribute = (MonoListAttribute) content.getAttribute(mlAttributeName);
 			AttributeInterface newResourceAttribute = monolistAttribute.addAttribute();
+			String monolistElementFieldPrefix = "Monolist:" + newResourceAttribute.getType() + ":";
 			
 			tracer.setListIndex(monolistAttribute.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
@@ -101,10 +102,10 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(monolistAttribute);
 			
 			String monolistElementName = tracer.getMonolistElementFieldName(newResourceAttribute);
-			assertEquals(mlAttributeName + "_0", monolistElementName);
+			assertEquals(monolistElementFieldPrefix + mlAttributeName + "_0", monolistElementName);
 			
 			String formFieldName = tracer.getFormFieldName(newResourceAttribute);
-			assertEquals("it_" + mlAttributeName + "_0", formFieldName);
+			assertEquals(monolistElementFieldPrefix + "it_" + mlAttributeName + "_0", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -128,9 +129,9 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			AttributeInterface attribute2 = monolistAttribute.addAttribute();
 			tracer.setListIndex(monolistAttribute.getAttributes().size() - 1);
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
-			assertEquals("it_" + mlAttributeName + "_1", formFieldName2);
+			assertEquals(monolistElementFieldPrefix + "it_" + mlAttributeName + "_1", formFieldName2);
 			String monolistElementName2 = tracer.getMonolistElementFieldName(attribute2);
-			assertEquals(mlAttributeName + "_1", monolistElementName2);
+			assertEquals(monolistElementFieldPrefix + mlAttributeName + "_1", monolistElementName2);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -156,12 +157,13 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			AttributeTracer tracerIT = this.getTracer();
 			CompositeAttribute compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
 			AttributeInterface attribute = compositeAttribute.getAttribute(elementName);
+			String formFieldPrefix = "Composite:" + attribute.getType() + ":";
 			
 			tracerIT.setCompositeElement(true);
 			tracerIT.setParentAttribute(compositeAttribute);
 			
 			String formITFieldName = tracerIT.getFormFieldName(attribute);
-			assertEquals("it_Composite_" + elementName, formITFieldName);
+			assertEquals(formFieldPrefix + "it_Composite_" + elementName, formITFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -170,7 +172,7 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "itValue");
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(1, "Composite_" + elementName);
+			this.checkFieldErrors(1, formFieldPrefix + "Composite_" + elementName);
 			
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			compositeAttribute = (CompositeAttribute) content.getAttribute("Composite");
@@ -180,7 +182,7 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(0, "Composite_" + elementName);
+			this.checkFieldErrors(0, formFieldPrefix + "Composite_" + elementName);
 			
 		} catch (Throwable t) {
 			this.deleteTestContent();
@@ -204,6 +206,8 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			MonoListAttribute monolistAttribute = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolistAttribute.addAttribute();
 			AttributeInterface attribute = compositeElement.getAttribute(elementName);
+			String monolistElementFieldPrefix = "Monolist:Composite:";
+			String formFieldPrefix = monolistElementFieldPrefix + attribute.getType() + ":";
 			
 			tracerIT.setListIndex(monolistAttribute.getAttributes().size() - 1);
 			tracerIT.setListLang(this.getLangManager().getDefaultLang());
@@ -212,10 +216,10 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			tracerIT.setParentAttribute(compositeElement);
 			
 			String formITFieldName = tracerIT.getFormFieldName(attribute);
-			assertEquals("it_MonoLCom_" + elementName + "_0", formITFieldName);
+			assertEquals(formFieldPrefix + "it_MonoLCom_" + elementName + "_0", formITFieldName);
 			
 			String monolistElementName = tracerIT.getMonolistElementFieldName(compositeElement);
-			assertEquals("MonoLCom_0", monolistElementName);
+			assertEquals(monolistElementFieldPrefix + "MonoLCom_0", monolistElementName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -224,7 +228,7 @@ public class TestValidateResourceAttribute extends AbstractTestContentAttribute 
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.addParameter(formITFieldName, "itValue");
 			this.executeAction(Action.INPUT);
-			this.checkFieldErrors(1, "MonoLCom_" + elementName + "_0");
+			this.checkFieldErrors(1, formFieldPrefix + "MonoLCom_" + elementName + "_0");
 			
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			monolistAttribute = (MonoListAttribute) content.getAttribute("MonoLCom");

@@ -119,7 +119,7 @@ public class TestUserProfileAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, result);
 		
         this.initAction("/do/userprofile", "save");
-		this.addParameter("fullname", "");
+		this.addParameter("Monotext:fullname", "");
         result = this.executeAction();
         assertEquals(Action.INPUT, result);
 		
@@ -127,16 +127,16 @@ public class TestUserProfileAction extends ApsAdminBaseTestCase {
         assertEquals(1, action.getFieldErrors().size());
 		
         this.initAction("/do/userprofile", "save");
-        this.addParameter("fullname", "Ronald Rossi");
-        this.addParameter("email", "");
-        this.addParameter("birthdate", "25/09/1972");
-        this.addParameter("language", "it");
+        this.addParameter("Monotext:fullname", "Ronald Rossi");
+        this.addParameter("Monotext:email", "");
+        this.addParameter("Date:birthdate", "25/09/1972");
+        this.addParameter("Monotext:language", "it");
         result = this.executeAction();
         assertEquals(Action.INPUT, result);
 		
         action = this.getAction();
         assertEquals(1, action.getFieldErrors().size());
-        assertEquals(1, ((List<String>) action.getFieldErrors().get("email")).size());
+        assertEquals(1, ((List<String>) action.getFieldErrors().get("Monotext:email")).size());
 		
         IUserProfile currentUserProfile = (IUserProfile) this.getRequest().getSession().getAttribute(UserProfileAction.USERPROFILE_ON_SESSION);
         assertNotNull(currentUserProfile);
@@ -153,10 +153,10 @@ public class TestUserProfileAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, result);
         try {
             this.initAction("/do/userprofile", "save");
-            this.addParameter("fullname", "Eugenio Montale");
-            this.addParameter("email", "eugenioxxxxx@xxxx.it");
-            this.addParameter("birthdate", "12/10/1896");
-            this.addParameter("language", "it");
+            this.addParameter("Monotext:fullname", "Eugenio Montale");
+            this.addParameter("Monotext:email", "eugenioxxxxx@xxxx.it");
+            this.addParameter("Date:birthdate", "12/10/1896");
+            this.addParameter("Monotext:language", "it");
             result = this.executeAction();
             assertEquals(Action.SUCCESS, result);
 			

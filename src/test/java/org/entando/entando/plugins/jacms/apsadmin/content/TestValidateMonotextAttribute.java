@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -23,6 +22,7 @@ import com.agiletec.aps.system.common.entity.model.attribute.CompositeAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+
 import com.opensymphony.xwork2.Action;
 
 /**
@@ -94,6 +94,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLMonot");
 			AttributeInterface attribute = monolist.addAttribute();
+			String formFieldPrefix = "Monolist:" + attribute.getType() + ":";
 			
 			tracer.setLang(this.getLangManager().getDefaultLang());
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
@@ -102,7 +103,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(monolist);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLMonot_0", formFieldName);
+			assertEquals(formFieldPrefix + "MonoLMonot_0", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -116,7 +117,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			AttributeInterface attribute2 = monolist.addAttribute();
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
-			assertEquals("MonoLMonot_1", formFieldName2);
+			assertEquals(formFieldPrefix + "MonoLMonot_1", formFieldName2);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -144,7 +145,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(list);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("it_ListMonot_0", formFieldName);
+			String formFieldPrefix = "List:" + attribute.getType() + ":";
+			assertEquals(formFieldPrefix + "it_ListMonot_0", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -158,7 +160,7 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			AttributeInterface attribute2 = list.addAttribute("it");
 			tracer.setListIndex(list.getAttributes().size() - 1);
 			formFieldName = tracer.getFormFieldName(attribute2);
-			assertEquals("it_ListMonot_1", formFieldName);
+			assertEquals(formFieldPrefix + "it_ListMonot_1", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -182,7 +184,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(compositeAttribute);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("Composite_Monotext", formFieldName);
+			String formFieldPrefix = "Composite:" + attribute.getType() + ":";
+			assertEquals(formFieldPrefix + "Composite_Monotext", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -206,6 +209,8 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
 			AttributeInterface attribute = compositeElement.getAttribute("Monotext");
+			String monolistElementFieldPrefix = "Monolist:Composite:";
+			String formFieldPrefix = monolistElementFieldPrefix + attribute.getType() + ":";
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
@@ -214,10 +219,10 @@ public class TestValidateMonotextAttribute extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(compositeElement);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLCom_Monotext_0", formFieldName);
+			assertEquals(formFieldPrefix + "MonoLCom_Monotext_0", formFieldName);
 			
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
-			assertEquals("MonoLCom_0", monolistElementName);
+			assertEquals(monolistElementFieldPrefix + "MonoLCom_0", monolistElementName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);

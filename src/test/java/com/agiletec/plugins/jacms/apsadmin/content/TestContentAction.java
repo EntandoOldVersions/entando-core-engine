@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -20,8 +19,6 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoListAttribute;
@@ -33,8 +30,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
-import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
-import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -103,7 +99,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(1, fieldErrors.size());
-			List<String> titleFieldErrors = fieldErrors.get("it_Titolo");
+			List<String> titleFieldErrors = fieldErrors.get("Text:it_Titolo");
 			assertNotNull(titleFieldErrors);
 			assertEquals(1, titleFieldErrors.size());//Verifica obbligatorietà attributo "Titolo"
 			
@@ -122,11 +118,11 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
 			
-			titleFieldErrors = fieldErrors.get("it_Titolo");
+			titleFieldErrors = fieldErrors.get("Text:it_Titolo");
 			assertNotNull(titleFieldErrors);
 			assertEquals(1, titleFieldErrors.size());//Verifica obbligatorietà attributo "Titolo"
 			
-			List<String> autoriFieldErrors = fieldErrors.get("Autori_0");
+			List<String> autoriFieldErrors = fieldErrors.get("Monolist:Monotext:Autori_0");
 			assertNotNull(autoriFieldErrors);
 			assertEquals(1, autoriFieldErrors.size());//Verifica non valido elemento 1 in attributo lista "Autori"
 		} catch (Throwable t) {
@@ -164,7 +160,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			ActionSupport action = this.getAction();
 			assertEquals(1, action.getFieldErrors().size());
-			assertEquals(1, action.getFieldErrors().get("LinkCorrelati_0").size());
+			assertEquals(1, action.getFieldErrors().get("Monolist:Link:LinkCorrelati_0").size());
 			
 		} catch (Throwable t) {
 			throw t;
@@ -200,7 +196,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			List<String> descrFieldsErrors = fieldErros.get("descr");
 			assertEquals(1, descrFieldsErrors.size());
-			List<String> titleFieldsErrors = fieldErros.get("it_Titolo");
+			List<String> titleFieldsErrors = fieldErros.get("Text:it_Titolo");
 			assertEquals(1, titleFieldsErrors.size());
 		} catch (Throwable t) {
 			throw t;
@@ -226,18 +222,18 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", insertedDescr);
-			this.addParameter("email", "wrongEmailAddress");
-			this.addParameter("Numero", "wrongNumber");
-			this.addParameter("Checkbox", "true");
+			this.addParameter("Monotext:email", "wrongEmailAddress");
+			this.addParameter("Number:Numero", "wrongNumber");
+			this.addParameter("CheckBox:Checkbox", "true");
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			
 			ActionSupport action = this.getAction();
 			Map<String, List<String>> fieldErros = action.getFieldErrors();
 			assertEquals(2, fieldErros.size());
-			List<String> emailFieldErrors = fieldErros.get("email");
+			List<String> emailFieldErrors = fieldErros.get("Monotext:email");
 			assertEquals(1, emailFieldErrors.size());
-			List<String> numberFieldErrors = fieldErros.get("Numero");
+			List<String> numberFieldErrors = fieldErros.get("Number:Numero");
 			assertEquals(1, numberFieldErrors.size());
 			
 			Content content = this.getContentOnEdit(contentOnSessionMarker);
@@ -252,8 +248,8 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
-			this.addParameter("email", "wrongEmailAddress");
-			this.addParameter("Numero", "wrongNumber");
+			this.addParameter("Monotext:email", "wrongEmailAddress");
+			this.addParameter("Number:Numero", "wrongNumber");
 			// LEAVING the Checkbox parameter will result in the checkbox attribute being later evaluated as 'false' 
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -290,7 +286,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("descr", insertedDescr);
-			this.addParameter("it_Titolo", shortTitle);
+			this.addParameter("Text:it_Titolo", shortTitle);
 			
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -300,14 +296,14 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			
 			assertEquals(1, fieldErros.size());
 			
-			List<String> titleItFieldErrors = fieldErros.get("it_Titolo");
+			List<String> titleItFieldErrors = fieldErros.get("Text:it_Titolo");
 			assertEquals(1, titleItFieldErrors.size());
 			
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
-			this.addParameter("it_Titolo", longTitle);
+			this.addParameter("Text:it_Titolo", longTitle);
 			
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -315,15 +311,15 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			action = this.getAction();
 			fieldErros = action.getFieldErrors();
 			assertEquals(1, fieldErros.size());
-			titleItFieldErrors = fieldErros.get("it_Titolo");
+			titleItFieldErrors = fieldErros.get("Text:it_Titolo");
 			assertEquals(1, titleItFieldErrors.size());
 			
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
 			this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
 			this.addParameter("descr", insertedDescr);
-			this.addParameter("it_Titolo", "Right Title length");
-			this.addParameter("en_Titolo", longTitle);
+			this.addParameter("Text:it_Titolo", "Right Title length");
+			this.addParameter("Text:en_Titolo", longTitle);
 			
 			result = this.executeAction();
 			assertEquals(Action.INPUT, result);
@@ -331,7 +327,7 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			action = this.getAction();
 			fieldErros = action.getFieldErrors();
 			assertEquals(1, fieldErros.size());
-			titleItFieldErrors = fieldErros.get("en_Titolo");
+			titleItFieldErrors = fieldErros.get("Text:en_Titolo");
 			assertEquals(1, titleItFieldErrors.size());
 			
 		} catch (Throwable t) {
@@ -490,18 +486,17 @@ public class TestContentAction extends AbstractBaseTestContentAction {
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, master);
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
 			this.setUserOnSession("admin");
-			this.addParameter("it_Titolo", "");
+			this.addParameter("Text:it_Titolo", "");
 			this.addParameter("descr", "");
 			String result = this.executeAction();
 			assertEquals(Action.INPUT, result);
 			Map<String, List<String>> fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
 			assertEquals(1, fieldErrors.get("descr").size());
-			assertEquals(1, fieldErrors.get("it_Titolo").size());
+			assertEquals(1, fieldErrors.get("Text:it_Titolo").size());
 			
 			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
-			//this.addParameter("descr", descr);
-			this.addParameter("it_Titolo", descr);
+			this.addParameter("Text:it_Titolo", descr);
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 		} catch (Throwable t) {

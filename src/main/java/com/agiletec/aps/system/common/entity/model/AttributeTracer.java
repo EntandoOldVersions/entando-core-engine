@@ -80,24 +80,35 @@ public class AttributeTracer {
      */
     public String getFormFieldName(AttributeInterface attribute) {
         StringBuilder formFieldName = new StringBuilder();
+		StringBuilder formFieldPrefix = new StringBuilder();
         String langModule = "";
         if (null != this.getLang() && attribute.isMultilingual()) {
             langModule = this.getLang().getCode() + "_";
         }
         if (this.isMonoListElement()) {
+			formFieldPrefix.append("Monolist:");
             if (this.isCompositeElement()) {
-                formFieldName.append(langModule).append(this.getParentAttribute().getName()).append("_").append(attribute.getName()).append("_").append(this.getListIndex());
+				formFieldPrefix.append("Composite:");
+                formFieldName.append(langModule).append(this.getParentAttribute().getName())
+						.append("_").append(attribute.getName()).append("_").append(this.getListIndex());
             } else {
-                formFieldName.append(langModule).append(attribute.getName()).append("_").append(this.getListIndex());
+                formFieldName.append(langModule).append(attribute.getName())
+						.append("_").append(this.getListIndex());
             }
+			formFieldPrefix.append(attribute.getType()).append(":");
         } else if (this.isCompositeElement()) {
-            formFieldName.append(langModule).append(this.getParentAttribute().getName()).append("_").append(attribute.getName());
+			formFieldPrefix.append("Composite:").append(attribute.getType()).append(":");
+            formFieldName.append(langModule).append(this.getParentAttribute().getName())
+					.append("_").append(attribute.getName());
         } else if (this.isListElement()) {
-            formFieldName.append(this.getListLang().getCode()).append("_").append(attribute.getName()).append("_").append(this.getListIndex());
+			formFieldPrefix.append("List:").append(attribute.getType()).append(":");
+            formFieldName.append(this.getListLang().getCode())
+					.append("_").append(attribute.getName()).append("_").append(this.getListIndex());
         } else {
+			formFieldPrefix.append(attribute.getType()).append(":");
             formFieldName.append(langModule).append(attribute.getName());
         }
-        return formFieldName.toString();
+        return formFieldPrefix.toString() + formFieldName.toString();
     }
 	
 	public String getMonolistElementFieldName(AttributeInterface attribute) {
@@ -105,6 +116,7 @@ public class AttributeTracer {
 			return null;
 		}
 		StringBuilder fieldName = new StringBuilder();
+		fieldName.append("Monolist:").append(attribute.getType()).append(":");
 		fieldName.append(attribute.getName()).append("_").append(this.getListIndex());
 		return fieldName.toString();
 	}

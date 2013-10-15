@@ -89,13 +89,14 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute(monolistAttributeName);
 			AttributeInterface attribute = monolist.addAttribute();
+			String formFieldPrefix = "Monolist:" + attribute.getType() + ":";
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
 			tracer.setMonoListElement(true);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals(monolistAttributeName + "_0", formFieldName);
+			assertEquals(formFieldPrefix + monolistAttributeName + "_0", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -114,7 +115,7 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			AttributeInterface attribute2 = monolist.addAttribute();
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
-			assertEquals(monolistAttributeName + "_1", formFieldName2);
+			assertEquals(formFieldPrefix + monolistAttributeName + "_1", formFieldName2);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -153,7 +154,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			tracerIT.setListElement(true);
 			
 			String formFieldItName = tracerIT.getFormFieldName(attributeIT);
-			assertEquals("it_"+ listAttributeName + "_0", formFieldItName);
+			String formFieldPrefix = "List:" + attributeIT.getType() + ":";
+			assertEquals(formFieldPrefix + "it_"+ listAttributeName + "_0", formFieldItName);
 			
 			AttributeTracer tracerEN = tracerIT.clone();
 			tracerEN.setLang(this.getLangManager().getLang("en"));
@@ -176,7 +178,7 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			AttributeInterface attribute2 = list.addAttribute("it");
 			tracerIT.setListIndex(list.getAttributes().size() - 1);
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
-			assertEquals("it_"+ listAttributeName + "_1", formFieldItName);
+			assertEquals(formFieldPrefix + "it_"+ listAttributeName + "_1", formFieldItName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -189,7 +191,7 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			
 			AttributeInterface attributeEN = list.addAttribute("en");
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
-			assertEquals("en_"+ listAttributeName + "_0", formFieldEnName);
+			assertEquals(formFieldPrefix + "en_"+ listAttributeName + "_0", formFieldEnName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -230,7 +232,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(compositeAttribute);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals(compositeAttributeName + "_" + attributeName, formFieldName);
+			String formFieldPrefix = "Composite:" + attribute.getType() + ":";
+			assertEquals(formFieldPrefix + compositeAttributeName + "_" + attributeName, formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -272,6 +275,8 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute(monolistAttributeName);
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
 			AttributeInterface attribute = compositeElement.getAttribute(attributeName);
+			String monolistElementFieldPrefix = "Monolist:Composite:";
+			String formFieldPrefix = monolistElementFieldPrefix + attribute.getType() + ":";
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
@@ -280,10 +285,10 @@ public class TestValidateBooleanAttributes extends AbstractTestContentAttribute 
 			tracer.setParentAttribute(compositeElement);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals(monolistAttributeName + "_" + attributeName + "_0", formFieldName);
+			assertEquals(formFieldPrefix + monolistAttributeName + "_" + attributeName + "_0", formFieldName);
 			
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
-			assertEquals(monolistAttributeName + "_0", monolistElementName);
+			assertEquals(monolistElementFieldPrefix + monolistAttributeName + "_0", monolistElementName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);

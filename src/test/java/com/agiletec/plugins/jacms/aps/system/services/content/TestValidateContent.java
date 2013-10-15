@@ -36,7 +36,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribu
  * @author E.Santoboni
  */
 public class TestValidateContent extends BaseTestCase {
-
+	
+	@Override
     protected void setUp() throws Exception {
         super.setUp();
         this.init();
@@ -50,7 +51,7 @@ public class TestValidateContent extends BaseTestCase {
             assertNotNull(errors);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
-            assertEquals("it_Titolo", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
+            assertEquals("Text:it_Titolo", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
             assertEquals(FieldError.MANDATORY, error.getErrorCode());
             
             String monolistAttributeName = "Autori";
@@ -61,11 +62,11 @@ public class TestValidateContent extends BaseTestCase {
             errors = content.validate(this._groupManager);
             assertEquals(2, errors.size());
             error = errors.get(0);
-            assertEquals("it_Titolo", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
+            assertEquals("Text:it_Titolo", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
             assertEquals(FieldError.MANDATORY, error.getErrorCode());
             
             error = errors.get(1);
-            assertEquals("Autori_0", error.getFieldCode());//Verifica non valido elemento 1 in attributo lista "Autori"
+            assertEquals("Monolist:Monotext:Autori_0", error.getFieldCode());//Verifica non valido elemento 1 in attributo lista "Autori"
             assertEquals(FieldError.INVALID, error.getErrorCode());
         } catch (Throwable t) {
             throw t;
@@ -86,7 +87,7 @@ public class TestValidateContent extends BaseTestCase {
             assertNotNull(errors);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
-            assertEquals("LinkCorrelati_0", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
+            assertEquals("Monolist:Link:LinkCorrelati_0", error.getFieldCode());//Verifica obbligatorietà attributo "Titolo"
             assertEquals(FieldError.INVALID, error.getErrorCode());
             
             //AGGIUNGO LINK SU PAGINA COACH
@@ -99,7 +100,7 @@ public class TestValidateContent extends BaseTestCase {
             assertNotNull(errors);
             assertEquals(1, errors.size());
             error = errors.get(0);
-            assertEquals("LinkCorrelati_0", error.getFieldCode());
+            assertEquals("Monolist:Link:LinkCorrelati_0", error.getFieldCode());
             assertEquals(ICmsAttributeErrorCodes.INVALID_CONTENT_GROUPS, error.getErrorCode());
             
         } catch (Throwable t) {
@@ -116,7 +117,7 @@ public class TestValidateContent extends BaseTestCase {
             List<FieldError> errors = content.validate(this._groupManager);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
-            assertEquals("email", error.getFieldCode());
+            assertEquals("Monotext:email", error.getFieldCode());
             assertEquals(FieldError.INVALID_FORMAT, error.getErrorCode());
         } catch (Throwable t) {
             throw t;
@@ -136,24 +137,24 @@ public class TestValidateContent extends BaseTestCase {
             List<FieldError> errors = content.validate(this._groupManager);
             assertEquals(1, errors.size());
             FieldError error = errors.get(0);
-            assertEquals("it_Titolo", error.getFieldCode());
+            assertEquals("Text:it_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MIN_LENGTH, error.getErrorCode());
             
             textAttribute.setText(longTitle, "it");
             errors = content.validate(this._groupManager);
             assertEquals(1, errors.size());
             error = errors.get(0);
-            assertEquals("it_Titolo", error.getFieldCode());
+            assertEquals("Text:it_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MAX_LENGTH, error.getErrorCode());
             
             textAttribute.setText(shortTitle, "en");
             errors = content.validate(this._groupManager);
             assertEquals(2, errors.size());
             error = errors.get(0);
-            assertEquals("it_Titolo", error.getFieldCode());
+            assertEquals("Text:it_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MAX_LENGTH, error.getErrorCode());
             error = errors.get(1);
-            assertEquals("en_Titolo", error.getFieldCode());
+            assertEquals("Text:en_Titolo", error.getFieldCode());
             assertEquals(FieldError.INVALID_MIN_LENGTH, error.getErrorCode());
             
         } catch (Throwable t) {

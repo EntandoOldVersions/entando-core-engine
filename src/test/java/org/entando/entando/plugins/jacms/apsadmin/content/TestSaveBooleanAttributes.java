@@ -46,7 +46,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("Boolean", "false");
+			this.addParameter("Boolean:Boolean", "false");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (BooleanAttribute) content.getAttribute("Boolean");
@@ -54,7 +54,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("Boolean", "true");
+			this.addParameter("Boolean:Boolean", "true");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (BooleanAttribute) content.getAttribute("Boolean");
@@ -84,7 +84,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("CheckBox", "false");
+			this.addParameter("CheckBox:CheckBox", "false");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
@@ -92,7 +92,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("CheckBox", "true");
+			this.addParameter("CheckBox:CheckBox", "true");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (CheckBoxAttribute) content.getAttribute("CheckBox");
@@ -122,7 +122,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("ThreeState", "false");
+			this.addParameter("ThreeState:ThreeState", "false");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
@@ -130,7 +130,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 			assertFalse(attribute.getValue());
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("ThreeState", "true");
+			this.addParameter("ThreeState:ThreeState", "true");
 			contentOnSessionMarker = this.executeSaveAndReloadContent(contentOnSessionMarker);
 			content = this.getContentOnEdit(contentOnSessionMarker);
 			attribute = (ThreeStateAttribute) content.getAttribute("ThreeState");
@@ -146,7 +146,7 @@ public class TestSaveBooleanAttributes extends AbstractTestContentAttribute {
 	
 	private String executeSaveAndReloadContent(String contentOnSessionMarker) throws Throwable {
 		Content contentOnSession = super.getContentOnEdit(contentOnSessionMarker);
-		this.addParameter("MARKER", "MARKER");
+		this.addParameter("Monotext:MARKER", "MARKER");
 		this.executeAction(Action.SUCCESS);
 		String id = contentOnSession.getId();
 		String result = super.executeEdit(id, "admin");

@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -50,7 +49,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		assertEquals(content.getDescr(), insertedDescr);
 		
 		this.initContentAction("/do/jacms/Content", "preview", contentOnSessionMarker);
-		this.addParameter("it_Titolo", "Nuovo titolo di prova");
+		this.addParameter("Text:it_Titolo", "Nuovo titolo di prova");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		
@@ -73,7 +72,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		
 		this.initContentAction("/do/jacms/Content", "preview", contentOnSessionMarker);
 		this.addParameter("mainGroup", Group.FREE_GROUP_NAME);
-		this.addParameter("it_Titolo", "Nuovo titolo di prova");
+		this.addParameter("Text:it_Titolo", "Nuovo titolo di prova");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 		

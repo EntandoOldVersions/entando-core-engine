@@ -88,13 +88,14 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			AttributeTracer tracer = this.getTracer();
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLNumb");
 			AttributeInterface attribute = monolist.addAttribute();
+			String formFieldPrefix = "Monolist:" + attribute.getType() + ":";
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
 			tracer.setMonoListElement(true);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLNumb_0", formFieldName);
+			assertEquals(formFieldPrefix + "MonoLNumb_0", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -113,7 +114,7 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			AttributeInterface attribute2 = monolist.addAttribute();
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			String formFieldName2 = tracer.getFormFieldName(attribute2);
-			assertEquals("MonoLNumb_1", formFieldName2);
+			assertEquals(formFieldPrefix + "MonoLNumb_1", formFieldName2);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -145,7 +146,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			tracerIT.setListElement(true);
 			
 			String formFieldItName = tracerIT.getFormFieldName(attributeIT);
-			assertEquals("it_ListNumber_0", formFieldItName);
+			String formFieldPrefix = "List:" + attributeIT.getType() + ":";
+			assertEquals(formFieldPrefix + "it_ListNumber_0", formFieldItName);
 			
 			AttributeTracer tracerEN = tracerIT.clone();
 			tracerEN.setLang(this.getLangManager().getLang("en"));
@@ -168,7 +170,7 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			AttributeInterface attribute2 = list.addAttribute("it");
 			tracerIT.setListIndex(list.getAttributes().size() - 1);
 			formFieldItName = tracerIT.getFormFieldName(attribute2);
-			assertEquals("it_ListNumber_1", formFieldItName);
+			assertEquals(formFieldPrefix + "it_ListNumber_1", formFieldItName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -181,7 +183,7 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			
 			AttributeInterface attributeEN = list.addAttribute("en");
 			String formFieldEnName = tracerEN.getFormFieldName(attributeEN);
-			assertEquals("en_ListNumber_0", formFieldEnName);
+			assertEquals(formFieldPrefix + "en_ListNumber_0", formFieldEnName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -210,7 +212,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			tracer.setParentAttribute(compositeAttribute);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("Composite_Number", formFieldName);
+			String formFieldPrefix = "Composite:" + attribute.getType() + ":";
+			assertEquals(formFieldPrefix + "Composite_Number", formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -230,7 +233,7 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("Number", "100");
+			this.addParameter("Number:Number", "100");
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			
@@ -253,6 +256,8 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			MonoListAttribute monolist = (MonoListAttribute) content.getAttribute("MonoLCom");
 			CompositeAttribute compositeElement = (CompositeAttribute) monolist.addAttribute();
 			AttributeInterface attribute = compositeElement.getAttribute("Number");
+			String monolistElementFieldPrefix = "Monolist:Composite:";
+			String formFieldPrefix = monolistElementFieldPrefix + attribute.getType() + ":";
 			
 			tracer.setListIndex(monolist.getAttributes().size() - 1);
 			tracer.setListLang(this.getLangManager().getDefaultLang());
@@ -261,10 +266,10 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			tracer.setParentAttribute(compositeElement);
 			
 			String formFieldName = tracer.getFormFieldName(attribute);
-			assertEquals("MonoLCom_Number_0", formFieldName);
+			assertEquals(formFieldPrefix + "MonoLCom_Number_0", formFieldName);
 			
 			String monolistElementName = tracer.getMonolistElementFieldName(compositeElement);
-			assertEquals("MonoLCom_0", monolistElementName);
+			assertEquals(monolistElementFieldPrefix + "MonoLCom_0", monolistElementName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
 			this.executeAction(Action.INPUT);
@@ -286,7 +291,7 @@ public class TestValidateNumberAttribute extends AbstractTestContentAttribute {
 			this.checkFieldErrors(0, formFieldName);
 			
 			this.initSaveContentAction(contentOnSessionMarker);
-			this.addParameter("Number", "40");//validation: end range attribute "Number"
+			this.addParameter("Number:Number", "40");//validation: end range attribute "Number"
 			this.executeAction(Action.INPUT);
 			this.checkFieldErrors(1, formFieldName);
 			

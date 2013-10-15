@@ -69,8 +69,8 @@ public class TestCurrentUserProfileAction extends ApsAdminBaseTestCase {
         assertEquals(Action.SUCCESS, result);
 		
         this.initAction("/do/currentuser/profile", "save");
-		this.addParameter("fullname", "");
-        this.addParameter("email", "");
+		this.addParameter("Monotext:fullname", "");
+        this.addParameter("Monotext:email", "");
         result = this.executeAction();
         assertEquals(Action.INPUT, result);
 		
@@ -78,16 +78,16 @@ public class TestCurrentUserProfileAction extends ApsAdminBaseTestCase {
         assertEquals(2, action.getFieldErrors().size());
 		
         this.initAction("/do/currentuser/profile", "save");
-        this.addParameter("fullname", "Ronald Rossi");
-        this.addParameter("email", "");
-        this.addParameter("birthdate", "25/09/1972");
-        this.addParameter("language", "it");
+        this.addParameter("Monotext:fullname", "Ronald Rossi");
+        this.addParameter("Monotext:email", "");
+        this.addParameter("Date:birthdate", "25/09/1972");
+        this.addParameter("Monotext:language", "it");
         result = this.executeAction();
         assertEquals(Action.INPUT, result);
 		
         action = this.getAction();
         assertEquals(1, action.getFieldErrors().size());
-        assertEquals(1, ((List<String>) action.getFieldErrors().get("email")).size());
+        assertEquals(1, ((List<String>) action.getFieldErrors().get("Monotext:email")).size());
 
         IUserProfile currentUserProfile = (IUserProfile) this.getRequest().getSession().getAttribute(ICurrentUserProfileAction.SESSION_PARAM_NAME_CURRENT_PROFILE);
         assertNotNull(currentUserProfile);
