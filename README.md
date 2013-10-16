@@ -9,6 +9,16 @@ ALTER TABLE showletconfig RENAME TO widgetconfig;
 
 ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
 
+UPDATE sysconfig SET config = replace(config, '</SpecialPages>', '</SpecialPages>
+	<FeaturesOnDemand>
+		<Param name="groupsOnDemand">false</Param>
+		<Param name="categoriesOnDemand">false</Param>
+		<Param name="contentTypesOnDemand">false</Param>
+		<Param name="contentModelsOnDemand">false</Param>
+		<Param name="apisOnDemand">false</Param>
+		<Param name="resourceArchivesOnDemand">false</Param>
+	</FeaturesOnDemand>') WHERE item = 'params';
+
 
 --- Bundle widgets rename // start ---
 
