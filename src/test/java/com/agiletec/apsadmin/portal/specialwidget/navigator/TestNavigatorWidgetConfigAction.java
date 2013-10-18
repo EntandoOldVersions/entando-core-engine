@@ -336,6 +336,32 @@ public class TestNavigatorWidgetConfigAction extends ApsAdminBaseTestCase {
 		}
 	}
 
+	public void testFailureSaveEmptyExpression() throws Throwable {
+		String pageCode = "pagina_2";
+		int frame = 0;
+		IPage page = this._pageManager.getPage(pageCode);
+		Widget widget = page.getWidgets()[frame];
+		assertNull(widget);
+		try {
+			this.setUserOnSession("admin");
+			this.initAction("/do/Page/SpecialWidget/Navigator", "saveNavigatorConfig");
+			this.addParameter("pageCode", pageCode);
+			this.addParameter("frame", String.valueOf(frame));
+			this.addParameter("widgetTypeCode", "leftmenu");
+			this.addParameter("navSpec", "");
+			String result = this.executeAction();
+			assertEquals("input", result);
+			NavigatorWidgetConfigAction action = (NavigatorWidgetConfigAction) this.getAction();
+			assertEquals(1, action.getActionErrors().size());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			page = this._pageManager.getPage(pageCode);
+			page.getWidgets()[frame] = null;
+			this._pageManager.updatePage(page);
+		}
+	}
+
 	private String executeConfigNavigator(String userName,
 			String pageCode, String frame, String showletTypeCode) throws Throwable {
 		this.setUserOnSession(userName);

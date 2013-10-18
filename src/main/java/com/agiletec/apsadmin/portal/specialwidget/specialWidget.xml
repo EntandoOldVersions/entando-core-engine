@@ -67,6 +67,7 @@
         </action>
 
 		<action name="saveNavigatorConfig" class="navigatorWidgetAction" method="save">
+			<result name="input" type="tiles">admin.Page.Showlet.Navigator.config</result>
     		<interceptor-ref name="entandoActionLogger" />
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
