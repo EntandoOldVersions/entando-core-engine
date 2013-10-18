@@ -192,6 +192,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				if (null == currentContent.getDescr() || currentContent.getDescr().trim().length() == 0) {
 					this.addFieldError("descr", this.getText("error.content.descr.required"));
 				} else {
+					currentContent.setLastEditor(this.getCurrentUser().getUsername());
 					this.getContentManager().saveContent(currentContent);
 				}
 			}

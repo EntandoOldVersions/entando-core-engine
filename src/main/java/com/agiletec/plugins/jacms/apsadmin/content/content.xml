@@ -316,5 +316,14 @@
         </action>
     	
     </package>
+
+    <package name="jacms_do/jacms/Content/Ajax" namespace="/do/jacms/Content/Ajax" extends="entando-default">
+    
+        <action name="autosave" class="jacmsContentAction" method="saveAndContinue">
+        	<result type="dispatcher">/WEB-INF/plugins/jacms/apsadmin/jsp/content/ajax/content-autosave.jsp</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
+        
+    </package>
 	
 </struts>
