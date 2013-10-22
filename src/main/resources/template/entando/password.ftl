@@ -1,9 +1,6 @@
 <#--
 NOTE:
 
-rimosso
-<#include "/${parameters.templateDir}/simple/css.ftl" />
-
 aggiunto
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
 
@@ -53,6 +50,7 @@ aggiunto
 <#if parameters.id?exists>
  id="${parameters.id?html}"<#rt/>
 </#if>
+<#include "/${parameters.templateDir}/simple/css.ftl" />
 <#if parameters.title?exists>
  title="${parameters.title?html}"<#rt/>
 </#if>
