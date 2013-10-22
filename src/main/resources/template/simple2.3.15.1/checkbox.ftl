@@ -1,9 +1,4 @@
 <#--
-NOTE: 
-1) Removed hidden fields
--->
-
-<#--
 /*
  * $Id: checkbox.ftl 1095111 2011-04-19 15:20:39Z mcucchiara $
  *
@@ -48,10 +43,8 @@ NOTE:
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
-<#--
 /><input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
--->
  />

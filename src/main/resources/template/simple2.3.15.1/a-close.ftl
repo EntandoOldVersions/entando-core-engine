@@ -1,11 +1,6 @@
 <#--
-NOTE: 
-1) Removed hidden fields
--->
-
-<#--
 /*
- * $Id: checkbox.ftl 1095111 2011-04-19 15:20:39Z mcucchiara $
+ * $Id: a-close.ftl 753015 2009-03-12 21:00:23Z musachy $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,33 +20,26 @@ NOTE:
  * under the License.
  */
 -->
-<input type="checkbox" name="${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
-<#if parameters.nameValue?? && parameters.nameValue>
- checked="checked"<#rt/>
+<a<#rt/>
+<#if parameters.id?if_exists != "">
+ id="${parameters.id?html}"<#rt/>
 </#if>
-<#if parameters.disabled?default(false)>
- disabled="disabled"<#rt/>
-</#if>
-<#if parameters.readonly?default(false)>
- readonly="readonly"<#rt/>
+<#if parameters.href?if_exists != "">
+ href="${parameters.href}"<#rt/>
 </#if>
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
 </#if>
-<#if parameters.id??>
- id="${parameters.id?html}"<#rt/>
+<#if parameters.cssClass??>
+ class="${parameters.cssClass?html}"<#rt/>
 </#if>
-<#include "/${parameters.templateDir}/simple/css.ftl" />
+<#if parameters.cssStyle??>
+ style="${parameters.cssStyle?html}"<#rt/>
+</#if>
 <#if parameters.title??>
  title="${parameters.title?html}"<#rt/>
 </#if>
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
-<#--
-/><input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
-<#if parameters.disabled?default(false)>
- disabled="disabled"<#rt/>
-</#if>
--->
- />
+>${parameters.body}</a>

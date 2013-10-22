@@ -1,11 +1,6 @@
 <#--
-NOTE: 
-1) Removed hidden fields
--->
-
-<#--
 /*
- * $Id: checkbox.ftl 1095111 2011-04-19 15:20:39Z mcucchiara $
+ * $Id: file.ftl 720258 2008-11-24 19:05:16Z musachy $
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,15 +20,19 @@ NOTE:
  * under the License.
  */
 -->
-<input type="checkbox" name="${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
-<#if parameters.nameValue?? && parameters.nameValue>
- checked="checked"<#rt/>
+<input type="file"<#rt/>
+ name="${parameters.name?default("")?html}"<#rt/>
+<#if parameters.get("size")??>
+ size="${parameters.get("size")?html}"<#rt/>
+</#if>
+<#if parameters.nameValue??>
+ value="<@s.property value="parameters.nameValue"/>"<#rt/>
 </#if>
 <#if parameters.disabled?default(false)>
  disabled="disabled"<#rt/>
 </#if>
-<#if parameters.readonly?default(false)>
- readonly="readonly"<#rt/>
+<#if parameters.accept??>
+ accept="${parameters.accept?html}"<#rt/>
 </#if>
 <#if parameters.tabindex??>
  tabindex="${parameters.tabindex?html}"<#rt/>
@@ -48,10 +47,4 @@ NOTE:
 <#include "/${parameters.templateDir}/simple/scripting-events.ftl" />
 <#include "/${parameters.templateDir}/simple/common-attributes.ftl" />
 <#include "/${parameters.templateDir}/simple/dynamic-attributes.ftl" />
-<#--
-/><input type="hidden" id="__checkbox_${parameters.id?html}" name="__checkbox_${parameters.name?html}" value="${parameters.fieldValue?html}"<#rt/>
-<#if parameters.disabled?default(false)>
- disabled="disabled"<#rt/>
-</#if>
--->
- />
+/>
