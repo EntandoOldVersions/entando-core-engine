@@ -5,7 +5,7 @@
 	<tlib-version>2.3</tlib-version>
 	<short-name>wpsf</short-name>
 	<uri>/apsadmin-form</uri>
-	
+
 	<tag>
 		<description><![CDATA[Render a checkbox input field]]></description>
 		<name>checkbox</name>
@@ -278,7 +278,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:hidden struts2 tag. Render a hidden input field.]]></description>
+		<description><![CDATA[Render a hidden input field.]]></description>
 		<name>hidden</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.HiddenTag</tag-class>
 		<body-content>JSP</body-content>
@@ -531,7 +531,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:password struts2 tag. Render an HTML input tag of type password.]]></description>
+		<description><![CDATA[Render an HTML input tag of type password.]]></description>
 		<name>password</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.PasswordTag</tag-class>
 		<body-content>JSP</body-content>
@@ -1147,7 +1147,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:select struts2 tag. Render a select element.]]></description>
+		<description><![CDATA[Render a select element.]]></description>
 		<name>select</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.SelectTag</tag-class>
 		<body-content>JSP</body-content>
@@ -1779,7 +1779,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:textarea struts2 tag. Render HTML textarea tag.]]></description>
+		<description><![CDATA[Render HTML textarea tag.]]></description>
 		<name>textarea</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.TextareaTag</tag-class>
 		<body-content>JSP</body-content>
@@ -2068,7 +2068,7 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description><![CDATA[DEPRECATED, use default s:textfield struts2 tag. Render an HTML input field of type text.]]></description>
+		<description><![CDATA[Render an HTML input field of type text.]]></description>
 		<name>textfield</name>
 		<tag-class>com.agiletec.apsadmin.tags.form.TextFieldTag</tag-class>
 		<body-content>JSP</body-content>
