@@ -43,7 +43,8 @@ public class UserProfile extends ApsEntity implements IUserProfile {
 	@Override
 	public String getDisplayName() {
 		String displayName = (String) this.getValueByRole(SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_FULL_NAME);
-		if (null == displayName) {
+		//diplayName may contain an empty string
+		if (null == displayName || displayName.trim().length() == 0) {
 			displayName = this.getUsername();
 		}
 		return displayName;
