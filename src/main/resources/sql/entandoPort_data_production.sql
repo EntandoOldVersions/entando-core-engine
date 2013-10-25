@@ -163,8 +163,8 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_I
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN','en','Move down');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN_IN','it','Sposta giu in posizione');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN_IN','en','Move down at position');
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','it','Rimuovi dalla lista'); 
-INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','en','Remove from list'); 
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','it','Rimuovi dalla lista');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','en','Remove from list');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_MESSAGE_TITLE_FIELDERRORS','it','Attenzione, si sono verificati i seguenti errori nella compilazione del modulo');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_MESSAGE_TITLE_FIELDERRORS','en','Warning, please check the module');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_NEWPASS','it','Nuova password');
@@ -214,7 +214,7 @@ INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_C
 INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('service', 'Service Page', '<frames>
 	<frame pos="0">
 		<descr>Sample Frame</descr>
-	</frame>	
+	</frame>
 </frames>', NULL);
 INSERT INTO pagemodels (code, descr, frames, plugincode) VALUES ('home', 'Home Page', NULL, NULL);
 
@@ -334,6 +334,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 	<Param name="treeStyle_page">classic</Param>
 	<Param name="treeStyle_category">classic</Param>
 	<Param name="startLangFromBrowser">false</Param>
+	<Param name="firstTimeMessages">true</Param>
 	<SpecialPages>
 		<Param name="notFoundPageCode">notfound</Param>
 		<Param name="homePageCode">homepage</Param>
@@ -351,7 +352,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('production', 'para
 	<ExtendendPrivacyModule>
 		<Param name="extendedPrivacyModuleEnabled">false</Param>
 		<Param name="maxMonthsSinceLastAccess">6</Param>
-		<Param name="maxMonthsSinceLastPasswordChange">3</Param>        
+		<Param name="maxMonthsSinceLastPasswordChange">3</Param>
 	</ExtendendPrivacyModule>
 </Params>
 ');
