@@ -36,11 +36,11 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 
 /**
- * This base action implements the default actions available for the system administration. 
+ * This base action implements the default actions available for the system administration.
  * @author E.Santoboni
  */
 public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
-    
+
     @Override
     public String reloadConfig() {
         try {
@@ -53,7 +53,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         }
         return SUCCESS;
     }
-    
+
     @Override
     public String reloadEntitiesReferences() {
         try {
@@ -75,7 +75,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
     public void setReloadingResult(int reloadingResult) {
         this._reloadingResult = reloadingResult;
     }
-    
+
 	@Override
     public String configSystemParams() {
         try {
@@ -86,12 +86,29 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         }
         return SUCCESS;
     }
-    
+
     @Override
     public String updateSystemParams() {
         try {
             this.initLocalMap();
-            this.updateLocalParams();
+            this.updateLocalParams(false);
+            String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
+            this.extractExtraParameters();
+            String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, this.getSystemParams());
+            this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
+            this.addActionMessage(this.getText("message.configSystemParams.ok"));
+        } catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "updateSystemParams");
+            return FAILURE;
+        }
+        return SUCCESS;
+    }
+
+
+    public String updateSystemParamsForAjax() {
+        try {
+            this.initLocalMap();
+            this.updateLocalParams(true);
             String xmlParams = this.getConfigManager().getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
             this.extractExtraParameters();
             String newXmlParams = SystemParamsUtils.getNewXmlParams(xmlParams, this.getSystemParams());
@@ -112,8 +129,9 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
 
     /**
      * Refresh the map of parameters with values fetched from the request
+     * @param keepOldParam when true, when a system parameter is not found in request, the previous system parameter will be stored
      */
-    private void updateLocalParams() {
+    private void updateLocalParams(boolean keepOldParam) {
         Iterator<String> paramNames = this.getSystemParams().keySet().iterator();
         while (paramNames.hasNext()) {
             String paramName = (String) paramNames.next();
@@ -121,11 +139,13 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             if (null != newValue) {
                 this.getSystemParams().put(paramName, newValue);
             } else {
-                this.getSystemParams().put(paramName, "false");
+            	if (!keepOldParam) {
+            		this.getSystemParams().put(paramName, "false");
+            	}
             }
         }
     }
-    
+
     public void extractExtraParameters() {
         try {
             Enumeration<String> parameterNames = this.getRequest().getParameterNames();
@@ -145,7 +165,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             ApsSystemUtils.logThrowable(e, this, "extractExtraParameters", "Error extracting extra parameters");
         }
     }
-    
+
     /**
      * Return a plain list of the free pages in the portal.
      * @return the list of the free pages of the portal.
@@ -156,7 +176,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         this.addPages(root, pages);
         return pages;
     }
-    
+
     private void addPages(IPage page, List<IPage> pages) {
         if (page.getGroup().equals(Group.FREE_GROUP_NAME)) {
             pages.add(page);
@@ -166,21 +186,21 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             this.addPages(children[i], pages);
         }
     }
-    
+
     protected ConfigInterface getConfigManager() {
         return _configManager;
     }
     public void setConfigManager(ConfigInterface configManager) {
         this._configManager = configManager;
     }
-    
+
     protected IPageManager getPageManager() {
         return _pageManager;
     }
     public void setPageManager(IPageManager pageManager) {
         this._pageManager = pageManager;
     }
-    
+
 	@Override
     public Map<String, String> getSystemParams() {
         return _systemParams;
@@ -188,19 +208,19 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
     public void setSystemParams(Map<String, String> systemParams) {
         this._systemParams = systemParams;
     }
-    
+
     public String getExternalParamMarker() {
         return "_newParamMarker";
     }
-    
+
     private ConfigInterface _configManager;
     private IPageManager _pageManager;
-    
+
     private Map<String, String> _systemParams;
-    
+
     private int _reloadingResult = -1;
-    
+
     public static final int FAILURE_RELOADING_RESULT_CODE = 0;
     public static final int SUCCESS_RELOADING_RESULT_CODE = 1;
-    
+
 }
