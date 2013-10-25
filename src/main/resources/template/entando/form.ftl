@@ -1,9 +1,4 @@
 <#--
-NOTE: 
-2) Eliminato inserimento attributo 'id'
-3) Eliminato inserimento attributo 'name'
--->
-<#--
 /*
  * $Id: form.ftl 590812 2007-10-31 20:32:54Z apetrelli $
  *
@@ -31,6 +26,12 @@ NOTE:
     </#if>
 </#if>
 <form<#rt/>
+<#if parameters.id??>
+ id="${parameters.id?html}"<#rt/>
+</#if>
+<#if parameters.name??>
+ name="${parameters.name?html}"<#rt/>
+</#if>
 <#if parameters.onsubmit??>
  onsubmit="${parameters.onsubmit?html}"<#rt/>
 </#if>
