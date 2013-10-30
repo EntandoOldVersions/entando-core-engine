@@ -21,6 +21,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
+import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ManagerConfiguration;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -30,29 +40,17 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
-import static org.entando.entando.aps.system.services.actionlog.IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX;
-
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
-import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
-import org.entando.entando.aps.system.services.actionlog.model.ManagerConfiguration;
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * @author E.Santoboni - S.Puddu
  */
 public class ActionLogManager extends AbstractService implements IActionLogManager {
-	
+
 	@Override
 	public void init() throws Exception {
 		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": ready");
 	}
-	
+
 	@Override
 	public void addActionRecord(ActionLogRecord actionRecord) throws ApsSystemException {
 		try {
@@ -65,7 +63,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
-	
+
 	protected synchronized void addActionRecordByThread(ActionLogRecord actionRecord) throws ApsSystemException {
 		try {
 			Integer key = null;
@@ -84,7 +82,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
-	
+
 	@Override
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
 	public void deleteActionRecord(int id) throws ApsSystemException {
@@ -95,7 +93,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error deleting the actionlogger record: " + id, t);
 		}
 	}
-	
+
 	@Override
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) throws ApsSystemException {
 		List<Integer> records = new ArrayList<Integer>();
@@ -107,7 +105,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return records;
 	}
-	
+
 	@Override
 	public ActionLogRecord getActionRecord(int id) throws ApsSystemException {
 		ActionLogRecord record = null;
@@ -119,19 +117,22 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return record;
 	}
-	
+
 	@Override
 	public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException {
 		List<Integer> recordIds = null;
 		try {
 			recordIds = this.getActionLogDAO().getActivityStream(userGroupCodes);
 			ManagerConfiguration config = this.getManagerConfiguration();
-			if (null != recordIds && null != config && 
+			if (null != recordIds && null != config &&
 					config.getCleanOldActivities() && config.getMaxActivitySizeByGroup() < recordIds.size()) {
 				ActivityStreamCleanerThread thread = new ActivityStreamCleanerThread(config.getMaxActivitySizeByGroup(), this.getActionLogDAO());
 				String threadName = LOG_CLEANER_THREAD_NAME_PREFIX + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
     			thread.setName(threadName);
     			thread.start();
+			}
+			if (null != config && null != recordIds && recordIds.size() > config.getMaxActivitySizeByGroup()) {
+				recordIds = recordIds.subList(0, config.getMaxActivitySizeByGroup());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getActivityStream");
@@ -139,7 +140,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return recordIds;
 	}
-	
+
 	@Override
 	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
 	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException {
@@ -150,7 +151,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error editing activity stream like records", t);
 		}
 	}
-	
+
 	@Override
 	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException {
@@ -172,13 +173,13 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return infos;
 	}
-	
+
 	@Override
 	public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException {
 		List<String> userGroupCodes = this.extractUserGroupCodes(loggedUser);
 		return this.getActivityStream(userGroupCodes);
 	}
-	
+
 	private List<String> extractUserGroupCodes(UserDetails loggedUser) {
 		List<String> codes = new ArrayList<String>();
 		IApsAuthority[] autorities = loggedUser.getAuthorities();
@@ -195,39 +196,39 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return codes;
 	}
-	
+
 	protected ManagerConfiguration getManagerConfiguration() {
 		return _managerConfiguration;
 	}
 	public void setManagerConfiguration(ManagerConfiguration managerConfiguration) {
 		this._managerConfiguration = managerConfiguration;
 	}
-	
+
 	protected IActionLogDAO getActionLogDAO() {
 		return _actionLogDAO;
 	}
 	public void setActionLogDAO(IActionLogDAO actionLogDAO) {
 		this._actionLogDAO = actionLogDAO;
 	}
-	
+
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
 	}
 	public void setKeyGeneratorManager(IKeyGeneratorManager keyGeneratorManager) {
 		this._keyGeneratorManager = keyGeneratorManager;
 	}
-	
+
 	protected IUserProfileManager getUserProfileManager() {
 		return _userProfileManager;
 	}
 	public void setUserProfileManager(IUserProfileManager userProfileManager) {
 		this._userProfileManager = userProfileManager;
 	}
-	
+
 	private ManagerConfiguration _managerConfiguration;
-	
+
 	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
 	private IUserProfileManager _userProfileManager;
-	
+
 }

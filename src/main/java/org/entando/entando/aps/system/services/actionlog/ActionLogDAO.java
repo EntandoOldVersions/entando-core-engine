@@ -17,10 +17,6 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.services.group.Group;
-
 import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,11 +41,15 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLik
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfos;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.services.group.Group;
+
 /**
  * @author E.Santoboni
  */
 public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
-	
+
 	@Override
 	public void addActionRecord(ActionLogRecord actionRecord) {
 		Connection conn = null;
@@ -81,7 +81,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat, conn);
 		}
 	}
-	
+
 	private void addLogRecordRelations(int recordId, ActivityStreamInfo asi, Connection conn) {
 		if (asi == null) {
 			return;
@@ -111,13 +111,13 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat);
 		}
 	}
-	
+
 	@Override
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = this.createFilters(searchBean);
 		return this.getActionRecords(filters);
 	}
-	
+
 	@Override
 	public List<Integer> getActionRecords(FieldSearchFilter[] filters) {
 		List<Integer> actionRecords = new ArrayList<Integer>();
@@ -134,7 +134,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return actionRecords;
 	}
-	
+
 	@Override
 	public List<Integer> getActivityStream(List<String> userGroupCodes) {
 		Connection conn = null;
@@ -160,7 +160,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return idList;
 	}
-	
+
 	private PreparedStatement buildStatement(FieldSearchFilter[] filters, Collection<String> groupCodes, Connection conn) {
 		String query = this.createQueryString(filters, groupCodes);
 		PreparedStatement stat = null;
@@ -174,7 +174,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return stat;
 	}
-	
+
 	protected String createQueryString(FieldSearchFilter[] filters, Collection<String> groupCodes) {
 		StringBuffer query = this.createBaseQueryBlock(filters, false);
 		this.appendJoinTableRefQueryBlock(query, groupCodes);
@@ -192,7 +192,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		boolean ordered = appendOrderQueryBlocks(filters, query, false);
 		return query.toString();
 	}
-	
+
 	private void appendJoinTableRefQueryBlock(StringBuffer query, Collection<String> groupCodes) {
 		if (null == groupCodes || groupCodes.isEmpty()) {
 			return;
@@ -204,7 +204,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 				.append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
 				.append("actionlogrelations").append(".").append("recordid").append(" ");
 	}
-	
+
 	protected int addGroupStatementBlock(Collection<String> groupCodes, int index, PreparedStatement stat) throws Throwable {
 		if (null != groupCodes && !groupCodes.isEmpty()) {
 			Iterator<String> groupIter = groupCodes.iterator();
@@ -215,7 +215,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return index;
 	}
-	
+
 	protected FieldSearchFilter[] createFilters(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = new FieldSearchFilter[0];
 		if (null != searchBean) {
@@ -250,12 +250,12 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return filters;
 	}
-	
+
 	protected List<String> extractSearchValues(String text) {
 		String[] titleSplit = text.trim().split(" ");
 		return (List<String>) Arrays.asList(titleSplit);
 	}
-	
+
 	@Override
 	public ActionLogRecord getActionRecord(int id) {
 		Connection conn = null;
@@ -292,7 +292,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return actionRecord;
 	}
-	
+
 	@Override
 	public void deleteActionRecord(int id) {
 		Connection conn = null;
@@ -308,7 +308,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeConnection(conn);
 		}
 	}
-	
+
 	private void deleteActionRecord(int id, Connection conn) {
 		try {
 			this.deleteRecord(id, conn, DELETE_LOG_LIKE_RECORDS);
@@ -318,7 +318,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			processDaoException(t, "Error on delete record: " + id , "deleteActionRecord");
 		}
 	}
-	
+
 	@Override
 	public void editActionLikeRecord(int id, String username, boolean add) {
 		if (add) {
@@ -327,7 +327,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			this.deleteActionLikeRecord(id, username);
 		}
 	}
-	
+
 	@Override
 	public void addActionLikeRecord(int id, String username) {
 		Connection conn = null;
@@ -349,7 +349,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat, conn);
 		}
 	}
-	
+
 	@Override
 	public void deleteActionLikeRecord(int id, String username) {
 		Connection conn = null;
@@ -369,7 +369,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat, conn);
 		}
 	}
-	
+
 	public void deleteRecord(int id, Connection conn, String query) {
 		PreparedStatement stat = null;
 		try {
@@ -382,7 +382,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat);
 		}
 	}
-	
+
 	@Override
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) {
 		List<ActivityStreamLikeInfo> infos = new ActivityStreamLikeInfos();
@@ -406,7 +406,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return infos;
 	}
-	
+
 	@Override
 	protected String getMasterTableName() {
 		return "actionlogrecords";
@@ -416,17 +416,17 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	protected String getMasterTableIdFieldName() {
 		return "id";
 	}
-	
+
 	@Override
 	protected String getTableFieldName(String metadataFieldKey) {
 		return metadataFieldKey;
 	}
-	
+
 	@Override
 	protected boolean isForceCaseInsensitiveLikeSearch() {
 		return true;
 	}
-	
+
 	@Override
 	public synchronized void cleanOldActivityStreamLogs(int maxActivitySizeByGroup) {
 		Connection conn = null;
@@ -453,7 +453,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeConnection(conn);
 		}
 	}
-	
+
 	private Map<String, Integer> getOccurrences(Integer maxActivitySizeByGroup, Connection conn) {
 		Map<String, Integer> occurrences = new HashMap<String, Integer>();
 		Statement stat = null;
@@ -461,7 +461,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		try {
 			stat = conn.createStatement();
 			res = stat.executeQuery(GET_GROUP_OCCURRENCES);
-			if (res.next()) {
+			while (res.next()) {
 				String groupName = res.getString(1);
 				Integer integer = res.getInt(2);
 				if (null != maxActivitySizeByGroup && integer > maxActivitySizeByGroup) {
@@ -475,8 +475,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		return occurrences;
 	}
-	
-	private void extractRecordToDelete(String groupName, 
+
+	private void extractRecordToDelete(String groupName,
 			Integer maxActivitySizeByGroup, Set<Integer> recordIds, Connection conn) {
 		PreparedStatement stat = null;
 		ResultSet result = null;
@@ -509,36 +509,36 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(result, stat);
 		}
 	}
-	
-	private static final String ADD_ACTION_RECORD = 
+
+	private static final String ADD_ACTION_RECORD =
 			"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
 			"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
-	
-	private static final String ADD_ACTION_LIKE_RECORD = 
+
+	private static final String ADD_ACTION_LIKE_RECORD =
 			"INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
-	
-	private static final String GET_ACTION_RECORD = 
+
+	private static final String GET_ACTION_RECORD =
 			"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
-	
-	private static final String DELETE_LOG_RECORD = 
+
+	private static final String DELETE_LOG_RECORD =
 			"DELETE from actionlogrecords where id = ?";
-	
-	private static final String DELETE_LOG_RECORD_RELATIONS = 
+
+	private static final String DELETE_LOG_RECORD_RELATIONS =
 			"DELETE from actionlogrelations where recordid = ?";
-	
+
 	private final String ADD_LOG_RECORD_RELATION =
 			"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
-	
-	private static final String DELETE_LOG_LIKE_RECORDS = 
+
+	private static final String DELETE_LOG_LIKE_RECORDS =
 			"DELETE from actionloglikerecords where recordid = ? ";
-	
-	private static final String DELETE_LOG_LIKE_RECORD = 
+
+	private static final String DELETE_LOG_LIKE_RECORD =
 			DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
-	
-	private static final String GET_ACTION_LIKE_RECORDS = 
+
+	private static final String GET_ACTION_LIKE_RECORDS =
 			"SELECT username from actionloglikerecords where recordid = ? ";
-	
-	private static final String GET_GROUP_OCCURRENCES = 
+
+	private static final String GET_GROUP_OCCURRENCES =
 			"SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
-	
+
 }
