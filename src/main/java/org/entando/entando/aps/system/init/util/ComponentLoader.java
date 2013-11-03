@@ -22,9 +22,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
 
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -72,7 +71,7 @@ public class ComponentLoader {
 				if (null != component) {
 					if (codes.add(component.getCode())) {
 						logger.info("Component '" + component.getCode() + "' loaded");
-						this.getComponents().add(component);
+						this.getComponents().put(component.getCode(), component);
 					} else {
 						logger.info("Component '" + component.getCode() + "' already loaded");
 					}
@@ -88,10 +87,10 @@ public class ComponentLoader {
         }
     }
 	
-	public List<Component> getComponents() {
+	public Map<String, Component> getComponents() {
 		return _components;
 	}
     
-	private List<Component> _components = new ArrayList<Component>();
+	private Map<String, Component> _components = new HashMap<String, Component>();
 	
 }

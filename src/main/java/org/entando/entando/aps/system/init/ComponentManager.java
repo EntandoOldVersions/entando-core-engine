@@ -17,14 +17,15 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.Component;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.Collections;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.ComponentLoader;
 
 /**
@@ -41,7 +42,19 @@ public class ComponentManager implements IComponentManager {
         try {
 			ComponentLoader loader = 
 					new ComponentLoader(this.getLocationPatterns(), this.getPostProcessClasses());
-			List<Component> components = loader.getComponents();
+			Map<String, Component> componentMap = loader.getComponents();
+			List<Component> components = new ArrayList<Component>();
+			components.addAll(componentMap.values());
+			for (int i = 0; i < components.size(); i++) {
+				Component component = components.get(i);
+				List<String> dependencies = component.getDependencies();
+				if (null != dependencies && !dependencies.isEmpty()) {
+					for (int j = 0; j < dependencies.size(); j++) {
+						String dependency = dependencies.get(j);
+						this.checkSubDependency(componentMap, dependency, dependencies);
+					}
+				}
+			}
 			Collections.sort(components);
 			this.setComponents(components);
         } catch (Throwable t) {
@@ -49,7 +62,24 @@ public class ComponentManager implements IComponentManager {
             throw new ApsSystemException("Error loading components definitions", t);
         }
     }
-    
+	
+	private void checkSubDependency(Map<String, Component> componentMap, String dependency, List<String> masterDependencies) {
+		Component component = componentMap.get(dependency);
+		if (null == component) {
+			return;
+		}
+		List<String> subDependencies = component.getDependencies();
+		if (null != subDependencies && !subDependencies.isEmpty()) {
+			for (int i = 0; i < subDependencies.size(); i++) {
+				String subDependency = subDependencies.get(i);
+				if (!masterDependencies.contains(subDependency)) {
+					masterDependencies.add(subDependency);
+				}
+				this.checkSubDependency(componentMap, subDependency, masterDependencies);
+			}
+		}
+	}
+	
 	@Override
 	public List<Component> getCurrentComponents() throws ApsSystemException {
 		return this.getComponents();

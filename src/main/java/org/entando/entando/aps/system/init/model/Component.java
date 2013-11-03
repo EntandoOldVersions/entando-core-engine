@@ -18,10 +18,12 @@
 package org.entando.entando.aps.system.init.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jdom.Element;
 
 /**
@@ -130,12 +132,14 @@ public class Component implements Comparable<Component> {
 	
 	@Override
 	public int compareTo(Component other) {
-		List<String> deps = this.getDependencies();
-		List<String> otherDeps = other.getDependencies();
-		if (null != otherDeps && otherDeps.contains(this.getCode())) {
-			return -1;
-		} else if (null != deps && deps.contains(other.getCode())) {
+		boolean depsEmpty = (null == this.getDependencies() || this.getDependencies().isEmpty());
+		boolean otherDepsEmpty = (null == other.getDependencies() || other.getDependencies().isEmpty());
+		if (!depsEmpty && 
+				(otherDepsEmpty || this.getDependencies().contains(other.getCode()))) {
 			return 1;
+		} else if (!otherDepsEmpty && 
+				(depsEmpty || other.getDependencies().contains(this.getCode()))) {
+			return -1;
 		}
 		return 0;
 	}
