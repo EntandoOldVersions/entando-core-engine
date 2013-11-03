@@ -98,7 +98,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 			MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 			Method targetMethod = methodSignature.getMethod();
 			Class targetClass = pjp.getTarget().getClass();
-			Method effectiveTargetMethod = targetClass.getDeclaredMethod(targetMethod.getName(), targetMethod.getParameterTypes());
+			Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
 			Object groupsCsv = this.evaluateExpression(cacheInfoEvict.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
 			if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
 				String[] groups = groupsCsv.toString().split(",");
