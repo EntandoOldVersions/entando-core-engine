@@ -390,10 +390,15 @@
 		<tag-class>com.agiletec.aps.tags.InternalServletTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
-			<description><![CDATA[
-				The init action path.
-			.]]></description>
+			<description><![CDATA[The init action path.]]></description>
 			<name>actionPath</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Whether to execute only the given action path. 
+				Possible entries (true|false). Default value: false.]]></description>
+			<name>staticAction</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

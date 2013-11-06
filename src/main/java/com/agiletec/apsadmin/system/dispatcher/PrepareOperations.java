@@ -34,8 +34,8 @@ public class PrepareOperations extends org.apache.struts2.dispatcher.ng.PrepareO
 	
 	public PrepareOperations(ServletContext servletContext, Dispatcher dispatcher) {
         super(servletContext, dispatcher);
-		this.dispatcher = dispatcher;
-		this.servletContext = servletContext;
+		this._dispatcher = dispatcher;
+		this._servletContext = servletContext;
     }
 	
 	@Override
@@ -43,10 +43,10 @@ public class PrepareOperations extends org.apache.struts2.dispatcher.ng.PrepareO
         ActionMapping mapping = (ActionMapping) request.getAttribute(STRUTS_ACTION_MAPPING_KEY);
         if (mapping == null || forceLookup) {
             try {
-				Container container = dispatcher.getContainer();
+				Container container = this._dispatcher.getContainer();
 				ActionMapper mapper = container.getInstance(ActionMapper.class);
 				String entandoActionName = EntandoActionUtils.extractEntandoActionName(request);
-				mapping = mapper.getMapping(request, dispatcher.getConfigurationManager());
+				mapping = mapper.getMapping(request, this._dispatcher.getConfigurationManager());
 				if (null != entandoActionName) {
 					mapping.setName(entandoActionName);
 				}
@@ -54,14 +54,18 @@ public class PrepareOperations extends org.apache.struts2.dispatcher.ng.PrepareO
                     request.setAttribute(STRUTS_ACTION_MAPPING_KEY, mapping);
                 }
             } catch (Exception ex) {
-                dispatcher.sendError(request, response, servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
+                this._dispatcher.sendError(request, response, this._servletContext, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex);
             }
         }
         return mapping;
     }
 	
-	private Dispatcher dispatcher;
-	private ServletContext servletContext;
+	public Dispatcher getDispatcher() {
+		return this._dispatcher;
+	}
+	
+	private Dispatcher _dispatcher;
+	private ServletContext _servletContext;
 	
 	private static final String STRUTS_ACTION_MAPPING_KEY = "struts.actionMapping";
 	

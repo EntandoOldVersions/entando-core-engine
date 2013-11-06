@@ -110,8 +110,8 @@ public class InternalServletTag extends TagSupport {
 	
 	/**
 	 * Invokes the showlet configured in the current page.
-	 * @throws JspException in case of error that occurred in both this method
-	 *  or in one of the included JSPs
+	 * @throws JspException in case of error that occurred in both this method 
+	 * or in one of the included JSPs
 	 */
 	@Override
 	public int doEndTag() throws JspException {
@@ -164,12 +164,15 @@ public class InternalServletTag extends TagSupport {
 		HttpServletRequest request = reqCtx.getRequest();
 		try {
 			String actionPath = this.extractIntroActionPath(reqCtx, widget);
-			String requestActionPath = request.getParameter(REQUEST_PARAM_ACTIONPATH);
-			String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
-			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
-			if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
-				actionPath = requestActionPath;
+			if (!this.isStaticAction()) {
+				String requestActionPath = request.getParameter(REQUEST_PARAM_ACTIONPATH);
+				String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
+				Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
+				if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
+					actionPath = requestActionPath;
+				}
 			}
+			reqCtx.addExtraParam(EXTRAPAR_STATIC_ACTION, this.isStaticAction());
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher(actionPath);
 			requestDispatcher.include(request, responseWrapper);
 		} catch (Throwable t) {
@@ -208,6 +211,7 @@ public class InternalServletTag extends TagSupport {
 	public void release() {
 		super.release();
 		this.setActionPath(null);
+		this.setStaticAction(false);
 	}
 	
 	public String getActionPath() {
@@ -217,10 +221,20 @@ public class InternalServletTag extends TagSupport {
 		this._actionPath = actionPath;
 	}
 	
+	public boolean isStaticAction() {
+		return _staticAction;
+	}
+	public void setStaticAction(boolean staticAction) {
+		this._staticAction = staticAction;
+	}
+	
 	private String _actionPath;
+	private boolean _staticAction;
 	
 	public static final String CONFIG_PARAM_ACTIONPATH = "actionPath";
 	public static final String REQUEST_PARAM_ACTIONPATH = "internalServletActionPath";
 	public static final String REQUEST_PARAM_FRAMEDEST = "internalServletFrameDest";
+	
+	public static final String EXTRAPAR_STATIC_ACTION = "internalServletStaticAction";
 	
 }
