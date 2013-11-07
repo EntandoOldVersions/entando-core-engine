@@ -38,36 +38,36 @@ import org.entando.entando.aps.system.services.storage.IStorageManager;
  * @author E.Santoboni
  */
 public class DatabaseDumper extends AbstractDatabaseUtils {
-	
+
 	protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport) throws ApsSystemException {
 		try {
 			DataSourceDumpReport report = new DataSourceDumpReport(installationReport);
 			long start = System.currentTimeMillis();
-			String backupSubFolder = (AbstractInitializerManager.Environment.develop.equals(environment)) ? 
+			String backupSubFolder = (AbstractInitializerManager.Environment.develop.equals(environment)) ?
 					environment.toString() : DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
-			//this.setBackupSubFolder(subFolder);
-			report.setSubFolderName(backupSubFolder);
-			List<Component> components = this.getComponents();
-			for (int i = 0; i < components.size(); i++) {
-				Component componentConfiguration = components.get(i);
-				this.createBackup(componentConfiguration.getTableMapping(), report, backupSubFolder);
-			}
-			this.createBackup(this.getEntandoTableMapping(), report, backupSubFolder);
-			long time = System.currentTimeMillis() - start;
-			report.setRequiredTime(time);
-			report.setDate(new Date());
-			StringBuilder reportFolder = new StringBuilder(this.getLocalBackupsFolder());
-			if (null != backupSubFolder) {
-				reportFolder.append(backupSubFolder).append(File.separator);
-			}
-			this.save(DatabaseManager.DUMP_REPORT_FILE_NAME, 
-					reportFolder.toString(), report.toXml());
+					//this.setBackupSubFolder(subFolder);
+					report.setSubFolderName(backupSubFolder);
+					List<Component> components = this.getComponents();
+					for (int i = 0; i < components.size(); i++) {
+						Component componentConfiguration = components.get(i);
+						this.createBackup(componentConfiguration.getTableMapping(), report, backupSubFolder);
+					}
+					this.createBackup(this.getEntandoTableMapping(), report, backupSubFolder);
+					long time = System.currentTimeMillis() - start;
+					report.setRequiredTime(time);
+					report.setDate(new Date());
+					StringBuilder reportFolder = new StringBuilder(this.getLocalBackupsFolder());
+					if (null != backupSubFolder) {
+						reportFolder.append(backupSubFolder).append(File.separator);
+					}
+					this.save(DatabaseManager.DUMP_REPORT_FILE_NAME,
+							reportFolder.toString(), report.toXml());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
-	
+
 	private void createBackup(Map<String, List<String>> tableMapping, DataSourceDumpReport report, String backupSubFolder) throws ApsSystemException {
 		if (null == tableMapping || tableMapping.isEmpty()) {
 			return;
@@ -91,8 +91,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
-	
-	protected void dumpTableData(String tableName, String dataSourceName, 
+
+	protected void dumpTableData(String tableName, String dataSourceName,
 			DataSource dataSource, DataSourceDumpReport report, String backupSubFolder) throws ApsSystemException {
 		try {
 			TableDumpResult tableDumpResult = TableDataUtils.dumpTable(dataSource, tableName);
@@ -108,12 +108,17 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 			throw new ApsSystemException("Error dumping table '" + tableName + "' - datasource '" + dataSourceName + "'", t);
 		}
 	}
-	
+
 	protected void save(String filename, String folder, String content) throws ApsSystemException {
-		IStorageManager storageManager = this.getStorageManager();
-		String path = folder + filename;
-		ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
-		storageManager.saveFile(path, true, bais);
+		try {
+			IStorageManager storageManager = this.getStorageManager();
+			String path = folder + filename;
+			ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes("UTF-8"));
+			storageManager.saveFile(path, true, bais);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "save");
+			throw new ApsSystemException("Error  save backup '" + filename , t);
+		}
 	}
-	
+
 }
