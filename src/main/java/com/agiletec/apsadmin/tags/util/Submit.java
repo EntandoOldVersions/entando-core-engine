@@ -22,7 +22,10 @@ import com.opensymphony.xwork2.util.ValueStack;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.struts2.components.Form;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
+import org.springframework.util.StringUtils;
 
 /**
  * @author E.Santoboni
@@ -64,6 +67,18 @@ public class Submit extends org.apache.struts2.components.Submit {
 		}
 		addParameter("align", findString(align));
 	}
+	
+	@Override
+	protected void populateComponentHtmlId(Form form) {
+        String _tmp_id = "";
+        if (id != null) {
+            // this check is needed for backwards compatibility with 2.1.x
+        	_tmp_id = super.findStringIfAltSyntax(id);
+        }
+		if (!StringUtils.isEmpty(_tmp_id)) {
+			this.addParameter("id", _tmp_id);
+		}
+    }
 	
 	static final String BUTTONTYPE_INPUT = "input";
     static final String BUTTONTYPE_BUTTON = "button";
