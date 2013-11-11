@@ -77,7 +77,7 @@ public class TestResourceManager extends BaseTestCase {
 			assertTrue(resource.isMultiInstance());
 			oldCategories = resource.getCategories();
 			oldDescr = resource.getDescr();
-			String newDescr = "Descrizione modificata";
+			String newDescr = "New Description";
 			resource.setDescr(newDescr);
 			resource.setCategories(new ArrayList<Category>());
 			this._resourceManager.updateResource(resource);
@@ -141,7 +141,7 @@ public class TestResourceManager extends BaseTestCase {
     private void testAddRemoveImageResource(String mainGroup) throws Throwable {
     	List<String> allowedGroups = this.getAllGroupCodes();
     	ResourceInterface res = null;
-    	String resDescrToAdd = "Logo jAPS";
+    	String resDescrToAdd = "Entando Logo";
     	String resourceType = "Image";
     	String categoryCodeToAdd = "resCat1";
     	ResourceDataBean bean = this.getMockResource(resourceType, mainGroup, resDescrToAdd, categoryCodeToAdd);
@@ -160,7 +160,7 @@ public class TestResourceManager extends BaseTestCase {
 			assertEquals(res.getDescr(), resDescrToAdd);
 			
 			ResourceInstance instance0 = ((ImageResource) res).getInstance(0, null);
-			assertEquals("jAPS_logo_d0.jpg", instance0.getFileName());
+			assertEquals("entando_logo_d0.jpg", instance0.getFileName());
 			assertEquals("image/jpeg", instance0.getMimeType());
 			
 			resourcesId = _resourceManager.searchResourcesId(resourceType, null, categoryCodeToAdd, allowedGroups);
@@ -181,7 +181,7 @@ public class TestResourceManager extends BaseTestCase {
     
     private ResourceDataBean getMockResource(String resourceType, 
     		String mainGroup, String resDescrToAdd, String categoryCodeToAdd) {
-    	File file = new File("target/test/jAPS_logo.jpg");
+    	File file = new File("target/test/entando_logo.jpg");
     	MockResourceDataBean bean = new MockResourceDataBean();
     	bean.setFile(file);
     	bean.setDescr(resDescrToAdd);
@@ -199,7 +199,7 @@ public class TestResourceManager extends BaseTestCase {
     
     public void testAddNullResource() throws Throwable {
     	List<String> allowedGroups = this.getAllGroupCodes();
-    	String resDescrToAdd = "Null jAPS resource";
+    	String resDescrToAdd = "Null Entando resource";
     	String resourceType = "Attach";
     	List<String> resourcesId = _resourceManager.searchResourcesId(resourceType, null, null, allowedGroups);
 		int initsize = resourcesId.size();
