@@ -6,12 +6,12 @@
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -32,7 +32,7 @@ import com.opensymphony.xwork2.Action;
  * @author E.Santoboni
  */
 public class ContentCategoryAction extends AbstractTreeAction implements IContentCategoryAction {
-	
+
 	@Override
 	public String buildTree() {
 		try {
@@ -49,15 +49,15 @@ public class ContentCategoryAction extends AbstractTreeAction implements IConten
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String joinCategory() {
 		this.updateContentOnSession();
 		try {
 			String categoryCode = this.getCategoryCode();
 			Category category = this.getCategoryManager().getCategory(categoryCode);
-			if (null != category && !category.getCode().equals(category.getParentCode()) 
-					&& !this.getContent().getCategories().contains(category)) { 
+			if (null != category && !category.getCode().equals(category.getParentCode())
+					&& !this.getContent().getCategories().contains(category)) {
 				this.getContent().addCategory(category);
 			}
 		} catch (Throwable t) {
@@ -66,7 +66,7 @@ public class ContentCategoryAction extends AbstractTreeAction implements IConten
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String removeCategory() {
 		this.updateContentOnSession();
@@ -82,51 +82,51 @@ public class ContentCategoryAction extends AbstractTreeAction implements IConten
 		}
 		return SUCCESS;
 	}
-	
+
 	public Content getContent() {
 		return (Content) this.getRequest().getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
-	
+
 	protected Content updateContentOnSession() {
 		Content content = this.getContent();
 		this.getContentActionHelper().updateEntity(content, this.getRequest());
 		return content;
 	}
-	
+
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
 		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
-	
+
 	public String getCategoryCode() {
 		return _categoryCode;
 	}
 	public void setCategoryCode(String categoryCode) {
 		this._categoryCode = categoryCode;
 	}
-	
+
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
-	
+
 	protected IContentActionHelper getContentActionHelper() {
 		return _contentActionHelper;
 	}
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
-	
+
 	private String _contentOnSessionMarker;
-	
+
 	private String _categoryCode;
 	private ICategoryManager _categoryManager;
-	
+
 	private IContentActionHelper _contentActionHelper;
-	
+
 }

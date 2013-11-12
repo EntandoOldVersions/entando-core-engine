@@ -61,7 +61,7 @@ import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
 public class OAuthConsumerManager extends AbstractService implements IOAuthConsumerManager {
     
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
+        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
     }
     
     protected void release() {

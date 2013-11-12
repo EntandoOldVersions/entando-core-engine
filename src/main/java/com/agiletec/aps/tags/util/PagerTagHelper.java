@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -92,7 +92,7 @@ public class PagerTagHelper {
 			try {
 				item = Integer.parseInt(stringItem);
 			} catch (NumberFormatException e) {
-				ApsSystemUtils.getLogger().severe("Error while parsing the stringItem " + stringItem);
+				ApsSystemUtils.getLogger().error("Error while parsing the stringItem " + stringItem);
 			}
 		}
 		return item;

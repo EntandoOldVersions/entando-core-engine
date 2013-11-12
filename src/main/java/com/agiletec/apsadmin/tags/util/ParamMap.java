@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -47,7 +47,7 @@ public class ParamMap extends Component {
 		}
 		Object object = this.findValue(this.getMap());
 		if (null == object) {
-			log.info("Map not found in ValueStack");
+			log.debug("Map not found in ValueStack");
 			return super.end(writer, body);
 		}
 		if (!(object instanceof Map)) {

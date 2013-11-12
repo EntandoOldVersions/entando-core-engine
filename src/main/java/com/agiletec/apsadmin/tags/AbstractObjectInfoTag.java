@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -41,14 +41,14 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 		try {
 			String keyValue = (String) super.findValue(this.getKey(), String.class);
 			Object masterObject = this.getMasterObject(keyValue);
-			if (null == masterObject && ApsSystemUtils.getLogger().isLoggable(Level.FINEST)) {
-				ApsSystemUtils.getLogger().finest(this.getNullMasterObjectLogMessage(keyValue));
+			if (null == masterObject ) {
+				ApsSystemUtils.getLogger().debug(this.getNullMasterObjectLogMessage(keyValue));
 				return super.doStartTag();
 			}
 			String propertyValue = (null != this.getProperty()) ? (String) super.findValue(this.getProperty(), String.class) : null;
 			Object requiredObject = (null != propertyValue) ? this.getPropertyValue(masterObject, propertyValue) : masterObject;
-			if (null == requiredObject && ApsSystemUtils.getLogger().isLoggable(Level.FINEST)) {
-				ApsSystemUtils.getLogger().finest(this.getNullObjectLogMessage(keyValue, propertyValue));
+			if (null == requiredObject) {
+				ApsSystemUtils.getLogger().debug(this.getNullObjectLogMessage(keyValue, propertyValue));
 				return super.doStartTag();
 			}
 			if (null != this.getVar()) {
@@ -86,10 +86,8 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 				Object[] args = null;
 				return method.invoke(masterObject, args);
 			}
-			if (ApsSystemUtils.getLogger().isLoggable(Level.FINEST)) {
-				ApsSystemUtils.getLogger().finest("Invalid required object property : Master Object '" 
+				ApsSystemUtils.getLogger().debug("Invalid required object property : Master Object '" 
 						+ masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
-			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "getPropertyValue", 
 					"Error extracting property value : Master Object '" 

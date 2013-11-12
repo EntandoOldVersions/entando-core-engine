@@ -51,10 +51,10 @@ public class ContentPreviewDispenser extends BaseContentDispenser {
 			renderedContent = this.getContentRender().render(content, modelId, langCode, reqCtx);
 			ok = true;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "getRenderedContent", t);
+			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getRenderedContent", t);
 		}
 		if (!ok) {
-			ApsSystemUtils.getLogger().warning("Impossibile fornire preview per il contenuto " + content.getId());
+			ApsSystemUtils.getLogger().warn("Impossibile fornire preview per il contenuto " + content.getId());
 			return "";
 		}
 		renderedContent = this.getLinkResolverManager().resolveLinks(renderedContent, reqCtx);

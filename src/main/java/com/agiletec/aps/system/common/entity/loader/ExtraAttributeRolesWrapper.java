@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -47,7 +47,7 @@ public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObj
 			for (int i = 0; i < roles.size(); i++) {
 				AttributeRole role = roles.get(i);
 				if (collectionToFill.containsKey(role.getName())) {
-					ApsSystemUtils.getLogger().severe("You can't override existing attribute role : " 
+					ApsSystemUtils.getLogger().error("You can't override existing attribute role : " 
 							+ role.getName() + " - " + role.getDescription());
 				} else {
 					collectionToFill.put(role.getName(), role);

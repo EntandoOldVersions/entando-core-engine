@@ -6,12 +6,12 @@
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-*
-* See the file License for the specific language governing permissions
+* 
+* See the file License for the specific language governing permissions   
 * and limitations under the License
-*
-*
-*
+* 
+* 
+* 
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -77,7 +77,7 @@ public class ImageDimensionDOM {
 					dimension.setDimy(Integer.parseInt(dimy));
 				}
 				dimensions.put(new Integer(dimension.getIdDim()), dimension);
-				ApsSystemUtils.getLogger().finest("Definita dimensione di resize: " + dimension.getIdDim());
+				ApsSystemUtils.getLogger().debug("Definita dimensione di resize: " + dimension.getIdDim());
 			}
 		}
 		return dimensions;
@@ -90,7 +90,7 @@ public class ImageDimensionDOM {
 		try {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Errore nel parsing: " + t.getMessage());
+			ApsSystemUtils.getLogger().error("Errore nel parsing: " + t.getMessage());
 			throw new ApsSystemException("Errore nel parsing della configurazione Dimensioni di resize", t);
 		}
 	}

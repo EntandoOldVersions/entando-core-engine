@@ -59,7 +59,7 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 				this.setStylesheet(longModelId, reqCtx);
 				renderedContent = this.getContentDispenser().getRenderedContent(contentId, longModelId, langCode, reqCtx);
 			} else {
-				ApsSystemUtils.getLogger().warning(
+				ApsSystemUtils.getLogger().warn(
 						"Parametri visualizzazione contenuto incompleti: contenuto=" + contentId + " modello="
 								+ modelId);
 			}

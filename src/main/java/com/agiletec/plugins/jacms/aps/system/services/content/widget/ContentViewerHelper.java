@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -17,7 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -87,11 +87,11 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	            this.setStylesheet(longModelId, reqCtx);
 	            renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
 	            if (null == renderizationInfo) {
-	            	log.warning("Null Renderization informations: content=" + contentId);
+	            	log.warn("Null Renderization informations: content=" + contentId);
 	            }
 	            this.manageAttributeValues(renderizationInfo, publishExtraTitle, reqCtx);
             } else {
-            	log.warning("Parametri visualizzazione contenuto incompleti: " +
+            	log.warn("Parametri visualizzazione contenuto incompleti: " +
             			"contenuto=" + contentId + " modello=" + modelId);
             }
         } catch (Throwable t) {

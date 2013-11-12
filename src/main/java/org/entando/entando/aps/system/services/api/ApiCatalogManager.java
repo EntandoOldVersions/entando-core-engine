@@ -39,7 +39,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
     
 	@Override
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
+        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
     }
     
     @Override
@@ -54,7 +54,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns());
             Map<String, ApiResource> resources = loader.getResources();
             this.setMasterResources(resources);
-            ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized Api Methods");
+            ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized Api Methods");
             this.getApiCatalogDAO().loadApiStatus(resources);
         } catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "loadResources", "Error loading Api Resources definitions");
@@ -110,7 +110,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                         ApiMethod alreadyMapped = mapping.get(showletCode);
                         String alertMessage = "There is more than one method related whith showlet '" + showletCode + "' - "
                                 + "Actual mapped '" + alreadyMapped.getResourceName() + "'; other method '" + apiMethod.getResourceName() + "'";
-                        ApsSystemUtils.getLogger().severe(alertMessage);
+                        ApsSystemUtils.getLogger().error(alertMessage);
                     } else {
                         mapping.put(showletCode, apiMethod.clone());
                     }

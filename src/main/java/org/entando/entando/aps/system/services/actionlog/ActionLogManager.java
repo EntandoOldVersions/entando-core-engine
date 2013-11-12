@@ -48,7 +48,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": ready");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": ready");
 	}
 
 	@Override

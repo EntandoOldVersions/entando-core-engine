@@ -56,7 +56,7 @@ public class ResourceManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
-    	ApsSystemUtils.getLogger().config(this.getClass().getName() + 
+    	ApsSystemUtils.getLogger().debug(this.getClass().getName() + 
         		": initialized " + this._resourceTypes.size() + " resource types");
 	}
 	
@@ -301,7 +301,7 @@ public class ResourceManager extends AbstractService
     
     protected void startResourceReloaderThread(String resourceTypeCode, int operationCode) throws ApsSystemException {
     	if (this.getStatus() != STATUS_READY) {
-    		ApsSystemUtils.getLogger().severe("Service not ready : status " + this.getStatus());
+    		ApsSystemUtils.getLogger().error("Service not ready : status " + this.getStatus());
     		return;
 		}
     	String threadName = this.getName() + "_resourceReloader_" + DateConverter.getFormattedDate(new Date(), "yyyyMMdd");

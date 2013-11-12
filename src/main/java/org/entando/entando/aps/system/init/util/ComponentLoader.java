@@ -27,7 +27,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import org.entando.entando.aps.system.init.model.Component;
 
@@ -70,10 +70,10 @@ public class ComponentLoader {
 				Component component = dom.getComponent(postProcessClasses);
 				if (null != component) {
 					if (codes.add(component.getCode())) {
-						logger.info("Component '" + component.getCode() + "' loaded");
+						logger.debug("Component '" + component.getCode() + "' loaded");
 						this.getComponents().put(component.getCode(), component);
 					} else {
-						logger.info("Component '" + component.getCode() + "' already loaded");
+						logger.debug("Component '" + component.getCode() + "' already loaded");
 					}
 				}
             } catch (Throwable t) {

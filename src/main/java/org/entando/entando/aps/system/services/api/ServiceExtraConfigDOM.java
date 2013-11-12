@@ -69,7 +69,7 @@ public class ServiceExtraConfigDOM {
         try {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().severe("Error while parsing: " + t.getMessage());
+            ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
             throw new ApsSystemException("Error detected while parsing the XML", t);
         }
     }

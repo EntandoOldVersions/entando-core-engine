@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -40,6 +39,7 @@ import com.agiletec.apsadmin.portal.helper.IPageActionHelper;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseActionHelper;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.slf4j.Logger;
 
 /**
  * Main action for pages handling
@@ -234,11 +234,11 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
 				page = this.getUpdatedPage();
 				this.getPageManager().updatePage(page);
-				log.finest("Updating page " + page.getCode());
+				log.debug("Updating page " + page.getCode());
 			} else {
 				page = this.buildNewPage();
 				this.getPageManager().addPage(page);
-				log.finest("Adding new page");
+				log.debug("Adding new page");
 			}
 			this.addActivityStreamInfo(page, this.getStrutsAction(), true);
 		} catch (Throwable t) {
@@ -349,7 +349,7 @@ public class PageAction extends AbstractPortalAction implements IPageAction {
 				Widget defaultWidget = defaultWidgets[i];
 				if (null != defaultWidget) {
 					if (null == defaultWidget.getType()) {
-						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
+						ApsSystemUtils.getLogger().error("Widget Type null when adding " +
 								"defaulWidget (of pagemodel '" + page.getModel().getCode() + "') on frame '" + i + "' of page '" + page.getCode() + "'");
 						continue;
 					}

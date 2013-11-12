@@ -53,7 +53,7 @@ public class EntityTypesInfoTag extends AbstractObjectInfoTag {
 				}
 				return entityTypes;
 			} else {
-				ApsSystemUtils.getLogger().finest("Null entity manager : service name '" + managerNameValue + "'");
+				ApsSystemUtils.getLogger().debug("Null entity manager : service name '" + managerNameValue + "'");
 			}
 		} catch (Throwable t) {
 			String message = "Error extracting entity types : entity manager '" + managerNameValue + "'";

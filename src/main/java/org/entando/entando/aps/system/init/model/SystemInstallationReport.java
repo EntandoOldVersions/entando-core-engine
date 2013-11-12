@@ -77,7 +77,7 @@ public class SystemInstallationReport {
 				this.getReports().add(report);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Error parsing Report: " + t.getMessage());
+			ApsSystemUtils.getLogger().error("Error parsing Report: " + t.getMessage());
 			throw new RuntimeException("Error detected while parsing the XML", t);
 		}
 	}

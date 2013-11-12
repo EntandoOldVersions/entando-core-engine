@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -83,7 +83,7 @@ public class AttributeRolesLoader {
 	private String extractConfigFile(String fileName) throws Throwable {
 		InputStream is = this.getEntityManager().getClass().getResourceAsStream(fileName);
 		if (null == is) {
-			ApsSystemUtils.getLogger().config(this.getEntityManager().getClass().getName() + ": there isn't any object to load : file " + fileName);
+			ApsSystemUtils.getLogger().debug(this.getEntityManager().getClass().getName() + ": there isn't any object to load : file " + fileName);
 			return null;
 		}
 		return FileTextReader.getText(is);

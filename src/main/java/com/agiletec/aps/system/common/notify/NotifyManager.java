@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -19,8 +19,8 @@ package com.agiletec.aps.system.common.notify;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
@@ -40,8 +40,8 @@ import com.agiletec.aps.util.DateConverter;
  * @author M.Diana - E.Santoboni
  */
 public class NotifyManager implements INotifyManager, ApplicationListener, 
-		BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
-	
+BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
+
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof ApsEvent) {
@@ -50,9 +50,9 @@ public class NotifyManager implements INotifyManager, ApplicationListener,
 			thread.start();
 			return;
 		}
-		ApsSystemUtils.getLogger().info("Unhandled generic event detected: "+ event.getClass().getName());
+		ApsSystemUtils.getLogger().debug("Unhandled generic event detected: "+ event.getClass().getName());
 	}
-	
+
 	/**
 	 * Notifica un evento ai corrispondenti servizi osservatori.
 	 * @param event L'evento da notificare.
@@ -70,21 +70,17 @@ public class NotifyManager implements INotifyManager, ApplicationListener,
 			}
 			if (observer != null) {
 				((ObserverService) observer).update(event);
-				if (log.isLoggable(Level.INFO)) {
-					log.info("The event " + event.getClass().getName() + " was notified to the " + observer.getClass().getName()+" service");
-				}
+				log.debug("The event " + event.getClass().getName() + " was notified to the " + observer.getClass().getName()+" service");
 			}
 		}
-		if (log.isLoggable(Level.INFO)) {
-			log.info("The " + event.getClass().getName()+" has been notified");
-		}
+		log.debug("The " + event.getClass().getName()+" has been notified");
 	}
-	
+
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this._beanFactory = beanFactory;
 	}
-	
+
 	/**
 	 * Notifica un'evento a tutti i listener definiti nel sistema.
 	 * @param event L'evento da notificare.
@@ -93,14 +89,14 @@ public class NotifyManager implements INotifyManager, ApplicationListener,
 	public void publishEvent(ApplicationEvent event) {
 		this._eventPublisher.publishEvent(event);
 	}
-	
+
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher eventPublisher) {
 		this._eventPublisher = eventPublisher;
 	}
-	
+
 	private ApplicationEventPublisher _eventPublisher;
-	
+
 	private BeanFactory _beanFactory;
 	
 	public static final String NOTIFYING_THREAD_NAME = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "NotifyingThreadName";

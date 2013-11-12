@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -46,7 +46,7 @@ public abstract class AbstractExtraAttributeSupportObject implements ServletCont
 		try {
 			is = this._servletContext.getResourceAsStream(this.getDefsFilePath());
 			if (null == is) {
-				ApsSystemUtils.getLogger().severe("Null Input Stream - Definition file path " + this.getDefsFilePath());
+				ApsSystemUtils.getLogger().error("Null Input Stream - Definition file path " + this.getDefsFilePath());
 				return null;
 			}
 			xml = FileTextReader.getText(is);

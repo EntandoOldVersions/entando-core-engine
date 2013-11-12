@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -32,29 +32,29 @@ import com.opensymphony.xwork2.Action;
  * @author E.Santoboni
  */
 public class TestHypertextAttributeAction extends AbstractBaseTestContentAction {
-	
+
 	public void testFindContent_1() throws Throwable {
 		this.initIntroContentLink("admin", "ART1");//Contenuto del gruppo Free
-		
-		
+
+
 		ContentLinkAttributeAction action = (ContentLinkAttributeAction) this.getAction();
 		List<String> contentIds = action.getContents();
 		assertEquals(14, contentIds.size());//Contenuti pubblici liberi o non liberi con free gruppo extra
 		assertTrue(contentIds.contains("EVN25"));//Contenuto coach abilitato al gruppo free
 		assertTrue(contentIds.contains("ART121"));//Contenuto del gruppo "administrators" abilitato al gruppo free
 	}
-	
+
 	public void testFindContent_2() throws Throwable {
 		this.initIntroContentLink("admin", "ART120");//Contenuto del gruppo degli amministratori
-		
+
 		ContentLinkAttributeAction action = (ContentLinkAttributeAction) this.getAction();
 		List<String> contentIds = action.getContents();
 		assertEquals(23, contentIds.size());//Tutti i contenuti pubblici
 	}
-	
+
 	public void testFindContent_3() throws Throwable {
 		this.initIntroContentLink("editorCustomers", "ART102");//Contenuto del gruppo customers
-		
+
 		ContentLinkAttributeAction action = (ContentLinkAttributeAction) this.getAction();
 		List<String> contentIds = action.getContents();
 		assertEquals(19, contentIds.size());// Contenuti pubblici liberi, o del gruppo customers o altri con customers gruppo extra
@@ -63,10 +63,10 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertTrue(contentIds.contains("EVN25"));//Contenuto del gruppo "coach" abilitato al gruppo free
 		assertTrue(contentIds.contains("ART111"));//Contenuto del gruppo "coach" abilitato al gruppo customers
 	}
-	
+
 	public void testFindContent_4() throws Throwable {
 		this.initIntroContentLink("admin", "EVN25");//Contenuto del gruppo coach
-		
+
 		ContentLinkAttributeAction action = (ContentLinkAttributeAction) this.getAction();
 		List<String> contentIds = action.getContents();
 		assertEquals(19, contentIds.size());// Contenuti pubblici liberi, o del gruppo coach o altri con coach gruppo extra
@@ -75,7 +75,7 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertTrue(contentIds.contains("EVN25"));//Contenuto del gruppo "coach" abilitato al gruppo free
 		assertTrue(contentIds.contains("ART111"));//Contenuto del gruppo "coach" abilitato al gruppo customers
 	}
-	
+
 	private void initIntroContentLink(String username, String contentId) throws Throwable {
 		this.executeEdit(contentId, username);
 		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
@@ -91,7 +91,7 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertEquals("homepage", root.getCode());
 		assertEquals(3, root.getChildren().length);
 	}
-	
+
 	public void testConfigPageLink_2() throws Throwable {
 		this.initIntroPageLink("admin", "ART102");
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
@@ -99,7 +99,7 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertEquals("homepage", root.getCode());
 		assertEquals(4, root.getChildren().length);
 	}
-	
+
 	public void testOpenPageTree_1() throws Throwable {
 		this.openTree("admin", "ART1", "homepage");
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
@@ -110,17 +110,17 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertEquals("homepage", showableRoot.getCode());
 		assertEquals(3, showableRoot.getChildren().length);
 	}
-	
+
 	public void testOpenPageTree_2() throws Throwable {
 		this.openTree("admin", "ART102", "homepage");
 		this.checkTestOpenPageTree_ART102();
 	}
-	
+
 	public void testOpenPageTree_3() throws Throwable {
 		this.openTree("editorCustomers", "ART102", "homepage");
 		this.checkTestOpenPageTree_ART102();
 	}
-	
+
 	private void checkTestOpenPageTree_ART102() throws Throwable {
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
 		assertNotNull(root);
@@ -130,9 +130,9 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertEquals("homepage", showableRoot.getCode());
 		assertEquals(4, showableRoot.getChildren().length);
 	}
-	
+
 	//http://localhost:8080/PortalExample/do/jacms/Content/Hypertext/configInternalLink.action?internalActionName=openTreeOnPageLink&activeTab=1&targetNode=homepage&
-	
+
 	private void initIntroPageLink(String username, String contentId) throws Throwable {
 		this.executeEdit(contentId, username);
 		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
@@ -140,7 +140,7 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
-	
+
 	private void openTree(String username, String contentId, String nodeToOpen) throws Throwable {
 		this.executeEdit(contentId, username);
 		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
@@ -150,5 +150,5 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
-	
+
 }

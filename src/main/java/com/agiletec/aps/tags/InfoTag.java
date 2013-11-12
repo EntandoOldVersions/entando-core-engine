@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -106,7 +106,7 @@ public class InfoTag extends OutSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		if (null == this._info) {
-			ApsSystemUtils.getLogger().severe("Null information - key '" + this.getKey() + "' - parameter '" + this.getParamName() + "'");
+			ApsSystemUtils.getLogger().error("Null information - key '" + this.getKey() + "' - parameter '" + this.getParamName() + "'");
 			return super.doEndTag();
 		}
 		if (this._varName != null) {

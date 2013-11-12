@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -19,7 +19,7 @@ package com.agiletec.aps.servlet;
 
 import java.io.IOException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,9 +44,7 @@ public class ControllerServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         RequestContext reqCtx = new RequestContext();
         Logger log = ApsSystemUtils.getLogger();
-        if (log.isLoggable(Level.FINEST)) {
-            log.finest("Request:" + request.getServletPath());
-        }
+        log.debug("Request:" + request.getServletPath());
         request.setAttribute(RequestContext.REQCTX, reqCtx);
         reqCtx.setRequest(request);
         reqCtx.setResponse(response);
@@ -54,24 +52,20 @@ public class ControllerServlet extends HttpServlet {
                 (ControllerManager) ApsWebApplicationUtils.getBean(SystemConstants.CONTROLLER_MANAGER, request);
         int status = controller.service(reqCtx);
         if (status == ControllerManager.REDIRECT) {
-            if (log.isLoggable(Level.FINEST)) {
-                log.finest("Redirection");
-            }
+
+            log.debug("Redirection");
             this.redirect(reqCtx, response);
         } else if (status == ControllerManager.OUTPUT) {
-            if (log.isLoggable(Level.FINEST)) {
-                log.finest("Output");
-            }
+            log.debug("Output");
         } else if (status == ControllerManager.ERROR) {
             this.outputError(reqCtx, response);
-            if (log.isLoggable(Level.FINEST)) {
-                log.finest("Error");
-            }
+  
+            log.debug("Error");
         } else {
-            log.severe("Error: final status = "
+            log.error("Error: final status = "
                     + ControllerManager.getStatusDescription(status)
                     + " - request: ");
-            log.severe(request.getServletPath());
+            log.error(request.getServletPath());
             throw new ServletException("Service not available");
         }
         return;

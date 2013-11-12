@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -40,7 +40,7 @@ public class WidgetTag extends TagSupport {
 			String showletOutput[] = (String[]) reqCtx.getExtraParam("ShowletOutput");
 			if(_frame <0 || _frame >= showletOutput.length){
 				String msg = "Frame attribute =" + _frame + " exceeds the limit in the page " + page.getCode();
-				ApsSystemUtils.getLogger().severe(msg);
+				ApsSystemUtils.getLogger().error(msg);
 				throw new JspException(msg);
 			}
 			String showlet = showletOutput[_frame];

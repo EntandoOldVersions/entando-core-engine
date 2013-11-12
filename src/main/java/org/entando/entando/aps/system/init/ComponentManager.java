@@ -35,7 +35,7 @@ public class ComponentManager implements IComponentManager {
 	
 	public void init() throws Exception {
 		this.loadComponents();
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initializated");
 	}
 	
     protected void loadComponents() throws ApsSystemException {

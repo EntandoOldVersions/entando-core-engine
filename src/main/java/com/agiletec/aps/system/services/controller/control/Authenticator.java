@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -41,7 +41,7 @@ public class Authenticator extends AbstractControlService {
     
 	@Override
     public void afterPropertiesSet() throws Exception {
-    	this._log.config(this.getClass().getName() + ": initialized");
+    	this._log.debug(this.getClass().getName() + ": initialized");
 	}
     
 	/**
@@ -58,9 +58,7 @@ public class Authenticator extends AbstractControlService {
      */
 	@Override
     public int service(RequestContext reqCtx, int status) {
-    	if (_log.isLoggable(Level.FINEST)) {
-    		_log.finest("Invocata " + this.getClass().getName());
-    	}
+    	_log.debug("Invocata " + this.getClass().getName());
         int retStatus = ControllerManager.INVALID_STATUS;
         if (status == ControllerManager.ERROR) {
         	return status;
@@ -74,14 +72,14 @@ public class Authenticator extends AbstractControlService {
             if (username != null && password != null) {
 				String returnUrl = req.getParameter("returnUrl");
 				returnUrl = (null != returnUrl && returnUrl.trim().length() > 0) ? returnUrl : null;
-            	this._log.finest("user " + username + " - password ******** ");
+            	this._log.debug("user " + username + " - password ******** ");
                 UserDetails user = this.getAuthenticationProvider().getUser(username, password);
                 if (user != null) {
                 	if (!user.isAccountNotExpired()) {
                 		req.setAttribute("accountExpired", new Boolean(true));
                 	} else {
                 		session.setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
-                		this._log.finest("New user: " + user.getUsername());
+                		this._log.debug("New user: " + user.getUsername());
 						if (null != returnUrl) {
 							return super.redirectUrl(URLDecoder.decode(returnUrl, "ISO-8859-1"), reqCtx);
 						}

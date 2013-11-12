@@ -3,7 +3,6 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software. 
-* Entando is a free software; 
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -25,27 +24,27 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
  */
 @Deprecated
 public interface ICacheManager {
-	
+
 	/**
 	 * Flush the entire cache immediately.
 	 */
 	@Deprecated
 	public void flushAll();
-	
+
 	/**
 	 * Flushes a single cache entry.
 	 * @param key The key entered by the user.
 	 */
 	@Deprecated
 	public void flushEntry(String key);
-	
+
 	/**
-	 * Flushes all items that belong to the specified group. 
+	 * Flushes all items that belong to the specified group.
 	 * @param group The name of the group to flush.
 	 */
 	@Deprecated
 	public void flushGroup(String group);
-	
+
 	/**
 	 * Put an object in a cache.
 	 * @param key The key entered by the user.
@@ -53,7 +52,7 @@ public interface ICacheManager {
 	 */
 	@Deprecated
 	public void putInCache(String key, Object obj);
-	
+
 	/**
 	 * Put an object in a cache.
 	 * @param key The key entered by the user.
@@ -70,7 +69,7 @@ public interface ICacheManager {
 	 */
 	@Deprecated
 	public Object getFromCache(String key);
-	
+
 	/**
 	 * Get an object from the cache.
 	 * @param key The key entered by the user.
@@ -79,13 +78,13 @@ public interface ICacheManager {
 	 */
 	@Deprecated
 	public Object getFromCache(String key, int myRefreshPeriod);
-	
+
 	@Deprecated
 	public void putInCacheGroups(String key, String[] groups);
-	
+
 	public void setExpirationTime(String key, long expiresInSeconds);
-	
+
 	@Deprecated
 	public static final String CACHE_NAME = ICacheInfoManager.CACHE_NAME;
-	
+
 }

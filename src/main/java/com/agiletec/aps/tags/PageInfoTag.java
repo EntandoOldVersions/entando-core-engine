@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -58,7 +58,7 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 				(IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
 			IPage page = pageManager.getPage(this.getPageCode());
 			if (null == page) {
-				ApsSystemUtils.getLogger().severe("Required info for null page : inserted code '" + this.getPageCode() + "'");
+				ApsSystemUtils.getLogger().error("Required info for null page : inserted code '" + this.getPageCode() + "'");
 			}
 			if (this.getInfo() == null || this.getInfo().equals(CODE_INFO)) {
 				this.setValue(page.getCode());

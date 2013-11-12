@@ -2,16 +2,15 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -36,12 +35,12 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
-    
+
 	@Override
     protected void setValue(AttributeInterface attribute, String value) {
         ((MonoTextAttribute) attribute).setText(value);
     }
-    
+
 	@Override
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         AttributeInterface attribute = attributeFieldError.getAttribute();
@@ -62,5 +61,5 @@ public class MonoTextAttributeManager extends AbstractMonoLangAttributeManager {
         }
         return action.getText(this.getInvalidAttributeMessage());
     }
-    
+
 }

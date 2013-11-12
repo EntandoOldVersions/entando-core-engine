@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -18,7 +18,7 @@
 package com.agiletec.apsadmin.common;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpSession;
 
@@ -40,18 +40,16 @@ public class DispatchAction extends BaseAction implements IDispatchAction {
 		super.validate();
 		if (this.hasFieldErrors()) return;
 		Logger log = ApsSystemUtils.getLogger();
-    	log.finest("Authentication : user " + this.getUsername() + " - password ******** ");
+    	log.debug("Authentication : user " + this.getUsername() + " - password ******** ");
     	UserDetails user = null;
 		try {
 			user = this.getAuthenticationProvider().getUser(this.getUsername(), this.getPassword());
 		} catch (Throwable t) {
-			log.throwing("LoginAction", "validate", t);
+			log.error("error in LoginAction {}", "validate", t);
 			throw new RuntimeException("Login error : username " + this.getUsername(), t);
 		}
 		if (null == user) {
-        	if (log.isLoggable(Level.FINEST)) {
-            	log.finest("Login failed : username " + this.getUsername() + " - password ******** ");
-            }
+        	log.debug("Login failed : username " + this.getUsername() + " - password ******** ");
         	this.addActionError(this.getText("error.user.login.loginFailed"));
         } else {
         	//UTENTE RICONOSCIUTO ED ATTIVO

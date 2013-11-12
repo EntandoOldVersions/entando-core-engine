@@ -2,7 +2,7 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
+* This file is part of Entando software.
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
@@ -15,10 +15,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
+
 package com.agiletec.aps;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.entando.entando.aps.system.services.api.TestApiCatalogManager;
+import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 import com.agiletec.aps.system.TestApplicationContext;
 import com.agiletec.aps.system.common.entity.TestEntityManager;
@@ -58,11 +62,6 @@ import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDAO;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeDOM;
 import com.agiletec.aps.system.services.widgettype.TestWidgetTypeManager;
 import com.agiletec.aps.util.TestHtmlHandler;
-
-import org.entando.entando.aps.system.services.actionlog.TestActionLogDAO;
-import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
-import org.entando.entando.aps.system.services.api.TestApiCatalogManager;
-import org.entando.entando.aps.system.services.userprofile.TestUserProfileManager;
 
 /**
  * @author W.Ambu
@@ -134,9 +133,6 @@ public class AllTests {
 		
 		suite.addTestSuite(TestUserProfileManager.class);
 		suite.addTestSuite(org.entando.entando.aps.system.services.userprofile.TestUserManager.class);
-		
-		suite.addTestSuite(TestActionLogDAO.class);
-		suite.addTestSuite(TestActionLogManager.class);
 		
 		return suite;
 	}

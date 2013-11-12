@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
+* This file is part of Entando software.
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -33,26 +33,26 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
-	
+
 	public void testOpenNew() throws Throwable {
 		String result = this.executeOpenNew("admin");
 		assertEquals(Action.SUCCESS, result);
-		
+
 		result = this.executeOpenNew("pageManagerCoach");
 		assertEquals("userNotAllowed", result);
 	}
-	
+
 	private String executeOpenNew(String currentUserName) throws Throwable {
 		this.initAction("/do/jacms/Content", "new");
 		this.setUserOnSession(currentUserName);
 		return this.executeAction();
 	}
-	
+
 	public void testCreateNewVoid() throws Throwable {
 		String contentTypeCode = "ART";
 		Content prototype = this.getContentManager().createContentType(contentTypeCode);
 		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
-		
+
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
 		this.addParameter("contentTypeCode", contentTypeCode);
@@ -62,10 +62,10 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		assertEquals(2, fieldErrors.size());
 		assertEquals(1, fieldErrors.get("contentDescription").size());
 		assertEquals(1, fieldErrors.get("contentMainGroup").size());
-		
+
 		Content content = super.getContentOnEdit(contentOnSessionMarker);
 		assertNull(content);
-		
+
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
 		this.addParameter("contentTypeCode", contentTypeCode);
@@ -73,12 +73,12 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		this.addParameter("contentMainGroup", Group.FREE_GROUP_NAME);
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		
+
 		content = super.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(content);
 		assertEquals(contentTypeCode, content.getTypeCode());
 	}
-	
+
 	public void testCreateNewVoid_2() throws Throwable {
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
@@ -88,7 +88,7 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		Map<String, List<String>> fieldErros = action.getFieldErrors();
 		assertEquals(3, fieldErros.size());
 	}
-	
+
 	public void testCreateNewVoid_3() throws Throwable {
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
@@ -102,7 +102,7 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErros.get("contentDescription").size());
 		assertEquals(1, fieldErros.get("contentMainGroup").size());
 	}
-	
+
 	public void testCreateNewVoid_4() throws Throwable {
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession("admin");
@@ -116,7 +116,7 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErros.size());
 		assertEquals(1, fieldErros.get("contentMainGroup").size());
 	}
-	
+
 	public void testCreateNewVoid_5() throws Throwable {
 		this.setUserOnSession("editorCustomers");
 		this.initAction("/do/jacms/Content", "createNewVoid");
@@ -129,7 +129,7 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		Map<String, List<String>> fieldErros = action.getFieldErrors();
 		assertEquals(1, fieldErros.size());
 		assertEquals(1, fieldErros.get("contentMainGroup").size());
-		
+
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.addParameter("contentTypeCode", "ART");
 		this.addParameter("contentDescription", "Description");
@@ -137,5 +137,5 @@ public class TestIntroNewContentAction extends AbstractBaseTestContentAction {
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
 	}
-	
+
 }

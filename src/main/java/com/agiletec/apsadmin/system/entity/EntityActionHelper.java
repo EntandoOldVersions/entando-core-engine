@@ -2,16 +2,15 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -52,7 +51,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @author E.Santoboni
  */
 public class EntityActionHelper extends BaseActionHelper implements IEntityActionHelper, BeanFactoryAware {
-    
+
 	@Override
 	public void updateEntity(IApsEntity currentEntity, HttpServletRequest request) {
 		try {
@@ -71,7 +70,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 			throw new RuntimeException("Error updating Entity", t);
 		}
 	}
-    
+
 	@Override
 	public void scanEntity(IApsEntity currentEntity, ActionSupport action) {
 		try {
@@ -99,7 +98,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 			throw new RuntimeException("Error scanning Entity", t);
 		}
 	}
-    
+
     private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer) {
         if (tracer.isMonoListElement()) {
             if (tracer.isCompositeElement()) {
@@ -120,7 +119,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
             return action.getText("EntityAttribute.singleAttribute.errorMessage.prefix", args);
         }
     }
-    
+
 	protected AttributeManagerInterface getManager(AttributeInterface attribute) {
 		String managerClassName = attribute.getAttributeManagerClassName();
         try {
@@ -140,13 +139,13 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         }
         return null;
     }
-	
+
 	@Override
 	@Deprecated
 	public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
 		return this.getAttributeFilters(entityFinderAction, prototype);
 	}
-	
+
 	@Override
 	public EntitySearchFilter[] getRoleFilters(AbstractApsEntityFinderAction entityFinderAction) {
 		EntitySearchFilter[] filters = new EntitySearchFilter[0];
@@ -185,7 +184,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		}
 		return filters;
 	}
-	
+
 	@Override
 	public EntitySearchFilter[] getAttributeFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
 		EntitySearchFilter[] filters = new EntitySearchFilter[0];
@@ -227,7 +226,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		}
 		return filters;
 	}
-	
+
     private Date getDateSearchFormValue(AbstractApsEntityFinderAction entityFinderAction,
             String fieldName, String dateFieldNameSuffix, boolean start) {
         String inputFormName = fieldName + dateFieldNameSuffix;
@@ -267,7 +266,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         }
         return bigdecimal;
     }
-	
+
     private EntitySearchFilter[] addFilter(EntitySearchFilter[] filters, EntitySearchFilter filterToAdd) {
         int len = filters.length;
         EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
@@ -277,7 +276,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         newFilters[len] = filterToAdd;
         return newFilters;
     }
-    
+
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
 	}
@@ -285,7 +284,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this._beanFactory = beanFactory;
 	}
-	
+
 	private BeanFactory _beanFactory;
-	
+
 }

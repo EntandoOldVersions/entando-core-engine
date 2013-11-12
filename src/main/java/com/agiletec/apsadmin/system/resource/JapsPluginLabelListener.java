@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-*
-* See the file License for the specific language governing permissions
+* 
+* See the file License for the specific language governing permissions   
 * and limitations under the License
-*
-*
-*
+* 
+* 
+* 
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -54,13 +54,13 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		Iterator<String> itr = classPlugins.iterator();
 		while (itr.hasNext()) {
 			String cur = itr.next();
-			ApsSystemUtils.getLogger().info("Trying to load resources under development @ "+cur);
+			ApsSystemUtils.getLogger().debug("Trying to load resources under development @ "+cur);
 			LocalizedTextUtil.addDefaultResourceBundle(cur+this.PLUGIN_RESOURCE_NAME);
 		}
 		itr = jaredPlugins.iterator();
 		while (itr.hasNext()) {
 			String cur = itr.next();
-			ApsSystemUtils.getLogger().info("Trying to load resources @ "+cur);
+			ApsSystemUtils.getLogger().debug("Trying to load resources @ "+cur);
 			LocalizedTextUtil.addDefaultResourceBundle(cur+this.PLUGIN_RESOURCE_NAME);
 		}
 		ApsSystemUtils.getLogger().info("JapsPluginLabelListener summary: "+(classPlugins.size()+jaredPlugins.size())+" plugin detected ("+classPlugins.size()+" under development)");
@@ -73,7 +73,9 @@ public class JapsPluginLabelListener implements ServletContextListener {
 	 */
 	private Set<String> discoverClasses(String path, ServletContextEvent event) {
 		Set<String> plugins = new HashSet<String>();
-		if (null==path || event==null) return plugins;
+		if (null == path || null == event) {
+			return plugins;
+		}
 		Set<String> directory = event.getServletContext().getResourcePaths(path);
 		if (null != directory && !directory.isEmpty()) {
 			Iterator<String> itr = directory.iterator();

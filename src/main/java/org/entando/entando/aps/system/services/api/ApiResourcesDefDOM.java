@@ -145,7 +145,7 @@ public class ApiResourcesDefDOM {
                 String alertMessage = "ALERT: There is more than one API with namespace '" + resource.getNamespace() + 
 						"', resource '" + resource.getResourceName() + 
                         "' into the same definitions file - The second definition will be ignored!!!";
-                ApsSystemUtils.getLogger().severe(alertMessage);
+                ApsSystemUtils.getLogger().error(alertMessage);
             } else {
                 apiResources.put(resource.getCode(), resource);
             }
@@ -161,7 +161,7 @@ public class ApiResourcesDefDOM {
                 String alertMessage = "ALERT: There is more than one API method " + apiMethod.getHttpMethod() 
                         + " for resource '" + apiMethod.getResourceName() + "' into the same definitions file "
                         + "- The second definition will be ignored!!!";
-                ApsSystemUtils.getLogger().severe(alertMessage);
+                ApsSystemUtils.getLogger().error(alertMessage);
             } else {
                 resource.setMethod(apiMethod);
             }
@@ -177,7 +177,7 @@ public class ApiResourcesDefDOM {
         try {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().severe("Error while parsing: " + t.getMessage());
+            ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
             throw new ApsSystemException("Error detected while parsing the XML", t);
         }
     }

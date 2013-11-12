@@ -3,7 +3,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
-* Entando is a free software; 
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -20,7 +20,7 @@ package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -75,9 +75,7 @@ public class IndexLoaderThread extends Thread {
 			if (content != null) {
 				this._indexerDao.add(content);
 				Logger log = ApsSystemUtils.getLogger();
-				if (log.isLoggable(Level.INFO)) {
-					log.info("Indexed content " + content.getId());
-				}
+				log.info("Indexed content " + content.getId());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "reloadContentIndex", "Error reloading index: content id" + id);

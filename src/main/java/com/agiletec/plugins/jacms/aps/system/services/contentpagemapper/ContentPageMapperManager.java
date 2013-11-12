@@ -18,7 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.contentpagemapper;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -42,7 +42,7 @@ public class ContentPageMapperManager extends AbstractService
 	@Override
 	public void init() throws Exception {
 		this.createContentPageMapper();
-		ApsSystemUtils.getLogger().config(this.getClass().getName() 
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
 				+ ": inizializzato Mapper Contenuti pubblicati / pagine " );
 	}
 	
@@ -107,9 +107,7 @@ public class ContentPageMapperManager extends AbstractService
 		try {
 			this.reloadContentPageMapper();
 			Logger log = ApsSystemUtils.getLogger();
-			if (log.isLoggable(Level.FINEST)) {
-				log.info("Notificato modifica pagina " + event.getPage().getCode());
-			}
+			log.info("Notificato modifica pagina " + event.getPage().getCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "updateFromPageChanged", "Errore in notificazione Evento");
 		}

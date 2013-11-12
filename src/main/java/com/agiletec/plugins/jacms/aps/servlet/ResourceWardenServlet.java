@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -22,7 +22,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -63,9 +63,7 @@ public class ResourceWardenServlet extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 		Logger log = ApsSystemUtils.getLogger();
-		if (log.isLoggable(Level.FINEST)) {
-			log.finest("Request:" + request.getRequestURI());
-		}
+		log.debug("Request:" + request.getRequestURI());
 		//Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
 		String[] uriSegments = request.getRequestURI().split("/");
 		int segments = uriSegments.length;

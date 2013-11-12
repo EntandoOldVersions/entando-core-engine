@@ -79,7 +79,7 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	public void deleteResourceInstances() throws ApsSystemException {
 		try {
 			if (null == this.getInstance()) {
-				ApsSystemUtils.getLogger().fine("Null instance for resource " + this.getId());
+				ApsSystemUtils.getLogger().debug("Null instance for resource " + this.getId());
 				return;
 			}
 			String docName = this.getInstance().getFileName();

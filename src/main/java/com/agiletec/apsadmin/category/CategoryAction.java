@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.tree.ITreeNode;
@@ -206,11 +206,11 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 				Category category = this.getCategory(this.getCategoryCode());
 				category.setTitles(this.getTitles());
 				this.getCategoryManager().updateCategory(category);
-				log.finest("Updated category " + category.getCode());
+				log.debug("Updated category " + category.getCode());
 			} else {
 				Category category = this.getHelper().buildNewCategory(this.getCategoryCode(), this.getParentCategoryCode(), this.getTitles());
 				this.getCategoryManager().addCategory(category);
-				log.finest("Added new category " + this.getCategoryCode());
+				log.debug("Added new category " + this.getCategoryCode());
 			}
 		} catch (Exception e) {
 			ApsSystemUtils.logThrowable(e, this, "save");

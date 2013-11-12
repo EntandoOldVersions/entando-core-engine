@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -25,11 +25,11 @@ import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+import org.slf4j.Logger;
 
 /**
  * This action class handles the configuration of the widgets with parameters.
@@ -51,7 +51,7 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 			try {
 				widget = this.createNewShowlet();
 			} catch (Exception e) {
-				log.severe(e.getMessage());
+				log.error(e.getMessage());
 				//TODO METTI MESSAGGIO DI ERRORE NON PREVISTO... Vai in pageTree con messaggio di errore Azione non prevista o cosa del genere
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
@@ -97,7 +97,7 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 			IPage page = this.getPage(this.getPageCode());
 			int strutsAction = (null != page.getWidgets()[this.getFrame()]) ? ApsAdminSystemConstants.ADD : ApsAdminSystemConstants.EDIT;
 			this.getPageManager().joinWidget(this.getPageCode(), this.getWidget(), this.getFrame());
-			log.finest("Saving Widget - code = " + this.getWidget().getType().getCode() + 
+			log.debug("Saving Widget - code = " + this.getWidget().getType().getCode() + 
 					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
 			this.addActivityStreamInfo(strutsAction, true);
 		} catch (Throwable t) {

@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -41,17 +41,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
-import static com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper.getAllowedGroupCodes;
-import static com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper.splitValues;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListFilterBean;
-import static com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentListHelper.CATEGORIES_SEPARATOR;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentListHelper.buildCacheKey;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.SHOWLET_PARAM_CATEGORY;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_FILTERS;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_OR_CLAUSE_CATEGORY_FILTER;
-import static com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
@@ -328,7 +318,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			String contentTypeCode = config.getProperty(WIDGET_PARAM_CONTENT_TYPE);
 			IApsEntity prototype = this.getContentManager().getEntityPrototype(contentTypeCode);
 			if (null == prototype) {
-				ApsSystemUtils.getLogger().severe("Null content type by code '" + contentTypeCode + "'");
+				ApsSystemUtils.getLogger().error("Null content type by code '" + contentTypeCode + "'");
 				return null;
 			}
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);

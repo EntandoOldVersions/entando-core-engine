@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -49,7 +49,7 @@ public class UserProfileTypeDOM extends EntityTypeDOM {
 			//this.extractRole(currentContentElem, entity, "firstNameAttributeName", SystemConstants.ATTRIBUTE_ROLE_FIRST_NAME);
 			//this.extractRole(currentContentElem, entity, "surnameAttributeName", SystemConstants.ATTRIBUTE_ROLE_SURNAME);
 			this.extractRole(currentContentElem, entity, "mailAttributeName", SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
-			ApsSystemUtils.getLogger().finest("Definining the Entity Type: " + entity.getTypeCode());
+			ApsSystemUtils.getLogger().debug("Definining the Entity Type: " + entity.getTypeCode());
 		}
 	}
 	

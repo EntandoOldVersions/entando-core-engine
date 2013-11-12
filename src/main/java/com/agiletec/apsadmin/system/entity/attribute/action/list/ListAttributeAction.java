@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -18,7 +18,7 @@
 package com.agiletec.apsadmin.system.entity.attribute.action.list;
 
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -45,7 +45,7 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 			} else if (currentAttribute instanceof ListAttribute) {
 				((ListAttribute) currentAttribute).addAttribute(this.getListLangCode());
 			}
-			log.fine("Added element of type " + currentAttribute.getNestedAttributeTypeCode() + " to the list " + currentAttribute.getName());
+			log.debug("Added element of type " + currentAttribute.getNestedAttributeTypeCode() + " to the list " + currentAttribute.getName());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "addListElement");
 			return FAILURE;
@@ -67,7 +67,7 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 				List<AttributeInterface> list = ((ListAttribute) currentAttribute).getAttributeList(this.getListLangCode());
 				this.moveListElement(list, elementIndex, this.getMovement());
 			}
-			log.fine("Moved element of type " + currentAttribute.getNestedAttributeTypeCode() + 
+			log.debug("Moved element of type " + currentAttribute.getNestedAttributeTypeCode() + 
 					" of the list " + currentAttribute.getName() + 
 					" in the position " + elementIndex + " with a '" + this.getMovement() + "' movement ");
 		} catch (Throwable t) {
@@ -111,7 +111,7 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 			} else if (currentAttribute instanceof ListAttribute) {
 				((ListAttribute) currentAttribute).removeAttribute(this.getListLangCode(), elementIndex);
 			}
-			log.fine("Element oy type " + currentAttribute.getNestedAttributeTypeCode() + " removed fomr the list " + currentAttribute.getName());
+			log.debug("Element oy type " + currentAttribute.getNestedAttributeTypeCode() + " removed fomr the list " + currentAttribute.getName());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "removeListElement");
 			return FAILURE;

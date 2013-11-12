@@ -3,15 +3,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
-* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -46,7 +45,7 @@ import com.opensymphony.xwork2.ActionSupport;
  * @author E.Santoboni
  */
 public class BaseAction extends ActionSupport implements ServletRequestAware, ParameterAware {
-	
+
 	/**
 	 * Check if the current user belongs to the given group. It always returns true if the user
 	 * belongs to the Administrators group.
@@ -58,9 +57,9 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		IAuthorizationManager authManager = this.getAuthorizationManager();
 		return authManager.isAuthOnGroup(currentUser, groupName) || authManager.isAuthOnGroup(currentUser, Group.ADMINS_GROUP_NAME);
 	}
-	
+
 	/**
-	 * Check if the current user has the given permission granted. It always returns true if the 
+	 * Check if the current user has the given permission granted. It always returns true if the
 	 * user has the the "superuser" permission set in some role.
 	 * @param permissionName The name of the permission to check against the current user.
 	 * @return true if the user has the permission granted, false otherwise.
@@ -70,21 +69,21 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		IAuthorizationManager authManager = this.getAuthorizationManager();
 		return authManager.isAuthOnPermission(currentUser, permissionName) || authManager.isAuthOnPermission(currentUser, Permission.SUPERUSER);
 	}
-	
+
 	protected UserDetails getCurrentUser() {
 		UserDetails currentUser = (UserDetails) this.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 		return currentUser;
 	}
-	
+
 	@Override
 	public void setParameters(Map<String, String[]> params) {
 		this._params = params;
 	}
-	
+
 	protected Map<String, String[]> getParameters() {
 		return this._params;
 	}
-	
+
 	protected String getParameter(String paramName) {
 		Object param = this.getParameters().get(paramName);
 		if (param != null && param instanceof String[]) {
@@ -94,10 +93,10 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Return the current system language used in the back-end interface. If this language does not
-	 * belong to those known by the system the default language is returned. A log line will 
+	 * belong to those known by the system the default language is returned. A log line will
 	 * report the problem.
 	 * @return The current language.
 	 */
@@ -112,7 +111,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 			return this.getLangManager().getDefaultLang();
 		}
 	}
-	
+
 	/**
 	 * Return a title by current lang.
 	 * @param defaultValue The default value returned in case there is no valid title in properties.
@@ -133,7 +132,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		}
 		return title;
 	}
-	
+
 	/**
 	 * Return the Activity informations (showable to the dashboard) joined to executed action.
 	 * this method has to be extended for custom action.
@@ -142,7 +141,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	public List<ActivityStreamInfo> getActivityStreamInfos() {
 		return this._activityStreamInfos;
 	}
-	
+
 	protected void addActivityStreamInfo(ActivityStreamInfo asi) {
 		if (null == asi) {
 			return;
@@ -152,7 +151,7 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 		}
 		this._activityStreamInfos.add(asi);
 	}
-	
+
 	@Override
 	public void setServletRequest(HttpServletRequest request) {
 		this._request = request;
@@ -160,14 +159,14 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	protected HttpServletRequest getRequest() {
 		return _request;
 	}
-	
+
 	protected ILangManager getLangManager() {
 		return _langManager;
 	}
 	public void setLangManager(ILangManager langManager) {
 		this._langManager = langManager;
 	}
-	
+
 	@Deprecated
 	protected IAuthorizationManager getAuthManager() {
 		return _authorizationManager;
@@ -178,18 +177,18 @@ public class BaseAction extends ActionSupport implements ServletRequestAware, Pa
 	public void setAuthorizationManager(IAuthorizationManager authorizationManager) {
 		this._authorizationManager = authorizationManager;
 	}
-	
+
 	private ILangManager _langManager;
-	
+
 	private IAuthorizationManager _authorizationManager;
-	
+
 	public static final String FAILURE = "failure";
-	
+
 	private HttpServletRequest _request;
 	private Map<String, String[]> _params;
-	
+
 	public static final String USER_NOT_ALLOWED = "userNotAllowed";
-	
+
 	private List<ActivityStreamInfo> _activityStreamInfos;
-	
+
 }

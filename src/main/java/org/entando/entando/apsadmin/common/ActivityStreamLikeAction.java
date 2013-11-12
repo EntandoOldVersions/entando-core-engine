@@ -39,7 +39,7 @@ public class ActivityStreamLikeAction extends BaseAction {
 	public String editLikeActivity(boolean add) {
 		try {
 			if (null == this.getRecordId()) {
-				ApsSystemUtils.getLogger().severe(this + " - Null record id");
+				ApsSystemUtils.getLogger().error(this + " - Null record id");
 				return SUCCESS;
 			}
 			UserDetails user = super.getCurrentUser();

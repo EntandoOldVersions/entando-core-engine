@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -38,7 +38,7 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 	@Override
 	public void init() throws Exception {
 		this.loadAuthConfiguration();
-		ApsSystemUtils.getLogger().config(
+		ApsSystemUtils.getLogger().debug(
 				this.getClass().getName() + ": initialized " + this._roles.size() + " roles and "
 				+ this._permissions.size() + " permissions.");
 	}

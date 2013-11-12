@@ -100,7 +100,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
             if (null != user) {
                 properties.put(SystemConstants.API_USER_PARAMETER, user);
             } else {
-				ApsSystemUtils.getLogger().severe("Admin user missing");
+				ApsSystemUtils.getLogger().error("Admin user missing");
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "extractParameters", "Error extracting parameters");

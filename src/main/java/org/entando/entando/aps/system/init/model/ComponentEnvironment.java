@@ -78,7 +78,7 @@ public class ComponentEnvironment {
 				}
 				this.getPostProcesses().add(postProcess);
 			} else {
-				ApsSystemUtils.getLogger().severe("Null post process class for process name '" + name + "'");
+				ApsSystemUtils.getLogger().error("Null post process class for process name '" + name + "'");
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createPostProcess");

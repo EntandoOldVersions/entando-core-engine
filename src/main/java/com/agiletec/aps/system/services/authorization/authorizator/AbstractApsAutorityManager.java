@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -99,7 +99,7 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 		for (int i = 0; i < authorities.size(); i++) {
 			IApsAuthority authorityToVerify = authorities.get(i);
 			if (!this.checkAuthority(authorityToVerify)) {
-				ApsSystemUtils.getLogger().severe("Attempt to set invalid authority to user " + username);
+				ApsSystemUtils.getLogger().error("Attempt to set invalid authority to user " + username);
 				return;
 			}
 		}
@@ -142,18 +142,18 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 	 */
 	protected boolean checkAuthority(IApsAuthority authority) {
 		if (null == authority) {
-			ApsSystemUtils.getLogger().severe("Invalid authority detected");
+			ApsSystemUtils.getLogger().error("Invalid authority detected");
 //					"Required Users by null authority";
 			return false;
 		}
 		IApsAuthority authForCheck = this.getAuthority(authority.getAuthority());
 		if (null == authForCheck) {
-			ApsSystemUtils.getLogger().severe("The authority with code " + authority.getAuthority()+" does not exist");
+			ApsSystemUtils.getLogger().error("The authority with code " + authority.getAuthority()+" does not exist");
 //					"Required Users by not existing authority : code " + authority.getAuthority());
 			return false;
 		}
 		if (!authForCheck.getClass().equals(authority.getClass())) {
-			ApsSystemUtils.getLogger().severe("Mismatching authority classes detected; code " + authority.getAuthority() + " - Class " + authority.getClass()+" is different by "+authForCheck.getClass());
+			ApsSystemUtils.getLogger().error("Mismatching authority classes detected; code " + authority.getAuthority() + " - Class " + authority.getClass()+" is different by "+authForCheck.getClass());
 //					"Required Users by invalid authority: code " + authority.getAuthority() + " - Class " + authority.getClass());
 			return false;
 		}

@@ -3,15 +3,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
-* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -26,17 +25,17 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
 
 /**
  * Main action class for the pages configuration.
  * @author E.Santoboni
  */
 public class PageConfigAction extends AbstractPortalAction implements IPageConfigAction {
-	
+
 	@Override
 	public String configure() {
 		String pageCode = (this.getSelectedNode() != null ? this.getSelectedNode() : this.getPageCode());
@@ -45,7 +44,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		if (null != check) return check;
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String editFrame() {
 		try {
@@ -57,14 +56,14 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 			this.setShowlet(widget);
 			if (widget != null) {
 				WidgetType widgetType = widget.getType();
-				ApsSystemUtils.getLogger().finest("pageCode=" + this.getPageCode() 
+				ApsSystemUtils.getLogger().debug("pageCode=" + this.getPageCode()
 						+ ", frame=" + this.getFrame() + ", widgetType=" + widgetType.getCode());
 				this.setWidgetAction(widgetType.getAction());
 				if (null == widgetType.getConfig() && null != this.getWidgetAction()) {
 					return "configureSpecialWidget";
 				}
 			} else {
-				ApsSystemUtils.getLogger().finest("pageCode=" + this.getPageCode() 
+				ApsSystemUtils.getLogger().debug("pageCode=" + this.getPageCode()
 						+ ", frame=" + this.getFrame() + ", empty showlet to config");
 			}
 		} catch (Exception e) {
@@ -73,7 +72,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		}
 		return SUCCESS;
 	}
-	
+
 	/**
 	 * @deprecated Use {@link #joinWidget()} instead
 	 */
@@ -92,7 +91,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
 			}
-			log.finest("code=" + this.getWidgetTypeCode() + ", pageCode=" 
+			log.debug("code=" + this.getWidgetTypeCode() + ", pageCode="
 					+ this.getPageCode() + ", frame=" + this.getFrame());
 			WidgetType widgetType = this.getShowletType(this.getWidgetTypeCode());
 			if (null == widgetType) {
@@ -114,13 +113,13 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	@Deprecated
 	public String removeShowlet() {
 		return this.trashWidget();
 	}
-	
+
 	/**
 	 * @deprecated Use {@link #trashWidget()} instead
 	 */
@@ -140,7 +139,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		}
 		return SUCCESS;
 	}
-	
+
 	/**
 	 * @deprecated Use {@link #deleteWidget()} instead
 	 */
@@ -164,7 +163,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		}
 		return SUCCESS;
 	}
-	
+
 	//TODO METODO COMUNE ALLA CONFIG SPECIAL WIDGET
 	protected String checkBaseParams() {
 		Logger log = ApsSystemUtils.getLogger();
@@ -186,36 +185,36 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 		}
 		return null;
 	}
-	
+
 	protected void addActivityStreamInfo(int strutsAction, boolean addLink) {
 		IPage page = this.getPage(this.getPageCode());
 		ActivityStreamInfo asi = this.getPageActionHelper()
 				.createActivityStreamInfo(page, strutsAction, addLink, "configure");
 		super.addActivityStreamInfo(asi);
 	}
-	
+
 	public WidgetType getShowletType(String typeCode) {
 		return this.getWidgetTypeManager().getWidgetType(typeCode);
 	}
-	
+
 	public IPage getCurrentPage() {
 		return this.getPage(this.getPageCode());
 	}
-	
+
 	public String getPageCode() {
 		return _pageCode;
 	}
 	public void setPageCode(String pageCode) {
 		this._pageCode = pageCode;
 	}
-	
+
 	public int getFrame() {
 		return _frame;
 	}
 	public void setFrame(int frame) {
 		this._frame = frame;
 	}
-	
+
 	@Deprecated
 	public String getShowletAction() {
 		return this.getWidgetAction();
@@ -224,14 +223,14 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	public void setShowletAction(String showletAction) {
 		this.setWidgetAction(showletAction);
 	}
-	
+
 	public String getWidgetAction() {
 		return _widgetAction;
 	}
 	public void setWidgetAction(String widgetAction) {
 		this._widgetAction = widgetAction;
 	}
-	
+
 	@Deprecated
 	public String getShowletTypeCode() {
 		return this.getWidgetTypeCode();
@@ -240,27 +239,27 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	public void setShowletTypeCode(String showletTypeCode) {
 		this.setWidgetTypeCode(showletTypeCode);
 	}
-	
+
 	public String getWidgetTypeCode() {
 		return _widgetTypeCode;
 	}
 	public void setWidgetTypeCode(String widgetTypeCode) {
 		this._widgetTypeCode = widgetTypeCode;
 	}
-	
+
 	public Widget getShowlet() {
 		return _showlet;
 	}
 	public void setShowlet(Widget widget) {
 		this._showlet = widget;
 	}
-	
+
 	private String _pageCode;
 	private int _frame = -1;
 	private String _widgetAction;
-	
+
 	private String _widgetTypeCode;
-	
+
 	private Widget _showlet;
-	
+
 }

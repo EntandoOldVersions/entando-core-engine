@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -45,7 +45,7 @@ public class WidgetTypeManager extends AbstractService
 	@Override
 	public void init() throws Exception {
 		this.loadWidgetTypes();
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized " + this._widgetTypes.size() + " widget types");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " + this._widgetTypes.size() + " widget types");
 	}
 	
 	/**
@@ -123,7 +123,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetType.getCode());
 			if (null != type) {
-				ApsSystemUtils.getLogger().severe("Type already exists : type code" + widgetType.getCode());
+				ApsSystemUtils.getLogger().error("Type already exists : type code" + widgetType.getCode());
 				return;
 			}
 			String parentTypeCode = widgetType.getParentTypeCode();
@@ -157,11 +157,11 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + widgetTypeCode);
+				ApsSystemUtils.getLogger().error("Type not exists : type code" + widgetTypeCode);
 				return;
 			}
 			if (type.isLocked()) {
-				ApsSystemUtils.getLogger().severe("A loked widget can't be deleted - type " + widgetTypeCode);
+				ApsSystemUtils.getLogger().error("A loked widget can't be deleted - type " + widgetTypeCode);
 				return;
 			}
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
@@ -178,7 +178,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
+				ApsSystemUtils.getLogger().error("Type not exists : type code" + showletTypeCode);
 				return;
 			}
 			this.updateWidgetType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
@@ -201,7 +201,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + widgetTypeCode);
+				ApsSystemUtils.getLogger().error("Type not exists : type code" + widgetTypeCode);
 				return;
 			}
 			if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
@@ -226,7 +226,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().severe("Type not exists : type code" + showletTypeCode);
+				ApsSystemUtils.getLogger().error("Type not exists : type code" + showletTypeCode);
 				return;
 			}
 			this.getWidgetTypeDAO().updateShowletTypeTitles(showletTypeCode, titles);

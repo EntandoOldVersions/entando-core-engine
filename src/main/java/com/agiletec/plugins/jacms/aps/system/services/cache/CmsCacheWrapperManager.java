@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -19,7 +19,7 @@ package com.agiletec.plugins.jacms.aps.system.services.cache;
 
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -52,7 +52,7 @@ public class CmsCacheWrapperManager extends AbstractService
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
 	}
 	/*
 	@Override
@@ -75,9 +75,7 @@ public class CmsCacheWrapperManager extends AbstractService
 		try {
 			ContentModel model = event.getContentModel();
 			Logger log = ApsSystemUtils.getLogger();
-			if (log.isLoggable(Level.FINEST)) {
-				log.info("Notified content model update : type " + model.getId());
-			}
+			log.info("Notified content model update : type " + model.getId());
 			String cacheGroupKey = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + model.getId();
 			this.getCacheInfoManager().flushGroup(cacheGroupKey);
 		} catch (Throwable t) {
@@ -94,9 +92,7 @@ public class CmsCacheWrapperManager extends AbstractService
 			if (event.getOperationCode() == EntityTypesChangingEvent.INSERT_OPERATION_CODE) return;
 			IApsEntity oldEntityType = event.getOldEntityType();
 			Logger log = ApsSystemUtils.getLogger();
-			if (log.isLoggable(Level.FINEST)) {
-				log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
-			}
+			log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
 			String typeGroupKey = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + oldEntityType.getTypeCode();
 			this.getCacheInfoManager().flushGroup(typeGroupKey);
 		} catch (Throwable t) {

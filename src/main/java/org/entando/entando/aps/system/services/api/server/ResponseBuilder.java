@@ -285,7 +285,7 @@ public class ResponseBuilder implements IResponseBuilder, BeanFactoryAware, Serv
     protected Object extractBean(ApiMethod api) throws ApsSystemException, ApiException {
         Object bean = this.getBeanFactory().getBean(api.getSpringBean());
         if (null == bean) {
-            ApsSystemUtils.getLogger().severe("Null bean '" + api.getSpringBean() + "' for api " + this.buildApiSignature(api));
+            ApsSystemUtils.getLogger().error("Null bean '" + api.getSpringBean() + "' for api " + this.buildApiSignature(api));
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, this.buildApiSignature(api) + " is not supported", Response.Status.INTERNAL_SERVER_ERROR);
         }
         return bean;

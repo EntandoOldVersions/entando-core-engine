@@ -6,12 +6,12 @@
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -33,11 +33,11 @@ import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 
 /**
  * Classe action delegata alla gestione delle operazioni base sugli attributi Link.
- * Le azioni gestite rappresentano ciascuna un entry point dall'interfaccia di redazione contenuto. 
+ * Le azioni gestite rappresentano ciascuna un entry point dall'interfaccia di redazione contenuto.
  * @author E.Santoboni
  */
 public class LinkAttributeAction extends BaseAction implements ILinkAttributeAction {
-	
+
 	@Override
 	public String chooseLink() {
 		try {
@@ -50,12 +50,12 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		//FA IL FORWARD ALLA choose link type
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String chooseLinkType() {
 		return SUCCESS;
 	}
-	
+
 	public String configLink() {
 		String result = FAILURE;
 		int destType = this.getLinkType();
@@ -80,7 +80,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
         }
 		return result;
 	}
-	
+
 	@Override
 	public String removeLink() {
 		try {
@@ -93,7 +93,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		}
 		return SUCCESS;
 	}
-	
+
 	public String backToEntryContent() {
 		HttpSession session = this.getRequest().getSession();
 		String anchorDest = this.getLinkAttributeHelper().buildEntryContentAnchorDest(session);
@@ -101,7 +101,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		this.getLinkAttributeHelper().removeSessionParams(session);
 		return SUCCESS;
 	}
-	
+
 	public String getEntryContentAnchorDestFromRemove() {
 		StringBuilder buffer = new StringBuilder("contentedit_");
 		buffer.append(this.getLangCode());
@@ -113,31 +113,31 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		}
 		return buffer.toString();
 	}
-	
+
 	public Content getContent() {
 		return (Content) this.getRequest().getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
-	
+
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
 		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
-	
+
 	public SymbolicLink getSymbolicLink() {
 		return (SymbolicLink) this.getRequest().getSession().getAttribute(ILinkAttributeActionHelper.SYMBOLIC_LINK_SESSION_PARAM);
 	}
-	
+
 	public int[] getLinkDestinations() {
 		return SymbolicLink.getDestinationTypes();
 	}
-	
+
 	public IPage getPage(String pageCode) {
 		return this.getPageManager().getPage(pageCode);
 	}
-	
+
 	public ContentRecordVO getContentVo(String contentId) {
 		ContentRecordVO contentVo = null;
 		try {
@@ -147,28 +147,28 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 		}
 		return contentVo;
 	}
-	
+
 	public int getLinkType() {
 		return _linkType;
 	}
 	public void setLinkType(int linkType) {
 		this._linkType = linkType;
 	}
-	
+
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-	
+
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
-	
+
 	@Override
 	public String getAttributeName() {
 		return _attributeName;
@@ -176,7 +176,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setAttributeName(String attributeName) {
 		this._attributeName = attributeName;
 	}
-	
+
 	@Override
 	public String getParentAttributeName() {
 		return _parentAttributeName;
@@ -184,7 +184,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setParentAttributeName(String parentAttributeName) {
 		this._parentAttributeName = parentAttributeName;
 	}
-	
+
 	@Override
 	public int getElementIndex() {
 		return _elementIndex;
@@ -192,7 +192,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setElementIndex(int elementIndex) {
 		this._elementIndex = elementIndex;
 	}
-	
+
 	@Override
 	public String getLangCode() {
 		return _langCode;
@@ -200,7 +200,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setLangCode(String langCode) {
 		this._langCode = langCode;
 	}
-	
+
 	public String getEntryContentAnchorDest() {
 		if (null == this._entryContentAnchorDest) {
 			HttpSession session = this.getRequest().getSession();
@@ -212,7 +212,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	protected void setEntryContentAnchorDest(String entryContentAnchorDest) {
 		this._entryContentAnchorDest = entryContentAnchorDest;
 	}
-	
+
 	/**
 	 * Restituisce la classe helper della gestione contenuti.
 	 * @return La classe helper della gestione contenuti.
@@ -220,7 +220,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	protected IContentActionHelper getContentActionHelper() {
 		return _contentActionHelper;
 	}
-	
+
 	/**
 	 * Setta la classe helper della gestione contenuti.
 	 * @param contentActionHelper La classe helper della gestione contenuti.
@@ -228,7 +228,7 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
-	
+
 	/**
 	 * Restituisce la classe helper della gestione degli attributi di tipo Link.
 	 * @return La classe helper degli attributi di tipo Link.
@@ -243,21 +243,21 @@ public class LinkAttributeAction extends BaseAction implements ILinkAttributeAct
 	public void setLinkAttributeHelper(ILinkAttributeActionHelper linkAttributeHelper) {
 		this._linkAttributeHelper = linkAttributeHelper;
 	}
-	
+
 	private String _contentOnSessionMarker;
-	
+
 	private String _attributeName;
 	private String _parentAttributeName;
 	private int _elementIndex = -1;
 	private String _langCode;
 	private int _linkType;
-	
+
 	private String _entryContentAnchorDest;
-	
+
 	private IPageManager _pageManager;
 	private IContentManager _contentManager;
-	
+
 	private IContentActionHelper _contentActionHelper;
 	private ILinkAttributeActionHelper _linkAttributeHelper;
-	
+
 }

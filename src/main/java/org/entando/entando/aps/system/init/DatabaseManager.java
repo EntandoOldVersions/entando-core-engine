@@ -6,12 +6,12 @@
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-*
-* See the file License for the specific language governing permissions
+* 
+* See the file License for the specific language governing permissions   
 * and limitations under the License
-*
-*
-*
+* 
+* 
+* 
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -52,7 +52,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		implements IDatabaseManager, IDatabaseInstallerManager, ServletContextAware {
 
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initializated");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initializated");
 	}
 
 	@Override
@@ -111,9 +111,8 @@ public class DatabaseManager extends AbstractInitializerManager
 		System.out.println("+ [ Component: Core ] :: SCHEMA\n" + logPrefix);
 		ComponentInstallationReport componentReport = report.getComponentReport("entandoCore", true);
 		DataSourceInstallationReport dataSourceReport = componentReport.getDataSourceReport();
-		if (/*componentReport.getStatus().equals(SystemInstallationReport.Status.PORTING)
-				|| */componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
+		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
+			ApsSystemUtils.getLogger().debug(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			return;
 		}
@@ -150,7 +149,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				}
 			}
 			System.out.println(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
-			ApsSystemUtils.getLogger().info(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initMasterDatabases");
 			throw new ApsSystemException("Error initializating master databases", t);
@@ -165,7 +164,7 @@ public class DatabaseManager extends AbstractInitializerManager
 			}
 			List<String> tableClassNames = this.getEntandoTableMapping().get(databaseName);
 			if (null == tableClassNames || tableClassNames.isEmpty()) {
-				ApsSystemUtils.getLogger().info("No Master Tables defined for db - " + databaseName);
+				ApsSystemUtils.getLogger().debug("No Master Tables defined for db - " + databaseName);
 				schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.NOT_AVAILABLE);
 			} else {
 				this.createTables(databaseName, tableClassNames, dataSource, schemaReport);
@@ -182,7 +181,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: SCHEMA\n" + logPrefix);
 		ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), true);
 		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			return;
 		}
@@ -205,7 +204,7 @@ public class DatabaseManager extends AbstractInitializerManager
 							? report.getStatus()
 							: SystemInstallationReport.Status.SKIPPED;
 					dataSourceReport.getDatabaseStatus().put(dataSourceName, status);
-					ApsSystemUtils.getLogger().info(logPrefix + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
+					ApsSystemUtils.getLogger().debug(logPrefix + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
 					System.out.println(logPrefix + "( ok )  " + dataSourceName + " already installed" + SystemInstallationReport.Status.PORTING);
 					continue;
 				}
@@ -230,7 +229,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				report.setUpdated();
 			}
 			System.out.println(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
-			ApsSystemUtils.getLogger().info(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initComponent",
 					"Error initializating component " + componentConfiguration.getCode());
@@ -258,7 +257,7 @@ public class DatabaseManager extends AbstractInitializerManager
 		ComponentInstallationReport coreComponentReport = report.getComponentReport("entandoCore", false);
 		if (coreComponentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
 			String message = logPrefix + "( ok )  Already installed. " + coreComponentReport.getStatus() + "\n" + logPrefix;
-			ApsSystemUtils.getLogger().info(message);
+			ApsSystemUtils.getLogger().debug(message);
 			System.out.println(message);
 			return;
 		}
@@ -273,7 +272,7 @@ public class DatabaseManager extends AbstractInitializerManager
 					dataReport.getDatabaseStatus().put(dataSourceName, report.getStatus());
 					report.setUpdated();
 					String message = logPrefix + "( ok )  " + dataSourceName + " already installed. " + report.getStatus() + "\n" + logPrefix;
-					ApsSystemUtils.getLogger().info(message);
+					ApsSystemUtils.getLogger().debug(message);
 					System.out.println(message);
 					continue;
 				}
@@ -306,20 +305,20 @@ public class DatabaseManager extends AbstractInitializerManager
 				}
 			}
 			System.out.println(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
-			ApsSystemUtils.getLogger().info(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initMasterDefaultResource");
 			throw new ApsSystemException("Error initializating master DefaultResource", t);
 		}
 	}
-
+	
 	private void initComponentDefaultResources(Component componentConfiguration,
 			SystemInstallationReport report, boolean checkOnStatup) throws ApsSystemException {
 		String logPrefix = "|   ";
 		System.out.println("+ [ Component: " + componentConfiguration.getCode() + " ] :: DATA\n" + logPrefix);
 		ComponentInstallationReport componentReport = report.getComponentReport(componentConfiguration.getCode(), false);
 		if (componentReport.getStatus().equals(SystemInstallationReport.Status.OK)) {
-			ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 			return;
 		}
@@ -339,7 +338,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				DataSource dataSource = (DataSource) this.getBeanFactory().getBean(dataSourceName);
 				SystemInstallationReport.Status dataStatus = dataReport.getDatabaseStatus().get(dataSourceName);
 				if (SystemInstallationReport.isSafeStatus(dataStatus)) {
-					ApsSystemUtils.getLogger().info(logPrefix + "( ok )  Already installed\n" + logPrefix);
+					ApsSystemUtils.getLogger().debug(logPrefix + "( ok )  Already installed\n" + logPrefix);
 					System.out.println(logPrefix + "( ok )  Already installed\n" + logPrefix);
 					continue;
 				}
@@ -367,7 +366,7 @@ public class DatabaseManager extends AbstractInitializerManager
 				}
 			}
 			System.out.println(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
-			ApsSystemUtils.getLogger().info(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
+			ApsSystemUtils.getLogger().debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "initComponent",
 					"Error restoring default resources of component " + componentConfiguration.getCode());
@@ -551,7 +550,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	public boolean dropAndRestoreBackup(String subFolderName) throws ApsSystemException {
 		try {
 			if (!this.checkBackupFolder(subFolderName)) {
-				ApsSystemUtils.getLogger().severe("backup not available - subfolder '" + subFolderName + "'");
+				ApsSystemUtils.getLogger().error("backup not available - subfolder '" + subFolderName + "'");
 				return false;
 			}
 			//TODO future improvement - execute 'lifeline' backup
@@ -570,7 +569,7 @@ public class DatabaseManager extends AbstractInitializerManager
 	private boolean restoreBackup(String subFolderName) throws ApsSystemException {
 		try {
 			if (!this.checkBackupFolder(subFolderName)) {
-				ApsSystemUtils.getLogger().severe("backup not available - subfolder '" + subFolderName + "'");
+				ApsSystemUtils.getLogger().error("backup not available - subfolder '" + subFolderName + "'");
 				return false;
 			}
 			this.getDatabaseRestorer().restoreBackup(subFolderName);

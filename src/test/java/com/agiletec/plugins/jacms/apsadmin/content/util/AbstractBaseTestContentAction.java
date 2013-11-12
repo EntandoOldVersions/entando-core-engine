@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -31,13 +31,13 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
  * @author E.Santoboni
  */
 public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase {
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.init();
 	}
-	
+
 	protected String executeEdit(String contentId, String currentUserName) throws Throwable {
 		this.initAction("/do/jacms/Content", "edit");
 		this.setUserOnSession(currentUserName);
@@ -45,8 +45,8 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		String result = this.executeAction();
 		return result;
 	}
-	
-	protected String executeCreateNewVoid(String contentTypeCode, String contentDescription, 
+
+	protected String executeCreateNewVoid(String contentTypeCode, String contentDescription,
 			String contentStatus, String contentMainGroup, String currentUserName) throws Throwable {
 		this.initAction("/do/jacms/Content", "createNewVoid");
 		this.setUserOnSession(currentUserName);
@@ -55,12 +55,12 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		this.addParameter("contentStatus", contentStatus);
 		this.addParameter("contentMainGroup", contentMainGroup);
 		String result = this.executeAction();
-		
+
 		String contentSessionMarker = this.extractSessionMarker(contentTypeCode, ApsAdminSystemConstants.ADD);
 		assertNotNull(this.getContentOnEdit(contentSessionMarker));
 		return result;
 	}
-	
+
 	protected String extractSessionMarker(String param, int operation) throws ApsSystemException {
 		Content content = null;
 		if (operation == ApsAdminSystemConstants.ADD) {
@@ -70,17 +70,17 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		}
 		return AbstractContentAction.buildContentOnSessionMarker(content, operation);
 	}
-	
+
 	protected void initContentAction(String namespace, String name, String contentOnSessionMarker) throws Exception {
 		this.initAction(namespace, name);
 		this.addParameter("contentOnSessionMarker", contentOnSessionMarker);
 	}
-	
+
 	protected Content getContentOnEdit(String contentMarker) {
 		return (Content) this.getRequest().getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentMarker);
 	}
-	
+
 	/**
 	 * Aggiunge una serie di contenuti ad uso dei test clonandoli da quelli specificati.
 	 * @param masterContentIds Gli identificativi dei contenuti da cui ricavare i nuovi.
@@ -105,7 +105,7 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
 		}
 		return newContentIds;
 	}
-	
+
 	private void init() throws Exception {
     	try {
     		_contentManager = (IContentManager) this.getService(JacmsSystemConstants.CONTENT_MANAGER);
@@ -113,11 +113,11 @@ public abstract class AbstractBaseTestContentAction extends ApsAdminBaseTestCase
             throw new Exception(t);
         }
     }
-	
+
 	protected IContentManager getContentManager() {
 		return this._contentManager;
 	}
-    
+
     private IContentManager _contentManager = null;
-    
+
 }

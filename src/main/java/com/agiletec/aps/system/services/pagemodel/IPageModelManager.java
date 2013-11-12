@@ -2,8 +2,7 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
-* Entando is a free software;
+* This file is part of Entando software. 
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -24,18 +23,18 @@ import java.util.Collection;
  * @author E.Santoboni
  */
 public interface IPageModelManager {
-	
+
 	/**
 	 * Restituisce il modello di pagina con il codice dato
 	 * @param name Il nome del modelo di pagina
 	 * @return Il modello di pagina richiesto
 	 */
 	public PageModel getPageModel(String name);
-	
+
 	/**
 	 * Restituisce la Collection completa di modelli.
 	 * @return la collection completa dei modelli disponibili in oggetti PageModel.
 	 */
 	public Collection<PageModel> getPageModels();
-	
+
 }

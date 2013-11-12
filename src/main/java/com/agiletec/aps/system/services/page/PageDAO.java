@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -404,7 +404,7 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 				Widget widget = widgets[i];
 				if (widget != null) {
 					if (null == widget.getType()) {
-						ApsSystemUtils.getLogger().severe("Widget Type null when adding " +
+						ApsSystemUtils.getLogger().error("Widget Type null when adding " +
 								"widget on frame '" + i + "' of page '" + page.getCode() + "'");
 						continue;
 					}

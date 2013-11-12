@@ -3,15 +3,14 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 * This file is part of Entando software.
-* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -44,12 +43,12 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public abstract class AbstractPortalAction extends BaseAction {
-	
+
 	@Deprecated
 	public List<List<SelectItem>> getShowletFlavours() {
 		return this.getWidgetFlavours();
 	}
-	
+
 	public List<List<SelectItem>> getWidgetFlavours() {
 		List<String> pluginCodes = new ArrayList<String>();
 		Map<String, List<SelectItem>> mapping = this.getWidgetFlavoursMapping(pluginCodes);
@@ -68,12 +67,12 @@ public abstract class AbstractPortalAction extends BaseAction {
 		}
 		return group;
 	}
-	
+
 	@Deprecated
 	protected Map<String, List<SelectItem>> getShowletFlavoursMapping(List<String> pluginCodes) {
 		return this.getWidgetFlavoursMapping(pluginCodes);
 	}
-	
+
 	protected Map<String, List<SelectItem>> getWidgetFlavoursMapping(List<String> pluginCodes) {
 		Map<String, List<SelectItem>> mapping = new HashMap<String, List<SelectItem>>();
 		List<WidgetType> types = this.getWidgetTypeManager().getWidgetTypes();
@@ -101,12 +100,12 @@ public abstract class AbstractPortalAction extends BaseAction {
 		Collections.sort(pluginCodes);
 		return mapping;
 	}
-	
+
 	@Deprecated
 	protected void addFlavourShowletType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
 		this.addFlavourWidgetType(mapCode, type, mapping);
 	}
-	
+
 	protected void addFlavourWidgetType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
 		List<SelectItem> widgetTypes = mapping.get(mapCode);
 		if (null == widgetTypes) {
@@ -117,7 +116,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		SelectItem item = new SelectItem(type.getCode(), title, mapCode);
 		widgetTypes.add(item);
 	}
-	
+
 	private void addGroup(String code, Map<String, List<SelectItem>> mapping, List<List<SelectItem>> group) {
 		List<SelectItem> singleGroup = mapping.get(code);
 		if (null != singleGroup) {
@@ -126,7 +125,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 			group.add(singleGroup);
 		}
 	}
-	
+
 	/**
 	 * Returns the 'bread crumbs' targets.
 	 * @param pageCode The code of the page being represented in the bread crumbs path.
@@ -139,7 +138,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		this.getSubBreadCrumbsTargets(pages, page);
 		return pages;
 	}
-	
+
 	private void getSubBreadCrumbsTargets(List<IPage> pages, IPage current) {
 		pages.add(0, current);
 		IPage parent = current.getParent();
@@ -147,7 +146,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 			this.getSubBreadCrumbsTargets(pages, parent);
 		}
 	}
-	
+
 	/**
 	 * Check if the current user can access the specified page.
 	 * @param page The page to check against the current user.
@@ -158,7 +157,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		String pageGroup = page.getGroup();
 		return this.isCurrentUserMemberOf(pageGroup);
 	}
-	
+
 	protected String checkSelectedNode(String selectedNode) {
 		if (null == selectedNode || selectedNode.trim().length() == 0) {
 			this.addActionError(this.getText("error.page.noSelection"));
@@ -179,7 +178,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Return the page given its code.
 	 * @param pageCode The code of the requested page.
@@ -188,7 +187,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	public IPage getPage(String pageCode) {
 		return this.getPageManager().getPage(pageCode);
 	}
-	
+
 	/**
 	 * Return the list of the system languages. The default language is placed first.
 	 * @return The list of the system languages.
@@ -196,15 +195,15 @@ public abstract class AbstractPortalAction extends BaseAction {
 	public List<Lang> getLangs() {
 		return this.getLangManager().getLangs();
 	}
-	
-	/** 
+
+	/**
 	 * Return the map of the system groups. The map is indexed by the group name.
 	 * @return The map containing the system groups.
 	 */
 	public Map<String, Group> getSystemGroups() {
 		return this.getGroupManager().getGroupsMap();
 	}
-	
+
 	public Map<String, ApiMethod> getShowletTypeApiMappings() {
 		Map<String, ApiMethod> mappings = null;
 		try {
@@ -214,7 +213,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 		}
 		return mappings;
 	}
-	
+
 	/**
 	 * Return the node selected in the tree of pages.
 	 * @return The node selected in the tree of pages.
@@ -222,7 +221,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	public String getSelectedNode() {
 		return _selectedNode;
 	}
-	
+
 	/**
 	 * Set a given node in the tree of pages.
 	 * @param selectedNode The node selected in the tree of pages.
@@ -230,7 +229,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	public void setSelectedNode(String selectedNode) {
 		this._selectedNode = selectedNode;
 	}
-	
+
 	@Deprecated
 	protected String getStockShowletCodes() {
 		return this.getStockWidgetCodes();
@@ -239,67 +238,67 @@ public abstract class AbstractPortalAction extends BaseAction {
 	public void setStockShowletCodes(String stockShowletCodes) {
 		this.setStockWidgetCodes(stockShowletCodes);
 	}
-	
+
 	protected String getStockWidgetCodes() {
 		return _stockWidgetCodes;
 	}
 	public void setStockWidgetCodes(String stockWidgetCodes) {
 		this._stockWidgetCodes = stockWidgetCodes;
 	}
-	
+
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-	
+
 	protected IGroupManager getGroupManager() {
 		return _groupManager;
 	}
 	public void setGroupManager(IGroupManager groupManager) {
 		this._groupManager = groupManager;
 	}
-	
+
 	protected IPageActionHelper getPageActionHelper() {
 		return _pageActionHelper;
 	}
 	public void setPageActionHelper(IPageActionHelper pageActionHelper) {
 		this._pageActionHelper = pageActionHelper;
 	}
-	
+
 	protected IApiCatalogManager getApiCatalogManager() {
 		return _apiCatalogManager;
 	}
 	public void setApiCatalogManager(IApiCatalogManager apiCatalogManager) {
 		this._apiCatalogManager = apiCatalogManager;
 	}
-	
+
 	protected IWidgetTypeManager getWidgetTypeManager() {
 		return _widgetTypeManager;
 	}
 	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
 		this._widgetTypeManager = widgetTypeManager;
 	}
-	
+
 	private String _selectedNode;
-	
+
 	private String _stockWidgetCodes;
-	
+
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;
-	
+
 	private IPageActionHelper _pageActionHelper;
-	
+
 	private IWidgetTypeManager _widgetTypeManager;
 	private IApiCatalogManager _apiCatalogManager;
-	
+
 	/**
 	 * This is the code of an abstract page which identifies a 'virtual' container of all
 	 * the pages which can be viewed by the current page administrator.
 	 */
 	public static final String VIRTUAL_ROOT_CODE = "VIRTUAL_PAGE_ROOT";
-	
+
 	public static final String USER_WIDGETS_CODE = "userShowletCode";
 	public static final String CUSTOM_WIDGETS_CODE = "customShowletCode";
 	public static final String STOCK_WIDGETS_CODE = "stockShowletCode";
@@ -318,5 +317,5 @@ public abstract class AbstractPortalAction extends BaseAction {
 	 * @deprecated Use {@link #STOCK_WIDGETS_CODE} instead
 	 */
 	public static final String STOCK_SHOWLETS_CODE = STOCK_WIDGETS_CODE;
-	
+
 }

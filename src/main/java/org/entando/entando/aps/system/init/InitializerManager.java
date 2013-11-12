@@ -51,7 +51,7 @@ public class InitializerManager extends AbstractInitializerManager {
 				this.saveReport(report);
 			}
 		}
-		ApsSystemUtils.getLogger().config(this.getClass().getName() 
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
 				+ ": initializated - Check on startup " + this.isCheckOnStartup());
 	}
 	
@@ -107,7 +107,7 @@ public class InitializerManager extends AbstractInitializerManager {
 				if (null != postProcessor) {
 					postProcessor.executePostProcess(postProcess);
 				} else {
-					ApsSystemUtils.getLogger().severe("Missing Post Processor for process '" + postProcess.getCode() + "'");
+					ApsSystemUtils.getLogger().error("Missing Post Processor for process '" + postProcess.getCode() + "'");
 				}
 			} catch (InvalidPostProcessResultException t) {
 				ApsSystemUtils.logThrowable(t, this, "executePostProcess", 

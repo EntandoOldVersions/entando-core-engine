@@ -31,7 +31,7 @@ public class OldCacheManager extends AbstractService implements ICacheManager {
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache service initialized");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": cache service initialized");
 	}
 	
 	@Override

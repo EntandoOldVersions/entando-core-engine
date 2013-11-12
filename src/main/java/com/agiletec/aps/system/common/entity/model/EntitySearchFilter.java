@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -452,7 +452,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 				data = dataF.parse(dateString);
 			}
 		} catch (ParseException ex) {
-			ApsSystemUtils.getLogger().severe("Invalid string - '" + dateString + "'");
+			ApsSystemUtils.getLogger().error("Invalid string - '" + dateString + "'");
 		}
 		return data;
 	}
@@ -462,7 +462,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		try {
 			number = new BigDecimal(numberString);
 		} catch (NumberFormatException e) {
-			ApsSystemUtils.getLogger().severe("Invalid string - '" + numberString + "'");
+			ApsSystemUtils.getLogger().error("Invalid string - '" + numberString + "'");
 		}
 		return number;
 	}

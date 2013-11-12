@@ -53,7 +53,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": cache info service initialized");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": cache info service initialized");
 	}
 	
 	@Around("@annotation(cacheableInfo)")
@@ -69,7 +69,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 			MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
 			Method targetMethod = methodSignature.getMethod();
 			Class targetClass = pjp.getTarget().getClass();
-			Method effectiveTargetMethod = targetClass.getDeclaredMethod(targetMethod.getName(), targetMethod.getParameterTypes());
+			Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
 			Cacheable cacheable = effectiveTargetMethod.getAnnotation(Cacheable.class);
 			if (null == cacheable) {
 				return result;

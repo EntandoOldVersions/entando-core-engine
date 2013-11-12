@@ -6,12 +6,12 @@
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -30,11 +30,11 @@ import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
  * @author E.Santoboni
  */
 public class ActionLogRecordTag extends AbstractObjectInfoTag {
-	
+
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
 		IActionLogManager loggerManager = (IActionLogManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
 		return loggerManager.getActionRecord(Integer.parseInt(keyValue));
 	}
-	
+
 }

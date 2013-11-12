@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
+* This file is part of Entando software.
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -45,33 +45,33 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction =(IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
-		assertEquals(4, contentModels.size());		
+		assertEquals(4, contentModels.size());
 	}
-	
+
 	public void testSearch_1() throws Throwable {
 		String result = this.executeSearch("ART");
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction = (IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
 		assertEquals(4, contentModels.size());
-		
+
 		result = this.executeSearch("CNG");
 		assertEquals(Action.SUCCESS, result);
 		contentModelFinderAction = (IContentModelFinderAction) this.getAction();
 		contentModels = contentModelFinderAction.getContentModels();
 		assertEquals(0, contentModels.size());
 	}
-	
+
 	public void testSearch_2() throws Throwable {
 		ContentModel contentModel = this.createContentModel(MODEL_ID, "EVN");
 		this._contentModelManager.addContentModel(contentModel);
-		
+
 		String result = this.executeSearch("");
 		assertEquals(Action.SUCCESS, result);
 		IContentModelFinderAction contentModelFinderAction = (IContentModelFinderAction) this.getAction();
 		List<ContentModel> contentModels = contentModelFinderAction.getContentModels();
 		assertEquals(5, contentModels.size());
-		
+
 		result = this.executeSearch("EVN");
 		assertEquals(Action.SUCCESS, result);
 		contentModelFinderAction = (IContentModelFinderAction) this.getAction();
@@ -85,7 +85,7 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 		this.addParameter("contentType", contentType);
 		return this.executeAction();
 	}
-	
+
 	private ContentModel createContentModel(int id, String contentType) {
 		ContentModel model = new ContentModel();
 		model.setId(id) ;
@@ -107,8 +107,8 @@ public class TestContentModelFinderAction extends ApsAdminBaseTestCase {
 			this._contentModelManager.removeContentModel(model);
 		}
 	}
-	
+
 	private IContentModelManager _contentModelManager;
 	private static final int MODEL_ID = 99;
-	
+
 }

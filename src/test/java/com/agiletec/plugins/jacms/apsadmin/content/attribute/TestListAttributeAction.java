@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -35,7 +35,7 @@ import com.opensymphony.xwork2.Action;
  * @author E.Santoboni
  */
 public class TestListAttributeAction extends AbstractBaseTestContentAction {
-	
+
 	public void testAddListElement() throws Throwable {
 		String contentOnSessionMarker = this.initEditContent();
 		this.initContentAction("/do/jacms/Content", "addListElement", contentOnSessionMarker);
@@ -49,7 +49,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 		String[] expected = {"Pippo", "Paperino", "Pluto", ""};
 		this.verifyText(attributes, expected);
 	}
-	
+
 	public void testMoveListElement() throws Throwable {
 		String contentOnSessionMarker = this.initEditContent();
 		this.initContentAction("/do/jacms/Content", "moveListElement", contentOnSessionMarker);
@@ -64,7 +64,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		String[] expected = {"Paperino", "Pippo", "Pluto"};
 		this.verifyText(attributes, expected);
-		
+
 		this.initContentAction("/do/jacms/Content", "moveListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "Autori");
 		this.addParameter("elementIndex", "1");
@@ -78,7 +78,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 		String[] expected2 = {"Paperino", "Pluto", "Pippo"};
 		this.verifyText(attributes, expected2);
 	}
-	
+
 	public void testRemoveListElement() throws Throwable {
 		String contentOnSessionMarker = this.initEditContent();
 		this.initContentAction("/do/jacms/Content", "removeListElement", contentOnSessionMarker);
@@ -93,7 +93,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 		String[] expected = {"Pippo", "Pluto"};
 		this.verifyText(attributes, expected);
 	}
-	
+
 	private String initEditContent() throws Throwable {
 		String contentId = "ART1";
 		Content content = this.getContentManager().loadContent(contentId, false);
@@ -106,7 +106,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 		this.verifyText(attributes, expected);
 		return contentOnSessionMarker;
 	}
-	
+
 	private void verifyText(List<AttributeInterface> attributes, String[] expected) {
 		assertEquals(expected.length, attributes.size());
 		for (int i=0; i<attributes.size(); i++) {
@@ -114,7 +114,7 @@ public class TestListAttributeAction extends AbstractBaseTestContentAction {
 			assertEquals(expected[i], textAttribute.getText());
 		}
 	}
-	
+
 	//TODO FARE IL RESTO
-	
+
 }

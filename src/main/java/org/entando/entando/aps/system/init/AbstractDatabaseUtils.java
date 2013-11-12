@@ -49,13 +49,13 @@ public abstract class AbstractDatabaseUtils implements BeanFactoryAware {
 				}
 			}
 			if (null == typeString) {
-				ApsSystemUtils.getLogger().severe("Type not recognized for Driver '" + driverClassName + "' - "
+				ApsSystemUtils.getLogger().error("Type not recognized for Driver '" + driverClassName + "' - "
 						+ "Recognized types '" + IDatabaseManager.DatabaseType.values() + "'");
 				return IDatabaseManager.DatabaseType.UNKNOWN;
 			}
 			return Enum.valueOf(IDatabaseManager.DatabaseType.class, typeString.toUpperCase());
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().severe("Invalid type for db - '" + typeString + "' - " + t.getMessage());
+			ApsSystemUtils.getLogger().error("Invalid type for db - '" + typeString + "' - " + t.getMessage());
 			throw new ApsSystemException("Invalid type for db - '" + typeString + "'", t);
 		}
 	}

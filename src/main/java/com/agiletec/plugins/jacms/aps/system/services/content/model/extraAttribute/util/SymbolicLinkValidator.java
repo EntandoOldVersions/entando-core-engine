@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -29,21 +29,21 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
 
 /**
- * Classe di utilità per la validazione degli attributi in cui negli elementi compositivi 
+ * Classe di utilità per la validazione degli attributi in cui negli elementi compositivi
  * vi può essere in link rappresentato dal proprio link simbolico.
  * @author E.Santoboni
  */
 public class SymbolicLinkValidator {
-    
+
     public SymbolicLinkValidator(IContentManager contentManager, IPageManager pageManager) {
         this.setContentManager(contentManager);
         this.setPageManager(pageManager);
     }
-    
+
     /**
-     * Analizza un link simbolico ne verifica la correttezza e restituisce 
+     * Analizza un link simbolico ne verifica la correttezza e restituisce
      * un intero rappresentante il codice dell'eventuale errore riscontrato.
-     * In caso di link a pagina ed a contenuto controlla 
+     * In caso di link a pagina ed a contenuto controlla
      * la validità dell'elemento referenziato.
      * @param symbLink Il link simbolico da verificare.
      * @param content Il contenuto corrente in fase di verifica.
@@ -68,7 +68,7 @@ public class SymbolicLinkValidator {
         }
         return errorCode;
     }
-    
+
     protected String checkPageDest(SymbolicLink symbLink, Content content) {
         String pageCode = symbLink.getPageDest();
         IPage page = this.getPageManager().getPage(pageCode);
@@ -123,7 +123,7 @@ public class SymbolicLinkValidator {
         }
         return null;
     }
-    
+
     protected String checkContentOnPageDest(SymbolicLink symbLink, Content content) {
         String errorCode = this.checkContentDest(symbLink, content);
         if (errorCode == null) {
@@ -131,13 +131,13 @@ public class SymbolicLinkValidator {
         }
         return errorCode;
     }
-    
+
     /**
      * Metodo di servizio: verifica che la pagina abbia dei widget configurate.
-     * Restituisce true nel caso tutti i frame siano vuoti, false in caso che 
+     * Restituisce true nel caso tutti i frame siano vuoti, false in caso che
      * anche un frame sia occupato da una widget.
      * @param page La pagina da controllare.
-     * @return true nel caso tutti i frame siano vuoti, false in caso 
+     * @return true nel caso tutti i frame siano vuoti, false in caso
      * che anche un frame sia occupato da una widget.
      */
     protected boolean isVoidPage(IPage page) {
@@ -149,22 +149,22 @@ public class SymbolicLinkValidator {
         }
         return true;
     }
-    
+
     protected IContentManager getContentManager() {
         return _contentManager;
     }
     protected void setContentManager(IContentManager contentManager) {
         this._contentManager = contentManager;
     }
-    
+
     protected IPageManager getPageManager() {
         return _pageManager;
     }
     protected void setPageManager(IPageManager pageManager) {
         this._pageManager = pageManager;
     }
-    
+
     private IContentManager _contentManager;
     private IPageManager _pageManager;
-    
+
 }

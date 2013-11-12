@@ -36,21 +36,21 @@ import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 /**
  * Action principale per la redazione contenuti.
  * @author E.Santoboni
  */
 public class ContentAction extends AbstractContentAction implements IContentAction {
-	
+
 	@Override
 	public void validate() {
 		Content content = this.updateContentOnSession();
 		super.validate();
 		this.getContentActionHelper().scanEntity(content, this);
 	}
-	
+
 	@Override
 	public String edit() {
 		try {
@@ -71,13 +71,13 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String copyPaste() {
 		try {
 			Content content = this.getContentManager().loadContent(this.getContentId(), this.isCopyPublicVersion());
 			if (null == content) {
-				throw new ApsSystemException("Contenuto in copyPaste '" 
+				throw new ApsSystemException("Contenuto in copyPaste '"
 						+ this.getContentId() + "' nullo ; copia di contenuto pubblico " + this.isCopyPublicVersion());
 			}
 			if (!this.isUserAllowed(content)) {
@@ -96,11 +96,11 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	public String forwardToEntryContent() {
 		return SUCCESS;
 	}
-	
+
 	public String configureMainGroup() {
 		Content content = this.updateContentOnSession();
 		try {
@@ -116,7 +116,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	@Deprecated (/** From jAPS 2.0 version 2.1, use joinCategory of {@link IContentCategoryAction} action */)
 	public String joinCategory() {
@@ -124,8 +124,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		try {
 			String categoryCode = this.getCategoryCode();
 			Category category = this.getCategoryManager().getCategory(categoryCode);
-			if (null != category && !category.getCode().equals(category.getParentCode()) 
-					&& !this.getContent().getCategories().contains(category)) { 
+			if (null != category && !category.getCode().equals(category.getParentCode())
+					&& !this.getContent().getCategories().contains(category)) {
 				this.getContent().addCategory(category);
 			}
 		} catch (Throwable t) {
@@ -134,7 +134,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	@Deprecated (/** From jAPS 2.0 version 2.1, use removeCategory of {@link IContentCategoryAction} action */)
 	public String removeCategory() {
@@ -151,14 +151,14 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String joinGroup() {
 		this.updateContentOnSession();
 		try {
 			String extraGroupName = this.getExtraGroupName();
 			Group group = this.getGroupManager().getGroup(extraGroupName);
-			if (null != group) { 
+			if (null != group) {
 				this.getContent().addGroup(extraGroupName);
 			}
 		} catch (Throwable t) {
@@ -167,7 +167,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String removeGroup() {
 		this.updateContentOnSession();
@@ -183,7 +183,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String saveAndContinue() {
 		try {
@@ -202,17 +202,17 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String saveContent() {
 		return this.saveContent(false);
 	}
-	
+
 	@Override
 	public String saveAndApprove() {
 		return this.saveContent(true);
 	}
-	
+
 	protected String saveContent(boolean approve) {
 		Logger log = ApsSystemUtils.getLogger();
 		try {
@@ -234,10 +234,10 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				}
 				this.addActivityStreamInfo(currentContent, strutsAction, true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
-				log.info("Salvato contenuto " + currentContent.getId() + 
+				log.info("Salvato contenuto " + currentContent.getId() +
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
 			} else {
-				log.severe("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
+				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "saveContent");
@@ -245,7 +245,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	@Override
 	public String suspend() {
 		Logger log = ApsSystemUtils.getLogger();
@@ -264,7 +264,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContentManager().removeOnLineContent(currentContent);
 				this.addActivityStreamInfo(currentContent, (ApsAdminSystemConstants.DELETE + 10), true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
-				log.info("Sospeso contenuto " + currentContent.getId() + 
+				log.info("Sospeso contenuto " + currentContent.getId() +
 						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
 			}
 		} catch (Throwable t) {
@@ -273,24 +273,24 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return SUCCESS;
 	}
-	
+
 	public int[] getLinkDestinations() {
 		return SymbolicLink.getDestinationTypes();
 	}
-	
+
 	@Deprecated (/** From jAPS 2.0 version 2.1, use {@link IContentCategoryAction} action */)
 	public Category getCategoryRoot() {
 		return (Category) this.getCategoryManager().getRoot();
 	}
-	
+
 	public IPage getPage(String pageCode) {
 		return this.getPageManager().getPage(pageCode);
 	}
-	
+
 	public String getHtmlEditorCode() {
 		return this.getConfigManager().getParam("hypertextEditor");
 	}
-	
+
 	/**
 	 * Restituice la lista di pagine dove è pubblicato il contenuto in fase di redazione.
 	 * @return La lista di pagine che referenziano dal contenuto.
@@ -310,7 +310,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return pages;
 	}
-	
+
 	/**
 	 * Return the list of the showing pages of the current content on edit
 	 * @return The list of the showing pages.
@@ -339,11 +339,11 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 		}
 		return pageItems;
 	}
-	
+
 	public String getIconFile(String fileName) {
 		return this.getResourceIconUtil().getIconFile(fileName);
 	}
-	
+
 	@Deprecated (/** From jAPS 2.0 version 2.1, use {@link IContentCategoryAction} action */)
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
@@ -359,28 +359,28 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	protected void setReferences(Map references) {
 		this._references = references;
 	}
-	
+
 	protected IPageManager getPageManager() {
 		return _pageManager;
 	}
 	public void setPageManager(IPageManager pageManager) {
 		this._pageManager = pageManager;
 	}
-	
+
 	protected ConfigInterface getConfigManager() {
 		return _configManager;
 	}
 	public void setConfigManager(ConfigInterface configManager) {
 		this._configManager = configManager;
 	}
-	
+
 	public String getContentId() {
 		return _contentId;
 	}
 	public void setContentId(String contentId) {
 		this._contentId = contentId;
 	}
-	
+
 	@Deprecated (/** From jAPS 2.0 version 2.1, use {@link IContentCategoryAction} action */)
 	public String getCategoryCode() {
 		return _categoryCode;
@@ -389,41 +389,41 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	public void setCategoryCode(String categoryCode) {
 		this._categoryCode = categoryCode;
 	}
-	
+
 	public String getExtraGroupName() {
 		return _extraGroupName;
 	}
 	public void setExtraGroupName(String extraGroupName) {
 		this._extraGroupName = extraGroupName;
 	}
-	
+
 	public boolean isCopyPublicVersion() {
 		return _copyPublicVersion;
 	}
 	public void setCopyPublicVersion(boolean copyPublicVersion) {
 		this._copyPublicVersion = copyPublicVersion;
 	}
-	
+
 	protected ResourceIconUtil getResourceIconUtil() {
 		return _resourceIconUtil;
 	}
 	public void setResourceIconUtil(ResourceIconUtil resourceIconUtil) {
 		this._resourceIconUtil = resourceIconUtil;
 	}
-	
+
 	private ICategoryManager _categoryManager;
 	private IPageManager _pageManager;
 	private ConfigInterface _configManager;
-	
+
 	private Map _references;
-	
+
 	private String _contentId;
-	
+
 	private String _categoryCode;
 	private String _extraGroupName;
-	
+
 	private boolean _copyPublicVersion;
-	
+
 	private ResourceIconUtil _resourceIconUtil;
-	
+
 }

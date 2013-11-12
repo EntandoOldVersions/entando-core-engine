@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -212,7 +212,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			entity.setEntityDOM(entityDom);
 			this.fillEntityType(entity, element);
 			entity.setDefaultLang(this.getLangManager().getDefaultLang().getCode());
-			ApsSystemUtils.getLogger().finest("Entity Type '" + entity.getTypeCode() + "' defined");
+			ApsSystemUtils.getLogger().debug("Entity Type '" + entity.getTypeCode() + "' defined");
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "doParsing", "Error extracting entity type");
 			throw new ApsSystemException("Configuration error of the Entity Type detected", t);
@@ -239,7 +239,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 				AttributeInterface attribute = this.createAttribute(currentAttrElem);
 				attribute.setParentEntity(entityType);
 				entityType.addAttribute(attribute);
-				ApsSystemUtils.getLogger().finest("The Attribute " + attribute.getName() + " of type " 
+				ApsSystemUtils.getLogger().debug("The Attribute " + attribute.getName() + " of type " 
 						+ attribute.getType() + " was successfully inserted in the Entity Type " + entityType.getTypeCode());
 			}
 		} catch (Throwable t) {

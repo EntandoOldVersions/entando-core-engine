@@ -53,7 +53,7 @@ public class PNGImageResizer extends AbstractImageResizer {
 	        ImageIO.write(imageResized, this.getFileExtension(filePath), file);
 		} catch (Throwable t) {
 			String msg = this.getClass().getName() + ": saveResizedImage: " + t.toString();
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "saveResizedImage",t);
+			ApsSystemUtils.getLogger().error(this.getClass().getName(), "saveResizedImage",t);
 			throw new ApsSystemException(msg, t);
 		}
 	}

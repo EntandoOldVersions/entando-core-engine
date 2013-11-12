@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -18,7 +18,7 @@
 package com.agiletec.apsadmin.system;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpSession;
 
@@ -88,13 +88,11 @@ public class InterceptorMadMax extends BaseInterceptorMadMax {
     
     protected String invoke(ActionInvocation invocation) throws Exception {
         Logger log = ApsSystemUtils.getLogger();
-        if (log.isLoggable(Level.INFO)) {
-            HttpSession session = ServletActionContext.getRequest().getSession();
-            UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-            String message = "Action invoked '" + invocation.getProxy().getActionName() + "' on namespace '"
-                    + invocation.getProxy().getNamespace() + "' from user '" + currentUser.getUsername() + "'";
-            log.info(message);
-        }
+        HttpSession session = ServletActionContext.getRequest().getSession();
+        UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
+        String message = "Action invoked '" + invocation.getProxy().getActionName() + "' on namespace '"
+        		+ invocation.getProxy().getNamespace() + "' from user '" + currentUser.getUsername() + "'";
+        log.info(message);
         return super.invoke(invocation);
     }
     

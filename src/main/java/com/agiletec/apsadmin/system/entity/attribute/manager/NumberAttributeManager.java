@@ -2,16 +2,15 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -29,11 +28,11 @@ import com.agiletec.apsadmin.util.CheckFormatUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
- * Manager class for the 'Number' Attribute 
+ * Manager class for the 'Number' Attribute
  * @author E.Santoboni
  */
 public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
-    
+
 	@Override
     protected void setValue(AttributeInterface attribute, String value) {
         NumberAttribute numberAttribute = (NumberAttribute) attribute;
@@ -53,7 +52,7 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
         numberAttribute.setValue(number);
     }
-	
+
 	@Override
     protected String getCustomAttributeErrorMessage(AttributeFieldError attributeFieldError, ActionSupport action) {
         AttributeInterface attribute = attributeFieldError.getAttribute();
@@ -76,7 +75,7 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
         return action.getText(this.getInvalidAttributeMessage());
     }
-    
+
     private Integer getOtherAttributeValue(AttributeInterface attribute, String otherAttributeName) {
         AttributeInterface other = (AttributeInterface) attribute.getParentEntity().getAttribute(otherAttributeName);
         if (null != other && (other instanceof NumberAttribute) && ((NumberAttribute) other).getValue() != null) {
@@ -84,10 +83,10 @@ public class NumberAttributeManager extends AbstractMonoLangAttributeManager {
         }
         return null;
     }
-	
+
 	@Override
     protected String getInvalidAttributeMessage() {
         return "NumberAttribute.fieldError.invalidNumber";
     }
-    
+
 }

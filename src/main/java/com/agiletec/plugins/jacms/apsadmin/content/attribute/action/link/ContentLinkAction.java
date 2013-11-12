@@ -54,7 +54,7 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String joinContentLink() {
 		ContentRecordVO contentVo = this.getContentVo(this.getContentId());
 		if (null == contentVo || !contentVo.isOnLine()) {
-			ApsSystemUtils.getLogger().severe("Contenuto '" + this.getContentId() + "' INESISTENTE O NON PUBBLICO");
+			ApsSystemUtils.getLogger().error("Contenuto '" + this.getContentId() + "' INESISTENTE O NON PUBBLICO");
 			return FAILURE;
 		}
 		if (this.isContentOnPageType()) {

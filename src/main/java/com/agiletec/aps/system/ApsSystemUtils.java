@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -18,10 +18,13 @@
 package com.agiletec.aps.system;
 
 import java.util.Map;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.RollingFileAppender;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classe di utilità.
@@ -35,33 +38,44 @@ public class ApsSystemUtils {
 	 * @throws Exception
 	 */
 	public void init() throws Exception {
-		Level logLevel = Level.INFO;
-		try {
-			String logName = (String) this._systemParams.get(INIT_PROP_LOG_NAME);
-			_logger = Logger.getLogger(logName);
-			String pattern = (String) this._systemParams.get(INIT_PROP_LOG_FILE_PREFIX);
-			if (pattern != null && !pattern.equals("")) {
-				_logger.setUseParentHandlers(false);
-				pattern = pattern + ".%g"; // Esempio: "c:/dir/nome%g.log";
-
-				int limit = Integer.parseInt((String) this._systemParams.get(INIT_PROP_LOG_FILE_SIZE));
-				int count = Integer.parseInt((String) this._systemParams.get(INIT_PROP_LOG_FILES_COUNT));
-
-				FileHandler handler = new FileHandler(pattern, limit, count);
-				handler.setFormatter(new SimpleFormatter());
-				handler.setEncoding("UTF-8");
-				_logger.addHandler(handler);
-			}
-			String levelString = (String) this._systemParams.get(INIT_PROP_LOG_LEVEL);
-			logLevel = Level.parse(levelString);
-			_logger.setLevel(logLevel);
-		} catch (Exception e) {
-			try {
-				_logger = Logger.getLogger(this.getClass().getName());
-				_logger.log(Level.SEVERE, "Error detected while creating the logger: ", e);
-			} catch (RuntimeException e1) {
-			}
+		String appenderName = "ENTANDO";
+		
+		//TODO set this in constant
+		String conversionPattern = (String) this._systemParams.get("log4jConversionPattern");
+		if (StringUtils.isBlank(conversionPattern)) {
+			conversionPattern = "%d{ISO8601} - %-5p - %c{1} - %m%n"; //default conversionPattern
 		}
+		PatternLayout layout = new PatternLayout(conversionPattern);
+		
+		String maxFileSize = (String) this._systemParams.get(INIT_PROP_LOG_FILE_SIZE);
+		if (StringUtils.isBlank(maxFileSize)) {
+			maxFileSize = "1MB"; //default size
+		} else {
+			long mega  = new Long(maxFileSize) / KILOBYTE;
+			maxFileSize = mega + "KB";
+		}
+		String filename = (String) this._systemParams.get(INIT_PROP_LOG_FILE_PREFIX);
+		int maxBackupIndex = Integer.parseInt((String) this._systemParams.get(INIT_PROP_LOG_FILES_COUNT));
+		String log4jLevelString = (String) this._systemParams.get(INIT_PROP_LOG_LEVEL);
+		if (StringUtils.isBlank(log4jLevelString)) {
+			log4jLevelString = "INFO"; //default level
+		}
+		
+		RollingFileAppender fileAppender = (RollingFileAppender) LogManager.getRootLogger().getAppender(appenderName);
+		if (null == fileAppender) {
+			fileAppender = new RollingFileAppender();
+			fileAppender.setName(appenderName);
+		}
+		fileAppender.setMaxBackupIndex(maxBackupIndex);
+		fileAppender.setThreshold(org.apache.log4j.Level.toLevel(log4jLevelString));
+		fileAppender.setLayout(layout);
+		fileAppender.setMaxFileSize(maxFileSize);
+		
+		fileAppender.setFile(filename);
+		fileAppender.activateOptions();
+		
+		LogManager.getRootLogger().setLevel(org.apache.log4j.Level.toLevel(log4jLevelString));
+		LogManager.getRootLogger().addAppender(fileAppender);
 	}
 
 	/**
@@ -73,14 +87,14 @@ public class ApsSystemUtils {
 	}
 
 	/**
-	 * Traccia una eccezione sul logger del contesto. Se il livello di soglia 
-	 * del logger è superiore a FINER, viene emesso solo un breve messaggio di 
+	 * Traccia una eccezione sul logger del contesto. Se il livello di soglia
+	 * del logger è superiore a FINER, viene emesso solo un breve messaggio di
 	 * livello SEVERE, altrimenti viene tracciato anche lo stack trace della
 	 * eccezione (con il livello FINER).
 	 * @param t L'eccezione da tracciare
 	 * @param caller La classe chiamante, in cui si è verificato l'errore.
 	 * @param methodName Il metodo in cui si è verificato l'errore.
-	 * @param message Testo da includere nel tracciamento. 
+	 * @param message Testo da includere nel tracciamento.
 	 */
 	public static void logThrowable(Throwable t, Object caller,
 			String methodName, String message){
@@ -88,16 +102,17 @@ public class ApsSystemUtils {
 		if(caller != null) {
 			className = caller.getClass().getName();
 		}
-		if(_logger.isLoggable(Level.FINER)){
-			_logger.throwing(className, methodName, t);
-		} 
-		_logger.severe(message + " - " + t.toString() 
-				+ " in " + className + "." + methodName);
+		_logger.error("{} in {}.{} {}", message, className, methodName,  t.toString());
+//		if(_logger.isLoggable(Level.FINER)){
+//			_logger.throwing(className, methodName, t);
+//		}
+//		_logger.warn(message + " - " + t.toString()
+//				+ " in " + className + "." + methodName);
 	}
 
 	/**
-	 * Traccia una eccezione sul logger del contesto. Se il livello di soglia 
-	 * del logger è superiore a FINER, viene emesso solo un breve messaggio di 
+	 * Traccia una eccezione sul logger del contesto. Se il livello di soglia
+	 * del logger è superiore a FINER, viene emesso solo un breve messaggio di
 	 * livello SEVERE, altrimenti viene tracciato anche lo stack trace della
 	 * eccezione (con il livello FINER).
 	 * @param t L'eccezione da tracciare
@@ -117,7 +132,7 @@ public class ApsSystemUtils {
 	}
 
 	/**
-	 * Nome della property che definisce il nome 
+	 * Nome della property che definisce il nome
 	 * da assegnare al logger (tipo: String)
 	 */
 	public static final String INIT_PROP_LOG_NAME = "logName";
@@ -148,8 +163,10 @@ public class ApsSystemUtils {
 	/**
 	 * Logger di sistema.
 	 */
-	private static Logger _logger; 
-
+	private static final Logger _logger =  LoggerFactory.getLogger(ApsSystemUtils.class);
+	
 	private Map<String, Object> _systemParams;
 
+	private static final long  KILOBYTE = 1024L;
+	
 }

@@ -43,7 +43,7 @@ public class LinkResolverManager extends AbstractService implements ILinkResolve
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": inizializzato " );
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": inizializzato " );
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class LinkResolverManager extends AbstractService implements ILinkResolve
 	@Override
 	public String resolveLink(SymbolicLink symbolicLink, RequestContext reqCtx) {
 		if (null == symbolicLink) {
-			ApsSystemUtils.getLogger().severe("Null Symbolic Link");
+			ApsSystemUtils.getLogger().error("Null Symbolic Link");
 			return "";
 		}
 		String url = null;

@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -101,7 +101,7 @@ public class EntityHandler extends DefaultHandler {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "startElement", t);
+            ApsSystemUtils.getLogger().error("error in " + this.getClass().getName() + ": {} - {}", "startElement", t);
             throw new SAXException(t.getMessage(), new Exception(t));
         }
     }
@@ -167,7 +167,7 @@ public class EntityHandler extends DefaultHandler {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "endElement", t);
+            ApsSystemUtils.getLogger().error("error in " + this.getClass().getName() + ": {} - {}", "endElement", t);
             throw new SAXException(t.getMessage(), new Exception(t));
         }
     }

@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -18,7 +18,7 @@
 package com.agiletec.aps.system.services.controller.control;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,9 +65,7 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 				url.addParam(RequestContext.PAR_REDIRECT_FLAG, "1");
 				url.setEscapeAmp(false);
 				String redirUrl = url.getURL();
-				if (this._log.isLoggable(Level.FINEST)) {
-					this._log.finest("Redirecting to " + redirUrl);
-				}
+				this._log.debug("Redirecting to " + redirUrl);
 				return this.redirectUrl(redirUrl, reqCtx);
 			} else {
 				reqCtx.setHTTPError(HttpServletResponse.SC_BAD_REQUEST);

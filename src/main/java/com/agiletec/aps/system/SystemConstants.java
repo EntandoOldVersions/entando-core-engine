@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -179,6 +179,11 @@ public interface SystemConstants {
     public static final String CONTROLLER_MANAGER = "ControllerManager";
     
     /**
+     * Name of the LicenseKey Manager.
+     */
+    public static final String LICENSE_KEY_MANAGER = "LicenseKeyManager";
+    
+    /**
      * Nome del servizio gestore cache.
 	 * @deprecated 
      */
@@ -221,6 +226,8 @@ public interface SystemConstants {
 	public static final String SYSTEM_TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss:SSS";
 	
     public static final String CONFIG_ITEM_LANGS = "langs";
+
+    public static final String CONFIG_ITEM_LICENSE = "license";
     
     public static final String CONFIG_ITEM_PARAMS = "params";
     

@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -19,8 +19,6 @@ package com.agiletec.aps.system.services.baseconfig;
 
 import java.io.StringReader;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.Rule;
@@ -29,7 +27,6 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ForJLogger;
 import com.agiletec.aps.util.MapSupportRule;
 
 /**
@@ -50,7 +47,7 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 	public void init() throws Exception {
 		this.loadConfigItems();
 		this.parseParams();
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized # "
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized # "
 				+ this._configItems.size() + " configuration items and "
 				+ this._params.size() + " parameters");
 	}
@@ -125,10 +122,6 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 	private void parseParams() throws ApsSystemException {
 		String xml = this.getConfigItem(SystemConstants.CONFIG_ITEM_PARAMS);
 		Digester dig = new Digester();
-		Logger log = ApsSystemUtils.getLogger();
-		Logger digLog = Logger.getLogger(log.getName() + ".digester");
-		digLog.setLevel(Level.SEVERE);
-		dig.setLogger(new ForJLogger(digLog));
 		Rule rule = new MapSupportRule("name");
 		dig.addRule("*/Param", rule);
 		dig.push(this._params);

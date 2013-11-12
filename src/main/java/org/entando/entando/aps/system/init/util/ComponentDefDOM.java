@@ -43,7 +43,7 @@ public class ComponentDefDOM {
     
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
         this.validate(xmlText, configPath);
-        ApsSystemUtils.getLogger().info("Loading Component from file : " + configPath);
+        ApsSystemUtils.getLogger().debug("Loading Component from file : " + configPath);
         this.decodeDOM(xmlText);
     }
     
@@ -60,7 +60,7 @@ public class ComponentDefDOM {
             xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
             Source source = new StreamSource(xmlIs);
             validator.validate(source);
-            ApsSystemUtils.getLogger().info("Valid Component definition : " + configPath);
+            ApsSystemUtils.getLogger().debug("Valid Component definition : " + configPath);
         } catch (Throwable t) {
             String message = "Error validating Component definition : " + configPath;
             ApsSystemUtils.logThrowable(t, this, "this", message);

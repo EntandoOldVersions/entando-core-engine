@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -36,7 +36,7 @@ public class CurrentUserProfileAttributeTag extends UserProfileAttributeTag {
         HttpSession session = this.pageContext.getSession();
         UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
         if (currentUser == null || currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME) || null == currentUser.getProfile()) {
-            ApsSystemUtils.getLogger().severe("User '" + currentUser + "' : Null user, or guest user or user without profile");
+            ApsSystemUtils.getLogger().error("User '" + currentUser + "' : Null user, or guest user or user without profile");
             return null;
         }
         return (IUserProfile) currentUser.getProfile();

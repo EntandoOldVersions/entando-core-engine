@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -136,7 +136,7 @@ public class SystemParamsUtils {
             StringReader reader = new StringReader(xmlText);
             doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().severe("Error parsing: " + t.getMessage());
+            ApsSystemUtils.getLogger().error("Error parsing: " + t.getMessage());
             throw new ApsSystemException("Error parsing document", t);
         }
         return doc;

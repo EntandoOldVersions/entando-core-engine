@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -48,7 +48,7 @@ public class RequestAuthorizator extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._log.config(this.getClass().getName() + ": initialized");
+		this._log.debug(this.getClass().getName() + ": initialized");
 	}
 	
 	/**
@@ -61,9 +61,7 @@ public class RequestAuthorizator extends AbstractControlService {
 	 */
 	@Override
 	public int service(RequestContext reqCtx, int status) {
-		if (_log.isLoggable(Level.FINEST)) {
-			_log.finest("Invoked: " + this.getClass().getName());
-		}
+		_log.debug("Invoked: " + this.getClass().getName());
 		int retStatus = ControllerManager.INVALID_STATUS;
 		if (status == ControllerManager.ERROR) {
 			return status;

@@ -55,7 +55,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized ");
+		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
 	}
 	
 	@Override
@@ -128,7 +128,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	
 	protected String buildRenderedContent(Content content, long modelId, String langCode, RequestContext reqCtx) {
 		if (null == content) {
-			ApsSystemUtils.getLogger().warning("Null The content can't be rendered");
+			ApsSystemUtils.getLogger().warn("Null The content can't be rendered");
 			return null;
 		}
 		String renderedContent = null;
@@ -137,10 +137,10 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			renderedContent = this.getContentRender().render(content, modelId, langCode, reqCtx);
 			ok = true;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "getRenderedContent", t);
+			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getRenderedContent", t);
 		}
 		if (!ok) {
-			ApsSystemUtils.getLogger().warning("The content " + content.getId() + " can't be rendered");
+			ApsSystemUtils.getLogger().warn("The content " + content.getId() + " can't be rendered");
 		}
 		return renderedContent;
 	}

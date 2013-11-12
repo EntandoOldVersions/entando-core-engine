@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -36,20 +36,19 @@ public class ErrorManager extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._log.config(this.getClass().getName() + ": initialized");
+		this._log.debug(this.getClass().getName() + ": initialized");
 	}
 	
 	@Override
 	public int service(RequestContext reqCtx, int status) {
 		int retStatus = ControllerManager.INVALID_STATUS;
-		this._log.finer("Intervention of the error service");
+		this._log.debug("Intervention of the error service");
 		try {
 			PageURL url = this.getUrlManager().createURL(reqCtx);
 			url.setPageCode(this.getErrorPageCode());
 			String redirUrl = url.getURL();
-			if(_log.isLoggable(Level.FINEST)) {
-				_log.finest("Redirecting to " + redirUrl);
-			}
+
+			_log.debug("Redirecting to " + redirUrl);
 			reqCtx.clearError();
 			reqCtx.addExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL, redirUrl);
 			retStatus = ControllerManager.REDIRECT;

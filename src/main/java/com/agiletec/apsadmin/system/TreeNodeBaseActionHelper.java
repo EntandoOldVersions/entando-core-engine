@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -135,12 +135,12 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 	
 	protected boolean checkNode(String nodeCode, Collection<String> groupCodes) {
 		if (!this.isNodeAllowed(nodeCode, groupCodes)) {
-			ApsSystemUtils.getLogger().severe("Node '" + nodeCode + "' not allowed ");
+			ApsSystemUtils.getLogger().error("Node '" + nodeCode + "' not allowed ");
 			return false;
 		}
 		ITreeNode treeNode = this.getTreeNode(nodeCode);
 		if (null == treeNode) {
-			ApsSystemUtils.getLogger().severe("Node '" + nodeCode + "' null ");
+			ApsSystemUtils.getLogger().error("Node '" + nodeCode + "' null ");
 			return false;
 		}
 		return true;

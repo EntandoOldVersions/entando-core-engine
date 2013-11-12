@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
+* This file is part of Entando software.
 * Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -38,7 +38,7 @@ import com.opensymphony.xwork2.Action;
  * @author E.Santoboni
  */
 public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
-	
+
 	public void testChooseLink_1() throws Throwable {
 		String contentId = "ART1";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
@@ -48,7 +48,7 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		this.addParameter("langCode", "it");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		
+
 		HttpSession session = this.getRequest().getSession();
 		assertEquals("VediAnche", session.getAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM));
 		assertEquals("it", session.getAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM));
@@ -58,7 +58,7 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		assertEquals("ART1", currentContent.getId());
 		assertEquals("Articolo", currentContent.getDescr());
 	}
-	
+
 	public void testChooseLink_2() throws Throwable {
 		String contentId = "EVN191";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
@@ -69,30 +69,30 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		this.addParameter("langCode", "it");
 		String result = this.executeAction();
 		assertEquals(BaseAction.FAILURE, result);//FALLIMENTO PER LISTA VUOTA
-		
+
 		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		MonoListAttribute monoListAttribute = (MonoListAttribute) currentContent.getAttribute("LinkCorrelati");
 		List<AttributeInterface> attributes = monoListAttribute.getAttributes();
 		assertEquals(0, attributes.size());
-		
+
 		this.initContentAction("/do/jacms/Content", "addListElement", contentOnSessionMarker);
 		this.addParameter("attributeName", "LinkCorrelati");
 		this.addParameter("listLangCode", "it");
 		result = this.executeAction();
 		assertEquals("chooseLink", result);
-		
+
 		currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		monoListAttribute = (MonoListAttribute) currentContent.getAttribute("LinkCorrelati");
 		attributes = monoListAttribute.getAttributes();
 		assertEquals(1, attributes.size());
-		
+
 		this.initContentAction("/do/jacms/Content", "chooseLink", contentOnSessionMarker);
 		this.addParameter("attributeName", "LinkCorrelati");
 		this.addParameter("elementIndex", "0");
 		this.addParameter("langCode", "it");
 		result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		
+
 		HttpSession session = this.getRequest().getSession();
 		assertEquals("LinkCorrelati", session.getAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM));
 		assertEquals("it", session.getAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM));
@@ -103,12 +103,12 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		assertEquals("EVN191", currentContent.getId());
 		assertEquals("Evento 1", currentContent.getDescr());
 	}
-	
+
 	public void testRemoveLink() throws Throwable {
 		String contentId = "ART102";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.executeEdit(contentId, "admin");
-		
+
 		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(currentContent);
 		LinkAttribute linkAttribute = (LinkAttribute) currentContent.getAttribute("VediAnche");
@@ -116,13 +116,13 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		SymbolicLink symbolicLink = linkAttribute.getSymbolicLink();
 		assertNotNull(symbolicLink);
 		assertEquals("ART111", symbolicLink.getContentDest());
-		
+
 		this.initContentAction("/do/jacms/Content", "removeLink", contentOnSessionMarker);
 		this.addParameter("attributeName", "VediAnche");
 		this.addParameter("langCode", "it");
 		String result = this.executeAction();
 		assertEquals(Action.SUCCESS, result);
-		
+
 		currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(currentContent);
 		linkAttribute = (LinkAttribute) currentContent.getAttribute("VediAnche");
@@ -130,17 +130,17 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		symbolicLink = linkAttribute.getSymbolicLink();
 		assertNull(symbolicLink);
 	}
-	
+
 	public void testFailureChooseLinkType_1() throws Throwable {
 		String contentId = "ART1";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.executeEdit(contentId, "admin");
-		
+
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, "VediAnche");
 		session.setAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM, "it");
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		String result = this.executeAction();
 		assertEquals(Action.INPUT, result);
@@ -148,23 +148,23 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErrors.size());
 		List<String> typeFieldErrors = fieldErrors.get("linkType");
 		assertEquals(1, typeFieldErrors.size());
-		
+
 		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(currentContent);
 		assertEquals("ART1", currentContent.getId());
 		assertEquals("Articolo", currentContent.getDescr());
 	}
-	
+
 	public void testFailureChooseLinkType_2() throws Throwable {
 		String contentId = "ART1";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.executeEdit(contentId, "admin");
-		
+
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, "VediAnche");
 		session.setAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM, "it");
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		this.addParameter("linkType", "0");
 		String result = this.executeAction();
@@ -173,7 +173,7 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErrors.size());
 		List<String> typeFieldErrors = fieldErrors.get("linkType");
 		assertEquals(1, typeFieldErrors.size());
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		this.addParameter("linkType", "4");
 		result = this.executeAction();
@@ -182,42 +182,42 @@ public class TestLinkAttributeAction extends AbstractBaseTestContentAction {
 		assertEquals(1, fieldErrors.size());
 		typeFieldErrors = fieldErrors.get("linkType");
 		assertEquals(1, typeFieldErrors.size());
-		
+
 		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(currentContent);
 		assertEquals("ART1", currentContent.getId());
 		assertEquals("Articolo", currentContent.getDescr());
 	}
-	
+
 	public void testChooseLinkType() throws Throwable {
 		String contentId = "ART1";
 		String contentOnSessionMarker = this.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
 		this.executeEdit(contentId, "admin");
-		
+
 		//iniziazione parametri sessione
 		HttpSession session = this.getRequest().getSession();
 		session.setAttribute(ILinkAttributeActionHelper.ATTRIBUTE_NAME_SESSION_PARAM, "VediAnche");
 		session.setAttribute(ILinkAttributeActionHelper.LINK_LANG_CODE_SESSION_PARAM, "it");
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		this.addParameter("linkType", "1");
 		String result = this.executeAction();
 		assertEquals("configUrlLink", result);
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		this.addParameter("linkType", "2");
 		result = this.executeAction();
 		assertEquals("configPageLink", result);
-		
+
 		this.initContentAction("/do/jacms/Content/Link", "configLink", contentOnSessionMarker);
 		this.addParameter("linkType", "3");
 		result = this.executeAction();
 		assertEquals("configContentLink", result);
-		
+
 		Content currentContent = this.getContentOnEdit(contentOnSessionMarker);
 		assertNotNull(currentContent);
 		assertEquals("ART1", currentContent.getId());
 		assertEquals("Articolo", currentContent.getDescr());
 	}
-	
+
 }

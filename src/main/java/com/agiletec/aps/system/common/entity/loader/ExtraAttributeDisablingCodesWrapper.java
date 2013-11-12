@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -46,7 +46,7 @@ public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeS
 			for (int i = 0; i < codes.size(); i++) {
 				String code = codes.get(i);
 				if (collectionToFill.containsKey(code)) {
-					ApsSystemUtils.getLogger().severe("You can't override existing disabling code : " + code + 
+					ApsSystemUtils.getLogger().error("You can't override existing disabling code : " + code + 
 							" - " + collectionToFill.get(code));
 				} else {
 					collectionToFill.put(code, codeMap.get(code));

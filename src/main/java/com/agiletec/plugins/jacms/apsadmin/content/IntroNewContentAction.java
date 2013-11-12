@@ -67,7 +67,7 @@ public class IntroNewContentAction extends AbstractContentAction {
 			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
-			ApsSystemUtils.getLogger().finest("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
+			ApsSystemUtils.getLogger().debug("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createNewVoid");
 			return FAILURE;
@@ -85,7 +85,7 @@ public class IntroNewContentAction extends AbstractContentAction {
 			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
-			ApsSystemUtils.getLogger().finest("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
+			ApsSystemUtils.getLogger().debug("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "createNewVoid");
 			return FAILURE;

@@ -2,16 +2,16 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
-* 
-* See the file License for the specific language governing permissions   
+*
+* See the file License for the specific language governing permissions
 * and limitations under the License
-* 
-* 
-* 
+*
+*
+*
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
@@ -34,32 +34,32 @@ import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
  * Servizio di autorizzazione.
- * Il servizio espone tutti i metodi necessari per la verifica verifica delle autorizzazioni utente, 
+ * Il servizio espone tutti i metodi necessari per la verifica verifica delle autorizzazioni utente,
  * qualsiasi sia la sua provenienza e definizione.
  * @author E.Santoboni
  */
 public class AuthorizationManager extends AbstractService implements IAuthorizationManager {
-    
+
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().config(this.getClass().getName() + ": initialized");
+        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
     }
-    
+
     public boolean isAuth(UserDetails user, IApsAuthority auth) {
         return this.checkAuth(user, auth);
     }
-    
+
     public boolean isAuth(UserDetails user, Group group) {
         return this.isAuthOnGroup(user, group.getName());
     }
-    
+
     public boolean isAuth(UserDetails user, IApsEntity entity) {
         if (null == entity) {
             return false;
         }
         String mainGroupName = entity.getMainGroup();
         //Group group = this.getGroupManager().getGroup(mainGroupName);
-        if (mainGroupName.equals(Group.FREE_GROUP_NAME) 
-        		|| this.checkAuth(user, mainGroupName, AuthorityType.GROUP) 
+        if (mainGroupName.equals(Group.FREE_GROUP_NAME)
+        		|| this.checkAuth(user, mainGroupName, AuthorityType.GROUP)
         		|| this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)) {
             return true;
         }
@@ -68,18 +68,18 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         while (iter.hasNext()) {
             String groupName = iter.next();
             //group = this.getGroupManager().getGroup(groupName);
-            if (groupName.equals(Group.FREE_GROUP_NAME) 
+            if (groupName.equals(Group.FREE_GROUP_NAME)
             		|| this.checkAuth(user, groupName, AuthorityType.GROUP)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public boolean isAuth(UserDetails user, Permission permission) {
         return this.isAuthOnPermission(user, permission.getName());
     }
-    
+
     public boolean isAuth(UserDetails user, IPage page) {
         if (this.isAuthOnGroup(user, Group.ADMINS_GROUP_NAME)) {
             return true;
@@ -107,22 +107,22 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return false;
     }
-    
+
     public boolean isAuthOnGroup(UserDetails user, String groupName) {
         //Group group = this.getGroupManager().getGroup(groupName);
         //Group adminGroup = this.getGroupManager().getGroup(Group.ADMINS_GROUP_NAME);
         //return (this.checkAuth(user, group) || this.checkAuth(user, adminGroup));
-        return ((this.checkAuth(user, groupName, AuthorityType.GROUP) 
+        return ((this.checkAuth(user, groupName, AuthorityType.GROUP)
                 || this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)));
     }
-    
+
     public boolean isAuthOnRole(UserDetails user, String roleName) {
         //Role role = this.getRoleManager().getRole(roleName);
         //return (this.isAuthOnPermission(user, Permission.SUPERUSER) || this.checkAuth(user, role));
-        return ((this.isAuthOnPermission(user, Permission.SUPERUSER) 
+        return ((this.isAuthOnPermission(user, Permission.SUPERUSER)
                 || this.checkAuth(user, roleName, AuthorityType.ROLE)));
     }
-    
+
     public boolean isAuthOnPermission(UserDetails user, String permissionName) {
         boolean check = this.isAuthOnSinglePermission(user, permissionName);
         if (check) {
@@ -142,7 +142,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return false;
     }
-    
+
     private List<Role> getRolesWithPermission(UserDetails user, String permissionName) {
         List<Role> roles = new ArrayList<Role>();
         if (null == user) return roles;
@@ -165,7 +165,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     public List<Group> getGroupsOfUser(UserDetails user) {
         return this.getUserGroups(user);
     }
-    
+
     public List<Group> getUserGroups(UserDetails user) {
         if (null == user) {
             return null;
@@ -185,7 +185,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return groups;
     }
-    
+
     public List<Role> getUserRoles(UserDetails user) {
         if (null == user) {
             return null;
@@ -205,7 +205,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return roles;
     }
-    
+
     private boolean checkAuth(UserDetails user, IApsAuthority requiredAuth) {
         if (null == requiredAuth) {
             return false;
@@ -225,7 +225,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return false;
     }
-    
+
     private boolean checkAuth(UserDetails user, String requiredAuthName, AuthorityType type) {
         if (null == requiredAuthName) {
             return false;
@@ -239,7 +239,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
                 }
                 String authName = auth.getAuthority();
                 boolean check = requiredAuthName.equals(authName);
-                if ((check && type.equals(AuthorityType.GROUP) && (auth instanceof Group)) 
+                if ((check && type.equals(AuthorityType.GROUP) && (auth instanceof Group))
                         || (check && type.equals(AuthorityType.ROLE) && (auth instanceof Role))) {
                     return true;
                 }
@@ -247,7 +247,7 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
         }
         return false;
     }
-    
+
     private enum AuthorityType{ROLE,GROUP}
     /*
     protected IGroupManager getGroupManager() {
@@ -256,14 +256,14 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
     public void setGroupManager(IGroupManager groupManager) {
         this._groupManager = groupManager;
     }
-    
+
     protected IRoleManager getRoleManager() {
         return _roleManager;
     }
     public void setRoleManager(IRoleManager roleManager) {
         this._roleManager = roleManager;
     }
-    
+
     private IGroupManager _groupManager;
     private IRoleManager _roleManager;
     */

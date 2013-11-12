@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -68,7 +68,7 @@ public class EntityTypeFactory implements IEntityTypeFactory {
 		Map<String, IApsEntity> entityTypes = null;
 		try {
 			String xml = this.getConfigManager().getConfigItem(configItemName);
-			ApsSystemUtils.getLogger().finest(configItemName + ": " + xml);
+			ApsSystemUtils.getLogger().debug(configItemName + ": " + xml);
 			entityTypeDom.initEntityTypeDOM(xml, entityClass, entityDom, entityManagerName);
 			entityTypes = entityTypeDom.getEntityTypes();
 		} catch (Throwable t) {

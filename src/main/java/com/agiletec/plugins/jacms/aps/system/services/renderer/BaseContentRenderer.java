@@ -87,7 +87,7 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 		} 
 		if (shape == null) {
 			shape = "Content model " + modelId + " undefined";
-			ApsSystemUtils.getLogger().severe(shape);
+			ApsSystemUtils.getLogger().error(shape);
 		}
 		return shape;
 	}

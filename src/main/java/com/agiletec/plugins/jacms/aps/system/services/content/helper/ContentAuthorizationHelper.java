@@ -2,8 +2,8 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software. 
-* Entando is a free software; 
+* This file is part of Entando software.
+* Entando is a free software;
 * You can redistribute it and/or modify it
 * under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
 * 
@@ -42,7 +42,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	@Override
 	public boolean isAuth(UserDetails user, Content content) throws ApsSystemException {
 		if (null == content) {
-			ApsSystemUtils.getLogger().severe("Null content");
+			ApsSystemUtils.getLogger().error("Null content");
 			return false;
 		}
 		Set<String> groupCodes = this.getContentGroups(content);
@@ -77,7 +77,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	
 	protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws ApsSystemException {
 		if (null == user) {
-			ApsSystemUtils.getLogger().severe("Null user");
+			ApsSystemUtils.getLogger().error("Null user");
 			return false;
 		}
 		if (groupCodes.contains(Group.FREE_GROUP_NAME)) return true;
@@ -94,7 +94,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	@Override
 	public boolean isAuthToEdit(UserDetails user, Content content) throws ApsSystemException {
 		if (null == content) {
-			ApsSystemUtils.getLogger().severe("Null content");
+			ApsSystemUtils.getLogger().error("Null content");
 			return false;
 		}
 		String mainGroupName = content.getMainGroup();
@@ -109,7 +109,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	
 	private boolean isAuthToEdit(UserDetails user, String mainGroupName) throws ApsSystemException {
 		if (null == user) {
-			ApsSystemUtils.getLogger().severe("Null user");
+			ApsSystemUtils.getLogger().error("Null user");
 			return false;
 		}
 		return (this.getAuthorizationManager().isAuthOnPermission(user, JacmsSystemConstants.PERMISSION_EDIT_CONTENTS) 
@@ -132,7 +132,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 			Content content = this.getContentManager().loadContent(contentId, true);
 			authInfo = new PublicContentAuthorizationInfo(content);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().throwing(this.getClass().getName(), "getAuthorizationInfo", t);
+			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getAuthorizationInfo", t);
 		}
 		return authInfo;
 	}
