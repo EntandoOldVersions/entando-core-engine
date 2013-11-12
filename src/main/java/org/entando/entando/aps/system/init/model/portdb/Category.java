@@ -43,7 +43,6 @@ public class Category {
 	
 	@DatabaseField(columnName = "titles", 
 			dataType = DataType.LONG_STRING, 
-			width = 30, 
 			canBeNull = false)
 	private String _titles;
 	

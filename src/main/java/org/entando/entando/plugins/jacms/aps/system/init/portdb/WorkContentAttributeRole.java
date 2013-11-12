@@ -58,7 +58,7 @@ public class WorkContentAttributeRole implements ExtendedColumnDefinition {
 			contentTableName = "`" + Content.TABLE_NAME + "`";
 		}
 		return new String[]{"ALTER TABLE " + tableName + " " 
-				+ "ADD CONSTRAINT workcontentattrroles_contid_fkey FOREIGN KEY (contentid) "
+				+ "ADD CONSTRAINT workcontentattrroles_id_fkey FOREIGN KEY (contentid) "
 				+ "REFERENCES " + contentTableName + " (contentid)"};
 	}
 	
