@@ -32,6 +32,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -41,10 +42,14 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
+import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
+import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedObserver;
+
 /**
  * @author E.Santoboni - S.Puddu
  */
-public class ActionLogManager extends AbstractService implements IActionLogManager {
+public class ActionLogManager extends AbstractService implements IActionLogManager, ProfileChangedObserver {
 
 	@Override
 	public void init() throws Exception {
@@ -140,9 +145,9 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return recordIds;
 	}
-
+	
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
 	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException {
 		try {
 			this.getActionLogDAO().editActionLikeRecord(id, username, add);
@@ -151,9 +156,10 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error editing activity stream like records", t);
 		}
 	}
-
+	
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_'.concat(#id)")
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
+	@CacheableInfo(groups = "'ActivityStreamLikeRecords_cacheGroup'")
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException {
 		List<ActivityStreamLikeInfo> infos = null;
 		try {
@@ -173,7 +179,17 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		}
 		return infos;
 	}
-
+	
+	@Override
+	public void updateFromProfileChanged(ProfileChangedEvent event) {
+		try {
+			ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getBeanFactory().getBean(SystemConstants.CACHE_INFO_MANAGER);
+			cacheInfoManager.flushGroup("ActivityStreamLikeRecords_cacheGroup");
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "updateFromProfileChanged", "Error flushing cache group");
+		}
+	}
+	
 	@Override
 	public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException {
 		List<String> userGroupCodes = this.extractUserGroupCodes(loggedUser);
@@ -230,5 +246,5 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
 	private IUserProfileManager _userProfileManager;
-
+	
 }
