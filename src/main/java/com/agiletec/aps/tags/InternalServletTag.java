@@ -169,24 +169,43 @@ public class InternalServletTag extends TagSupport {
 				String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
 				Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 				if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
-					actionPath = requestActionPath;
+					if (this.isAllowedRequestPath(requestActionPath)) {
+						actionPath = requestActionPath;
+					}
 				}
 			}
 			reqCtx.addExtraParam(EXTRAPAR_STATIC_ACTION, this.isStaticAction());
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher(actionPath);
 			requestDispatcher.include(request, responseWrapper);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "includeShowlet", "Error including showlet");
+			ApsSystemUtils.logThrowable(t, this, "includeShowlet", "Error including widget");
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/aps/jsp/system/internalServlet_error.jsp");
 			requestDispatcher.include(request, responseWrapper);
 		}
 	}
 	
+	protected boolean isAllowedRequestPath(String requestActionPath) {
+		String rapLowerCase = requestActionPath.toLowerCase();
+		if (rapLowerCase.contains("web-inf") 
+				|| rapLowerCase.contains("meta-inf") 
+				|| rapLowerCase.contains("../") 
+				|| rapLowerCase.contains("%2e%2e%2f") 
+				|| rapLowerCase.endsWith(".txt") 
+				|| rapLowerCase.contains("<") 
+				|| rapLowerCase.endsWith("%3c") 
+				|| rapLowerCase.endsWith("%00") 
+				|| rapLowerCase.endsWith("'") 
+				|| rapLowerCase.endsWith("\"")) {
+			return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Extract the init Action Path. 
-	 * Return the tag attribute (if set), else the showlet parameter.
+	 * Return the tag attribute (if set), else the widget parameter.
 	 * @param reqCtx The request context
-	 * @param widget The current showlet.
+	 * @param widget The current widget.
 	 * @return The init Action Path
 	 */
 	protected String extractIntroActionPath(RequestContext reqCtx, Widget widget) {
