@@ -1,11 +1,9 @@
-
 SQL notes
 
 ```sql 
 
 -- sql - port database
 
--- update localstrings
 
 CREATE TABLE contentattributeroles
 (
@@ -72,6 +70,8 @@ ALTER TABLE jpsurvey ADD COLUMN checkusername smallint;
 update jpsurvey SET checkusername = 0;
 ALTER TABLE jpsurvey ALTER COLUMN checkusername SET NOT NULL;
 -- for "jpsurvey" plugin - End
+
+-- update localstrings
 
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIGURATION','it','Configura il profile');
 INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIGURATION','en','Edit profile');
