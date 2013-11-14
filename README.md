@@ -1,23 +1,173 @@
+
 SQL notes
 
-```sql
+```sql 
+
+-- sql - port database
+
+-- update localstrings
+
+CREATE TABLE contentattributeroles
+(
+  contentid character varying(16) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  rolename character varying(50) NOT NULL,
+  CONSTRAINT contentattrroles_contid_fkey FOREIGN KEY (contentid)
+      REFERENCES contents (contentid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+CREATE TABLE workcontentattributeroles
+(
+  contentid character varying(16) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  rolename character varying(50) NOT NULL,
+  CONSTRAINT workcontentattrroles_contid_fkey FOREIGN KEY (contentid)
+      REFERENCES contents (contentid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+
+-- for "Address book" plugin - Start
+CREATE TABLE jpaddressbook_attroles
+(
+  contactkey character varying(40) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  rolename character varying(50) NOT NULL,
+  CONSTRAINT jpaddressbook_attroles_fkey FOREIGN KEY (contactkey)
+      REFERENCES jpaddressbook_contacts (contactkey) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+-- for "Address book" plugin - End
+
+
+-- for "User Profile" plugin - Start
+CREATE TABLE jpuserprofile_attroles
+(
+  username character varying(40) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  rolename character varying(50) NOT NULL,
+  CONSTRAINT jpuserprofile_attroles_fkey FOREIGN KEY (username)
+      REFERENCES jpuserprofile_authuserprofiles (username) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+-- for "User Profile" plugin - End
+
+
+-- for "Web Dynamic Form" plugin - Start
+CREATE TABLE jpwebdynamicform_attroles
+(
+  messageid character varying(16) NOT NULL,
+  attrname character varying(30) NOT NULL,
+  rolename character varying(50) NOT NULL,
+  CONSTRAINT jpwebdynamicform_attroles_fkey FOREIGN KEY (messageid)
+      REFERENCES jpwebdynamicform_messages (messageid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+-- for "Web Dynamic Form" plugin - End
+
+
+-- for "jpsurvey" plugin - Start
+ALTER TABLE jpsurvey ADD COLUMN checkusername smallint;
+update jpsurvey SET checkusername = 0;
+ALTER TABLE jpsurvey ALTER COLUMN checkusername SET NOT NULL;
+-- for "jpsurvey" plugin - End
+
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIGURATION','it','Configura il profile');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIGURATION','en','Edit profile');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIRM_NEWPASS','it','Conferma nuova password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CONFIRM_NEWPASS','en','Confirm new password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPASSWORD','it','Modifica Password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPASSWORD','en','Edit Password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPASSWORD_TITLE','it','Modifica Password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPASSWORD_TITLE','en','Edit Password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPROFILE_TITLE','it','Modifica profilo');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_EDITPROFILE_TITLE','en','Edit Profile');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEUP','it','Sposta su');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEUP','en','Move up');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEUP_IN','it','Sposta su in posizione');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEUP_IN','en','Move at position');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN','it','Sposta giu');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN','en','Move down');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN_IN','it','Sposta giu in posizione');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_MOVEDOWN_IN','en','Move down at position');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','it','Rimuovi dalla lista');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ITEM_REMOVE','en','Remove from list');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_MESSAGE_TITLE_FIELDERRORS','it','Attenzione, si sono verificati i seguenti errori nella compilazione del modulo');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_MESSAGE_TITLE_FIELDERRORS','en','Warning, please check the module');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_NEWPASS','it','Nuova password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_NEWPASS','en','New password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_OLDPASSWORD','it','Vecchia password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_OLDPASSWORD','en','Old password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PASSWORD_UPDATED','it','La password è stata aggiornata correttamente.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PASSWORD_UPDATED','en','Your password updated successfully.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN','it','E'' necessario effettuare l''accesso');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN','en','Please login');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN_AGAIN','it','E'' necessario riloggarsi.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN_AGAIN','en','Please logout and login again.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN_TO_EDIT_PASSWORD','it','E'' necessario effettuare l''accesso per cambiare la password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PLEASE_LOGIN_TO_EDIT_PASSWORD','en','Please login in order to change your password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PROFILE_UPDATED','it','Profilo aggiornato correttamente.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_PROFILE_UPDATED','en','Your profile is now updated.');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_SAVE_PASSWORD','it','Salva password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_SAVE_PASSWORD','en','Save password');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_SAVE_PROFILE','it','Salva il profilo');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_SAVE_PROFILE','en','Save profile');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ADDITEM_LIST','it','Aggiungi nuovo elemento alla lista');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ADDITEM_LIST','en','Add an element to the list');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_YES','it','Si');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_YES','en','Yes');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_NO','it','No');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_NO','en','No');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_BOTH_YES_AND_NO','it','Indifferente');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_BOTH_YES_AND_NO','en','Both');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MANDATORY_SHORT', 'it', '*');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MANDATORY_SHORT', 'en', '*');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MANDATORY_FULL', 'it', 'Obbligatorio');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MANDATORY_FULL', 'en', 'Mandatory');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MINLENGTH_SHORT', 'it', 'Min');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MINLENGTH_SHORT', 'en', 'Min');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MINLENGTH_FULL', 'it', 'Lunghezza Minima');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MINLENGTH_FULL', 'en', 'Minimum length');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_SHORT', 'it', 'Max');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_SHORT', 'en', 'Max');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_FULL', 'it', 'Lunghezza Massima');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_ENTITY_ATTRIBUTE_MAXLENGTH_FULL', 'en', 'Maximum length');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CURRENT_USER_WITHOUT_PROFILE', 'it', 'Utente corrente senza profilo');
+INSERT INTO localstrings (keycode, langcode, stringvalue) VALUES ('userprofile_CURRENT_USER_WITHOUT_PROFILE', 'en', 'Current user without profile');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_KEY','en','Key');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_KEY','it','Id');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARENT_API','en','Parent API');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARENT_API','it','API Padre');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_AUTHORIZATION','en','Authorization');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_AUTHORIZATION','it','Autorizzazione');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_AUTH_FREE','en','Free');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_AUTH_FREE','it','Accesso Libero');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_URI','en','URI');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_URI','it','URI');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARAMETERS','en','Parameters');
+INSERT INTO localstrings(keycode, langcode, stringvalue) VALUES ('ENTANDO_API_SERVICE_PARAMETERS','it','Parametri');
+
+
 
 -- transition from 'showlets' to 'widgets' - Start
 ALTER TABLE showletcatalog RENAME TO widgetcatalog;
-ALTER TABLE showletconfig RENAME showletcode TO widgetcode;
+ALTER TABLE showletconfig RENAME COLUMN showletcode TO widgetcode;
 ALTER TABLE showletconfig RENAME TO widgetconfig;
 
-ALTER TABLE widgetconfig RENAME COLUMN showletcode to widgetcode;
-
 UPDATE sysconfig SET config = replace(config, '</SpecialPages>', '</SpecialPages>
-	<FeaturesOnDemand>
-		<Param name="groupsOnDemand">false</Param>
-		<Param name="categoriesOnDemand">false</Param>
-		<Param name="contentTypesOnDemand">false</Param>
-		<Param name="contentModelsOnDemand">false</Param>
-		<Param name="apisOnDemand">false</Param>
-		<Param name="resourceArchivesOnDemand">false</Param>
-	</FeaturesOnDemand>') WHERE item = 'params';
+  <FeaturesOnDemand>
+    <Param name="groupsOnDemand">false</Param>
+    <Param name="categoriesOnDemand">false</Param>
+    <Param name="contentTypesOnDemand">false</Param>
+    <Param name="contentModelsOnDemand">false</Param>
+    <Param name="apisOnDemand">false</Param>
+    <Param name="resourceArchivesOnDemand">false</Param>
+
+  </FeaturesOnDemand>') WHERE item = 'params';
+
+UPDATE sysconfig SET config = replace(config, '<Param name="startLangFromBrowser">false</Param>', '<Param name="startLangFromBrowser">false</Param>
+  <Param name="firstTimeMessages">true</Param>') WHERE item = 'params';
 
 
 --- Bundle widgets rename // start ---
@@ -179,39 +329,40 @@ UPDATE pagemodels SET frames = replace(frames, 'jpuserprofile_editCurrentUser_pr
 -- IF "User Profile" plugin NOT installed:
 INSERT INTO sysconfig (version, item, descr, config) values ('production', 'userProfileTypes', 'User Profile Types Definitions', '<?xml version="1.0" encoding="UTF-8"?>
 <profiletypes>
-	<profiletype typecode="PFL" typedescr="Default user profile">
-		<attributes>
-			<attribute name="fullname" attributetype="Monotext" searcheable="true">
-				<validations>
-					<required>true</required>
-				</validations>
-				<roles>
-					<role>userprofile:fullname</role>
-				</roles>
-			</attribute>
-			<attribute name="email" attributetype="Monotext" searcheable="true">
-				<validations>
-					<required>true</required>
-					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
-				</validations>
-				<roles>
-					<role>userprofile:email</role>
-				</roles>
-			</attribute>
-		</attributes>
-	</profiletype>
+  <profiletype typecode="PFL" typedescr="Default user profile">
+    <attributes>
+      <attribute name="fullname" attributetype="Monotext" searcheable="true">
+        <validations>
+          <required>true</required>
+        </validations>
+        <roles>
+          <role>userprofile:fullname</role>
+        </roles>
+      </attribute>
+      <attribute name="email" attributetype="Monotext" searcheable="true">
+        <validations>
+          <required>true</required>
+          <regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
+        </validations>
+        <roles>
+          <role>userprofile:email</role>
+        </roles>
+      </attribute>
+    </attributes>
+  </profiletype>
 </profiletypes>');
 
 -- for "User Profile" plugin - END
 
-
-```
-
-```sql
+-- sql - serv database
 
 INSERT INTO authpermissions (permissionname, descr) VALUES ('viewUsers', 'View Users and Profiles');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUsers', 'User Editing');
 INSERT INTO authpermissions (permissionname, descr) VALUES ('editUserProfile', 'User Profile Editing');
+
+INSERT INTO authuserprofiles (username, profiletype, profilexml, publicprofile) VALUES ('admin', 'PFL', '<?xml version="1.0" encoding="UTF-8"?>
+<profile id="admin" typecode="PFL" typedescr="Default user profile"><descr /><groups /><categories /><attributes><attribute name="fullname" attributetype="Monotext" /><attribute name="email" attributetype="Monotext" /></attributes></profile>
+', 0);
 
 CREATE TABLE actionlogrecords
 (
@@ -253,6 +404,8 @@ CREATE TABLE authuserprofiles (
   CONSTRAINT authuserprofiles_pkey PRIMARY KEY (username )
 );
 
+
+
 CREATE TABLE authuserprofilesearch (
   username character varying(40) NOT NULL,
   attrname character varying(30) NOT NULL,
@@ -261,7 +414,7 @@ CREATE TABLE authuserprofilesearch (
   numvalue integer,
   langcode character varying(3),
   CONSTRAINT authuserprofilesearch_fkey FOREIGN KEY (username)
-      REFERENCES authuserprofiles (username);
+      REFERENCES authuserprofiles (username)
 );
 
 CREATE TABLE authuserprofileattrroles (
@@ -269,12 +422,144 @@ CREATE TABLE authuserprofileattrroles (
   attrname character varying(30) NOT NULL,
   rolename character varying(50) NOT NULL,
   CONSTRAINT authuserprofileattrroles_fkey FOREIGN KEY (username)
-      REFERENCES authuserprofiles (username);
+      REFERENCES authuserprofiles (username)
 );
 -- for "User Profile" plugin - END
 
+-- actionlogrecords - START
+INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (1, 'admin', '2013-09-27 10:58:38', '/do/Page', 'save', 'selectedNode=service
+model=service
+strutsAction=1
+extraGroupName=free
+charset=
+parentPageCode=service
+defaultShowlet=true
+copyPageCode=
+langit=Accedi
+groupSelectLock=false
+langen=Sign In
+group=free
+mimeType=
+pageCode=sign_in
+', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<activityStreamInfo>
+    <objectTitles>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">en</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Sign In</value>
+        </entry>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">it</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Accedi</value>
+        </entry>
+    </objectTitles>
+    <groups>
+        <group>free</group>
+    </groups>
+    <actionType>1</actionType>
+    <linkNamespace>/do/Page</linkNamespace>
+    <linkActionName>edit</linkActionName>
+    <linkParameters>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">selectedNode</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">sign_in</value>
+        </entry>
+    </linkParameters>
+    <linkAuthPermission>managePages</linkAuthPermission>
+    <linkAuthGroup>free</linkAuthGroup>
+</activityStreamInfo>
+');
+
+INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (2, 'admin', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
+model=service
+strutsAction=1
+extraGroupName=free
+charset=
+parentPageCode=service
+defaultShowlet=true
+copyPageCode=
+langit=Pagina non trovata
+groupSelectLock=false
+langen=Page not found
+group=free
+mimeType=
+pageCode=notfound
+', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<activityStreamInfo>
+    <objectTitles>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">en</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Page not found</value>
+        </entry>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">it</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Pagina non trovata</value>
+        </entry>
+    </objectTitles>
+    <groups>
+        <group>free</group>
+    </groups>
+    <actionType>1</actionType>
+    <linkNamespace>/do/Page</linkNamespace>
+    <linkActionName>edit</linkActionName>
+    <linkParameters>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">selectedNode</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">notfound</value>
+        </entry>
+    </linkParameters>
+    <linkAuthPermission>managePages</linkAuthPermission>
+    <linkAuthGroup>free</linkAuthGroup>
+</activityStreamInfo>
+');
+
+
+
+INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (3, 'admin', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
+model=service
+strutsAction=1
+extraGroupName=free
+charset=
+parentPageCode=service
+defaultShowlet=true
+copyPageCode=
+langit=Errore di Sistema
+groupSelectLock=false
+langen=System Error
+group=free
+mimeType=
+pageCode=errorpage
+', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<activityStreamInfo>
+    <objectTitles>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">en</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">System Error</value>
+        </entry>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">it</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">Errore di Sistema</value>
+        </entry>
+    </objectTitles>
+    <groups>
+        <group>free</group>
+    </groups>
+    <actionType>1</actionType>
+    <linkNamespace>/do/Page</linkNamespace>
+    <linkActionName>edit</linkActionName>
+    <linkParameters>
+        <entry>
+            <key xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">selectedNode</key>
+            <value xsi:type="xs:string" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">errorpage</value>
+        </entry>
+    </linkParameters>
+    <linkAuthPermission>managePages</linkAuthPermission>
+    <linkAuthGroup>free</linkAuthGroup>
+</activityStreamInfo>
+');
+
+INSERT INTO actionlogrelations (recordid, refgroup) VALUES (1, 'free');
+INSERT INTO actionlogrelations (recordid, refgroup) VALUES (2, 'free');
+INSERT INTO actionlogrelations (recordid, refgroup) VALUES (3, 'free');
+
 ```
-
-
-
-
