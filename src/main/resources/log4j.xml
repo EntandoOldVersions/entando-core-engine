@@ -1,9 +1,10 @@
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" >
 	<appender name="async" class="org.apache.log4j.AsyncAppender">
-		<appender-ref ref="console" />
 		<!-- <appender-ref ref="socket" /> -->
 		<param name="Blocking" value="false" />
 		<param name="bufferSize" value="256" />
+		<appender-ref ref="console" />
 	</appender>
 
 <!-- uncomment this appender and uncomment the ref into the async appender to enable remote logging
