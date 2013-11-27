@@ -40,6 +40,10 @@
 			<value><![CDATA[fullDate;longDate;mediumDate;shortDate;getFormattedDate(\"<DATE_PATTERN>\")]]></value>
 		</entry>
 		<entry>
+			<key><value>Timestamp</value></key>
+			<value><![CDATA[fullDate;longDate;mediumDate;shortDate;getFormattedDate(\"<DATE_PATTERN>\")]]></value>
+		</entry>
+		<entry>
 			<key><value>Number</value></key>
 			<value><![CDATA[number;value]]></value>
 		</entry>
