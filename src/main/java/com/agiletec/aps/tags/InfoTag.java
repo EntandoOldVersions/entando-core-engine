@@ -106,7 +106,7 @@ public class InfoTag extends OutSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		if (null == this._info) {
-			ApsSystemUtils.getLogger().error("Null information - key '" + this.getKey() + "' - parameter '" + this.getParamName() + "'");
+			ApsSystemUtils.getLogger().debug("Null information - key '" + this.getKey() + "' - parameter '" + this.getParamName() + "'");
 			return super.doEndTag();
 		}
 		if (this._varName != null) {
