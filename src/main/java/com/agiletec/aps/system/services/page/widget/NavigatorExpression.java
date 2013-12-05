@@ -62,8 +62,8 @@ public class NavigatorExpression {
 		this.buildPageSpecFields(components);
 		this.buildOperatorsFields(components);
 	}
-
-	private void buildPageSpecFields(String[] components) {
+	
+	protected void buildPageSpecFields(String[] components) {
 		String pageSpec = components[0].trim();
 		if (pageSpec.startsWith(SPEC_CURRENT_PAGE_CODE)) {
 			this.setSpecId(SPEC_CURRENT_PAGE_ID);
@@ -85,8 +85,8 @@ public class NavigatorExpression {
 			}
 		}
 	}
-
-	private void buildOperatorsFields(String[] components) {
+	
+	protected void buildOperatorsFields(String[] components) {
 		if (components.length > 1) {
 			String operator = components[1].trim();
 			if (operator.startsWith(OPERATOR_CHILDREN_CODE)) {
@@ -102,7 +102,7 @@ public class NavigatorExpression {
 			}
 		}
 	}
-
+	
 	private String extractParam(String pageSpec){
 		String param = null;
 		int p1 = pageSpec.indexOf('(');
@@ -112,7 +112,7 @@ public class NavigatorExpression {
 		}
 		return param;
 	}
-
+	
 	/**
 	 * Crea la stringa rappresentazione dell'espressione. 
 	 */
@@ -152,7 +152,7 @@ public class NavigatorExpression {
 			throw new RuntimeException("Specification identifier '" + specId+"' not recognized");
 		}
 	}
-
+	
 	/**
 	 * Crea la porzione di espressione relativa all'operatore.
 	 * @param buffer Il buffer iniziale.
