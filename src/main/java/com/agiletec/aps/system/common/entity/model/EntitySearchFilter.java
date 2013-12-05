@@ -17,15 +17,6 @@
 */
 package com.agiletec.aps.system.common.entity.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -35,7 +26,16 @@ import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
-import java.util.*;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * This class implements a filter to search among entities.
@@ -90,6 +90,13 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		}
 	}
 	
+	public EntitySearchFilter(String key, boolean isAttributeFilter, Object value, boolean useLikeOption, LikeOptionType likeOptionType) {
+		this(key, isAttributeFilter, value, useLikeOption);
+		if (this.isLikeOption()) {
+			this.setLikeOptionType(likeOptionType);
+		}
+	}
+	
 	/**
 	 * Filter constructor.
 	 * This constructor is used when filtering by a range of values; this can applied to both
@@ -132,6 +139,13 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		this.setLikeOption(useLikeOption);
 	}
 	
+	public EntitySearchFilter(String key, boolean isAttributeFilter, List<T> allowedValues, boolean useLikeOption, LikeOptionType likeOptionType) {
+		this(key, isAttributeFilter, allowedValues, useLikeOption);
+		if (this.isLikeOption()) {
+			this.setLikeOptionType(likeOptionType);
+		}
+	}
+	
 	public static EntitySearchFilter createRoleFilter(String roleName) {
 		EntitySearchFilter filter = new EntitySearchFilter();
 		filter.setAttributeFilter(true);
@@ -159,6 +173,14 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		return filter;
 	}
 	
+	public static <T> EntitySearchFilter createRoleFilter(String roleName, Object value, boolean useLikeOption, LikeOptionType likeOptionType) {
+		EntitySearchFilter filter = EntitySearchFilter.createRoleFilter(roleName, value, useLikeOption);
+		if (filter.isLikeOption()) {
+			filter.setLikeOptionType(likeOptionType);
+		}
+		return filter;
+	}
+	
 	public static EntitySearchFilter createRoleFilter(String roleName, Object start, Object end) {
 		EntitySearchFilter filter = new EntitySearchFilter();
 		filter.setAttributeFilter(true);
@@ -177,6 +199,14 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		filter.setRoleName(roleName);
 		filter.setAllowedValues(allowedValues);
 		filter.setLikeOption(useLikeOption);
+		return filter;
+	}
+	
+	public static <T> EntitySearchFilter createRoleFilter(String roleName, List<T> allowedValues, boolean useLikeOption, LikeOptionType likeOptionType) {
+		EntitySearchFilter filter = EntitySearchFilter.createRoleFilter(roleName, allowedValues, useLikeOption);
+		if (filter.isLikeOption()) {
+			filter.setLikeOptionType(likeOptionType);
+		}
 		return filter;
 	}
 	
@@ -386,12 +416,27 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		Object objectEnd = getDataObject(end, dataType);
 		String likeOptionString = props.getProperty(LIKE_OPTION_PARAM);
 		boolean likeOption = (null != likeOptionString) ? Boolean.parseBoolean(likeOptionString) : false;
+		String likeOptionTypeString = props.getProperty(LIKE_OPTION_TYPE_PARAM);
+		LikeOptionType likeOptionType = LikeOptionType.COMPLETE;
+		if (null != likeOptionTypeString) {
+			try {
+				likeOptionType = Enum.valueOf(LikeOptionType.class, likeOptionTypeString.trim().toUpperCase());
+			} catch (Throwable t) {
+				ApsSystemUtils.logThrowable(t, EntitySearchFilter.class, "setValues", "Error parsing 'like option type' parameter");
+			}
+		}
 		if (objectValue != null) {
 			filter.setValue(objectValue);
 			filter.setLikeOption(likeOption);
+			if (filter.isLikeOption()) {
+				filter.setLikeOptionType(likeOptionType);
+			}
 		} else if (objectAllowedValues != null) {
 			filter.setAllowedValues(objectAllowedValues);
 			filter.setLikeOption(likeOption);
+			if (filter.isLikeOption()) {
+				filter.setLikeOptionType(likeOptionType);
+			}
 		} else if ((null != objectStart) || (null != objectEnd)) {
 			filter.setStart(objectStart);
 			filter.setEnd(objectEnd);
@@ -480,6 +525,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 	public static final String ALLOWED_VALUES_PARAM = "allowedValues";
 	public static final String ALLOWED_VALUES_SEPARATOR = ",";
 	public static final String LIKE_OPTION_PARAM = "likeOption";
+	public static final String LIKE_OPTION_TYPE_PARAM = "likeOptionType";
 	public static final String LANG_PARAM = "lang";
 	public static final String START_PARAM = "start";
 	public static final String END_PARAM = "end";

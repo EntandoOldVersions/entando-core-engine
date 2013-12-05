@@ -72,6 +72,9 @@ public class BaseFilterUtils {
         props.setProperty(EntitySearchFilter.KEY_PARAM, bean.getKey());
         props.setProperty(EntitySearchFilter.FILTER_TYPE_PARAM, String.valueOf(bean.isAttributeFilter()));
         props.setProperty(EntitySearchFilter.LIKE_OPTION_PARAM, String.valueOf(bean.getLikeOption()));
+		if (null != bean.getLikeOptionType()) {
+			props.setProperty(EntitySearchFilter.LIKE_OPTION_TYPE_PARAM, String.valueOf(bean.getLikeOptionType()));
+		}
         if (null != bean.getValue()) {
             props.setProperty(EntitySearchFilter.VALUE_PARAM, bean.getValue());
         }
@@ -102,7 +105,7 @@ public class BaseFilterUtils {
     }
     
     public String getFilterParam(EntitySearchFilter[] filters) {
-        StringBuffer param = new StringBuffer("");
+        StringBuilder param = new StringBuilder("");
         for (int i = 0; i < filters.length; i++) {
             if (i != 0) {
                 param.append("+");
@@ -116,7 +119,7 @@ public class BaseFilterUtils {
     }
     
     public static String getToStringFilterParam(List<Properties> properties, String separator) {
-        StringBuffer param = new StringBuffer("");
+        StringBuilder param = new StringBuilder("");
         for (int i = 0; i < properties.size(); i++) {
             if (i != 0) {
                 param.append("+");
@@ -131,7 +134,7 @@ public class BaseFilterUtils {
     }
     
     private static String createElement(Properties props, String separator) {
-        StringBuffer param = new StringBuffer();
+        StringBuilder param = new StringBuilder();
         Iterator<Object> keys = props.keySet().iterator();
         boolean init = true;
         while (keys.hasNext()) {

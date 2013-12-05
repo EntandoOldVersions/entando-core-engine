@@ -30,8 +30,7 @@ import java.util.List;
 
 /**
  * Utility Class for searching operation on db.
- * This class presents utility method for searching on db table throw 
- * Field search filter.
+ * This class presents utility method for searching on db table throw Field search filter.
  * @author E.Santoboni
  */
 public abstract class AbstractSearcherDAO extends AbstractDAO {
@@ -95,13 +94,13 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			String fieldName = this.getTableFieldName(filter.getKey());
 			String value = result.getString(fieldName);
 			if (null != filter.getValue()) {
-				verify = this.checkText((String)filter.getValue(), value);
+				verify = this.checkText((String)filter.getValue(), value, filter.getLikeOptionType());
 				if (!verify) {
 					break;
 				}
 			} else if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {
 				List<Object> allowedValues = filter.getAllowedValues();
-				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues);
+				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues, filter.getLikeOptionType());
 				if (!verify) {
 					break;
 				}
@@ -110,11 +109,17 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 		return verify;
 	}
 	
+	@Deprecated
 	protected boolean verifyLikeAllowedValuesFilter(String extractedValue, List<Object> allowedValues) {
+		return this.verifyLikeAllowedValuesFilter(extractedValue, allowedValues, FieldSearchFilter.LikeOptionType.COMPLETE);
+	}
+	
+	protected boolean verifyLikeAllowedValuesFilter(String extractedValue, 
+			List<Object> allowedValues, FieldSearchFilter.LikeOptionType likeOptionType) {
 		boolean verify = false;
 		for (int j = 0; j < allowedValues.size(); j++) {
 			String allowedValue = (String) allowedValues.get(j);
-			verify = this.checkText(allowedValue, extractedValue);
+			verify = this.checkText(allowedValue, extractedValue, likeOptionType);
 			if (verify) {
 				break;
 			}
@@ -123,22 +128,48 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	}
 	
 	/**
-	 * This utility method checks if the given Text matches or is contained inside
-	 * another one.
+	 * This utility method checks if the given Text matches or is contained inside another one.
 	 * @param insertedText The text to look for
 	 * @param text The text to search in
 	 * @return True if an occurrence of 'insertedText' is found in 'text'.
+	 * @deprecated use checkText(String insertedText, String text)
 	 */
 	protected boolean checkText(String insertedText, String text) {
-		if (this.isForceCaseInsensitiveLikeSearch() 
-				&& (null == insertedText || insertedText.trim().length() == 0 
-						|| (null != text && text.toLowerCase().indexOf(insertedText.trim().toLowerCase()) != -1))) {
+		return this.checkText(insertedText, text, FieldSearchFilter.LikeOptionType.COMPLETE);
+	}
+	
+	/**
+	 * This utility method checks if the given Text matches or is contained inside another one, depends on the like option type.
+	 * @param insertedText The text to look for
+	 * @param text The text to search in
+	 * @param likeOptionType The like option type. It can be COMPLETE, RIGHT or LEFT
+	 * @return True if an occurrence of 'insertedText' is found in 'text', depends on the like option type.
+	 */
+	protected boolean checkText(String insertedText, String text, FieldSearchFilter.LikeOptionType likeOptionType) {
+		if (this.isForceTextCaseSearch() && (null == insertedText || insertedText.trim().length() == 0)) {
 			return true;
 		}
-		if (this.isForceCaseSensitiveLikeSearch() 
-				&& (null == insertedText || insertedText.trim().length() == 0 
-						|| (null != text && text.indexOf(insertedText.trim()) != -1))) {
-			return true;
+		if (null == text) {
+			return false;
+		}
+		FieldSearchFilter.LikeOptionType lot = (null != likeOptionType) ? likeOptionType : FieldSearchFilter.LikeOptionType.COMPLETE;
+		if (this.isForceCaseInsensitiveLikeSearch()) {
+				//&& (null != text && text.toLowerCase().indexOf(insertedText.trim().toLowerCase()) != -1)) {
+			String textToCompare = text.toLowerCase();
+			String insertedTextToCompare = insertedText.trim().toLowerCase();
+			if ((lot.equals(FieldSearchFilter.LikeOptionType.COMPLETE) && textToCompare.indexOf(insertedTextToCompare) != -1) 
+					|| (lot.equals(FieldSearchFilter.LikeOptionType.LEFT) && textToCompare.endsWith(insertedTextToCompare))
+					|| (lot.equals(FieldSearchFilter.LikeOptionType.RIGHT) && textToCompare.startsWith(insertedTextToCompare))) {
+				return true;
+			}
+		}
+		if (this.isForceCaseSensitiveLikeSearch()) {
+				//&& (null != text && text.indexOf(insertedText.trim()) != -1)) {
+			if ((lot.equals(FieldSearchFilter.LikeOptionType.COMPLETE) && text.indexOf(insertedText) != -1) 
+					|| (lot.equals(FieldSearchFilter.LikeOptionType.LEFT) && text.endsWith(insertedText))
+					|| (lot.equals(FieldSearchFilter.LikeOptionType.RIGHT) && text.startsWith(insertedText))) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -199,7 +230,7 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 				this.addObjectSearchStatementBlock(stat, ++index, allowedValue, filter.isLikeOption());
 			}
 		} else if (filter.getValue() != null) {
-			this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.getValueDateDelay(), filter.isLikeOption());
+			this.addObjectSearchStatementBlock(stat, ++index, filter.getValue(), filter.getValueDateDelay(), filter.isLikeOption(), filter.getLikeOptionType());
 		} else {
 			if (null != filter.getStart()) {
 				this.addObjectSearchStatementBlock(stat, ++index, filter.getStart(), filter.getStartDateDelay(), false);
@@ -213,14 +244,27 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 	
 	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
 			Object object, boolean isLikeOption) throws SQLException {
-		this.addObjectSearchStatementBlock(stat, index, object, null, isLikeOption);
+		this.addObjectSearchStatementBlock(stat, index, object, null, isLikeOption, null);
 	}
 	
 	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
 			Object object, Integer dateDelay, boolean isLikeOption) throws SQLException {
+		this.addObjectSearchStatementBlock(stat, index, object, dateDelay, isLikeOption, null);
+	}
+	
+	protected void addObjectSearchStatementBlock(PreparedStatement stat, int index,
+			Object object, Integer dateDelay, boolean isLikeOption, FieldSearchFilter.LikeOptionType likeOptionType) throws SQLException {
 		if (object instanceof String) {
 			if (isLikeOption) {
-				stat.setString(index, "%" + ((String) object) + "%");
+				String parameter = null;
+				if (null == likeOptionType || likeOptionType.equals(FieldSearchFilter.LikeOptionType.COMPLETE)) {
+					parameter = "%" + ((String) object) + "%";
+				} else if (likeOptionType.equals(FieldSearchFilter.LikeOptionType.LEFT)) {
+					parameter = "%" + ((String) object);
+				} else if (likeOptionType.equals(FieldSearchFilter.LikeOptionType.RIGHT)) {
+					parameter = ((String) object) + "%";
+				}
+				stat.setString(index, parameter);
 			} else {
 				stat.setString(index, (String) object);
 			}
@@ -237,8 +281,7 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 				Date data = calendar.getTime();
 				stat.setDate(index, new java.sql.Date(data.getTime()));
 			}
-		}
-		else if (object instanceof BigDecimal) {
+		} else if (object instanceof BigDecimal) {
 			stat.setBigDecimal(index, (BigDecimal) object);
 		} else if (object instanceof Boolean) {
 			stat.setString(index, ((Boolean) object).toString());

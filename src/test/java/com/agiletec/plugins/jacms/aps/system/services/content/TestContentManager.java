@@ -27,6 +27,7 @@ import java.util.Map;
 import com.agiletec.aps.BaseTestCase;
 
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
@@ -43,6 +44,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ResourceAttributeInterface;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
 
 /**
  * @author M. Morini - E.Santoboni
@@ -55,7 +59,7 @@ public class TestContentManager extends BaseTestCase {
 		this.init();
     }
 	
-	public void testSearchContents_1() throws Throwable {
+	public void testSearchContents_1_1() throws Throwable {
 		List<String> contentIds = this._contentManager.searchId(null);
 		assertNotNull(contentIds);
     	assertEquals(24, contentIds.size());
@@ -66,21 +70,46 @@ public class TestContentManager extends BaseTestCase {
     	EntitySearchFilter[] filters1 = {creationOrder, descrFilter};
     	contentIds = this._contentManager.searchId(filters1);
 		assertNotNull(contentIds);
-    	String[] expected1 = {"RAH101", "ART102", "EVN103", 
-    			"ART104", "ART111", "ART112", "ART120", "ART121", "ART122"};
+    	String[] expected1 = {"RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "ART120", "ART121", "ART122"};
     	assertEquals(expected1.length, contentIds.size());
     	this.verifyOrder(contentIds, expected1);
-    	
+		
     	EntitySearchFilter lastEditorFilter = new EntitySearchFilter(IContentManager.CONTENT_LAST_EDITOR_FILTER_KEY, false, "admin", true);
     	EntitySearchFilter[] filters2 = {creationOrder, descrFilter, lastEditorFilter};
     	contentIds = this._contentManager.searchId(filters2);
 		assertNotNull(contentIds);
     	assertEquals(expected1.length, contentIds.size());
     	this.verifyOrder(contentIds, expected1);
-    	
+		
+		descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "Cont", true, FieldSearchFilter.LikeOptionType.RIGHT);
+    	EntitySearchFilter[] filters3 = {creationOrder, descrFilter};
+    	contentIds = this._contentManager.searchId(filters3);
+		System.out.println(contentIds);
+		assertNotNull(contentIds);
+    	String[] expected3 = expected1;
+    	assertEquals(expected3.length, contentIds.size());
+    	this.verifyOrder(contentIds, expected3);
+		
+		descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "Cont", true, FieldSearchFilter.LikeOptionType.LEFT);
+    	EntitySearchFilter[] filters4 = {creationOrder, descrFilter};
+    	contentIds = this._contentManager.searchId(filters4);
+		assertNotNull(contentIds);
+    	assertTrue(contentIds.isEmpty());
+		
+		descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "1", true, FieldSearchFilter.LikeOptionType.LEFT);
+    	EntitySearchFilter[] filters5 = {creationOrder, descrFilter};
+    	contentIds = this._contentManager.searchId(filters5);
+		assertNotNull(contentIds);
+		String[] expected5 = {"EVN191", "ART120"};
+    	assertEquals(expected5.length, contentIds.size());
+    	this.verifyOrder(contentIds, expected5);
+		
+	}
+    
+	public void testSearchContents_1_2() throws Throwable {
     	EntitySearchFilter versionFilter = new EntitySearchFilter(IContentManager.CONTENT_CURRENT_VERSION_FILTER_KEY, false, "0.", true);
     	EntitySearchFilter[] filters3 = {versionFilter};
-    	contentIds = this._contentManager.searchId(filters3);
+    	List<String> contentIds = this._contentManager.searchId(filters3);
 		assertNotNull(contentIds);
 		String[] expected2 = {"ART179"};
     	assertEquals(expected2.length, contentIds.size());
@@ -96,7 +125,7 @@ public class TestContentManager extends BaseTestCase {
 	/*
 	 * ATTENTION: invalid test on mysql db because the standard search with 'LIKE' clause is case insensitive
 	 */
-	public void testSearchContents_1_a() throws Throwable {
+	public void testSearchContents_1_3() throws Throwable {
 		EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
     	creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
 		EntitySearchFilter descrFilter_b = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "cont", true);
@@ -113,7 +142,7 @@ public class TestContentManager extends BaseTestCase {
     	assertEquals(0, contentIds.size());
 	}
 	
-	public void testSearchContents_1_b() throws Throwable {
+	public void testSearchContents_1_4() throws Throwable {
 		//forcing case insensitive search
     	WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
     	searcherDao.setForceCaseInsensitiveLikeSearch(true);
@@ -128,8 +157,7 @@ public class TestContentManager extends BaseTestCase {
     	EntitySearchFilter[] filters1 = {creationOrder, descrFilter};
     	contentIds = this._contentManager.searchId(filters1);
 		assertNotNull(contentIds);
-    	String[] expected1 = {"RAH101", "ART102", "EVN103", 
-    			"ART104", "ART111", "ART112", "ART120", "ART121", "ART122"};
+    	String[] expected1 = {"RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "ART120", "ART121", "ART122"};
     	assertEquals(expected1.length, contentIds.size());
     	this.verifyOrder(contentIds, expected1);
     	
@@ -141,7 +169,46 @@ public class TestContentManager extends BaseTestCase {
     	this.verifyOrder(contentIds, expected1);
 	}
 	
-	public void testSearchContents_1_c() throws Throwable {
+	public void testSearchContents_1_5() throws Throwable {
+		//forcing case insensitive search
+    	WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
+    	searcherDao.setForceCaseInsensitiveLikeSearch(true);
+    	
+    	EntitySearchFilter creationOrder = new EntitySearchFilter(IContentManager.CONTENT_CREATION_DATE_FILTER_KEY, false);
+    	creationOrder.setOrder(EntitySearchFilter.ASC_ORDER);
+    	EntitySearchFilter descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.COMPLETE);
+    	EntitySearchFilter[] filters1 = {creationOrder, descrFilter};
+    	List<String> contentIds = this._contentManager.searchId(filters1);
+		assertNotNull(contentIds);
+		String[] expected1 = {"ART1", "RAH1", "ART187", "RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120", "ART121", "ART122"};
+    	assertEquals(expected1.length, contentIds.size());
+    	this.verifyOrder(contentIds, expected1);
+    	
+		descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.RIGHT);
+    	EntitySearchFilter[] filters2 = {creationOrder, descrFilter};
+    	contentIds = this._contentManager.searchId(filters2);
+		assertNotNull(contentIds);
+    	String[] expected2 = {"RAH101", "ART102", "EVN103", "ART104", "ART111", "ART112", "EVN23", "ART120", "ART121", "ART122"};
+    	assertEquals(expected2.length, contentIds.size());
+    	this.verifyOrder(contentIds, expected2);
+		
+		EntitySearchFilter idFilter = new EntitySearchFilter(IContentManager.ENTITY_ID_FILTER_KEY, false, "1", true, FieldSearchFilter.LikeOptionType.LEFT);
+    	EntitySearchFilter[] filters3 = {creationOrder, descrFilter, idFilter};
+    	contentIds = this._contentManager.searchId(filters3);
+		assertNotNull(contentIds);
+    	String[] expected3 = {"RAH101", "ART111", "ART121"};
+    	assertEquals(expected3.length, contentIds.size());
+    	this.verifyOrder(contentIds, expected3);
+		
+		descrFilter = new EntitySearchFilter(IContentManager.CONTENT_DESCR_FILTER_KEY, false, "co", true, FieldSearchFilter.LikeOptionType.LEFT);
+    	EntitySearchFilter[] filters4 = {creationOrder, descrFilter};
+    	contentIds = this._contentManager.searchId(filters4);
+    	assertNotNull(contentIds);
+    	String[] expected4 = {};
+    	assertEquals(expected4.length, contentIds.size());
+	}
+	
+	public void testSearchContents_1_6() throws Throwable {
 		//forcing case sensitive search
     	WorkContentSearcherDAO searcherDao = (WorkContentSearcherDAO) this.getApplicationContext().getBean("jacmsWorkContentSearcherDAO");
     	searcherDao.setForceCaseSensitiveLikeSearch(true);

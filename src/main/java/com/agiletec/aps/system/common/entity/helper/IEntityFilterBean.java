@@ -29,6 +29,8 @@ public interface IEntityFilterBean {
     
     public boolean getLikeOption();
     
+    public String getLikeOptionType();
+    
     public String getValue();
     
     public String getStart();

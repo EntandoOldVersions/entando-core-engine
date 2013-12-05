@@ -137,13 +137,15 @@ public class ContentListUserFilterOptionTag extends TagSupport implements IEntit
 	@Override
 	public String getEnd() {return null;}
 	@Override
-	public boolean getLikeOption() {return false;}
-	@Override
 	public String getOrder() {return null;}
 	@Override
 	public String getStart() {return null;}
 	@Override
 	public String getValue() {return null;}
+	@Override
+	public boolean getLikeOption() {return false;}
+	@Override
+	public String getLikeOptionType() {return null;}
 	
 	private String _key;
 	private boolean _attributeFilter;

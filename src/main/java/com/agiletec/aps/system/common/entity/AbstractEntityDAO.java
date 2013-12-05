@@ -42,21 +42,31 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 	@Override
 	public void addEntity(IApsEntity entity) {
 		Connection conn = null;
-		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
+			this.executeAddEntity(entity, conn);
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error adding new entity", "addEntity");
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	
+	protected void executeAddEntity(IApsEntity entity, Connection conn) throws Throwable {
+		PreparedStatement stat = null;
+		try {
 			stat = conn.prepareStatement(this.getAddEntityRecordQuery());
 			this.buildAddEntityStatement(entity, stat);
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
 			this.addEntityAttributeRoleRecord(entity.getId(), entity, conn);
-			conn.commit();
 		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Error adding entity", "addEntity");
+			throw t;
 		} finally {
-			closeDaoResources(null, stat, conn);
+			this.closeDaoResources(null, stat);
 		}
 	}
 	
@@ -70,9 +80,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecordsByEntityId(entityId, this.getRemovingSearchRecordQuery(), conn);
-			this.deleteRecordsByEntityId(entityId, this.getRemovingAttributeRoleRecordQuery(), conn);
-			this.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
+			this.executeDeleteEntity(entityId, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			processDaoException(t, "Error deleting the entity by id", "deleteEntity");
@@ -81,15 +89,33 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		}
 	}
 	
+	protected void executeDeleteEntity(String entityId, Connection conn) throws Throwable {
+		this.deleteRecordsByEntityId(entityId, this.getRemovingSearchRecordQuery(), conn);
+		this.deleteRecordsByEntityId(entityId, this.getRemovingAttributeRoleRecordQuery(), conn);
+		this.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
+	}
+	
 	protected abstract String getDeleteEntityRecordQuery();
 	
 	@Override
 	public void updateEntity(IApsEntity entity) {
 		Connection conn = null;
-		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
+			this.executeUpdateEntity(entity, conn);
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Errore updating entity", "updateEntity");
+		} finally {
+			this.closeConnection(conn);
+		}
+	}
+	
+	protected void executeUpdateEntity(IApsEntity entity, Connection conn) throws Throwable {
+		PreparedStatement stat = null;
+		try {
 			this.deleteRecordsByEntityId(entity.getId(), this.getRemovingSearchRecordQuery(), conn);
 			this.deleteRecordsByEntityId(entity.getId(), this.getRemovingAttributeRoleRecordQuery(), conn);
 			stat = conn.prepareStatement(this.getUpdateEntityRecordQuery());
@@ -97,12 +123,10 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			stat.executeUpdate();
 			this.addEntitySearchRecord(entity.getId(), entity, conn);
 			this.addEntityAttributeRoleRecord(entity.getId(), entity, conn);
-			conn.commit();
 		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Errore updating entity", "updateEntity");
+			throw t;
 		} finally {
-			closeDaoResources(null, stat, conn);
+			this.closeDaoResources(null, stat);
 		}
 	}
 	
@@ -142,10 +166,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.deleteRecordsByEntityId(id, this.getRemovingSearchRecordQuery(), conn);
-			this.deleteRecordsByEntityId(id, this.getRemovingAttributeRoleRecordQuery(), conn);
-			this.addEntitySearchRecord(id, entity, conn);
-			this.addEntityAttributeRoleRecord(id, entity, conn);
+			this.executeReloadEntitySearchRecords(id, entity, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -155,10 +176,13 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		}
 	}
 	
-	/**
-	 * 'Utility' method.
-	 * Add a record in the 'contentSearch' table for every indexed attribute.
-	 */
+	protected void executeReloadEntitySearchRecords(String id, IApsEntity entity, Connection conn) throws Throwable {
+		this.deleteRecordsByEntityId(id, this.getRemovingSearchRecordQuery(), conn);
+		this.deleteRecordsByEntityId(id, this.getRemovingAttributeRoleRecordQuery(), conn);
+		this.addEntitySearchRecord(id, entity, conn);
+		this.addEntityAttributeRoleRecord(id, entity, conn);
+	}
+	
 	protected void addEntitySearchRecord(String id, IApsEntity entity, Connection conn) throws ApsSystemException {
 		PreparedStatement stat = null;
 		try {
@@ -228,10 +252,6 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		stat.executeBatch();
 	}
 	
-	/**
-	 * 'Utility' method.
-	 * Delete the records in the support table (the table used to perform search the entities)
-	 */
 	protected void deleteEntitySearchRecord(String id, Connection conn) throws ApsSystemException {
 		this.deleteRecordsByEntityId(id, this.getRemovingSearchRecordQuery(), conn);
 	}

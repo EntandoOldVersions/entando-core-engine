@@ -67,6 +67,13 @@ public class FieldSearchFilter<T> implements Serializable {
 		}
 	}
 	
+	public FieldSearchFilter(String key, Object value, boolean useLikeOption, LikeOptionType likeOptionType) {
+		this(key, value, useLikeOption);
+		if (this.isLikeOption()) {
+			this.setLikeOptionType(likeOptionType);
+		}
+	}
+	
 	/**
 	 * Filter constructor.
 	 * This constructor is used when filtering by a range of values.
@@ -100,6 +107,13 @@ public class FieldSearchFilter<T> implements Serializable {
 		this.setAllowedValues(allowedValues);
 		if (null != allowedValues && allowedValues.size() > 0 && (allowedValues.get(0) instanceof String)) {
 			this.setLikeOption(useLikeOption);			
+		}
+	}
+	
+	public FieldSearchFilter(String key, List<T> allowedValues, boolean useLikeOption, LikeOptionType likeOptionType) {
+		this(key, allowedValues, useLikeOption);
+		if (this.isLikeOption()) {
+			this.setLikeOptionType(likeOptionType);
 		}
 	}
 	
@@ -167,7 +181,9 @@ public class FieldSearchFilter<T> implements Serializable {
 	 * @param order The order used to sort results found applying the filter.
 	 */
 	public void setOrder(String order) {
-		if (null != order && !(order.equals(ASC_ORDER) || order.equals(DESC_ORDER))) {
+		if (null == order) {
+			return;
+		} else if (!(order.equals(ASC_ORDER) || order.equals(DESC_ORDER))) {
 			throw new RuntimeException("Error: the 'order' clause cannot be null and must be comparable using the constants ASC_ORDER or DESC_ORDER");
 		}
 		this._order = Enum.valueOf(Order.class, order);
@@ -195,6 +211,19 @@ public class FieldSearchFilter<T> implements Serializable {
 			throw new RuntimeException("Error: The 'like' clause cannot be applied on a null value or on a not string type");
 		}
 		this._likeOption = likeOption;
+		if (likeOption) {
+			this.setLikeOptionType(LikeOptionType.COMPLETE);
+		}
+	}
+	
+	public LikeOptionType getLikeOptionType() {
+		return _likeOptionType;
+	}
+	protected void setLikeOptionType(LikeOptionType likeOptionType) {
+		if (!this.isLikeOption()) {
+			throw new RuntimeException("Error: The 'like type' clause cannot be applied on a false value of 'like option'");
+		}
+		this._likeOptionType = likeOptionType;
 	}
 	
 	public boolean isNullOption() {
@@ -245,6 +274,7 @@ public class FieldSearchFilter<T> implements Serializable {
 	private Object _end;
 	
 	private boolean _likeOption;
+	private LikeOptionType _likeOptionType;
 	private boolean _nullOption;
 	
 	private List<T> _allowedValues;
@@ -257,5 +287,7 @@ public class FieldSearchFilter<T> implements Serializable {
 	public static final String DESC_ORDER = Order.DESC.toString();
 	
 	public enum Order {ASC, DESC}
+	
+	public enum LikeOptionType {COMPLETE, RIGHT, LEFT}
 	
 }

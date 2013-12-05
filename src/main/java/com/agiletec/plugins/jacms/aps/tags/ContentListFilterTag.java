@@ -23,6 +23,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -155,6 +156,7 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 	public String getStart() {
 		return _start;
 	}
+	
 	/**
 	 * Set the filter to restrict the result to the contents by attribute type or by the field specified 
 	 * with the key (<b>respect</b> the following matches):<br/>
@@ -180,6 +182,7 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 	public String getEnd() {
 		return _end;
 	}
+	
 	/**
 	 * Similar the the "start" attribute but with the opposite behaviour it
 	 * sets the upper limit of the filter
@@ -196,6 +199,7 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 	public String getOrder() {
 		return _order;
 	}
+	
 	/**
 	 * Specifies the sorting behaviour of the IDs found: "ASC"ending or "DESC"ending.
 	 * By default no ordering is performed.
@@ -204,6 +208,7 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 	public void setOrder(String order) {
 		this._order = order;
 	}
+	
 	@Override
 	public boolean getLikeOption() {
 		return this._likeOption;
@@ -218,6 +223,21 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 		this._likeOption = likeOption;
 	}
 	
+	@Override
+	public String getLikeOptionType() {
+		return _likeOptionType;
+	}
+	
+	/**
+	 * Toggles the 'like type' functionality. 
+	 * The option set 'likeOption' option on 'true' and it's available for metadata and on Text Content attributes.
+	 * @param likeOptionType Admitted values: (COMPLETE|RIGHT|LEFT).
+	 */
+	public void setLikeOptionType(String likeOptionType) {
+		this._likeOptionType = likeOptionType;
+		this.setLikeOption(true);
+	}
+	
 	private String _key;
 	private boolean _attributeFilter;
 	private String _value;
@@ -225,5 +245,6 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 	private String _end;
 	private String _order;
 	private boolean _likeOption;
+	private String _likeOptionType;
 	
 }

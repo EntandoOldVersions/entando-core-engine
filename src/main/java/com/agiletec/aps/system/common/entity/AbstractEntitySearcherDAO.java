@@ -149,13 +149,13 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			}
 			String value = result.getString(fieldName);
 			if (null != filter.getValue()) {
-				verify = this.checkText((String)filter.getValue(), value);
+				verify = this.checkText((String)filter.getValue(), value, filter.getLikeOptionType());
 				if (!verify) {
 					break;
 				}
 			} else if (filter.getAllowedValues() != null && filter.getAllowedValues().size() > 0) {
 				List<Object> allowedValues = filter.getAllowedValues();
-				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues);
+				verify = this.verifyLikeAllowedValuesFilter(value, allowedValues, filter.getLikeOptionType());
 				if (!verify) {
 					break;
 				}
@@ -264,7 +264,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		return query;
 	}
 	
-	private StringBuffer createMasterSelectQueryBlock(EntitySearchFilter[] filters, boolean selectAll) {
+	protected StringBuffer createMasterSelectQueryBlock(EntitySearchFilter[] filters, boolean selectAll) {
 		String masterTableName = this.getEntityMasterTableName();
 		StringBuffer query = new StringBuffer("SELECT ").append(masterTableName).append(".");
 		if (selectAll) {
@@ -293,7 +293,7 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 		return query;
 	}
 	
-	private void appendJoinSerchTableQueryBlock(EntitySearchFilter[] filters, StringBuffer query) {
+	protected void appendJoinSerchTableQueryBlock(EntitySearchFilter[] filters, StringBuffer query) {
 		if (filters == null) {
 			return;
 		}

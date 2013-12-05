@@ -77,25 +77,9 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	}
 	
 	@Override
-	public void addEntity(IApsEntity entity) {
-		Connection conn = null;
-		PreparedStatement stat = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(this.getAddEntityRecordQuery());
-			this.buildAddEntityStatement(entity, stat);
-			stat.executeUpdate();
-			this.addEntitySearchRecord(entity.getId(), entity, conn);
-			this.addWorkContentRelationsRecord((Content) entity, conn);
-			this.addContentAttributeRoleRecord(entity.getId(), entity, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Error adding new content", "addEntity");
-		} finally {
-			closeDaoResources(null, stat, conn);
-		}
+	protected void executeAddEntity(IApsEntity entity, Connection conn) throws Throwable {
+		super.executeAddEntity(entity, conn);
+		this.addWorkContentRelationsRecord((Content) entity, conn);
 	}
 	
 	@Override
@@ -120,28 +104,10 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	}
 	
 	@Override
-	public void updateEntity(IApsEntity entity) {
-		Connection conn = null;
-		PreparedStatement stat = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			this.deleteEntitySearchRecord(entity.getId(), conn);
-			this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
-			this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			stat = conn.prepareStatement(this.getUpdateEntityRecordQuery());
-			this.buildUpdateEntityStatement(entity, stat);
-			stat.executeUpdate();
-			this.addEntitySearchRecord(entity.getId(), entity, conn);
-			this.addWorkContentRelationsRecord((Content) entity, conn);
-			this.addContentAttributeRoleRecord(entity.getId(), entity, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			conn.commit();
-		} catch (Throwable t) {
-			this.executeRollback(conn);
-			processDaoException(t, "Errore updating content " + entity.getId(), "updateEntity");
-		} finally {
-			closeDaoResources(null, stat, conn);
-		}
+	protected void executeUpdateEntity(IApsEntity entity, Connection conn) throws Throwable {
+		this.deleteRecordsByEntityId(entity.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+		super.executeUpdateEntity(entity, conn);
+		this.addWorkContentRelationsRecord((Content) entity, conn);
 	}
 	
 	@Override
@@ -173,27 +139,30 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
-			super.deleteEntitySearchRecord(content.getId(), conn);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
-			this.updateContentRecordForInsertOnLine(content, conn);
-			this.addPublicContentSearchRecord(content.getId(), content, conn);
-			super.addEntitySearchRecord(content.getId(), content, conn);
-			this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
-			this.addWorkContentRelationsRecord(content, conn);
-			this.addContentRelationsRecord(content, conn);
-			this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
+			this.executeInsertOnLineContent(content, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in inserimento contenuto online - " + content.getId(),
-					"insertOnLineContent");
+			processDaoException(t, "Error publish content - " + content.getId(), "insertOnLineContent");
 		} finally {
 			this.closeConnection(conn);
 		}
+	}
+	
+	protected void executeInsertOnLineContent(Content content, Connection conn) throws Throwable {
+		super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
+		super.deleteEntitySearchRecord(content.getId(), conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
+		this.updateContentRecordForInsertOnLine(content, conn);
+		this.addPublicContentSearchRecord(content.getId(), content, conn);
+		super.addEntitySearchRecord(content.getId(), content, conn);
+		this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
+		this.addWorkContentRelationsRecord(content, conn);
+		this.addContentRelationsRecord(content, conn);
+		this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 	}
 	
 	@Deprecated
@@ -248,21 +217,25 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 			try {
 				conn = this.getConnection();
 				conn.setAutoCommit(false);
-				super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
-				super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
-				super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
-				this.addPublicContentSearchRecord(content.getId(), content, conn);
-				this.addContentRelationsRecord(content, conn);
-				this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
+				this.executeReloadPublicContentReferences(content, conn);
 				conn.commit();
 			} catch (Throwable t) {
 				this.executeRollback(conn);
-				processDaoException(t, "Errore in reloading references - Content " + content.getId(),
+				processDaoException(t, "Error reloading references - Content " + content.getId(),
 						"reloadPublicContentReferences");
 			} finally {
 				this.closeConnection(conn);
 			}
 		}
+	}
+	
+	protected void executeReloadPublicContentReferences(Content content, Connection conn) throws Throwable {
+		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
+		this.addPublicContentSearchRecord(content.getId(), content, conn);
+		this.addContentRelationsRecord(content, conn);
+		this.addContentAttributeRoleRecord(content.getId(), content, ADD_ATTRIBUTE_ROLE_RECORD, conn);
 	}
 	
 	/**
@@ -275,20 +248,24 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
-			super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			super.deleteEntitySearchRecord(content.getId(), conn);
-			super.addEntitySearchRecord(content.getId(), content, conn);
-			this.addWorkContentRelationsRecord(content, conn);
-			this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
+			this.executeReloadWorkContentReferences(content, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in reloading references - Content on work " + content.getId(),
+			processDaoException(t, "Errore in reloading references - Work Content " + content.getId(),
 					"reloadWorkContentReferences");
 		} finally {
 			this.closeConnection(conn);
 		}
+	}
+	
+	protected void executeReloadWorkContentReferences(Content content, Connection conn) throws Throwable {
+		super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_CONTENT_REL_RECORD, conn);
+		super.deleteRecordsByEntityId(content.getId(), DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
+		super.deleteEntitySearchRecord(content.getId(), conn);
+		super.addEntitySearchRecord(content.getId(), content, conn);
+		this.addWorkContentRelationsRecord(content, conn);
+		this.addContentAttributeRoleRecord(content.getId(), content, ADD_WORK_ATTRIBUTE_ROLE_RECORD, conn);
 	}
 	
 	/**
@@ -301,11 +278,11 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			this.removeOnLineContent(content, conn);
+			this.executeRemoveOnLineContent(content, conn);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in rimozione contenuto online - " + content.getId(),
+			processDaoException(t, "Error rimoving online content - " + content.getId(),
 				"removeOnLineContent");
 		} finally {
 			this.closeConnection(conn);
@@ -319,7 +296,7 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	 * @param conn the connection to the DB.
 	 * @throws ApsSystemException when connection errors to the database are detected.
 	 */
-	private void removeOnLineContent(Content content, Connection conn) throws ApsSystemException {
+	protected void executeRemoveOnLineContent(Content content, Connection conn) throws ApsSystemException {
 		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_SEARCH_RECORD, conn);
 		super.deleteRecordsByEntityId(content.getId(), DELETE_CONTENT_REL_RECORD, conn);
 		super.deleteRecordsByEntityId(content.getId(), DELETE_ATTRIBUTE_ROLE_RECORD, conn);
@@ -348,29 +325,14 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 	}
 	
 	@Override
-	public void deleteEntity(String entityId) {
-		Connection conn = null;
-		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
-			super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_SEARCH_RECORD, conn);
-			super.deleteEntitySearchRecord(entityId, conn);
-			super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_REL_RECORD, conn);
-			super.deleteRecordsByEntityId(entityId, DELETE_ATTRIBUTE_ROLE_RECORD, conn);
-			super.deleteRecordsByEntityId(entityId, DELETE_WORK_CONTENT_REL_RECORD, conn);
-			super.deleteRecordsByEntityId(entityId, DELETE_WORK_ATTRIBUTE_ROLE_RECORD, conn);
-			super.deleteRecordsByEntityId(entityId, this.getDeleteEntityRecordQuery(), conn);
-			conn.commit();
-		} catch (Throwable t) {
-			processDaoException(t, "Errore on delete entity by id", "deleteEntity");
-		} finally {
-			closeConnection(conn);
-		}
+	protected void executeDeleteEntity(String entityId, Connection conn) throws Throwable {
+		super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_SEARCH_RECORD, conn);
+		super.deleteRecordsByEntityId(entityId, DELETE_CONTENT_REL_RECORD, conn);
+		super.deleteRecordsByEntityId(entityId, DELETE_ATTRIBUTE_ROLE_RECORD, conn);
+		super.deleteRecordsByEntityId(entityId, DELETE_WORK_CONTENT_REL_RECORD, conn);
+		super.executeDeleteEntity(entityId, conn);
 	}
 	
-	/**
-	 * Service method.
-	 */
 	private void addCategoryRelationsRecord(Content content, boolean isPublicRelations, PreparedStatement stat) throws ApsSystemException {
 		if (content.getCategories().size()>0) {
 			try {
@@ -426,8 +388,8 @@ public class ContentDAO extends AbstractEntityDAO implements IContentDAO {
 				stat.addBatch();
 				stat.clearParameters();
 			}
-		} catch (Throwable e) {
-			processDaoException(e, "Errore in aggiunta record tabella contentrelations - " + content.getId(), 
+		} catch (Throwable t) {
+			processDaoException(t, "Errore in aggiunta record tabella contentrelations - " + content.getId(), 
 					"addGroupRelationsRecord");
 		}
 	}
