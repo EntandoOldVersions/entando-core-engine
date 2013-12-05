@@ -32,6 +32,7 @@ import org.xml.sax.InputSource;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -46,6 +47,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceHandler;
+import java.util.Arrays;
 
 /**
  * Servizio gestore tipi di risorse (immagini, audio, video, etc..).
@@ -117,7 +119,7 @@ public class ResourceManager extends AbstractService
     	}
     }
 	
-	private void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
+	protected void generateAndSetResourceId(ResourceInterface resource, String id) throws ApsSystemException {
 		if (null == id || id.trim().length() == 0) {
 			IKeyGeneratorManager keyGenerator = 
 					(IKeyGeneratorManager) this.getBeanFactory().getBean(SystemConstants.KEY_GENERATOR_MANAGER);
@@ -176,7 +178,7 @@ public class ResourceManager extends AbstractService
 		return resource;
 	}
 	
-	private void notifyResourceChanging(ResourceInterface resource) throws ApsSystemException {
+	protected void notifyResourceChanging(ResourceInterface resource) throws ApsSystemException {
 		ResourceChangedEvent event = new ResourceChangedEvent();
 		event.setResource(resource);
 		this.notifyEvent(event);
@@ -204,17 +206,46 @@ public class ResourceManager extends AbstractService
 	@Override
 	public List<String> searchResourcesId(String type, String text, 
 			String filename, String categoryCode, Collection<String> groupCodes) throws ApsSystemException {
-		if (null == groupCodes || groupCodes.size() == 0) return new ArrayList<String>();
-		List<String> resources = null;
+		if (null == groupCodes || groupCodes.isEmpty()) {
+			return new ArrayList<String>();
+		}
+		List<String> resourcesId = null;
     	try {
-    		resources = this.getResourceDAO().searchResourcesId(type, text, filename, categoryCode, groupCodes);
+    		resourcesId = this.getResourceDAO().searchResourcesId(type, text, filename, categoryCode, groupCodes);
     	} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
 			throw new ApsSystemException("Error extracting resources id", t);
     	}
-    	return resources;
+    	return resourcesId;
     }
     
+	@Override
+	public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes) throws ApsSystemException {
+		this.checkFilterKeys(filters);
+		List<String> resourcesId = null;
+    	try {
+    		resourcesId = this.getResourceDAO().searchResourcesId(filters, categoryCode, groupCodes);
+    	} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
+			throw new ApsSystemException("Error extracting resources id", t);
+    	}
+    	return resourcesId;
+	}
+    
+	protected void checkFilterKeys(FieldSearchFilter[] filters) {
+		if (null != filters && filters.length > 0) {
+			String[] allowedFilterKeys = {RESOURCE_ID_FILTER_KEY, RESOURCE_TYPE_FILTER_KEY, RESOURCE_DESCR_FILTER_KEY, 
+				RESOURCE_MAIN_GROUP_FILTER_KEY, RESOURCE_FILENAME_FILTER_KEY, RESOURCE_CREATION_DATE_FILTER_KEY, RESOURCE_MODIFY_DATE_FILTER_KEY};
+			List<String> allowedFilterKeysList = Arrays.asList(allowedFilterKeys);
+			for (int i = 0; i < filters.length; i++) {
+				FieldSearchFilter filter = filters[i];
+				if (!allowedFilterKeysList.contains(filter.getKey())) {
+					throw new RuntimeException("Invalid filter key - '" + filter.getKey() + "'");
+				}
+			}
+		}
+	}
+	
     /**
      * Restituisce la risorsa con l'id specificato.
      * @param id L'identificativo della risorsa da caricare.
@@ -244,12 +275,14 @@ public class ResourceManager extends AbstractService
      * @return La risorsa valorizzata.
      * @throws ApsSystemException in caso di errore.
      */
-    private ResourceInterface createResource(ResourceRecordVO resourceVo) throws ApsSystemException {
+    protected ResourceInterface createResource(ResourceRecordVO resourceVo) throws ApsSystemException {
 		String resourceType = resourceVo.getResourceType();
 		String resourceXML = resourceVo.getXml();
 		ResourceInterface resource = this.createResourceType(resourceType);
 		this.fillEmptyResourceFromXml(resource, resourceXML);
 		resource.setMainGroup(resourceVo.getMainGroup());
+		resource.setCreationDate(resourceVo.getCreationDate());
+		resource.setLastModified(resourceVo.getLastModified());
 		return resource;
 	}
     
@@ -301,7 +334,7 @@ public class ResourceManager extends AbstractService
     
     protected void startResourceReloaderThread(String resourceTypeCode, int operationCode) throws ApsSystemException {
     	if (this.getStatus() != STATUS_READY) {
-    		ApsSystemUtils.getLogger().error("Service not ready : status " + this.getStatus());
+    		ApsSystemUtils.getLogger().info("Service not ready : status " + this.getStatus());
     		return;
 		}
     	String threadName = this.getName() + "_resourceReloader_" + DateConverter.getFormattedDate(new Date(), "yyyyMMdd");
@@ -421,5 +454,5 @@ public class ResourceManager extends AbstractService
     private IResourceDAO _resourceDao;
     
     private ICategoryManager _categoryManager;
-    
+	
 }

@@ -21,6 +21,8 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.Date;
+
 /**
  * @author E.Santoboni
  */
@@ -63,6 +65,16 @@ public class Resource {
 			canBeNull = false)
 	private String _masterFileName;
 	
+	@DatabaseField(columnName = "creationdate", 
+			dataType = DataType.DATE, 
+			canBeNull = true)
+	private Date _creationDate;
+	
+	@DatabaseField(columnName = "lastmodified", 
+			dataType = DataType.DATE, 
+			canBeNull = true)
+	private Date _lastModified;
+	
 	public static final String TABLE_NAME = "resources";
 	
 }
@@ -75,6 +87,8 @@ CREATE TABLE resources
   maingroup character varying(20) NOT NULL,
   resourcexml character varying NOT NULL,
   masterfilename character varying(100) NOT NULL,
+  creationdate date,
+  lastmodified date,
   CONSTRAINT resources_pkey PRIMARY KEY (resid )
 )
  */

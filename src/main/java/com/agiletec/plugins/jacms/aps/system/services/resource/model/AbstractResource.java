@@ -19,16 +19,18 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.io.File;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
+
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 /**
@@ -48,6 +50,8 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 		this.setMasterFileName("");
 		this._categories = new ArrayList<Category>();
 		this.setFolder("");
+		this.setCreationDate(null);
+		this.setLastModified(null);
 	}
 	
 	/**
@@ -131,6 +135,24 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
     @Override
 	public void setMasterFileName(String masterFileName) {
 		this._masterFileName = masterFileName;
+	}
+	
+	@Override
+	public Date getCreationDate() {
+		return _creationDate;
+	}
+	@Override
+	public void setCreationDate(Date creationDate) {
+		this._creationDate = creationDate;
+	}
+	
+	@Override
+	public Date getLastModified() {
+		return _lastModified;
+	}
+	@Override
+	public void setLastModified(Date lastModified) {
+		this._lastModified = lastModified;
 	}
 	
 	/**
@@ -242,6 +264,8 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 		prototype.setProtectedBaseURL(this.getProtectedBaseURL());
 		prototype.setAllowedExtensions(this.getAllowedExtensions());
 		prototype.setStorageManager(this.getStorageManager());
+		prototype.setCreationDate(null);
+		prototype.setLastModified(null);
 		return prototype;
 	}
 	
@@ -332,7 +356,8 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 	}
     
     /**
-	 * Restituisce il path del file relativo all'istanza.
+	 * Repurn the url path of the given istance.
+	 * @param instance the resource instance
 	 * @return Il path del file relativo all'istanza.
 	 */
 	protected String getUrlPath(ResourceInstance instance) {
@@ -410,6 +435,9 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 	private String _protectedBaseURL;
 	
 	private String _allowedExtensions;
+	
+	private Date _creationDate;
+	private Date _lastModified;
 	
 	private IStorageManager _storageManager;
 	

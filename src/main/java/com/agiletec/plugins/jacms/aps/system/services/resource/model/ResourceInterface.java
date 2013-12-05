@@ -17,12 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
-import java.util.List;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
+
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Interfaccia per gli oggetti risorsa.
@@ -98,6 +99,14 @@ public interface ResourceInterface {
      * @param mainFileName The name of the master file.
      */
 	public void setMasterFileName(String mainFileName);
+	
+	public Date getCreationDate();
+	
+	public void setCreationDate(Date creationDate);
+	
+	public Date getLastModified();
+	
+	public void setLastModified(Date lastModified);
 	
 	@Deprecated
 	public File getFile();

@@ -17,11 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
+
 import java.util.Collection;
 import java.util.List;
 
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
 
 /**
  * Interfaccia base per i Data Access Object 
@@ -80,6 +82,8 @@ public interface IResourceDAO {
 	 */
 	public List<String> searchResourcesId(String type, String text, String filename, String categoryCode, Collection<String> groupCodes);
 	
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, String categoryCode, Collection<String> groupCodes);
+    
 	/**
 	 * Carica un record di risorse in funzione dell'idRisorsa. Questo record è 
 	 * necessario per l'estrazione della risorse in oggetto tipo AbstractResource 

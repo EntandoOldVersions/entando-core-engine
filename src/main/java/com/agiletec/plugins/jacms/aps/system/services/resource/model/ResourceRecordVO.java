@@ -17,6 +17,8 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
+import java.util.Date;
+
 /**
  * Oggetto di utilità per le risorse. Ha la funzione fare da tramite 
  * (tra dati estratti da db e parser) nel caricamento di una risorsa completa.
@@ -113,11 +115,28 @@ public class ResourceRecordVO {
 		this._xml = xml;
 	}
 	
+	public Date getCreationDate() {
+		return _creationDate;
+	}
+	public void setCreationDate(Date creationDate) {
+		this._creationDate = creationDate;
+	}
+	
+	public Date getLastModified() {
+		return _lastModified;
+	}
+	public void setLastModified(Date lastModified) {
+		this._lastModified = lastModified;
+	}
+	
 	private String _id;
 	private String _resourceType;
 	private String _descr;
 	private String _mainGroup;
 	private String _masterFileName;
 	private String _xml;
+	
+	private Date _creationDate;
+	private Date _lastModified;
 	
 }

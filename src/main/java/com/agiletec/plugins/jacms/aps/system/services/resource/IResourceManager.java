@@ -17,12 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
-import java.util.Collection;
-import java.util.List;
-
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Interfaccia base per i servizi gestori tipi di risorse (immagini, audio, video, etc..).
@@ -107,6 +108,9 @@ public interface IResourceManager {
 	public List<String> searchResourcesId(String type, String text, 
 			String filename, String categoryCode, Collection<String> groupCodes) throws ApsSystemException;
     
+    public List<String> searchResourcesId(FieldSearchFilter[] filters, 
+			String categoryCode, Collection<String> groupCodes) throws ApsSystemException;
+    
     /**
      * Restituisce la risorsa con l'id specificato.
      * @param id L'identificativo della risorsa da caricare.
@@ -141,7 +145,21 @@ public interface IResourceManager {
      * @return The service status id.
      */
     public int getStatus();
-    
+	
+	public static final String RESOURCE_ID_FILTER_KEY = "resid";
+	
+	public static final String RESOURCE_TYPE_FILTER_KEY = "restype";
+	
+	public static final String RESOURCE_DESCR_FILTER_KEY = "descr";
+	
+	public static final String RESOURCE_MAIN_GROUP_FILTER_KEY = "maingroup";
+	
+	public static final String RESOURCE_FILENAME_FILTER_KEY = "masterfilename";
+	
+	public static final String RESOURCE_CREATION_DATE_FILTER_KEY = "creationdate";
+	
+	public static final String RESOURCE_MODIFY_DATE_FILTER_KEY = "lastmodified";
+	
     public static final int STATUS_READY = 0;
 	public static final int STATUS_RELOADING_RESOURCE_MAIN_FILENAME_IN_PROGRESS = 1;
 	public static final int STATUS_RELOADING_RESOURCE_INSTANCES_IN_PROGRESS = 2;
