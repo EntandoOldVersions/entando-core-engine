@@ -117,7 +117,8 @@ public class PageModelDOM {
 		String widgetCode = defaultWidgetElement.getAttributeValue(ATTRIBUTE_CODE);
 		WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
 		if (null == type) {
-			throw new RuntimeException("The code of the default widget '" + widgetCode + "' unknown");
+			ApsSystemUtils.getLogger().error("Unknown code of the default widget - '" + widgetCode + "'");
+			return;
 		}
 		widget.setType(type);
 		Element propertiesElement = defaultWidgetElement.getChild(TAB_PROPERTIES);
