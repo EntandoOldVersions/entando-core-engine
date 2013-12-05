@@ -32,11 +32,11 @@ public class ApiCatalogMethod implements ExtendedColumnDefinition {
 	
 	public ApiCatalogMethod() {}
 	
-	@DatabaseField(columnName = "resource", 
+	@DatabaseField(columnName = "resourcecode", 
 			dataType = DataType.STRING, 
 			width = 100, 
 			canBeNull = false)
-	private String _resource;
+	private String _resourceCode;
 	
 	@DatabaseField(columnName = "httpmethod", 
 			dataType = DataType.STRING, 
@@ -70,15 +70,11 @@ public class ApiCatalogMethod implements ExtendedColumnDefinition {
 			tableName = "`" + tableName + "`";
 			permissionsTableName = "`" + permissionsTableName + "`";
 		}
-		String primaryKeysSection = "resource , httpmethod";
-		if (IDatabaseManager.DatabaseType.ORACLE.equals(type)) {
-			primaryKeysSection = "\"RESOURCE\" , httpmethod";
-		}
 		return new String[]{"ALTER TABLE " + TABLE_NAME + " ADD CONSTRAINT " 
-				+ TABLE_NAME + "_pkey PRIMARY KEY(" + primaryKeysSection + ")", 
-			"ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_auth_fkey FOREIGN KEY (authorizationrequired) "
-				+ "REFERENCES " + permissionsTableName + " (permissionname)"};
+				+ TABLE_NAME + "_pkey PRIMARY KEY(resourcecode , httpmethod)", 
+			"ALTER TABLE " + tableName + " ADD CONSTRAINT " 
+				+ TABLE_NAME + "_auth_fkey FOREIGN KEY (authorizationrequired) REFERENCES " 
+				+ permissionsTableName + " (permissionname)"};
 	}
 	
 	public static final String TABLE_NAME = "apicatalog_methods";
@@ -87,13 +83,13 @@ public class ApiCatalogMethod implements ExtendedColumnDefinition {
 /*
 CREATE TABLE apicatalog_methods
 (
-  resource character varying(100) NOT NULL,
+  resourcecode character varying(100) NOT NULL,
   httpmethod character varying(6) NOT NULL,
   isactive smallint NOT NULL,
   ishidden smallint NOT NULL,
   authenticationrequired smallint,
   authorizationrequired character varying(30),
-  CONSTRAINT apicatalog_status_pkey PRIMARY KEY (resource , httpmethod ),
+  CONSTRAINT apicatalog_status_pkey PRIMARY KEY (resourcecode , httpmethod ),
   CONSTRAINT apicatalog_methods_authorizationrequired_fkey FOREIGN KEY (authorizationrequired)
       REFERENCES authpermissions (permissionname) MATCH SIMPLE
       ON UPDATE RESTRICT ON DELETE RESTRICT

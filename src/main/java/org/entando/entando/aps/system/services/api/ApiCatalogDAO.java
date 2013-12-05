@@ -50,11 +50,11 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
             conn = this.getConnection();
             conn.setAutoCommit(false);
             stat = conn.prepareStatement(LOAD_API_STATUS);
-            //resource, httpmethod, isactive, authenticationrequired, authorizationrequired
+            //resourcecode, httpmethod, isactive, authenticationrequired, authorizationrequired
             //"SELECT method, isactive FROM apicatalog_status";
             res = stat.executeQuery();
             while (res.next()) {
-                String resourceCode = res.getString("resource");
+                String resourceCode = res.getString("resourcecode");
                 String httpMethodString = res.getString("httpmethod");
                 ApiMethod.HttpMethod httpMethod = Enum.valueOf(ApiMethod.HttpMethod.class, httpMethodString.toUpperCase());
                 ApiMethod method = null;
@@ -323,27 +323,27 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
     }
     
     private static final String LOAD_API_STATUS =
-            "SELECT resource, httpmethod, isactive, authenticationrequired, authorizationrequired, ishidden "
+            "SELECT resourcecode, httpmethod, isactive, authenticationrequired, authorizationrequired, ishidden "
             + "FROM apicatalog_methods";
     
     private static final String SAVE_API_STATUS =
-            "INSERT INTO apicatalog_methods(resource, httpmethod, isactive, "
+            "INSERT INTO apicatalog_methods(resourcecode, httpmethod, isactive, "
             + "authenticationrequired, authorizationrequired, ishidden) VALUES (?, ?, ?, ?, ?, ?)";
     
     private static final String RESET_API_STATUS =
-            "DELETE FROM apicatalog_methods WHERE resource = ? AND httpmethod = ?";
+            "DELETE FROM apicatalog_methods WHERE resourcecode = ? AND httpmethod = ?";
     
     private static final String LOAD_SERVICES =
-			"SELECT servicekey, resource, description, parameters, tag, freeparameters, isactive, "
+			"SELECT servicekey, resourcecode, description, parameters, tag, freeparameters, isactive, "
 			+ "ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup FROM apicatalog_services";
     
     private static final String ADD_SERVICE =
-            "INSERT INTO apicatalog_services(servicekey, resource, description, parameters, tag, "
+            "INSERT INTO apicatalog_services(servicekey, resourcecode, description, parameters, tag, "
 			+ "freeparameters, isactive, ishidden, myentando, authenticationrequired, requiredpermission, requiredgroup) "
 			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? ) ";
     
     private static final String UPDATE_SERVICE =
-            "UPDATE apicatalog_services SET resource = ? , description = ? , parameters = ? , tag = ? , "
+            "UPDATE apicatalog_services SET resourcecode = ? , description = ? , parameters = ? , tag = ? , "
 			+ "freeparameters = ? , isactive = ? , ishidden = ? , myentando = ? , authenticationrequired = ? , requiredpermission = ? , requiredgroup = ? WHERE servicekey = ? ";
     
     private static final String DELETE_SERVICE =

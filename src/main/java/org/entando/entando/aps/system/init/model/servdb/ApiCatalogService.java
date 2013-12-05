@@ -38,11 +38,11 @@ public class ApiCatalogService implements ExtendedColumnDefinition {
 			canBeNull = false, id = true)
 	private String _serviceKey;
 	
-	@DatabaseField(columnName = "resource", 
+	@DatabaseField(columnName = "resourcecode", 
 			dataType = DataType.STRING, 
 			width = 100, 
 			canBeNull = false)
-	private String _resourceName;
+	private String _resourceCode;
 	
 	@DatabaseField(columnName = "description", 
 			dataType = DataType.LONG_STRING, 
@@ -114,7 +114,7 @@ public class ApiCatalogService implements ExtendedColumnDefinition {
 CREATE TABLE apicatalog_services
 (
   servicekey character varying(100) NOT NULL,
-  resource character varying(100) NOT NULL,
+  resourcecode character varying(100) NOT NULL,
   description character varying NOT NULL,
   parameters character varying,
   tag character varying(100),
