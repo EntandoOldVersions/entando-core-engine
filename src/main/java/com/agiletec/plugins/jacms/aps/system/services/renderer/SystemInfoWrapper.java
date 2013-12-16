@@ -106,14 +106,22 @@ public class SystemInfoWrapper {
         }
     }
 	
-    public Widget getCurrentShowlet() {
-		try {
-            return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-        } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getCurrentShowlet", "Error current Widget");
-			return null;
-        }
-    }
+    
+    /**
+		 * @deprecated Use {@link #getCurrentWidget()} instead
+		 */
+		public Widget getCurrentShowlet() {
+			return getCurrentWidget();
+		}
+
+		public Widget getCurrentWidget() {
+			try {
+				return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
+			} catch (Throwable t) {
+				ApsSystemUtils.logThrowable(t, this, "getCurrentWidget", "Error current Widget");
+				return null;
+			}
+		}
 	
     protected RequestContext getReqCtx() {
         return _reqCtx;
