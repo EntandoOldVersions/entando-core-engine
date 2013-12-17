@@ -8,16 +8,16 @@
 	<package name="core_do/ActivityStream" namespace="/do/ActivityStream" extends="entando-default">
 		
 		<action name="viewMore*" class="activityStreamAction" method="viewMore">
-			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/activiti-stream/inc/stream.jsp</result>
-			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/activiti-stream/inc/stream.jsp</result>
+			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/activity-stream/inc/stream.jsp</result>
+			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/activity-stream/inc/stream.jsp</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">enterBackend</param>
 			</interceptor-ref>
 		</action>
 		
 		<action name="update*" class="activityStreamAction" method="update">
-			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/activiti-stream/inc/stream.jsp</result>
-			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/activiti-stream/inc/stream.jsp</result>
+			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/activity-stream/inc/stream.jsp</result>
+			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/activity-stream/inc/stream.jsp</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">enterBackend</param>
 			</interceptor-ref>
