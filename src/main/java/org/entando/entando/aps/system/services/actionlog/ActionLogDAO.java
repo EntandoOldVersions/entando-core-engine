@@ -154,6 +154,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 
 		} catch (Throwable t) {
 			processDaoException(t, "Error loading actionlogger records", "getActionRecords");
+		} finally {
+			closeDaoResources(result, stat, conn);
 		}
 		return idList;
 	}
