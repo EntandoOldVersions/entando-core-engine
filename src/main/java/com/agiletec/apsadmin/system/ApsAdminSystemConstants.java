@@ -51,6 +51,7 @@ public interface ApsAdminSystemConstants {
 	public static final String STRUTS2_CONFIG_INIT_PARAM_NAME = "Struts2Config";
 	
 	public static final String CALENDAR_DATE_PATTERN = "dd/MM/yyyy";
+	public static final String CALENDAR_TIMESTAMP_PATTERN = "yyyy-MM-dd HH:mm:ss|SSS";
 	
 	public static final String MOVEMENT_UP_CODE = "UP";
 	public static final String MOVEMENT_DOWN_CODE = "DOWN";
