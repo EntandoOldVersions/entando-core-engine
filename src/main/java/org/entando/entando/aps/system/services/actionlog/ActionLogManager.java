@@ -45,6 +45,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
+import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -151,6 +152,13 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			//ApsSystemUtils.logThrowable(t, this, "getActivityStream");
 			throw new ApsSystemException("Error loading activity stream records", t);
 		}
+		return recordIds;
+	}
+
+	@Override
+	public List<Integer> getActivityStream(IActivityStreamSearchBean activityStreamSearchBean) {
+		List<Integer> recordIds = null;
+		recordIds = this.getActionLogDAO().getActionRecords(activityStreamSearchBean);
 		return recordIds;
 	}
 	

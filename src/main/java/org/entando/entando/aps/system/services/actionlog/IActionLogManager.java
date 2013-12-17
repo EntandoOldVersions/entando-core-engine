@@ -22,6 +22,7 @@ import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -66,6 +67,8 @@ public interface IActionLogManager {
 	public List<Integer> getActivityStream(List<String> userGroupCodes) throws ApsSystemException;
 	
 	public List<Integer> getActivityStream(UserDetails loggedUser) throws ApsSystemException;
+	
+	public List<Integer> getActivityStream(IActivityStreamSearchBean activityStreamSearchBean) throws ApsSystemException;
 	
 	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException;
 	

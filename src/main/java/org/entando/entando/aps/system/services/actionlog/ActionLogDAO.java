@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
+import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 /**
  * @author E.Santoboni
@@ -126,6 +127,11 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = this.createFilters(searchBean);
 		return this.getActionRecords(filters);
+	}
+
+	@Override
+	public List<Integer> getActivityStreamRecords(IActivityStreamSearchBean searchBean) {
+		return getActionRecords(searchBean);
 	}
 
 	@Override
@@ -261,6 +267,11 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 				Timestamp tsStart = (null != start) ? new Timestamp(start.getTime()) : null;
 				Timestamp tsEnd = (null != end) ? new Timestamp(end.getTime()) : null;
 				FieldSearchFilter filter = new FieldSearchFilter("actiondate", tsStart, tsEnd);
+				filter.setOrder(FieldSearchFilter.Order.DESC);
+				filters = super.addFilter(filters, filter);
+			}
+			if(searchBean instanceof IActivityStreamSearchBean) {
+				FieldSearchFilter filter = new FieldSearchFilter("activitystreaminfo");
 				filters = super.addFilter(filters, filter);
 			}
 		}

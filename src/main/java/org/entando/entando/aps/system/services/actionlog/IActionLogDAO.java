@@ -22,6 +22,7 @@ import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
@@ -31,6 +32,8 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 public interface IActionLogDAO {
 	
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean);
+	
+	public List<Integer> getActivityStreamRecords(IActivityStreamSearchBean searchBean);
 	
 	public List<Integer> getActionRecords(FieldSearchFilter[] filters);
 	

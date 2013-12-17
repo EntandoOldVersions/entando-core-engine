@@ -36,4 +36,6 @@ public interface IActionLogRecordSearchBean {
 	
 	public String getParams();
 	
+	public List<Grou
+	
 }
