@@ -36,6 +36,7 @@ import static junit.framework.Assert.assertEquals;
 
 import org.entando.entando.aps.system.services.actionlog.ActionLoggerTestHelper;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
 
@@ -71,6 +72,7 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
 			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
 			assertEquals(1, ids.size());
+			ActionLogRecord firstRecord = this._actionLoggerManager.getActionRecord(ids.get(0));
 			
 			ActivityStreamSeachBean activityStreamSeachBean = new ActivityStreamSeachBean();
 			activityStreamSeachBean.setEnd(firstDate);
@@ -101,15 +103,17 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 			ActivityStreamAction activityStreamAction = (ActivityStreamAction) this.getAction();
 			List<Integer> update = activityStreamAction.getActionRecordIds();
 			assertEquals(1, update.size());
+			ActionLogRecord updateRecord = this._actionLoggerManager.getActionRecord(update.get(0));
 			
-			String newDate = DateConverter.getFormattedDate(new Date(), ApsAdminSystemConstants.CALENDAR_TIMESTAMP_PATTERN);
-			this.initActivityStreamAction("/do/ActivityStream", "viewMore", newDate);
+			String actionRecordDate = DateConverter.getFormattedDate(updateRecord.getActionDate(), ApsAdminSystemConstants.CALENDAR_TIMESTAMP_PATTERN);
+			this.initActivityStreamAction("/do/ActivityStream", "viewMore", actionRecordDate);
 			this.setUserOnSession("admin");
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			activityStreamAction = (ActivityStreamAction) this.getAction();
 			List<Integer> viewMore = activityStreamAction.getActionRecordIds();
-			assertEquals(2, viewMore.size());
+			assertEquals(1, viewMore.size());
+			assertEquals(firstRecord.getId(), viewMore.get(0).intValue());
 			
 		} catch (Throwable t) {
 			throw t;

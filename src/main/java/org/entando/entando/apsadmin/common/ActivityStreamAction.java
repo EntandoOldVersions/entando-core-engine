@@ -38,10 +38,13 @@ public class ActivityStreamAction extends BaseAction{
 			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
 			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
 			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
+			if(timestamp != null){
+				timestamp.setTime(timestamp.getTime() - 100);
+			}
 			searchBean.setEnd(timestamp);
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "editLikeActivity", "Error on like/unlike activity");
+            ApsSystemUtils.logThrowable(t, this, "viewMore", "Error on loading more activities");
         }
 		this.setActionRecordIds(actionRecordIds);
 		return SUCCESS;
@@ -61,7 +64,7 @@ public class ActivityStreamAction extends BaseAction{
 			searchBean.setEnd(new Date());
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "editLikeActivity", "Error on like/unlike activity");
+            ApsSystemUtils.logThrowable(t, this, "update", "Error on loading updated activities");
         }
 		this.setActionRecordIds(actionRecordIds);
 		return SUCCESS;
