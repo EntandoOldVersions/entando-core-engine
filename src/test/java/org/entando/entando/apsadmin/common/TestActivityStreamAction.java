@@ -99,16 +99,16 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			ActivityStreamAction activityStreamAction = (ActivityStreamAction) this.getAction();
-			List<Integer> update = activityStreamAction.getUpdate();
+			List<Integer> update = activityStreamAction.getActionRecordIds();
 			assertEquals(1, update.size());
 			
 			String newDate = DateConverter.getFormattedDate(new Date(), ApsAdminSystemConstants.CALENDAR_TIMESTAMP_PATTERN);
-			this.initActivityStreamAction("/do/ActivityStream", "update", newDate);
+			this.initActivityStreamAction("/do/ActivityStream", "viewMore", newDate);
 			this.setUserOnSession("admin");
 			result = this.executeAction();
 			assertEquals(Action.SUCCESS, result);
 			activityStreamAction = (ActivityStreamAction) this.getAction();
-			List<Integer> viewMore = activityStreamAction.getViewMore();
+			List<Integer> viewMore = activityStreamAction.getActionRecordIds();
 			assertEquals(2, viewMore.size());
 			
 		} catch (Throwable t) {

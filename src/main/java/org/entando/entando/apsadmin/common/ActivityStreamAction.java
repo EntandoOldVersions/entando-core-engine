@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
 
 /**
  * @author S.Loru
@@ -32,18 +32,10 @@ import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSe
 public class ActivityStreamAction extends BaseAction{
 	
 	public String viewMore(){
-		return SUCCESS;
-	}
-	
-	public String update(){
-		return SUCCESS;
-	}
-	
-	public List<Integer> getViewMore() {
-		List<Integer> actionRecordIds = null;
+		List<Integer> actionRecordIds = new ArrayList<Integer>();
 		try {
 			Date timestamp = this.getTimestamp();
-			ActionLogRecordSearchBean searchBean = new ActionLogRecordSearchBean();
+			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
 			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
 			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
 			searchBean.setEnd(timestamp);
@@ -51,14 +43,18 @@ public class ActivityStreamAction extends BaseAction{
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "editLikeActivity", "Error on like/unlike activity");
         }
-		return actionRecordIds;
+		this.setActionRecordIds(actionRecordIds);
+		return SUCCESS;
 	}
 	
-	public List<Integer> getUpdate() {
-		List<Integer> actionRecordIds = null;
+	public String update(){
+		List<Integer> actionRecordIds = new ArrayList<Integer>();
 		try {
 			Date timestamp = this.getTimestamp();
-			ActionLogRecordSearchBean searchBean = new ActionLogRecordSearchBean();
+			if(timestamp != null){
+				timestamp.setTime(timestamp.getTime() + 100);
+			}
+			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
 			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
 			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
 			searchBean.setStart(timestamp);
@@ -67,7 +63,8 @@ public class ActivityStreamAction extends BaseAction{
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "editLikeActivity", "Error on like/unlike activity");
         }
-		return actionRecordIds;
+		this.setActionRecordIds(actionRecordIds);
+		return SUCCESS;
 	}
 	
 	private List<String> groupsToStringCode(List<Group> groups) {
@@ -94,8 +91,17 @@ public class ActivityStreamAction extends BaseAction{
 	public void setTimestamp(Date timestamp) {
 		this._timestamp = timestamp;
 	}
+
+	public List<Integer> getActionRecordIds() {
+		return _actionRecordIds;
+	}
+
+	public void setActionRecordIds(List<Integer> actionRecordIds) {
+		this._actionRecordIds = actionRecordIds;
+	}
 	
 	private IActionLogManager _actionLogManager;
 	private Date _timestamp;
+	private List<Integer> _actionRecordIds;
 
 }
