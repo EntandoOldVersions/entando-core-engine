@@ -41,7 +41,7 @@ public class ActivityStreamAction extends BaseAction{
 			if(timestamp != null){
 				timestamp.setTime(timestamp.getTime() - 100);
 			}
-			searchBean.setEnd(timestamp);
+			searchBean.setEndCreation(timestamp);
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "viewMore", "Error on loading more activities");
@@ -60,14 +60,30 @@ public class ActivityStreamAction extends BaseAction{
 			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
 			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
 			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
-			searchBean.setStart(timestamp);
-			searchBean.setEnd(new Date());
+			searchBean.setStartUpdate(timestamp);
+			searchBean.setEndUpdate(new Date());
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "update", "Error on loading updated activities");
         }
 		this.setActionRecordIds(actionRecordIds);
 		return SUCCESS;
+	}
+	
+	public Date getLastUpdate() {
+		List<Integer> actionRecordIds = new ArrayList<Integer>();
+		Date lastUpdate = null;
+		try {
+			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
+			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
+			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
+			searchBean.setEndUpdate(new Date());
+			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
+		} catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getLastUpdate", "Error on loading updated activities");
+        }
+		this.setActionRecordIds(actionRecordIds);
+		return lastUpdate;
 	}
 	
 	private List<String> groupsToStringCode(List<Group> groups) {
@@ -102,6 +118,7 @@ public class ActivityStreamAction extends BaseAction{
 	public void setActionRecordIds(List<Integer> actionRecordIds) {
 		this._actionRecordIds = actionRecordIds;
 	}
+
 	
 	private IActionLogManager _actionLogManager;
 	private Date _timestamp;

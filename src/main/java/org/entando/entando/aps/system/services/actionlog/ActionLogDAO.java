@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 /**
@@ -76,6 +77,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			} else {
 				stat.setNull(7, Types.VARCHAR);
 			}
+			stat.setTimestamp(8, timestamp);
 			stat.executeUpdate();
 			this.addLogRecordRelations(actionRecord.getId(), asi, conn);
 			conn.commit();
@@ -126,7 +128,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	@Override
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = this.createFilters(searchBean);
-		if(searchBean.getUserGroupCodes() != null && !searchBean.getUserGroupCodes().isEmpty()){
+		if(searchBean != null && searchBean.getUserGroupCodes() != null && !searchBean.getUserGroupCodes().isEmpty()){
 			return this.getActionRecords(filters, searchBean.getUserGroupCodes());
 		}
 		return this.getActionRecords(filters);
@@ -289,12 +291,21 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 				FieldSearchFilter filter = new FieldSearchFilter("parameters", this.extractSearchValues(parameters), true);
 				filters = super.addFilter(filters, filter);
 			}
-			Date start = searchBean.getStart();
-			Date end = searchBean.getEnd();
-			if (null != start || null != end) {
-				Timestamp tsStart = (null != start) ? new Timestamp(start.getTime()) : null;
-				Timestamp tsEnd = (null != end) ? new Timestamp(end.getTime()) : null;
+			Date startCreation = searchBean.getStartCreation();
+			Date endCreation = searchBean.getEndCreation();
+			if (null != startCreation || null != endCreation) {
+				Timestamp tsStart = (null != startCreation) ? new Timestamp(startCreation.getTime()) : null;
+				Timestamp tsEnd = (null != endCreation) ? new Timestamp(endCreation.getTime()) : null;
 				FieldSearchFilter filter = new FieldSearchFilter("actiondate", tsStart, tsEnd);
+				filter.setOrder(FieldSearchFilter.Order.DESC);
+				filters = super.addFilter(filters, filter);
+			}
+			Date startUpdate = searchBean.getStartUpdate();
+			Date endUpdate = searchBean.getEndUpdate();
+			if (null != startUpdate || null != endUpdate) {
+				Timestamp tsStart = (null != startUpdate) ? new Timestamp(startUpdate.getTime()) : null;
+				Timestamp tsEnd = (null != endUpdate) ? new Timestamp(endUpdate.getTime()) : null;
+				FieldSearchFilter filter = new FieldSearchFilter("updatedate", tsStart, tsEnd);
 				filter.setOrder(FieldSearchFilter.Order.DESC);
 				filters = super.addFilter(filters, filter);
 			}
@@ -402,6 +413,9 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			stat.setTimestamp(3, timestamp);
 			stat.executeUpdate();
+			
+			updateRecordUpdateDate(conn, id);
+			
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -412,6 +426,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(null, stat, conn);
 		}
 	}
+	
+	
 
 	@Override
 	public void deleteActionLikeRecord(int id, String username) {
@@ -424,6 +440,9 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			stat.setInt(1, id);
 			stat.setString(2, username);
 			stat.executeUpdate();
+			
+			updateRecordUpdateDate(conn, id);
+			
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -435,6 +454,23 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 	}
 
+	
+	protected void updateRecordUpdateDate(Connection conn, int recordid){
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(UPDATE_UPDATEDATE_ACTION_RECORD);
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			stat.setTimestamp(1, timestamp);
+			stat.setInt(2, recordid);
+			stat.executeUpdate();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error on insert actionlogger like record", "updateRecordUpdateDate");
+		}
+	}
+			
 	public void deleteRecord(int id, Connection conn, String query) {
 		PreparedStatement stat = null;
 		try {
@@ -476,6 +512,76 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		return infos;
 	}
 
+	@Override
+	public List<ActivityStreamComment> getActionCommentRecords(int id) {
+		List<ActivityStreamComment> comments = new ArrayList<ActivityStreamComment>();
+		Connection conn = null;
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			stat = conn.prepareStatement(GET_ACTION_COMMENT_RECORD);
+			stat.setInt(1, id);
+			result = stat.executeQuery();
+			while (result.next()) {
+				ActivityStreamComment comment = new ActivityStreamComment();
+				comment.setUsername(result.getString(1));
+				comment.setCommentText(result.getString(2));
+				comment.setCommentDate(result.getDate(3));
+				comments.add(comment);
+			}
+		} catch (Throwable t) {
+			processDaoException(t, "Error while loading activity stream comment records", "getActionCommentRecords");
+		} finally {
+			closeDaoResources(result, stat, conn);
+		}
+		return comments;
+	}
+
+	@Override
+	public void addActionCommentRecord(int id, String username, String comment) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(ADD_ACTION_COMMENT_RECORD);
+			stat.setInt(1, id);
+			stat.setString(2, username);
+			stat.setString(3, comment);
+			Timestamp timestamp = new Timestamp(new Date().getTime());
+			stat.setTimestamp(4, timestamp);
+			stat.executeUpdate();
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error on insert actionlogger comment record", "addActionCommentRecord");
+		} finally {
+			closeDaoResources(null, stat, conn);
+		}
+	}
+
+	@Override
+	public void deleteActionCommentRecord(int id, String username) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+			stat = conn.prepareStatement(DELETE_ACTION_COMMENT_RECORD);
+			stat.setInt(1, id);
+			stat.setString(2, username);
+			stat.executeUpdate();
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			processDaoException(t, "Error on delete comment record: " + id, "deleteActionCommentRecord");
+		} finally {
+			closeDaoResources(null, stat, conn);
+		}
+	}
+	
+	
 	@Override
 	protected String getMasterTableName() {
 		return "actionlogrecords";
@@ -585,8 +691,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	}
 
 	private static final String ADD_ACTION_RECORD
-			= "INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) "
-			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? )";
+			= "INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo, updatedate) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
 
 	private static final String ADD_ACTION_LIKE_RECORD
 			= "INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
@@ -614,5 +720,25 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 
 	private static final String GET_GROUP_OCCURRENCES
 			= "SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
+	
+	
+	private static final String UPDATE_UPDATEDATE_ACTION_RECORD
+			= "UPDATE actionlogrecords SET updatedate = ? WHERE id = ?";
+	
+	// COMMENT QUERIES
+	
+	private static final String ADD_ACTION_COMMENT_RECORD
+			= "INSERT INTO actionlogcommentrecords (recordid, username, comment, commentdate) VALUES ( ? , ? , ? , ? )";
+	
+	private static final String DELETE_ACTION_COMMENT_RECORDS
+			= "DELETE from actionlogcommentrecords where recordid = ? ";
+
+	private static final String DELETE_ACTION_COMMENT_RECORD
+			= DELETE_ACTION_COMMENT_RECORDS + "AND username = ? ";
+	
+	private static final String GET_ACTION_COMMENT_RECORD
+			= "SELECT username, comment, commentDate FROM actionlogcommentrecords WHERE recordid = ?";
+	
+
 
 }

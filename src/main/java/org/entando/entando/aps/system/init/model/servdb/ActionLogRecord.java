@@ -68,6 +68,12 @@ public class ActionLogRecord {
 			canBeNull = true)
 	private String _activitystreaminfo;
 	
+	
+	@DatabaseField(columnName = "updatedate", 
+			dataType = DataType.DATE, 
+			canBeNull = true)
+	private Date _updateDate;
+	
 	public static final String TABLE_NAME = "actionlogrecords";
 	
 }

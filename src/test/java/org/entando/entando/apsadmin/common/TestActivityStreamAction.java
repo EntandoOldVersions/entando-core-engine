@@ -75,7 +75,7 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 			ActionLogRecord firstRecord = this._actionLoggerManager.getActionRecord(ids.get(0));
 			
 			ActivityStreamSeachBean activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setEnd(firstDate);
+			activityStreamSeachBean.setEndUpdate(firstDate);
 			List<Integer> activityStreamEndDate = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(1, activityStreamEndDate.size());
 			
@@ -91,7 +91,7 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 			
 			
 			activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setEnd(new Date());
+			activityStreamSeachBean.setEndUpdate(new Date());
 			List<Integer> activityStreamBetweenSave2 = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(2, activityStreamBetweenSave2.size());
 			

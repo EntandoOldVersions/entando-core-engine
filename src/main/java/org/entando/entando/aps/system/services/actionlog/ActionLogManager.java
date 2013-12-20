@@ -218,6 +218,22 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		List<String> userGroupCodes = this.extractUserGroupCodes(loggedUser);
 		return this.getActivityStream(userGroupCodes);
 	}
+	
+	@Override
+	public void addActionCommentRecord(int id, String username, String comment) throws ApsSystemException {
+	//TODO
+	}
+
+	@Override
+	public void deleteActionCommentRecord(int id) throws ApsSystemException {
+	//TODO
+	}
+
+	@Override
+	public List<ActivityStreamLikeInfo> getActionCommentRecords(int id) throws ApsSystemException {
+	//TODO
+		return null;
+	}
 
 	private List<String> extractUserGroupCodes(UserDetails loggedUser) {
 		List<String> codes = new ArrayList<String>();
@@ -269,5 +285,5 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	private IActionLogDAO _actionLogDAO;
 	private IKeyGeneratorManager _keyGeneratorManager;
 	private IUserProfileManager _userProfileManager;
-	
+
 }

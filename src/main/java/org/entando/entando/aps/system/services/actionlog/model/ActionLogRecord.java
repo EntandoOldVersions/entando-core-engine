@@ -82,4 +82,5 @@ public class ActionLogRecord implements Serializable {
 	private String _parameters;
 	private ActivityStreamInfo _activityStreamInfo;
 	
+	
 }

@@ -21,13 +21,17 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author E.Santoboni - S.Puddu
+ * @author E.Santoboni - S.Puddu - S.Loru
  */
 public interface IActionLogRecordSearchBean {
 	
-	public Date getStart();
+	public Date getStartCreation();
 	
-	public Date getEnd();
+	public Date getEndCreation();
+	
+	public Date getStartUpdate();
+	
+	public Date getEndUpdate();
 	
 	public String getUsername();
 	

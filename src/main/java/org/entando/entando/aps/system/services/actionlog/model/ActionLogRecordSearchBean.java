@@ -24,21 +24,41 @@ import java.util.List;
  * @author E.Santoboni - S.Puddu
  */
 public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
-	
+
 	@Override
-	public Date getStart() {
-		return _start;
+	public Date getStartCreation() {
+		return _startCreation;
 	}
-	public void setStart(Date start) {
-		this._start = start;
+
+	public void setStartCreation(Date startCreation) {
+		this._startCreation = startCreation;
 	}
-	
+
 	@Override
-	public Date getEnd() {
-		return _end;
+	public Date getEndCreation() {
+		return _endCreation;
 	}
-	public void setEnd(Date end) {
-		this._end = end;
+
+	public void setEndCreation(Date endCreation) {
+		this._endCreation = endCreation;
+	}
+
+	@Override
+	public Date getStartUpdate() {
+		return _startUpdate;
+	}
+
+	public void setStartUpdate(Date startUpdate) {
+		this._startUpdate = startUpdate;
+	}
+
+	@Override
+	public Date getEndUpdate() {
+		return _endUpdate;
+	}
+
+	public void setEndUpdate(Date endUpdate) {
+		this._endUpdate = endUpdate;
 	}
 	
 	@Override
@@ -81,11 +101,14 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 		this._userGroupCodes = userGroupCodes;
 	}
 	
-	private Date _start;
-	private Date _end;
+	private Date _startCreation;
+	private Date _endCreation;
+	private Date _startUpdate;
+	private Date _endUpdate;
 	private String _username;
 	private String _namespace;
 	private String _actionName;
 	private String _params;
 	private List<String> _userGroupCodes;
+
 }

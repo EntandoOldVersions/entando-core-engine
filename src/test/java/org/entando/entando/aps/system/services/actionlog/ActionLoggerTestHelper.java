@@ -103,8 +103,8 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 		searchBean.setActionName(actionName);
 		searchBean.setNamespace(namespace);
 		searchBean.setParams(params);
-		searchBean.setStart(start);
-		searchBean.setEnd(end);
+		searchBean.setStartCreation(start);
+		searchBean.setEndCreation(end);
 		return searchBean;
 	}
 	

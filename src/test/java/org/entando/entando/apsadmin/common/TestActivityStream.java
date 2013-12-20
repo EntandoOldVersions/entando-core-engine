@@ -227,12 +227,12 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			assertEquals(1, ids.size());
 			
 			ActivityStreamSeachBean activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setEnd(firstDate);
+			activityStreamSeachBean.setEndCreation(firstDate);
 			List<Integer> activityStreamEndDate = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(1, activityStreamEndDate.size());
 			
 			activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setEnd(dateBeforeSave);
+			activityStreamSeachBean.setEndUpdate(dateBeforeSave);
 			List<Integer> activityStreamDateBeforeSave = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(0, activityStreamDateBeforeSave.size());
 			
@@ -247,14 +247,14 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
 			
 			activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setStart(dateBeforeSave);
-			activityStreamSeachBean.setEnd(firstDate);
+			activityStreamSeachBean.setStartUpdate(dateBeforeSave);
+			activityStreamSeachBean.setEndUpdate(firstDate);
 			List<Integer> activityStreamBetweenSave = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(1, activityStreamBetweenSave.size());
 			
 			activityStreamSeachBean = new ActivityStreamSeachBean();
-			activityStreamSeachBean.setStart(dateBeforeSave);
-			activityStreamSeachBean.setEnd(new Date());
+			activityStreamSeachBean.setStartUpdate(dateBeforeSave);
+			activityStreamSeachBean.setEndUpdate(new Date());
 			List<Integer> activityStreamBetweenSave2 = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(2, activityStreamBetweenSave2.size());
 		} catch (Throwable t) {
