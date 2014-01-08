@@ -20,6 +20,7 @@ package com.agiletec.aps.system;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.AsyncAppender;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.RollingFileAppender;
@@ -38,12 +39,13 @@ public class ApsSystemUtils {
 	 * @throws Exception
 	 */
 	public void init() throws Exception {
+
 		String appenderName = "ENTANDO";
 		
 		//TODO set this in constant
 		String conversionPattern = (String) this._systemParams.get("log4jConversionPattern");
 		if (StringUtils.isBlank(conversionPattern)) {
-			conversionPattern = "%d{ISO8601} - %-5p - %c{1} - %m%n"; //default conversionPattern
+			conversionPattern = "%d{yyyy-MM-dd HH:mm:ss.SSS} - %-5p -  %c - %m%n"; //default conversionPattern
 		}
 		PatternLayout layout = new PatternLayout(conversionPattern);
 		
@@ -74,8 +76,8 @@ public class ApsSystemUtils {
 		fileAppender.setFile(filename);
 		fileAppender.activateOptions();
 		
-		LogManager.getRootLogger().setLevel(org.apache.log4j.Level.toLevel(log4jLevelString));
-		LogManager.getRootLogger().addAppender(fileAppender);
+		AsyncAppender async = (AsyncAppender) LogManager.getRootLogger().getAppender("async");
+		async.addAppender(fileAppender);
 	}
 
 	/**
@@ -102,7 +104,7 @@ public class ApsSystemUtils {
 		if(caller != null) {
 			className = caller.getClass().getName();
 		}
-		_logger.error("{} in {}.{} {}", message, className, methodName,  t.toString());
+		_logger.error("{} in {}.{}", message, className, methodName,  t);
 //		if(_logger.isLoggable(Level.FINER)){
 //			_logger.throwing(className, methodName, t);
 //		}
