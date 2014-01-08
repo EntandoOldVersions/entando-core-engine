@@ -17,7 +17,7 @@
     	
     	<!-- ######### INIZIO OPERAZIONI IN INTERFACCIA LISTA UTENTI ######### -->
     	
-		<action name="list" class="userFinderAction">
+		<action name="list" class="userFinderAction" method="list">
 			<result type="tiles">admin.User.list</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>

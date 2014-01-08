@@ -32,7 +32,10 @@
         -->
         <action name="view" class="userProfileAction" method="view">
             <result type="tiles">admin.UserProfile.view</result>
-            <result name="input" type="chain">list</result>
+            <result name="input" type="chain">
+                <param name="namespace">/do/User</param>
+                <param name="actionName">list</param>
+            </result>
             <interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermissions">viewUsers,editUsers,editUserProfile</param>
 				<param name="requestAuth.ORClause">true</param>

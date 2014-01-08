@@ -36,6 +36,11 @@ import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
  * @author E.Santoboni
  */
 public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
+	
+	public String list() {
+		this.setUsername(null);
+		return this.execute();
+	}
     
 	@Override
     public String execute() {
@@ -135,7 +140,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
     public void setUsername(String username) {
         this._username = username;
     }
-    
+	
     public Integer getWithProfile() {
             return _withProfile;
     }
@@ -158,7 +163,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
     }
     
     private String _username;
-    private Integer _withProfile;
+	private Integer _withProfile;
     
     private IUserManager _userManager;
     private IUserProfileManager _userProfileManager;

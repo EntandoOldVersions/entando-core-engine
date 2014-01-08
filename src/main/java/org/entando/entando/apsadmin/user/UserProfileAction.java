@@ -22,9 +22,12 @@ import java.util.List;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.AbstractUser;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
@@ -38,7 +41,7 @@ public class UserProfileAction extends AbstractApsEntityAction {
     public String edit() {
         String username = this.getUsername();
         try {
-            String chechUsernameResult = this.checkUsername(username);
+            String chechUsernameResult = this.checkUsername(username, false);
             if (null != chechUsernameResult) return chechUsernameResult;
             IUserProfile userProfile = (IUserProfile) this.getUserProfileManager().getProfile(username);
             if (null == userProfile) {
@@ -66,14 +69,14 @@ public class UserProfileAction extends AbstractApsEntityAction {
         String username = this.getUsername();
         String profileTypeCode = this.getProfileTypeCode();
         try {
-            String chechUsernameResult = this.checkUsername(username);
+            String chechUsernameResult = this.checkUsername(username, false);
             if (null != chechUsernameResult) return chechUsernameResult;
             IUserProfile userProfile = (IUserProfile) this.getUserProfileManager().getProfile(username);
             if (null != userProfile) {
                 this.getRequest().getSession().setAttribute(USERPROFILE_ON_SESSION, userProfile);
                 return "edit";
             }
-            if (null == profileTypeCode || profileTypeCode.trim().length() == 0) {
+            if (StringUtils.isBlank(profileTypeCode)) {
                 String[] args = {profileTypeCode};
                 this.addFieldError("profileTypeCode", this.getText("error.newUserProfile.invalidProfileType", args));
                 return INPUT;
@@ -120,7 +123,7 @@ public class UserProfileAction extends AbstractApsEntityAction {
     public String view() {
         String username = this.getUsername();
         try {
-            String chechUsernameResult = this.checkUsername(username);
+            String chechUsernameResult = this.checkUsername(username, true);
             if (null != chechUsernameResult) return chechUsernameResult;
             IUserProfile userProfile = (IUserProfile) this.getUserProfileManager().getProfile(username);
             if (null == userProfile) {
@@ -135,8 +138,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
         return SUCCESS;
     }
     
-    private String checkUsername(String username) {
-        if (null == username || username.trim().length() == 0) {
+    private String checkUsername(String username, boolean checkNullProfile) throws ApsSystemException {
+        if (StringUtils.isBlank(username) || (checkNullProfile && null == this.getUserProfileManager().getProfile(username))) {
             String[] args = {username};
             this.addFieldError("username", this.getText("error.newUserProfile.invalidUsername", args));
             return INPUT;
@@ -194,10 +197,11 @@ public class UserProfileAction extends AbstractApsEntityAction {
     public void setUserProfileManager(IUserProfileManager userProfileManager) {
         this._userProfileManager = userProfileManager;
     }
-    
+	
     private String _username;
     private String _profileTypeCode;
     private IUserProfileManager _userProfileManager;
+	
     public static final String USERPROFILE_ON_SESSION = "userprofile_profileOnSession";
     
 }
