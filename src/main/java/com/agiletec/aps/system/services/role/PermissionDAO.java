@@ -25,6 +25,9 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -33,6 +36,8 @@ import com.agiletec.aps.system.common.AbstractDAO;
  */
 public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(PermissionDAO.class);
+	
 	/**
 	 * Carica la mappa (indicizzata in base al nome) dei permessi di autorizzazione presenti nel db.
 	 * @return La mappa dei permessi di autorizzazione.
@@ -52,7 +57,9 @@ public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 				permissions.put(permission.getName(), permission);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading permissions", "loadPermissions");
+			_logger.error("Error loading permissions",  t);
+			throw new RuntimeException("Error loading permissions", t);
+			//processDaoException(t, "Error loading permissions", "loadPermissions");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -76,7 +83,9 @@ public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while adding a permission", "addPermission");
+			_logger.error("Error while adding a permission",  t);
+			throw new RuntimeException("Error while adding a permission", t);
+			//processDaoException(t, "Error while adding a permission", "addPermission");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -99,7 +108,9 @@ public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating a permission", "updatePermission");
+			_logger.error("Error while updating a permission",  t);
+			throw new RuntimeException("Error while updating a permission", t);
+			//processDaoException(t, "Error while updating a permission", "updatePermission");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -129,7 +140,9 @@ public class PermissionDAO extends AbstractDAO implements IPermissionDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while deleting a permission", "deletePermission");
+			_logger.error("Error while deleting a permission",  t);
+			throw new RuntimeException("Error while deleting a permission", t);
+			//processDaoException(t, "Error while deleting a permission", "deletePermission");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

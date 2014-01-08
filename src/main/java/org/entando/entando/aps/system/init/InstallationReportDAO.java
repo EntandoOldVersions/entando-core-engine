@@ -17,20 +17,24 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import com.agiletec.aps.system.ApsSystemUtils;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
  * @author E.Santoboni
  */
 public class InstallationReportDAO extends AbstractDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(InstallationReportDAO.class);
 	
 	public SystemInstallationReport loadReport(String version) {
 		Connection conn = null;
@@ -55,7 +59,9 @@ public class InstallationReportDAO extends AbstractDAO {
 			ApsSystemUtils.getLogger().info("Report not available - " + sqle.getMessage());
 			return null;
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error while loading component installation report - version: " + version, "loadReport");
+			_logger.error("Error while loading component installation report - version: {}", version,  t);
+			throw new RuntimeException("Error while loading component installation report - version: " + version, t);
+			//this.processDaoException(t, "Error while loading component installation report - version: " + version, "loadReport");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -78,8 +84,9 @@ public class InstallationReportDAO extends AbstractDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating saving item",
-					"saveConfigItem");
+			_logger.error("Error saving item" ,  t);
+			throw new RuntimeException("Error saving item", t);
+			//processDaoException(t, "Error while updating saving item",	"saveConfigItem");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -97,7 +104,9 @@ public class InstallationReportDAO extends AbstractDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while deleting item", "deleteItem");
+			_logger.error("Error deleting item" ,  t);
+			throw new RuntimeException("Error deleting item", t);
+			//processDaoException(t, "Error while deleting item", "deleteItem");
 		} finally {
 			closeDaoResources(null, stat);
 		}

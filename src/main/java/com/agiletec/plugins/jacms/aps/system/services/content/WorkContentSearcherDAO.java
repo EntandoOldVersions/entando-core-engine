@@ -24,12 +24,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 
 /**
  * @author E.Santoboni
  */
 public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implements IWorkContentSearcherDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(WorkContentSearcherDAO.class);
 	
 	@Override
 	public List<String> loadContentsId(EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
@@ -57,7 +62,9 @@ public class WorkContentSearcherDAO extends AbstractContentSearcherDAO implement
 			result = stat.executeQuery();
 			this.flowResult(contentsId, filters, result);
 		} catch (Throwable t) {
-			processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
+			_logger.error("Error loading contents id list",  t);
+			throw new RuntimeException("Error loading contents id list", t);
+			//processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}

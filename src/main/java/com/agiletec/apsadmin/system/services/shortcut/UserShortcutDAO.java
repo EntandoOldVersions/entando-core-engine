@@ -21,6 +21,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -29,6 +32,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(UserShortcutDAO.class);
 	
 	@Override
 	public void saveUserConfig(String username, String config) {
@@ -40,7 +45,9 @@ public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
 			this.addUserConfigRecord(username, config, conn);
 			conn.commit();
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error deleting user config by user " + username, "deleteUserConfig");
+			_logger.error("Error deleting user config by user {}", username,  t);
+			throw new RuntimeException("Error deleting user config by user " + username, t);
+			//this.processDaoException(t, "Error deleting user config by user " + username, "deleteUserConfig");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -54,7 +61,9 @@ public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
 			stat.setString(2, config);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error adding user config record", "addUserConfigRecord");
+			_logger.error("Error adding user config record",  t);
+			throw new RuntimeException("Error adding user config record", t);
+			//this.processDaoException(t, "Error adding user config record", "addUserConfigRecord");
 		} finally {
 			this.closeDaoResources(null, stat);
 		}
@@ -69,7 +78,9 @@ public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
 			this.deleteUserConfigRecord(username, conn);
 			conn.commit();
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error deleting user config by user " + username, "deleteUserConfig");
+			_logger.error("Error deleting user config by user {}", username,  t);
+			throw new RuntimeException("Error deleting user config by user " + username, t);
+			//this.processDaoException(t, "Error deleting user config by user " + username, "deleteUserConfig");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -82,8 +93,9 @@ public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
 			stat.setString(1, username);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error deleting user config record by id " + username, 
-					"deleteUserConfigRecord");
+			_logger.error("Error deleting user config record by id {}", username,  t);
+			throw new RuntimeException("Error deleting user config record by id " + username, t);
+			//this.processDaoException(t, "Error deleting user config record by id " + username, "deleteUserConfigRecord");
 		} finally {
 			this.closeDaoResources(null, stat);
 		}
@@ -104,7 +116,9 @@ public class UserShortcutDAO extends AbstractDAO implements IUserShortcutDAO {
 				config = res.getString(1);
 			}
 		} catch (Throwable t) {
-			this.processDaoException(t, "Error loading short cut config by user " + username, "loadUserConfig");
+			_logger.error("Error loading short cut config by user {}", username,  t);
+			throw new RuntimeException("Error loading short cut config by user " + username, t);
+			//this.processDaoException(t, "Error loading short cut config by user " + username, "loadUserConfig");
 		} finally {
 			this.closeDaoResources(res, stat, conn);
 		}

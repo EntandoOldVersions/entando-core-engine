@@ -24,6 +24,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.AttributeSearchInfo;
@@ -32,12 +35,15 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.user.UserDAO;
 
 /**
  * Abstract DAO class used for the management of the ApsEntities.
  * @author E.Santoboni
  */
 public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractEntityDAO.class);
 	
 	@Override
 	public void addEntity(IApsEntity entity) {
@@ -49,7 +55,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error adding new entity", "addEntity");
+			_logger.error("Error adding new entity",  t);
+			throw new RuntimeException("Error adding new entity", t);
+			//processDaoException(t, "Error adding new entity", "addEntity");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -83,7 +91,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			this.executeDeleteEntity(entityId, conn);
 			conn.commit();
 		} catch (Throwable t) {
-			processDaoException(t, "Error deleting the entity by id", "deleteEntity");
+			_logger.error("Error deleting the entity by id '{}'", entityId,  t);
+			throw new RuntimeException("Error deleting the entity by id", t);
+			//processDaoException(t, "Error deleting the entity by id", "deleteEntity");
 		} finally {
 			closeConnection(conn);
 		}
@@ -107,7 +117,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore updating entity", "updateEntity");
+			_logger.error("Error updating entity",  t);
+			throw new RuntimeException("Error updating entity", t);
+			//processDaoException(t, "Errore updating entity", "updateEntity");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -149,7 +161,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 				entityRecord = this.createEntityRecord(res);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading entity record", "loadEntityRecord");
+			_logger.error("Error loading entity record '{}'", id,  t);
+			throw new RuntimeException("Error loading entity record", t);
+			//processDaoException(t, "Error loading entity record", "loadEntityRecord");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -170,7 +184,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error detected while reloading references", "reloadEntitySearchRecords");
+			_logger.error("Error detected while reloading references",  t);
+			throw new RuntimeException("Error detected while reloading references", t);
+			//processDaoException(t, "Error detected while reloading references", "reloadEntitySearchRecords");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -189,7 +205,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			stat = conn.prepareStatement(this.getAddingSearchRecordQuery());
 			this.addEntitySearchRecord(id, entity, stat);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while adding a new record", "addEntitySearchRecord");
+			_logger.error("Error while adding a new record",  t);
+			throw new RuntimeException("Error while adding a new record", t);
+			//processDaoException(t, "Error while adding a new record", "addEntitySearchRecord");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -227,7 +245,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			stat = conn.prepareStatement(this.getAddingAttributeRoleRecordQuery());
 			this.addEntityAttributeRoleRecord(id, entity, stat);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while adding a new attribute role record", "addEntityAttributeRoleRecord");
+			_logger.error("Error while adding a new attribute role record",  t);
+			throw new RuntimeException("Error while adding a new attribute role record", t);
+			//processDaoException(t, "Error while adding a new attribute role record", "addEntityAttributeRoleRecord");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -269,8 +289,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 			stat.setString(1, entityId);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error deleting entity records by id " + entityId, 
-					"deleteRecordsByEntityId");
+			_logger.error("Error deleting entity records by id '{}'", entityId,  t);
+			throw new RuntimeException("Error deleting entity records by id " + entityId, t);
+			//processDaoException(t, "Error deleting entity records by id " + entityId, "deleteRecordsByEntityId");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -293,7 +314,9 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 				entitiesId.add(res.getString(1));
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error retrieving the list of entity IDs", "getAllEntityId");
+			_logger.error("Error retrieving the list of entity IDs",  t);
+			throw new RuntimeException("Error retrieving the list of entity IDs", t);
+			//processDaoException(t, "Error retrieving the list of entity IDs", "getAllEntityId");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}

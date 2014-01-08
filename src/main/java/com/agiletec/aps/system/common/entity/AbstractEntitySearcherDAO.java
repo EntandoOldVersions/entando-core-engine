@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -35,6 +38,8 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
  * @author E.Santoboni
  */
 public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO implements IEntitySearcherDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractEntitySearcherDAO.class);
 	
 	@Override
 	public List<ApsEntityRecord> searchRecords(EntitySearchFilter[] filters) {
@@ -48,7 +53,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			result = stat.executeQuery();
 			this.flowRecordsResult(records, filters, result);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading records list", "searchRecord");
+			_logger.error("Error while loading records list",  t);
+			throw new RuntimeException("Error while loading records list", t);
+			//processDaoException(t, "Error while loading records list", "searchRecord");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -95,7 +102,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			result = stat.executeQuery();
 			this.flowResult(idList, filters, result);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading the list of IDs", "searchId");
+			_logger.error("Error while loading the list of IDs",  t);
+			throw new RuntimeException("Error while loading the list of IDs", t);
+			//processDaoException(t, "Error while loading the list of IDs", "searchId");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -173,7 +182,9 @@ public abstract class AbstractEntitySearcherDAO extends AbstractSearcherDAO impl
 			index = this.addAttributeFilterStatementBlock(filters, index, stat);
 			index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while creating the statement", "buildStatement");
+			_logger.error("Error while creating the statement",  t);
+			throw new RuntimeException("Error while creating the statement", t);
+			//processDaoException(t, "Error while creating the statement", "buildStatement");
 		}
 		return stat;
 	}

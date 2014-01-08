@@ -23,6 +23,9 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.page.PageDAO;
 
 /**
@@ -30,6 +33,8 @@ import com.agiletec.aps.system.services.page.PageDAO;
  * @author E.Santoboni
  */
 public class CmsPageDAO extends PageDAO implements ICmsPageDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(CmsPageDAO.class);
 	
 	@Override
 	public List<String> getContentUtilizers(String contentId) {
@@ -46,8 +51,9 @@ public class CmsPageDAO extends PageDAO implements ICmsPageDAO {
 				pageCodes.add(res.getString(1));
 			}
 		} catch (Throwable t) {
-			this.processDaoException(t, "Errore in caricamento lista pagine referenziate con contenuto " + contentId, 
-					"getContentUtilizers");
+			_logger.error("Error loading pages referenced by content {}", contentId,  t);
+			throw new RuntimeException("Error loading pages referenced by content " + contentId, t);
+			//this.processDaoException(t, "Errore in caricamento lista pagine referenziate con contenuto " + contentId, "getContentUtilizers");
 		} finally {
 			this.closeDaoResources(res, stat, conn);
 		}

@@ -24,8 +24,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.baseconfig.ConfigItemDAO;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -34,6 +38,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(CategoryDAO.class);
 	
 	/**
 	 * Carica la lista delle categorie inserite nel sistema.
@@ -55,7 +61,9 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
 				categories.add(category);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading categories", "loadCategories");
+			_logger.error("Error loading categories",  t);
+			throw new RuntimeException("Error loading categories", t);
+			//processDaoException(t, "Error loading categories", "loadCategories");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -102,7 +110,9 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
             conn.commit();
         } catch (Throwable t) {
         	this.executeRollback(conn);
-			processDaoException(t, "Error detected while deleting a category", "deleteCategory");
+			_logger.error("Error detected while deleting category '{}'", code,  t);
+			throw new RuntimeException("Error detected while deleting a category", t);
+			//processDaoException(t, "Error detected while deleting a category", "deleteCategory");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -127,7 +137,9 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
     		conn.commit();
     	} catch (Throwable t) {
     		this.executeRollback(conn);
-			processDaoException(t, "Error while inserting a new category", "addCategory");
+			_logger.error("Error while inserting a new category",  t);
+			throw new RuntimeException("Error while inserting a new category", t);
+			//processDaoException(t, "Error while inserting a new category", "addCategory");
     	} finally {
     		closeDaoResources(null, stat, conn);
     	}
@@ -152,8 +164,9 @@ public class CategoryDAO extends AbstractDAO implements ICategoryDAO {
     		conn.commit();
     	} catch (Throwable t) {
     		this.executeRollback(conn);
-			processDaoException(t, "Error detected while updating a category", 
-    				"updateCategory");
+			_logger.error("Error detected while updating a category",  t);
+			throw new RuntimeException("Error detected while updating a category", t);
+			//processDaoException(t, "Error detected while updating a category",  "updateCategory");
     	} finally {
     		closeDaoResources(null, stat, conn);
     	}

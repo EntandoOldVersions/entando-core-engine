@@ -27,6 +27,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityDAO;
 
@@ -37,6 +40,8 @@ import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAu
  */
 public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(RoleDAO.class);
+	
 	/**
 	 * Carica da db una mappa completa di tutti i ruoli. Nella mappa, la chiave 
 	 * è costituita dal nome del ruolo. Nei ruoli sono caricati tutti i permessi 
@@ -54,7 +59,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			res = stat.executeQuery(LOAD_ROLES);
 			roles = this.loadRoles(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading roles", "loadRoles");
+			_logger.error("Error loading roles",  t);
+			throw new RuntimeException("Error loading roles", t);
+			//processDaoException(t, "Error loading roles", "loadRoles");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -105,7 +112,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			stat.setString(1, role.getName());
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error while deleting permissions", "deleteRolesPermission");
+			_logger.error("Error while deleting permissions",  t);
+			throw new RuntimeException("Error while deleting permissions", t);
+			//processDaoException(t, "Error while deleting permissions", "deleteRolesPermission");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -133,7 +142,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 				}
 				stat.executeBatch();
 			} catch (Throwable t) {
-				processDaoException(t, "Error while adding permissions to a role", "addRolePermissions");
+				_logger.error("Error while adding permissions to a role",  t);
+				throw new RuntimeException("Error while adding permissions to a role", t);
+				//processDaoException(t, "Error while adding permissions to a role", "addRolePermissions");
 			} finally {
 				closeDaoResources(null, stat);
 			}
@@ -158,7 +169,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while adding a role", "addRole");
+			_logger.error("Error while adding a role",  t);
+			throw new RuntimeException("Error while adding a role", t);
+			//processDaoException(t, "Error while adding a role", "addRole");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -181,7 +194,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while deleting a role", "deleteRole");
+			_logger.error("Error while deleting a role",  t);
+			throw new RuntimeException("Error while deleting a role", t);
+			//processDaoException(t, "Error while deleting a role", "deleteRole");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -206,7 +221,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating a role", "updateRole");
+			_logger.error("Error while updating a role",  t);
+			throw new RuntimeException("Error while updating a role", t);
+			//processDaoException(t, "Error while updating a role", "updateRole");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -230,7 +247,9 @@ public class RoleDAO extends AbstractApsAutorityDAO implements IRoleDAO {
 			res.next();
 			num = res.getInt(1);
 		} catch (Throwable t) {
-			processDaoException(t, "Error getting the users sharing the same role", "getNumberOfUserWithRole");
+			_logger.error("Error getting the users sharing the same role",  t);
+			throw new RuntimeException("Error getting the users sharing the same role", t);
+			//processDaoException(t, "Error getting the users sharing the same role", "getNumberOfUserWithRole");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}

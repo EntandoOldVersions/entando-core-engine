@@ -22,6 +22,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -29,6 +32,8 @@ import com.agiletec.aps.system.common.AbstractDAO;
  * @author S.Didaci - E.Santoboni
  */
 public class KeyGeneratorDAO extends AbstractDAO implements IKeyGeneratorDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(KeyGeneratorDAO.class);
 	
 	/**
 	 * Estrae la chiave presente nel db.
@@ -47,9 +52,10 @@ public class KeyGeneratorDAO extends AbstractDAO implements IKeyGeneratorDAO {
 			if (res.next()) {
 				currentKey = res.getInt(1);
 			}
-		} catch (Throwable e) {
-			processDaoException(e, "Error while getting the unique key",
-			"getUniqueKey");
+		} catch (Throwable t) {
+			_logger.error("Error while getting the unique key",  t);
+			throw new RuntimeException("Error while getting the unique key", t);
+			//processDaoException(e, "Error while getting the unique key", "getUniqueKey");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -70,9 +76,11 @@ public class KeyGeneratorDAO extends AbstractDAO implements IKeyGeneratorDAO {
 			stat.setInt(1, currentKey);
 			stat.executeUpdate();
 			conn.commit();
-		} catch (Throwable e) {
+		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(e, "Error while updating a key", "getUpdateKey");
+			_logger.error("Error while updating a key",  t);
+			throw new RuntimeException("Error while updating a key", t);
+			//processDaoException(e, "Error while updating a key", "getUpdateKey");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

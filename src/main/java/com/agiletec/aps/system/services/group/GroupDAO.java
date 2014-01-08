@@ -24,13 +24,19 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityDAO;
+import com.agiletec.aps.system.services.category.CategoryDAO;
 
 /**
  * Data Access Object per gli oggetti Group. 
  * @author E.Santoboni
  */
 public class GroupDAO extends AbstractApsAutorityDAO implements IGroupDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(GroupDAO.class);
 	
 	/**
 	 * Carica la mappa dei gruppi presenti nel sistema 
@@ -55,7 +61,9 @@ public class GroupDAO extends AbstractApsAutorityDAO implements IGroupDAO {
 				groups.put(group.getName(), group);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading groups", "loadGroups");
+			_logger.error("Error while loading groups",  t);
+			throw new RuntimeException("Error while loading groups", t);
+			//processDaoException(t, "Error while loading groups", "loadGroups");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -80,7 +88,9 @@ public class GroupDAO extends AbstractApsAutorityDAO implements IGroupDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while adding a group", "addGroup");
+			_logger.error("Error while adding a group",  t);
+			throw new RuntimeException("Error while adding a group", t);
+			//processDaoException(t, "Error while adding a group", "addGroup");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -104,7 +114,9 @@ public class GroupDAO extends AbstractApsAutorityDAO implements IGroupDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating a group", "updateGroup");
+			_logger.error("Error while updating a group",  t);
+			throw new RuntimeException("Error while updating a group", t);
+			//processDaoException(t, "Error while updating a group", "updateGroup");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -136,7 +148,9 @@ public class GroupDAO extends AbstractApsAutorityDAO implements IGroupDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while deleting a group", "deleteGroup");
+			_logger.error("Error while deleting a group",  t);
+			throw new RuntimeException("Error while deleting a group", t);
+			//processDaoException(t, "Error while deleting a group", "deleteGroup");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

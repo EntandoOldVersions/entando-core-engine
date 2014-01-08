@@ -27,8 +27,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.group.GroupDAO;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
@@ -36,6 +40,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author S.Didaci- E.Santoboni
  */
 public class I18nDAO extends AbstractDAO implements II18nDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(I18nDAO.class);
 	
 	/**
 	 * Carica la mappa che contiene tutte le label in tutte le lingue.
@@ -52,7 +58,9 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			res = stat.executeQuery(LOAD_ALL_LABELS);
 			labels = this.createLabels(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading label", "loadLabelMap");
+			_logger.error("Error loading labels",  t);
+			throw new RuntimeException("Error loading labels", t);
+			//processDaoException(t, "Error loading label", "loadLabelMap");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
@@ -69,7 +77,9 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating a label", "updateLabel");
+			_logger.error("Error while updating a label '{}'", key, t);
+			throw new RuntimeException("Error while updating a label", t);
+			//processDaoException(t, "Error while updating a label", "updateLabel");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -84,7 +94,9 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while adding a label", "addLabelGroup");
+			_logger.error("Error while adding a label '{}'", key, t);
+			throw new RuntimeException("Error while adding a label", t);
+			//processDaoException(t, "Error while adding a label", "addLabelGroup");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -106,11 +118,13 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			}
 			stat.executeBatch();
 		} catch (BatchUpdateException e) {
-			processDaoException(e.getNextException(), "Error adding a new label record", 
-			"addLabel");
+			_logger.error("Error adding a new label record",  e.getNextException());
+			throw new RuntimeException("Error adding a new label record", e.getNextException());
+			//processDaoException(e.getNextException(), "Error adding a new label record", "addLabel");
 		} catch (Throwable t) {
-			processDaoException(t, "Error while adding a new label", 
-			"addLabel");
+			_logger.error("Error while adding a new label",  t);
+			throw new RuntimeException("Error while adding a new label", t);
+			//processDaoException(t, "Error while adding a new label", "addLabel");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -125,7 +139,9 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Erro while deleting multiple labels", "deleteLabelGroup");
+			_logger.error("Error deleting labels by key '{}'", key, t);
+			throw new RuntimeException("Error deleting labels by key " + key, t);
+			//processDaoException(t, "Erro while deleting multiple labels", "deleteLabelGroup");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -138,7 +154,9 @@ public class I18nDAO extends AbstractDAO implements II18nDAO {
 			stat.setString(1, key);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error while deleting a label group", "deleteLabel");
+			_logger.error("Error deleting labels by key '{}'", key, t);
+			throw new RuntimeException("Error deleting labels by key " + key, t);
+			//processDaoException(t, "Error while deleting a label group", "deleteLabel");
 		} finally {
 			closeDaoResources(null, stat);
 		}

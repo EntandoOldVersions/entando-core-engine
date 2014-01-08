@@ -28,12 +28,19 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.services.user.UserDAO;
+
 /**
  * Utility Class for searching operation on db.
  * This class presents utility method for searching on db table throw Field search filter.
  * @author E.Santoboni
  */
 public abstract class AbstractSearcherDAO extends AbstractDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractSearcherDAO.class);
 	
 	protected List<String> searchId(FieldSearchFilter[] filters) {
 		Connection conn = null;
@@ -46,7 +53,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			result = stat.executeQuery();
 			this.flowResult(idList, filters, result);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading the list of IDs", "searchId");
+			_logger.error("Error while loading the list of IDs",  t);
+			throw new RuntimeException("Error while loading the list of IDs", t);
+			//processDaoException(t, "Error while loading the list of IDs", "searchId");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -182,7 +191,9 @@ public abstract class AbstractSearcherDAO extends AbstractDAO {
 			int index = 0;
 			index = this.addMetadataFieldFilterStatementBlock(filters, index, stat);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while creating the statement", "buildStatement");
+			_logger.error("Error while creating the statement",  t);
+			throw new RuntimeException("Error while creating the statement", t);
+			//processDaoException(t, "Error while creating the statement", "buildStatement");
 		}
 		return stat;
 	}

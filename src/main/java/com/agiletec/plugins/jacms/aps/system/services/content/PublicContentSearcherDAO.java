@@ -26,6 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.group.Group;
 
@@ -33,6 +36,8 @@ import com.agiletec.aps.system.services.group.Group;
  * @author E.Santoboni
  */
 public class PublicContentSearcherDAO extends AbstractContentSearcherDAO implements IPublicContentSearcherDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(PublicContentSearcherDAO.class);
 	
 	@Override
 	public List<String> loadPublicContentsId(String contentType, String[] categories, EntitySearchFilter[] filters, Collection<String> userGroupCodes) {
@@ -75,7 +80,9 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 			result = stat.executeQuery();
 			this.flowResult(contentsId, filters, result);
 		} catch (Throwable t) {
-			processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
+			_logger.error("Error loading contents id list",  t);
+			throw new RuntimeException("Error loading contents id list", t);
+			//processDaoException(t, "Errore in caricamento lista id contenuti", "loadContentsId");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -104,7 +111,9 @@ public class PublicContentSearcherDAO extends AbstractContentSearcherDAO impleme
 				}
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
+			_logger.error("Error creating statement",  t);
+			throw new RuntimeException("Error creating statement", t);
+			//processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
 		}
 		return stat;
 	}

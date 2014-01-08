@@ -24,6 +24,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -33,6 +35,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Diana - E.Santoboni
  */
 public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(PageModelDAO.class);
 	
 	/**
 	 * Carica e restituisce la mappa dei modelli di pagina.
@@ -53,7 +57,9 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 				models.put(pageModel.getCode(), pageModel);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading the page models", "loadModels");
+			_logger.error("Error loading the page models",  t);
+			throw new RuntimeException("Error loading the page models", t);
+			//processDaoException(t, "Error loading the page models", "loadModels");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
@@ -83,7 +89,9 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			}
 			pageModel.setPluginCode(res.getString(4));
 		} catch (Throwable t) {
-			processDaoException(t, "Error building the page model code '" + code + "'", "getPageModelFromResultSet");
+			_logger.error("Error building the page model code '{}'", code, t);
+			throw new RuntimeException("Error building the page model code '" + code + "'", t);
+			//processDaoException(t, "Error building the page model code '" + code + "'", "getPageModelFromResultSet");
 		}
 		return pageModel;
 	}

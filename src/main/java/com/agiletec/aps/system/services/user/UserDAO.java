@@ -21,11 +21,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -36,6 +38,8 @@ import com.agiletec.aps.util.IApsEncrypter;
  * @author M.Diana - E.Santoboni
  */
 public class UserDAO extends AbstractDAO implements IUserDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserDAO.class);
 	
 	@Override
 	public List<String> loadUsernames() {
@@ -64,7 +68,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 				usernames.add(res.getString(1));
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading the usernames list", "loadUsernames");
+			_logger.error("Error loading the usernames list",  t);
+			throw new RuntimeException("Error loading the usernames list", t);
+			//processDaoException(t, "Error loading the usernames list", "loadUsernames");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -96,7 +102,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			res = stat.executeQuery();
 			users = this.loadUsers(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while searching users", "searchUsers");
+			_logger.error("Error while searching users  by '{}' ", text, t);
+			throw new RuntimeException("Error while searching users", t);
+			//processDaoException(t, "Error while searching users", "searchUsers");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -142,7 +150,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 				((AbstractUser) user).setPassword(password);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading the user " + username, "loadUser");
+			_logger.error("Error while loading the user {} ", username, t);
+			throw new RuntimeException("Error while loading the user " + username, t);
+			//processDaoException(t, "Error while loading the user " + username, "loadUser");
 		}
 		return user;
 	}
@@ -160,7 +170,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			res = stat.executeQuery();
 			user = this.createUserFromRecord(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading the user " + username, "executeLoadingUser");
+			_logger.error("Error while loading the user '{}'", username, t);
+			throw new RuntimeException("Error while loading the user " + username, t);
+			//processDaoException(t, "Error while loading the user " + username, "executeLoadingUser");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -187,7 +199,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			res = stat.executeQuery();
 			user = this.createUserFromRecord(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading the user " + username, "loadUser");
+			_logger.error("Error while loading the user {}", username, t);
+			throw new RuntimeException("Error while loading the user " + username, t);
+			//processDaoException(t, "Error while loading the user " + username, "loadUser");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -222,7 +236,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error deleting a user", "deleteUser");
+			_logger.error("Error while deleting the user {}", username, t);
+			throw new RuntimeException("Error while deleting the user " + username, t);
+			//processDaoException(t, "Error deleting a user", "deleteUser");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -253,7 +269,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error adding a new user", "addUser");
+			_logger.error("Error while adding a new user {}", user, t);
+			throw new RuntimeException("Error while adding a new user", t);
+			//processDaoException(t, "Error adding a new user", "addUser");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -298,7 +316,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating the user " + user.getUsername(), "updateUser");
+			_logger.error("Error while updating the user {}", user.getUsername(), t);
+			throw new RuntimeException("Error while adding a new user", t);
+			//processDaoException(t, "Error while updating the user " + user.getUsername(), "updateUser");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -320,7 +340,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error updating the password for the user " + username, "changePassword");
+			_logger.error("Error updating the password for the user {}", username, t);
+			throw new RuntimeException("Error updating the password for the user " + username, t);
+			//processDaoException(t, "Error updating the password for the user " + username, "changePassword");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -340,7 +362,10 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error updating the password for the user " + username, "updateLastAccess");
+			//processDaoException(t, "Error updating the last access for the user " + username, "updateLastAccess");
+			_logger.error("Error updating the last access for the user {}", username, t);
+			throw new RuntimeException("Error updating the last access for the user " + username, t);
+			
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -353,7 +378,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			stat.setString(1, username);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error deleting the association between the user and his roles" , "removeUserRoles");
+			_logger.error("Error deleting the association between the user and his roles for the user {}", username, t);
+			throw new RuntimeException("Error deleting the association between the user and his roles for the user " + username, t);
+			//processDaoException(t, "Error deleting the association between the user and his roles" , "removeUserRoles");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -390,8 +417,10 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			stat.setString(1, username);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error deleting the association between the user and his roles", 
-			"removeUserGroups");
+			//processDaoException(t, "Error deleting the association between the user and his groups", "removeUserGroups");
+			_logger.error("Error deleting the association between the user and his groups for the user {}", username, t);
+			throw new RuntimeException("Error deleting the association between the user and his groups for the user " + username, t);
+			
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -412,8 +441,10 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 				usernames.add(res.getString(1));
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error getting the usernames sharing the same group", 
-					"loadUsernamesForGroup");
+			//processDaoException(t, "Error getting the usernames sharing the same group", "loadUsernamesForGroup");
+			_logger.error("Error loading usernames by group {}", groupName, t);
+			throw new RuntimeException("Error loading usernames by group " + groupName, t);
+			
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -438,8 +469,9 @@ public class UserDAO extends AbstractDAO implements IUserDAO {
 			res = stat.executeQuery();
 			users = this.loadUsers(res);
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading the list of users members of the group", 
-					"loadUsersForGroup");
+			//processDaoException(t, "Error loading the list of users members of the group", "loadUsersForGroup");
+			_logger.error("Error loading UserDetails list by group {}", groupName, t);
+			throw new RuntimeException("Error loading UserDetails list by group " + groupName, t);
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}

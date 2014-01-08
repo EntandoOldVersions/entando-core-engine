@@ -23,7 +23,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 
@@ -32,6 +36,8 @@ import com.agiletec.aps.system.services.authorization.IApsAuthority;
  * @author E.Santoboni
  */
 public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IApsAuthorityDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractApsAutorityDAO.class);
 	
 	@Override
 	public List<String> getUserAuthorizated(IApsAuthority auth) throws ApsSystemException {
@@ -49,7 +55,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
     			usernames.add(username);
 			}
     	} catch (Throwable t) {
-    		processDaoException(t, "Error while loading authorized usernames", "getUserAuthorizated");
+    		_logger.error("Error while loading authorized usernames",  t);
+			throw new RuntimeException("Error while loading authorized usernames", t);
+			//processDaoException(t, "Error while loading authorized usernames", "getUserAuthorizated");
     	} finally {
     		closeDaoResources(res, stat, conn);
     	}
@@ -69,7 +77,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
     		stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
-			processDaoException(t, "Error while updating user authorizations", "setUserAuthorization");
+			_logger.error("Error while updating user authorizations",  t);
+			throw new RuntimeException("Error while updating user authorizations", t);
+			//processDaoException(t, "Error while updating user authorizations", "setUserAuthorization");
 		} finally {
 			this.closeDaoResources(null, stat, conn);
 		}
@@ -88,7 +98,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
     		stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
-			processDaoException(t, "Error detected while removing user authorizations", "removeUserAuthorization");
+			_logger.error("Error detected while removing user authorizations",  t);
+			throw new RuntimeException("Error detected while removing user authorizations", t);
+			//processDaoException(t, "Error detected while removing user authorizations", "removeUserAuthorization");
 		} finally {
 			this.closeDaoResources(null, stat, conn);
 		}
@@ -104,7 +116,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
 			this.addUserAuthorizations(username, auths, conn);
 			conn.commit();
 		} catch (Throwable t) {
-			processDaoException(t, "Error detected while updated using user authorizations", "setUserAuthorizations");
+			_logger.error("Error detected while updated using user authorizations",  t);
+			throw new RuntimeException("Error detected while updated using user authorizations", t);
+			//processDaoException(t, "Error detected while updated using user authorizations", "setUserAuthorizations");
 		} finally {
 			this.closeConnection(conn);
 		}
@@ -117,7 +131,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
     		stat.setString(1, userName);
     		stat.executeUpdate();
     	} catch (Throwable t) {
-    		processDaoException(t, "Error while removing user authorizations", "removeUserRoles");
+    		_logger.error("Error while removing user authorizations",  t);
+			throw new RuntimeException("Error while removing user authorizations", t);
+			//processDaoException(t, "Error while removing user authorizations", "removeUserRoles");
     	} finally {
     		closeDaoResources(null, stat);
     	}
@@ -136,7 +152,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
         		}
                 stat.executeBatch();
         	} catch (Throwable t) {
-        		processDaoException(t, "Error while adding an authorization to the user", "addUserAuthorizations");
+        		_logger.error("Error while adding an authorization to the user",  t);
+			throw new RuntimeException("Error while adding an authorization to the user", t);
+			//processDaoException(t, "Error while adding an authorization to the user", "addUserAuthorizations");
         	} finally {
         		closeDaoResources(null, stat);
         	}
@@ -183,7 +201,9 @@ public abstract class AbstractApsAutorityDAO extends AbstractDAO implements IAps
     			authNames.add(auth);
 			}
     	} catch (Throwable t) {
-    		processDaoException(t, "Error while loading authorizations", "getAuthorizationNamesForUser");
+    		_logger.error("Error while loading authorizations",  t);
+			throw new RuntimeException("Error while loading authorizations", t);
+			//processDaoException(t, "Error while loading authorizations", "getAuthorizationNamesForUser");
     	} finally {
     		closeDaoResources(res, stat, conn);
     	}

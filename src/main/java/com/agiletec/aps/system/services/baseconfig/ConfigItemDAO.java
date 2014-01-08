@@ -22,9 +22,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -34,6 +35,8 @@ import com.agiletec.aps.system.common.AbstractDAO;
  * @author 
  */
 public class ConfigItemDAO extends AbstractDAO implements IConfigItemDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(ConfigItemDAO.class);
 	
 	/**
 	 * Carica e restituisce un Map con tutte le voci di
@@ -56,9 +59,10 @@ public class ConfigItemDAO extends AbstractDAO implements IConfigItemDAO {
 				String value = res.getString(2);
 				itemMap.put(name, value);
 			}
-		} catch (Throwable e) {
-			processDaoException(e, "Error while loading configuration item - version " 
-			+ version, "loadVersionItems");
+		} catch (Throwable t) {
+			_logger.error("Error while loading configuration item - version '{}'", version,  t);
+			throw new RuntimeException("Error while loading configuration item - version " 	+ version, t);
+			//processDaoException(e, "Error while loading configuration item - version " 	+ version, "loadVersionItems");
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -88,10 +92,7 @@ public class ConfigItemDAO extends AbstractDAO implements IConfigItemDAO {
 			res.next();
 			value = res.getString(1);
 		} catch (Throwable t) {
-			Logger log = ApsSystemUtils.getLogger();
-			log.error("Error while loading the configuration item - version: " + 
-					 version + ", item: " + itemName);
-			log.error("error in " + this.getClass().getName() + " {}" , "lodaVersioneItem", t);
+			_logger.error("Error while loading the configuration item - version: '{}' item: '{}'", version, itemName, t);
 		} finally {
 			closeDaoResources(res, stat, conn);
 		}
@@ -118,8 +119,9 @@ public class ConfigItemDAO extends AbstractDAO implements IConfigItemDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while updating oconfiguration item",
-					"updateConfigItem");
+			_logger.error("Error while updating configuration item '{}'", itemName, t);
+			throw new RuntimeException("Error while updating oconfiguration item", t);
+			//processDaoException(t, "Error while updating oconfiguration item",	"updateConfigItem");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

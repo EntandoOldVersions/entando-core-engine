@@ -25,6 +25,9 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -32,6 +35,8 @@ import com.agiletec.aps.system.common.AbstractDAO;
  * @author M.Diana - C.Siddi - C.Sirigu
  */
 public class ContentModelDAO extends AbstractDAO implements IContentModelDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(ContentModelDAO.class);
 	
 	@Override
 	public Map<Long, ContentModel> loadContentModels(){
@@ -50,8 +55,10 @@ public class ContentModelDAO extends AbstractDAO implements IContentModelDAO {
 				Long wrapLongId = new Long(contentModel.getId());
 				models.put(wrapLongId, contentModel);
 			}
-		} catch (Throwable e) {
-			processDaoException(e, "Errore in caricamento modelli pagina", "loadContentModels");
+		} catch (Throwable t) {
+			_logger.error("Error loading content models",  t);
+			throw new RuntimeException("Error loading content models", t);
+			//processDaoException(t, "Errore in caricamento modelli pagina", "loadContentModels");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
@@ -75,7 +82,9 @@ public class ContentModelDAO extends AbstractDAO implements IContentModelDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in aggiunta modello di contenuto " + model.getId(), "addContentModel");
+			_logger.error("Error adding content model {}", model.getId() ,  t);
+			throw new RuntimeException("Error adding content model " + model.getId(), t);
+			//processDaoException(t, "Errore in aggiunta modello di contenuto " + model.getId(), "addContentModel");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -94,7 +103,9 @@ public class ContentModelDAO extends AbstractDAO implements IContentModelDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in cancellazione modello di contenuto " + model.getId(), "deleteContentModel");
+			_logger.error("Error deleting content model {} ", model.getId(),  t);
+			throw new RuntimeException("Error deleting content model " + model.getId(), t);
+			//processDaoException(t, "Errore in cancellazione modello di contenuto " + model.getId(), "deleteContentModel");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -117,7 +128,9 @@ public class ContentModelDAO extends AbstractDAO implements IContentModelDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Errore in modifica modello di contenuto " + model.getId(), "updateContentModel");
+			_logger.error("Error updating content model {} ", model.getId(),  t);
+			throw new RuntimeException("Error updating content model " + model.getId(), t);
+			//processDaoException(t, "Errore in modifica modello di contenuto " + model.getId(), "updateContentModel");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

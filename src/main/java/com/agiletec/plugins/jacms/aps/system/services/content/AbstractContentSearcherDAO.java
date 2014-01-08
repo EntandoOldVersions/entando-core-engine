@@ -24,6 +24,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -36,6 +39,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecor
  * @author E.Santoboni
  */
 public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractContentSearcherDAO.class);
 	
 	@Override
 	protected String getTableFieldName(String metadataFieldKey) {
@@ -91,7 +96,9 @@ public abstract class AbstractContentSearcherDAO extends AbstractEntitySearcherD
 				index = this.addCategoryStatementBlock(categories, index, stat);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
+			_logger.error("Errore in fase di creazione statement",  t);
+			throw new RuntimeException("Errore in fase di creazione statement", t);
+			//processDaoException(t, "Errore in fase di creazione statement", "buildStatement");
 		}
 		return stat;
 	}
