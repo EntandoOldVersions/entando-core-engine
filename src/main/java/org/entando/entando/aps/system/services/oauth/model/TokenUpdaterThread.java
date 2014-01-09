@@ -21,6 +21,8 @@ import org.entando.entando.aps.system.services.oauth.IOAuthTokenDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+
 /**
  * Thread Class delegate to update OAuth token.
  * @author E.Santoboni

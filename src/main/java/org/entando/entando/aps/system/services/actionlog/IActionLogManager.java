@@ -17,7 +17,6 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.SystemConstants;
 import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;

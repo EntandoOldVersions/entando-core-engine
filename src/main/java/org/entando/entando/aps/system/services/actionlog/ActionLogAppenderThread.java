@@ -21,6 +21,8 @@ import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.agiletec.aps.system.ApsSystemUtils;
+
 /**
  * @author E.Santoboni
  */

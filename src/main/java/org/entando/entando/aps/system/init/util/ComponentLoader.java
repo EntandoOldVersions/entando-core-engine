@@ -2,10 +2,9 @@
 *
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
-* This file is part of Entando software.
-* Entando is a free software;
+* This file is part of Entando Enterprise Edition software.
 * You can redistribute it and/or modify it
-* under the terms of the GNU General Public License (GPL) as published by the Free Software Foundation; version 2.
+* under the terms of the Entando's EULA
 * 
 * See the file License for the specific language governing permissions   
 * and limitations under the License
@@ -59,6 +58,7 @@ public class ComponentLoader {
 					new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
 		ComponentDefDOM dom = null;
+		Logger logger = ApsSystemUtils.getLogger();
 		Set<String> codes = new HashSet<String>();
 		for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
