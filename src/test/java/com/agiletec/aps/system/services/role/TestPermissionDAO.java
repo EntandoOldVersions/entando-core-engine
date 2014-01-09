@@ -24,9 +24,6 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.aps.system.services.role.PermissionDAO;
-
 /**
  * @version 1.0
  * @author M.Diana

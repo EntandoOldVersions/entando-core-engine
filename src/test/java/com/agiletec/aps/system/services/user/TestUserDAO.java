@@ -21,11 +21,6 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.aps.system.services.user.IUserDAO;
-import com.agiletec.aps.system.services.user.User;
-import com.agiletec.aps.system.services.user.UserDAO;
-import com.agiletec.aps.system.services.user.UserDetails;
-
 /**
  * @version 1.0
  * @author M.Diana

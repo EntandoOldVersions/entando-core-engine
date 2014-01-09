@@ -24,10 +24,6 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModelDAO;
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelDAO;
-
 /**
  * @version 1.1
  * @author M.Morini - C.Siddi

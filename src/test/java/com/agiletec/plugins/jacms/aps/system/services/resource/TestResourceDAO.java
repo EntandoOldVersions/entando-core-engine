@@ -21,10 +21,7 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.services.mock.MockResourcesDAO;
-
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceDAO;
-import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceDAO;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResource;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;

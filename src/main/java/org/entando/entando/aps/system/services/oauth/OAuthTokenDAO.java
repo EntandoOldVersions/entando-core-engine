@@ -17,14 +17,11 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
-import com.agiletec.aps.system.common.AbstractDAO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 import java.util.Date;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,12 +29,18 @@ import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 
 import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
  * @author E.Santoboni
  */
 public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(OAuthTokenDAO.class);
+	
     public void addAccessToken(OAuthAccessor accessor) {
         Connection conn = null;
         PreparedStatement stat = null;
@@ -56,7 +59,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while adding an access token", "addAccessToken");
+            _logger.error("Error while adding an access token",  t);
+			throw new RuntimeException("Error while adding an access token", t);
+			//processDaoException(t, "Error while adding an access token", "addAccessToken");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -72,7 +77,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            this.processDaoException(t, "Error refreshing access tokens", "refreshAccessTokens");
+            _logger.error("Error refreshing access tokens",  t);
+			throw new RuntimeException("Error refreshing access tokens", t);
+			//this.processDaoException(t, "Error refreshing access tokens", "refreshAccessTokens");
         } finally {
             this.closeConnection(conn);
         }
@@ -87,7 +94,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             stat.executeUpdate();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            this.processDaoException(t, "Error updating an access token", "updateAccessTokens");
+            _logger.error("Error updating an access token",  t);
+			throw new RuntimeException("Error updating an access token", t);
+			//this.processDaoException(t, "Error updating an access token", "updateAccessTokens");
         } finally {
             this.closeDaoResources(null, stat);
         }
@@ -103,7 +112,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             stat.executeUpdate();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            this.processDaoException(t, "Error deleting old access token", "deleteOldAccessTokens");
+            _logger.error("Error deleting old access token",  t);
+			throw new RuntimeException("Error deleting old access token", t);
+			//this.processDaoException(t, "Error deleting old access token", "deleteOldAccessTokens");
         } finally {
             this.closeDaoResources(null, stat);
         }
@@ -133,7 +144,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
 				accessor.setLastAccess(lastAccess);
             }
         } catch (Throwable t) {
-            processDaoException(t, "Error while loading accessor " + accessToken, "getAccessor");
+            _logger.error("Error while loading accessor {}", accessToken,  t);
+			throw new RuntimeException("Error while loading accessor " + accessToken, t);
+			//processDaoException(t, "Error while loading accessor " + accessToken, "getAccessor");
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -154,7 +167,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while deleting an access token", "deleteAccessToken");
+            _logger.error("Error while deleting an access token",  t);
+			throw new RuntimeException("Error while deleting an access token", t);
+			//processDaoException(t, "Error while deleting an access token", "deleteAccessToken");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -175,7 +190,9 @@ public class OAuthTokenDAO extends AbstractDAO implements IOAuthTokenDAO {
                 occurrences.put(consumerkey, count);
             }
         } catch (Throwable t) {
-            processDaoException(t, "Error while loading occurrences", "getOccurrencesByConsumer");
+            _logger.error("Error while loading occurrences",  t);
+			throw new RuntimeException("Error while loading occurrences", t);
+			//processDaoException(t, "Error while loading occurrences", "getOccurrencesByConsumer");
         } finally {
             closeDaoResources(res, stat, conn);
         }

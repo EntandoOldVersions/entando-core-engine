@@ -17,25 +17,30 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Date;
-
-import java.util.List;
-import net.oauth.OAuthConsumer;
-
-import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
+import java.util.List;
+
+import net.oauth.OAuthConsumer;
+
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.common.AbstractSearcherDAO;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 
 /**
  * @author E.Santoboni
  */
 public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsumerDAO {
     
+	private static final Logger _logger =  LoggerFactory.getLogger(OAuthConsumerDAO.class);
+	
     public List<String> getConsumerKeys(FieldSearchFilter[] filters) {
         return super.searchId(filters);
     }
@@ -87,7 +92,9 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
                 }
             }
         } catch (Throwable t) {
-            processDaoException(t, "Error while loading consumer by key " + consumerKey, "getConsumer");
+           _logger.error("Error while loading consumer by key {}", consumerKey,  t);
+			throw new RuntimeException("Error while loading consumer by key " + consumerKey, t);
+			// processDaoException(t, "Error while loading consumer by key " + consumerKey, "getConsumer");
         } finally {
             closeDaoResources(res, stat, conn);
         }
@@ -108,7 +115,9 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while adding a consumer", "addConsumer");
+            _logger.error("Error while adding a consumer",  t);
+			throw new RuntimeException("Error while adding a consumer", t);
+			//processDaoException(t, "Error while adding a consumer", "addConsumer");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -128,7 +137,9 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while updating a consumer", "updateConsumer");
+            _logger.error("Error while updating a consumer",  t);
+			throw new RuntimeException("Error while updating a consumer", t);
+			//processDaoException(t, "Error while updating a consumer", "updateConsumer");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -157,7 +168,9 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             conn.commit();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while deleting a consumer and its tokens", "deleteConsumer");
+            _logger.error("Error while deleting consumer '{}' and its tokens", consumerKey,  t);
+			throw new RuntimeException("Error while deleting a consumer and its tokens", t);
+			//processDaoException(t, "Error while deleting a consumer and its tokens", "deleteConsumer");
         } finally {
             closeDaoResources(null, stat, conn);
         }
@@ -171,7 +184,9 @@ public class OAuthConsumerDAO extends AbstractSearcherDAO implements IOAuthConsu
             stat.executeUpdate();
         } catch (Throwable t) {
             this.executeRollback(conn);
-            processDaoException(t, "Error while deleting records", "delete");
+            _logger.error("Error while deleting records for {}", key,  t);
+			throw new RuntimeException("Error while deleting records", t);
+			//processDaoException(t, "Error while deleting records", "delete");
         } finally {
             closeDaoResources(null, stat);
         }

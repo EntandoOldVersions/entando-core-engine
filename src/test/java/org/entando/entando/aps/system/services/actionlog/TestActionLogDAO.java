@@ -17,10 +17,6 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import org.entando.entando.aps.system.services.actionlog.ActionLogDAO;
-import org.entando.entando.aps.system.services.actionlog.IActionLogDAO;
-import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.util.DateConverter;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -28,6 +24,9 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+
+import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.util.DateConverter;
 
 public class TestActionLogDAO extends BaseTestCase {
 

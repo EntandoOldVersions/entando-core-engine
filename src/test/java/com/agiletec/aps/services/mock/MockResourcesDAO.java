@@ -20,6 +20,9 @@ package com.agiletec.aps.services.mock;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -27,6 +30,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Casari
  */
 public class MockResourcesDAO extends AbstractDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(MockResourcesDAO.class);
 	
     /**
      * 
@@ -43,7 +48,9 @@ public class MockResourcesDAO extends AbstractDAO {
             stat.setString(1, descr);
             res = stat.executeUpdate();
         } catch (Throwable t) {
-            processDaoException(t, "Errore in cancellazione risorsa ", "deleteResource");
+            _logger.error("Error deleting resource by descr {}", descr,  t);
+			throw new RuntimeException("Error deleting resource by descr " + descr, t);
+			//processDaoException(t, "Errore in cancellazione risorsa ", "deleteResource");
         } finally {
             closeDaoResources(null, stat, conn);
         }

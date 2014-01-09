@@ -22,9 +22,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.baseconfig.ConfigItemDAO;
 
 /**
  * @author M.Diana

@@ -20,26 +20,33 @@ package com.agiletec.aps.services.mock;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
  * @author E.Santoboni
  */
 public class MockWidgetTypeDAO extends AbstractDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(MockWidgetTypeDAO.class);
 	
-	public void deleteShowletType(String showletTypeCode) {
+	public void deleteShowletType(String widgetTypeCode) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(DELETE_SHOWLET_TYPE);
-			stat.setString(1, showletTypeCode);
+			stat.setString(1, widgetTypeCode);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error deleting showlet type", "deleteShowletType");
+			_logger.error("Error deleting widget type {}", widgetTypeCode,  t);
+			throw new RuntimeException("Error deleting showlet type", t);
+			//processDaoException(t, "Error deleting showlet type", "deleteShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

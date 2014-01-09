@@ -25,6 +25,9 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -36,6 +39,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author M.Diana - E.Santoboni
  */
 public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeDAO.class);
 	
 	/**
 	 * Carica e restituisce il Map dei tipi di showlet.
@@ -56,21 +61,23 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 		Connection conn = null;
 		Statement stat = null;
 		ResultSet res = null;
-		Map<String, WidgetType> showletTypes = new HashMap<String, WidgetType>();
+		Map<String, WidgetType> widgetTypes = new HashMap<String, WidgetType>();
 		try {
 			conn = this.getConnection();
 			stat = conn.createStatement();
 			res = stat.executeQuery(ALL_WIDGET_TYPES);
 			while (res.next()) {
-				WidgetType showletType = this.showletTypeFromResultSet(res);
-				showletTypes.put(showletType.getCode(), showletType);
+				WidgetType widgetType = this.showletTypeFromResultSet(res);
+				widgetTypes.put(widgetType.getCode(), widgetType);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading showlets", "loadShowletTypes");
+			_logger.error("Error loading widgets",  t);
+			throw new RuntimeException("Error loading widgets", t);
+			//processDaoException(t, "Error loading showlets", "loadShowletTypes");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
-		return showletTypes;
+		return widgetTypes;
 	}
 
 	/**
@@ -80,49 +87,49 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	 * @throws ApsSystemException In caso di errore
 	 */
 	protected WidgetType showletTypeFromResultSet(ResultSet res) throws ApsSystemException {
-		WidgetType showletType = new WidgetType();
+		WidgetType widgetType = new WidgetType();
 		String code = null;
 		try {
 			code = res.getString(1);
-			showletType.setCode(code);
+			widgetType.setCode(code);
 			String xmlTitles = res.getString(2);
 			ApsProperties titles = new ApsProperties();
 			titles.loadFromXml(xmlTitles);
-			showletType.setTitles(titles);
+			widgetType.setTitles(titles);
 			String xml = res.getString(3);
 			if (null != xml && xml.trim().length() > 0) {
 				WidgetTypeDOM showletTypeDom = new WidgetTypeDOM(xml, this.getLangManager().getLangs());
-				showletType.setTypeParameters(showletTypeDom.getParameters());
-				showletType.setAction(showletTypeDom.getAction());
+				widgetType.setTypeParameters(showletTypeDom.getParameters());
+				widgetType.setAction(showletTypeDom.getAction());
 			}
-			showletType.setPluginCode(res.getString(4));
-			showletType.setParentTypeCode(res.getString(5));
+			widgetType.setPluginCode(res.getString(4));
+			widgetType.setParentTypeCode(res.getString(5));
 			String config = res.getString(6);
 			if (null != config && config.trim().length() > 0) {
 				ApsProperties defaultConfig = new ApsProperties();
 				defaultConfig.loadFromXml(config);
-				showletType.setConfig(defaultConfig);
+				widgetType.setConfig(defaultConfig);
 			}
-			if ((null != showletType.getConfig() && null == showletType.getParentTypeCode())) {
+			if ((null != widgetType.getConfig() && null == widgetType.getParentTypeCode())) {
 				throw new ApsSystemException("Default configuration found in the type '" +
 						code + "' with no parent type assigned");
 			}
 			int isLocked = res.getInt(7);
-			showletType.setLocked(isLocked == 1);
+			widgetType.setLocked(isLocked == 1);
 			String mainGroup = res.getString(8);
 			if (null != mainGroup && mainGroup.trim().length() > 0) {
-				showletType.setMainGroup(mainGroup.trim());
+				widgetType.setMainGroup(mainGroup.trim());
 			}
 		} catch (Throwable t) {
 			ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet",
 					"Error parsing the Widget Type '" + code + "'");
 			throw new ApsSystemException("Error in the parsing in the Widget Type '" + code + "'", t);
 		}
-		return showletType;
+		return widgetType;
 	}
 	
 	@Override
-	public void addShowletType(WidgetType showletType) {
+	public void addShowletType(WidgetType widgetType) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -130,32 +137,34 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(ADD_WIDGET_TYPE);
 			//(code, titles, parameters, plugincode, parenttypecode, defaultconfig, locked)
-			stat.setString(1, showletType.getCode());
-			stat.setString(2, showletType.getTitles().toXml());
-			if (null != showletType.getTypeParameters()) {
-				WidgetTypeDOM showletTypeDom = new WidgetTypeDOM(showletType.getTypeParameters(), showletType.getAction());
+			stat.setString(1, widgetType.getCode());
+			stat.setString(2, widgetType.getTitles().toXml());
+			if (null != widgetType.getTypeParameters()) {
+				WidgetTypeDOM showletTypeDom = new WidgetTypeDOM(widgetType.getTypeParameters(), widgetType.getAction());
 				stat.setString(3, showletTypeDom.getXMLDocument());
 			} else {
 				stat.setNull(3, Types.VARCHAR);
 			}
-			stat.setString(4, showletType.getPluginCode());
-			stat.setString(5, showletType.getParentTypeCode());
-			if (null != showletType.getConfig()) {
-				stat.setString(6, showletType.getConfig().toXml());
+			stat.setString(4, widgetType.getPluginCode());
+			stat.setString(5, widgetType.getParentTypeCode());
+			if (null != widgetType.getConfig()) {
+				stat.setString(6, widgetType.getConfig().toXml());
 			} else {
 				stat.setNull(6, Types.VARCHAR);
 			}
-			if (showletType.isLocked()) {
+			if (widgetType.isLocked()) {
 				stat.setInt(7, 1);
 			} else {
 				stat.setInt(7, 0);
 			}
-			stat.setString(8, showletType.getMainGroup());
+			stat.setString(8, widgetType.getMainGroup());
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while adding a new showlet type", "addShowletType");
+			_logger.error("Error while adding a new widget type",  t);
+			throw new RuntimeException("Error while adding a new widget type", t);
+			//processDaoException(t, "Error while adding a new showlet type", "addShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -170,20 +179,22 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	}
 
 	@Override
-	public void deleteWidgetType(String showletTypeCode) {
+	public void deleteWidgetType(String widgetTypeCode) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(DELETE_WIDGET_TYPE);
-			stat.setString(1, showletTypeCode);
+			stat.setString(1, widgetTypeCode);
 			stat.setInt(2, 0);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error deleting showlet type", "deleteShowletType");
+			_logger.error("Error deleting showlet type '{}'", widgetTypeCode, t);
+			throw new RuntimeException("Error deleting showlet type", t);
+			//processDaoException(t, "Error deleting showlet type", "deleteShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -191,7 +202,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	
 	@Override
 	@Deprecated
-	public void updateShowletTypeTitles(String showletTypeCode,	ApsProperties titles) {
+	public void updateShowletTypeTitles(String widgetTypeCode,	ApsProperties titles) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -199,12 +210,14 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(UPDATE_SHOWLET_TYPE_TITLES);
 			stat.setString(1, titles.toXml());
-			stat.setString(2, showletTypeCode);
+			stat.setString(2, widgetTypeCode);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error updating showlet type titles", "updateShowletTypeTitles");
+			_logger.error("Error updating titles for showlet type {}", widgetTypeCode,  t);
+			throw new RuntimeException("Error updating showlet type titles", t);
+			//processDaoException(t, "Error updating showlet type titles", "updateShowletTypeTitles");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -212,7 +225,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	
 	@Override
 	@Deprecated
-	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig) {
+	public void updateShowletType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -225,12 +238,14 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			} else {
 				stat.setString(2, defaultConfig.toXml());
 			}
-			stat.setString(3, showletTypeCode);
+			stat.setString(3, widgetTypeCode);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error updating showlet type", "updateShowletType");
+			_logger.error("Error updating widget type",  t);
+			throw new RuntimeException("Error updating widget type", t);
+			//processDaoException(t, "Error updating showlet type", "updateShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -245,7 +260,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	}
 
 	@Override
-	public void updateWidgetType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) {
+	public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -259,12 +274,14 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 				stat.setString(2, defaultConfig.toXml());
 			}
 			stat.setString(3, mainGroup);
-			stat.setString(4, showletTypeCode);
+			stat.setString(4, widgetTypeCode);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error updating showlet type", "updateShowletType");
+			_logger.error("Error updating widget type {}", widgetTypeCode,  t);
+			throw new RuntimeException("Error updating widget type", t);
+			//processDaoException(t, "Error updating showlet type", "updateShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

@@ -20,11 +20,12 @@ package org.entando.entando.aps.system.services.userprofile;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
+
 import com.agiletec.aps.system.common.entity.AbstractEntityDAO;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
 
 /**
  * Data Access Object for UserProfile Object. 

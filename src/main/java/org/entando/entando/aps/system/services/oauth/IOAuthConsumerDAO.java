@@ -17,10 +17,13 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.List;
+
 import net.oauth.OAuthConsumer;
+
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+
+import com.agiletec.aps.system.common.FieldSearchFilter;
 
 /**
  * @author E.Santoboni

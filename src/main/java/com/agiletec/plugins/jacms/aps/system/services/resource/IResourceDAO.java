@@ -17,12 +17,12 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceRecordVO;
-
-import java.util.Collection;
-import java.util.List;
 
 
 /**

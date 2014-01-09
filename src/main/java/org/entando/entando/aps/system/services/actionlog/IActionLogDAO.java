@@ -17,12 +17,13 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
+
+import com.agiletec.aps.system.common.FieldSearchFilter;
 
 /**
  * @author E.Santoboni - S.Puddu

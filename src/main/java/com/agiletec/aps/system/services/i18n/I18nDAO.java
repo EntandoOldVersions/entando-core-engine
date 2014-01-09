@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.group.GroupDAO;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

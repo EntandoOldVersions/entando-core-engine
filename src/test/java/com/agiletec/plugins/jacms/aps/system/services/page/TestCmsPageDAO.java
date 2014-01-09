@@ -26,7 +26,6 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
-import com.agiletec.plugins.jacms.aps.system.services.page.CmsPageDAO;
 
 /**
  * @author M.Diana

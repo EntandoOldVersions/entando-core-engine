@@ -24,8 +24,6 @@ import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.plugins.jacms.aps.system.services.content.PublicContentSearcherDAO;
-
 /**
  * @author E.Santoboni
  */

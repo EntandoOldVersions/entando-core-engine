@@ -20,12 +20,18 @@ package org.entando.entando.aps.system.services.api;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
+import com.agiletec.aps.system.services.user.MockUserDAO;
 
 /**
  * @author E.Santoboni
  */
 public class ApiTestHelperDAO extends AbstractDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(MockUserDAO.class);
 	
 	public void cleanApiStatus() {
 		String sql = "DELETE FROM apicatalog_methods";
@@ -48,7 +54,9 @@ public class ApiTestHelperDAO extends AbstractDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error while cleaning api/methods", "clean");
+			_logger.error("Error while cleaning api/methods - {}", sql, t);
+			throw new RuntimeException("Error while cleaning api/methods", t);
+			//processDaoException(t, "Error while cleaning api/methods", "clean");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

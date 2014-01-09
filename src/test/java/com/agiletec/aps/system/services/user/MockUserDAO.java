@@ -24,7 +24,8 @@ import java.util.Date;
 
 import javax.sql.DataSource;
 
-import com.agiletec.aps.system.services.user.UserDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class is used to change some date fields in the 'authuser' table, in order to test the behaviour of the privacy module
@@ -32,6 +33,8 @@ import com.agiletec.aps.system.services.user.UserDAO;
  * @author M. Minnai
  */
 public class MockUserDAO extends UserDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(MockUserDAO.class);
 	
 	public MockUserDAO(DataSource datasource) {
 		this.setDataSource(datasource);
@@ -73,7 +76,9 @@ public class MockUserDAO extends UserDAO {
 			stat.setString(2, username);
 			stat.execute();
 		} catch (Throwable t) {
-			processDaoException(t, "Errore nel settare data", "mockDate");
+			_logger.error("Error setting date. username: {} - accessDate:{} - sql:{}", username, accessDate, sql, t);
+			throw new RuntimeException("Error setting date", t);
+			//processDaoException(t, "Errore nel settare data", "mockDate");
 		}  finally {
 			this.closeDaoResources(null, stat, conn);
 		}

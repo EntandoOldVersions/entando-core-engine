@@ -21,6 +21,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -28,6 +31,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Casari
  */
 public class MockUniqueKeysDAO extends AbstractDAO {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(MockUniqueKeysDAO.class);
 	
     /**
      * @param id L'id del contatore.
@@ -47,9 +52,10 @@ public class MockUniqueKeysDAO extends AbstractDAO {
             if (res.next()) {
 				current = res.getInt("keyvalue");
 			}
-            return current;
         } catch (Throwable t) {
-            processDaoException(t, "Errore in controllo presenza showlet di test", "exists");
+            _logger.error("Error loading unique key",  t);
+			throw new RuntimeException("Error loading unique key", t);
+			//processDaoException(t, "Errore in controllo presenza showlet di test", "exists");
         } finally {
             closeDaoResources(res, stat, conn);
         }

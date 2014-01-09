@@ -19,13 +19,11 @@ package org.entando.entando.aps.system.services.userprofile;
 
 import java.sql.ResultSet;
 
+import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
+
 import com.agiletec.aps.system.common.entity.AbstractEntitySearcherDAO;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
-import org.entando.entando.aps.system.init.model.servdb.UserProfile;
-import org.entando.entando.aps.system.init.model.servdb.UserProfileAttributeRole;
-import org.entando.entando.aps.system.init.model.servdb.UserProfileSearch;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
 
 /**
  * Data Access Object for Search of UserProfile Object. 

@@ -31,8 +31,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.services.user.UserDAO;
-
 /**
  * Utility Class for searching operation on db.
  * This class presents utility method for searching on db table throw Field search filter.
