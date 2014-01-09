@@ -25,8 +25,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -42,6 +43,8 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author M.Diana - W.Ambu - E.Santoboni
  */
 public abstract class BaseEntityRenderer extends DefaultVelocityRenderer implements IEntityRenderer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseEntityRenderer.class);
 	
 	@Override
 	public String render(IApsEntity entity, String velocityTemplate, String langCode, boolean convertSpecialCharacters) {
@@ -66,7 +69,8 @@ public abstract class BaseEntityRenderer extends DefaultVelocityRenderer impleme
 			stringWriter.flush();
 			renderedEntity = stringWriter.toString();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "render", "Rendering error");
+			_logger.error("Rendering error. entity {}", entity.getTypeCode(), t);
+			//ApsSystemUtils.logThrowable(t, this, "render", "Rendering error");
 			renderedEntity = "";
 		} finally {
 			if (convertSpecialCharacters && null != conversions) {

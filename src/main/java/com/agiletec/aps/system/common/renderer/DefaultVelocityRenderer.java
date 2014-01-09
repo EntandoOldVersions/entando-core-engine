@@ -26,6 +26,7 @@ import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -36,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Diana - W.Ambu - E.Santoboni
  */
 public class DefaultVelocityRenderer extends AbstractService implements LogChute, IVelocityRenderer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DefaultVelocityRenderer.class);
 	
 	@Override
 	public void init() throws Exception {
@@ -43,7 +46,8 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 			Velocity.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM, this);
 			Velocity.init();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "init");
+			_logger.error("Error initializing the VelocityEngine", t);
+			//ApsSystemUtils.logThrowable(t, this, "init");
 			throw new ApsSystemException("Error initializing the VelocityEngine", t);
 		}
 		ApsSystemUtils.getLogger().debug(this.getName() + ": initialized");
@@ -63,7 +67,8 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 			stringWriter.flush();
 			renderedObject = stringWriter.toString();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "render", "Rendering error");
+			_logger.error("Rendering error, class: {} - template: {}", object.getClass().getSimpleName(), velocityTemplate, t);
+			//ApsSystemUtils.logThrowable(t, this, "render", "Rendering error");
 			renderedObject = "";
 		}
 		return renderedObject;

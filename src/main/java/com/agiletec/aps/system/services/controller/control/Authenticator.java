@@ -23,7 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
@@ -36,10 +38,13 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author M.Diana - E.Santoboni
  */
 public class Authenticator extends AbstractControlService {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(Authenticator.class);
+
+	
 	@Override
     public void afterPropertiesSet() throws Exception {
-    	this._log.debug(this.getClass().getName() + ": initialized");
+    	_logger.debug("{}: initialized", this.getClass().getName());
 	}
     
 	/**
@@ -95,8 +100,9 @@ public class Authenticator extends AbstractControlService {
                 session.setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, guestUser);
             }
             retStatus = ControllerManager.CONTINUE;
-        } catch (Throwable e) {
-            ApsSystemUtils.logThrowable(e, this, "service", "Error, could not fulfill the request");
+        } catch (Throwable t) {
+        	_logger.error("Error, could not fulfill the request", t);
+            //ApsSystemUtils.logThrowable(e, this, "service", "Error, could not fulfill the request");
             retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

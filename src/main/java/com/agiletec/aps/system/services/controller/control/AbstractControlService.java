@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -36,6 +37,8 @@ import com.agiletec.aps.system.services.url.PageURL;
  * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractControlService implements ControlServiceInterface {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractControlService.class);
 	
 	/**
 	 * Imposta i parametri di una redirezione.
@@ -74,7 +77,8 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 		} catch (Throwable t) {
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to page " + redirDestPage);
+			_logger.error("Error on creation redirect to page {}", redirDestPage, t);
+			//ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to page " + redirDestPage);
 		}
 		return retStatus;
 	}
@@ -88,7 +92,8 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 		} catch (Throwable t) {
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to url " + urlDest);
+			_logger.error("Error on creation redirect to url {}", urlDest, t);
+			//ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to url " + urlDest);
 		}
 		return retStatus;
 	}
@@ -114,6 +119,7 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 	/**
 	 * Il log di sistema.
 	 */
+	@Deprecated
 	protected Logger _log = ApsSystemUtils.getLogger();
 	
 	/**

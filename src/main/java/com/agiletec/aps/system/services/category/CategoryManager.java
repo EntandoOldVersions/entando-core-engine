@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -35,12 +37,13 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class CategoryManager extends AbstractService implements ICategoryManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CategoryManager.class);
 	
 	@Override
     public void init() throws Exception {
 		this.loadCategories();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": " + 
-				this._categories.size() + " categories initialized");
+		_logger.debug("{} ready. {} categories initialized", this.getClass().getName(),this._categories.size());
 	}
 	
 	/**
@@ -56,7 +59,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 				this.addCategory(root);
 			} else this.build(categories);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadCategories");
+			_logger.error("Error loading the category tree", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadCategories");
             throw new ApsSystemException("Error loading the category tree.", t);
 		}
 	}
@@ -88,7 +92,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
         } catch (ApsSystemException e) {
             throw e;
         } catch (Throwable t) {
-        	ApsSystemUtils.logThrowable(t, this, "loadCategories");
+        	_logger.error("Error building the category tree", t);
+        	//ApsSystemUtils.logThrowable(t, this, "loadCategories");
             throw new ApsSystemException("Error building the category tree", t);
         }
 	}
@@ -103,7 +108,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		try {
 			this.getCategoryDAO().addCategory(category);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addCategory");
+			_logger.error("Error detected while adding a category", t);
+			//ApsSystemUtils.logThrowable(t, this, "addCategory");
 			throw new ApsSystemException("Error detected while adding a category", t);
 		}
 		this.loadCategories();
@@ -121,7 +127,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
             try {
                 this.getCategoryDAO().deleteCategory(code);
             } catch (Throwable t) {
-            	ApsSystemUtils.logThrowable(t, this, "deleteCategory");
+            	_logger.error("Error detected while removing the category {}", code, t);
+            	//ApsSystemUtils.logThrowable(t, this, "deleteCategory");
     			throw new ApsSystemException("Error detected while removing a category", t);
             }
         }
@@ -138,7 +145,8 @@ public class CategoryManager extends AbstractService implements ICategoryManager
 		try {
 			this.getCategoryDAO().updateCategory(category);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateCategory");
+			_logger.error("Error detected while updating a category", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateCategory");
 			throw new ApsSystemException("Error detected while updating a category", t);
 		}
 		this.loadCategories();

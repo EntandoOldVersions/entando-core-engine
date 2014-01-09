@@ -25,7 +25,11 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.renderer.DefaultVelocityRenderer;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -33,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author M.Diana - E.Santoboni
  */
 public abstract class AbstractDAO implements Serializable {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractDAO.class);
 	
 	/**
 	 * Traccia un'eccezione e rilancia una eccezione runtime 
@@ -58,7 +64,8 @@ public abstract class AbstractDAO implements Serializable {
 		try {
 			conn = this.getDataSource().getConnection();
 		} catch (SQLException e) {
-			ApsSystemUtils.logThrowable(e, this, "getConnection");
+			_logger.error("Error getting connection to the datasource", e);
+			//ApsSystemUtils.logThrowable(e, this, "getConnection");
 			throw new ApsSystemException("Error getting connection to the datasource", e);
 		}
 		return conn;
@@ -89,14 +96,16 @@ public abstract class AbstractDAO implements Serializable {
 			try {
 				res.close();
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the resultset");
+				_logger.error("Error while closing the resultset", t);
+				//ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the resultset");
 			}
 		}
 		if (stat != null) {
 			try {
 				stat.close();
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the resultset");
+				_logger.error("Error while closing the resultset", t);
+				//ApsSystemUtils.logThrowable(t, this, "closeDaoResources", "Error while closing the resultset");
 			}
 		}
 	}
@@ -110,7 +119,8 @@ public abstract class AbstractDAO implements Serializable {
 		try {
 			if (conn != null) conn.rollback();
 		} catch (SQLException e) {
-			ApsSystemUtils.logThrowable(e, this, "executeRollback");
+			_logger.error("Error on connection rollback", e);			
+			//ApsSystemUtils.logThrowable(e, this, "executeRollback");
 		}
 	}
 
@@ -124,7 +134,8 @@ public abstract class AbstractDAO implements Serializable {
 		try {
 			if (conn != null) conn.close();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "closeDaoStatement", "Error closing the connection");
+			_logger.error("Error closing the connection", t);			
+			//ApsSystemUtils.logThrowable(t, this, "closeDaoStatement", "Error closing the connection");
 		}
 	}
 

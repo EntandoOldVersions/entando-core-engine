@@ -20,7 +20,10 @@ package com.agiletec.aps.system.services.authorization.authorizator;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
@@ -32,6 +35,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author E.Santoboni
  */
 public abstract class AbstractApsAutorityManager extends AbstractService implements IApsAuthorityManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractApsAutorityManager.class);
 	
 	@Override
 	public List<UserDetails> getUsersByAuthority(IApsAuthority authority) throws ApsSystemException {
@@ -51,7 +56,8 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUsersByAuthority");
+			_logger.error("Error retrieving the list of authorized users", t);
+			//ApsSystemUtils.logThrowable(t, this, "getUsersByAuthority");
 			throw new ApsSystemException("Error retrieving the list of authorized users", t);
 		}
 		return users;
@@ -66,7 +72,8 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 		try {
 			usernames = this.getAuthorizatorDAO().getUserAuthorizated(authority);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUsernamesByAuthority");
+			_logger.error("Error retrieving the list of authorized users", t);
+			//ApsSystemUtils.logThrowable(t, this, "getUsernamesByAuthority");
 			throw new ApsSystemException("Error retrieving the list of authorized users", t);
 		}
 		return usernames;
@@ -78,7 +85,8 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 		try {
 			this.getAuthorizatorDAO().setUserAuthorization(username, authority);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setUserAuthorization");
+			_logger.error("Error while setting the user authorization for {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "setUserAuthorization");
 			throw new ApsSystemException("Error while setting the user authorization", t);
 		}
 	}
@@ -89,7 +97,8 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 		try {
 			this.getAuthorizatorDAO().removeUserAuthorization(username, authority);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeUserAuthorization");
+			_logger.error("Error while deleting the user authorization for {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "removeUserAuthorization");
 			throw new ApsSystemException("Error while deleting the user authorization", t);
 		}
 	}
@@ -99,14 +108,15 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 		for (int i = 0; i < authorities.size(); i++) {
 			IApsAuthority authorityToVerify = authorities.get(i);
 			if (!this.checkAuthority(authorityToVerify)) {
-				ApsSystemUtils.getLogger().error("Attempt to set invalid authority to user " + username);
+				_logger.warn("Attempt to set invalid authority to user {}", username);
 				return;
 			}
 		}
 		try {
 			this.getAuthorizatorDAO().setUserAuthorizations(username, authorities);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setUserAuthorizations");
+			_logger.error("Error detected while granting user authorizations for {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "setUserAuthorizations");
 			throw new ApsSystemException("Error detected while granting user authorizations", t);
 		}
 	}
@@ -129,7 +139,8 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAuthorizationsByUser");
+			_logger.error("Error while retrieving the authorizations of the user {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "getAuthorizationsByUser");
 			throw new ApsSystemException("Error while retrieving the authorizations of the user", t);
 		}
 		return auths;
@@ -142,18 +153,18 @@ public abstract class AbstractApsAutorityManager extends AbstractService impleme
 	 */
 	protected boolean checkAuthority(IApsAuthority authority) {
 		if (null == authority) {
-			ApsSystemUtils.getLogger().error("Invalid authority detected");
+			_logger.warn("Invalid authority detected");
 //					"Required Users by null authority";
 			return false;
 		}
 		IApsAuthority authForCheck = this.getAuthority(authority.getAuthority());
 		if (null == authForCheck) {
-			ApsSystemUtils.getLogger().error("The authority with code " + authority.getAuthority()+" does not exist");
+			_logger.warn("The authority with code {} does not exist", authority.getAuthority());
 //					"Required Users by not existing authority : code " + authority.getAuthority());
 			return false;
 		}
 		if (!authForCheck.getClass().equals(authority.getClass())) {
-			ApsSystemUtils.getLogger().error("Mismatching authority classes detected; code " + authority.getAuthority() + " - Class " + authority.getClass()+" is different by "+authForCheck.getClass());
+			_logger.warn("Mismatching authority classes detected; code {} - Class {} is different by {}", authority.getAuthority(), authority.getClass(), authForCheck.getClass());
 //					"Required Users by invalid authority: code " + authority.getAuthority() + " - Class " + authority.getClass());
 			return false;
 		}

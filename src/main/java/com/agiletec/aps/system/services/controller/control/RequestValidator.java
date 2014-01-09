@@ -22,6 +22,9 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -49,10 +52,12 @@ import com.agiletec.aps.system.services.page.PageUtils;
  * @author M.Diana - E.Santoboni
  */
 public class RequestValidator extends AbstractControlService {
+
+	private static final Logger _logger = LoggerFactory.getLogger(RequestValidator.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
+		_logger.debug("{} : initialized", this.getClass().getName());
 	}
 	
 	/**
@@ -85,7 +90,8 @@ public class RequestValidator extends AbstractControlService {
 		} catch (Throwable t) {
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			ApsSystemUtils.logThrowable(t, this, "service", "Error while validating the client request");
+			_logger.error("Error while validating the client request", t);
+			//ApsSystemUtils.logThrowable(t, this, "service", "Error while validating the client request");
 		}
 		return retStatus;
 	}

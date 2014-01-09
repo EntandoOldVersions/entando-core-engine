@@ -20,13 +20,16 @@ package com.agiletec.aps.system.common.entity;
 import java.util.Iterator;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Thread Class used to reload all entity references. 
  * @author E.Santoboni
  */
 public class ReloadingReferencesThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ReloadingReferencesThread.class);
 	
 	/**
 	 * Setup the thread for the references reloading
@@ -56,7 +59,8 @@ public class ReloadingReferencesThread extends Thread {
 		try {
 			this._entityManager.reloadEntitySearchReferencesByType(typeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntityTypeReferences of type : " + typeCode);
+			_logger.error("reloadEntityTypeReferences of type : {}", typeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntityTypeReferences of type : " + typeCode);
 		}
 	}
 	

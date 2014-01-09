@@ -19,7 +19,9 @@ package com.agiletec.aps.system.services.controller;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
@@ -34,11 +36,12 @@ import com.agiletec.aps.system.services.controller.control.ControlServiceInterfa
  * @author M.Diana
  */
 public class ControllerManager extends AbstractService {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ControllerManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " 
-				+ this.getControllerServices().size() + " controller services");
+		_logger.debug("{}: initialized {} controller services", this.getClass().getName(), this.getControllerServices().size());
 	}
 	
 	/**
@@ -76,7 +79,8 @@ public class ControllerManager extends AbstractService {
 					&& status != REDIRECT 
 					&& status != SYS_ERROR);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "service");
+			_logger.error("generic error", t);
+			//ApsSystemUtils.logThrowable(t, this, "service");
 			status = SYS_ERROR;
 		}
 		return status;

@@ -19,7 +19,9 @@ package com.agiletec.aps.system.services.controller.control;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -31,27 +33,30 @@ import com.agiletec.aps.system.services.url.PageURL;
  * @author M.Diana
  */
 public class ErrorManager extends AbstractControlService {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ErrorManager.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._log.debug(this.getClass().getName() + ": initialized");
+		_logger.debug("{} : initialized", this.getClass().getName());
 	}
 	
 	@Override
 	public int service(RequestContext reqCtx, int status) {
 		int retStatus = ControllerManager.INVALID_STATUS;
-		this._log.debug("Intervention of the error service");
+		_logger.debug("Intervention of the error service");
 		try {
 			PageURL url = this.getUrlManager().createURL(reqCtx);
 			url.setPageCode(this.getErrorPageCode());
 			String redirUrl = url.getURL();
 
-			_log.debug("Redirecting to " + redirUrl);
+			_logger.debug("Redirecting to " + redirUrl);
 			reqCtx.clearError();
 			reqCtx.addExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL, redirUrl);
 			retStatus = ControllerManager.REDIRECT;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "service", "Error detected while processing the request");
+			_logger.debug("Error detected while processing the request", t);
+			//ApsSystemUtils.logThrowable(t, this, "service", "Error detected while processing the request");
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 		}

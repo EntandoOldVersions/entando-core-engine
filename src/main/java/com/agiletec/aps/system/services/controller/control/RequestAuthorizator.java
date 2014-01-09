@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -43,10 +45,12 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author M.Diana
  */
 public class RequestAuthorizator extends AbstractControlService {
+
+	private static final Logger _logger = LoggerFactory.getLogger(RequestAuthorizator.class);
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this._log.debug(this.getClass().getName() + ": initialized");
+		_logger.debug("{} : initialized", this.getClass().getName());
 	}
 	
 	/**
@@ -59,7 +63,7 @@ public class RequestAuthorizator extends AbstractControlService {
 	 */
 	@Override
 	public int service(RequestContext reqCtx, int status) {
-		_log.debug("Invoked: " + this.getClass().getName());
+		_logger.debug("Invoked: {}", this.getClass().getName());
 		int retStatus = ControllerManager.INVALID_STATUS;
 		if (status == ControllerManager.ERROR) {
 			return status;
@@ -86,7 +90,8 @@ public class RequestAuthorizator extends AbstractControlService {
 				retStatus = this.redirect(this.getLoginPageCode(), params, reqCtx);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "service", "Error while processing the request");
+			_logger.error("Error while processing the request", t);
+			//ApsSystemUtils.logThrowable(t, this, "service", "Error while processing the request");
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}

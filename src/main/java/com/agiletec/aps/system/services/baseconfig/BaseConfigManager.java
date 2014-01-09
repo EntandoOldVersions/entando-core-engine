@@ -22,8 +22,9 @@ import java.util.Map;
 
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.Rule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -42,14 +43,17 @@ import com.agiletec.aps.util.MapSupportRule;
  * @author M.Diana - E.Santoboni
  */
 public class BaseConfigManager extends AbstractService implements ConfigInterface {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseConfigManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadConfigItems();
 		this.parseParams();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized # "
-				+ this._configItems.size() + " configuration items and "
-				+ this._params.size() + " parameters");
+		_logger.debug("{} ready. Initialized {} configuration items and {} parameters", this.getClass().getName(), this._configItems.size(), this._params.size());
+		//ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized # "
+				//+ this._configItems.size() + " configuration items and "
+				//+ this._params.size() + " parameters");
 	}
 	
 	/**
@@ -80,7 +84,8 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 			this.refresh();
 		} catch (Throwable t) {
 			this._configItems.put(itemName, oldParamValue);
-			ApsSystemUtils.logThrowable(t, this, "updateConfigItem");
+			_logger.error("Error while updating item {}", itemName, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateConfigItem");
 			throw new ApsSystemException("Error while updating item", t);
 		}
 	}
@@ -128,7 +133,8 @@ public class BaseConfigManager extends AbstractService implements ConfigInterfac
 		try {
 			dig.parse(new StringReader(xml));
 		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "parseParams");
+			_logger.error("Error detected while parsing the \"params\" item in the \"sysconfig\" table: verify the \"sysconfig\" table", e);
+			//ApsSystemUtils.logThrowable(e, this, "parseParams");
 			throw new ApsSystemException(
 					"Error detected while parsing the \"params\" item in the \"sysconfig\" table:" +
 					" verify the \"sysconfig\" table", e);
