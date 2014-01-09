@@ -42,10 +42,11 @@ public abstract class AbstractDAO implements Serializable {
 	 * @param methodName Il nome del metodo in cui si e verificata l'eccezione 
 	 *                   (non indispensabile, può essere null)
 	 */
-//	protected void processDaoException(Throwable t, String message, String methodName) {
-//		ApsSystemUtils.logThrowable(t, this, methodName, message);
-//		throw new RuntimeException(message, t);
-//	}
+	@Deprecated
+	protected void processDaoException(Throwable t, String message, String methodName) {
+		ApsSystemUtils.logThrowable(t, this, methodName, message);
+		throw new RuntimeException(message, t);
+	}
 
 	/**
 	 * Restituisce una connessione SQL relativa al datasource.
