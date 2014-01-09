@@ -17,7 +17,9 @@
 */
 package com.agiletec.aps.system.services.keygenerator;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -26,12 +28,13 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author S.Didaci - E.Santoboni
  */
 public class KeyGeneratorManager extends AbstractService implements IKeyGeneratorManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(KeyGeneratorManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadUniqueKey();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + 
-				": last loaded key " + _uniqueKeyCurrentValue );
+		_logger.debug("{} ready. : last loaded key {}", this.getClass().getName(), _uniqueKeyCurrentValue );
 	}
 
 	/**
@@ -43,7 +46,8 @@ public class KeyGeneratorManager extends AbstractService implements IKeyGenerato
 		try {
 			_uniqueKeyCurrentValue = this.getKeyGeneratorDAO().getUniqueKey();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadUniqueKey","Error retrieving the unique key");
+			_logger.error("Error retrieving the unique key", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadUniqueKey","Error retrieving the unique key");
 			throw new ApsSystemException("Error retrieving the unique key", t);
 		}
 	}
@@ -65,7 +69,8 @@ public class KeyGeneratorManager extends AbstractService implements IKeyGenerato
 		try {
 			this.getKeyGeneratorDAO().updateKey(_uniqueKeyCurrentValue);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadUniqueKey");
+			_logger.error("Error updating the unique key", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadUniqueKey");
 			throw new ApsSystemException("Error updating the unique key", t);
 		}
 	}

@@ -26,6 +26,8 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -38,6 +40,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class PageModelDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageModelDOM.class);
 	
 	/**
 	 * Costruttore della classe.
@@ -57,7 +61,8 @@ public class PageModelDOM {
 		try {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "decodeDOM");
+			_logger.error("Error parsing the page model XML: {}", xmlText, t);
+			//ApsSystemUtils.logThrowable(t, this, "decodeDOM");
 			throw new ApsSystemException("Error parsing the page model XML", t);
 		}
 	}

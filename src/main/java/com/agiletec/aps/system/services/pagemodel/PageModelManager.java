@@ -20,7 +20,9 @@ package com.agiletec.aps.system.services.pagemodel;
 import java.util.Collection;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -30,17 +32,19 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class PageModelManager extends AbstractService implements IPageModelManager {
 
+	private static final Logger _logger = LoggerFactory.getLogger(PageModelManager.class);
+	
 	@Override
 	public void init() throws Exception {
 		this.loadPageModels();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " 
-				+ this._models.size() + " page models");
+		_logger.debug("{} ready. initialized {} page models", this.getClass().getName() ,this._models.size());
 	}
 
 	private void loadPageModels() throws ApsSystemException {
 		try {
 			this._models = this.getPageModelDAO().loadModels();
 		} catch (Throwable t) {
+			_logger.error("Error loading page models", t);
 			throw new ApsSystemException("Error loading page models", t);
 		}
 	}

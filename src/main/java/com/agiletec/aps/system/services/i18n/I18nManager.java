@@ -24,7 +24,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsProperties;
@@ -35,12 +37,13 @@ import com.agiletec.aps.util.ApsProperties;
  * @author S.Didaci - E.Santoboni - S.Puddu
  */
 public class I18nManager extends AbstractService implements II18nManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(I18nManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadLabels();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + 
-				": initialized " + this._labelGroups.size() + " labels");
+		_logger.debug("{} : initialized {} labels", this.getClass().getName(), this._labelGroups.size());
 	}
 
 	/**
@@ -94,7 +97,8 @@ public class I18nManager extends AbstractService implements II18nManager {
 			this.getI18nDAO().addLabelGroup(key, labels);
 			this._labelGroups.put(key, labels);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addLabelGroup");
+			_logger.error("Error while adding a group of labels by key '{}'", key, t);
+			//ApsSystemUtils.logThrowable(t, this, "addLabelGroup");
 			throw new ApsSystemException("Error while adding a group of labels", t);
 		}
 	}
@@ -110,7 +114,8 @@ public class I18nManager extends AbstractService implements II18nManager {
 			this.getI18nDAO().deleteLabelGroup(key);
 			this._labelGroups.remove(key);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteLabelGroup");
+			_logger.error("Error while deleting a label by key {}", key, t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteLabelGroup");
 			throw new ApsSystemException("Error while deleting a label", t);
 		}
 	}
@@ -127,7 +132,8 @@ public class I18nManager extends AbstractService implements II18nManager {
 			this.getI18nDAO().updateLabelGroup(key, labels);
 			this._labelGroups.put(key, labels);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateLabel");
+			_logger.error("Error while updating label with key {}", key, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateLabel");
 			throw new ApsSystemException("Error while updating a label", t);
 		}
 	}

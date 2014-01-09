@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityManager;
@@ -33,11 +35,13 @@ import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthority
  */
 public class GroupManager extends AbstractApsAutorityManager implements IGroupManager  {
 	
+	private static final Logger _logger = LoggerFactory.getLogger(GroupManager.class);
+	
 	@Override
 	public void init() throws Exception {
 		this.loadGroups();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
-				+ ": initialized " + _groups.size() + " user groups");
+		_logger.debug("{} ready. Initialized {}  user groups", this.getClass().getName(), _groups.size());
+		//ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " + _groups.size() + " user groups");
 	}
 	
 	private void loadGroups() throws ApsSystemException {
@@ -58,7 +62,8 @@ public class GroupManager extends AbstractApsAutorityManager implements IGroupMa
 			this.getGroupDAO().addGroup(group);
 			_groups.put(group.getName(), group );
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addGroup");
+			_logger.error("Error detected while adding a group", t);
+			//ApsSystemUtils.logThrowable(t, this, "addGroup");
 			throw new ApsSystemException("Error detected while adding a group", t);
 		}
 	}
@@ -73,7 +78,8 @@ public class GroupManager extends AbstractApsAutorityManager implements IGroupMa
 			this.getGroupDAO().deleteGroup(group);
 			_groups.remove(group.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeGroup");
+			_logger.error("Error while removing a group", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeGroup");
 			throw new ApsSystemException("Error while removing a group", t);
 		}
 	}
@@ -89,7 +95,8 @@ public class GroupManager extends AbstractApsAutorityManager implements IGroupMa
 			Group groupInMap = this.getGroup(group.getName());
 			groupInMap.setDescr(group.getDescr());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateGroup");
+			_logger.error("Error updating a group", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateGroup");
 			throw new ApsSystemException("Error updating a group", t);
 		}
 	}

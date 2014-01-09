@@ -24,7 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -44,11 +46,12 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
  */
 public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver {
 
+	private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
+	
 	@Override
 	public void init() throws Exception {
 		this.loadPageTree();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
-				+ ": Initialized " + _pages.size() + " pages.");
+		_logger.debug("{} ready. : Initialized {} pages", this.getClass().getName(), _pages.size());
 	}
 
 	/**
@@ -88,7 +91,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		} catch (ApsSystemException e) {
 			throw e;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadPageTree");
+			_logger.error("Error while building the tree of pages", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadPageTree");
 			throw new ApsSystemException("Error while building the tree of pages", t);
 		}
 	}
@@ -98,7 +102,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		try {
 			this.init();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
+			_logger.error("Error on init method", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
 		}
 	}
 	
@@ -114,7 +119,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			try {
 				this.getPageDAO().deletePage(page);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "deletePage");
+				_logger.error("Error detected while deleting page {}", pageCode, t);
+				//ApsSystemUtils.logThrowable(t, this, "deletePage");
 				throw new ApsSystemException("Error detected while deleting a page", t);
 			}
 		}
@@ -132,7 +138,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		try {
 			this.getPageDAO().addPage(page);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addPage");
+			_logger.error("Error adding a page", t);
+			//ApsSystemUtils.logThrowable(t, this, "addPage");
 			throw new ApsSystemException("Error adding a page", t);
 		}
 		this.loadPageTree();
@@ -149,7 +156,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		try {
 			this.getPageDAO().updatePage(page);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updatePage");
+			_logger.error("Error updating a page", t);
+			//ApsSystemUtils.logThrowable(t, this, "updatePage");
 			throw new ApsSystemException("Error updating a page", t);
 		}
 		this.loadPageTree();
@@ -200,7 +208,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "movePage");
+			_logger.error("Error while moving  page {}", pageCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "movePage");
 			throw new ApsSystemException("Error while moving a page", t);
 		}
 		this.loadPageTree();
@@ -238,7 +247,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		try {
 			this.getPageDAO().updatePosition(pageDown, pageUp);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "moveUpDown");
+			_logger.error("Error while moving a page", t);
+			//ApsSystemUtils.logThrowable(t, this, "moveUpDown");
 			throw new ApsSystemException("Error while moving a page", t);
 		}
 	}
@@ -271,7 +281,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error removing the showlet from the page '" + pageCode + "' in the frame "+ pos;
-			ApsSystemUtils.logThrowable(t, this, "removeShowlet", message);
+			_logger.error("Error removing the showlet from the page '{}' in the frame {}", pageCode, pos, t);
 			throw new ApsSystemException(message, t);
 		}
 	}
@@ -307,7 +317,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, pos);
 		} catch (Throwable t) {
 			String message = "Error during the assignation of a showlet to the frame " + pos +" in the page code "+pageCode;
-			ApsSystemUtils.logThrowable(t, this, "joinWidget", message);
+			_logger.error("Error during the assignation of a showlet to the frame {} in the page code {}", pos, pageCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "joinWidget", message);
 			throw new ApsSystemException(message, t);
 		}
 	}
@@ -377,7 +388,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.searchPages(root, pageCodeToken, allowedGroups, searchResult);
 		} catch (Throwable t) {
 			String message = "Error during searching pages with token " + pageCodeToken;
-			ApsSystemUtils.logThrowable(t, this, "searchPages", message);
+			_logger.error("Error during searching pages with token {}", pageCodeToken, t);
+			//ApsSystemUtils.logThrowable(t, this, "searchPages", message);
 			throw new ApsSystemException(message, t);
 		}
 		return searchResult;
@@ -407,7 +419,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.searchUtilizers(groupName, utilizers, root);
 		} catch (Throwable t) {
 			String message = "Error during searching page utilizers of group " + groupName;
-			ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers", message);
+			_logger.error("Error during searching page utilizers of group {}", groupName, t);
+			//ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers", message);
 			throw new ApsSystemException(message, t);
 		}
 		return utilizers;
@@ -453,7 +466,8 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.getWidgetUtilizers(root, widgetTypeCode, pages);
 		} catch (Throwable t) {
 			String message = "Error during searching page utilizers of widget with code " + widgetTypeCode;
-			ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers", message);
+			_logger.error("Error during searching page utilizers of widget with code {}", widgetTypeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers", message);
 			throw new ApsSystemException(message, t);
 		}
 		return pages;
