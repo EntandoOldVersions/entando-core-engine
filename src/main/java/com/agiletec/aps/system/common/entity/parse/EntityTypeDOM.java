@@ -29,6 +29,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -57,6 +59,8 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  * @author M.Diana - E.Santoboni
  */
 public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityTypeDOM.class);
 	
 	/**
 	 * Initialization of the DOM class.
@@ -95,7 +99,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			Document document = this.decodeDOM(xml);
 			this.doParsing(document, entityClass, entityDom);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initEntityTypeDOM", "Error extracting entity types");
+			_logger.error("Error extracting entity types. entityManagerName {} - xml: {}", entityManagerName, xml, t);
+			//ApsSystemUtils.logThrowable(t, this, "initEntityTypeDOM", "Error extracting entity types");
 			throw new ApsSystemException("Error extracting entity types", t);
 		}
 	}
@@ -118,7 +123,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			format.setIndent("\t");
 			out.setFormat(format);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
+			_logger.error("Error building xml", t);
+			//ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
 			throw new ApsSystemException("Error building xml", t);
 		}
 		return out.outputString(document);
@@ -135,7 +141,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			format.setIndent("\t");
 			out.setFormat(format);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
+			_logger.error("Error building xml", t);
+			//ApsSystemUtils.logThrowable(t, this, "getXml", "Error building xml");
 			throw new ApsSystemException("Error building xml", t);
 		}
 		return out.outputString(document);
@@ -148,7 +155,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			Document document = this.decodeDOM(xml);
 			return this.doParsing(document.getRootElement(), entityClass, entityDom);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractEntityType", "Error extracting entity type");
+			_logger.error("Error extracting entity type from xml {}", xml, t);
+			//ApsSystemUtils.logThrowable(t, this, "extractEntityType", "Error extracting entity type");
 			throw new ApsSystemException("Error extracting entity type", t);
 		}
 	}
@@ -214,7 +222,8 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			entity.setDefaultLang(this.getLangManager().getDefaultLang().getCode());
 			ApsSystemUtils.getLogger().debug("Entity Type '" + entity.getTypeCode() + "' defined");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doParsing", "Error extracting entity type");
+			_logger.error("Error extracting entity type", t);
+			//ApsSystemUtils.logThrowable(t, this, "doParsing", "Error extracting entity type");
 			throw new ApsSystemException("Configuration error of the Entity Type detected", t);
 		}
 		return entity;

@@ -27,8 +27,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;
@@ -45,7 +46,9 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  * @author E.Santoboni
  */
 public class ApsEntity implements IApsEntity {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsEntity.class);
+	
     /**
      * Initialization of the entity with its related elements.
      */
@@ -291,7 +294,8 @@ public class ApsEntity implements IApsEntity {
             }
             entity.setEntityDOM(this.getEntityDOM());
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "getEntityPrototype", "Error creating entity prototype");
+        	_logger.error("Error creating entity prototype", e);
+            //ApsSystemUtils.logThrowable(e, this, "getEntityPrototype", "Error creating entity prototype");
             throw new RuntimeException("Error creating entity prototype", e);
         }
         return entity;
@@ -409,7 +413,8 @@ public class ApsEntity implements IApsEntity {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating entity", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new RuntimeException("Error validating entity");
         }
         return errors;

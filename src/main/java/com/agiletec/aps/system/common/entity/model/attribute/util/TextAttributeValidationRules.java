@@ -23,8 +23,9 @@ import java.util.regex.Pattern;
 
 import org.jdom.CDATA;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -38,7 +39,9 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author E.Santoboni
  */
 public class TextAttributeValidationRules extends AbstractAttributeValidationRules {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(TextAttributeValidationRules.class);
+	
     @Override
     public IAttributeValidationRules clone() {
         TextAttributeValidationRules clone = (TextAttributeValidationRules) super.clone();
@@ -124,7 +127,8 @@ public class TextAttributeValidationRules extends AbstractAttributeValidationRul
                 this.checkRegExp(attribute, textTracer, lang, errors);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+            //ApsSystemUtils.logThrowable(t, this, "validate");
+            _logger.error("Error validating text attribute", t);
             throw new RuntimeException("Error validating text attribute", t);
         }
         return errors;

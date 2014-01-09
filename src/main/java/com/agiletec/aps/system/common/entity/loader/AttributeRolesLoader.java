@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -35,6 +37,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class AttributeRolesLoader {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AttributeRolesLoader.class);
 	
 	public Map<String, AttributeRole> extractAttributeRoles(String attributeRolesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, AttributeRole> attributeRoles = new HashMap<String, AttributeRole>();
@@ -44,7 +48,8 @@ public class AttributeRolesLoader {
 			this.loadDefaultRoles(attributeRolesFileName, attributeRoles);
 			this.loadExtraRoles(attributeRoles);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractAttributeRoles", "Error loading attribute Roles");
+			//ApsSystemUtils.logThrowable(t, this, "extractAttributeRoles", "Error loading attribute Roles");
+			_logger.error("Error loading attribute Roles", t);
 		}
 		return attributeRoles;
 	}
@@ -57,7 +62,8 @@ public class AttributeRolesLoader {
 				attributeRoles.putAll(dom.extractRoles(xml, attributeRolesFileName));
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadDefaultRoles", "Error loading attribute Roles : file " + attributeRolesFileName);
+			_logger.error("Error loading attribute Roles : file {}", attributeRolesFileName, t);
+			//ApsSystemUtils.logThrowable(t, this, "loadDefaultRoles", "Error loading attribute Roles : file " + attributeRolesFileName);
 		}
 	}
 	
@@ -72,11 +78,13 @@ public class AttributeRolesLoader {
 						((ExtraAttributeRolesWrapper) loader).executeLoading(attributeRoles, this.getEntityManager());
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "loadExtraRoles", "Error extracting attribute support object : bean " + defNames[i]);
+					_logger.error("Error extracting attribute support object : bean {}", defNames[i], t);
+					//ApsSystemUtils.logThrowable(t, this, "loadExtraRoles", "Error extracting attribute support object : bean " + defNames[i]);
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadExtraRoles", "Error loading attribute support object");
+			_logger.error("Error loading attribute support object", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadExtraRoles", "Error loading attribute support object");
 		}
 	}
 	

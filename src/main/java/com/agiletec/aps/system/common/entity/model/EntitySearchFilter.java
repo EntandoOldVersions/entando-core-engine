@@ -27,6 +27,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -42,6 +45,8 @@ import com.agiletec.aps.util.DateConverter;
  * @author E.Santoboni
  */
 public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializable {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntitySearchFilter.class);
 	
 	protected EntitySearchFilter() {}
 	
@@ -396,7 +401,8 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 			String order = props.getProperty(EntitySearchFilter.ORDER_PARAM);
 			filter.setOrder(order);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, EntitySearchFilter.class, "Error on creation of filter instance");
+			_logger.error("Error on creation of filter instance", t);
+			//ApsSystemUtils.logThrowable(t, EntitySearchFilter.class, "Error on creation of filter instance");
 			throw new RuntimeException("Error on creation of filter instance", t);
 		}
 		return filter;
@@ -422,7 +428,8 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 			try {
 				likeOptionType = Enum.valueOf(LikeOptionType.class, likeOptionTypeString.trim().toUpperCase());
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, EntitySearchFilter.class, "setValues", "Error parsing 'like option type' parameter");
+				_logger.error("Error parsing 'like option type' parameter", t);
+				//ApsSystemUtils.logThrowable(t, EntitySearchFilter.class, "setValues", "Error parsing 'like option type' parameter");
 			}
 		}
 		if (objectValue != null) {

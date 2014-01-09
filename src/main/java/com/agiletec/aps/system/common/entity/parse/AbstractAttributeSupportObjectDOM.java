@@ -31,6 +31,8 @@ import javax.xml.validation.Validator;
 
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -40,6 +42,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public abstract class AbstractAttributeSupportObjectDOM {
+	
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractAttributeSupportObjectDOM.class);
 	
 	protected void validate(String xmlText, String definitionPath) throws ApsSystemException {
 		SchemaFactory factory = 
@@ -57,14 +61,16 @@ public abstract class AbstractAttributeSupportObjectDOM {
 	        ApsSystemUtils.getLogger().info("Valid definition : " + definitionPath);
         } catch (Throwable t) {
         	String message = "Error validating definition : " + definitionPath;
-        	ApsSystemUtils.logThrowable(t, this, "this", message);
+        	_logger.error("Error validating definition : {}", definitionPath, t);
+        	//ApsSystemUtils.logThrowable(t, this, "this", message);
         	throw new ApsSystemException(message, t);
         } finally {
         	try {
 				if (null != schemaIs) schemaIs.close();
 				if (null != xmlIs) xmlIs.close();
 			} catch (IOException e) {
-				ApsSystemUtils.logThrowable(e, this, "this");
+				_logger.error("Error validating definition path: {} - xml: {}", definitionPath, xmlText, e);
+				//ApsSystemUtils.logThrowable(e, this, "this");
 			}
         }
 	}

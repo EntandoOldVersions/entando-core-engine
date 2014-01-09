@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -44,6 +45,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class CompositeAttribute extends AbstractComplexAttribute {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(CompositeAttribute.class);
+	
 	/**
 	 * Attribute initialization.
 	 */
@@ -286,7 +289,8 @@ public class CompositeAttribute extends AbstractComplexAttribute {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate");
+			//ApsSystemUtils.logThrowable(t, this, "validate");
+			_logger.error("Error validating composite attribute", t);
 			throw new RuntimeException("Error validating composite attribute", t);
 		}
 		return errors;

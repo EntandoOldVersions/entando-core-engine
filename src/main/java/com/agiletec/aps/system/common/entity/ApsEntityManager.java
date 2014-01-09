@@ -33,6 +33,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -64,6 +65,8 @@ import com.agiletec.aps.util.DateConverter;
  */
 public abstract class ApsEntityManager extends AbstractService 
 		implements IEntityManager, IEntityTypesConfigurer, ReloadingEntitiesReferencesObserver {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsEntityManager.class);
 	
 	/**
 	 * Initialize the service by loading the Entity Types form the configuration.
@@ -75,7 +78,8 @@ public abstract class ApsEntityManager extends AbstractService
 		String entityManagerName = super.getName();
 		this._entityTypes = this._entityTypeFactory.getEntityTypes(this.getEntityClass(), 
 				this.getConfigItemName(), this.getEntityTypeDom(), entityManagerName, this.getEntityDom());
-		ApsSystemUtils.getLogger().debug(this.getName() + ": inizializated " + this._entityTypes.size() + " entity types");
+		
+		_logger.debug("{} : inizializated {} entity types", this.getName(), this._entityTypes.size());
 	}
 	
 	@Override
@@ -158,7 +162,8 @@ public abstract class ApsEntityManager extends AbstractService
 			parser.parse(is, handler);
 			return entityPrototype;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createEntityFromXml");
+			_logger.error("Error detected while creating the entity. typecode: {} - xml: {}", entityTypeCode, xml, t);
+			//ApsSystemUtils.logThrowable(t, this, "createEntityFromXml");
 			throw new ApsSystemException("Error detected while creating the entity", t);
 		}
 	}
@@ -303,7 +308,8 @@ public abstract class ApsEntityManager extends AbstractService
 			this._entityTypeFactory.updateEntityTypes(newEntityTypes, this.getConfigItemName(), this.getEntityTypeDom());
 			this.refresh();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateEntityPrototypes");
+			//ApsSystemUtils.logThrowable(t, this, "updateEntityPrototypes");
+			_logger.error("Error detected while updating entity prototypes", t);
 			throw new ApsSystemException("Error detected while updating entity prototypes", t);
 		}
 	}
@@ -371,9 +377,9 @@ public abstract class ApsEntityManager extends AbstractService
 			} while (!check.equals(Object.class));
 			throw new RuntimeException("Invalid entity class");
 		} catch (ClassNotFoundException e) {
-			ApsSystemUtils.logThrowable(e, this, "setEntityClassName", 
-			"Error detected while creating the entity class");
-			throw new RuntimeException("Errore creating the entity class", e);
+			_logger.error("Errore creating the entity class", e);
+			//ApsSystemUtils.logThrowable(e, this, "setEntityClassName","Error detected while creating the entity class");
+			throw new RuntimeException("Error creating the entity class", e);
 		}
 	}
 	
@@ -491,7 +497,8 @@ public abstract class ApsEntityManager extends AbstractService
 		try {
 			idList = this.getEntitySearcherDao().searchId(filters);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchId");
+			_logger.error("Error detected while searching entities", t);
+			//ApsSystemUtils.logThrowable(t, this, "searchId");
 			throw new ApsSystemException("Error detected while searching entities", t);
 		}
 		return idList;
@@ -510,7 +517,8 @@ public abstract class ApsEntityManager extends AbstractService
 		try {
 			idList = this.getEntitySearcherDao().searchId(typeCode, filters);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchId");
+			_logger.error("Error detected while searching entities with typeCode {}", typeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "searchId");
 			throw new ApsSystemException("Error detected while searching entities", t);
 		}
 		return idList;
@@ -522,7 +530,8 @@ public abstract class ApsEntityManager extends AbstractService
 		try {
 			records = this.getEntitySearcherDao().searchRecords(filters);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchRecords");
+			_logger.error("Error searching entity records", t);
+			//ApsSystemUtils.logThrowable(t, this, "searchRecords");
 			throw new ApsSystemException("Error searching entity records", t);
 		}
 		return records;
@@ -534,8 +543,8 @@ public abstract class ApsEntityManager extends AbstractService
 			String typeCode = null;
 			this.reloadEntitiesReferences(typeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntitiesReferences", 
-			"Error while refreshing entity refrences");
+			_logger.error("Error while refreshing entity refrences", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntitiesReferences", "Error while refreshing entity refrences");
 		}
 	}
 
@@ -578,7 +587,8 @@ public abstract class ApsEntityManager extends AbstractService
 				this.reloadEntityReferences(entityId);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntitySearchReferencesByType");
+			_logger.error("Error reloading entity references of type: {}", typeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntitySearchReferencesByType");
 			throw new ApsSystemException("Error reloading entity references of type: " + typeCode, t);
 		} finally {
 			this.setStatus(ApsEntityManager.STATUS_READY, typeCode);
@@ -593,7 +603,8 @@ public abstract class ApsEntityManager extends AbstractService
 			}
 			ApsSystemUtils.getLogger().info("Entities search references reloaded " + entityId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", "Error reloading the entities search references: " + entityId);
+			_logger.error("Error reloading the entities search references: {}", entityId, t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", "Error reloading the entities search references: " + entityId);
 		}
 	}
 	
@@ -608,7 +619,8 @@ public abstract class ApsEntityManager extends AbstractService
 		try {
 			entitiesId = this.getEntityDao().getAllEntityId();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllEntityId");
+			_logger.error("Error while loading the complete list of entity IDs", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllEntityId");
 			throw new ApsSystemException("Error while loading the complete list of entity IDs", t);
 		}
 		return entitiesId;

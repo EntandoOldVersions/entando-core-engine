@@ -21,8 +21,9 @@ import java.util.List;
 
 import org.jdom.CDATA;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.util.EnumeratorAttributeItemsExtractor;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -31,7 +32,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class EnumeratorAttribute extends MonoTextAttribute {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(EnumeratorAttribute.class);
+	
 	@Override
     public Object getAttributePrototype() {
         EnumeratorAttribute prototype = (EnumeratorAttribute) super.getAttributePrototype();
@@ -73,7 +76,8 @@ public class EnumeratorAttribute extends MonoTextAttribute {
                     }
                 }
             } catch (Throwable t) {
-                ApsSystemUtils.logThrowable(t, this, "initItems", "Error while extract items from bean extractor '" + this.getExtractorBeanName() + "'");
+            	_logger.error("Error while extract items from bean extractor '{}'", this.getExtractorBeanName(), t);
+                //ApsSystemUtils.logThrowable(t, this, "initItems", "Error while extract items from bean extractor '" + this.getExtractorBeanName() + "'");
             }
         }
         if (null != this.getItems()) {

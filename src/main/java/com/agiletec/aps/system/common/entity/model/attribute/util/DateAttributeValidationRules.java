@@ -24,8 +24,9 @@ import java.util.List;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -38,7 +39,9 @@ import com.agiletec.aps.util.DateConverter;
  * @author E.Santoboni
  */
 public class DateAttributeValidationRules extends AbstractAttributeValidationRules {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(DateAttributeValidationRules.class);
+	
 	@Override
     protected void fillJDOMConfigElement(Element configElement) {
         super.fillJDOMConfigElement(configElement);
@@ -124,7 +127,8 @@ public class DateAttributeValidationRules extends AbstractAttributeValidationRul
                 errors.add(error);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
+        	_logger.error("Error validating Attribute '{}'", attribute.getName(), t);
+           // ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
             throw new RuntimeException("Error validating Attribute '" + attribute.getName() + "'", t);
         }
         return errors;

@@ -31,8 +31,9 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
@@ -49,8 +50,10 @@ import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 @XmlSeeAlso({ArrayList.class, BaseAttributeValidationRules.class, DateAttributeValidationRules.class, 
     NumberAttributeValidationRules.class, TextAttributeValidationRules.class, OgnlValidationRule.class})
 public class DefaultJAXBAttributeType {
-    
-    @XmlElement(name = "name", required = true)
+
+	private static final Logger _logger =  LoggerFactory.getLogger(DefaultJAXBAttributeType.class);
+	
+	@XmlElement(name = "name", required = true)
     public String getName() {
         return _name;
     }
@@ -127,7 +130,8 @@ public class DefaultJAXBAttributeType {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "createAttribute", "Error creating attribute '" + this.getName() + "'");
+        	_logger.error("Error creating attribute '{}'", this.getName(), t);
+            //ApsSystemUtils.logThrowable(t, this, "createAttribute", "Error creating attribute '" + this.getName() + "'");
             throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Error creating attribute '" + this.getName() + "'");
         }
         return attribute;

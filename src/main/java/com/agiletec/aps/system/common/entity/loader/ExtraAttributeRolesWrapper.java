@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -33,6 +36,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObject {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeRolesWrapper.class);
 	
 	public void executeLoading(Map<String, AttributeRole> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
 		String managerName = ((IManager) entityManager).getName();
@@ -56,7 +61,8 @@ public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObj
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute Roles");
+			//ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute Roles");
+			_logger.error("Error loading extra attribute Roles", t);
 		}
 	}
 	

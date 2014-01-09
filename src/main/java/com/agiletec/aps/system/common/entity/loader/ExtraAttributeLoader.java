@@ -20,10 +20,11 @@ package com.agiletec.aps.system.common.entity.loader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
 /**
@@ -31,13 +32,16 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
  * @author E.Santoboni
  */
 public class ExtraAttributeLoader {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeLoader.class);
 	
 	public Map<String, AttributeInterface> extractAttributes(BeanFactory beanFactory, String entityManagerName) {
 		Map<String, AttributeInterface> attributes = null;
 		try {
 			attributes = this.loadExtraAttributes(beanFactory, entityManagerName);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractAttributes", "Error loading extra attributes");
+			//ApsSystemUtils.logThrowable(t, this, "extractAttributes", "Error loading extra attributes");
+			_logger.error("Error loading extra attributes. entityManager: {}", entityManagerName, t);
 		}
 		return attributes;
 	}
@@ -58,11 +62,13 @@ public class ExtraAttributeLoader {
 						}
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "loadExtraAttributes", "Error extracting attribute : wrapper bean " + defNames[i]);
+					//ApsSystemUtils.logThrowable(t, this, "loadExtraAttributes", "Error extracting attribute : wrapper bean " + defNames[i]);
+					_logger.error("Error extracting attribute : wrapper bean {}", defNames[i], t);
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadExtraAttributes", "Error loading extra attributes");
+			//ApsSystemUtils.logThrowable(t, this, "loadExtraAttributes", "Error loading extra attributes");
+			_logger.error("Error loading extra attributes. entityManagerName: {}", entityManagerName, t);
 		}
 		return extraAttributes;
 	}

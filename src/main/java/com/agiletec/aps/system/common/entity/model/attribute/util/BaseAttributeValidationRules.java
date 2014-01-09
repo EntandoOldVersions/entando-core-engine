@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -33,7 +34,9 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  * @author E.Santoboni
  */
 public class BaseAttributeValidationRules implements IAttributeValidationRules {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(BaseAttributeValidationRules.class);
+	
     @Override 
     public IAttributeValidationRules clone() {
         BaseAttributeValidationRules clone = null;
@@ -45,9 +48,9 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
                 clone.setOgnlValidationRule(this.getOgnlValidationRule().clone());
             }
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "clone");
-            throw new RuntimeException("Error detected while cloning the ValidationRules class '"
-                    + this.getClass().getName() + "' ");
+            //ApsSystemUtils.logThrowable(e, this, "clone");
+            _logger.error("Error detected while cloning the ValidationRules", e);
+            throw new RuntimeException("Error detected while cloning the ValidationRules class '" + this.getClass().getName() + "' ");
         }
         return clone;
     }
@@ -62,7 +65,8 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
             configElement = new Element(VALIDATIONS_ELEMENT_NAME);
             this.fillJDOMConfigElement(configElement);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getJDOMConfigElement");
+            //ApsSystemUtils.logThrowable(t, this, "getJDOMConfigElement");
+            _logger.error("Error detected while creating jdom element", t);
             throw new RuntimeException("Error detected while creating jdom element", t);
         }
         return configElement;
@@ -133,7 +137,8 @@ public class BaseAttributeValidationRules implements IAttributeValidationRules {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
+            //ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + attribute.getName() + "'");
+            _logger.error("Error validating Attribute '{}'", attribute.getName(), t);
             throw new RuntimeException("Error validating Attribute '" + attribute.getName() + "'", t);
         }
         return errors;

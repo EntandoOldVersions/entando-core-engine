@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
@@ -34,6 +36,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public final class AttributeDisablingCodesLoader {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AttributeDisablingCodesLoader.class);
 	
 	public Map<String, String> extractDisablingCodes(String attributeDisablingCodesFileName, BeanFactory beanFactory, IEntityManager entityManager) {
 		Map<String, String> disablingCodes = new HashMap<String, String>();
@@ -43,7 +47,8 @@ public final class AttributeDisablingCodesLoader {
 			this.loadDefaultDisablingCodes(attributeDisablingCodesFileName, disablingCodes);
 			this.loadExtraDisablingCodes(disablingCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractDisablingCodes", "Error loading disabling codes");
+			//ApsSystemUtils.logThrowable(t, this, "extractDisablingCodes", "Error loading disabling codes");
+			_logger.error("Error loading disabling codes", t);
 		}
 		return disablingCodes;
 	}
@@ -56,7 +61,8 @@ public final class AttributeDisablingCodesLoader {
 				disablingCodes.putAll(dom.extractDisablingCodes(xml, disablingCodesFileName));
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractDisablingCodes", "Error loading disabling codes : file " + disablingCodesFileName);
+			_logger.error("Error loading disabling codes from file {}", disablingCodesFileName, t);
+			//ApsSystemUtils.logThrowable(t, this, "extractDisablingCodes", "Error loading disabling codes : file " + disablingCodesFileName);
 		}
 	}
 	
@@ -71,13 +77,13 @@ public final class AttributeDisablingCodesLoader {
 						((ExtraAttributeDisablingCodesWrapper) loader).executeLoading(disablingCodes, this.getEntityManager());
 					}
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes", 
-							"Error extracting attribute support object : bean " + defNames[i]);
+					//ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes",	"Error extracting attribute support object : bean " + defNames[i]);
+					_logger.error("Error extracting attribute support object : bean {}", defNames[i], t);
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes", 
-					"Error loading attribute support object");
+			_logger.error("Error loading attribute support object", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadExtraDisablingCodes", "Error loading attribute support object");
 		}
 	}
 	

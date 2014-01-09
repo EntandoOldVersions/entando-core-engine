@@ -105,11 +105,6 @@ public class ApsSystemUtils {
 			className = caller.getClass().getName();
 		}
 		_logger.error("{} in {}.{}", message, className, methodName,  t);
-//		if(_logger.isLoggable(Level.FINER)){
-//			_logger.throwing(className, methodName, t);
-//		}
-//		_logger.warn(message + " - " + t.toString()
-//				+ " in " + className + "." + methodName);
 	}
 
 	/**

@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -39,8 +40,10 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author M.Diana
  */
 public class ListAttribute extends AbstractListAttribute {
-    
-    /**
+
+	private static final Logger _logger = LoggerFactory.getLogger(ListAttribute.class);
+	
+	/**
      * Initialize the data structure.
      */
     public ListAttribute() {
@@ -251,7 +254,8 @@ public class ListAttribute extends AbstractListAttribute {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+            //ApsSystemUtils.logThrowable(t, this, "validate");
+            _logger.error("Error validating list attribute", t);
             throw new RuntimeException("Error validating list attribute", t);
         }
         return errors;

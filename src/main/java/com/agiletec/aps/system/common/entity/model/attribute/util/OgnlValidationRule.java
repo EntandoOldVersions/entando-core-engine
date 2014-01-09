@@ -28,8 +28,9 @@ import ognl.OgnlException;
 
 import org.jdom.CDATA;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -40,7 +41,9 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author E.Santoboni
  */
 public class OgnlValidationRule implements Serializable {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(OgnlValidationRule.class);
+	
     public OgnlValidationRule() {}
     
     public OgnlValidationRule(Element element) {
@@ -124,9 +127,11 @@ public class OgnlValidationRule implements Serializable {
                 error.setMessageKey(this.getErrorMessageKey());
             }
         } catch (OgnlException oe) {
-            ApsSystemUtils.logThrowable(oe, this, "checkExpression", "Error on evaluation of expression : " + expression);
+            //ApsSystemUtils.logThrowable(oe, this, "checkExpression", "Error on evaluation of expression : " + expression);
+            _logger.error("Error on evaluation of expression : {}", expression, oe);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "checkExpression");
+            //ApsSystemUtils.logThrowable(t, this, "checkExpression");
+            _logger.error("Generic Error on evaluation Ognl Expression : {}", expression, t);
             throw new RuntimeException("Generic Error on evaluation Ognl Expression", t);
         }
         return error;

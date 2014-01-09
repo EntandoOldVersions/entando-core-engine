@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
@@ -32,7 +33,9 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
  * @author M.Diana
  */
 public class MonoListAttribute extends AbstractListAttribute {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(MonoListAttribute.class);
+	
     /**
      * Initialize the list of attributes.
      */
@@ -189,7 +192,8 @@ public class MonoListAttribute extends AbstractListAttribute {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating monolist attribute", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new RuntimeException("Error validating monolist attribute", t);
         }
         return errors;

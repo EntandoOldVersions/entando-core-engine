@@ -19,6 +19,9 @@ package com.agiletec.aps.system.common.entity.parse;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -32,6 +35,8 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
  * @author E.Santoboni
  */
 public class EntityTypeFactory implements IEntityTypeFactory {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityTypeFactory.class);
 	
 	/**
 	 * Return the Map of the prototypes of the Entity Types (indexed by their code) that the
@@ -72,7 +77,8 @@ public class EntityTypeFactory implements IEntityTypeFactory {
 			entityTypeDom.initEntityTypeDOM(xml, entityClass, entityDom, entityManagerName);
 			entityTypes = entityTypeDom.getEntityTypes();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityTypes");
+			_logger.error("Error in the entities initialization process. configItemName:{}", configItemName, t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityTypes");
 			throw new ApsSystemException("Error in the entities initialization process", t);
 		}
 		return entityTypes;
@@ -84,7 +90,8 @@ public class EntityTypeFactory implements IEntityTypeFactory {
 			String xml = entityTypeDom.getXml(entityTypes);
 			this.getConfigManager().updateConfigItem(configItemName, xml);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateEntityTypes");
+			_logger.error("Error detected while updating the Entity Types. configItemName: {}", configItemName, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateEntityTypes");
 			throw new ApsSystemException("Error detected while updating the Entity Types", t);
 		}
 	}

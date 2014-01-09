@@ -31,7 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttribute;
@@ -46,7 +48,9 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
 @XmlType(propOrder = {"id", "descr", "typeCode", "typeDescr", "mainGroup", "categories", "groups", "attributes"})
 @XmlSeeAlso({ArrayList.class, HashMap.class, JAXBHypertextAttribute.class, JAXBListAttribute.class})
 public class JAXBEntity implements Serializable {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(JAXBEntity.class);
+	
     public JAXBEntity() {}
     
     public JAXBEntity(IApsEntity mainEntity, String langCode) {
@@ -70,7 +74,8 @@ public class JAXBEntity implements Serializable {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "JAXBEntity");
+        	_logger.error("Error creating JAXBEntity", t);
+            //ApsSystemUtils.logThrowable(t, this, "JAXBEntity");
             throw new RuntimeException("Error creating JAXBEntity", t);
         }
     }
@@ -110,7 +115,8 @@ public class JAXBEntity implements Serializable {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "buildEntity");
+        	_logger.error("Error creating Entity", t);
+            //ApsSystemUtils.logThrowable(t, this, "buildEntity");
             throw new RuntimeException("Error creating Entity", t);
         }
         return prototype;

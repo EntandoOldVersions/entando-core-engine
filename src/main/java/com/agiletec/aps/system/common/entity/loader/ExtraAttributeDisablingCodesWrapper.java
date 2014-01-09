@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -32,6 +35,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeSupportObject {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ExtraAttributeDisablingCodesWrapper.class);
 	
 	public void executeLoading(Map<String, String> collectionToFill, IEntityManager entityManager) throws ApsSystemException {
 		String managerName = ((IManager) entityManager).getName();
@@ -55,7 +60,8 @@ public class ExtraAttributeDisablingCodesWrapper extends AbstractExtraAttributeS
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute disabling codes");
+			//ApsSystemUtils.logThrowable(t, this, "executeLoading", "Error loading extra attribute disabling codes");
+			_logger.error("Error loading extra attribute disabling codes", t);
 		}
 	}
 	

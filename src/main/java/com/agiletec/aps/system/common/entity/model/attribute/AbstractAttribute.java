@@ -23,11 +23,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -45,7 +46,9 @@ import com.agiletec.aps.system.services.lang.ILangManager;
  * @author W.Ambu - E.Santoboni
  */
 public abstract class AbstractAttribute implements AttributeInterface, BeanFactoryAware, Serializable {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractAttribute.class);
+	
     @Override
     public boolean isMultilingual() {
         return false;
@@ -185,11 +188,11 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             clone.setValidationRules(this.getValidationRules().clone());
             clone.setBeanFactory(this.getBeanFactory());
 			clone.setAttributeManagerClassName(this.getAttributeManagerClassName());
-        } catch (Throwable e) {
-            String message = "Error detected while creating the attribute prototype '"
-                    + this.getName() + "' type '" + this.getType() + "'";
-            ApsSystemUtils.logThrowable(e, this, "getAttributePrototype", message);;
-            throw new RuntimeException(message, e);
+        } catch (Throwable t) {
+            String message = "Error detected while creating the attribute prototype '"  + this.getName() + "' type '" + this.getType() + "'";
+            _logger.error("Error detected while creating the attribute prototype '{}' type '{}'", this.getName(), this.getType(), t);
+           // ApsSystemUtils.logThrowable(e, this, "getAttributePrototype", message);
+            throw new RuntimeException(message, t);
         }
         return clone;
     }
@@ -240,11 +243,12 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
                 String[] roles = this.extractValues(rolesElements, "role");
                 this.setRoles(roles);
             }
-        } catch (Throwable e) {
+        } catch (Throwable t) {
             String message = "Error detected while creating the attribute config '"
                     + this.getName() + "' type '" + this.getType() + "'";
-            ApsSystemUtils.logThrowable(e, this, "getAttributePrototype", message);
-            throw new RuntimeException(message, e);
+            _logger.error("Error detected while creating the attribute config '{}' type '{}'", this.getName(), this.getType(), t);
+            //ApsSystemUtils.logThrowable(t, this, "getAttributePrototype", message);
+            throw new RuntimeException(message, t);
         }
     }
 
@@ -511,7 +515,8 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + this.getName() + "'");
+        	_logger.error("Error validating Attribute '{}'", this.getName(), t);
+            //ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + this.getName() + "'");
             throw new RuntimeException("Error validating Attribute '" + this.getName() + "'", t);
         }
         return errors;

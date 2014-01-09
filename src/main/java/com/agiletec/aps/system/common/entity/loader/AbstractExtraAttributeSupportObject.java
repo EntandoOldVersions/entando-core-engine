@@ -22,9 +22,10 @@ import java.io.Serializable;
 
 import javax.servlet.ServletContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ServletContextAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.util.FileTextReader;
@@ -33,6 +34,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public abstract class AbstractExtraAttributeSupportObject implements ServletContextAware, Serializable {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractExtraAttributeSupportObject.class);
 	
 	/**
 	 * Extract the xml with the definition of Attribute support object.
@@ -46,13 +49,15 @@ public abstract class AbstractExtraAttributeSupportObject implements ServletCont
 		try {
 			is = this._servletContext.getResourceAsStream(this.getDefsFilePath());
 			if (null == is) {
-				ApsSystemUtils.getLogger().error("Null Input Stream - Definition file path " + this.getDefsFilePath());
+				//ApsSystemUtils.getLogger().error("Null Input Stream - Definition file path " + this.getDefsFilePath());
+				_logger.warn("Null Input Stream - Definition file path {}", this.getDefsFilePath());
 				return null;
 			}
 			xml = FileTextReader.getText(is);
 		} catch (Throwable t) {
-			String message = "Error detected while extracting extra Attribute Objects : file " + this.getDefsFilePath();
-			ApsSystemUtils.logThrowable(t, this, "extractXml", message);
+			//String message = "Error detected while extracting extra Attribute Objects : file " + this.getDefsFilePath();
+			//ApsSystemUtils.logThrowable(t, this, "extractXml", message);
+			_logger.error("Error detected while extracting extra Attribute Objects : file {}", this.getDefsFilePath(), t);
 		} finally {
 			if (null != is) {
 				is.close();
