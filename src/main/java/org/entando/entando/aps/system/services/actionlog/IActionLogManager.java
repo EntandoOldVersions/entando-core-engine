@@ -20,6 +20,7 @@ package org.entando.entando.aps.system.services.actionlog;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
 import org.entando.entando.aps.system.services.actionlog.model.IActionLogRecordSearchBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
@@ -74,11 +75,11 @@ public interface IActionLogManager {
 	
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException;
 	
-	public void addActionCommentRecord(int id, String username, String comment) throws ApsSystemException;
+	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException;
 	
 	public void deleteActionCommentRecord(int id) throws ApsSystemException;
 	
-	public List<ActivityStreamLikeInfo> getActionCommentRecords(int id) throws ApsSystemException;
+	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
 	
 	public static final String LOG_APPENDER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActionRecordAppender_";
 	public static final String LOG_CLEANER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActivityStreamCleanerThread_";

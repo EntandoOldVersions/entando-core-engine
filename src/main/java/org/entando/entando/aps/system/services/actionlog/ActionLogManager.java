@@ -45,6 +45,7 @@ import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 /**
@@ -220,9 +221,25 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
-	public void addActionCommentRecord(int id, String username, String comment) throws ApsSystemException {
-	//TODO
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
+	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException {
+		try {
+			Integer key = null;
+			List<Integer> ids = null;
+			do {
+				key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
+				FieldSearchFilter filter = new FieldSearchFilter("id", key, true);
+				FieldSearchFilter[] filters = {filter};
+				ids = this.getActionLogDAO().getActionRecords(filters);
+			} while (!ids.isEmpty());
+			this.getActionLogDAO().addActionCommentRecord(key, streamId, username, commentText);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "addActionCommentRecord");
+			throw new ApsSystemException("Error adding a comment record", t);
+		}
 	}
+	
+	
 
 	@Override
 	public void deleteActionCommentRecord(int id) throws ApsSystemException {
@@ -230,9 +247,26 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 
 	@Override
-	public List<ActivityStreamLikeInfo> getActionCommentRecords(int id) throws ApsSystemException {
-	//TODO
-		return null;
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
+	@CacheableInfo(groups = "'ActivityStreamCommentRecords_cacheGroup'")
+	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException {
+		List<ActivityStreamComment> infos = null;
+		try {
+			infos = this.getActionLogDAO().getActionCommentRecords(id);
+			if (null != infos) {
+				for (int i = 0; i < infos.size(); i++) {
+					ActivityStreamComment comment = infos.get(i);
+					String username = comment.getUsername();
+					IUserProfile profile = this.getUserProfileManager().getProfile(username);
+					String displayName = (null != profile) ? profile.getDisplayName() : username;
+					comment.setDisplayName(displayName);
+				}
+			}
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
+			throw new ApsSystemException("Error extracting activity stream like records", t);
+		}
+		return infos;
 	}
 
 	private List<String> extractUserGroupCodes(UserDetails loggedUser) {

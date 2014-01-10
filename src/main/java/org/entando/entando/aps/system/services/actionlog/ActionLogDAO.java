@@ -413,9 +413,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			stat.setTimestamp(3, timestamp);
 			stat.executeUpdate();
-			
 			updateRecordUpdateDate(conn, id);
-			
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -427,8 +425,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 	}
 	
-	
-
 	@Override
 	public void deleteActionLikeRecord(int id, String username) {
 		Connection conn = null;
@@ -440,9 +436,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			stat.setInt(1, id);
 			stat.setString(2, username);
 			stat.executeUpdate();
-			
 			updateRecordUpdateDate(conn, id);
-			
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
@@ -468,6 +462,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			processDaoException(t, "Error on insert actionlogger like record", "updateRecordUpdateDate");
+		} finally {
+			closeDaoResources(null, stat, conn);
 		}
 	}
 			
@@ -520,14 +516,15 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		ResultSet result = null;
 		try {
 			conn = this.getConnection();
-			stat = conn.prepareStatement(GET_ACTION_COMMENT_RECORD);
+			stat = conn.prepareStatement(GET_ACTION_COMMENT_RECORDS);
 			stat.setInt(1, id);
 			result = stat.executeQuery();
 			while (result.next()) {
 				ActivityStreamComment comment = new ActivityStreamComment();
-				comment.setUsername(result.getString(1));
-				comment.setCommentText(result.getString(2));
-				comment.setCommentDate(result.getDate(3));
+				comment.setId(result.getInt(1));
+				comment.setUsername(result.getString(2));
+				comment.setCommentText(result.getString(3));
+				comment.setCommentDate(result.getDate(4));
 				comments.add(comment);
 			}
 		} catch (Throwable t) {
@@ -539,7 +536,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	}
 
 	@Override
-	public void addActionCommentRecord(int id, String username, String comment) {
+	public void addActionCommentRecord(int id, int recordId, String username, String comment) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -547,10 +544,11 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(ADD_ACTION_COMMENT_RECORD);
 			stat.setInt(1, id);
-			stat.setString(2, username);
-			stat.setString(3, comment);
+			stat.setInt(2, recordId);
+			stat.setString(3, username);
+			stat.setString(4, comment);
 			Timestamp timestamp = new Timestamp(new Date().getTime());
-			stat.setTimestamp(4, timestamp);
+			stat.setTimestamp(5, timestamp);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -562,7 +560,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	}
 
 	@Override
-	public void deleteActionCommentRecord(int id, String username) {
+	public void deleteActionCommentRecord(int id) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -570,7 +568,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(DELETE_ACTION_COMMENT_RECORD);
 			stat.setInt(1, id);
-			stat.setString(2, username);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
@@ -721,24 +718,21 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	private static final String GET_GROUP_OCCURRENCES
 			= "SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
 	
-	
 	private static final String UPDATE_UPDATEDATE_ACTION_RECORD
 			= "UPDATE actionlogrecords SET updatedate = ? WHERE id = ?";
 	
 	// COMMENT QUERIES
 	
 	private static final String ADD_ACTION_COMMENT_RECORD
-			= "INSERT INTO actionlogcommentrecords (recordid, username, comment, commentdate) VALUES ( ? , ? , ? , ? )";
+			= "INSERT INTO actionlogcommentrecords (id, recordid, username, comment, commentdate) VALUES ( ? , ? , ? , ? , ? )";
 	
 	private static final String DELETE_ACTION_COMMENT_RECORDS
-			= "DELETE from actionlogcommentrecords where recordid = ? ";
+			= "DELETE from actionlogcommentrecords where recordid = ?";
 
 	private static final String DELETE_ACTION_COMMENT_RECORD
-			= DELETE_ACTION_COMMENT_RECORDS + "AND username = ? ";
+			= "DELETE from actionlogcommentrecords where id = ?";
 	
-	private static final String GET_ACTION_COMMENT_RECORD
-			= "SELECT username, comment, commentDate FROM actionlogcommentrecords WHERE recordid = ?";
-	
-
+	private static final String GET_ACTION_COMMENT_RECORDS
+			= "SELECT id, username, comment, commentDate FROM actionlogcommentrecords WHERE recordid = ? ORDER BY commentDate ASC";
 
 }

@@ -58,9 +58,9 @@ public interface IActionLogDAO {
 	
 	public List<ActivityStreamComment> getActionCommentRecords(int id);
 	
-	public void addActionCommentRecord(int id, String username, String comment);
+	public void addActionCommentRecord(int id, int recordId, String username, String comment);
 	
-	public void deleteActionCommentRecord(int id, String username);
+	public void deleteActionCommentRecord(int id);
 	
 	public void cleanOldActivityStreamLogs(int maxActivitySizeByGroup);
 	
