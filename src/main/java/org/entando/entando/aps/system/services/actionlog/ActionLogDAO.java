@@ -452,8 +452,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	protected void updateRecordUpdateDate(Connection conn, int recordid){
 		PreparedStatement stat = null;
 		try {
-			conn = this.getConnection();
-			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(UPDATE_UPDATEDATE_ACTION_RECORD);
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			stat.setTimestamp(1, timestamp);
@@ -462,9 +460,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			processDaoException(t, "Error on insert actionlogger like record", "updateRecordUpdateDate");
-		} finally {
-			closeDaoResources(null, stat, conn);
-		}
+		} 
 	}
 			
 	public void deleteRecord(int id, Connection conn, String query) {
@@ -552,6 +548,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			Timestamp timestamp = new Timestamp(new Date().getTime());
 			stat.setTimestamp(5, timestamp);
 			stat.executeUpdate();
+			updateRecordUpdateDate(conn, recordId);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);

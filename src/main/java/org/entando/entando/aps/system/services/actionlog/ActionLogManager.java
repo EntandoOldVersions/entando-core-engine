@@ -221,7 +221,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
 	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException {
 		try {
 			Integer key = null;
