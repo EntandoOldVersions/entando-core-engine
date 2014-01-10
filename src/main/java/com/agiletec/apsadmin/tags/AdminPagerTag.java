@@ -27,7 +27,6 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.apsadmin.tags.util.AdminPagerTagHelper;
 import com.agiletec.apsadmin.tags.util.ComponentPagerVO;
