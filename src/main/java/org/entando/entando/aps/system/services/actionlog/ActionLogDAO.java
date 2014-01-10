@@ -521,10 +521,12 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			result = stat.executeQuery();
 			while (result.next()) {
 				ActivityStreamComment comment = new ActivityStreamComment();
+				
 				comment.setId(result.getInt(1));
 				comment.setUsername(result.getString(2));
 				comment.setCommentText(result.getString(3));
-				comment.setCommentDate(result.getDate(4));
+				Timestamp timestamp = result.getTimestamp(4);
+				comment.setCommentDate(new Date(timestamp.getTime()));
 				comments.add(comment);
 			}
 		} catch (Throwable t) {
