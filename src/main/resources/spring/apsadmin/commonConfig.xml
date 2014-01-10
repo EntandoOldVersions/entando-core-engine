@@ -62,6 +62,11 @@
 	
 	<!-- *************************** -->
 	
+	<bean id="activityStreamCommentAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.common.ActivityStreamCommentAction" parent="abstractBaseAction">
+		<property name="actionLogManager" ref="ActionLogManager"/>
+	</bean>
+	
 	<bean id="activityStreamLikeAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.common.ActivityStreamLikeAction" parent="abstractBaseAction">
 		<property name="actionLogManager" ref="ActionLogManager"/>
