@@ -26,13 +26,13 @@ import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
  * Returns the list of like records of an activity through the code.
  * @author E.Santoboni
  */
-public class ActivityStreamLikeRecordsTag extends AbstractObjectInfoTag {
+public class ActivityStreamCommentRecordsTag extends AbstractObjectInfoTag {
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
 		Integer recordId = Integer.parseInt(keyValue);
 		IActionLogManager loggerManager = (IActionLogManager) ApsWebApplicationUtils.getBean(SystemConstants.ACTION_LOGGER_MANAGER, this.pageContext);
-		return loggerManager.getActionLikeRecords(recordId);
+		return loggerManager.getActionCommentRecords(recordId);
 	}
 	
 	public String getRecordId() {
