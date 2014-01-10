@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -43,6 +45,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author Wiz of Id <wiz@apritisoftware.it>
  */
 public class InfoTag extends OutSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(InfoTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -66,7 +70,8 @@ public class InfoTag extends OutSupport {
 				this._info = confManager.getParam(this.getParamName());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error during tag initialization", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization", t);
 		}
 		return EVAL_BODY_INCLUDE;
@@ -89,7 +94,8 @@ public class InfoTag extends OutSupport {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractStartLang", "Error extracting start lang");
+			_logger.error("Error extracting start lang", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractStartLang", "Error extracting start lang");
 		} finally {
 			if (null == startLang) {
 				startLang = langManager.getDefaultLang();
@@ -119,8 +125,9 @@ public class InfoTag extends OutSupport {
 					this.pageContext.getOut().print(this._info);
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "doEndTag");
-				throw new JspException("Error closing tag ", t);
+				_logger.error("Error closing tag", t);
+				//ApsSystemUtils.logThrowable(t, this, "doEndTag");
+				throw new JspException("Error closing tag", t);
 			}
 		}
 		return EVAL_PAGE;

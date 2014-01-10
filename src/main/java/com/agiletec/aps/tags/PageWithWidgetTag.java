@@ -25,8 +25,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -39,6 +40,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 public class PageWithWidgetTag extends TagSupport {
 
+	private static final Logger _logger = LoggerFactory.getLogger(PageWithWidgetTag.class);
+	
 	@Override
 	public int doStartTag() throws JspException {
 		IPageManager pageManager = (IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext); 
@@ -53,8 +56,9 @@ public class PageWithWidgetTag extends TagSupport {
 				this.pageContext.setAttribute(this.getVar(), pages.get(0));
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
-			throw new JspException("Errore tag", t);
+			_logger.error("Error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			throw new JspException("Error in doStartTag", t);
 		}
 		return super.doStartTag();
 	}

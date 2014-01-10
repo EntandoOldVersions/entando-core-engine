@@ -21,7 +21,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.tags.util.IParameterParentTag;
 
 /**
@@ -33,6 +35,8 @@ import com.agiletec.aps.tags.util.IParameterParentTag;
  */
 @SuppressWarnings("serial")
 public class ParameterTag extends BodyTagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ParameterTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {
@@ -44,7 +48,8 @@ public class ParameterTag extends BodyTagSupport {
 			IParameterParentTag parentTag = (IParameterParentTag) findAncestorWithClass(this, IParameterParentTag.class);
 			parentTag.addParameter(this.getName(), value);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("Error closing tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error closing tag ", t);
 		}
 		return super.doEndTag();

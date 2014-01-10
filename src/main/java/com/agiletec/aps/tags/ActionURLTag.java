@@ -26,7 +26,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -43,6 +45,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author M.Casari - E.Santoboni
  */
 public class ActionURLTag extends TagSupport implements IParameterParentTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ActionURLTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -75,7 +79,8 @@ public class ActionURLTag extends TagSupport implements IParameterParentTag {
 				this.pageContext.getOut().print(path);
 			}
 		} catch (IOException e) {
-			ApsSystemUtils.logThrowable(e, this, "doEndTag");
+			_logger.error("Error closing tag", e);
+			//ApsSystemUtils.logThrowable(e, this, "doEndTag");
 			throw new JspException("Error closing tag ", e);
 		}
 		this.release();

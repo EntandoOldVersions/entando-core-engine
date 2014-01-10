@@ -20,13 +20,16 @@ package com.agiletec.aps.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This tag must be used in conjunction with "HeadInfoOutputterTag"; it
  * returns the information to output.
  */
 public class HeadInfoPrinterTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(HeadInfoPrinterTag.class);
 	
 	public int doEndTag() throws JspException {
 		HeadInfoOutputterTag parent = 
@@ -35,7 +38,8 @@ public class HeadInfoPrinterTag extends TagSupport {
 		try {
 			this.pageContext.getOut().print(info);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("error in doEndTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error closing tag ", t);
 		}
 		return EVAL_PAGE;

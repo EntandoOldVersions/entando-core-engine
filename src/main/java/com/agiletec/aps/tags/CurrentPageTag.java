@@ -22,7 +22,9 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -37,6 +39,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class CurrentPageTag extends PageInfoTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CurrentPageTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {
@@ -59,7 +63,8 @@ public class CurrentPageTag extends PageInfoTag {
 			}
 			this.evalValue();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization ", t);
 		}
 		return EVAL_PAGE;

@@ -27,7 +27,9 @@ import java.util.regex.Pattern;
 
 import javax.servlet.ServletContext;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -35,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public abstract class AbstractConfigLoader {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractConfigLoader.class);
 	
 	protected List<String> loadDefinitionPaths() throws Throwable {
 		List<String> filenames = new ArrayList<String>();
@@ -53,7 +57,8 @@ public abstract class AbstractConfigLoader {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadDefinitionPaths", "Error loading definition paths");
+			_logger.error("Error loading definition paths", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadDefinitionPaths", "Error loading definition paths");
 			throw new ApsSystemException("Error loading definition paths", t);
 		}
 		return filenames;

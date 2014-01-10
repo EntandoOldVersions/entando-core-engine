@@ -23,11 +23,12 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.RefreshableBean;
@@ -37,6 +38,8 @@ import com.agiletec.aps.system.common.RefreshableBean;
  * @author E.Santoboni
  */
 public class ApsWebApplicationUtils {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsWebApplicationUtils.class);
 	
 	/**
 	 * Resolve the given location pattern into Resource objects. 
@@ -153,7 +156,8 @@ public class ApsWebApplicationUtils {
 			try {
 				bean = wac.getBean(defNames[i]);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, ApsWebApplicationUtils.class, "executeSystemRefresh");
+				_logger.error("error in executeSystemRefresh", t);
+				//ApsSystemUtils.logThrowable(t, ApsWebApplicationUtils.class, "executeSystemRefresh");
 				bean = null;
 			}
 			if (bean != null) {

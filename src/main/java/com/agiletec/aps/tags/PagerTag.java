@@ -23,6 +23,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.aps.tags.util.PagerTagHelper;
@@ -36,6 +39,8 @@ import com.agiletec.aps.tags.util.PagerTagHelper;
  */
 public class PagerTag extends TagSupport {
 
+	private static final Logger _logger = LoggerFactory.getLogger(PagerTag.class);
+	
 	public int doStartTag() throws JspException {
 		ServletRequest request =  this.pageContext.getRequest();
 		try {
@@ -48,9 +53,10 @@ public class PagerTag extends TagSupport {
 						this.isPagerIdFromFrame(), this.getMax(),  this.isAdvanced(), this.getOffset(), request);
 				this.pageContext.setAttribute(this.getObjectName(), pagerVo);
 			}
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doStartTag");
-			throw new JspException("Error detected during tag initialization", e);
+		} catch (Throwable t) {
+			_logger.error("Error detected during tag initialization", t);
+			//ApsSystemUtils.logThrowable(e, this, "doStartTag");
+			throw new JspException("Error detected during tag initialization", t);
 		}
 		return EVAL_BODY_INCLUDE;
 	}

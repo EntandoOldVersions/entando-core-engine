@@ -31,7 +31,9 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -45,7 +47,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author M.Casari - E.Santoboni
  */
 public class InternalServletTag extends TagSupport {
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(InternalServletTag.class);
 	/**
 	 * Internal class that wrappers the response, extending the
 	 * javax.servlet.http.HttpServletResponseWrapper class to
@@ -130,8 +133,9 @@ public class InternalServletTag extends TagSupport {
 				this.pageContext.getOut().print(output);
 			}
 		} catch (Throwable t) {
+			_logger.error("Error in showlet preprocessing", t);
 			String msg = "Error in showlet preprocessing";
-			ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			throw new JspException(msg, t);
 		}
 		return result;
@@ -178,7 +182,8 @@ public class InternalServletTag extends TagSupport {
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher(actionPath);
 			requestDispatcher.include(request, responseWrapper);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "includeShowlet", "Error including widget");
+			_logger.error("Error including widget", t);
+			//ApsSystemUtils.logThrowable(t, this, "includeShowlet", "Error including widget");
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/aps/jsp/system/internalServlet_error.jsp");
 			requestDispatcher.include(request, responseWrapper);
 		}

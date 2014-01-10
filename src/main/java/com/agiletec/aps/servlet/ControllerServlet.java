@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -38,6 +39,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author  
  */
 public class ControllerServlet extends HttpServlet {
+	
+	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
     
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -91,7 +94,8 @@ public class ControllerServlet extends HttpServlet {
                 response.sendError(httpErrorCode.intValue());
             }
         } catch (IOException e) {
-            ApsSystemUtils.logThrowable(e, this, "outputError");
+        	_logger.error("outputError", e);
+            //ApsSystemUtils.logThrowable(e, this, "outputError");
             throw new ServletException("Service not available");
         }
     }

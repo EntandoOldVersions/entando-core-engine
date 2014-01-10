@@ -21,7 +21,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.tags.util.HeadInfoContainer;
@@ -31,6 +33,8 @@ import com.agiletec.aps.tags.util.HeadInfoContainer;
  */
 public class HeadInfoTag extends TagSupport {
 
+	private static final Logger _logger = LoggerFactory.getLogger(HeadInfoTag.class);
+	
 	public int doEndTag() throws JspException {
 		ServletRequest request =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
@@ -46,7 +50,8 @@ public class HeadInfoTag extends TagSupport {
 				headInfo.addInfo(_type, info);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("Error closing tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error closing tag ", t);
 		}
 		return EVAL_BODY_INCLUDE;

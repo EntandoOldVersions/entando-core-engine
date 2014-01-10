@@ -20,7 +20,9 @@ package com.agiletec.aps.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -35,6 +37,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 @SuppressWarnings("serial")
 public class ResourceURLTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceURLTag.class);
 	
 	public int doEndTag() throws JspException {
 		try {
@@ -46,9 +50,10 @@ public class ResourceURLTag extends TagSupport {
 				_folder = "";
 			}
 			pageContext.getOut().print(_root + _folder);
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doEndTag");
-			throw new JspException("Error closing the tag", e);
+		} catch (Throwable t) {
+			_logger.error("Error closing the tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			throw new JspException("Error closing the tag", t);
 		}
 		return EVAL_PAGE;
 	}

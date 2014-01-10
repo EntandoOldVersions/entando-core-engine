@@ -20,8 +20,9 @@ package com.agiletec.aps.tags;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -35,6 +36,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author S.Didaci - E.Santoboni
  */
 public class I18nTag extends OutSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(I18nTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -58,7 +61,8 @@ public class I18nTag extends OutSupport {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error during tag initialization", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization", t);
 		}
 		return super.doStartTag();
@@ -85,7 +89,8 @@ public class I18nTag extends OutSupport {
 				label = this._key;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractLabel");
+			_logger.error("Error getting label", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractLabel");
 			throw new ApsSystemException("Error getting label", t);
 		}
 		return label;

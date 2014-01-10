@@ -25,7 +25,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.url.IURLManager;
@@ -40,6 +42,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * Use the sub-tag "ParameterTag" to insert parameters in the query string.
  */
 public class URLTag extends TagSupport implements IParameterParentTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(URLTag.class);
 	
 	/**
 	 * Prepares a PageURL object; this object may comprehend several sub-tags
@@ -63,7 +67,8 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 				_pageUrl.setParamRepeat(exclusion);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error during tag initialization", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization", t);
 		}
 		return EVAL_BODY_INCLUDE;
@@ -82,7 +87,8 @@ public class URLTag extends TagSupport implements IParameterParentTag {
 			try {
 				this.pageContext.getOut().print(url);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "doEndTag");
+				_logger.error("Error closing tag", t);
+				//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 				throw new JspException("Error closing tag", t);
 			}
 		}

@@ -21,7 +21,9 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -36,6 +38,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class CheckPermissionTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CheckPermissionTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -60,7 +64,8 @@ public class CheckPermissionTag extends TagSupport {
 				return SKIP_BODY;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error during tag initialization", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization ", t);
 		}
 	}

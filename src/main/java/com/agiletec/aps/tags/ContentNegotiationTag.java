@@ -23,7 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -37,6 +39,8 @@ import com.agiletec.aps.system.services.page.IPage;
  * @author William Ghelfi
  */
 public class ContentNegotiationTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentNegotiationTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -46,7 +50,8 @@ public class ContentNegotiationTag extends TagSupport {
 				this.setMimeType(ContentNegotiationTag.DEFAULT_MIMETYPE);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization ", t);
 		}
 		return super.doStartTag();
@@ -72,7 +77,8 @@ public class ContentNegotiationTag extends TagSupport {
 			contentType.append(charset);
 			response.setContentType(contentType.toString());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("Error detected while setting content type", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error detected while setting content type", t);
 		}
 		return EVAL_PAGE;
@@ -120,7 +126,8 @@ public class ContentNegotiationTag extends TagSupport {
 				isAcceptedMimeType = (header.indexOf(mimeType) >= 0);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "isAcceptedMimeType");
+			_logger.error("Error detected while verifying mimetype", t);
+			//ApsSystemUtils.logThrowable(t, this, "isAcceptedMimeType");
 			throw new ApsSystemException("Error detected while verifying mimetype", t);
 		}
 		return isAcceptedMimeType;

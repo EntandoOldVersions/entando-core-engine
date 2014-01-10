@@ -24,7 +24,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.Category;
@@ -38,6 +40,8 @@ import com.agiletec.aps.util.SelectItem;
  * @author E.Santoboni
  */
 public class CategoriesTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CategoriesTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -57,8 +61,9 @@ public class CategoriesTag extends TagSupport {
 			this.addSmallCategory(categories, root, langCode, true, titleStyle);
 			this.pageContext.setAttribute(this.getVar(), categories);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
-			throw new JspException("Errore inizializzazione tag", t);
+			_logger.error("Error starting tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			throw new JspException("Error starting tag", t);
 		}
 		return super.doStartTag();
 	}

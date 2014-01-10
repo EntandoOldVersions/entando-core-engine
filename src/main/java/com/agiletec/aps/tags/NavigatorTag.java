@@ -23,7 +23,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -39,6 +41,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author M.Diana - E.Santoboni
  */
 public class NavigatorTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(NavigatorTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -64,7 +68,8 @@ public class NavigatorTag extends TagSupport {
 			this.pageContext.setAttribute(this.getVar(), currentTarget);
 			return EVAL_BODY_INCLUDE;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error during tag initialization", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization ", t);
 		}
 	}

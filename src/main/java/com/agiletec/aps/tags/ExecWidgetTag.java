@@ -30,9 +30,10 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -56,6 +57,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 @SuppressWarnings("serial")
 public class ExecWidgetTag extends TagSupport {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ExecWidgetTag.class);
+	
 	/**
 	 * Invoke the widget configured in the page.
 	 *
@@ -80,8 +83,9 @@ public class ExecWidgetTag extends TagSupport {
 			}
 			this.pageContext.popBody();
 		} catch (Throwable t) {
+			_logger.error("Error detected during widget preprocessing", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			String msg = "Error detected during widget preprocessing";
-			ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			throw new JspException(msg, t);
 		}
 		return super.doEndTag();
@@ -160,7 +164,8 @@ public class ExecWidgetTag extends TagSupport {
 			BeanComparator comparator = new BeanComparator("order");
 			Collections.sort(containters, comparator);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractDecorators", "Error extracting widget decorators");
+			_logger.error("Error extracting widget decorators", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractDecorators", "Error extracting widget decorators");
 			throw new ApsSystemException("Error extracting widget decorators", t);
 		}
 		return containters;
@@ -200,7 +205,8 @@ public class ExecWidgetTag extends TagSupport {
 			UserDetails currentUser = (UserDetails) reqCtx.getRequest().getSession().getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
 			return authorizationManager.isAuthOnGroup(currentUser, showletTypeGroup);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking user authorities");
+			_logger.error("Error checking user authorities", t);
+			//ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking user authorities");
 		}
 		return false;
 	}

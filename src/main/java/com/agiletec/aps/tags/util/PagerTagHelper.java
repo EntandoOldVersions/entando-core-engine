@@ -21,7 +21,9 @@ import java.util.Collection;
 
 import javax.servlet.ServletRequest;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -33,6 +35,8 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class PagerTagHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PagerTagHelper.class);
 	
 	/**
 	 * Restituisce l'oggetto necessario per fornire gli elementi necessari 
@@ -59,7 +63,8 @@ public class PagerTagHelper {
 			int maxElement = this.getMaxElementForItem(max, request);
 			pagerVo = this.buildPageVO(collection, item, maxElement, truePagerId, isAdvanced, offset);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getPagerVO");
+			_logger.error("Error while preparing the pagerVo object", t);
+			//ApsSystemUtils.logThrowable(t, this, "getPagerVO");
 			throw new ApsSystemException("Error while preparing the pagerVo object", t);
 		}
 		return pagerVo;
@@ -92,7 +97,7 @@ public class PagerTagHelper {
 			try {
 				item = Integer.parseInt(stringItem);
 			} catch (NumberFormatException e) {
-				ApsSystemUtils.getLogger().error("Error while parsing the stringItem " + stringItem);
+				_logger.error("Error while parsing the stringItem {}", stringItem, e);
 			}
 		}
 		return item;
@@ -182,7 +187,8 @@ public class PagerTagHelper {
 			pagerVo.setBeginItemAnchor(beginItemAnchor);
 			pagerVo.setEndItemAnchor(endItemAnchor);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildPageVO");
+			_logger.error("error in buildPageVO", t);
+			//ApsSystemUtils.logThrowable(t, this, "buildPageVO");
 		}
 		return pagerVo;
 	}

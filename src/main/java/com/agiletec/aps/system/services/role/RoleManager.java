@@ -23,7 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityManager;
@@ -34,13 +36,13 @@ import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthority
  * @author M.Diana - E.Santoboni
  */
 public class RoleManager extends AbstractApsAutorityManager implements IRoleManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(RoleManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadAuthConfiguration();
-		ApsSystemUtils.getLogger().debug(
-				this.getClass().getName() + ": initialized " + this._roles.size() + " roles and "
-				+ this._permissions.size() + " permissions.");
+		_logger.debug("{} : initialized {} roles and {} permissions", this.getClass().getName(), this._roles.size(),this._permissions.size());
 	}
 
 	private void loadAuthConfiguration() throws ApsSystemException {
@@ -83,7 +85,8 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 			this.getRoleDAO().deleteRole(role);
 			_roles.remove(role.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeRole");
+			_logger.error("Error while removing a role", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeRole");
 			throw new ApsSystemException("Error while removing a role", t);
 		}
 	}
@@ -99,7 +102,8 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 			this.getRoleDAO().updateRole(role);
 			_roles.put(role.getName(), role);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateRole");
+			_logger.error("Error while updating a role", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateRole");
 			throw new ApsSystemException("Error while updating a role", t);
 		}
 	}
@@ -116,7 +120,8 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 			this.getRoleDAO().addRole(role);
 			this._roles.put(role.getName(), role);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addRole");
+			_logger.error("Error while adding a role", t);
+			//ApsSystemUtils.logThrowable(t, this, "addRole");
 			throw new ApsSystemException("Error while adding a role", t);
 		}
 	}
@@ -153,7 +158,8 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 				role.removePermission(permissionName);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removePermission");
+			_logger.error("Error while deleting permission {}", permissionName, t);
+			//ApsSystemUtils.logThrowable(t, this, "removePermission");
 			throw new ApsSystemException("Error while deleting a permission", t);
 		}
 	}
@@ -169,8 +175,9 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 			this.getPermissionDAO().updatePermission(permission);
 			this._permissions.put(permission.getName(), permission);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updatePermission");
-			throw new ApsSystemException("Error while updating a role", t);
+			_logger.error("Error updating permission", t);
+			//ApsSystemUtils.logThrowable(t, this, "updatePermission");
+			throw new ApsSystemException("Error while updating perrmission", t);
 		}
 	}
 
@@ -185,7 +192,8 @@ public class RoleManager extends AbstractApsAutorityManager implements IRoleMana
 			this.getPermissionDAO().addPermission(permission);
 			this._permissions.put(permission.getName(), permission);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addPermission");
+			_logger.error("Error while adding a permission", t);
+			//ApsSystemUtils.logThrowable(t, this, "addPermission");
 			throw new ApsSystemException("Error while adding a permission", t);
 		}
 	}

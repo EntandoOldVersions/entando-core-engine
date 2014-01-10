@@ -25,7 +25,9 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
@@ -42,6 +44,8 @@ import com.agiletec.aps.system.services.page.IPage;
  */
 public class PageBuilderTag extends TagSupport {
 
+	private static final Logger _logger = LoggerFactory.getLogger(PageBuilderTag.class);
+	
 	/** 
 	 * Include la jsp corrispondente al modello di pagina. Se si verificano eccezioni,
 	 * non viene emesso alcun output e viene rilanciata un'eccezione.
@@ -63,12 +67,14 @@ public class PageBuilderTag extends TagSupport {
 			// se è andato tutto bene, scrivo l'output sul buffer originale
 			body.writeOut(this.pageContext.getOut());
 		} catch (ServletException e) {
+			_logger.error("Error detected while including a page model", e);
 			String msg = "Error detected while including a page model";
-			ApsSystemUtils.logThrowable(e, this, "doEndTag", msg);
+			//ApsSystemUtils.logThrowable(e, this, "doEndTag", msg);
 			throw new JspException(msg, e);
 		} catch (IOException e) {
+			_logger.error("IO error detected while including the page model", e);
 			String msg = "IO error detected while including the page model";
-			ApsSystemUtils.logThrowable(e, this, "doEndTag", msg);
+			//ApsSystemUtils.logThrowable(e, this, "doEndTag", msg);
 			throw new JspException(msg, e);
 		}
 		return EVAL_PAGE;

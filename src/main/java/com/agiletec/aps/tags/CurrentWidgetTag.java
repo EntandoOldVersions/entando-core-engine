@@ -22,8 +22,9 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -44,6 +45,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 @SuppressWarnings("serial")
 public class CurrentWidgetTag extends OutSupport {
+	
+	private static final Logger _logger = LoggerFactory.getLogger(CurrentWidgetTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -74,8 +77,9 @@ public class CurrentWidgetTag extends OutSupport {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error detected during showlet preprocessing", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			String msg = "Error detected during showlet preprocessing";
-			ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
 			throw new JspException(msg, t);
 		}
 		return super.doStartTag();
