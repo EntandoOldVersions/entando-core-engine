@@ -38,6 +38,14 @@ public class ActionLogRecord implements Serializable {
 	public void setActionDate(Date actionDate) {
 		this._actionDate = actionDate;
 	}
+
+	public Date getUpdateDate() {
+		return _updateDate;
+	}
+
+	public void setUpdateDate(Date updateDate) {
+		this._updateDate = updateDate;
+	}
 	
 	public String getUsername() {
 		return _username;
@@ -76,10 +84,12 @@ public class ActionLogRecord implements Serializable {
 	
 	private int _id;
 	private Date _actionDate;
+	private Date _updateDate;
 	private String _username;
 	private String _namespace;
 	private String _actionName;
 	private String _parameters;
+	
 	private ActivityStreamInfo _activityStreamInfo;
 	
 	

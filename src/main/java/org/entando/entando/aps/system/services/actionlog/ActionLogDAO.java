@@ -337,8 +337,10 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			if (res.next()) {
 				actionRecord = new ActionLogRecord();
 				actionRecord.setId(id);
-				Timestamp timestamp = res.getTimestamp("actiondate");
-				actionRecord.setActionDate(new Date(timestamp.getTime()));
+				Timestamp actionDate = res.getTimestamp("actiondate");
+				actionRecord.setActionDate(new Date(actionDate.getTime()));
+				Timestamp updateDate = res.getTimestamp("updatedate");
+				actionRecord.setUpdateDate(new Date(updateDate.getTime()));
 				actionRecord.setActionName(res.getString("actionname"));
 				actionRecord.setNamespace(res.getString("namespace"));
 				actionRecord.setParameters(res.getString("parameters"));
@@ -694,7 +696,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			= "INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
 
 	private static final String GET_ACTION_RECORD
-			= "SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
+			= "SELECT username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
 
 	private static final String DELETE_LOG_RECORD
 			= "DELETE from actionlogrecords where id = ?";

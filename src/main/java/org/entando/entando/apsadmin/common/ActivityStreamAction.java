@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
 
 /**
@@ -70,19 +71,23 @@ public class ActivityStreamAction extends BaseAction{
 		return SUCCESS;
 	}
 	
+	//TODO END THIS
 	public Date getLastUpdate() {
 		List<Integer> actionRecordIds = new ArrayList<Integer>();
-		Date lastUpdate = null;
+		Date lastUpdate = new Date();
 		try {
 			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
 			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
 			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
-			searchBean.setEndUpdate(new Date());
+			searchBean.setEndUpdate(lastUpdate);
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
+			if(null != actionRecordIds && actionRecordIds.size() > 0) {
+				ActionLogRecord actionRecord = this.getActionLogManager().getActionRecord(actionRecordIds.get(0));
+				lastUpdate = actionRecord.getUpdateDate();
+			}
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "getLastUpdate", "Error on loading updated activities");
         }
-		this.setActionRecordIds(actionRecordIds);
 		return lastUpdate;
 	}
 	
