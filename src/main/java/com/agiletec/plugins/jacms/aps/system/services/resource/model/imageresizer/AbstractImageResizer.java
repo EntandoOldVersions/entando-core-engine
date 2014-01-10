@@ -33,11 +33,6 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
-import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
-
 /**
  * Classe astratta base a servizio delle classi delegate al redimensionameno e salvataggio di file tipo immagine.
  * @author E.Santoboni
