@@ -32,6 +32,7 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
+import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 import com.opensymphony.xwork2.Action;
@@ -257,6 +258,52 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			activityStreamSeachBean.setEndUpdate(new Date());
 			List<Integer> activityStreamBetweenSave2 = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
 			assertEquals(2, activityStreamBetweenSave2.size());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._contentManager.deleteContent(content);
+			assertNull(this._contentManager.loadContent(contentId, false));
+		}
+	}
+	
+	public void testLastUpdate() throws Throwable {
+		Content content = this._contentManager.loadContent("EVN41", false);//"coach" group
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
+		content.setId(null);
+		String contentId = null;
+		Thread.sleep(1000);
+		try {
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			String result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
+			assertEquals(1, ids.size());
+			
+			Thread.sleep(1000);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+			
+			List<Integer> actionRecords = this._actionLoggerManager.getActionRecords(null);
+			
+			assertNotNull(actionRecords);
+			assertEquals(2, actionRecords.size());
+			ActionLogRecord actionRecord = this._actionLoggerManager.getActionRecord(actionRecords.get(1));
+			UserDetails adminUser = this.getUser("admin", "admin");
+			Date lastUpdateDate = this._actionLoggerManager.lastUpdateDate(adminUser);
+			assertEquals(actionRecord.getUpdateDate(), lastUpdateDate);
+
 		} catch (Throwable t) {
 			throw t;
 		} finally {

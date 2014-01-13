@@ -521,6 +521,20 @@
 	</tag>
 	<tag>
 		<description>
+			<![CDATA[Return the date of the last update activity stream for the current user.]]>
+		</description>
+		<name>activityStreamLastUpdateDate</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ActivityLastUpdateTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name used to reference the update date.]]></description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<description>
 			<![CDATA[Returns a single record of Action Logger Manager (or one of its property) through the code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property.
 			The names of the available property of "ActivityStream": "id", "actionDate", "username", "namespace", "actionName", "parameters", "activityStreamInfo".]]>
