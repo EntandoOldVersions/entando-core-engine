@@ -561,7 +561,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	}
 
 	@Override
-	public void deleteActionCommentRecord(int id) {
+	public void deleteActionCommentRecord(int id, int streamId) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -570,6 +570,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			stat = conn.prepareStatement(DELETE_ACTION_COMMENT_RECORD);
 			stat.setInt(1, id);
 			stat.executeUpdate();
+			updateRecordUpdateDate(conn, streamId);
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);

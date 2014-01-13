@@ -53,6 +53,16 @@
 			</interceptor-ref>
 		</action>
 		
+		<action name="removeComment*" class="activityStreamCommentAction" method="removeComment" >
+			<result type="redirectAction">
+				<param name="namespace">/do</param>
+    			<param name="actionName">main</param>
+			</result>
+			<interceptor-ref name="entandoDefaultStack">
+				<param name="requestAuth.requiredPermission">enterBackend</param>
+			</interceptor-ref>
+		</action>
+		
 	</package>
 	
 	<package name="core_do/user/avatar" namespace="/do/user/avatar" extends="entando-default">

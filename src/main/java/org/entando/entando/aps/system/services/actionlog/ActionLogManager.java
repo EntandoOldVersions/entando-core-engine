@@ -241,8 +241,14 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 
 	@Override
-	public void deleteActionCommentRecord(int id) throws ApsSystemException {
-	//TODO
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
+	public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException {
+		try {
+			this.getActionLogDAO().deleteActionCommentRecord(id, streamId);
+		} catch (Throwable t) {
+			ApsSystemUtils.logThrowable(t, this, "deleteActionCommentRecord");
+			throw new ApsSystemException("Error deleting comment", t);
+		}
 	}
 
 	@Override

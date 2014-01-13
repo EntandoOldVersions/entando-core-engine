@@ -81,7 +81,7 @@ public interface IActionLogManager {
 	
 	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException;
 	
-	public void deleteActionCommentRecord(int id) throws ApsSystemException;
+	public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException;
 	
 	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
 	

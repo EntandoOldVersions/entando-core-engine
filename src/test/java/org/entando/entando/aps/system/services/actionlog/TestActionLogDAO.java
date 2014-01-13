@@ -137,7 +137,7 @@ public class TestActionLogDAO extends BaseTestCase {
 		assertEquals(100, actionCommentRecords.get(0).getId());
 		assertEquals(101, actionCommentRecords.get(1).getId());
 		
-		this._actionLoggerDAO.deleteActionCommentRecord(100);
+		this._actionLoggerDAO.deleteActionCommentRecord(100,addedRecord1.getId());
 		
 		actionCommentRecords = this._actionLoggerDAO.getActionCommentRecords(addedRecord1.getId());
 

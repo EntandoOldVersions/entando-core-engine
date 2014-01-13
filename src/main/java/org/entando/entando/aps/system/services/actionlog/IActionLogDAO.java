@@ -60,7 +60,7 @@ public interface IActionLogDAO {
 	
 	public void addActionCommentRecord(int id, int recordId, String username, String comment);
 	
-	public void deleteActionCommentRecord(int id);
+	public void deleteActionCommentRecord(int id, int streamId);
 	
 	public void cleanOldActivityStreamLogs(int maxActivitySizeByGroup);
 	

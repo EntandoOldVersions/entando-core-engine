@@ -35,6 +35,15 @@ public class ActivityStreamCommentAction extends BaseAction{
 		return SUCCESS;
 	}
 	
+	public String removeComment() {
+		try {
+			this.getActionLogManager().deleteActionCommentRecord(this.getCommentId(), this.getStreamRecordId());
+		} catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "removeComment", "Error on removing comment on activity");
+        }
+		return SUCCESS;
+	}
+	
 	public int getStreamRecordId() {
 		return _streamRecordId;
 	}
@@ -58,9 +67,18 @@ public class ActivityStreamCommentAction extends BaseAction{
 	public void setActionLogManager(IActionLogManager actionLogManager) {
 		this._actionLogManager = actionLogManager;
 	}
+
+	public int getCommentId() {
+		return _commentId;
+	}
+
+	public void setCommentId(int commentId) {
+		this._commentId = commentId;
+	}
 	
 	private IActionLogManager _actionLogManager;
 	private int _streamRecordId;
 	private String _commentText;
+	private int _commentId;
 	
 }
