@@ -34,8 +34,9 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.aps.system.services.api.model.ServiceInfo;
 import org.entando.entando.aps.system.services.api.model.ServiceParameterInfo;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -46,7 +47,9 @@ import com.agiletec.aps.util.ApsProperties;
  * @author E.Santoboni
  */
 public class ApiServiceInterface {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiServiceInterface.class);
+	
     public ArrayList<ServiceInfo> getServices(Properties properties) throws ApiException {
         ArrayList<ServiceInfo> services = new ArrayList<ServiceInfo>();
         try {
@@ -68,7 +71,8 @@ public class ApiServiceInterface {
             BeanComparator comparator = new BeanComparator("description");
             Collections.sort(services, comparator);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
+        	_logger.error("Error extracting services", t);
+            //ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Internal error");
         }
         return services;
@@ -127,7 +131,8 @@ public class ApiServiceInterface {
         } catch (ApiException e) {
             throw e;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getService", "Error invocating service - key '" + key + "'");
+        	_logger.error("Error invocating service - key '{}'", key, t);
+            //ApsSystemUtils.logThrowable(t, this, "getService", "Error invocating service - key '" + key + "'");
             throw new ApiException(IApiErrorCodes.SERVER_ERROR, "Internal error");
         }
         return response;
@@ -154,7 +159,8 @@ public class ApiServiceInterface {
 			}
 			return false;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkServiceAuthorization", "Error checking auth for service - key '" + service.getKey() + "'");
+			_logger.error("Error checking auth for service - key '{}'", service.getKey(), t);
+			//ApsSystemUtils.logThrowable(t, this, "checkServiceAuthorization", "Error checking auth for service - key '" + service.getKey() + "'");
             throw t;
 		}
 		return true;

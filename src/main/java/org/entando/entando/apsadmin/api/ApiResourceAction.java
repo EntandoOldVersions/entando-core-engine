@@ -23,15 +23,18 @@ import java.util.List;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethod.HttpMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.SelectItem;
 
 /**
  * @author E.Santoboni
  */
 public class ApiResourceAction extends AbstractApiAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiResourceAction.class);
+	
 	@Override
     public void validate() {
         try {
@@ -48,7 +51,8 @@ public class ApiResourceAction extends AbstractApiAction {
 				}
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating request");
+        	_logger.error("Error validating request", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate", "Error validating request");
         }
     }
 	
@@ -58,7 +62,8 @@ public class ApiResourceAction extends AbstractApiAction {
 			if (null != result) return result;
             return super.generateRequestBodySchema(this.extractMethod());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema", "Error extracting request body Schema");
+        	_logger.error("Error extracting request body Schema", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema", "Error extracting request body Schema");
             return FAILURE;
         }
     }
@@ -69,7 +74,8 @@ public class ApiResourceAction extends AbstractApiAction {
 			if (null != result) return result;
             return super.generateResponseBodySchema(this.extractMethod());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
+        	_logger.error("Error extracting response body Schema", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
             return FAILURE;
         }
     }
@@ -98,7 +104,8 @@ public class ApiResourceAction extends AbstractApiAction {
             }
             this.updateMethodStatus(method, requiredAuthority, active, hidden);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status");
+        	_logger.error("Error updating method status", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status");
             return FAILURE;
         }
         return SUCCESS;
@@ -110,7 +117,8 @@ public class ApiResourceAction extends AbstractApiAction {
 			if (null != result) return result;
             this.resetMethodStatus(this.extractMethod());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error resetting method status");
+        	_logger.error("Error resetting method status", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error resetting method status");
             return FAILURE;
         }
         return SUCCESS;
@@ -144,7 +152,8 @@ public class ApiResourceAction extends AbstractApiAction {
             this.updateMethodStatus(resource.getPutMethod(), requiredAuthority, active, hidden);
             this.updateMethodStatus(resource.getDeleteMethod(), requiredAuthority, active, hidden);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateAllMethodStatus", "Error updating all method status");
+        	_logger.error("Error updating all method status", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateAllMethodStatus", "Error updating all method status");
             return FAILURE;
         }
         return SUCCESS;
@@ -169,8 +178,8 @@ public class ApiResourceAction extends AbstractApiAction {
             String[] args = {method.getHttpMethod().toString()};
             this.addActionMessage(this.getText("message.resource.method.configUpdated", args));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", 
-                    "Error updating method status - " + method.getResourceName() + " - " + method.getHttpMethod());
+        	_logger.error("Error updating method status - {} - {}", method.getResourceName(), method.getHttpMethod(), t);
+            //ApsSystemUtils.logThrowable(t, this, "updateMethodStatus", "Error updating method status - " + method.getResourceName() + " - " + method.getHttpMethod());
             throw new RuntimeException("Error updating method status", t);
         }
     }
@@ -183,7 +192,8 @@ public class ApiResourceAction extends AbstractApiAction {
             this.resetMethodStatus(resource.getPutMethod());
             this.resetMethodStatus(resource.getDeleteMethod());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "resetAllMethodStatus", "Error resetting all method status");
+        	_logger.error("Error resetting all method status", t);
+            //ApsSystemUtils.logThrowable(t, this, "resetAllMethodStatus", "Error resetting all method status");
             return FAILURE;
         }
         return SUCCESS;
@@ -196,8 +206,8 @@ public class ApiResourceAction extends AbstractApiAction {
             String[] args = {method.getHttpMethod().toString()};
             this.addActionMessage(this.getText("message.resource.method.configResetted", args));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "resetMethodStatus", 
-                    "Error resetting method status - " + method.getResourceName() + " - " + method.getHttpMethod());
+        	_logger.error("Error resetting method status - {} - {}", method.getResourceName() ,method.getHttpMethod(), t);
+            //ApsSystemUtils.logThrowable(t, this, "resetMethodStatus", "Error resetting method status - " + method.getResourceName() + " - " + method.getHttpMethod());
             throw new RuntimeException("Error resetting method status", t);
         }
     }

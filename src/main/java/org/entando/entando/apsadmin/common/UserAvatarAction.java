@@ -26,10 +26,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -38,6 +39,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class UserAvatarAction extends BaseAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserAvatarAction.class);
 	
 	public String returnAvatarStream() {
 		try {
@@ -58,7 +61,8 @@ public class UserAvatarAction extends BaseAction {
 			}
 			this.setInputStream(response.getEntity().getContent());
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "returnAvatarStream");
+			_logger.error("error in returnAvatarStream", t);
+            //ApsSystemUtils.logThrowable(t, this, "returnAvatarStream");
 			return this.extractDefaultAvatarStream();
         }
 		return SUCCESS;
@@ -80,7 +84,8 @@ public class UserAvatarAction extends BaseAction {
 				sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));        
 			}
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "createMd5Hex");
+			_logger.error("Error creating Md5 Hex", t);
+            //ApsSystemUtils.logThrowable(t, this, "createMd5Hex");
 			throw new RuntimeException("Error creating Md5 Hex", t);
 		}
 		return sb.toString();
@@ -91,7 +96,8 @@ public class UserAvatarAction extends BaseAction {
 			Resource resource = new ClassPathResource("avatar-default.png");
 			this.setInputStream(resource.getInputStream());
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "extractDefaultAvatarStream");
+			_logger.error("error in extractDefaultAvatarStream", t);
+            //ApsSystemUtils.logThrowable(t, this, "extractDefaultAvatarStream");
             return FAILURE;
         }
 		return SUCCESS;

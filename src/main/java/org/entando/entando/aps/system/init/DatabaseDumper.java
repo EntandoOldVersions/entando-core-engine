@@ -32,8 +32,9 @@ import org.entando.entando.aps.system.init.model.TableDumpResult;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
 
@@ -42,6 +43,8 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class DatabaseDumper extends AbstractDatabaseUtils {
 
+	private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumper.class);
+	
 	protected void createBackup(AbstractInitializerManager.Environment environment, SystemInstallationReport installationReport) throws ApsSystemException {
 		try {
 			DataSourceDumpReport report = new DataSourceDumpReport(installationReport);
@@ -66,7 +69,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 					this.save(DatabaseManager.DUMP_REPORT_FILE_NAME,
 							reportFolder.toString(), report.toXml());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createBackup");
+			_logger.error("error in ", t);
+			//ApsSystemUtils.logThrowable(t, this, "Error while creating backup");
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
@@ -90,7 +94,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createBackup");
+			_logger.error("Error while creating backup", t);
+			//ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
@@ -107,7 +112,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 			dirName.append(dataSourceName).append(File.separator);
 			this.save(tableName + ".sql", dirName.toString(), tableDumpResult.getSqlDump());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "dumpTableData");
+			_logger.error("Error dumping table '{}' - datasource '{}'", tableName, dataSourceName, t);
+			//ApsSystemUtils.logThrowable(t, this, "dumpTableData");
 			throw new ApsSystemException("Error dumping table '" + tableName + "' - datasource '" + dataSourceName + "'", t);
 		}
 	}
@@ -119,7 +125,8 @@ public class DatabaseDumper extends AbstractDatabaseUtils {
 			ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes("UTF-8"));
 			storageManager.saveFile(path, true, bais);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("Error  save backup '{}'", filename, t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			throw new ApsSystemException("Error  save backup '" + filename , t);
 		}
 	}

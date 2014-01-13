@@ -21,8 +21,9 @@ import java.util.Date;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.IUserManager;
@@ -39,6 +40,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class UserAction extends BaseAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserAction.class);
 	
 	@Override
 	public void validate() {
@@ -53,7 +56,8 @@ public class UserAction extends BaseAction {
 					this.setUser(user);
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "validate", "Error validating user ");
+				_logger.error("Error validating user", t);
+				//ApsSystemUtils.logThrowable(t, this, "validate", "Error validating user ");
 			}
 		}
 	}
@@ -70,8 +74,8 @@ public class UserAction extends BaseAction {
 				this.addFieldError("username", this.getText("error.user.duplicateUser", args));
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, 
-					"checkDuplicatedUser", "Error checking duplicate user '" + username + "'");
+			_logger.error("Error checking duplicate user '{}'", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "checkDuplicatedUser", "Error checking duplicate user '" + username + "'");
 		}
 	}
 	
@@ -94,7 +98,8 @@ public class UserAction extends BaseAction {
 			this.setActive(!user.isDisabled());
 			this.setUser(user);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -129,7 +134,8 @@ public class UserAction extends BaseAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -147,7 +153,8 @@ public class UserAction extends BaseAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkUserProfile");
+			_logger.error("Error adding default profile for user {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "checkUserProfile");
 			throw new ApsSystemException("Error adding default profile for user " + username, t);
 		}
 	}
@@ -157,7 +164,8 @@ public class UserAction extends BaseAction {
 			String result = this.checkUserForDelete();
 			if (null != result) return result;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -169,7 +177,8 @@ public class UserAction extends BaseAction {
 			if (null != result) return result;
 			this.getUserManager().removeUser(this.getUsername());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;

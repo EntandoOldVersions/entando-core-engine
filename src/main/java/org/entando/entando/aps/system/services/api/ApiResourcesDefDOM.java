@@ -37,18 +37,21 @@ import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class ApiResourcesDefDOM {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiResourcesDefDOM.class);
+	
     public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
         this.validate(xmlText, definitionPath);
-        ApsSystemUtils.getLogger().info("Loading Resources from file : " + definitionPath);
+        _logger.info("Loading Resources from file : {}", definitionPath);
         this.decodeDOM(xmlText);
     }
     
@@ -65,10 +68,11 @@ public class ApiResourcesDefDOM {
             xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
             Source source = new StreamSource(xmlIs);
             validator.validate(source);
-            ApsSystemUtils.getLogger().info("Valid api methods definition : " + definitionPath);
+            _logger.info("Valid api methods definition : {}", definitionPath);
         } catch (Throwable t) {
             String message = "Error validating api methods definition : " + definitionPath;
-            ApsSystemUtils.logThrowable(t, this, "this", message);
+            _logger.error("Error validating api methods definition : {}", definitionPath, t);
+            //ApsSystemUtils.logThrowable(t, this, "this", message);
             throw new ApsSystemException(message, t);
         } finally {
             try {
@@ -79,7 +83,8 @@ public class ApiResourcesDefDOM {
                     xmlIs.close();
                 }
             } catch (IOException e) {
-                ApsSystemUtils.logThrowable(e, this, "this");
+            	_logger.error("error in validate", e);
+                //ApsSystemUtils.logThrowable(e, this, "this");
             }
         }
     }
@@ -133,7 +138,8 @@ public class ApiResourcesDefDOM {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getResources", "Error building api resources");
+        	_logger.error("Error building api resources", t);
+            //ApsSystemUtils.logThrowable(t, this, "getResources", "Error building api resources");
         }
         return apiResources;
     }
@@ -142,15 +148,13 @@ public class ApiResourcesDefDOM {
         try {
 			ApiResource extractedResource = apiResources.get(resource.getCode());
             if (null != extractedResource) {
-                String alertMessage = "ALERT: There is more than one API with namespace '" + resource.getNamespace() + 
-						"', resource '" + resource.getResourceName() + 
-                        "' into the same definitions file - The second definition will be ignored!!!";
-                ApsSystemUtils.getLogger().error(alertMessage);
+                _logger.error("ALERT: There is more than one API with namespace '{}', resource '{}' into the same definitions file - The second definition will be ignored!!!", resource.getNamespace(), resource.getResourceName());
             } else {
                 apiResources.put(resource.getCode(), resource);
             }
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "checkResource", "Error checking api resource");
+        	_logger.error("Error checking api resource", e);
+            //ApsSystemUtils.logThrowable(e, this, "checkResource", "Error checking api resource");
         }
     }
     
@@ -158,15 +162,13 @@ public class ApiResourcesDefDOM {
         try {
             ApiMethod extractedMethod = resource.getMethod(apiMethod.getHttpMethod());
             if (null != extractedMethod) {
-                String alertMessage = "ALERT: There is more than one API method " + apiMethod.getHttpMethod() 
-                        + " for resource '" + apiMethod.getResourceName() + "' into the same definitions file "
-                        + "- The second definition will be ignored!!!";
-                ApsSystemUtils.getLogger().error(alertMessage);
+                _logger.error("ALERT: There is more than one API method {} for resource '{}' into the same definitions file - The second definition will be ignored!!!", apiMethod.getHttpMethod(), apiMethod.getResourceName() );
             } else {
                 resource.setMethod(apiMethod);
             }
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "checkMethod", "Error checking api method");
+        	_logger.error("Error checking api method", e);
+            //ApsSystemUtils.logThrowable(e, this, "checkMethod", "Error checking api method");
         }
     }
     
@@ -177,7 +179,7 @@ public class ApiResourcesDefDOM {
         try {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
+            _logger.error("Error while parsing xml: {}", xmlText, t);
             throw new ApsSystemException("Error detected while parsing the XML", t);
         }
     }

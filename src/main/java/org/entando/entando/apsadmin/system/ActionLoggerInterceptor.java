@@ -29,8 +29,9 @@ import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -42,6 +43,8 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * @author E.Santoboni - S.Puddu
  */
 public class ActionLoggerInterceptor extends AbstractInterceptor {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ActionLoggerInterceptor.class);
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
@@ -67,7 +70,8 @@ public class ActionLoggerInterceptor extends AbstractInterceptor {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "intercept");
+			_logger.error("error in intercept", t);
+			//ApsSystemUtils.logThrowable(t, this, "intercept");
 		}
 		return result;
 	}

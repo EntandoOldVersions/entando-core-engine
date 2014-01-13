@@ -27,8 +27,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.Lang;
 
@@ -37,6 +38,8 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author E.Santoboni
  */
 public class WidgetTypeDOM {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeDOM.class);
 	
 	/**
 	 * Costruttore della classe.
@@ -149,7 +152,8 @@ public class WidgetTypeDOM {
 		try {
 			this.setDoc(builder.build(reader));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "decodeDOM");
+			_logger.error("Error detected while parsing the XML {}", xmlText, t);
+			//ApsSystemUtils.logThrowable(t, this, "decodeDOM");
 			throw new ApsSystemException("Error detected while parsing the XML", t);
 		}
 	}

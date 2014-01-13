@@ -20,7 +20,9 @@ package org.entando.entando.apsadmin.user;
 import java.util.Iterator;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
@@ -33,6 +35,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author E.Mezzano - E.Santoboni
  */
 public class AuthorityToUsersAction extends UserProfileFinderAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AuthorityToUsersAction.class);
 	
 	public String addUser() {
 		IApsAuthority auth = this.getApsAuthority();
@@ -47,7 +51,8 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 				authorizatorManager.setUserAuthorization(this.getUsernameToSet(), auth);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addUser");
+			_logger.error("error in addUser", t);
+			//ApsSystemUtils.logThrowable(t, this, "addUser");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -66,7 +71,8 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 				authorizatorManager.removeUserAuthorization(this.getUsernameToSet(), auth);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeUser");
+			_logger.error("error in removeUser", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeUser");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -87,8 +93,9 @@ public class AuthorityToUsersAction extends UserProfileFinderAction {
 		try {
 			return this.getAuthorizatorManager().getUsersByAuthority(auth);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUserAuthorizated");
-			throw new RuntimeException("Errore in ricerca utenti autorizzati", t);
+			_logger.error("Error in getUserAuthorizated", t);
+			//ApsSystemUtils.logThrowable(t, this, "getUserAuthorizated");
+			throw new RuntimeException("Error searching authorized users", t);
 		}
 	}
 	

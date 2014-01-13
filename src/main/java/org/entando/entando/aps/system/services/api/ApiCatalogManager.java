@@ -27,6 +27,8 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedWidget;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -36,10 +38,12 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ApiCatalogManager extends AbstractService implements IApiCatalogManager {
-    
+   
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiCatalogManager.class);
+	
 	@Override
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
+        _logger.debug("{} ready.", this.getClass().getName());
     }
     
     @Override
@@ -57,7 +61,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized Api Methods");
             this.getApiCatalogDAO().loadApiStatus(resources);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "loadResources", "Error loading Api Resources definitions");
+        	_logger.error("Error loading Api Resources definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "loadResources", "Error loading Api Resources definitions");
             throw new ApsSystemException("Error loading Api Resources definitions", t);
         }
     }
@@ -78,7 +83,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             this.setMasterServices(this.getApiCatalogDAO().loadServices(apiGETMethods));
         } catch (Throwable t) {
             this.setMasterServices(new HashMap<String, ApiService>());
-            ApsSystemUtils.logThrowable(t, this, "loadServices", "Error loading Services definitions");
+            _logger.error("Error loading Services definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "loadServices", "Error loading Services definitions");
             throw new ApsSystemException("Error loading Services definitions", t);
         }
     }
@@ -108,16 +114,16 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                     String showletCode = relatedShowlet.getShowletCode();
                     if (mapping.containsKey(showletCode)) {
                         ApiMethod alreadyMapped = mapping.get(showletCode);
-                        String alertMessage = "There is more than one method related whith showlet '" + showletCode + "' - "
-                                + "Actual mapped '" + alreadyMapped.getResourceName() + "'; other method '" + apiMethod.getResourceName() + "'";
-                        ApsSystemUtils.getLogger().error(alertMessage);
+                        //String alertMessage = "There is more than one method related whith showlet '" + showletCode + "' - " + "Actual mapped '" + alreadyMapped.getResourceName() + "'; other method '" + apiMethod.getResourceName() + "'";
+                       _logger.error("There is more than one method related whith showlet '{}' - Actual mapped '{}'; other method '{}'", showletCode, alreadyMapped.getResourceName(), apiMethod.getResourceName());
                     } else {
                         mapping.put(showletCode, apiMethod.clone());
                     }
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getRelatedShowletMethods", "Error loading related showlet methods");
+        	_logger.error("Error loading related showlet methods", t);
+            //ApsSystemUtils.logThrowable(t, this, "getRelatedShowletMethods", "Error loading related showlet methods");
             throw new ApsSystemException("Error loading related showlet methods", t);
         }
         return mapping;
@@ -138,8 +144,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 masterMethod.setRequiredPermission(null);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateMethodConfig", "Error error updating api status : "
-                    + "resource '" + apiMethod.getResourceName() + "' method '" + apiMethod.getHttpMethod() + "' ");
+        	_logger.error("Error error updating api status : resource '{}' method '{}'", apiMethod.getResourceName(), apiMethod.getHttpMethod(), t);
+            //ApsSystemUtils.logThrowable(t, this, "updateMethodConfig", "Error error updating api status : resource '" + apiMethod.getResourceName() + "' method '" + apiMethod.getHttpMethod() + "' ");
             throw new ApsSystemException("Error updating api status", t);
         }
     }
@@ -152,8 +158,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             this.getApiCatalogDAO().resetApiStatus(resourceCode, masterMethod.getHttpMethod());
             masterMethod.resetConfiguration();
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "resetApiStatus", "Error error resetting api status : "
-                    + "resource '" + apiMethod.getResourceName() + "' method '" + apiMethod.getHttpMethod() + "' ");
+        	_logger.error("Error error resetting api status : resource '{}' method '{}'",apiMethod.getResourceName(), apiMethod.getHttpMethod(), t);
+            //ApsSystemUtils.logThrowable(t, this, "resetApiStatus", "Error error resetting api status : resource '" + apiMethod.getResourceName() + "' method '" + apiMethod.getHttpMethod() + "' ");
             throw new ApsSystemException("Error resetting api status", t);
         }
     }
@@ -202,7 +208,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 return resource.getMethod(httpMethod);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMasterMethod", "Error extracting methods");
+        	_logger.error("Error extracting methods", t);
+            //ApsSystemUtils.logThrowable(t, this, "getMasterMethod", "Error extracting methods");
             throw new ApsSystemException("Error extracting methods", t);
         }
         return null;
@@ -230,7 +237,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 clonedMethods.add(apiMethod.clone());
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMethods", "Error extracting methods");
+        	_logger.error("Error extracting methods", t);
+            //ApsSystemUtils.logThrowable(t, this, "getMethods", "Error extracting methods");
             throw new ApsSystemException("Error extracting methods", t);
         }
         return clonedMethods;
@@ -250,7 +258,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getMasterMethods", "Error loading Master Methods definitions");
+        	_logger.error("Error loading Master Methods definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "getMasterMethods", "Error loading Master Methods definitions");
             throw new ApsSystemException("Error loading Master Methods definitions", t);
         }
         return apiMethods;
@@ -270,7 +279,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 clonedApiResources.put(resourceFullCode, resource.clone());
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiResources", "Error extracting resources");
+        	_logger.error("Error extracting resources", t);
+            //ApsSystemUtils.logThrowable(t, this, "getApiResources", "Error extracting resources");
             throw new ApsSystemException("Error extracting resources", t);
         }
         return clonedApiResources;
@@ -288,8 +298,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 return apiResource.clone();
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiResource", 
-                    "Error extracting resource by name '" + resourceName + "'");
+        	_logger.error("Error extracting resource by name '{}'", resourceName, t);
+            //ApsSystemUtils.logThrowable(t, this, "getApiResource", "Error extracting resource by name '" + resourceName + "'");
             throw new ApsSystemException("Error extracting resource", t);
         }
         return null;
@@ -302,7 +312,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 this.loadServices();
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiService", "Error extracting services");
+        	_logger.error("Error extracting services. key: {}", key, t);
+            //ApsSystemUtils.logThrowable(t, this, "getApiService", "Error extracting services");
             throw new ApsSystemException("Error extracting services", t);
         }
         ApiService service = this.getMasterServices().get(key);
@@ -330,7 +341,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
+        	_logger.error("Error extracting services", t);
+           //ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
             throw new ApsSystemException("Error extracting services", t);
         }
         return clonedServices;
@@ -355,7 +367,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
+        	_logger.error("Error extracting services", t);
+            //ApsSystemUtils.logThrowable(t, this, "getServices", "Error extracting services");
             throw new ApsSystemException("Error extracting services", t);
         }
         return servicesToReturn;
@@ -378,7 +391,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             }
             this.getMasterServices().put(service.getKey(), service);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "saveService", "Error saving service");
+        	_logger.error("Error saving service", t);
+            //ApsSystemUtils.logThrowable(t, this, "saveService", "Error saving service");
             throw new ApsSystemException("Error saving service", t);
         }
     }
@@ -389,7 +403,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             this.getApiCatalogDAO().deleteService(key);
             this.getMasterServices().remove(key);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteService", "Error deleting api service '" + key + "'");
+        	_logger.error("Error deleting api service by key '{}'", key, t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteService", "Error deleting api service '" + key + "'");
             throw new ApsSystemException("Error deleting service '" + key + "'", t);
         }
     }
@@ -408,7 +423,8 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             masterService.setPublicService(service.isPublicService());
             this.getApiCatalogDAO().updateService(masterService);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateApiServiceStatus", "Error updating api service '" + service.getKey() + "'");
+        	_logger.error("Error updating api service with key '{}'", service.getKey(), t);
+            //ApsSystemUtils.logThrowable(t, this, "updateApiServiceStatus", "Error updating api service '" + service.getKey() + "'");
             throw new ApsSystemException("Error updating service '" + service.getKey() + "'", t);
         }
     }

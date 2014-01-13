@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -33,6 +35,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ComponentEnvironment {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ComponentEnvironment.class);
 	
 	public ComponentEnvironment(Element environmentElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {
@@ -59,7 +63,8 @@ public class ComponentEnvironment {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "ComponentEnvironment");
+			_logger.error("Error creating ComponentEnvironment", t);
+			//ApsSystemUtils.logThrowable(t, this, "ComponentEnvironment");
 			throw new ApsSystemException("Error creating ComponentEnvironment", t);
 		}
 	}
@@ -80,7 +85,8 @@ public class ComponentEnvironment {
 				ApsSystemUtils.getLogger().error("Null post process class for process name '" + name + "'");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createPostProcess");
+			_logger.error("Error creating Post Process", t);
+			//ApsSystemUtils.logThrowable(t, this, "createPostProcess");
 			throw new ApsSystemException("Error creating Post Process", t);
 		}
 	}

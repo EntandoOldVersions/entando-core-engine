@@ -34,7 +34,6 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.util.ApsProperties;
 
@@ -238,7 +237,8 @@ public class ApiCatalogDAO extends AbstractDAO implements IApiCatalogDAO {
                 invalidServices.add(key);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "buildService", "Error building service - key '" + key + "'");
+        	_logger.error("Error building service - key '{}'",key, t);
+            //ApsSystemUtils.logThrowable(t, this, "buildService", "Error building service - key '" + key + "'");
         }
     }
 

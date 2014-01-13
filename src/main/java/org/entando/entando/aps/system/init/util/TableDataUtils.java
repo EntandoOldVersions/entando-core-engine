@@ -32,6 +32,8 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.model.TableDumpResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -41,6 +43,8 @@ import com.agiletec.aps.util.DateConverter;
  * @author E.Santoboni
  */
 public class TableDataUtils {
+
+	private static final Logger _logger = LoggerFactory.getLogger(TableDataUtils.class);
 	
 	public static void valueDatabase(String script, String databaseName, 
 			DataSource dataSource, DataInstallationReport schemaReport) throws ApsSystemException {
@@ -61,7 +65,8 @@ public class TableDataUtils {
 			if (null != schemaReport) {
 				schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
 			}
-			ApsSystemUtils.logThrowable(t, TableDataUtils.class, "valueDatabase", "Error executing script into db " + databaseName);
+			_logger.error("Error executing script into db {} ", databaseName, t);
+			//ApsSystemUtils.logThrowable(t, TableDataUtils.class, "valueDatabase", "Error executing script into db " + databaseName);
 			throw new ApsSystemException("Error executing script into db " + databaseName, t);
 		}
 	}
@@ -86,12 +91,13 @@ public class TableDataUtils {
 					conn.rollback();
 				}
 			} catch (Throwable tr) {
-				ApsSystemUtils.logThrowable(tr, TableDataUtils.class, 
-						"executeQueries", "Error executing rollback");
+				_logger.error("Error executing rollback", t);
+				//ApsSystemUtils.logThrowable(tr, TableDataUtils.class,"executeQueries", "Error executing rollback");
 			}
 			String errorMessage = "Error executing script - QUERY:\n" + currentQuery;
 			if (traceException) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, "executeQueries", errorMessage);
+				_logger.error("Error executing script - QUERY:\n{}", currentQuery, t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class, "executeQueries", errorMessage);
 			}
 			throw new ApsSystemException(errorMessage, t);
 		} finally {
@@ -100,16 +106,16 @@ public class TableDataUtils {
 					stat.close();
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"closeDaoResources", "Error while closing the statement");
+				_logger.error("Error while closing the statement", t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class, "closeDaoResources", "Error while closing the statement");
 			}
 			try {
 				if (conn != null) {
 					conn.close();
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"closeDaoStatement", "Error closing the connection");
+				_logger.error("Error closing the connection", t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class,  "closeDaoStatement", "Error closing the connection");
 			}
 		}
 	}
@@ -164,8 +170,8 @@ public class TableDataUtils {
 			report.setSqlDump(sqlDump.toString());
 			report.setRows(rows);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-					"dumpTable", "Error creating backup");
+			_logger.error("Error creating backup", t);
+			//ApsSystemUtils.logThrowable(t, TableDataUtils.class, 	"dumpTable", "Error creating backup");
 			throw new ApsSystemException("Error creating backup", t);
 		} finally {
 			try {
@@ -173,24 +179,24 @@ public class TableDataUtils {
 					res.close();
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"dumpTable", "Error while closing the resultset");
+				_logger.error("Error while closing the resultset", t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class,"dumpTable", "Error while closing the resultset");
 			}
 			try {
 				if (stat != null) {
 					stat.close();
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"dumpTable", "Error while closing the statement");
+				_logger.error("Error while closing the statement", t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class, "dumpTable", "Error while closing the statement");
 			}
 			try {
 				if (conn != null) {
 					conn.close();
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, TableDataUtils.class, 
-						"dumpTable", "Error closing the connection");
+				_logger.error("Error closing the connection", t);
+				//ApsSystemUtils.logThrowable(t, TableDataUtils.class, "dumpTable", "Error closing the connection");
 			}
 		}
 		long time = System.currentTimeMillis() - start;

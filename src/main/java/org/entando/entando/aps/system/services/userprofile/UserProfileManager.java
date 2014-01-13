@@ -29,10 +29,11 @@ import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityDAO;
@@ -52,7 +53,9 @@ import com.agiletec.aps.system.services.user.UserDetails;
  */
 @Aspect
 public class UserProfileManager extends ApsEntityManager implements IUserProfileManager {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileManager.class);
+	
     @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.getUser(..))", returning = "user")
     public void injectProfile(Object user) {
         if (user != null) {
@@ -62,7 +65,8 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                     IUserProfile profile = this.getProfile(userDetails.getUsername());
                     userDetails.setProfile(profile);
                 } catch (Throwable t) {
-                    ApsSystemUtils.logThrowable(t, this, "injectProfile", "Error injecting profile on user " + userDetails.getUsername());
+                	_logger.error("Error injecting profile on user {}", userDetails.getUsername(), t);
+                    //ApsSystemUtils.logThrowable(t, this, "injectProfile", "Error injecting profile on user " + userDetails.getUsername());
                 }
             }
         }
@@ -77,7 +81,8 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                 try {
                     this.addProfile(userDetails.getUsername(), (IUserProfile) profile);
                 } catch (Throwable t) {
-                    ApsSystemUtils.logThrowable(t, this, "addProfile", "Error adding profile on user " + userDetails.getUsername());
+                	_logger.error("Error adding profile on user {}", userDetails.getUsername(), t);
+                    //ApsSystemUtils.logThrowable(t, this, "addProfile", "Error adding profile on user " + userDetails.getUsername());
                 }
             }
         }
@@ -93,7 +98,8 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                 try {
                     this.updateProfile(userDetails.getUsername(), (IUserProfile) profile);
                 } catch (Throwable t) {
-                    ApsSystemUtils.logThrowable(t, this, "updateProfile", "Error updating profile to user " + userDetails.getUsername());
+                	_logger.error("Error updating profile to user {}", userDetails.getUsername(), t);
+                    //ApsSystemUtils.logThrowable(t, this, "updateProfile", "Error updating profile to user " + userDetails.getUsername());
                 }
             }
         }
@@ -113,7 +119,8 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             try {
                 this.deleteProfile(username);
             } catch (Throwable t) {
-                ApsSystemUtils.logThrowable(t, this, "addProfile", "ERRORE CANCELLAZIONE PROFILO su utente " + username);
+            	_logger.error("Error deleting profile. user: {}", username, t);
+                //ApsSystemUtils.logThrowable(t, this, "deleteProfile", "ERRORE CANCELLAZIONE PROFILO su utente " + username);
             }
         }
     }
@@ -149,8 +156,9 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.getProfileDAO().addEntity(profile);
             this.notifyProfileChanging(profile, ProfileChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addProfile");
-            throw new ApsSystemException("Errore salvataggio profilo", t);
+        	_logger.error("Error saving profile - user: {}", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "addProfile");
+            throw new ApsSystemException("Error saving profile", t);
         }
     }
     
@@ -165,8 +173,9 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.getProfileDAO().deleteEntity(username);
             this.notifyProfileChanging(profileToDelete, ProfileChangedEvent.REMOVE_OPERATION_CODE);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteProfile");
-            throw new ApsSystemException("Errore eliminazione profile per utente", t);
+        	_logger.error("Error deleting user profile {}", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteProfile");
+            throw new ApsSystemException("Error deleting user profile", t);
         }
     }
     
@@ -182,8 +191,9 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                 profile.setPublicProfile(profileVO.isPublicProfile());
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getProfile");
-            throw new ApsSystemException("Errore recupero profileVO", t);
+        	_logger.error("Error loading provileVo. user: {} ", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "getProfile");
+            throw new ApsSystemException("Error loading profileVO", t);
         }
         return profile;
     }
@@ -196,8 +206,9 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.getProfileDAO().updateEntity(profile);
             this.notifyProfileChanging(profile, ProfileChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateProfile");
-            throw new ApsSystemException("Errore aggiornamento profilo", t);
+        	_logger.error("Error updating profile {}", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "updateProfile");
+            throw new ApsSystemException("Error updating profile", t);
         }
     }
 	

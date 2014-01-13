@@ -25,6 +25,7 @@ import java.util.StringTokenizer;
 
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -37,7 +38,9 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class ApiResourceLoader {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiResourceLoader.class);
+	
     protected ApiResourceLoader(String locationPatterns) throws ApsSystemException {
         try {
             StringTokenizer tokenizer = new StringTokenizer(locationPatterns, ",");
@@ -46,7 +49,8 @@ public class ApiResourceLoader {
                 this.loadApiResources(locationPattern);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
+        	_logger.error("Error loading Api Method definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "ApiMethodLoader", "Error loading Api Method definitions");
             throw new ApsSystemException("Error loading Api Method definitions", t);
         }
     }
@@ -81,8 +85,8 @@ public class ApiResourceLoader {
                 }
                 log.info("Loaded Api Resources definition by file " + path);
             } catch (Throwable t) {
-                ApsSystemUtils.logThrowable(t, this, "loadApiResources", 
-                        "Error loading Api Resources definition by location Pattern '" + path + "'");
+            	_logger.error("Error loading Api Resources definition by location Pattern '{}'",path, t);
+                //ApsSystemUtils.logThrowable(t, this, "loadApiResources", "Error loading Api Resources definition by location Pattern '" + path + "'");
             } finally {
                 if (null != is) {
                     is.close();

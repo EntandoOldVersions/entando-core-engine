@@ -36,7 +36,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -50,6 +52,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 @XmlType(propOrder = {"id", "typeCode", "description", "mainGroup", "fileName", "categories", "base64"})
 public class JAXBResource {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(JAXBResource.class);
+	
 	public JAXBResource() {}
 
 	public JAXBResource(ResourceInterface resource) throws ApsSystemException {
@@ -78,7 +82,8 @@ public class JAXBResource {
 				tempFile.delete();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "JAXBResource");
+			_logger.error("Error creating jaxb resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "JAXBResource");
 			throw new ApsSystemException("Error creating jaxb resource", t);
 		}
 	}
@@ -97,7 +102,8 @@ public class JAXBResource {
 			outStream.close();
 			is.close();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveTempFile");
+			_logger.error("Error on saving temporary file", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveTempFile");
 			throw new ApsSystemException("Error on saving temporary file", t);
 		}
 		return new File(filePath);
@@ -112,7 +118,8 @@ public class JAXBResource {
 				bos.write(buf, 0, readNum);
 			}
 		} catch (IOException ex) {
-			ApsSystemUtils.logThrowable(ex, this, "fileToByteArray");
+			_logger.error("Error creating byte array", ex);
+			//ApsSystemUtils.logThrowable(ex, this, "fileToByteArray");
 			throw new ApsSystemException("Error creating byte array", ex);
 		}
 		return bos.toByteArray();
@@ -160,7 +167,8 @@ public class JAXBResource {
 			out.close();
 			inputStream.close();
 		} catch (IOException ex) {
-			ApsSystemUtils.logThrowable(ex, this, "byteArrayToFile");
+			_logger.error("rror creating file from byte array", ex);
+			//ApsSystemUtils.logThrowable(ex, this, "byteArrayToFile");
 			throw new ApsSystemException("Error creating file from byte array", ex);
 		}
 		return file;

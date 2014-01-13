@@ -29,13 +29,15 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.apsadmin.api.model.ApiSelectItem;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ApiServiceFinderAction extends AbstractApiFinderAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiServiceFinderAction.class);
 	
 	public String updateAllStatusOfGroup() {
 		try {
@@ -59,11 +61,12 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 					service.setHidden(!publicService);
 					this.getApiCatalogManager().updateService(service);
 					this.addActionMessage(this.getText("message.service.status.updated", new String[]{serviceItem.getKey(), serviceItem.getValue()}));
-					ApsSystemUtils.getLogger().info("Updated api service status - Service Key '" + serviceItem.getKey() + "'");
+					_logger.info("Updated api service status - Service Key '{}'", serviceItem.getKey());
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateAllStatusOfGroup");
+			_logger.error("error in updateAllStatusOfGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateAllStatusOfGroup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -80,7 +83,8 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 				Collections.sort(group, comparator);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getServiceFlavours");
+			_logger.error("Error extracting Flavours services", t);
+			//ApsSystemUtils.logThrowable(t, this, "getServiceFlavours");
 			throw new RuntimeException("Error extracting Flavours services", t);
 		}
 		return groups;
@@ -106,7 +110,8 @@ public class ApiServiceFinderAction extends AbstractApiFinderAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildServiceGroups");
+			_logger.error("error in buildServiceGroups", t);
+			//ApsSystemUtils.logThrowable(t, this, "buildServiceGroups");
 			throw t;
 		}
 	}

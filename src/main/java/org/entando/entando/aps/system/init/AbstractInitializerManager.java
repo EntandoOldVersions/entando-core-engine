@@ -20,17 +20,20 @@ package org.entando.entando.aps.system.init;
 import javax.sql.DataSource;
 
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractInitializerManager implements BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractInitializerManager.class);
 	
 	protected SystemInstallationReport extractReport() throws ApsSystemException {
 		SystemInstallationReport report = null;
@@ -40,7 +43,8 @@ public abstract class AbstractInitializerManager implements BeanFactoryAware {
 			dao.setDataSource(dataSource);
 			report = dao.loadReport(this.getConfigVersion());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractReport");
+			_logger.error("error Error extracting report", t);
+			//ApsSystemUtils.logThrowable(t, this, "Error extracting report");
 			throw new ApsSystemException("Error extracting report", t);
 		}
 		return report;

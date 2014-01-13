@@ -22,16 +22,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class LocalStorageManager implements IStorageManager {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(LocalStorageManager.class);
 	
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
+		_logger.debug("{} ready", this.getClass().getName());
 	}
 	
 	@Override
@@ -52,7 +56,8 @@ public class LocalStorageManager implements IStorageManager {
 			outStream.close();
 			is.close();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("Error on saving file", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			throw new ApsSystemException("Error on saving file", t);
 		}
 	}
@@ -108,7 +113,8 @@ public class LocalStorageManager implements IStorageManager {
 				return new FileInputStream(file);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getStream");
+			_logger.error("Error extracting stream", t);
+			//ApsSystemUtils.logThrowable(t, this, "getStream");
 			throw new ApsSystemException("Error extracting stream", t);
 		}
 		return null;

@@ -32,7 +32,6 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
-import com.agiletec.plugins.jacms.apsadmin.content.model.ContentModelAction;
 
 /**
  * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.

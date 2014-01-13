@@ -24,13 +24,15 @@ import javax.ws.rs.core.MediaType;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.jdom.Element;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class SelfRestCallPostProcess implements IPostProcess {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SelfRestCallPostProcess.class);
 	
 	/*
 	<selfRestCall langCode="" namespace="jacms" resourceName="contentType" 
@@ -115,7 +117,8 @@ public class SelfRestCallPostProcess implements IPostProcess {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createConfig");
+			_logger.error("Error creating Self rest call", t);
+			//ApsSystemUtils.logThrowable(t, this, "createConfig");
 			throw new RuntimeException("Error creating Self rest call", t);
 		}
 	}

@@ -24,18 +24,21 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.ComponentLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class ComponentManager implements IComponentManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ComponentManager.class);
 	
 	public void init() throws Exception {
 		this.loadComponents();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initializated");
+		_logger.debug("{} ready.", this.getClass().getName());
 	}
 	
     protected void loadComponents() throws ApsSystemException {
@@ -58,7 +61,8 @@ public class ComponentManager implements IComponentManager {
 			Collections.sort(components);
 			this.setComponents(components);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "loadComponents", "Error loading components definitions");
+        	_logger.error("Error loading components definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "loadComponents", "Error loading components definitions");
             throw new ApsSystemException("Error loading components definitions", t);
         }
     }

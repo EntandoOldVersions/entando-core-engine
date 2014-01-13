@@ -17,12 +17,15 @@
 */
 package org.entando.entando.aps.system.init;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class DatabaseDumperThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DatabaseDumperThread.class);
 	
 	public DatabaseDumperThread(DatabaseManager manager) {
 		this._manager = manager;
@@ -33,7 +36,8 @@ public class DatabaseDumperThread extends Thread {
 		try {
 			this._manager.executeBackup();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		}
 	}
 	

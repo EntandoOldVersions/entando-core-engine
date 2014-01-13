@@ -28,8 +28,9 @@ import org.entando.entando.aps.system.services.api.model.ApiMethodRelatedWidget;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -43,6 +44,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class ApiServiceAction extends AbstractApiAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiServiceAction.class);
 	
 	@Override
 	public void validate() {
@@ -53,7 +56,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.checkDescriptions();
 			this.checkParameters();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate");
+			_logger.error("Error validating service", t);
+			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException("Error validating service", t);
 		}
 	}
@@ -86,7 +90,8 @@ public class ApiServiceAction extends AbstractApiAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkCode");
+			_logger.error("Error checking service key", t);
+			//ApsSystemUtils.logThrowable(t, this, "checkCode");
 			throw new RuntimeException("Error checking service key", t);
 		}
 	}
@@ -111,7 +116,8 @@ public class ApiServiceAction extends AbstractApiAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkParameters");
+			_logger.error("Error checking parameters", t);
+			//ApsSystemUtils.logThrowable(t, this, "checkParameters");
 			throw new RuntimeException("Error checking parameters", t);
 		}
 	}
@@ -162,7 +168,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
 			this.setServiceKey(this.buildTempKey(masterMethod.getResourceName()));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "newService");
+			_logger.error("error in newService", t);
+			//ApsSystemUtils.logThrowable(t, this, "newService");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -172,8 +179,8 @@ public class ApiServiceAction extends AbstractApiAction {
 		try {
 			return this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, namespace, resourceName);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getMethod", 
-					"Error extracting GET method of resource '" + resourceName + "' namespace '" + namespace + "'");
+			_logger.error("Error extracting GET method of resource '{}' namespace '{}'", resourceName, namespace, t);
+			//ApsSystemUtils.logThrowable(t, this, "getMethod", "Error extracting GET method of resource '" + resourceName + "' namespace '" + namespace + "'");
 		}
 		return null;
 	}
@@ -226,7 +233,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setStrutsAction(ApsAdminSystemConstants.PASTE);
 			this.setServiceKey(this.buildTempKey(masterMethod.getResourceName()));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "copyFromWidget");
+			_logger.error("error in copyFromWidget", t);
+			//ApsSystemUtils.logThrowable(t, this, "copyFromWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -293,7 +301,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setRequiredPermission(apiService.getRequiredPermission());
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -325,7 +334,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			this.getApiCatalogManager().saveService(service);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -342,7 +352,8 @@ public class ApiServiceAction extends AbstractApiAction {
 				return check;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -360,7 +371,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			this.getApiCatalogManager().deleteService(this.getServiceKey());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -396,7 +408,8 @@ public class ApiServiceAction extends AbstractApiAction {
 			ApiService apiService = this.getApiService(this.getServiceKey());
             return super.generateResponseBodySchema(apiService.getMaster());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
+        	_logger.error("Error extracting response body Schema", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
             return FAILURE;
         }
     }

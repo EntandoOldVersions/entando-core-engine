@@ -31,10 +31,11 @@ import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
 import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedObserver;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -50,9 +51,11 @@ import com.agiletec.aps.util.DateConverter;
  */
 public class ActionLogManager extends AbstractService implements IActionLogManager, ProfileChangedObserver {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ActionLogManager.class);
+	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": ready");
+		_logger.debug("{} ready",this.getClass().getName());
 	}
 
 	@Override
@@ -63,7 +66,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			thread.setName(threadName);
 			thread.start();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addActionRecord");
+			_logger.error("Error adding an actionlogger record", t);
+			//ApsSystemUtils.logThrowable(t, this, "addActionRecord");
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
@@ -82,7 +86,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			actionRecord.setActionDate(new Date());
 			this.getActionLogDAO().addActionRecord(actionRecord);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addActionRecordByThread");
+			_logger.error("Error adding an actionlogger record", t);
+			//ApsSystemUtils.logThrowable(t, this, "addActionRecordByThread");
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
@@ -93,7 +98,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		try {
 			this.getActionLogDAO().deleteActionRecord(id);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteActionRecord");
+			_logger.error("Error deleting the actionlogger record: {}", id, t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteActionRecord");
 			throw new ApsSystemException("Error deleting the actionlogger record: " + id, t);
 		}
 	}
@@ -104,7 +110,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		try {
 			records = this.getActionLogDAO().getActionRecords(searchBean);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getActionRecords");
+			_logger.error("Error loading actionlogger records", t);
+			//ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger records", t);
 		}
 		return records;
@@ -116,7 +123,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		try {
 			record = this.getActionLogDAO().getActionRecord(id);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getActionRecords");
+			_logger.error("Error loading actionlogger record with id: {}", id, t);
+			//ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger record with id: " + id, t);
 		}
 		return record;
@@ -139,7 +147,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 				recordIds = recordIds.subList(0, config.getMaxActivitySizeByGroup());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getActivityStream");
+			_logger.error("Error loading activity stream records", t);
+			//ApsSystemUtils.logThrowable(t, this, "getActivityStream");
 			throw new ApsSystemException("Error loading activity stream records", t);
 		}
 		return recordIds;
@@ -151,7 +160,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		try {
 			this.getActionLogDAO().editActionLikeRecord(id, username, add);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "editActionLikeRecord");
+			_logger.error("Error editing activity stream like records", t);
+			//ApsSystemUtils.logThrowable(t, this, "editActionLikeRecord");
 			throw new ApsSystemException("Error editing activity stream like records", t);
 		}
 	}
@@ -173,7 +183,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
+			_logger.error("Error extracting activity stream like records", t);
+			//ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
 			throw new ApsSystemException("Error extracting activity stream like records", t);
 		}
 		return infos;
@@ -185,7 +196,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getBeanFactory().getBean(SystemConstants.CACHE_INFO_MANAGER);
 			cacheInfoManager.flushGroup("ActivityStreamLikeRecords_cacheGroup");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromProfileChanged", "Error flushing cache group");
+			_logger.error("Error flushing cache group", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromProfileChanged", "Error flushing cache group");
 		}
 	}
 	

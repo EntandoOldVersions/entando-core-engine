@@ -22,8 +22,9 @@ import java.util.Map;
 
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -31,13 +32,16 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class ConsumerFinderAction extends BaseAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ConsumerAction.class);
+	
     public List<String> getSearchResult() throws Throwable {
         List<String> consumerKeys = null;
         try {
             consumerKeys = this.getOauthConsumerManager().getConsumerKeys(this.getSearchFilters());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+        	_logger.error("error in getSearchResult", t);
+            //ApsSystemUtils.logThrowable(t, this, "getSearchResult");
             throw t;
         }
         return consumerKeys;
@@ -75,7 +79,8 @@ public class ConsumerFinderAction extends BaseAction {
         try {
             return this.getOauthConsumerManager().getTokenOccurrencesByConsumer();
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer");
+        	_logger.error("error in getTokenOccurrencesByConsumer", t);
+           //ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer");
             throw t;
         }
     }
@@ -84,7 +89,8 @@ public class ConsumerFinderAction extends BaseAction {
         try {
             return this.getOauthConsumerManager().getConsumerRecord(key);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConsumer");
+        	_logger.error("error in getConsumer", t);
+            //ApsSystemUtils.logThrowable(t, this, "getConsumer");
             throw t;
         }
     }

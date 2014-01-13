@@ -28,7 +28,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -121,8 +120,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 				widgetType.setMainGroup(mainGroup.trim());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet",
-					"Error parsing the Widget Type '" + code + "'");
+			_logger.error("Error parsing the Widget Type '{}'", code, t);
+			//ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet", "Error parsing the Widget Type '" + code + "'");
 			throw new ApsSystemException("Error in the parsing in the Widget Type '" + code + "'", t);
 		}
 		return widgetType;

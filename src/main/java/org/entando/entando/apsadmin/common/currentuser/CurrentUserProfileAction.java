@@ -22,8 +22,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -40,7 +41,9 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
  * @author E.Santoboni
  */
 public class CurrentUserProfileAction extends AbstractApsEntityAction implements ICurrentUserProfileAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(CurrentUserProfileAction.class);
+	
 	@Override
     public void validate() {
         if (this.getUserProfile() != null) {
@@ -88,7 +91,8 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
 				this.getRequest().getSession().setAttribute(SESSION_PARAM_NAME_CURRENT_PROFILE, userProfile);
 			}
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "edit");
+        	_logger.error("error in edit", t);
+            //ApsSystemUtils.logThrowable(t, this, "edit");
             return FAILURE;
         }
         return SUCCESS;
@@ -112,7 +116,8 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkTypeLables");
+			_logger.error("Error checking label types", t);
+			//ApsSystemUtils.logThrowable(t, this, "checkTypeLables");
 			throw new RuntimeException("Error checking label types", t);
 		}
 	}
@@ -124,7 +129,8 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
 			properties.put(defaultLang.getCode(), defaultValue);
 			this.getI18nManager().addLabelGroup(key, properties);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addLabelGroups");
+			_logger.error("Error adding label groups - key '{}'", key, t);
+			//ApsSystemUtils.logThrowable(t, this, "addLabelGroups");
 			throw new RuntimeException("Error adding label groups - key '" + key + "'", t);
 		}
 	}
@@ -146,7 +152,8 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
             this.getRequest().getSession().removeAttribute(SESSION_PARAM_NAME_CURRENT_PROFILE);
 			this.addActionMessage(this.getText("message.profileUpdated"));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
+        	_logger.error("error in save", t);
+            //ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
         }
         return SUCCESS;
@@ -158,7 +165,8 @@ public class CurrentUserProfileAction extends AbstractApsEntityAction implements
             userProfileTypes = new ArrayList<IApsEntity>();
             userProfileTypes.addAll(this.getUserProfileManager().getEntityPrototypes().values());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUserProfileTypes");
+        	_logger.error("error in getUserProfileTypes", t);
+            //ApsSystemUtils.logThrowable(t, this, "getUserProfileTypes");
         }
         return userProfileTypes;
     }

@@ -41,6 +41,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
 import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
 import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -58,9 +60,11 @@ import com.agiletec.aps.util.DateConverter;
  * @author Praveen Alavilli - E.Santoboni
  */
 public class OAuthConsumerManager extends AbstractService implements IOAuthConsumerManager {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(OAuthConsumerManager.class);
+	
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
+        _logger.debug("{} ready", this.getClass().getName());
     }
     
     protected void release() {
@@ -82,7 +86,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConsumer", "Error extracting consumer by key '" + consumerKey + "'");
+        	_logger.error("Error extracting consumer by key '{}'", consumerKey, t);
+            //ApsSystemUtils.logThrowable(t, this, "getConsumer", "Error extracting consumer by key '" + consumerKey + "'");
             throw new RuntimeException("Error extracting consumer by key '" + consumerKey + "'");
         }
         if (consumer == null) {
@@ -117,7 +122,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         } catch (IOException io) {
             throw io;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getAuthorizedAccessor", "Error extracting access token");
+        	_logger.error("Error extracting access token", t);
+            //ApsSystemUtils.logThrowable(t, this, "getAuthorizedAccessor", "Error extracting access token");
             throw new RuntimeException("Error extracting access token");
         }
         if (accessor == null) {
@@ -151,7 +157,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         } catch (OAuthException oe) {
             throw oe;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "markAsAuthorized", "Error while mark As Authorized request token");
+        	_logger.error("Error while mark As Authorized request token", t);
+            //ApsSystemUtils.logThrowable(t, this, "markAsAuthorized", "Error while mark As Authorized request token");
         }
     }
     
@@ -167,7 +174,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
             accessor.accessToken = null;
             this.getUnauthorizedTokensCache().put(token, accessor);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateRequestToken", "Error generating request token");
+        	_logger.error("Error generating request token", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateRequestToken", "Error generating request token");
         }
     }
     
@@ -193,7 +201,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
             accessor.setProperty("authorized", Boolean.TRUE);
             this.getTokenDAO().addAccessToken(accessor);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateAccessToken", "Error generating access token");
+        	_logger.error("Error generating access token", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateAccessToken", "Error generating access token");
         }
     }
     
@@ -221,7 +230,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
             String consumerKey = (null != consumer) ? consumer.consumerKey : null;
             this.getTokenDAO().deleteAccessToken(username, accessToken, consumerKey);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteMyAccessToken", "Error deleting access token");
+        	_logger.error("Error deleting access token", t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteMyAccessToken", "Error deleting access token");
         }
     }
     
@@ -230,7 +240,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             consumer = this.getConsumerDAO().getConsumerRecord(consumerKey);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConsumerRecord", "Error extracting consumer record by key " + consumerKey);
+        	_logger.error("Error extracting consumer record by key {}", consumerKey, t);
+            //ApsSystemUtils.logThrowable(t, this, "getConsumerRecord", "Error extracting consumer record by key " + consumerKey);
             throw new ApsSystemException("Error extracting consumer record by key " + consumerKey, t);
         }
         return consumer;
@@ -240,7 +251,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             this.getConsumerDAO().addConsumer(consumer);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addConsumer", "Error adding consumer");
+        	_logger.error("Error adding consumer", t);
+            //ApsSystemUtils.logThrowable(t, this, "addConsumer", "Error adding consumer");
             throw new ApsSystemException("Error adding consumer", t);
         }
     }
@@ -249,7 +261,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             this.getConsumerDAO().updateConsumer(consumer);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateConsumer", "Error updating consumer");
+        	_logger.error("Error updating consumer", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateConsumer", "Error updating consumer");
             throw new ApsSystemException("Error updating consumer", t);
         }
     }
@@ -258,7 +271,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             this.getConsumerDAO().deleteConsumer(consumerKey);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConsumerRecord", "Error deleting consumer record by key " + consumerKey);
+        	_logger.error("Error deleting consumer record by key {}", consumerKey, t);
+            //ApsSystemUtils.logThrowable(t, this, "getConsumerRecord", "Error deleting consumer record by key " + consumerKey);
             throw new ApsSystemException("Error deleting consumer record by key " + consumerKey, t);
         }
     }
@@ -268,7 +282,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             consumerKeys = this.getConsumerDAO().getConsumerKeys(filters);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConsumerKeys", "Error extracting consumer keys");
+        	_logger.error("Error extracting consumer keys", t);
+            //ApsSystemUtils.logThrowable(t, this, "getConsumerKeys", "Error extracting consumer keys");
             throw new ApsSystemException("Error extracting consumer keys", t);
         }
         return consumerKeys;
@@ -279,7 +294,8 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             occurrences = this.getTokenDAO().getOccurrencesByConsumer();
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer", "Error extracting token occurrences");
+        	_logger.error("Error extracting token occurrences", t);
+            //ApsSystemUtils.logThrowable(t, this, "getTokenOccurrencesByConsumer", "Error extracting token occurrences");
             throw new ApsSystemException("Error extracting token occurrences", t);
         }
         return occurrences;

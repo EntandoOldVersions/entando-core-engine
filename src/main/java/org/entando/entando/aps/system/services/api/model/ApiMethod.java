@@ -23,15 +23,18 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.api.ApiResourcesDefDOM;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class ApiMethod implements Serializable {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApiMethod.class);
+	
     protected ApiMethod() {}
     
     public ApiMethod(Element element) {
@@ -102,8 +105,8 @@ public class ApiMethod implements Serializable {
                 this.setExpectedType(beanClass);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "ApiMethod", "Error building api method '" 
-                    + this.getResourceName() + "'");
+        	_logger.error("Error building api method '{}'", this.getResourceName(), t);
+            //ApsSystemUtils.logThrowable(t, this, "ApiMethod", "Error building api method '" + this.getResourceName() + "'");
             throw new RuntimeException("Error building api method", t);
         }
     }

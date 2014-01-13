@@ -22,13 +22,17 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class QueryExtractor {
+
+	private static final Logger _logger = LoggerFactory.getLogger(QueryExtractor.class);
 	
 	public static String[] extractQueries(String script) throws Throwable {
 		if (null == script || script.trim().length() == 0) return null;
@@ -48,7 +52,8 @@ public class QueryExtractor {
 				lines = addChild(lines, strLine);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, QueryExtractor.class, "readLines", "Error reading lines");
+			_logger.error("Error reading lines", t);
+			//ApsSystemUtils.logThrowable(t, QueryExtractor.class, "readLines", "Error reading lines");
 			throw new ApsSystemException("Error reading lines", t);
 		} finally {
 			if (null != is) is.close();

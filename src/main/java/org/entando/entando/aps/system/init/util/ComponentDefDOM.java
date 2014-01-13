@@ -34,6 +34,8 @@ import org.entando.entando.aps.system.init.model.Component;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -42,7 +44,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ComponentDefDOM {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(ComponentDefDOM.class);
+	
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
         this.validate(xmlText, configPath);
         ApsSystemUtils.getLogger().debug("Loading Component from file : " + configPath);
@@ -64,8 +68,9 @@ public class ComponentDefDOM {
             validator.validate(source);
             ApsSystemUtils.getLogger().debug("Valid Component definition : " + configPath);
         } catch (Throwable t) {
-            String message = "Error validating Component definition : " + configPath;
-            ApsSystemUtils.logThrowable(t, this, "this", message);
+            _logger.error("Error validating Component definition : {}", configPath, t);
+        	String message = "Error validating Component definition : " + configPath;
+            //ApsSystemUtils.logThrowable(t, this, "this", message);
             throw new ApsSystemException(message, t);
         } finally {
             try {
@@ -76,7 +81,8 @@ public class ComponentDefDOM {
                     xmlIs.close();
                 }
             } catch (IOException e) {
-                ApsSystemUtils.logThrowable(e, this, "this");
+            	_logger.error("error in validate", e);
+                //ApsSystemUtils.logThrowable(e, this, "this");
             }
         }
     }
@@ -87,7 +93,8 @@ public class ComponentDefDOM {
             Element rootElement = this._doc.getRootElement();
 			component = new Component(rootElement, postProcessClasses);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getComponent", "Error loading component");
+        	_logger.error("Error loading component", t);
+            //ApsSystemUtils.logThrowable(t, this, "getComponent", "Error loading component");
         }
         return component;
     }
@@ -99,7 +106,8 @@ public class ComponentDefDOM {
         try {
             this._doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "decodeDOM", "Error while parsing: " + t.getMessage());
+        	_logger.error("Error detected while parsing the XML {}", xmlText, t);
+            //ApsSystemUtils.logThrowable(t, this, "decodeDOM", "Error while parsing: " + t.getMessage());
             throw new ApsSystemException("Error detected while parsing the XML", t);
         }
     }

@@ -31,6 +31,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.DateConverter;
@@ -39,6 +41,8 @@ import com.agiletec.aps.util.DateConverter;
  * @author E.Santoboni
  */
 public class DataSourceDumpReport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DataSourceDumpReport.class);
 	
 	public DataSourceDumpReport(SystemInstallationReport installationReport) {
 		List<ComponentInstallationReport> componentInstallationReports = installationReport.getReports();
@@ -139,7 +143,8 @@ public class DataSourceDumpReport {
 			out.setFormat(format);
 			return out.outputString(doc);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "toXml");
+			_logger.error("Error creating XML", t);
+			//ApsSystemUtils.logThrowable(t, this, "toXml");
 			throw new RuntimeException("Error creating XML", t);
 		}
 	}

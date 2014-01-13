@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -36,6 +38,8 @@ import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
  * @author E.Santoboni
  */
 public class EntityTypesInfoTag extends AbstractObjectInfoTag {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(EntityTypesInfoTag.class);
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
@@ -56,7 +60,9 @@ public class EntityTypesInfoTag extends AbstractObjectInfoTag {
 			}
 		} catch (Throwable t) {
 			String message = "Error extracting entity types : entity manager '" + managerNameValue + "'";
-			ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
+			
+			_logger.error("Error extracting entity types : entity manager '{}'", managerNameValue, t);
+			//ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
 			throw new ApsSystemException(message, t);
 		}
 		return null;

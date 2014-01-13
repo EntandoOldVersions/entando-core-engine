@@ -18,14 +18,16 @@
 package org.entando.entando.aps.system.services.oauth.model;
 
 import org.entando.entando.aps.system.services.oauth.IOAuthTokenDAO;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Thread Class delegate to update OAuth token.
  * @author E.Santoboni
  */
 public class TokenUpdaterThread extends Thread {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(TokenUpdaterThread.class);
 	
 	public TokenUpdaterThread(String accessToken, int tokenTimeValidity,
 			IOAuthTokenDAO tokenDao) {
@@ -38,7 +40,8 @@ public class TokenUpdaterThread extends Thread {
 		try {
 			this._tokenDao.refreshAccessTokens(this._accessToken, this._tokenTimeValidity);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		}
 	}
 	

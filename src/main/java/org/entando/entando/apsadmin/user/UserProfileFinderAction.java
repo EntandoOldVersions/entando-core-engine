@@ -23,8 +23,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -36,6 +37,8 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
  * @author E.Santoboni
  */
 public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileFinderAction.class);
 	
 	public String list() {
 		this.setUsername(null);
@@ -55,7 +58,8 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
             filter.setOrder(EntitySearchFilter.ASC_ORDER);
             this.addFilter(filter);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "execute");
+        	_logger.error("error in execute", t);
+            //ApsSystemUtils.logThrowable(t, this, "execute");
             return FAILURE;
         }
         return super.execute();
@@ -90,7 +94,8 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+        	_logger.error("Error while searching entity Ids", t);
+            //ApsSystemUtils.logThrowable(t, this, "getSearchResult");
             throw new RuntimeException("Error while searching entity Ids", t);
         }
         return searchResult;
@@ -101,7 +106,8 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         try {
             user = this.getUserManager().getUser(username);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUser");
+        	_logger.error("Error extracting user {}", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "getUser");
             throw new RuntimeException("Error extracting user " + username, t);
         }
         return user;

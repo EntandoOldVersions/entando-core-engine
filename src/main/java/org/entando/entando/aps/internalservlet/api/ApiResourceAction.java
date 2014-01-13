@@ -20,8 +20,9 @@ package org.entando.entando.aps.internalservlet.api;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.interceptor.ServletResponseAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -30,6 +31,8 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
  * @author E.Santoboni
  */
 public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResourceAction implements ServletResponseAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApiResourceAction.class);
 	
 	@Override
 	public String generateRequestBodySchema() {
@@ -38,7 +41,8 @@ public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResou
 			if (!result.equals(SUCCESS)) return result;
 			this.getResponse().sendRedirect(this.generateRedirectUrl("executeRequestSchema"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema");
+			_logger.error("error in generateRequestBodySchema", t);
+			//ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema");
 			return FAILURE;
 		}
 		return null;
@@ -55,7 +59,8 @@ public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResou
 			if (!result.equals(SUCCESS)) return result;
 			this.getResponse().sendRedirect(this.generateRedirectUrl("executeResponseSchema"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema");
+			_logger.error("error in generateRequestBodySchema", t);
+			//ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema");
 			return FAILURE;
 		}
 		return null;
@@ -77,7 +82,8 @@ public class ApiResourceAction extends org.entando.entando.apsadmin.api.ApiResou
 			builder.append("&httpMethod=").append(this.getHttpMethod());
 			url = this.getResponse().encodeRedirectURL(builder.toString());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "generateRedirectUrl");
+			_logger.error("Error generating redirect url ", t);
+			//ApsSystemUtils.logThrowable(t, this, "generateRedirectUrl");
 			throw new ApsSystemException("Error generating redirect url", t);
 		}
 		return url;

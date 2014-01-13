@@ -56,8 +56,9 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -70,6 +71,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  */
 public class ApiRestServer {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ApiRestServer.class);
+	
     @GET
     @Produces({"application/xml", "text/plain", "application/json", "application/javascript"})
     @Path("/{langCode}/{resourceName}")
@@ -244,7 +247,8 @@ public class ApiRestServer {
 		if (null != namespace) {
 			buffer.append(" Namespace '").append(namespace).append("'");
 		}
-        ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
+		_logger.error("Error building api response  - {}", buffer.toString(), t);
+        //ApsSystemUtils.logThrowable(t, this, "buildErrorResponse", "Error building api response  - " + buffer.toString());
         StringApiResponse response = new StringApiResponse();
         if (t instanceof ApiException) {
             response.addErrors(((ApiException) t).getErrors());

@@ -27,6 +27,8 @@ import javax.sql.DataSource;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -36,6 +38,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class DatabaseRestorer extends AbstractDatabaseUtils {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DatabaseRestorer.class);
 	
 	protected void initOracleSchema(DataSource dataSource) throws Throwable {
 		IDatabaseManager.DatabaseType type = this.getType(dataSource);
@@ -46,7 +50,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] queryTimestampFormat = new String[]{"ALTER SESSION SET NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS.FF'"};
 			TableDataUtils.executeQueries(dataSource, queryTimestampFormat, false);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
+			_logger.error("Error initializing oracle schema ", t);
+			//ApsSystemUtils.getLogger().info("Error initializing oracle schema - " + t.getMessage());
 			throw new ApsSystemException("Error initializing oracle schema", t);
 		}
 	}
@@ -64,7 +69,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] initSchemaQuery = new String[]{"SET SCHEMA \"" + username.toUpperCase() + "\""};
 			TableDataUtils.executeQueries(dataSource, initSchemaQuery, true);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
+			_logger.error("Error initializating Derby Schema", t);
+			//ApsSystemUtils.logThrowable(t, this, "initDerbySchema", "Error initializating Derby Schema");
 			throw new ApsSystemException("Error initializating Derby Schema", t);
 		}
 	}
@@ -80,7 +86,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			this.dropTables(this.getEntandoTableMapping());
 			this.restoreBackup(backupSubFolder);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
+			_logger.error("Error while restoring backup: {}", backupSubFolder, t);
+			//ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
 			throw new ApsSystemException("Error while restoring backup", t);
 		}
 	}
@@ -106,7 +113,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "dropTables");
+			_logger.error("Error while dropping tables", t);
+			//ApsSystemUtils.logThrowable(t, this, "dropTables");
 			throw new RuntimeException("Error while dropping tables", t);
 		}
 	}
@@ -120,7 +128,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 				this.restoreLocalDump(componentConfiguration.getTableMapping(), backupSubFolder);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "restoreBackup");
+			_logger.error("Error while restoring local backup", t);
+			//ApsSystemUtils.logThrowable(t, this, "restoreBackup");
 			throw new ApsSystemException("Error while restoring local backup", t);
 		}
 	}
@@ -154,7 +163,8 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "restoreLocalDump");
+			_logger.error("Error while restoring local dump", t);
+			//ApsSystemUtils.logThrowable(t, this, "restoreLocalDump");
 			throw new RuntimeException("Error while restoring local dump", t);
 		}
 	}

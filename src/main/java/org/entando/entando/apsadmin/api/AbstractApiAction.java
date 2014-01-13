@@ -30,8 +30,9 @@ import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.apsadmin.api.helper.SchemaGeneratorActionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -42,7 +43,9 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public abstract class AbstractApiAction extends BaseAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractApiAction.class);
+	
     public List<SelectItem> getPermissionAutorityOptions() {
         List<SelectItem> items = new ArrayList<SelectItem>();
         try {
@@ -56,7 +59,8 @@ public abstract class AbstractApiAction extends BaseAction {
 						this.getPermissionAutorityOptionPrefix() + permission.getDescription()));
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getPermissionAutorityOptions", "Error extracting autority options");
+        	_logger.error("Error extracting autority options", t);
+            //ApsSystemUtils.logThrowable(t, this, "getPermissionAutorityOptions", "Error extracting autority options");
         }
         return items;
     }
@@ -83,7 +87,8 @@ public abstract class AbstractApiAction extends BaseAction {
                 return INPUT;
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema", "Error extracting request body Schema");
+        	_logger.error("Error extracting request body Schema", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateRequestBodySchema", "Error extracting request body Schema");
             return FAILURE;
         }
         return SUCCESS;
@@ -99,7 +104,8 @@ public abstract class AbstractApiAction extends BaseAction {
                 return INPUT;
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
+        	_logger.error("Error extracting response body Schema", t);
+            //ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
             return FAILURE;
         }
         return SUCCESS;
@@ -115,7 +121,8 @@ public abstract class AbstractApiAction extends BaseAction {
                 stream = new ByteArrayInputStream(text.getBytes());
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateSchema", "Error extracting generating schema from class " + jaxbObject);
+        	_logger.error("Error extracting generating schema from class {}", jaxbObject, t);
+            //ApsSystemUtils.logThrowable(t, this, "generateSchema", "Error extracting generating schema from class " + jaxbObject);
             throw new RuntimeException("Error extracting generating schema", t);
         }
         this.setSchemaStream(stream);
@@ -126,8 +133,8 @@ public abstract class AbstractApiAction extends BaseAction {
 		try {
             return this.getApiCatalogManager().getResource(namespace, resourceName);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiResource", "Error extracting "
-					+ "resource '" + resourceName + "' namespace'" + namespace + "'");
+        	_logger.error("Error extracting resource '{}' namespace'{}'", resourceName, namespace, t);
+            //ApsSystemUtils.logThrowable(t, this, "getApiResource", "Error extracting resource '" + resourceName + "' namespace'" + namespace + "'");
             throw new RuntimeException("Error extracting resource '" + resourceName + "' namespace'" + namespace + "'", t);
         }
     }
@@ -136,7 +143,8 @@ public abstract class AbstractApiAction extends BaseAction {
 		try {
             return this.getApiCatalogManager().getApiService(key);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getApiService", "Error extracting service '" + key + "'");
+        	_logger.error("Error extracting service '{}'", key, t);
+            //ApsSystemUtils.logThrowable(t, this, "getApiService", "Error extracting service '" + key + "'");
             throw new RuntimeException("Error extracting api service '" + key + "'", t);
         }
 	}

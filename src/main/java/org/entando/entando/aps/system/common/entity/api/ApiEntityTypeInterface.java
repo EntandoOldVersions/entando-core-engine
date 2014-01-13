@@ -28,8 +28,9 @@ import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.model.StringListApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -42,6 +43,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public abstract class ApiEntityTypeInterface {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ApiEntityTypeInterface.class);
+	
 	public StringListApiResponse getEntityTypes(Properties properties) throws Throwable {
 		StringListApiResponse response = new StringListApiResponse();
 		try {
@@ -52,7 +55,8 @@ public abstract class ApiEntityTypeInterface {
 			Collections.sort(codes);
 			response.setResult(codes, null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityTypes");
+			_logger.error("Error extracting entity type codes", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityTypes");
 			throw new ApsSystemException("Error extracting entity type codes", t);
 		}
 		return response;
@@ -71,7 +75,8 @@ public abstract class ApiEntityTypeInterface {
 		} catch (ApiException ae) {
 			throw ae;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityType");
+			_logger.error("Error extracting entity type", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityType");
 			throw new ApsSystemException("Error extracting entity type", t);
 		}
 		return jaxbEntityType;
@@ -102,7 +107,8 @@ public abstract class ApiEntityTypeInterface {
 			response.addErrors(ae.getErrors());
 			response.setResult(IResponseBuilder.FAILURE, null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityType");
+			_logger.error("Error extracting entity type", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityType");
 			throw new ApsSystemException("Error extracting entity type", t);
 		}
 		return response;
@@ -130,7 +136,8 @@ public abstract class ApiEntityTypeInterface {
 			response.addErrors(ae.getErrors());
 			response.setResult(IResponseBuilder.FAILURE, null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateEntityType");
+			_logger.error("Error updating entity type", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateEntityType");
 			throw new ApsSystemException("Error updating entity type", t);
 		}
 		return response;
@@ -158,7 +165,8 @@ public abstract class ApiEntityTypeInterface {
 		} catch (ApiException ae) {
 			throw ae;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteEntityType");
+			_logger.error("Error deleting Entity type", t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteEntityType");
 			throw new ApsSystemException("Error deleting Entity type", t);
 		}
 	}

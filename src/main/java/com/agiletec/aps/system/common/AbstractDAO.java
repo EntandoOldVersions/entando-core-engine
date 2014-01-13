@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.renderer.DefaultVelocityRenderer;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**

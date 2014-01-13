@@ -27,15 +27,18 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * @author E.Santoboni
  */
 public abstract class AbstractApiFinderAction extends BaseAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(AbstractApiFinderAction.class);
+	
     public List<List<ApiResource>> getResourceFlavours() {
         List<List<ApiResource>> group = new ArrayList<List<ApiResource>>();
         try {
@@ -48,7 +51,8 @@ public abstract class AbstractApiFinderAction extends BaseAction {
             }
             this.addResourceGroup("custom", mapping, group);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getResourceFlavours");
+        	_logger.error("Error extracting Flavours resources", t);
+            //ApsSystemUtils.logThrowable(t, this, "getResourceFlavours");
             throw new RuntimeException("Error extracting Flavours resources", t);
         }
         return group;
@@ -85,7 +89,8 @@ public abstract class AbstractApiFinderAction extends BaseAction {
             }
             Collections.sort(pluginCodes);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getResourceFlavoursMapping");
+        	_logger.error("Error extracting resource Flavours mapping", t);
+            //ApsSystemUtils.logThrowable(t, this, "getResourceFlavoursMapping");
             throw new RuntimeException("Error extracting resource Flavours mapping", t);
         }
         return finalMapping;

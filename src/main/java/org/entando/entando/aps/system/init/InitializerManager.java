@@ -28,16 +28,19 @@ import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class InitializerManager extends AbstractInitializerManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(InitializerManager.class);
 	
 	public void init() throws Exception {
 		SystemInstallationReport report = null;
@@ -45,15 +48,15 @@ public class InitializerManager extends AbstractInitializerManager {
 			report = this.extractReport();
 			report = ((IDatabaseInstallerManager) this.getDatabaseManager()).installDatabase(report, this.isCheckOnStartup());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
+			_logger.error("Error while initializating Db Installer", t);
+			//ApsSystemUtils.logThrowable(t, this, "init", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
 		} finally {
 			if (null != report && report.isUpdated()) {
 				this.saveReport(report);
 			}
 		}
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
-				+ ": initializated - Check on startup " + this.isCheckOnStartup());
+		_logger.debug("{}: initializated - Check on startup {}", this.getClass().getName(), this.isCheckOnStartup());
 	}
 	
 	public void executePostInitProcesses() throws BeansException {
@@ -88,7 +91,8 @@ public class InitializerManager extends AbstractInitializerManager {
 				report.setUpdated();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executePostInitProcesses", "Error while executing post processes");
+			_logger.error("Error while executing post processes", t);
+			//ApsSystemUtils.logThrowable(t, this, "executePostInitProcesses", "Error while executing post processes");
 			throw new FatalBeanException("Error while executing post processes", t);
 		} finally {
 			if (null != report && report.isUpdated()) {
@@ -108,14 +112,16 @@ public class InitializerManager extends AbstractInitializerManager {
 				if (null != postProcessor) {
 					postProcessor.executePostProcess(postProcess);
 				} else {
-					ApsSystemUtils.getLogger().error("Missing Post Processor for process '" + postProcess.getCode() + "'");
+					_logger.error("Missing Post Processor for process '{}'", postProcess.getCode());
+					//ApsSystemUtils.getLogger().error("Missing Post Processor for process '" + postProcess.getCode() + "'");
 				}
 			} catch (InvalidPostProcessResultException t) {
-				ApsSystemUtils.logThrowable(t, this, "executePostProcess", 
-						"Error while executing post process of index " + i + " - " + t.getMessage());
+				_logger.error("Error while executing post process of index {}",i, t);
+				//ApsSystemUtils.logThrowable(t, this, "executePostProcess", "Error while executing post process of index " + i + " - " + t.getMessage());
 				return SystemInstallationReport.Status.INCOMPLETE;
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "executePostProcesses", "Error while executing post process - index " + i);
+				_logger.error("Error while executing post process - index {}", i, t);
+				//ApsSystemUtils.logThrowable(t, this, "executePostProcesses", "Error while executing post process - index " + i);
 				return SystemInstallationReport.Status.INCOMPLETE;
 			}
 		}
@@ -134,7 +140,8 @@ public class InitializerManager extends AbstractInitializerManager {
 			dao.setDataSource(dataSource);
 			dao.saveConfigItem(report.toXml(), this.getConfigVersion());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveReport");
+			_logger.error("Error saving report", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveReport");
 			throw new FatalBeanException("Error saving report", t);
 		}
 	}

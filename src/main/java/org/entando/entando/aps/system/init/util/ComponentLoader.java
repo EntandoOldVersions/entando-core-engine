@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 
 import org.entando.entando.aps.system.init.model.Component;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -37,6 +38,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class ComponentLoader {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ComponentLoader.class);
 	
 	public ComponentLoader(String locationPatterns, Map<String, String> postProcessClasses) throws ApsSystemException {
         try {
@@ -46,7 +49,8 @@ public class ComponentLoader {
                 this.loadComponent(locationPattern, postProcessClasses);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "ComponentLoader", "Error loading component definitions");
+        	_logger.error("Error loading component definitions", t);
+            //ApsSystemUtils.logThrowable(t, this, "ComponentLoader", "Error loading component definitions");
             throw new ApsSystemException("Error loading component definitions", t);
         }
     }
@@ -76,8 +80,8 @@ public class ComponentLoader {
 					}
 				}
             } catch (Throwable t) {
-                ApsSystemUtils.logThrowable(t, this, "ComponentLoader", 
-                        "Error loading Component definition by location Pattern '" + path + "'");
+            	_logger.error("Error loading Component definition by location Pattern '{}'",path, t);
+                //ApsSystemUtils.logThrowable(t, this, "ComponentLoader", "Error loading Component definition by location Pattern '" + path + "'");
             } finally {
                 if (null != is) {
                     is.close();

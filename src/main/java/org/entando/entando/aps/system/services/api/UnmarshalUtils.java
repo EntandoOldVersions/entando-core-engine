@@ -27,8 +27,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.provider.json.JSONProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -36,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  */
 public class UnmarshalUtils {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(UnmarshalUtils.class);
+	
 	public static Object unmarshal(ApiMethod apiMethod, HttpServletRequest request, MediaType contentType) throws Throwable {
 		return unmarshal(apiMethod, request.getInputStream(), contentType);
 	}
@@ -59,7 +62,8 @@ public class UnmarshalUtils {
                 bodyObject = (Object) unmarshaller.unmarshal(bodyStream);
             }
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshal");
+			_logger.error("Error unmarshalling request body", t);
+			//ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshal");
 			throw new ApsSystemException("Error unmarshalling request body", t);
 		}
 		return bodyObject;

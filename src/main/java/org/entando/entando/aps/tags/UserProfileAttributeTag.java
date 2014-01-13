@@ -22,8 +22,9 @@ import javax.servlet.jsp.JspException;
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -34,7 +35,9 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class UserProfileAttributeTag extends OutSupport {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileAttributeTag.class);
+	
     @Override
     public int doStartTag() throws JspException {
         try {
@@ -62,7 +65,8 @@ public class UserProfileAttributeTag extends OutSupport {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "doStartTag");
+        	_logger.error("error in doStartTag", t);
+            //ApsSystemUtils.logThrowable(t, this, "doStartTag");
             throw new JspException("Error during tag initialization", t);
         }
         return super.doStartTag();

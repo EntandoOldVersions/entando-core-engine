@@ -28,7 +28,6 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInf
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.Lang;

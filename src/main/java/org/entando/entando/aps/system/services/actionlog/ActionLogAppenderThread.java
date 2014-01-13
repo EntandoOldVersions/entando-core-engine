@@ -18,13 +18,15 @@
 package org.entando.entando.aps.system.services.actionlog;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ActionLogAppenderThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ActionLogAppenderThread.class);
 	
 	public ActionLogAppenderThread(ActionLogRecord actionRecordToAdd, 
 			ActionLogManager actionLogManager) {
@@ -37,7 +39,8 @@ public class ActionLogAppenderThread extends Thread {
 		try {
 			this._actionLogManager.addActionRecordByThread(this._actionRecordToAdd);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		}
 	}
 	

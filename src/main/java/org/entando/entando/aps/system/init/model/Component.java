@@ -23,13 +23,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class Component implements Comparable<Component> {
+
+	private static final Logger _logger = LoggerFactory.getLogger(Component.class);
 	
 	public Component(Element rootElement, Map<String, String> postProcessClasses) throws Throwable {
 		try {
@@ -61,7 +63,8 @@ public class Component implements Comparable<Component> {
 				}
 			}
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "Component", "Error loading component");
+        	_logger.error("Error loading component", t);
+            //ApsSystemUtils.logThrowable(t, this, "Component", "Error loading component");
         }
 	}
 	

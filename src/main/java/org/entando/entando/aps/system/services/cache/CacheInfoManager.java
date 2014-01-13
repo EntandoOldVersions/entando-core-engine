@@ -31,12 +31,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.support.AbstractCacheManager;
 import org.springframework.expression.EvaluationContext;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -50,10 +51,12 @@ import com.agiletec.aps.system.services.page.events.PageChangedObserver;
  */
 @Aspect
 public class CacheInfoManager extends AbstractService implements ICacheInfoManager, PageChangedObserver {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(CacheInfoManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": cache info service initialized");
+		_logger.debug("{} (cache info service initialized) ready", this.getClass().getName());
 	}
 	
 	@Around("@annotation(cacheableInfo)")
@@ -86,7 +89,8 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 				this.setExpirationTime(key.toString(), cacheableInfo.expiresInMinute());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "aroundCacheableMethod", "Error while evaluating cacheableInfo annotation");
+			_logger.error("Error while evaluating cacheableInfo annotation", t);
+			//ApsSystemUtils.logThrowable(t, this, "aroundCacheableMethod", "Error while evaluating cacheableInfo annotation");
 			throw new ApsSystemException("Error while evaluating cacheableInfo annotation", t);
 		}
 		return result;
@@ -108,7 +112,8 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "aroundCacheInfoEvictMethod", "Error while flushing group");
+			_logger.error("Error while flushing group", t);
+			//ApsSystemUtils.logThrowable(t, this, "aroundCacheInfoEvictMethod", "Error while flushing group");
 			throw new ApsSystemException("Error while flushing group", t);
 		}
 		return pjp.proceed();

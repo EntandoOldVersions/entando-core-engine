@@ -30,8 +30,9 @@ import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttributeType;
@@ -46,7 +47,9 @@ import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttributeTy
 @XmlType(propOrder = {"typeCode", "typeDescription", "entityManagerName", "attributes"})
 @XmlSeeAlso({JAXBListAttributeType.class, JAXBCompositeAttributeType.class, JAXBEnumeratorAttributeType.class})
 public class JAXBEntityType {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(JAXBEntityType.class);
+	
     public JAXBEntityType() {}
     
     public JAXBEntityType(IApsEntity entityType) {
@@ -83,7 +86,8 @@ public class JAXBEntityType {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "buildEntityType");
+        	_logger.error("error in buildEntityType", t);
+            //ApsSystemUtils.logThrowable(t, this, "buildEntityType");
             throw t;
         }
         if (!errors.isEmpty()) throw new ApiException(errors);

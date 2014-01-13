@@ -26,8 +26,9 @@ import javax.xml.bind.JAXBContext;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
@@ -36,7 +37,9 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class SchemaGeneratorActionHelper {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(SchemaGeneratorActionHelper.class);
+	
     public Class extractResponseClass(ApiMethod method, HttpServletRequest request) throws ApsSystemException {
         Class responseClass = null;
         try {
@@ -49,7 +52,8 @@ public class SchemaGeneratorActionHelper {
                 responseClass = StringApiResponse.class;
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "extractResponseClass", "Error extracting response Class");
+        	_logger.error("Error extracting response Class", t);
+            //ApsSystemUtils.logThrowable(t, this, "extractResponseClass", "Error extracting response Class");
             throw new ApsSystemException("Error extracting response Class", t);
         }
         return responseClass;
@@ -93,7 +97,8 @@ public class SchemaGeneratorActionHelper {
                 return null;
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "extractReturnType", "Error extracting return type ");
+        	_logger.error("Error extracting return type", t);
+            //ApsSystemUtils.logThrowable(t, this, "extractReturnType", "Error extracting return type ");
             return null;
         }
         return returnType;
@@ -109,7 +114,8 @@ public class SchemaGeneratorActionHelper {
             mainStream = sor.getStream();
             schema = FileTextReader.getText(mainStream);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "generateSchema", "Error extracting generating schema from class " + jaxbObject);
+        	_logger.error("Error extracting generating schema from class {}", jaxbObject, t);
+            //ApsSystemUtils.logThrowable(t, this, "generateSchema", "Error extracting generating schema from class " + jaxbObject);
             throw new RuntimeException("Error extracting generating schema", t);
         } finally {
             if (null != mainStream) mainStream.close();

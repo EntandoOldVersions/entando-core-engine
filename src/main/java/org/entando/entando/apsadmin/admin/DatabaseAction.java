@@ -27,8 +27,9 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -36,13 +37,16 @@ import com.j256.ormlite.table.DatabaseTable;
  * @author E.Santoboni
  */
 public class DatabaseAction extends BaseAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(DatabaseAction.class);
 	
 	public String executeBackup() {
 		try {
 			this.getDatabaseManager().createBackup();
 			//TODO MESSAGE
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeBackup");
+			_logger.error("error in executeBackup", t);
+			//ApsSystemUtils.logThrowable(t, this, "executeBackup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -52,7 +56,8 @@ public class DatabaseAction extends BaseAction {
 		try {
 			return this.getDatabaseManager().getBackupReports();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getDumpReports");
+			_logger.error("Error extracting dump reports", t);
+			//ApsSystemUtils.logThrowable(t, this, "getDumpReports");
 			throw new RuntimeException("Error extracting dump reports", t);
 		}
 	}
@@ -61,7 +66,8 @@ public class DatabaseAction extends BaseAction {
 		try {
 			return this.getDatabaseManager().getBackupReport(subFolderName);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getDumpReport");
+			_logger.error("Error extracting report of subfolder {}", subFolderName, t);
+			//ApsSystemUtils.logThrowable(t, this, "getDumpReport");
 			throw new RuntimeException("Error extracting report of subfolder " + subFolderName, t);
 		}
 	}
@@ -81,7 +87,8 @@ public class DatabaseAction extends BaseAction {
 				return check;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "redirectRestoreIntro");
+			_logger.error("error in redirectRestoreIntro", t);
+			//ApsSystemUtils.logThrowable(t, this, "redirectRestoreIntro");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -96,7 +103,8 @@ public class DatabaseAction extends BaseAction {
 			this.getDatabaseManager().dropAndRestoreBackup(this.getSubFolderName());
 			this.addActionMessage(this.getText("message.restore.done"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "restoreBackup");
+			_logger.error("error in restoreBackup", t);
+			//ApsSystemUtils.logThrowable(t, this, "restoreBackup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -111,7 +119,8 @@ public class DatabaseAction extends BaseAction {
 			InputStream stream = this.getDatabaseManager().getTableDump(this.getTableName(), this.getDataSourceName(), this.getSubFolderName());
 			this.setInputStream(stream);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractLastTableDump");
+			_logger.error("error in extractLastTableDump", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractLastTableDump");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -124,7 +133,8 @@ public class DatabaseAction extends BaseAction {
 				return check;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trashBackup");
+			_logger.error("error in trashBackup", t);
+			//ApsSystemUtils.logThrowable(t, this, "trashBackup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -140,7 +150,8 @@ public class DatabaseAction extends BaseAction {
 			String[] args = {this.getSubFolderName()};
 			this.addActionMessage(this.getText("message.backup.deleteDone", args));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteBackup");
+			_logger.error("error in deleteBackup", t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteBackup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -171,7 +182,8 @@ public class DatabaseAction extends BaseAction {
 		try {
 			components = this.getComponentManager().getCurrentComponents();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getCurrentComponents");
+			_logger.error("Error extracting current components", t);
+			//ApsSystemUtils.logThrowable(t, this, "getCurrentComponents");
 			throw new RuntimeException("Error extracting current components", t);
 		}
 		return components;
@@ -190,7 +202,8 @@ public class DatabaseAction extends BaseAction {
 				tableNames.add(tableAnnotation.tableName());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getTableNames");
+			_logger.error("Error extracting table names", t);
+			//ApsSystemUtils.logThrowable(t, this, "getTableNames");
 			throw new RuntimeException("Error extracting table names", t);
 		}
 		return tableNames;

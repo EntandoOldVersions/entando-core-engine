@@ -27,8 +27,9 @@ import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfileType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -40,6 +41,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class ApiUserProfileTypeInterface {
+	
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiUserProfileTypeInterface.class);
     
     public JAXBUserProfileType getUserProfileType(Properties properties) throws ApiException, Throwable {
         JAXBUserProfileType jaxbProfileType = null;
@@ -53,7 +56,8 @@ public class ApiUserProfileTypeInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getProfileType");
+        	_logger.error("Error extracting user profile type", t);
+            //ApsSystemUtils.logThrowable(t, this, "getProfileType");
             throw new ApsSystemException("Error extracting user profile type", t);
         }
         return jaxbProfileType;
@@ -78,7 +82,8 @@ public class ApiUserProfileTypeInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addProfileType");
+        	_logger.error("Error adding user profile type", t);
+            //ApsSystemUtils.logThrowable(t, this, "addProfileType");
             throw new ApsSystemException("Error adding user profile type", t);
         }
         return response;
@@ -100,7 +105,8 @@ public class ApiUserProfileTypeInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateProfileType");
+        	_logger.error("Error updating user profile type", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateProfileType");
             throw new ApsSystemException("Error updating user profile type", t);
         }
         return response;
@@ -122,7 +128,8 @@ public class ApiUserProfileTypeInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteProfileType");
+        	_logger.error("Error deleting user Profile type", t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteProfileType");
             throw new ApsSystemException("Error deleting user Profile type", t);
         }
     }

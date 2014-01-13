@@ -25,15 +25,17 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
-import org.entando.entando.aps.system.services.api.UnmarshalUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
 public class ActivityStreamInfoDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamInfoDOM.class);
 	
 	public static String marshalInfo(ActivityStreamInfo activityStreamInfo) throws ApsSystemException {
 		StringWriter writer = new StringWriter();
@@ -43,7 +45,8 @@ public class ActivityStreamInfoDOM {
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			marshaller.marshal(activityStreamInfo, writer);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, ActivityStreamInfoDOM.class, "bindInfo", "Error binding object");
+			_logger.error("Error binding object", t);
+			//ApsSystemUtils.logThrowable(t, ActivityStreamInfoDOM.class, "bindInfo", "Error binding object");
 			throw new ApsSystemException("Error binding object", t);
 		}
 		return writer.toString();
@@ -57,7 +60,8 @@ public class ActivityStreamInfoDOM {
 			ByteArrayInputStream is = new ByteArrayInputStream(xml.getBytes());
 			bodyObject = (ActivityStreamInfo) unmarshaller.unmarshal(is);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshalInfo");
+			_logger.error("Error unmarshalling activity stream info config. xml: {}", xml, t);
+			//ApsSystemUtils.logThrowable(t, UnmarshalUtils.class, "unmarshalInfo");
 			throw new ApsSystemException("Error unmarshalling activity stream info config", t);
 		}
 		return bodyObject;

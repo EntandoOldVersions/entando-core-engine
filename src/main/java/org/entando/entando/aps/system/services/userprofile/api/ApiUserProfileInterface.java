@@ -31,8 +31,9 @@ import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.api.model.JAXBUserProfile;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -46,7 +47,9 @@ import com.agiletec.aps.system.services.group.IGroupManager;
  * @author E.Santoboni
  */
 public class ApiUserProfileInterface {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiUserProfileInterface.class);
+	
     public List<String> getUserProfiles(Properties properties) throws Throwable {
         List<String> usernames = null;
         try {
@@ -64,7 +67,8 @@ public class ApiUserProfileInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUserProfiles");
+        	_logger.error("Error searching usernames", t);
+            //ApsSystemUtils.logThrowable(t, this, "getUserProfiles");
             throw new ApsSystemException("Error searching usernames", t);
         }
         return usernames;
@@ -83,7 +87,8 @@ public class ApiUserProfileInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUserProfile");
+        	_logger.error("Error extracting user profile", t);
+            //ApsSystemUtils.logThrowable(t, this, "getUserProfile");
             throw new ApsSystemException("Error extracting user profile", t);
         }
         return jaxbUserProfile;
@@ -115,7 +120,8 @@ public class ApiUserProfileInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addUserProfile");
+        	_logger.error("Error adding user profile", t);
+            //ApsSystemUtils.logThrowable(t, this, "addUserProfile");
             throw new ApsSystemException("Error adding user profile", t);
         }
         return response;
@@ -147,7 +153,8 @@ public class ApiUserProfileInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateUserProfile");
+        	_logger.error("Error updating user profile", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateUserProfile");
             throw new ApsSystemException("Error updating user profile", t);
         }
         return response;
@@ -171,7 +178,8 @@ public class ApiUserProfileInterface {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating profile", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new ApsSystemException("Error validating profile", t);
         }
         return errors;
@@ -192,7 +200,8 @@ public class ApiUserProfileInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteUserProfile");
+        	_logger.error("Error deleting user Profile", t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteUserProfile");
             throw new ApsSystemException("Error deleting user Profile", t);
         }
     }

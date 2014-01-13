@@ -23,8 +23,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.AbstractUser;
@@ -35,7 +36,9 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityAction;
  * @author E.Santoboni
  */
 public class UserProfileAction extends AbstractApsEntityAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileAction.class);
+	
 	@Override
     public String edit() {
         String username = this.getUsername();
@@ -57,7 +60,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
             }
             this.getRequest().getSession().setAttribute(USERPROFILE_ON_SESSION, userProfile);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "edit");
+        	_logger.error("error in edit", t);
+            //ApsSystemUtils.logThrowable(t, this, "edit");
             return FAILURE;
         }
         return SUCCESS;
@@ -89,7 +93,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
             userProfile.setId(this.getUsername());
             this.getRequest().getSession().setAttribute(USERPROFILE_ON_SESSION, userProfile);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "createNew");
+        	_logger.error("error in createNew", t);
+           //ApsSystemUtils.logThrowable(t, this, "createNew");
             return FAILURE;
         }
         return SUCCESS;
@@ -112,7 +117,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
 				((AbstractUser) currentUser).setProfile(userProfile);
 			}
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
+        	_logger.error("error in save", t);
+            //ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
         }
         return SUCCESS;
@@ -131,7 +137,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
                 return INPUT;
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "view");
+        	_logger.error("error in view", t);
+            //ApsSystemUtils.logThrowable(t, this, "view");
             return FAILURE;
         }
         return SUCCESS;
@@ -152,7 +159,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
             userProfileTypes = new ArrayList<IApsEntity>();
             userProfileTypes.addAll(this.getUserProfileManager().getEntityPrototypes().values());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUserProfileTypes");
+        	_logger.error("error in getUserProfileTypes", t);
+            //ApsSystemUtils.logThrowable(t, this, "getUserProfileTypes");
         }
         return userProfileTypes;
     }
@@ -166,7 +174,8 @@ public class UserProfileAction extends AbstractApsEntityAction {
         try {
             userProfile = this.getUserProfileManager().getProfile(username);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUserProfile", "Error extracting user profile by username " + username);
+        	_logger.error("Error extracting user profile by username {}", username, t);
+            //ApsSystemUtils.logThrowable(t, this, "getUserProfile", "Error extracting user profile by username " + username);
         }
         return userProfile;
     }

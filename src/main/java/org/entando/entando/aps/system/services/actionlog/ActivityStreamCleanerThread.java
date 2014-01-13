@@ -17,12 +17,15 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
  */
 public class ActivityStreamCleanerThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ActivityStreamCleanerThread.class);
 	
 	public ActivityStreamCleanerThread(Integer maxActivitySizeByGroup, 
 			IActionLogDAO actionLogDAO) {
@@ -35,7 +38,8 @@ public class ActivityStreamCleanerThread extends Thread {
 		try {
 			this._actionLogDAO.cleanOldActivityStreamLogs(this._maxActivitySizeByGroup);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run ", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		}
 	}
 	

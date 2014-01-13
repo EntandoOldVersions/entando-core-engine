@@ -21,8 +21,9 @@ import java.util.Date;
 
 import org.entando.entando.aps.system.services.oauth.IOAuthConsumerManager;
 import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -31,7 +32,9 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class ConsumerAction extends BaseAction {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ConsumerAction.class);
+	
     public void validate() {
         super.validate();
         try {
@@ -43,7 +46,8 @@ public class ConsumerAction extends BaseAction {
                 this.addActionError(this.getText("error.consumer.notExist"));
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating consumer");
+        	_logger.error("Error validating consumer", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate", "Error validating consumer");
             this.addActionError(this.getText("error.consumer.systemError"));
         }
     }
@@ -67,7 +71,8 @@ public class ConsumerAction extends BaseAction {
             this.setExpirationDate(consumer.getExpirationDate());
             this.setSecret(consumer.getSecret());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "edit");
+        	_logger.error("error in edit", t);
+            //ApsSystemUtils.logThrowable(t, this, "edit");
             return FAILURE;
         }
         return SUCCESS;
@@ -92,7 +97,8 @@ public class ConsumerAction extends BaseAction {
                 this.getOauthConsumerManager().updateConsumer(consumer);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
+        	_logger.error("error in save", t);
+            //ApsSystemUtils.logThrowable(t, this, "save");
             return FAILURE;
         }
         return SUCCESS;
@@ -103,7 +109,8 @@ public class ConsumerAction extends BaseAction {
             String check = this.checkForDelete();
             if (null != check) return check;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "trash");
+        	_logger.error("error in trash", t);
+            //ApsSystemUtils.logThrowable(t, this, "trash");
             return FAILURE;
         }
         return SUCCESS;
@@ -115,7 +122,8 @@ public class ConsumerAction extends BaseAction {
             if (null != check) return check;
             this.getOauthConsumerManager().deleteConsumer(this.getConsumerKey());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "delete");
+        	_logger.error("error in delete", t);
+            //ApsSystemUtils.logThrowable(t, this, "delete");
             return FAILURE;
         }
         return SUCCESS;

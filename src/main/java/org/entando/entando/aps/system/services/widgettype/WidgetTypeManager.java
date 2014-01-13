@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -41,11 +43,14 @@ import com.agiletec.aps.util.ApsProperties;
  */
 public class WidgetTypeManager extends AbstractService 
 		implements IWidgetTypeManager, LangsChangedObserver, GroupUtilizer {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeManager.class);
+	
 	
 	@Override
 	public void init() throws Exception {
 		this.loadWidgetTypes();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " + this._widgetTypes.size() + " widget types");
+		_logger.debug("{} ready. Initialized {} widget types", this.getClass().getName(), this._widgetTypes.size());
 	}
 	
 	/**
@@ -64,7 +69,8 @@ public class WidgetTypeManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadWidgetTypes");
+			_logger.error("Error loading widgets types", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadWidgetTypes");
 			throw new ApsSystemException("Error loading widgets types", t);
 		}
 	}
@@ -74,7 +80,8 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			this.init();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
+			_logger.error("Error on init method", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromLangsChanged", "Error on init method");
 		}
 	}
 	
@@ -139,7 +146,8 @@ public class WidgetTypeManager extends AbstractService
 			this.getWidgetTypeDAO().addShowletType(widgetType);
 			this._widgetTypes.put(widgetType.getCode(), widgetType);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addWidgetType");
+			_logger.error("Error adding a Widget Type", t);
+			//ApsSystemUtils.logThrowable(t, this, "addWidgetType");
 			throw new ApsSystemException("Error adding a Widget Type", t);
 		}
 	}
@@ -167,7 +175,8 @@ public class WidgetTypeManager extends AbstractService
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
 			this._widgetTypes.remove(widgetTypeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteWidgetType");
+			_logger.error("Error deleting widget type", t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteWidgetType");
 			throw new ApsSystemException("Error deleting widget type", t);
 		}
 	}
@@ -183,7 +192,8 @@ public class WidgetTypeManager extends AbstractService
 			}
 			this.updateWidgetType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
+			_logger.error("Error updating Showlet type titles : type code {}", showletTypeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
 			throw new ApsSystemException("Error updating Showlet type titles : type code" + showletTypeCode, t);
 		}
 	}
@@ -215,7 +225,8 @@ public class WidgetTypeManager extends AbstractService
 			event.setShowletTypeCode(widgetTypeCode);
 			this.notifyEvent(event);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateWidgetType");
+			_logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateWidgetType");
 			throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
 		}
 	}
@@ -232,7 +243,8 @@ public class WidgetTypeManager extends AbstractService
 			this.getWidgetTypeDAO().updateShowletTypeTitles(showletTypeCode, titles);
 			type.setTitles(titles);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
+			_logger.error("Error updating Showlet type titles : type code {}", showletTypeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "updateShowletTypeTitles");
 			throw new ApsSystemException("Error updating Showlet type titles : type code" + showletTypeCode, t);
 		}
 	}
@@ -254,7 +266,8 @@ public class WidgetTypeManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers");
+			_logger.error("Error extracting utilizers", t);
+			//ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers");
 			throw new ApsSystemException("Error extracting utilizers", t);
 		}
 		return utilizers;

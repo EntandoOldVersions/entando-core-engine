@@ -19,7 +19,9 @@ package org.entando.entando.apsadmin.user;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
@@ -38,6 +40,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni - E.Mezzano
  */
 public class UserToAuthoritiesAction extends BaseAction {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserToAuthoritiesAction.class);
 	
 	public String edit() {
 		try {
@@ -52,7 +56,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 			//FIXME MODIFICARE FUNZIONALITA' PER RIMUOVERE L'UTILIZZO DELLA SESSIONE
 			this.getRequest().getSession().setAttribute(CURRENT_FORM_USER_AUTHS_PARAM_NAME,  userAuthsFormBean);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -72,7 +77,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 			List<IApsAuthority> groups = authsBean.getGroups();
 			((IApsAuthorityManager) this.getGroupManager()).setUserAuthorizations(username, groups);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -102,7 +108,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 				this.getUserAuthsFormBean().addGroup(group);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addGroup");
+			_logger.error("error in addGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "addGroup");
 			return FAILURE;
 		}
 		this.setSection(GROUP_SECTION);
@@ -117,7 +124,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 				this.getUserAuthsFormBean().addRole(role);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addRole");
+			_logger.error("error in addRole", t);
+			//ApsSystemUtils.logThrowable(t, this, "addRole");
 			return FAILURE;
 		}
 		this.setSection(ROLE_SECTION);
@@ -131,7 +139,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 				this.getUserAuthsFormBean().removeGroup(group);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeGroup");
+			_logger.error("error in removeGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeGroup");
 			return FAILURE;
 		}
 		this.setSection(GROUP_SECTION);
@@ -145,7 +154,8 @@ public class UserToAuthoritiesAction extends BaseAction {
 				this.getUserAuthsFormBean().removeRole(role);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeRole");
+			_logger.error("error in removeRole", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeRole");
 			return FAILURE;
 		}
 		this.setSection(ROLE_SECTION);

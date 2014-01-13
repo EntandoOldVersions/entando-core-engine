@@ -30,8 +30,9 @@ import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.ApiContentListBean;
 import org.entando.entando.plugins.jacms.aps.system.services.api.model.JAXBContent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -56,6 +57,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
  */
 public class ApiContentInterface extends AbstractCmsApiInterface {
 
+	private static final Logger _logger =  LoggerFactory.getLogger(ApiContentInterface.class);
+	
     public List<String> getContents(Properties properties) throws Throwable {
         return this.extractContents(properties);
     }
@@ -69,7 +72,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContents");
+        	_logger.error("error in extractContents", t);
+            //ApsSystemUtils.logThrowable(t, this, "getContents");
             throw new ApsSystemException("Error into API method", t);
         }
         return contentsId;
@@ -94,7 +98,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "buildSearchBean");
+        	_logger.error("error in buildSearchBean", t);
+            //ApsSystemUtils.logThrowable(t, this, "buildSearchBean");
             throw new ApsSystemException("Error into API method", t);
         }
         return bean;
@@ -125,7 +130,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContentsToHtml");
+        	_logger.error("error in getContentsToHtml", t);
+            //ApsSystemUtils.logThrowable(t, this, "getContentsToHtml");
             throw new ApsSystemException("Error into API method", t);
         }
         return render.toString();
@@ -148,7 +154,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContent");
+        	_logger.error("error in getContent", t);
+            //ApsSystemUtils.logThrowable(t, this, "getContent");
             throw new ApsSystemException("Error into API method", t);
         }
         return jaxbContent;
@@ -176,7 +183,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getContentToHtml");
+        	_logger.error("error in getContentToHtml", t);
+            //ApsSystemUtils.logThrowable(t, this, "getContentToHtml");
             throw new ApsSystemException("Error into API method", t);
         }
         return render;
@@ -192,7 +200,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getPublicContent");
+        	_logger.error("Error extracting content by id '{}'",id, t);
+            //ApsSystemUtils.logThrowable(t, this, "getPublicContent");
             throw new ApsSystemException("Error extracting content by id '" + id + "'", t);
         }
         return content;
@@ -235,7 +244,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "checkModel");
+        	_logger.error("Error checking model id '{}'", modelId, t);
+            //ApsSystemUtils.logThrowable(t, this, "checkModel");
             throw new ApsSystemException("Error checking model id '" + modelId + "'", t);
         }
         return modelIdInteger;
@@ -260,7 +270,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addContent");
+        	_logger.error("Error adding content", t);
+            //ApsSystemUtils.logThrowable(t, this, "addContent");
             throw new ApsSystemException("Error adding content", t);
         }
         return response;
@@ -289,8 +300,9 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addContent");
-            throw new ApsSystemException("Error adding content", t);
+        	_logger.error("Error updating content", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateContent");
+            throw new ApsSystemException("Error updating content", t);
         }
         return response;
     }
@@ -324,7 +336,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addContent");
+        	_logger.error("error in validateAndSaveContent", t);
+            //ApsSystemUtils.logThrowable(t, this, "addContent");
             throw new ApsSystemException("Error adding content", t);
         }
         return response;
@@ -349,7 +362,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating content", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new ApsSystemException("Error validating content", t);
         }
         return errors;
@@ -402,7 +416,8 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             response.addErrors(ae.getErrors());
             response.setResult(IResponseBuilder.FAILURE, null);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "deleteContent");
+        	_logger.error("Error deleting content", t);
+            //ApsSystemUtils.logThrowable(t, this, "deleteContent");
             throw new ApsSystemException("Error deleting content", t);
         }
         return response;

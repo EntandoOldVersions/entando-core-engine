@@ -34,6 +34,8 @@ import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -52,6 +54,8 @@ import com.agiletec.aps.util.FileTextReader;
  * @author E.Santoboni
  */
 public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SelfRestCaller.class);
 	
 	@Override
 	public int executePostProcess(IPostProcess postProcess) throws InvalidPostProcessResultException, ApsSystemException {
@@ -76,10 +80,12 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 				this.printResponse(selfRestCall, result, responseStatus, method, properties);
 			}
         } catch (InvalidPostProcessResultException t) {
-			ApsSystemUtils.logThrowable(t, this, "executePostProcess", t.getMessage());
+        	_logger.error("error in executePostProcess", t);
+			//ApsSystemUtils.logThrowable(t, this, "executePostProcess", t.getMessage());
 			throw t;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executePostProcess", "Error invoking api method");
+			_logger.error("Error invoking api method", t);
+			//ApsSystemUtils.logThrowable(t, this, "executePostProcess", "Error invoking api method");
 			throw new ApsSystemException("Error invoking api method", t);
         }
 		return 1;
@@ -104,7 +110,8 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 				ApsSystemUtils.getLogger().error("Admin user missing");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractParameters", "Error extracting parameters");
+			_logger.error("Error extracting parameters", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractParameters", "Error extracting parameters");
 			throw new ApsSystemException("Error extracting parameters", t);
 		}
 		return properties;
@@ -121,8 +128,8 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 				is = resource.getInputStream();
 				contentBody = FileTextReader.getText(is);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "getContentBody", 
-						"Error loading contentBody from file '" + path + "'");
+				_logger.error("Error loading contentBody from file '{}'", path, t);
+				//ApsSystemUtils.logThrowable(t, this, "getContentBody", "Error loading contentBody from file '" + path + "'");
 				throw t;
 			} finally {
 				if (null != is) {

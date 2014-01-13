@@ -28,6 +28,8 @@ import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -45,6 +47,8 @@ import com.j256.ormlite.table.TableUtils;
  * @author E.Santoboni
  */
 public class TableFactory {
+
+	private static final Logger _logger = LoggerFactory.getLogger(TableFactory.class);
 	
 	public TableFactory(String databaseName, DataSource dataSource, IDatabaseManager.DatabaseType type) {
 		this.setDataSource(dataSource);
@@ -58,7 +62,8 @@ public class TableFactory {
 			connectionSource = this.createConnectionSource();
 			this.createTables(tableClassNames, connectionSource, schemaReport);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createTables", "Error creating tables into db " + this.getDatabaseName());
+			_logger.error("Error creating tables to db {}", this.getDatabaseName(), t);
+			//ApsSystemUtils.logThrowable(t, this, "createTables", "Error creating tables into db " + this.getDatabaseName());
 			throw new ApsSystemException("Error creating tables to db " + this.getDatabaseName(), t);
 		} finally {
 			if (connectionSource != null) {
@@ -95,7 +100,8 @@ public class TableFactory {
 				connectionSource = new JdbcConnectionSource(url, username, password, dataType);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createConnectionSource", "Error creating connectionSource to db " + this.getDatabaseName());
+			_logger.error("Error creating connectionSource to db {}", this.getDatabaseName(), t);
+			//ApsSystemUtils.logThrowable(t, this, "createConnectionSource", "Error creating connectionSource to db " + this.getDatabaseName());
 			throw new ApsSystemException("Error creating connectionSource to db " + this.getDatabaseName(), t);
 		}
 		return connectionSource;
@@ -131,13 +137,15 @@ public class TableFactory {
 				} catch (Throwable t) {
 					schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
 					String message = "Error creating table " + this.getDatabaseName() + "/" + tableClassName + " - " + t.getMessage();
-					ApsSystemUtils.logThrowable(t, this, "createTables", message);
+					_logger.error("Error creating table {}/{}",this.getDatabaseName(), tableClassName, t);
+					//ApsSystemUtils.logThrowable(t, this, "createTables", message);
 					throw new ApsSystemException(message, t);
 				}
 			}
 		} catch (Throwable t) {
 			schemaReport.getDatabaseStatus().put(this.getDatabaseName(), SystemInstallationReport.Status.INCOMPLETE);
-			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error on setup Database - " + this.getDatabaseName());
+			_logger.error("Error on setup Database - {}", this.getDatabaseName(), t);
+			//ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error on setup Database - " + this.getDatabaseName());
 			throw new ApsSystemException("Error on setup Database", t);
 		}
 	}
@@ -164,7 +172,8 @@ public class TableFactory {
 				throw new RuntimeException("Error creating table from class " + logTableName);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error creating table " + logTableName + " - " + t.getMessage());
+			_logger.error("Error creating table {}", logTableName, t);
+			//ApsSystemUtils.logThrowable(t, this, "setupDatabase", "Error creating table " + logTableName + " - " + t.getMessage());
 			if (result > 0) {
 				TableUtils.dropTable(connectionSource, tableClass, true);
 			}
