@@ -71,26 +71,6 @@ public class ActivityStreamAction extends BaseAction{
 		return SUCCESS;
 	}
 	
-	//TODO END THIS
-	public Date getLastUpdate() {
-		List<Integer> actionRecordIds = new ArrayList<Integer>();
-		Date lastUpdate = new Date();
-		try {
-			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
-			List<Group> userGroups = this.getAuthorizationManager().getUserGroups(this.getCurrentUser());
-			searchBean.setUserGroupCodes(groupsToStringCode(userGroups));
-			searchBean.setEndUpdate(lastUpdate);
-			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
-			if(null != actionRecordIds && actionRecordIds.size() > 0) {
-				ActionLogRecord actionRecord = this.getActionLogManager().getActionRecord(actionRecordIds.get(0));
-				lastUpdate = actionRecord.getUpdateDate();
-			}
-		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getLastUpdate", "Error on loading updated activities");
-        }
-		return lastUpdate;
-	}
-	
 	private List<String> groupsToStringCode(List<Group> groups) {
 		List<String> groupCodes = new ArrayList<String>();
 		for (int i = 0; i < groups.size(); i++) {

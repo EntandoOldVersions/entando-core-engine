@@ -122,57 +122,6 @@ public class TestActivityStreamAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
-	public void testLastUpdate() throws Throwable {
-		Content content = this._contentManager.loadContent("EVN41", false);//"coach" group
-		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
-		content.setId(null);
-		String contentId = null;
-		Thread.sleep(1000);
-		try {
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
-			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
-			this.setUserOnSession("admin");
-			String result = this.executeAction();
-			assertEquals(Action.SUCCESS, result);
-			contentId = content.getId();
-			assertNotNull(this._contentManager.loadContent(contentId, false));
-			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
-			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
-			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
-			assertEquals(1, ids.size());
-			
-			Thread.sleep(1000);
-			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
-			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
-			this.setUserOnSession("admin");
-			result = this.executeAction();
-			assertEquals(Action.SUCCESS, result);
-			contentId = content.getId();
-			assertNotNull(this._contentManager.loadContent(contentId, false));
-			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
-			
-			List<Integer> actionRecords = this._actionLoggerManager.getActionRecords(null);
-			
-			assertNotNull(actionRecords);
-			assertEquals(2, actionRecords.size());
-			ActionLogRecord actionRecord = this._actionLoggerManager.getActionRecord(actionRecords.get(1));
-			this.initActivityStreamAction("/do/ActivityStream", "update", "2012-12-12 12:12:12|121");
-			this.setUserOnSession("admin");
-			this.executeAction();
-			ActivityStreamAction action = (ActivityStreamAction) this.getAction();
-			assertNotNull(action);
-			Date lastUpdate = action.getLastUpdate();
-			assertEquals(actionRecord.getUpdateDate(), lastUpdate);
-
-		} catch (Throwable t) {
-			throw t;
-		} finally {
-			this._contentManager.deleteContent(content);
-			assertNull(this._contentManager.loadContent(contentId, false));
-		}
-		
-	}
-	
 	public void testCallAction() throws Throwable {
 		this.initActivityStreamAction("/do/ActivityStream", "update", "2012-12-12 12:12:12|121");
 		this.setUserOnSession("admin");
