@@ -524,7 +524,7 @@
 			<![CDATA[Return the date of the last update activity stream for the current user.]]>
 		</description>
 		<name>activityStreamLastUpdateDate</name>
-		<tag-class>org.entando.entando.apsadmin.tags.ActivityLastUpdateTag</tag-class>
+		<tag-class>org.entando.entando.apsadmin.tags.ActivityStreamLastUpdateTag</tag-class>
 		<body-content>empty</body-content>
 		<attribute>
 			<description><![CDATA[Name used to reference the update date.]]></description>
