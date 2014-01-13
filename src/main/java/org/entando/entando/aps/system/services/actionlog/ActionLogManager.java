@@ -46,6 +46,7 @@ import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
 /**
@@ -238,14 +239,31 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error adding a comment record", t);
 		}
 	}
-	
-	
 
 	@Override
 	public void deleteActionCommentRecord(int id) throws ApsSystemException {
 	//TODO
 	}
 
+	@Override
+	public Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException {
+		List<Integer> actionRecordIds = new ArrayList<Integer>();
+		Date lastUpdate = new Date();
+		try {
+			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
+			searchBean.setUserGroupCodes(this.extractUserGroupCodes(loggedUser));
+			searchBean.setEndUpdate(lastUpdate);
+			actionRecordIds = this.getActionRecords(searchBean);
+			if(null != actionRecordIds && actionRecordIds.size() > 0) {
+				ActionLogRecord actionRecord = this.getActionRecord(actionRecordIds.get(0));
+				lastUpdate = actionRecord.getUpdateDate();
+			}
+		} catch (Throwable t) {
+            ApsSystemUtils.logThrowable(t, this, "getLastUpdate", "Error on loading updated activities");
+        }
+		return lastUpdate;
+	}
+	
 	@Override
 	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
 	@CacheableInfo(groups = "'ActivityStreamCommentRecords_cacheGroup'")

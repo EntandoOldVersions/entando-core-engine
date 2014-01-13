@@ -17,8 +17,12 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
+import com.agiletec.aps.system.SystemConstants;
 import java.util.List;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
+import java.util.Date;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamLikeInfo;
@@ -80,6 +84,8 @@ public interface IActionLogManager {
 	public void deleteActionCommentRecord(int id) throws ApsSystemException;
 	
 	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException;
+	
+	public Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException;
 	
 	public static final String LOG_APPENDER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActionRecordAppender_";
 	public static final String LOG_CLEANER_THREAD_NAME_PREFIX = SystemConstants.ENTANDO_THREAD_NAME_PREFIX + "ActivityStreamCleanerThread_";
