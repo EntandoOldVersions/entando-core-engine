@@ -62,7 +62,7 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<?xml version
 
 ');
 
-INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (1, 'admin', '2013-09-27 10:58:38', '/do/Page', 'save', 'selectedNode=service
+INSERT INTO actionlogrecords (id, username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo) VALUES (1, 'admin', '2013-09-27 10:58:38', '2013-09-27 10:58:38', '/do/Page', 'save', 'selectedNode=service
 model=service
 strutsAction=1
 extraGroupName=free
@@ -105,7 +105,7 @@ pageCode=sign_in
 </activityStreamInfo>
 ');
 
-INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (2, 'admin', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
+INSERT INTO actionlogrecords (id, username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo) VALUES (2, 'admin', '2013-09-27 11:00:12', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
 model=service
 strutsAction=1
 extraGroupName=free
@@ -148,7 +148,7 @@ pageCode=notfound
 </activityStreamInfo>
 ');
 
-INSERT INTO actionlogrecords (id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) VALUES (3, 'admin', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
+INSERT INTO actionlogrecords (id, username, actiondate, updatedate, namespace, actionname, parameters, activitystreaminfo) VALUES (3, 'admin', '2013-09-27 11:00:12', '2013-09-27 11:00:12', '/do/Page', 'save', 'selectedNode=service
 model=service
 strutsAction=1
 extraGroupName=free
