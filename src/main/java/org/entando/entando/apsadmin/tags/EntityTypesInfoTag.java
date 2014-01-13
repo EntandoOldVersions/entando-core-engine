@@ -32,13 +32,6 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
-import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
-
 /**
  * Returns the list of entity types through the code and the entity service name.
  * @author E.Santoboni

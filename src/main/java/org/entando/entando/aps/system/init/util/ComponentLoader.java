@@ -58,7 +58,6 @@ public class ComponentLoader {
 					new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
 		ComponentDefDOM dom = null;
-		Logger logger = ApsSystemUtils.getLogger();
 		Set<String> codes = new HashSet<String>();
 		for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
