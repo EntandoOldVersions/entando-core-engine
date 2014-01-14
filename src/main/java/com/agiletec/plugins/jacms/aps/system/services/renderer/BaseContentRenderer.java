@@ -92,7 +92,7 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 			shape = model.getContentShape();
 		} 
 		if (shape == null) {
-			//shape = "Content model " + modelId + " undefined";
+			shape = "Content model " + modelId + " undefined";
 			_logger.error("Content model {} undefined", modelId);
 		}
 		return shape;
