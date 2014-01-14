@@ -33,12 +33,17 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
 /**
  * @author E.Santoboni
  */
 public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
-
-	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileFinderAction.class);
 	
 	public String list() {
 		this.setUsername(null);
@@ -93,8 +98,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
                 }
             }
         } catch (Throwable t) {
-        	_logger.error("Error while searching entity Ids", t);
-            //ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+            ApsSystemUtils.logThrowable(t, this, "getSearchResult");
             throw new RuntimeException("Error while searching entity Ids", t);
         }
         return searchResult;
@@ -105,8 +109,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         try {
             user = this.getUserManager().getUser(username);
         } catch (Throwable t) {
-        	_logger.error("Error extracting user {}", username, t);
-            //ApsSystemUtils.logThrowable(t, this, "getUser");
+            ApsSystemUtils.logThrowable(t, this, "getUser");
             throw new RuntimeException("Error extracting user " + username, t);
         }
         return user;
