@@ -18,6 +18,7 @@
 			<result-type name="redirectActionWithAnchor" class="com.agiletec.apsadmin.system.dispatcher.ServletActionRedirectResultWithAnchor" />
 			<!-- "redirect-action" result **Deprecated** : inserted to ensure compatibility with previous of jAPS 2.0 version 2.0.6 -->
 			<result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>	
+			<result-type name="json" class="org.apache.struts2.json.JSONResult"/>
 		</result-types>
     	
 		<interceptors>
