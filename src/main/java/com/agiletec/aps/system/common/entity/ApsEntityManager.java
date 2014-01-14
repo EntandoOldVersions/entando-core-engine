@@ -251,7 +251,7 @@ public abstract class ApsEntityManager extends AbstractService
 		for (int i = 0; i < attributes.size(); i++) {
 			AttributeInterface oldAttribute = attributes.get(i);
 			AttributeInterface newAttribute = (AttributeInterface) newEntityType.getAttribute(oldAttribute.getName());
-			if ((oldAttribute.isSearcheable() && null == newAttribute) || (null != newAttribute && oldAttribute.isSearcheable() != newAttribute.isSearcheable())) {
+			if ((oldAttribute.isSearchable() && null == newAttribute) || (null != newAttribute && oldAttribute.isSearchable() != newAttribute.isSearchable())) {
 				this.setStatus(IEntityManager.STATUS_NEED_TO_RELOAD_REFERENCES, oldEntityType.getTypeCode());
 				return;
 			}

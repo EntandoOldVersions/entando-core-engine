@@ -188,7 +188,7 @@ public class TestContentDAO extends BaseTestCase {
     	attribute.setName("temp");
     	attribute.setDefaultLangCode("it");
     	attribute.setRenderingLang("it");
-    	attribute.setSearcheable(true);
+    	attribute.setSearchable(true);
     	attribute.setType("Monotext");
     	content.addAttribute(attribute);	
     	content.setDefaultLang("it");

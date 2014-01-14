@@ -70,7 +70,7 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 		IAttributeValidationRules valRule = attribute.getValidationRules();
 		this.setRequired(new Boolean(valRule.isRequired()));
 		this.setOgnlValidationRule(valRule.getOgnlValidationRule());
-		this.setSearcheable(new Boolean(attribute.isSearcheable()));
+		this.setSearchable(new Boolean(attribute.isSearchable()));
 		String indexingType = attribute.getIndexingType();
 		if (null != indexingType) {
 			this.setIndexable(indexingType.equalsIgnoreCase(IndexableAttributeInterface.INDEXING_TYPE_TEXT));
@@ -130,7 +130,7 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 		}
 		attribute.setRoles(this.createStringArray(this.getAttributeRoles()));
 		attribute.setDisablingCodes(this.createStringArray(this.getDisablingCodes()));
-		attribute.setSearcheable(null != this.getSearcheable() && this.getSearcheable());
+		attribute.setSearchable(null != this.getSearchable() && this.getSearchable());
 		String indexingType = IndexableAttributeInterface.INDEXING_TYPE_NONE;
 		if (null != this.getIndexable()) {
 			indexingType = IndexableAttributeInterface.INDEXING_TYPE_TEXT;
@@ -380,11 +380,20 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 		this._attributeTypeCode = attributeTypeCode;
 	}
 	
+	@Deprecated
 	public Boolean getSearcheable() {
+		return this.getSearchable();
+	}
+	@Deprecated
+	public void setSearcheable(Boolean searchable) {
+		this.setSearchable(searchable);
+	}
+	
+	public Boolean getSearchable() {
 		return _searchable;
 	}
-	public void setSearcheable(Boolean searcheable) {
-		this._searchable = searcheable;
+	public void setSearchable(Boolean searchable) {
+		this._searchable = searchable;
 	}
 	
 	public Boolean getIndexable() {

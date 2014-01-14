@@ -576,21 +576,21 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'contentTyp
 			<attribute name="VediAnche" attributetype="Link" />
 			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
 			<attribute name="Foto" attributetype="Image" />
-			<attribute name="Data" attributetype="Date" searcheable="true" />
-			<attribute name="Numero" attributetype="Number" searcheable="true" />
+			<attribute name="Data" attributetype="Date" searchable="true" />
+			<attribute name="Numero" attributetype="Number" searchable="true" />
 		</attributes>
 	</contenttype>
 	<contenttype typecode="EVN" typedescr="Evento" viewpage="contentview" listmodel="51" defaultmodel="5">
 		<attributes>
-			<attribute name="Titolo" attributetype="Text" searcheable="true" indexingtype="TEXT">
+			<attribute name="Titolo" attributetype="Text" searchable="true" indexingtype="TEXT">
 				<validations />
 				<roles>
 					<role>jacms:title</role>
 				</roles>
 			</attribute>
 			<attribute name="CorpoTesto" attributetype="Hypertext" indexingtype="text" />
-			<attribute name="DataInizio" attributetype="Date" searcheable="true" />
-			<attribute name="DataFine" attributetype="Date" searcheable="true" />
+			<attribute name="DataInizio" attributetype="Date" searchable="true" />
+			<attribute name="DataFine" attributetype="Date" searchable="true" />
 			<attribute name="Foto" attributetype="Image" />
 			<list name="LinkCorrelati" attributetype="Monolist">
 				<nestedtype>

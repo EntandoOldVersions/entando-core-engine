@@ -37,7 +37,7 @@ public class TestContentAttributeIterator extends BaseTestCase {
     	attribute.setName("temp");
     	attribute.setDefaultLangCode("it");
     	attribute.setRenderingLang("it");
-    	attribute.setSearcheable(true);
+    	attribute.setSearchable(true);
     	attribute.setType("Monotext");        
         content.addAttribute(attribute);
         EntityAttributeIterator attributeIterator = new EntityAttributeIterator(content);

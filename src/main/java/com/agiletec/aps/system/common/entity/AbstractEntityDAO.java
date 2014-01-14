@@ -200,7 +200,7 @@ public abstract class AbstractEntityDAO extends AbstractDAO implements IEntityDA
 		while (attributeIter.hasNext()) {
 			AttributeInterface currAttribute = (AttributeInterface) attributeIter.next();
 			List<AttributeSearchInfo> infos = currAttribute.getSearchInfos(this.getLangManager().getLangs());
-			if (currAttribute.isSearcheable() && null != infos) {
+			if (currAttribute.isSearchable() && null != infos) {
 				for (int i=0; i<infos.size(); i++) {
 					AttributeSearchInfo searchInfo = infos.get(i);
 					stat.setString(1, id);

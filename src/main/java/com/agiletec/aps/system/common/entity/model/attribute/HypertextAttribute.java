@@ -106,14 +106,14 @@ public class HypertextAttribute extends TextAttribute {
         }
         return attributeElement;
     }
-
+	
     /**
      * Since this kind of attribute cannot be searchable we have overridden the abstract so to
      * always return false.
      * @return Return always false.
      */
     @Override
-    public boolean isSearcheable() {
+    public boolean isSearchable() {
         return false;
     }
     

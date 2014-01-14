@@ -170,20 +170,25 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 		return this.getRequest().getParameter(inputFieldName);
 	}
 	
+	@Deprecated
 	public List<AttributeInterface> getSearcheableAttributes() {
-		List<AttributeInterface> searcheableAttributes = new ArrayList<AttributeInterface>();
+		return this.getSearchableAttributes();
+	}
+	
+	public List<AttributeInterface> getSearchableAttributes() {
+		List<AttributeInterface> searchableAttributes = new ArrayList<AttributeInterface>();
 		IApsEntity prototype = this.getEntityPrototype();
 		if (null == prototype) {
-			return searcheableAttributes;
+			return searchableAttributes;
 		}
 		List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 		for (int i=0; i<contentAttributes.size(); i++) {
 			AttributeInterface attribute = contentAttributes.get(i);
-			if (attribute.isActive() && attribute.isSearcheable()) {
-				searcheableAttributes.add(attribute);
+			if (attribute.isActive() && attribute.isSearchable()) {
+				searchableAttributes.add(attribute);
 			}
 		}
-		return searcheableAttributes;
+		return searchableAttributes;
 	}
 	
 	public List<AttributeRole> getAttributeRoles() {

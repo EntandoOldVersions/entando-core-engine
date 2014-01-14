@@ -194,7 +194,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
 				AttributeInterface attribute = contentAttributes.get(i);
-				if (attribute.isSearcheable()) {
+				if (attribute.isSearchable()) {
 					types.add(new SelectItem(UserFilterOptionBean.TYPE_ATTRIBUTE + "_" + attribute.getName(), this.getText("label.attribute", new String[]{attribute.getName()})));
 				}
 			}
@@ -215,7 +215,7 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 			for (int i=0; i<contentAttributes.size(); i++) {
 				AttributeInterface attribute = contentAttributes.get(i);
-				if (attribute.isSearcheable()) {
+				if (attribute.isSearchable()) {
 					types.add(new SelectItem(attribute.getName(), this.getText("label.attribute", new String[]{attribute.getName()})));
 				}
 			}

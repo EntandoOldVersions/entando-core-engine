@@ -371,7 +371,7 @@ INSERT INTO sysconfig (version, item, descr, config) values ('production', 'user
 <profiletypes>
 	<profiletype typecode="PFL" typedescr="Default user profile">
 		<attributes>
-			<attribute name="fullname" attributetype="Monotext" description="Full Name" searcheable="true">
+			<attribute name="fullname" attributetype="Monotext" description="Full Name" searchable="true">
 				<validations>
 					<required>true</required>
 				</validations>
@@ -379,7 +379,7 @@ INSERT INTO sysconfig (version, item, descr, config) values ('production', 'user
 					<role>userprofile:fullname</role>
 				</roles>
 			</attribute>
-			<attribute name="email" attributetype="Monotext" description="Email" searcheable="true">
+			<attribute name="email" attributetype="Monotext" description="Email" searchable="true">
 				<validations>
 					<required>true</required>
 					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>

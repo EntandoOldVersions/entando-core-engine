@@ -176,7 +176,7 @@ public class CompositeAttribute extends AbstractComplexAttribute {
 		}
 		compositeAttrElem = (AttributeInterface) compositeAttrElem.getAttributePrototype();
 		compositeAttrElem.setAttributeConfig(currentAttrJdomElem);
-		compositeAttrElem.setSearcheable(false);
+		compositeAttrElem.setSearchable(false);
 		compositeAttrElem.setDefaultLangCode(this.getDefaultLangCode());
 		this.addAttribute(compositeAttrElem);
 	}

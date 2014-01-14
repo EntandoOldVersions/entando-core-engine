@@ -55,10 +55,10 @@ public abstract class AbstractComplexAttribute extends AbstractAttribute {
 	 * This method overrides the one of the abstract class so that it always returns false.
 	 * This happens because Complex Attributes can never be "searchable" by design.
 	 * @return Return always false.
-	 * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearcheable()
+	 * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearchable()
 	 */
 	@Override
-	public boolean isSearcheable() {
+	public boolean isSearchable() {
 		return false;
 	}
 	

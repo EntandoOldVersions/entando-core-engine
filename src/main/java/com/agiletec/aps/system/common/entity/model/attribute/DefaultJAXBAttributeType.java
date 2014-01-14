@@ -121,7 +121,7 @@ public class DefaultJAXBAttributeType {
             attribute.setName(this.getName());
             attribute.setDescription(this.getDescription());
             attribute.setRoles(this.toArray(this.getRoles()));
-            if (null != this.getSearchable()) attribute.setSearcheable(this.getSearchable().booleanValue());
+            if (null != this.getSearchable()) attribute.setSearchable(this.getSearchable().booleanValue());
             if (null != this.getIndexable()) attribute.setIndexingType(IndexableAttributeInterface.INDEXING_TYPE_TEXT);
             attribute.setValidationRules((IAttributeValidationRules) this.getValidationRules());
         } catch (ApiException ae) {

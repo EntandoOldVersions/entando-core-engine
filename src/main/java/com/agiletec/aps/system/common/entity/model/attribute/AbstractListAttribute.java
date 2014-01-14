@@ -138,16 +138,15 @@ public abstract class AbstractListAttribute extends AbstractComplexAttribute
     public String getIndexingType() {
         return IndexableAttributeInterface.INDEXING_TYPE_NONE;
     }
-
+	
     /**
      * This method overrides the method of the abstract class it derives from, because
-     * this kind of attribute can never be "searchable" and so it always return a 'false'
-     * value.
+     * this kind of attribute can never be "searchable" and so it always return a 'false' value.
      * @return Return always false.
-     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearcheable()
+     * @see com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface#isSearchable()
      */
     @Override
-    public boolean isSearcheable() {
+    public boolean isSearchable() {
         return false;
     }
     

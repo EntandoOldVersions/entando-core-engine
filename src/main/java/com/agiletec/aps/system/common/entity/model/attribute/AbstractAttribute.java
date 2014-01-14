@@ -119,23 +119,40 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     public String getRenderingLang() {
         return _renderingLangCode;
     }
-
-    /**
-     * @return True if the attribute is searchable, false otherwise.
-     */
+	
     @Override
+	@Deprecated
     public boolean isSearcheable() {
-        return _searcheable;
+        return this.isSearchable();
     }
-
-    /**
-     * Toggle the searchable condition of the attribute.
-     * @param searchable True if the attribute is searchable, false otherwise.
-     */
+	
     @Override
+	@Deprecated
     public void setSearcheable(boolean searchable) {
-        this._searcheable = searchable;
+        this.setSearchable(searchable);
     }
+	
+	/**
+     * Test whether the attribute is searchable (using a query on the DB) or not. The
+     * information held by a searchable attribute is replicated in an appropriate table
+     * used for SQL queries.
+     * @return True if the attribute is a searchable one. 
+     */
+	@Override
+    public boolean isSearchable() {
+		return _searchable;
+	}
+	
+	/**
+     * Set up the searchable status of an attribute. When set to 'true' then the
+     * information held by the current attribute is replicated in an appropriate table
+     * used for SQL queries.
+     * @param searchable True if the attribute is of searchable type, false otherwise.
+     */
+	@Override
+    public void setSearchable(boolean searchable) {
+		this._searchable = searchable;
+	}
     
     @Override
     public Object getAttributePrototype() {
@@ -146,7 +163,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             clone.setName(this.getName());
             clone.setDescription(this.getDescription());
             clone.setType(this.getType());
-            clone.setSearcheable(this.isSearcheable());
+            clone.setSearchable(this.isSearchable());
             clone.setDefaultLangCode(this.getDefaultLangCode());
             clone.setIndexingType(this.getIndexingType());
             clone.setParentEntity(this.getParentEntity());
@@ -185,8 +202,13 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
             this.setName(name);
 			String description = this.extractXmlAttribute(attributeElement, "description", false);
 			this.setDescription(description);
-            String searcheable = this.extractXmlAttribute(attributeElement, "searcheable", false);
-            this.setSearcheable(null != searcheable && searcheable.equalsIgnoreCase("true"));
+            String searchable = this.extractXmlAttribute(attributeElement, "searchable", false);
+			//to guaranted compatibility with previsous version of Entando 4.0.1 *** Start Block
+            if (null == searchable) {
+				searchable = this.extractXmlAttribute(attributeElement, "searcheable", false);
+			}
+			//to guaranted compatibility with previsous version of Entando 4.0.1 *** End Block
+			this.setSearchable(null != searchable && searchable.equalsIgnoreCase("true"));
             IAttributeValidationRules validationCondition = this.getValidationRules();
             validationCondition.setConfig(attributeElement);
             //to guaranted compatibility with previsous version of jAPS 2.0.12 *** Start Block
@@ -255,8 +277,8 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         if (null != this.getDescription() && this.getDescription().trim().length() > 0) {
 			configElement.setAttribute("description", this.getDescription());
 		}
-        if (this.isSearcheable()) {
-            configElement.setAttribute("searcheable", "true");
+        if (this.isSearchable()) {
+            configElement.setAttribute("searchable", "true");
         }
         if (null != this.getValidationRules() && !this.getValidationRules().isEmpty()) {
 			Element validationElement = this.getValidationRules().getJDOMConfigElement();
@@ -452,7 +474,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
         jaxbAttributeType.setName(this.getName());
         jaxbAttributeType.setDescription(this.getDescription());
         jaxbAttributeType.setType(this.getType());
-        if (this.isSearcheable()) {
+        if (this.isSearchable()) {
             jaxbAttributeType.setSearchable(true);
         }
         if (null != this.getIndexingType() && this.getIndexingType().equalsIgnoreCase(IndexableAttributeInterface.INDEXING_TYPE_TEXT)) {
@@ -517,7 +539,7 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     private String _type;
     private String _defaultLangCode;
     private String _renderingLangCode;
-    private boolean _searcheable;
+    private boolean _searchable;
     private String _indexingType;
     private IApsEntity _parentEntity;
     private transient AttributeHandlerInterface _handler;

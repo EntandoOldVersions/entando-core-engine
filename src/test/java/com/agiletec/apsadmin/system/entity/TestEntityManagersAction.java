@@ -181,7 +181,7 @@ public class TestEntityManagersAction extends ApsAdminBaseTestCase {
 			EntityAttributeConfigAction action = (EntityAttributeConfigAction) this.getAction();
 			assertEquals(currentAttribute.getType(), action.getAttributeTypeCode());
 			assertEquals(currentAttribute.isRequired(), action.getRequired().booleanValue());
-			assertEquals(currentAttribute.isSearcheable(), action.getSearcheable().booleanValue());
+			assertEquals(currentAttribute.isSearchable(), action.getSearchable().booleanValue());
 			assertEquals(currentAttribute.getIndexingType().equalsIgnoreCase(IndexableAttributeInterface.INDEXING_TYPE_TEXT), action.getIndexable().booleanValue());
 			if (currentAttribute.isTextAttribute()) {
 				ITextAttribute attr = (ITextAttribute) currentAttribute;

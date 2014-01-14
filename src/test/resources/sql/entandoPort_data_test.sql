@@ -390,7 +390,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfileTypes', 'User Profile Types Definitions', '<profiletypes>
 	<profiletype typecode="PFL" typedescr="Default user profile" >
 		<attributes>
-			<attribute name="fullname" attributetype="Monotext" searcheable="true" >
+			<attribute name="fullname" attributetype="Monotext" searchable="true" >
 				<validations>
 					<required>true</required>
 				</validations>
@@ -398,7 +398,7 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 					<role>userprofile:fullname</role>
 				</roles>
 			</attribute>
-			<attribute name="email" attributetype="Monotext" searcheable="true" >
+			<attribute name="email" attributetype="Monotext" searchable="true" >
 				<validations>
 					<required>true</required>
 					<regexp><![CDATA[.+@.+.[a-z]+]]></regexp>
@@ -407,10 +407,10 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'userProfil
 					<role>userprofile:email</role>
 				</roles>
 			</attribute>
-			<attribute name="birthdate" attributetype="Date" required="true" searcheable="true"/>
+			<attribute name="birthdate" attributetype="Date" required="true" searchable="true"/>
 			<attribute name="language" attributetype="Monotext" required="true"/>
-			<attribute name="boolean1" attributetype="Boolean" searcheable="true"/>
-			<attribute name="boolean2" attributetype="Boolean" searcheable="true"/>
+			<attribute name="boolean1" attributetype="Boolean" searchable="true"/>
+			<attribute name="boolean2" attributetype="Boolean" searchable="true"/>
 		</attributes>
 	</profiletype>
 </profiletypes>');

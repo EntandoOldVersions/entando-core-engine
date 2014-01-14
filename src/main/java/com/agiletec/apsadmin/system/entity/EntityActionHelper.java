@@ -194,7 +194,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 		for (int i = 0; i < contentAttributes.size(); i++) {
 			AttributeInterface attribute = contentAttributes.get(i);
-			if (attribute.isActive() && attribute.isSearcheable()) {
+			if (attribute.isActive() && attribute.isSearchable()) {
 				if (attribute instanceof ITextAttribute) {
 					String insertedText = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_textFieldName");
 					if (null != insertedText && insertedText.trim().length() > 0) {
