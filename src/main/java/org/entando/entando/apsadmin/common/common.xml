@@ -44,6 +44,11 @@
 		</action>
 		
 		<action name="addComment*" class="activityStreamCommentAction" method="addComment" >
+			<result type="json">
+				<param name="includeProperties">
+					streamRecordId
+				</param>
+			</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">enterBackend</param>
 			</interceptor-ref>
