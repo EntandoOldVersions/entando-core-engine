@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin;
 
+import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
@@ -49,10 +51,18 @@ import com.agiletec.apsadmin.portal.specialwidget.TestSimpleWidgetConfigAction;
 import com.agiletec.apsadmin.portal.specialwidget.navigator.TestNavigatorWidgetConfigAction;
 import com.agiletec.apsadmin.system.entity.TestEntityManagersAction;
 import com.agiletec.apsadmin.system.services.TestShortcutManager;
+import org.entando.entando.apsadmin.user.TestAuthorityToUsersAction;
+import org.entando.entando.apsadmin.user.TestUserAction;
+import org.entando.entando.apsadmin.user.TestUserFinderAction;
+import org.entando.entando.apsadmin.user.TestUserToAuthoritiesAction;
 import com.agiletec.apsadmin.user.group.TestGroupAction;
 import com.agiletec.apsadmin.user.group.TestGroupFinderAction;
 import com.agiletec.apsadmin.user.role.TestRoleAction;
 import com.agiletec.apsadmin.user.role.TestRoleFinderAction;
+import org.entando.entando.apsadmin.common.TestActivityStreamAction;
+import org.entando.entando.apsadmin.common.currentuser.TestCurrentUserProfileAction;
+import org.entando.entando.apsadmin.user.TestUserProfileAction;
+import org.entando.entando.apsadmin.user.TestUserProfileFinderAction;
 
 public class AllTests {
 	
@@ -115,6 +125,8 @@ public class AllTests {
 		//Role
 		suite.addTestSuite(TestRoleAction.class);
 		suite.addTestSuite(TestRoleFinderAction.class);
+		//Activity Stream
+		suite.addTestSuite(TestActivityStreamAction.class);
 		
 		return suite;
 	}
