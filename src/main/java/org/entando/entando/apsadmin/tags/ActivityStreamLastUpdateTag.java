@@ -46,7 +46,7 @@ public class ActivityStreamLastUpdateTag extends StrutsBodyTagSupport {
 	            stack.setValue("#attr['" + this.getVar() + "']", lastUpdate, false);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error on doStartTag", t);
 		}
 		return super.doEndTag();
