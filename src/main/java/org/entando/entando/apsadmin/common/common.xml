@@ -44,19 +44,16 @@
 		</action>
 		
 		<action name="addComment*" class="activityStreamCommentAction" method="addComment" >
-			<result type="redirectAction">
-				<param name="namespace">/do</param>
-    			<param name="actionName">main</param>
-			</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">enterBackend</param>
 			</interceptor-ref>
 		</action>
 		
 		<action name="removeComment*" class="activityStreamCommentAction" method="removeComment" >
-			<result type="redirectAction">
-				<param name="namespace">/do</param>
-    			<param name="actionName">main</param>
+			<result type="json">
+				<param name="includeProperties">
+					commentId
+				</param>
 			</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="requestAuth.requiredPermission">enterBackend</param>
