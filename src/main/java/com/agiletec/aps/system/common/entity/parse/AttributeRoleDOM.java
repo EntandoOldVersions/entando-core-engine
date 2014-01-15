@@ -17,9 +17,6 @@
 */
 package com.agiletec.aps.system.common.entity.parse;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +24,9 @@ import java.util.Map;
 
 import org.jdom.Document;
 import org.jdom.Element;
+
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Dom class parser of Attribute Role definitions.

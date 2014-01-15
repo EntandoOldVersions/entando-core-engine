@@ -20,6 +20,15 @@ package com.agiletec.plugins.jacms;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestSaveBooleanAttributes;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAttributes;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateDateAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateMonotextAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateNumberAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateResourceAttribute;
+import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
+
 import com.agiletec.plugins.jacms.aps.system.TestApplicationContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestCategoryUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.content.TestContentDAO;
@@ -77,15 +86,6 @@ import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityAttribut
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityManagersAction;
 import com.agiletec.plugins.jacms.apsadmin.system.entity.TestJacmsEntityTypeConfigAction;
 import com.agiletec.plugins.jacms.apsadmin.user.group.TestTrashReferencedGroup;
-
-import org.entando.entando.plugins.jacms.aps.system.services.cache.TestCacheInfoManager;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestSaveBooleanAttributes;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateBooleanAttributes;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateDateAttribute;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateMonotextAttribute;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateNumberAttribute;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateResourceAttribute;
-import org.entando.entando.plugins.jacms.apsadmin.content.TestValidateTextAttribute;
 
 public class AllTests {
 	

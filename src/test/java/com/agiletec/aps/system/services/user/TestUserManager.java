@@ -17,16 +17,10 @@
 */
 package com.agiletec.aps.system.services.user;
 
-import java.util.Date;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.user.IUserManager;
-import com.agiletec.aps.system.services.user.User;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.DateConverter;
 
 /**
  * @version 1.0

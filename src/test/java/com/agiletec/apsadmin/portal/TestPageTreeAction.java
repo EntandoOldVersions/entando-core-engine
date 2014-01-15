@@ -19,14 +19,11 @@ package com.agiletec.apsadmin.portal;
 
 import java.util.Collection;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
-import com.agiletec.apsadmin.portal.AbstractPortalAction;
-import com.agiletec.apsadmin.portal.IPageTreeAction;
-import com.agiletec.apsadmin.portal.PageTreeAction;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ITreeAction;
 import com.opensymphony.xwork2.Action;
 

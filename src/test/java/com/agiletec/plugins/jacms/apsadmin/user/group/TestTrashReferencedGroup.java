@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.apsadmin.user.group.GroupAction;
 
 public class TestTrashReferencedGroup extends ApsAdminBaseTestCase {

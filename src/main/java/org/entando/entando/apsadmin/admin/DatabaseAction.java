@@ -17,19 +17,20 @@
 */
 package org.entando.entando.apsadmin.admin;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.apsadmin.system.BaseAction;
-import com.j256.ormlite.table.DatabaseTable;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.entando.entando.aps.system.init.IComponentManager;
 
+import org.entando.entando.aps.system.init.IComponentManager;
 import org.entando.entando.aps.system.init.IDatabaseManager;
 import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.apsadmin.system.BaseAction;
+import com.j256.ormlite.table.DatabaseTable;
 
 /**
  * @author E.Santoboni

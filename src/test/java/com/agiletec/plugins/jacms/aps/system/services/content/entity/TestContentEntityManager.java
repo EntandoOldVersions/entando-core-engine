@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;

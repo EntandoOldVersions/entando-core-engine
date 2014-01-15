@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
+import javax.ws.rs.core.Response;
 
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -46,8 +47,6 @@ import com.agiletec.aps.system.common.renderer.IVelocityRenderer;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
-
-import javax.ws.rs.core.Response;
 
 /**
  * @author E.Santoboni

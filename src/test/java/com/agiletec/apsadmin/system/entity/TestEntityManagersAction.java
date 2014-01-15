@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
@@ -30,11 +28,11 @@ import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.entity.EntityManagersAction;
 import com.agiletec.apsadmin.system.entity.type.EntityAttributeConfigAction;
-import com.agiletec.apsadmin.system.entity.type.IEntityTypesAction;
 import com.agiletec.apsadmin.system.entity.type.IEntityTypeConfigAction;
+import com.agiletec.apsadmin.system.entity.type.IEntityTypesAction;
 import com.opensymphony.xwork2.Action;
 
 /**

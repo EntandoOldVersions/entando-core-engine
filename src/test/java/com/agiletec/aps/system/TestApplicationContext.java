@@ -17,10 +17,11 @@
 */
 package com.agiletec.aps.system;
 
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.cache.ICacheManager;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.i18n.II18nManager;
@@ -31,11 +32,6 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IUserManager;
-
-import static junit.framework.Assert.assertNotNull;
-
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 /**
  * @author W.Ambu

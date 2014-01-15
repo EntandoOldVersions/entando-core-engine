@@ -18,7 +18,8 @@
 package com.agiletec.plugins.jacms.aps.system.services.cache;
 
 import java.util.List;
-import java.util.logging.Level;
+
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -40,8 +41,6 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedEvent;
 import com.agiletec.plugins.jacms.aps.system.services.resource.event.ResourceChangedObserver;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 
 /**
  * Cache Wrapper Manager for plugin jacms

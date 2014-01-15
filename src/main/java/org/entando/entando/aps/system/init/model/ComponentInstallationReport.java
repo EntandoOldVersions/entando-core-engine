@@ -17,12 +17,12 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.util.DateConverter;
-
 import java.util.Date;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 
+import org.entando.entando.aps.system.init.model.SystemInstallationReport.Status;
 import org.jdom.Element;
+
+import com.agiletec.aps.util.DateConverter;
 
 /**
  * @author E.Santoboni

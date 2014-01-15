@@ -17,27 +17,27 @@
 */
 package com.agiletec.aps.system.common.entity.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
-import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttribute;
-import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import com.agiletec.aps.system.common.entity.model.attribute.DefaultJAXBAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.JAXBHypertextAttribute;
+import com.agiletec.aps.system.common.entity.model.attribute.JAXBListAttribute;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.category.ICategoryManager;
 
 /**
  * @author E.Santoboni

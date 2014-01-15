@@ -17,11 +17,11 @@
 */
 package org.entando.entando.apsadmin.common.currentuser;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.user.UserDetails;
-
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.apsadmin.common.UserAvatarAction;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.user.UserDetails;
 
 /**
  * @author E.Santoboni

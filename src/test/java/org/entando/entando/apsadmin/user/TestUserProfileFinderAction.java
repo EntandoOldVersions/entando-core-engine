@@ -17,13 +17,12 @@
 */
 package org.entando.entando.apsadmin.user;
 
+import java.util.List;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.opensymphony.xwork2.Action;
-
-import java.util.List;
 
 /**
  * @author f.deidda

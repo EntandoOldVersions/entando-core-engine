@@ -17,11 +17,7 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.util.DateConverter;
-
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +27,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.util.DateConverter;
 
 /**
  * @author E.Santoboni

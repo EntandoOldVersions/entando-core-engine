@@ -18,13 +18,11 @@
 package com.agiletec.plugins.jacms.aps.system.services.linkresolver;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolverManager;
 
 /**
  * @author W.Ambu - M.Diana

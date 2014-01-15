@@ -18,6 +18,8 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.BeanFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
@@ -28,10 +30,7 @@ import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.BaseAction;
-
 import com.opensymphony.xwork2.ActionSupport;
-
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * This abstract class is the base for the managers of all attributes.

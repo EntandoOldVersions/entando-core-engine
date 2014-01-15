@@ -23,13 +23,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.ITreeNodeBaseActionHelper;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Interface for the helper classes handling the portal pages.

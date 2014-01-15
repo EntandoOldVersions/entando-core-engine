@@ -17,7 +17,6 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.contentpagemapper;
 
-import java.util.logging.Level;
 import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;

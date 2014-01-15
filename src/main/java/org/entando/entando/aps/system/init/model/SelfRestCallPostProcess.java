@@ -17,15 +17,15 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-
 import java.util.List;
 import java.util.Properties;
+
 import javax.ws.rs.core.MediaType;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
-
 import org.jdom.Element;
+
+import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
  * @author E.Santoboni

@@ -22,8 +22,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.apsadmin.portal.IPageTreeAction;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
@@ -33,6 +31,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.LinkAttribute;
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.ILinkAttributeActionHelper;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
 
 /**

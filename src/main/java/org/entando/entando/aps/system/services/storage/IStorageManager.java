@@ -17,9 +17,10 @@
 */
 package org.entando.entando.aps.system.services.storage;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.InputStream;
 import java.io.Serializable;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

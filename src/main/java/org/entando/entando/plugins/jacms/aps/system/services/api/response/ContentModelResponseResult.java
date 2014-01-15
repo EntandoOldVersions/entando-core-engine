@@ -17,9 +17,11 @@
 */
 package org.entando.entando.plugins.jacms.aps.system.services.api.response;
 
-import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import javax.xml.bind.annotation.XmlElement;
+
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
+
+import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 
 /**
  * @author E.Santoboni

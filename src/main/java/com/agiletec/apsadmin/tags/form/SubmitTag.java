@@ -17,17 +17,16 @@
 */
 package com.agiletec.apsadmin.tags.form;
 
-import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
-import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
-import com.agiletec.apsadmin.tags.util.Submit;
-
-import com.opensymphony.xwork2.util.ValueStack;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.components.Component;
+
+import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
+import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
+import com.agiletec.apsadmin.tags.util.Submit;
+import com.opensymphony.xwork2.util.ValueStack;
 
 /**
  * This class extends the org.apache.struts2.views.jsp.ui.SubmitTag 

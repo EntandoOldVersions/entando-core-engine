@@ -17,12 +17,14 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import java.util.List;
+
+import org.jdom.Element;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
-import java.util.List;
-import org.jdom.Element;
 
 /**
  * @author E.Santoboni

@@ -26,11 +26,11 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
 import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.entando.entando.apsadmin.api.model.ApiSelectItem;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-import org.entando.entando.aps.system.services.api.model.ApiResource;
 
 /**
  * @author E.Santoboni

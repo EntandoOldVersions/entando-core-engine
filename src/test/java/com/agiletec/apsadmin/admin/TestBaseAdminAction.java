@@ -19,12 +19,9 @@ package com.agiletec.apsadmin.admin;
 
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.apsadmin.admin.BaseAdminAction;
-import com.agiletec.apsadmin.admin.IBaseAdminAction;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
 
 /**

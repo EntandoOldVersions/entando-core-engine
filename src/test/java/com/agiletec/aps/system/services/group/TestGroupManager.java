@@ -20,10 +20,7 @@ package com.agiletec.aps.system.services.group;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.group.IGroupManager;
-import com.agiletec.aps.system.services.group.Group;
 
 /**
  * @version 1.0

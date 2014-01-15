@@ -26,6 +26,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.common.tree.TreeNode;
@@ -41,8 +43,6 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import com.agiletec.apsadmin.system.TreeNodeBaseActionHelper;
-
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Classe Helper per la gestione pagine.

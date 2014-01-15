@@ -17,15 +17,14 @@
 */
 package com.agiletec.apsadmin.system;
 
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.interceptor.FileUploadInterceptor;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
-
 import com.opensymphony.xwork2.ActionInvocation;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.interceptor.FileUploadInterceptor;
 
 /**
  * Extension of default FileUploadInterceptor.

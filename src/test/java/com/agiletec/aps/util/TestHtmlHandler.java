@@ -19,8 +19,6 @@ package com.agiletec.aps.util;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.aps.util.HtmlHandler;
-
 /**
  * @version 1.0
  * @author W.Ambu

@@ -17,9 +17,10 @@
 */
 package org.entando.entando.aps.system.services.userprofile;
 
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * Interface for Manager of UserProfile Object. 

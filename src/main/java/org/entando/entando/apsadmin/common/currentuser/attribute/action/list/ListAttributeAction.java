@@ -17,10 +17,11 @@
 */
 package org.entando.entando.apsadmin.common.currentuser.attribute.action.list;
 
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-import com.agiletec.apsadmin.system.entity.IEntityActionHelper;
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 import org.entando.entando.apsadmin.common.currentuser.ICurrentUserProfileAction;
+
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.apsadmin.system.entity.IEntityActionHelper;
 
 /**
  * Action classe for the management of operations on the list type attributes in User Profile.

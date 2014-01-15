@@ -20,10 +20,7 @@ package com.agiletec.aps.system.services.category;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.ApsProperties;
 
 /**

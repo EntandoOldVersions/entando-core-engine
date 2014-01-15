@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.role.IRoleManager;
-import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.aps.system.services.role.Role;
 
 /**
  * @version 1.0

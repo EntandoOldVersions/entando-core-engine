@@ -17,18 +17,18 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
-import java.util.logging.Level;
-import org.slf4j.Logger;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.url.PageURL;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Classe di utilità che implementa un metodo per impostare una redirezione ed

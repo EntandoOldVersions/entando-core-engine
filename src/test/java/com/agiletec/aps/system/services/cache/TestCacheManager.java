@@ -18,10 +18,7 @@
 package com.agiletec.aps.system.services.cache;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.cache.ICacheManager;
-import static junit.framework.Assert.assertEquals;
 
 /**
  * Classe test del servizio gestore cache.

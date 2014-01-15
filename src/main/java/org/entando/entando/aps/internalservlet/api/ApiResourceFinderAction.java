@@ -19,7 +19,6 @@ package org.entando.entando.aps.internalservlet.api;
 
 import org.entando.entando.aps.system.services.api.model.ApiMethod;
 import org.entando.entando.aps.system.services.api.model.ApiResource;
-
 import org.entando.entando.apsadmin.api.AbstractApiFinderAction;
 
 /**

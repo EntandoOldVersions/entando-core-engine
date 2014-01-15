@@ -17,8 +17,9 @@
 */
 package org.entando.entando.aps.system.services.api.model;
 
-import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
+
+import com.agiletec.aps.util.ApsProperties;
 
 /**
  * The representation of a service

@@ -18,12 +18,8 @@
 package com.agiletec.aps.system.services.i18n;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.util.ApsProperties;
-import org.entando.entando.aps.system.init.DatabaseManager;
-import org.entando.entando.aps.system.init.IDatabaseManager;
 
 /**
  * @version 1.0

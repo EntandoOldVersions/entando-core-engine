@@ -18,8 +18,6 @@
 package com.agiletec.plugins.jacms.aps.system;
 
 import com.agiletec.aps.BaseTestCase;
-
-import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
 import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.IContentPageMapperManager;

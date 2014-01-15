@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.IContentListFilterAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 

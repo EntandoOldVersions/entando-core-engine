@@ -21,17 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.services.user.MockUser;
-
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
-import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import com.agiletec.aps.system.services.user.MockUser;
 import com.agiletec.aps.system.services.user.UserDetails;
 
 /**

@@ -17,16 +17,17 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.FieldError;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
-import java.util.ArrayList;
 
 /**
  * @author E.Santoboni

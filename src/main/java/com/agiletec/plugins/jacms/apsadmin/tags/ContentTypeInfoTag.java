@@ -17,17 +17,16 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.tags;
 
+import javax.servlet.http.HttpSession;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.tags.EntityTypeInfoTag;
-
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentAuthorizationHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import javax.servlet.http.HttpSession;
 
 /**
  * Returns a content type (or one of its property) through the code.

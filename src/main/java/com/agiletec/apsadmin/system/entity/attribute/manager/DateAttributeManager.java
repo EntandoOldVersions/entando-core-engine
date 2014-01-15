@@ -16,19 +16,17 @@
 */
 package com.agiletec.apsadmin.system.entity.attribute.manager;
 
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
-import com.agiletec.aps.system.common.entity.model.FieldError;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
+import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 /**

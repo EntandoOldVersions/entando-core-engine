@@ -17,9 +17,9 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +34,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import java.net.URLEncoder;
 
 /**
  * Sottoservizio delegato al controllo dell'autorizzazione dell'utente corrente.

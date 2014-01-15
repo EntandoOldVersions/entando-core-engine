@@ -20,16 +20,14 @@ package com.agiletec.aps.system.services.authorization;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthorityManager;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.role.Role;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import com.agiletec.aps.BaseTestCase;
 
 /**
  * @author E.Santoboni

@@ -17,12 +17,6 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.category.Category;
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -32,6 +26,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.category.Category;
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
 /**
  * Classe astratta di base per gli oggetti Resource.

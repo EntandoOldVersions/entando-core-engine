@@ -17,8 +17,9 @@
 */
 package org.entando.entando.aps.system.services.oauth.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import org.entando.entando.aps.system.services.oauth.IOAuthTokenDAO;
+
+import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
  * Thread Class delegate to update OAuth token.

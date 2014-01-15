@@ -17,11 +17,11 @@
 */
 package org.entando.entando.aps.system.services.userprofile.api.model;
 
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
-
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.common.entity.api.JAXBEntityType;
+
+import com.agiletec.aps.system.common.entity.model.IApsEntity;
 
 /**
  * @author E.Santoboni

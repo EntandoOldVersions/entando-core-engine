@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.jdom.Element;
 
 import com.agiletec.aps.system.SystemConstants;
@@ -35,8 +37,6 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
 import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
 import com.agiletec.aps.system.services.lang.Lang;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 /**
  * This class describes the "Date" attribute; obviously it does not support multiple

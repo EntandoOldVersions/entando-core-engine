@@ -18,7 +18,6 @@
 package com.agiletec.plugins.jacms.aps.system.services;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;

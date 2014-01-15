@@ -17,8 +17,20 @@
 */
 package org.entando.entando.aps.system.services.userprofile;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -30,20 +42,6 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.user.AbstractUser;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
-
-import org.entando.entando.aps.system.services.cache.CacheableInfo;
-import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
-import org.entando.entando.aps.system.services.userprofile.event.ProfileChangedEvent;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfileRecord;
-
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  * Implementation of ProfileManager.

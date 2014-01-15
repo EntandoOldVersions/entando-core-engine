@@ -18,7 +18,6 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.util;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;

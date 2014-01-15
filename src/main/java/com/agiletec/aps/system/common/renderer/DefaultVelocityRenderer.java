@@ -17,10 +17,6 @@
 */
 package com.agiletec.aps.system.common.renderer;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 import java.io.StringWriter;
 
 import org.apache.velocity.VelocityContext;
@@ -29,8 +25,11 @@ import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.runtime.RuntimeServices;
 import org.apache.velocity.runtime.log.LogChute;
-
 import org.slf4j.Logger;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Entities rendering service.

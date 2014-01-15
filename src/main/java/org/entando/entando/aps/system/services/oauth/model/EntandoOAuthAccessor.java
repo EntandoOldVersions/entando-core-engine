@@ -18,6 +18,7 @@
 package org.entando.entando.aps.system.services.oauth.model;
 
 import java.util.Date;
+
 import net.oauth.OAuthConsumer;
 
 /**

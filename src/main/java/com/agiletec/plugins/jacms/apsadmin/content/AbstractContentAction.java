@@ -17,6 +17,12 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -29,12 +35,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SmallContentType;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Action Astratta Base per la gestione contenuti.

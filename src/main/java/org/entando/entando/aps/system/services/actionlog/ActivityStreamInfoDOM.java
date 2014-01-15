@@ -17,9 +17,6 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
 
@@ -29,6 +26,9 @@ import javax.xml.bind.Unmarshaller;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.api.UnmarshalUtils;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

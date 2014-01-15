@@ -17,8 +17,9 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+
+import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
  * @author E.Santoboni

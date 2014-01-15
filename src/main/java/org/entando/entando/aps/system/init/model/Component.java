@@ -17,14 +17,14 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
+
+import com.agiletec.aps.system.ApsSystemUtils;
 
 /**
  * @author E.Santoboni

@@ -17,6 +17,13 @@
 */
 package org.entando.entando.aps.system.services.userprofile;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.ApsEntityRecord;
@@ -24,13 +31,6 @@ import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.exception.ApsSystemException;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.entando.entando.aps.system.services.userprofile.model.UserProfile;
 
 /**
  * @author E.Santoboni

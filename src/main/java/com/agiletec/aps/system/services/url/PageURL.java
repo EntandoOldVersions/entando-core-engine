@@ -19,6 +19,7 @@ package com.agiletec.aps.system.services.url;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Rappresenta un URL ad una pagina del sistema. Oggetti di questa classe

@@ -19,10 +19,11 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresiz
 
 import javax.swing.ImageIcon;
 
+import org.entando.entando.aps.system.services.storage.IStorageManager;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
 
 /**
  * Interfaccia base per le classi delegate al redimensionameno e salvataggio di file tipo immagine.

@@ -17,19 +17,19 @@
 */
 package com.agiletec.apsadmin.portal.specialwidget;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.util.ApsProperties;
-import com.agiletec.apsadmin.portal.AbstractPortalAction;
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.slf4j.Logger;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.apsadmin.portal.AbstractPortalAction;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 /**
  * This action class handles the configuration of the widgets with parameters.

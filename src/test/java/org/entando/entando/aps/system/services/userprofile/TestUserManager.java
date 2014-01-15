@@ -17,17 +17,17 @@
 */
 package org.entando.entando.aps.system.services.userprofile;
 
-import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.SystemConstants;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
+import com.agiletec.aps.BaseTestCase;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.attribute.DateAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * @author E.Santoboni

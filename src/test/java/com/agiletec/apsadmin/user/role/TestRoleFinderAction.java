@@ -19,10 +19,8 @@ package com.agiletec.apsadmin.user.role;
 
 import java.util.List;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.services.role.Role;
-import com.agiletec.apsadmin.user.role.IRoleFinderAction;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
 
 /**

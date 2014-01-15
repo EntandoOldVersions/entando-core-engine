@@ -20,11 +20,10 @@ package com.agiletec.plugins.jacms.apsadmin.category;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.category.CategoryAction;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 

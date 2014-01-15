@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.apsadmin.portal.PageAction;
 
 public class TestTrashReferencedPage extends ApsAdminBaseTestCase {

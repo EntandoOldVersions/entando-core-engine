@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 /**

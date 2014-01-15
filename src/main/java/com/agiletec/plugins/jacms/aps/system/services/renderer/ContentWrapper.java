@@ -17,6 +17,8 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
+import org.springframework.beans.factory.BeanFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -25,11 +27,8 @@ import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.DateConverter;
-
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink;
-
-import org.springframework.beans.factory.BeanFactory;
 
 /**
  * Rappresenta un contenuto nella forma utilizzabile al servizio di renderizzazione. 

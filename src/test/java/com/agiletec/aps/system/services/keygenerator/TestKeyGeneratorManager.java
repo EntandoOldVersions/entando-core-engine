@@ -26,10 +26,8 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.keygenerator.IKeyGeneratorManager;
 
 /**
  * @version 1.0

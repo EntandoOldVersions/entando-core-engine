@@ -17,7 +17,6 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import java.util.HashMap;
 import java.util.Map;
 

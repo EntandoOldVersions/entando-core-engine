@@ -17,17 +17,10 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
-
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
-
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
-import static com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction.buildContentOnSessionMarker;
-import static com.opensymphony.xwork2.Action.SUCCESS;
 
 /**
  * Action gestore delle operazioni di creazione nuovo contenuto.

@@ -20,10 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.system.entity;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.entity.type.EntityTypesAction;
 import com.agiletec.apsadmin.system.entity.type.IEntityTypesAction;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;

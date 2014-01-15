@@ -20,9 +20,8 @@ package org.entando.entando.apsadmin.api;
 import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 
 import com.agiletec.aps.system.SystemConstants;
-import com.opensymphony.xwork2.Action;
-
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author E.Santoboni

@@ -17,11 +17,20 @@
 */
 package com.agiletec.aps.tags;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -35,16 +44,6 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.beanutils.BeanComparator;
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.springframework.web.context.WebApplicationContext;
 
 /**
  * Triggers the preliminary execution of the widget, it must be used

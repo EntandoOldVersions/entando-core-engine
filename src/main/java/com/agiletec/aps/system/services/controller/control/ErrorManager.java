@@ -17,8 +17,6 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
-import java.util.logging.Level;
-
 import javax.servlet.http.HttpServletResponse;
 
 import com.agiletec.aps.system.ApsSystemUtils;

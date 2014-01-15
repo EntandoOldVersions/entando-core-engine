@@ -17,7 +17,17 @@
 */
 package org.entando.entando.aps.system.init.util;
 
+import java.lang.reflect.Method;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.entando.entando.aps.system.init.IDatabaseManager;
+import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
+import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -30,17 +40,6 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
-
-import java.lang.reflect.Method;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
-import javax.sql.DataSource;
-
-import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
-import org.entando.entando.aps.system.init.IDatabaseManager;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
 
 /**
  * @author E.Santoboni

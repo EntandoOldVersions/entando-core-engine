@@ -20,9 +20,7 @@ package org.entando.entando.apsadmin.user;
 import java.util.List;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.opensymphony.xwork2.Action;
-import org.entando.entando.apsadmin.user.UserProfileFinderAction;
 
 /**
  * @version 1.0

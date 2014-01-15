@@ -17,8 +17,9 @@
 */
 package com.agiletec.aps.system.common.entity.model;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import java.io.Serializable;
+
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
 /**
  * @author E.Santoboni

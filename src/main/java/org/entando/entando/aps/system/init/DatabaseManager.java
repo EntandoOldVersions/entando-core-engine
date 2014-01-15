@@ -17,33 +17,38 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.ComponentEnvironment;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletContext;
+import javax.sql.DataSource;
+
+import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
+import org.entando.entando.aps.system.init.model.DataInstallationReport;
 import org.entando.entando.aps.system.init.model.DataSourceDumpReport;
 import org.entando.entando.aps.system.init.model.DataSourceInstallationReport;
-import org.entando.entando.aps.system.init.model.DataInstallationReport;
+import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
+import org.entando.entando.aps.system.init.util.TableFactory;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.web.context.ServletContextAware;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.aps.util.FileTextReader;
-
-import java.io.*;
-
-import java.util.*;
-import javax.servlet.ServletContext;
-import javax.sql.DataSource;
-import org.apache.commons.beanutils.BeanComparator;
-
-import org.entando.entando.aps.system.init.util.TableFactory;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
-
-import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.web.context.ServletContextAware;
 
 /**
  * @author E.Santoboni

@@ -17,13 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource;
 
+import java.util.Collection;
+import java.util.List;
+
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Interfaccia base per i servizi gestori tipi di risorse (immagini, audio, video, etc..).

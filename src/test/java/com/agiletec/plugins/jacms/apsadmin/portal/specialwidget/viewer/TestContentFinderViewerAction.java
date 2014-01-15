@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer.ContentFinderViewerAction;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 

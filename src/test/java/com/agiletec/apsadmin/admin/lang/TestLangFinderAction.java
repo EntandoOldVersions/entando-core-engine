@@ -19,10 +19,8 @@ package com.agiletec.apsadmin.admin.lang;
 
 import java.util.List;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.apsadmin.admin.lang.LangFinderAction;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
 
 /**

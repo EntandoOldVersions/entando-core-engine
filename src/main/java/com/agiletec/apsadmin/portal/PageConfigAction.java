@@ -16,19 +16,14 @@
 */
 package com.agiletec.apsadmin.portal;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.lang.Lang;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.system.services.role.Permission;
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
 /**
  * Main action class for the pages configuration.

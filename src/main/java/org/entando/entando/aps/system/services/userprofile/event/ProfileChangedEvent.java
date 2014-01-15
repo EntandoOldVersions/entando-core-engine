@@ -17,9 +17,10 @@
 */
 package org.entando.entando.aps.system.services.userprofile.event;
 
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.ApsEvent;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * @author E.Santoboni

@@ -17,14 +17,12 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.SearchEngineManager;
-import com.agiletec.plugins.jacms.apsadmin.content.ContentAdminAction;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 
 /**
  * @author E.Mezzano

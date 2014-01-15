@@ -17,11 +17,15 @@
 */
 package org.entando.entando.plugins.jacms.aps.system.services.cache;
 
+import java.util.List;
+
+import org.entando.entando.aps.system.services.cache.CacheInfoManager;
+import org.entando.entando.plugins.jacms.aps.system.services.MockContentListBean;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper;
@@ -32,15 +36,6 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
-
-import java.util.List;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.assertTrue;
-
-import org.entando.entando.aps.system.services.cache.CacheInfoManager;
-import org.entando.entando.plugins.jacms.aps.system.services.MockContentListBean;
 
 /**
  * @author E.Santoboni

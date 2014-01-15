@@ -18,9 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.resource.parse;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
 /**
  * @version 1.0

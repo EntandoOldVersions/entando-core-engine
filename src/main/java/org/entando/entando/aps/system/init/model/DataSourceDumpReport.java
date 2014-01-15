@@ -17,22 +17,23 @@
 */
 package org.entando.entando.aps.system.init.model;
 
-import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
-import org.entando.entando.aps.system.init.model.SystemInstallationReport;
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.util.DateConverter;
-
 import java.io.StringReader;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
-
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.util.DateConverter;
 
 /**
  * @author E.Santoboni

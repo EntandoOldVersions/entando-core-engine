@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentListTagBean;
-import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterOptionBean;
 
 /**
  * @author E.Santoboni

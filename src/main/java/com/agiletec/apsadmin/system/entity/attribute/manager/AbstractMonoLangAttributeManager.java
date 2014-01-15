@@ -18,8 +18,8 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
 /**
  * Base abstract class for those manager which handle mono-language simple attributes.

@@ -17,15 +17,14 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute.ImageAttribute;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ExtendedResourceFinderAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ResourceAttributeActionHelper;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.agiletec.plugins.jacms.apsadmin.resource.IResourceFinderAction;
 import com.opensymphony.xwork2.Action;
 

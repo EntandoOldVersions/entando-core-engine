@@ -22,6 +22,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -29,7 +31,6 @@ import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.IEntityActionHelper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.opensymphony.xwork2.ActionSupport;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 /**
  * Interfaccia per gli Helper della ContentAction.

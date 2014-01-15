@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.services.category.CategoryUtilizer;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 

@@ -17,9 +17,10 @@
 */
 package org.entando.entando.aps.system.init;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

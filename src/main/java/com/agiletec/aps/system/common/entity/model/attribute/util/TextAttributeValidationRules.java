@@ -17,6 +17,13 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.jdom.CDATA;
+import org.jdom.Element;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -26,11 +33,6 @@ import com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import org.jdom.CDATA;
-import org.jdom.Element;
 
 /**
  * @author E.Santoboni

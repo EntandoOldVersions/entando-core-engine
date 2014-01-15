@@ -20,7 +20,6 @@ package com.agiletec.apsadmin.system.services;
 import java.util.List;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.services.shortcut.IShortcutManager;

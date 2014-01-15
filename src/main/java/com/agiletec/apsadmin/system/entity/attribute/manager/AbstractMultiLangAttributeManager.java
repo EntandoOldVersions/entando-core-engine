@@ -20,8 +20,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
+import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.services.lang.Lang;
 
 /**

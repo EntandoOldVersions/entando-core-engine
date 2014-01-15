@@ -17,8 +17,9 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.dispenser;
 
-import com.agiletec.aps.BaseTestCase;
+import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 
+import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -26,8 +27,6 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
-
-import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 
 /**
  * @author W.Ambu - E.Santoboni

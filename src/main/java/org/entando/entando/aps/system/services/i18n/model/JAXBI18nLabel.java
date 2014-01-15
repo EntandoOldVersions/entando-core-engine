@@ -17,19 +17,20 @@
 */
 package org.entando.entando.aps.system.services.i18n.model;
 
-import java.util.ArrayList;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
-
-import com.agiletec.aps.util.ApsProperties;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
+
+import com.agiletec.aps.util.ApsProperties;
 
 /**
  * @author E.Santoboni

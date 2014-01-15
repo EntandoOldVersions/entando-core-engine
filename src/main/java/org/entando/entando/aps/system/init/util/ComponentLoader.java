@@ -17,22 +17,21 @@
 */
 package org.entando.entando.aps.system.init.util;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.util.FileTextReader;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-import org.slf4j.Logger;
 
 import org.entando.entando.aps.system.init.model.Component;
-
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.FileTextReader;
 
 /**
  * @author E.Santoboni

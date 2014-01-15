@@ -17,6 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
+import java.io.StringWriter;
+import java.util.List;
+
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.apache.velocity.context.Context;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -28,11 +35,6 @@ import com.agiletec.aps.system.services.i18n.I18nManagerWrapper;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
-import java.io.StringWriter;
-import java.util.List;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.context.Context;
 
 /**
  * Servizio di renderizzazione contenuti.

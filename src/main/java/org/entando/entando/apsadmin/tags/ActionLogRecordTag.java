@@ -17,11 +17,11 @@
 */
 package org.entando.entando.apsadmin.tags;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.apsadmin.tags.*;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
-
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.util.ApsWebApplicationUtils;
+import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
 
 /**
  * Returns a single record of Action Logger Manager (or one of its property) through the code.

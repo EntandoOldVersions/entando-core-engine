@@ -22,12 +22,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
-import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.ContentListViewerWidgetAction;
 import com.opensymphony.xwork2.Action;
 
 /**

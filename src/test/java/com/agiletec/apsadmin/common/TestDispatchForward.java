@@ -18,7 +18,6 @@
 package com.agiletec.apsadmin.common;
 
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.opensymphony.xwork2.Action;
 
 /**

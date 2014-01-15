@@ -20,12 +20,9 @@ package com.agiletec.aps.system.services.url;
 import java.util.Map;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
-import com.agiletec.aps.system.services.url.IURLManager;
-import com.agiletec.aps.system.services.url.PageURL;
 import com.agiletec.apsadmin.admin.SystemParamsUtils;
 
 /**

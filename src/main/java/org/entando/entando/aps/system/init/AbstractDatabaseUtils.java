@@ -17,18 +17,23 @@
 */
 package org.entando.entando.aps.system.init;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.File;
 import java.lang.reflect.Method;
-import org.entando.entando.aps.system.init.model.Component;
-import java.util.*;
-import javax.sql.DataSource;
-import org.entando.entando.aps.system.services.storage.IStorageManager;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import javax.sql.DataSource;
+
+import org.entando.entando.aps.system.init.model.Component;
+import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

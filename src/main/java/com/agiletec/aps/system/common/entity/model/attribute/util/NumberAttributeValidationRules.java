@@ -17,6 +17,8 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute.util;
 
+import java.util.List;
+
 import org.jdom.Element;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -26,7 +28,6 @@ import com.agiletec.aps.system.common.entity.model.FieldError;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.NumberAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
-import java.util.List;
 
 /**
  * @author E.Santoboni

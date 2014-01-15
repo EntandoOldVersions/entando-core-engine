@@ -17,7 +17,6 @@
 */
 package com.agiletec.apsadmin.tags;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import java.util.Collection;
 
 import javax.servlet.ServletRequest;
@@ -26,6 +25,7 @@ import javax.servlet.jsp.JspException;
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.apsadmin.tags.util.AdminPagerTagHelper;
 import com.agiletec.apsadmin.tags.util.ComponentPagerVO;

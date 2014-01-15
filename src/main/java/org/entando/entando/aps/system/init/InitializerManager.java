@@ -17,21 +17,22 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.Component;
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
+
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.model.ComponentEnvironment;
 import org.entando.entando.aps.system.init.model.ComponentInstallationReport;
 import org.entando.entando.aps.system.init.model.IPostProcess;
 import org.entando.entando.aps.system.init.model.InvalidPostProcessResultException;
-
 import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.FatalBeanException;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

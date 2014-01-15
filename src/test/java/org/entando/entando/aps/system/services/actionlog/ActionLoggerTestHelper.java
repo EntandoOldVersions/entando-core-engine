@@ -17,25 +17,26 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import org.entando.entando.aps.system.services.actionlog.ActionLogDAO;
-import org.entando.entando.aps.system.services.actionlog.IActionLogDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Date;
 
 import javax.sql.DataSource;
 
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.agiletec.aps.system.common.AbstractDAO;
-
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
 /**
  * @author E.Santoboni
  */
 public class ActionLoggerTestHelper extends AbstractDAO {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ActionLoggerTestHelper.class);
 	
 	public ActionLoggerTestHelper(ApplicationContext applicationContext) {
 		DataSource dataSource = (DataSource) applicationContext.getBean("servDataSource");
@@ -61,7 +62,9 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error on delete records" , "cleanRecords");
+			_logger.error("Error on delete records",  t);
+			throw new RuntimeException("Error on delete records", t);
+			//processDaoException(t, "Error on delete records" , "cleanRecords");
 		} finally {
 			closeConnection(conn);
 		}
@@ -73,7 +76,9 @@ public class ActionLoggerTestHelper extends AbstractDAO {
 			stat = conn.prepareStatement(query);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			processDaoException(t, "Error on delete records", "deleteRecords");
+			_logger.error("Error on delete records: {}", query,  t);
+			throw new RuntimeException("Error on delete records", t);
+			//processDaoException(t, "Error on delete records", "deleteRecords");
 		} finally {
 			closeDaoResources(null, stat);
 		}

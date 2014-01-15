@@ -20,9 +20,8 @@ package com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.listviewer.BaseFilterAction;
-import com.opensymphony.xwork2.Action;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author E.Santoboni

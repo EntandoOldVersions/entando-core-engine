@@ -18,7 +18,6 @@
 package com.agiletec.apsadmin.system.entity.type;
 
 import com.agiletec.aps.system.ApsSystemUtils;
-
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 

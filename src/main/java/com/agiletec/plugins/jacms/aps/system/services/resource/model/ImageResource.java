@@ -18,6 +18,8 @@
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -30,8 +32,6 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer.IImageResizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 /**
  * Classe rappresentante una risorsa Image.

@@ -17,11 +17,11 @@
 */
 package org.entando.entando.apsadmin.common;
 
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.BaseAction;
-
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 
 /**
  * @author E.Santoboni

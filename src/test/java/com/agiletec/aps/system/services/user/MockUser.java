@@ -23,7 +23,6 @@ import java.util.Set;
 
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.role.Role;
-import com.agiletec.aps.system.services.user.User;
 
 public class MockUser extends User {
 	

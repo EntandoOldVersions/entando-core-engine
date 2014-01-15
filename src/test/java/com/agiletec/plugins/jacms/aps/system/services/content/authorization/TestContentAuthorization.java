@@ -20,8 +20,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.authorization;
 import java.util.ArrayList;
 
 import com.agiletec.aps.BaseTestCase;
-import com.agiletec.aps.system.services.user.MockUser;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IApsAuthority;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -30,6 +28,7 @@ import com.agiletec.aps.system.services.group.GroupManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.role.RoleManager;
 import com.agiletec.aps.system.services.user.IUserManager;
+import com.agiletec.aps.system.services.user.MockUser;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;

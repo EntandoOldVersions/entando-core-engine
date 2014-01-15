@@ -18,10 +18,8 @@
 package com.agiletec.plugins.jacms.aps.system.services.contentpagemapper;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
-import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.IContentPageMapperManager;
 
 /**
  * @version 1.0

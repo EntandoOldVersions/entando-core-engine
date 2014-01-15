@@ -16,6 +16,16 @@
 */
 package com.agiletec.apsadmin.system.entity;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -32,18 +42,7 @@ import com.agiletec.apsadmin.system.BaseActionHelper;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AbstractAttributeManager;
 import com.agiletec.apsadmin.system.entity.attribute.manager.AttributeManagerInterface;
 import com.agiletec.apsadmin.util.CheckFormatUtil;
-
 import com.opensymphony.xwork2.ActionSupport;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * This abstract class supports all the helper classes that, in turn, support those

@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model.util;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -26,8 +27,6 @@ import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ImageDimensionDOM;
-
-import java.io.Serializable;
 
 /**
  * Classe delegata al caricamento 

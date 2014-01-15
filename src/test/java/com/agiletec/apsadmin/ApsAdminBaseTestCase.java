@@ -41,7 +41,6 @@ import org.springframework.mock.web.MockServletContext;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.agiletec.ConfigTestUtils;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.NotifyManager;

@@ -19,6 +19,7 @@ package com.agiletec.aps.system.common.entity;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,12 +27,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
 import org.xml.sax.InputSource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -53,7 +54,6 @@ import com.agiletec.aps.system.common.entity.parse.IEntityTypeFactory;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.util.DateConverter;
-import java.util.Arrays;
 
 /**
  * This abstract service must be extended in all those services that make use of ApsEntities.

@@ -17,8 +17,6 @@
 */
 package com.agiletec.apsadmin.system.dispatcher;
 
-import com.opensymphony.xwork2.inject.Container;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.dispatcher.Dispatcher;
 import org.apache.struts2.dispatcher.mapper.ActionMapper;
 import org.apache.struts2.dispatcher.mapper.ActionMapping;
+
+import com.opensymphony.xwork2.inject.Container;
 
 /**
  * @author E.Santoboni

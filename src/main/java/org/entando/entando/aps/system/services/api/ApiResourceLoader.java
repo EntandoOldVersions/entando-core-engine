@@ -22,17 +22,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-import org.slf4j.Logger;
-
-import javax.servlet.ServletContext;
 
 import org.entando.entando.aps.system.services.api.model.ApiResource;
+import org.slf4j.Logger;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * Shortcut Loader Class.

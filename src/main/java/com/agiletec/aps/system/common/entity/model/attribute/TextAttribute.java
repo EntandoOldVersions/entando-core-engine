@@ -17,9 +17,6 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;

@@ -17,21 +17,12 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeValidationRules;
-import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
-import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
-import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
-import com.agiletec.aps.system.common.entity.model.attribute.util.OgnlValidationRule;
-import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
-import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -40,6 +31,15 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.common.entity.model.attribute.util.BaseAttributeValidationRules;
+import com.agiletec.aps.system.common.entity.model.attribute.util.DateAttributeValidationRules;
+import com.agiletec.aps.system.common.entity.model.attribute.util.IAttributeValidationRules;
+import com.agiletec.aps.system.common.entity.model.attribute.util.NumberAttributeValidationRules;
+import com.agiletec.aps.system.common.entity.model.attribute.util.OgnlValidationRule;
+import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
+import com.agiletec.aps.system.common.searchengine.IndexableAttributeInterface;
 
 /**
  * @author E.Santoboni

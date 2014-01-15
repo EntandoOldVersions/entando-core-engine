@@ -17,11 +17,11 @@
 */
 package org.entando.entando.apsadmin.tags;
 
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
-
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 
 /**
  * Returns the list of like records of an activity through the code.

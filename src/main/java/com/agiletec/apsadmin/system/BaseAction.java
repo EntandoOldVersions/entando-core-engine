@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.interceptor.ParameterAware;
 import org.apache.struts2.interceptor.ServletRequestAware;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -35,9 +36,6 @@ import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 /**

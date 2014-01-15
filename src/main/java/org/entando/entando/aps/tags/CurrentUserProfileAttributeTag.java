@@ -19,10 +19,11 @@ package org.entando.entando.aps.tags;
 
 import javax.servlet.http.HttpSession;
 
+import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
 
 /**
  * Current User Profile tag.

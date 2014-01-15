@@ -17,11 +17,9 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
 
 /**

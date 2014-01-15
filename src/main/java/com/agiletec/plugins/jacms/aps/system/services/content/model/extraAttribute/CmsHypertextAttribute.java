@@ -17,14 +17,13 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribute;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import com.agiletec.aps.system.common.entity.model.attribute.HypertextAttribute;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;

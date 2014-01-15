@@ -17,12 +17,12 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
+import java.io.File;
+import java.io.InputStream;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
-
-import java.io.File;
-import java.io.InputStream;
 
 /**
  * Classe astratta di base per l'implementazione 

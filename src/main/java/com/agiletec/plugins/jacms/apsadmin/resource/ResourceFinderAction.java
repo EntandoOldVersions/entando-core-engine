@@ -17,6 +17,7 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.resource;
 
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,8 +29,6 @@ import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
-
-import java.net.URLConnection;
 
 /**
  * Classe Action delegata alla gestione delle operazioni di ricerca risorse.

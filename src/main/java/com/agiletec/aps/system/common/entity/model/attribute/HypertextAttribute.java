@@ -17,15 +17,15 @@
 */
 package com.agiletec.aps.system.common.entity.model.attribute;
 
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.CDATA;
 import org.jdom.Element;
 
 import com.agiletec.aps.util.HtmlHandler;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class represents a 'Hypertext' Attribute.

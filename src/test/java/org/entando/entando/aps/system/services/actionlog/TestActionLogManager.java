@@ -17,13 +17,14 @@
 */
 package org.entando.entando.aps.system.services.actionlog;
 
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import java.util.List;
+
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
+
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
-import java.util.List;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
 
 public class TestActionLogManager extends BaseTestCase {
 	

@@ -18,6 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
 import java.io.Serializable;
+
 import org.jdom.Element;
 
 /**

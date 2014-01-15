@@ -18,10 +18,8 @@
 package com.agiletec.aps.system.services.controller.control;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.services.controller.ControllerManager;
-import com.agiletec.aps.system.services.controller.control.ControlServiceInterface;
 
 /**
  * @author M.Diana

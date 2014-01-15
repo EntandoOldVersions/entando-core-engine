@@ -17,12 +17,10 @@
 */
 package com.agiletec.apsadmin.system;
 
-import java.util.logging.Level;
-import org.slf4j.Logger;
-
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;

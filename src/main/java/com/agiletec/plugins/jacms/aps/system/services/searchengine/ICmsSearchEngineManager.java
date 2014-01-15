@@ -17,8 +17,9 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.searchengine;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * Interfaccia base per i servizi detentori delle operazioni di indicizzazione 

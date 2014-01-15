@@ -18,16 +18,10 @@ package com.agiletec.apsadmin.system.entity.attribute.manager;
 
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.FieldError;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.MonoTextAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.util.TextAttributeValidationRules;
-
 import com.opensymphony.xwork2.ActionSupport;
 
 /**

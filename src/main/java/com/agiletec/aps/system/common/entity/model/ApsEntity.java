@@ -17,8 +17,6 @@
 */
 package com.agiletec.aps.system.common.entity.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +28,7 @@ import java.util.Set;
 
 import org.jdom.Element;
 
+import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.parse.IApsEntityDOM;
 import com.agiletec.aps.system.services.category.Category;

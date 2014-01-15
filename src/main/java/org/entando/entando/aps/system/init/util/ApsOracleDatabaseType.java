@@ -17,9 +17,10 @@
 */
 package org.entando.entando.aps.system.init.util;
 
+import java.util.List;
+
 import com.j256.ormlite.db.OracleDatabaseType;
 import com.j256.ormlite.field.FieldType;
-import java.util.List;
 
 /**
  * @author E.Santoboni

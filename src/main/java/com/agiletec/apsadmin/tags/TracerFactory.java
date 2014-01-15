@@ -21,7 +21,6 @@ import org.apache.struts2.components.Component;
 
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.services.lang.Lang;
-
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**

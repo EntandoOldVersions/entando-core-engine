@@ -17,9 +17,8 @@
 */
 package org.entando.entando.aps.system.services.oauth;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,17 +38,17 @@ import net.oauth.SimpleOAuthValidator;
 import net.oauth.server.OAuthServlet;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
+import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
+import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
-
 import com.agiletec.aps.util.DateConverter;
-import java.util.Date;
-import org.entando.entando.aps.system.services.oauth.model.ConsumerRecordVO;
-import org.entando.entando.aps.system.services.oauth.model.EntandoOAuthAccessor;
-import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
 
 /**
  * Manager of consumers, access token (stored in database and in local cache) 

@@ -17,19 +17,21 @@
 */
 package org.entando.entando.aps.system.services.i18n;
 
+import java.util.Iterator;
+import java.util.Properties;
+
+import javax.ws.rs.core.Response;
+
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
-import java.util.Iterator;
-import java.util.Properties;
-import javax.ws.rs.core.Response;
-import org.entando.entando.aps.system.services.api.IApiErrorCodes;
-
-import org.entando.entando.aps.system.services.api.model.ApiException;
-import org.entando.entando.aps.system.services.i18n.model.JAXBI18nLabel;
 
 /**
  * @author E.Santoboni

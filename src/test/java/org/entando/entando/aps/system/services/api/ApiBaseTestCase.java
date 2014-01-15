@@ -19,11 +19,9 @@ package org.entando.entando.aps.system.services.api;
 
 import javax.sql.DataSource;
 
-import org.entando.entando.aps.system.services.api.IApiCatalogManager;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 
 import com.agiletec.aps.BaseTestCase;
-
 import com.agiletec.aps.system.SystemConstants;
 
 /**

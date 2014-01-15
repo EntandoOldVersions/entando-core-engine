@@ -19,13 +19,12 @@ package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
 import java.util.List;
 
-import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.apsadmin.portal.IPageTreeAction;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.ITreeAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.hypertext.ContentLinkAttributeAction;
+import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
 
 /**

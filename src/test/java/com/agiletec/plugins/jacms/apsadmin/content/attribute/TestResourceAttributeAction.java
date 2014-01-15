@@ -17,6 +17,8 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content.attribute;
 
+import javax.servlet.http.HttpSession;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -28,10 +30,7 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.resource.ResourceAttributeActionHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
-
 import com.opensymphony.xwork2.Action;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * @author E.Santoboni

@@ -20,8 +20,6 @@ package com.agiletec.aps.util;
 
 import com.agiletec.aps.BaseTestCase;
 
-import com.agiletec.aps.util.DefaultApsEncrypter;
-
 
 public class TestDefaultApsEncrypter extends BaseTestCase {
 

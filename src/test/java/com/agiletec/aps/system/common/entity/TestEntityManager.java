@@ -23,9 +23,6 @@ import java.util.Map;
 import org.springframework.beans.factory.ListableBeanFactory;
 
 import com.agiletec.aps.BaseTestCase;
-
-import com.agiletec.aps.system.common.entity.IEntityManager;
-import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 

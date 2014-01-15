@@ -20,10 +20,16 @@ package org.entando.entando.apsadmin.api;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.beanutils.BeanComparator;
+import org.entando.entando.aps.system.services.api.IApiCatalogManager;
+import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.ApiResource;
+import org.entando.entando.aps.system.services.api.model.ApiService;
+import org.entando.entando.apsadmin.api.helper.SchemaGeneratorActionHelper;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -31,14 +37,6 @@ import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.BaseAction;
-
-import org.apache.commons.beanutils.BeanComparator;
-
-import org.entando.entando.aps.system.services.api.IApiCatalogManager;
-import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.api.model.ApiResource;
-import org.entando.entando.aps.system.services.api.model.ApiService;
-import org.entando.entando.apsadmin.api.helper.SchemaGeneratorActionHelper;
 
 /**
  * @author E.Santoboni

@@ -18,20 +18,19 @@
 package org.entando.entando.apsadmin.api.helper;
 
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBContext;
+
+import org.entando.entando.aps.system.services.api.model.ApiMethod;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
-
-import java.lang.reflect.Method;
-import java.util.Properties;
-import javax.servlet.http.HttpServletRequest;
-
-import org.entando.entando.aps.system.services.api.model.ApiMethod;
-import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 
 /**
  * @author E.Santoboni

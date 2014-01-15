@@ -17,17 +17,20 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.Component;
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
 
-import com.agiletec.aps.util.FileTextReader;
-import java.io.*;
-import java.util.*;
 import javax.sql.DataSource;
 
+import org.entando.entando.aps.system.init.model.Component;
 import org.entando.entando.aps.system.init.util.TableDataUtils;
 import org.entando.entando.aps.system.init.util.TableFactory;
+
+import com.agiletec.aps.system.ApsSystemUtils;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.util.FileTextReader;
 
 /**
  * @author E.Santoboni

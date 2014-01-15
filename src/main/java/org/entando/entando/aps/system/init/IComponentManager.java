@@ -17,9 +17,11 @@
 */
 package org.entando.entando.aps.system.init;
 
-import org.entando.entando.aps.system.init.model.Component;
-import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.List;
+
+import org.entando.entando.aps.system.init.model.Component;
+
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni

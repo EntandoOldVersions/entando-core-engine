@@ -17,7 +17,7 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
-import java.util.logging.Level;
+import java.net.URLDecoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,8 +30,6 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
-
-import java.net.URLDecoder;
 
 /**
  * Sottoservizio di controllo esecutore dell'autenticazione.
