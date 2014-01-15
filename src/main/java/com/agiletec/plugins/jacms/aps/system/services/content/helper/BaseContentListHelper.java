@@ -28,10 +28,11 @@ import java.util.Set;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -46,7 +47,9 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class BaseContentListHelper implements IContentListHelper {
-    
+  
+	private static final Logger _logger = LoggerFactory.getLogger(BaseContentListHelper.class);
+	
 	@Override
     public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, String langCode) {
         Content contentPrototype = this.getContentManager().createContentType(contentType);
@@ -98,7 +101,8 @@ public class BaseContentListHelper implements IContentListHelper {
             Collection<String> userGroupCodes = getAllowedGroupCodes(user); //this.getAllowedGroups(user);
             contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), bean.getCategories(), bean.getFilters(), userGroupCodes);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "extractContentsId");
+        	_logger.error("Error extracting contents id", t);
+            //ApsSystemUtils.logThrowable(t, this, "extractContentsId");
             throw new ApsSystemException("Error extracting contents id", t);
         }
         return contentsId;

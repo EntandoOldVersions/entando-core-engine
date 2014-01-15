@@ -19,7 +19,8 @@ package com.agiletec.plugins.jacms.aps.system.services.resource;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Thread Class delegate to execute resource refresh operations.
@@ -28,6 +29,8 @@ import com.agiletec.aps.system.ApsSystemUtils;
  * @author E.Santoboni
  */
 public class ResourceReloaderThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceReloaderThread.class);
 	
 	public ResourceReloaderThread(ResourceManager resourceManager, int operationCode, List<String> resources) {
 		this._resourceManager = resourceManager;
@@ -53,7 +56,8 @@ public class ResourceReloaderThread extends Thread {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		} finally {
 			this._resourceManager.setStatus(IResourceManager.STATUS_READY);
 		}

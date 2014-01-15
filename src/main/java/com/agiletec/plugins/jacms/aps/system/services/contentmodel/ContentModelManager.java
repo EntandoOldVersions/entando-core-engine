@@ -23,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
@@ -39,12 +41,13 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.event.Content
  * @author S.Didaci - C.Siddi - C.Sirigu
  */
 public class ContentModelManager extends AbstractService implements IContentModelManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentModelManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadContentModels();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
-				+ ": inizializzati " + _contentModels.size() + " modelli di contenuto");
+		_logger.debug("{} ready. Initialized {} content models", this.getClass().getName(),_contentModels.size());
 	}
 	
 	/**
@@ -72,8 +75,9 @@ public class ContentModelManager extends AbstractService implements IContentMode
 			_contentModels.put(wrapLongId, model);
 			this.notifyContentModelChanging(model, ContentModelChangedEvent.INSERT_OPERATION_CODE);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addContentModel");
-			throw new ApsSystemException("Errore in aggiunta modello di contenuto", t);
+			_logger.error("Error saving a contentModel", t);
+			//ApsSystemUtils.logThrowable(t, this, "addContentModel");
+			throw new ApsSystemException("Error saving a contentModel", t);
 		}
 	}
 	
@@ -89,8 +93,8 @@ public class ContentModelManager extends AbstractService implements IContentMode
 			_contentModels.remove(new Long(model.getId()));
 			this.notifyContentModelChanging(model, ContentModelChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeContentModel");
-			throw new ApsSystemException("Errore in rimozione modello di contenuto", t);
+			_logger.error("Error deleting a content model", t);			
+			throw new ApsSystemException("Error deleting a content model", t);
 		}
 	}
 	
@@ -106,8 +110,9 @@ public class ContentModelManager extends AbstractService implements IContentMode
 			this._contentModels.put(new Long(model.getId()), model);
 			this.notifyContentModelChanging(model, ContentModelChangedEvent.UPDATE_OPERATION_CODE);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateContentModel");
-			throw new ApsSystemException("Errore in aggiornamento modello di contenuto", t);
+			_logger.error("Error updating a content model", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateContentModel");
+			throw new ApsSystemException("Error updating a content model", t);
 		}
 	}
 	

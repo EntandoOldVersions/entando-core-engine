@@ -22,8 +22,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -35,6 +36,8 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
  * @author E.Santoboni
  */
 public class ContentFinderViewerAction extends ContentFinderAction implements IContentFinderViewerAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentFinderViewerAction.class);
 	
 	@Override
 	public List<String> getContents() {
@@ -47,7 +50,8 @@ public class ContentFinderViewerAction extends ContentFinderAction implements IC
 			 * da tutti i gruppi a cui appartiene la pagina.
 			 */
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContents");
+			_logger.error("Error searching contents ", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContents");
 			throw new RuntimeException("Errore in ricerca contenuti", t);
 		}
 		return result;

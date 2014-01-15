@@ -29,6 +29,8 @@ import org.apache.commons.collections.ListUtils;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.searchengine.IEntitySearchEngineManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -54,6 +56,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.Filter
  * @author E.Santoboni
  */
 public class ContentListHelper extends BaseContentListHelper implements IContentListWidgetHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentListHelper.class);
 	
 	@Override
 	public EntitySearchFilter[] getFilters(String contentType, String filtersShowletParam, RequestContext reqCtx) {
@@ -110,7 +114,8 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			contentsId = this.extractContentsId(bean, reqCtx);
 			contentsId = this.executeFullTextSearch(bean, contentsId, reqCtx);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentsId");
+			_logger.error("Error extracting contents id", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
@@ -160,7 +165,8 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			contentsId = this.getContentManager().loadPublicContentsId(bean.getContentType(), 
                                 categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractContentsId");
+			_logger.error("Error extracting contents id", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
@@ -327,7 +333,8 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 				userEntityFilters = FilterUtils.getUserFilters(userFilters, currentFrame, currentLang, prototype, this.getUserFilterDateFormat(), reqCtx.getRequest());	
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getConfiguredUserFilters");
+			_logger.error("Error extracting user filters", t);
+			//ApsSystemUtils.logThrowable(t, this, "getConfiguredUserFilters");
 			throw new ApsSystemException("Error extracting user filters", t);
 		}
 		return userEntityFilters;

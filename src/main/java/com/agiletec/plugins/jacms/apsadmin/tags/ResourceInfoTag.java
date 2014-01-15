@@ -17,7 +17,9 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.tags;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.tags.AbstractObjectInfoTag;
@@ -32,6 +34,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
  * @author E.Santoboni
  */
 public class ResourceInfoTag extends AbstractObjectInfoTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceInfoTag.class);
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
@@ -39,8 +43,9 @@ public class ResourceInfoTag extends AbstractObjectInfoTag {
 			IResourceManager resourceManager = (IResourceManager) ApsWebApplicationUtils.getBean(JacmsSystemConstants.RESOURCE_MANAGER, this.pageContext);
 			return resourceManager.loadResource(keyValue);
 		} catch (Throwable t) {
+			_logger.error("Error extracting resource : id '{}'", keyValue, t);
 			String message = "Error extracting resource : id '" + keyValue + "'";
-			ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
+			//ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
 			throw new ApsSystemException(message, t);
 		}
 	}

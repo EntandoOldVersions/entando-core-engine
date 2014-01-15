@@ -33,6 +33,8 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -48,6 +50,8 @@ import com.agiletec.aps.system.services.lang.Lang;
  * @author W.Ambu
  */
 public class IndexerDAO implements IIndexerDAO {
+
+	private static final Logger _logger = LoggerFactory.getLogger(IndexerDAO.class);
 	
 	/**
 	 * Inizializzazione dell'indicizzatore.
@@ -75,8 +79,8 @@ public class IndexerDAO implements IIndexerDAO {
             Document document = this.createDocument(entity);
             this.add(document);
         } catch (ApsSystemException e) {
-        	ApsSystemUtils.logThrowable(e, this, "addContentToIndex", 
-        			"Errore in aggiunta di un contenuto");
+        	_logger.error("Errore saving entity {}", entity.getId(), e);
+        	//ApsSystemUtils.logThrowable(e, this, "addContentToIndex", "Errore in aggiunta di un contenuto");
             throw e;
         }
 	}

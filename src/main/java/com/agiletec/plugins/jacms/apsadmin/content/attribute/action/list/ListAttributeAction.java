@@ -19,7 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.list;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
@@ -30,12 +32,14 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
 
 /**
- * Classi action base delegata
+ * Classi action base delegata 
  * alla gestione delle operazione sugli attributi di contenuto tipo lista.
  * @author E.Santoboni
  */
 public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.attribute.action.list.ListAttributeAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ListAttributeAction.class);
+	
 	@Override
 	public String addListElement() {
 		try {
@@ -62,46 +66,47 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 				return "chooseLink";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addListElement");
+			_logger.error("error in addListElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "addListElement");
 			return FAILURE;
 		}
 	}
-
+	
 	@Override
 	protected IApsEntity getCurrentApsEntity() {
 		Content content = this.updateContentOnSession();
 		return content;
 	}
-
+	
 	public Content getContent() {
 		return (Content) this.getRequest().getSession()
 				.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
-
+	
 	protected Content updateContentOnSession() {
 		Content content = this.getContent();
 		this.getContentActionHelper().updateEntity(content, this.getRequest());
 		return content;
 	}
-
+	
 	public String getEntryContentAnchorDest() {
 		return "contentedit_" + this.getListLangCode() + "_" + this.getAttributeName();
 	}
-
+	
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
 		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
-
+	
 	public String getResourceTypeCode() {
 		return _resourceTypeCode;
 	}
 	protected void setResourceTypeCode(String resourceTypeCode) {
 		this._resourceTypeCode = resourceTypeCode;
 	}
-
+	
 	/**
 	 * Restituisce la classe helper della gestione contenuti.
 	 * @return La classe helper della gestione contenuti.
@@ -109,7 +114,7 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 	protected IContentActionHelper getContentActionHelper() {
 		return _contentActionHelper;
 	}
-
+	
 	/**
 	 * Setta la classe helper della gestione contenuti.
 	 * @param contentActionHelper La classe helper della gestione contenuti.
@@ -117,10 +122,10 @@ public class ListAttributeAction extends com.agiletec.apsadmin.system.entity.att
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
-
+	
 	private String _contentOnSessionMarker;
 	private String _resourceTypeCode;
-
+	
 	private IContentActionHelper _contentActionHelper;
-
+	
 }

@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -51,10 +53,12 @@ import com.agiletec.plugins.jacms.aps.system.services.renderer.IContentRenderer;
  * @author M.Diana - E.Santoboni
  */
 public class BaseContentDispenser extends AbstractService implements IContentDispenser {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseContentDispenser.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
+		ApsSystemUtils.getLogger().debug("{} ready", this.getClass().getName());
 	}
 	
 	@Override
@@ -99,7 +103,8 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			String finalRenderedContent = this._linkResolver.resolveLinks(renderInfo.getCachedRenderedContent(), reqCtx);
 			renderInfo.setRenderedContent(finalRenderedContent);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
+			_logger.error("Error while rendering content {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
 			return null;
 		}
 		return renderInfo;
@@ -119,7 +124,8 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
+			_logger.error("Error while rendering content {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
 			return null;
 		}
 		return renderInfo;

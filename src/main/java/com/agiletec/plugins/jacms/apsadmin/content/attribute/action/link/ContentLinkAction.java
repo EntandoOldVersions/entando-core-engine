@@ -22,6 +22,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -37,6 +40,8 @@ import com.agiletec.plugins.jacms.apsadmin.content.attribute.action.link.helper.
  * @author E.Santoboni
  */
 public class ContentLinkAction extends ContentFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentLinkAction.class);
 	
 	@Override
 	public List<String> getContents() {
@@ -45,8 +50,9 @@ public class ContentLinkAction extends ContentFinderAction {
 			List<String> allowedGroups = this.getContentGroupCodes();
 			result = this.getContentManager().loadPublicContentsId(null, this.createFilters(), allowedGroups);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContents");
-			throw new RuntimeException("Errore in ricerca contenuti", t);
+			_logger.error("error loading contents", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContents");
+			throw new RuntimeException("error loading contents", t);
 		}
 		return result;
 	}

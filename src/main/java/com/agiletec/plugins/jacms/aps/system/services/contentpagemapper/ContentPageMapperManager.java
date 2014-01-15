@@ -18,6 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.contentpagemapper;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
@@ -37,12 +38,13 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
  */
 public class ContentPageMapperManager extends AbstractService 
 		implements IContentPageMapperManager, PageChangedObserver {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentPageMapperManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.createContentPageMapper();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() 
-				+ ": inizializzato Mapper Contenuti pubblicati / pagine " );
+		_logger.debug("{} ready.", this.getClass().getName());
 	}
 	
     /**
@@ -69,8 +71,9 @@ public class ContentPageMapperManager extends AbstractService
             IPage root = this.getPageManager().getRoot();
             this.searchPublishedContents(root);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "createContentPageMapper");
-            throw new ApsSystemException("Errore in fase caricamento mappa contenuti pubblicati / pagine", t);
+        	_logger.error("Errore loading ContentPageMapper", t);
+            //ApsSystemUtils.logThrowable(t, this, "createContentPageMapper");
+            throw new ApsSystemException("Errore loading ContentPageMapper", t);
         }
     }
     
@@ -108,7 +111,8 @@ public class ContentPageMapperManager extends AbstractService
 			Logger log = ApsSystemUtils.getLogger();
 			log.info("Notificato modifica pagina " + event.getPage().getCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromPageChanged", "Errore in notificazione Evento");
+			_logger.error("Error notifying event", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromPageChanged", "Errore in notificazione Evento");
 		}
 	}
     

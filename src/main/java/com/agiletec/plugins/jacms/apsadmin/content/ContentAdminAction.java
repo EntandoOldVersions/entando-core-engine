@@ -17,6 +17,9 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -29,14 +32,17 @@ import com.agiletec.plugins.jacms.aps.system.services.searchengine.LastReloadInf
  * @author E.Santoboni
  */
 public class ContentAdminAction extends BaseAction implements IContentAdminAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentAdminAction.class);
 	
 	@Override
 	public String reloadContentsIndex() {
 		try {
 			this.getSearchEngineManager().startReloadContentsReferences();
-			ApsSystemUtils.getLogger().info("Ricaricamento indicizzazione dei contenuti avviata");
+			_logger.info("Reload contents index started");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadContentsIndex");
+			_logger.error("error in reloadContentsIndex", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadContentsIndex");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -47,9 +53,10 @@ public class ContentAdminAction extends BaseAction implements IContentAdminActio
 		try {
 			String typeCode = null;
 			this.getContentManager().reloadEntitiesReferences(typeCode);
-			ApsSystemUtils.getLogger().info("Ricaricamento referenze contenuti avviato");
+			ApsSystemUtils.getLogger().info("Reload contents reference started");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadContentsReference");
+			_logger.error("error in reloadContentsReference", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadContentsReference");
 			return FAILURE;
 		}
 		return SUCCESS;

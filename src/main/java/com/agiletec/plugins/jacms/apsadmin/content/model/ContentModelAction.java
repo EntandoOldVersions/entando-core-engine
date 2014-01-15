@@ -27,7 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -46,6 +48,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
  * @author E.Santoboni
  */
 public class ContentModelAction extends BaseAction implements IContentModelAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentModelAction.class);
 	
 	@Override
 	public void validate() {
@@ -82,7 +86,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 			ContentModel model = this.getContentModelManager().getContentModel(modelId);
 			this.setFormValues(model);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -98,7 +103,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 				this.getContentModelManager().updateContentModel(model);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -134,7 +140,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 				return "noModel";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -151,7 +158,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 			ContentModel model = this.getContentModelManager().getContentModel(modelId);
 			this.getContentModelManager().removeContentModel(model);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -208,7 +216,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 		try {
 			contentVo = this.getContentManager().loadContentVO(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVo");
+			_logger.error("error loading getContentVo for {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentVo");
 			throw new RuntimeException("Errore in caricamento contenuto vo", t);
 		}
 		return contentVo;
@@ -242,7 +251,8 @@ public class ContentModelAction extends BaseAction implements IContentModelActio
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedAttributeMethods");
+			_logger.error("error in getAllowedAttributeMethods", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedAttributeMethods");
 		}
 		return methods;
 	}

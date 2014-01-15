@@ -26,8 +26,9 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInstance;
@@ -37,6 +38,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceIns
  * @author E.Santoboni
  */
 public abstract class AbstractImageResizer implements IImageResizer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractImageResizer.class);
 	
 	@Override
 	public ResourceInstance saveResizedImage(String subPath, boolean isProtectedResource, 
@@ -56,8 +59,9 @@ public abstract class AbstractImageResizer implements IImageResizer {
 			resizedInstance.setFileLength(String.valueOf(realLength) + " Kb");
 			tempFile.delete();
 		} catch (Throwable t) {
+			_logger.error("Error creating resized Image", t);
 			String msg = "Error creating resigned Image";
-			ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
+			//ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
 			throw new ApsSystemException(msg, t);
 		}
 		String mimeType = URLConnection.guessContentTypeFromName(filename);

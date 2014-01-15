@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceDataBean;
@@ -33,14 +35,17 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @deprecated Since Entando 3.2.1. Use IStorageManager
  */
 public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceInstanceFileHelper.class);
+	
 	@Override
 	@Deprecated
     public void save(String filePath, ResourceDataBean bean) throws ApsSystemException {
         try {
             this.save(filePath, bean.getInputStream());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
+        	_logger.error("Error on saving file. path: {}", filePath, t);
+            //ApsSystemUtils.logThrowable(t, this, "save");
             throw new ApsSystemException("Error on saving file", t);
         }
     }
@@ -59,7 +64,8 @@ public class ResourceInstanceFileHelper implements IResourceInstanceHelper {
             outStream.close();
             is.close();
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "save");
+        	_logger.error("Error on saving file {}", filePath, t);
+            //ApsSystemUtils.logThrowable(t, this, "save");
             throw new ApsSystemException("Error on saving file", t);
         }
     }

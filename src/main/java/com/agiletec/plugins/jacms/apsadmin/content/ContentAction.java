@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.category.Category;
@@ -45,6 +45,8 @@ import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
  */
 public class ContentAction extends AbstractContentAction implements IContentAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ContentAction.class);
+	
 	@Override
 	public void validate() {
 		Content content = this.updateContentOnSession();
@@ -60,14 +62,15 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				throw new ApsSystemException("Contenuto in edit '" + this.getContentId() + "' nullo!");
 			}
 			if (!this.isUserAllowed(content)) {
-				ApsSystemUtils.getLogger().info("Utente non abilitato all'editazione del contenuto " + content.getId());
+				_logger.info("Utente non abilitato all'editazione del contenuto {}", content.getId());
 				return USER_NOT_ALLOWED;
 			}
 			String marker = buildContentOnSessionMarker(content, ApsAdminSystemConstants.EDIT);
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -82,7 +85,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 						+ this.getContentId() + "' nullo ; copia di contenuto pubblico " + this.isCopyPublicVersion());
 			}
 			if (!this.isUserAllowed(content)) {
-				ApsSystemUtils.getLogger().info("Utente non abilitato all'accesso del contenuto " + content.getId());
+				_logger.info("Utente non abilitato all'accesso del contenuto {}", content.getId());
 				return USER_NOT_ALLOWED;
 			}
 			String marker = buildContentOnSessionMarker(content, ApsAdminSystemConstants.PASTE);
@@ -92,7 +95,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, content);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "copyPaste");
+			_logger.error("error in copyPaste", t);
+			//ApsSystemUtils.logThrowable(t, this, "copyPaste");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -112,7 +116,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setMainGroup");
+			_logger.error("error in setMainGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "setMainGroup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -130,7 +135,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContent().addCategory(category);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "joinCategory");
+			_logger.error("error in joinCategory", t);
+			//ApsSystemUtils.logThrowable(t, this, "joinCategory");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -147,7 +153,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContent().removeCategory(category);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeCategory");
+			_logger.error("error in removeCategory", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeCategory");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -163,7 +170,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContent().addGroup(extraGroupName);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "joinGroup");
+			_logger.error("error in joinGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "joinGroup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -179,7 +187,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContent().getGroups().remove(group.getName());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeGroup");
+			_logger.error("error in removeGroup", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeGroup");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -198,7 +207,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
+			_logger.error("error in saveAndContinue", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveAndContinue");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -215,7 +225,6 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 	}
 
 	protected String saveContent(boolean approve) {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			Content currentContent = this.getContent();
 			if (null != currentContent) {
@@ -224,7 +233,7 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 					strutsAction += 10;
 				}
 				if (!this.getContentActionHelper().isUserAllowed(currentContent, this.getCurrentUser())) {
-					log.info("Utente non abilitato al salvataggio del contenuto " + currentContent.getId());
+					_logger.info("User not allowed to save content {}", currentContent.getId());
 					return USER_NOT_ALLOWED;
 				}
 				currentContent.setLastEditor(this.getCurrentUser().getUsername());
@@ -235,13 +244,13 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				}
 				this.addActivityStreamInfo(currentContent, strutsAction, true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
-				log.info("Salvato contenuto " + currentContent.getId() +
-						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
+				_logger.info("Saving content {} - Description: '{}' - User: {}",   currentContent.getId(), currentContent.getDescr(), this.getCurrentUser().getUsername());
 			} else {
-				log.error("Tentativo Salvataggio/approvazione contenuto NULLO - Utente: " + this.getCurrentUser().getUsername());
+				_logger.error("Save/approve NULL content - User: {}", this.getCurrentUser().getUsername());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveContent");
+			_logger.error("error in saveContent", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveContent");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -249,12 +258,11 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 
 	@Override
 	public String suspend() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			Content currentContent = this.updateContentOnSession();
 			if (null != currentContent) {
 				if (!this.getContentActionHelper().isUserAllowed(currentContent, this.getCurrentUser())) {
-					ApsSystemUtils.getLogger().info("Utente non abilitato alla rimozione dall'area pubblica del contenuto " + currentContent.getId());
+					_logger.info("User not allowed to unpublish content {}", currentContent.getId());
 					return USER_NOT_ALLOWED;
 				}
 				Map references = this.getContentActionHelper().getReferencingObjects(currentContent, this.getRequest());
@@ -265,11 +273,11 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				this.getContentManager().removeOnLineContent(currentContent);
 				this.addActivityStreamInfo(currentContent, (ApsAdminSystemConstants.DELETE + 10), true);
 				this.getRequest().getSession().removeAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + super.getContentOnSessionMarker());
-				log.info("Sospeso contenuto " + currentContent.getId() +
-						" - Descrizione: '" + currentContent.getDescr() + "' - Utente: " + this.getCurrentUser().getUsername());
+				_logger.info("Content {} suspended - Description: '{}' - Utente: {}", currentContent.getId(), currentContent.getDescr(), this.getCurrentUser().getUsername());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "suspend");
+			_logger.error("error in suspend", t);
+			//ApsSystemUtils.logThrowable(t, this, "suspend");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -306,7 +314,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				pages = ((ContentUtilizer) pageManager).getContentUtilizers(content.getId());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getShowingPages");
+			_logger.error("error loading referenced pages", t);
+			//ApsSystemUtils.logThrowable(t, this, "getShowingPages");
 			throw new RuntimeException("Errore in estrazione pagine referenziate", t);
 		}
 		return pages;
@@ -335,7 +344,8 @@ public class ContentAction extends AbstractContentAction implements IContentActi
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getShowingPageSelectItems");
+			_logger.error("Error on extracting showing pages", t);
+			//ApsSystemUtils.logThrowable(t, this, "getShowingPageSelectItems");
 			throw new RuntimeException("Error on extracting showing pages", t);
 		}
 		return pageItems;

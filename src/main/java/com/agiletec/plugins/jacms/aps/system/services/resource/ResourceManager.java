@@ -28,6 +28,8 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -56,10 +58,11 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceHan
 public class ResourceManager extends AbstractService 
 		implements IResourceManager, GroupUtilizer, CategoryUtilizer {
 	
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceManager.class);
+	
 	@Override
 	public void init() throws Exception {
-    	ApsSystemUtils.getLogger().debug(this.getClass().getName() + 
-        		": initialized " + this._resourceTypes.size() + " resource types");
+    	_logger.debug("{} ready. Initialized {} resource types", this.getClass().getName(), this._resourceTypes.size());
 	}
 	
 	/**
@@ -97,7 +100,8 @@ public class ResourceManager extends AbstractService
     		this.getResourceDAO().addResource(newResource);
     	} catch (Throwable t) {
 			newResource.deleteResourceInstances();
-			ApsSystemUtils.logThrowable(t, this, "addResource");
+			_logger.error("Error adding resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "addResource");
 			throw new ApsSystemException("Error adding resource", t);
     	}
 		return newResource;
@@ -114,7 +118,8 @@ public class ResourceManager extends AbstractService
 			this.generateAndSetResourceId(resource, resource.getId());
     		this.getResourceDAO().addResource(resource);
     	} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addResource");
+    		_logger.error("Error adding resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "addResource");
 			throw new ApsSystemException("Error adding resource", t);
     	}
     }
@@ -147,7 +152,8 @@ public class ResourceManager extends AbstractService
 				this.notifyResourceChanging(updatedResource);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateResource");
+			_logger.error("Error updating resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateResource");
 			throw new ApsSystemException("Error updating resource", t);
 		}
 	}
@@ -163,7 +169,8 @@ public class ResourceManager extends AbstractService
 			this.getResourceDAO().updateResource(resource);
 			this.notifyResourceChanging(resource);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateResource");
+			_logger.error("Error updating resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateResource");
 			throw new ApsSystemException("Error updating resource", t);
 		}
 	}
@@ -213,8 +220,9 @@ public class ResourceManager extends AbstractService
     	try {
     		resourcesId = this.getResourceDAO().searchResourcesId(type, text, filename, categoryCode, groupCodes);
     	} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
-			throw new ApsSystemException("Error extracting resources id", t);
+    		_logger.error("Error searching resources id", t);
+			//ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
+			throw new ApsSystemException("Error searching resources id", t);
     	}
     	return resourcesId;
     }
@@ -226,8 +234,9 @@ public class ResourceManager extends AbstractService
     	try {
     		resourcesId = this.getResourceDAO().searchResourcesId(filters, categoryCode, groupCodes);
     	} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
-			throw new ApsSystemException("Error extracting resources id", t);
+    		_logger.error("Error searching resources id", t);
+			//ApsSystemUtils.logThrowable(t, this, "searchResourcesId");
+			throw new ApsSystemException("Error searching resources id", t);
     	}
     	return resourcesId;
 	}
@@ -262,7 +271,8 @@ public class ResourceManager extends AbstractService
     			resource.setMasterFileName(resourceVo.getMasterFileName());
     		}
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "loadResource");
+    		_logger.error("Error loading resource : id {}", id, t);
+    		//ApsSystemUtils.logThrowable(t, this, "loadResource");
     		throw new ApsSystemException("Error loading resource : id " + id, t);
     	}
     	return resource;
@@ -301,7 +311,8 @@ public class ResourceManager extends AbstractService
     		ResourceHandler handler = new ResourceHandler(resource, this.getCategoryManager());
     		parser.parse(is, handler);
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "fillEmptyResourceFromXml");
+    		_logger.error("Error loading resource", t);
+    		//ApsSystemUtils.logThrowable(t, this, "fillEmptyResourceFromXml");
     		throw new ApsSystemException("Error loading resource", t);
     	}
     }
@@ -317,7 +328,8 @@ public class ResourceManager extends AbstractService
     		this.getResourceDAO().deleteResource(resource.getId());
     		resource.deleteResourceInstances();
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "deleteResource");
+    		_logger.error("Error deleting resource", t);
+    		//ApsSystemUtils.logThrowable(t, this, "deleteResource");
     		throw new ApsSystemException("Error deleting resource", t);
     	}
     }
@@ -345,8 +357,8 @@ public class ResourceManager extends AbstractService
 			thread.start();
 			ApsSystemUtils.getLogger().info("Reloader started");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "startResourceReloaderThread", 
-					"Error refreshing Resource of type " + resourceTypeCode + " - Thread Name '" + threadName + "'");
+			_logger.error("Error refreshing Resource of type {} - Thread Name '{}'",resourceTypeCode, threadName, t);
+			//ApsSystemUtils.logThrowable(t, this, "startResourceReloaderThread", "Error refreshing Resource of type " + resourceTypeCode + " - Thread Name '" + threadName + "'");
 		}
 	}
     
@@ -367,8 +379,8 @@ public class ResourceManager extends AbstractService
     		}
     		this.updateResource(resource);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "refreshMasterFileNames", 
-					"Error reloading master file name of resource " + resourceId);
+			_logger.error("Error reloading master file name of resource {}", resourceId, t);
+			//ApsSystemUtils.logThrowable(t, this, "refreshMasterFileNames", 	"Error reloading master file name of resource " + resourceId);
 		}
     }
     
@@ -378,8 +390,8 @@ public class ResourceManager extends AbstractService
     		resource.reloadResourceInstances();
     		this.updateResource(resource);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "refreshResourceInstances", 
-					"Error refreshing resource instances of resource " + resourceId);
+			_logger.error("Error refreshing resource instances of resource {}", resourceId, t);
+			//ApsSystemUtils.logThrowable(t, this, "refreshResourceInstances", "Error refreshing resource instances of resource " + resourceId);
 		}
     }
     
@@ -391,7 +403,8 @@ public class ResourceManager extends AbstractService
 	    	allowedGroups.add(groupName);
 	    	resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, null, allowedGroups);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers");
+			_logger.error("Error searching group utilizers : group '{}'", groupName, t);
+			//ApsSystemUtils.logThrowable(t, this, "getGroupUtilizers");
 			throw new ApsSystemException("Error searching group utilizers : group '" + groupName + "'", t);
 		}
 		return resourcesId;
@@ -403,7 +416,8 @@ public class ResourceManager extends AbstractService
     	try {
 	    	resourcesId = this.getResourceDAO().searchResourcesId(null, null, null, categoryCode, null);
     	} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getCategoryUtilizers");
+    		_logger.error("Error searching category utilizers : category code '{}'", categoryCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "getCategoryUtilizers");
 			throw new ApsSystemException("Error searching category utilizers : category code '" + categoryCode + "'", t);
 		}
     	return resourcesId;

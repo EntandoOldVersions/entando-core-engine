@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.util.EntityAttributeIterator;
 import com.agiletec.aps.system.services.page.IPage;
@@ -35,15 +37,18 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribu
  * @author E.Santoboni - M.E.Minnai
  */
 public class ContentInspectionAction extends AbstractContentAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentFinderAction.class);
 	
 	public List<IPage> getReferencingPages() {
 		List<IPage> referencingPages;
 		try {
 			referencingPages = ((ContentUtilizer) this.getPageManager()).getContentUtilizers(this.getContentId());
 		} catch (Throwable t) {
+			_logger.error("Error getting referencing pages by content {}", this.getContentId(), t);
 			String msg = "Error getting referencing pages by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "setReferencingPages", msg );
 			throw new RuntimeException(msg, t);
+			//ApsSystemUtils.logThrowable(t, this, "setReferencingPages", msg );
 		}
 		return referencingPages;
 	}
@@ -57,8 +62,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 		try {
 			referencingContentsId = ((ContentUtilizer) this.getContentManager()).getContentUtilizers(this.getContentId());
 		} catch (Throwable t) {
+			_logger.error("Error getting referencing contents id by content {}", this.getContentId(), t);
 			String msg = "Error getting referencing contents id by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getReferencingContentsId", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencingContentsId", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContentsId;
@@ -80,8 +86,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error getting referencing contents by content {}", this.getContentId(), t);
 			String msg = "Error getting referencing contents by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContents;
@@ -111,8 +118,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error getting referenced contents id by content {}", this.getContentId(), t);
 			String msg = "Error getting referenced contents id by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getReferencedContents", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencedContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencedContentsId;
@@ -134,8 +142,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error getting referenced contents by content {}", this.getContentId(), t);
 			String msg = "Error getting referenced contents by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getReferencedContents", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencedContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencedContents;
@@ -164,8 +173,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error getting referenced pages by content {}", this.getContentId(), t);
 			String msg = "Error getting referenced pages by content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getReferencedPages", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencedPages", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencedPages;
@@ -177,8 +187,9 @@ public class ContentInspectionAction extends AbstractContentAction {
 		try {
 			this._content = this.getContentManager().loadContent(this.getContentId(), this.isCurrentPublicVersion());
 		} catch (Throwable t) {
+			_logger.error("Error getting the content {}", this.getContentId(), t);
 			String msg = "Error getting the content " + this.getContentId();
-			ApsSystemUtils.logThrowable(t, this, "getContent", msg);
+			//ApsSystemUtils.logThrowable(t, this, "getContent", msg);
 			throw new RuntimeException(msg, t);
 		}
 		return _content;

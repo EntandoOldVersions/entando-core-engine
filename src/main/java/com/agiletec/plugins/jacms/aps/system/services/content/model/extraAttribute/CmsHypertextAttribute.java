@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttrib
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -42,6 +44,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.extraAttribu
  */
 public class CmsHypertextAttribute extends HypertextAttribute implements IReferenceableAttribute {
 
+	private static final Logger _logger = LoggerFactory.getLogger(CmsHypertextAttribute.class);
+	
     /**
      * Restituisce il testo con modificato con eliminate 
      * l'apertura del primo paragrafo e la chiusura dell'ultimo.
@@ -163,7 +167,8 @@ public class CmsHypertextAttribute extends HypertextAttribute implements IRefere
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + this.getName() + "'");
+        	_logger.error("Error validating Attribute '{}'", this.getName(), t);
+            //ApsSystemUtils.logThrowable(t, this, "validate", "Error validating Attribute '" + this.getName() + "'");
             throw new RuntimeException("Error validating Attribute '" + this.getName() + "'", t);
         }
         return errors;

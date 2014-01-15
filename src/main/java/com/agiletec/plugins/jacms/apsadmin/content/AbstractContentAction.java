@@ -22,8 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -42,11 +43,13 @@ import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
  */
 public abstract class AbstractContentAction extends BaseAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractContentAction.class);
+	
 	protected void addActivityStreamInfo(Content content, int strutsAction, boolean addLink) {
 		ActivityStreamInfo asi = this.getContentActionHelper().createActivityStreamInfo(content, strutsAction, addLink);
 		super.addActivityStreamInfo(asi);
 	}
-
+	
 	/**
 	 * Restituisce il contenuto vo in base all'identificativo.
 	 * @param contentId L'identificativo del contenuto.
@@ -57,14 +60,15 @@ public abstract class AbstractContentAction extends BaseAction {
 		try {
 			contentVo = this.getContentManager().loadContentVO(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVo");
-			throw new RuntimeException("Errore in caricamento contenuto vo", t);
+			_logger.error("error loading contentVo {}",contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentVo");
+			throw new RuntimeException("error loading contentVo", t);
 		}
 		return contentVo;
 	}
-
+	
 	/**
-	 * Verifica se l'utente corrente è abilitato all'accesso
+	 * Verifica se l'utente corrente è abilitato all'accesso 
 	 * del contenuto specificato.
 	 * @param content Il contenuto su cui verificare il permesso di accesso.
 	 * @return True se l'utente corrente è abilitato all'eccesso al contenuto,
@@ -73,7 +77,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	protected boolean isUserAllowed(Content content) {
 		return this.getContentActionHelper().isUserAllowed(content, this.getCurrentUser());
 	}
-
+	
 	/**
 	 * Restituisce il contenuto in sesione.
 	 * @return Il contenuto in sesione.
@@ -81,26 +85,26 @@ public abstract class AbstractContentAction extends BaseAction {
 	public Content getContent() {
 		return (Content) this.getRequest().getSession().getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + this.getContentOnSessionMarker());
 	}
-
+	
 	protected Content updateContentOnSession() {
 		Content content = this.getContent();
 		this.getContentActionHelper().updateEntity(content, this.getRequest());
 		return content;
 	}
-
+	
 	/**
 	 * Restituisce la lista di contenuti (in forma small) definiti nel sistema.
-	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire
+	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire 
 	 * una corretta visualizzazione della pagina.
 	 * @return La lista di tipi di contenuto (in forma small) definiti nel sistema.
 	 */
 	public List<SmallContentType> getContentTypes() {
 		return this.getContentManager().getSmallContentTypes();
 	}
-
+	
 	/**
 	 * Restituisce la lista di stati di contenuto definiti nel sistema.
-	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire
+	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire 
 	 * una corretta visualizzazione della pagina.
 	 * @return La lista di stati di contenuto definiti nel sistema.
 	 * @deprecated use getAvalaibleStatus()
@@ -108,10 +112,10 @@ public abstract class AbstractContentAction extends BaseAction {
 	public String[] getStatesList() {
 		return Content.AVAILABLE_STATUS;
 	}
-
+	
 	/**
 	 * Restituisce la lista di stati di contenuto definiti nel sistema, come insieme di chiave e valore
-	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire
+	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire 
 	 * una corretta visualizzazione della pagina.
 	 * @return La lista di stati di contenuto definiti nel sistema.
 	 */
@@ -124,17 +128,17 @@ public abstract class AbstractContentAction extends BaseAction {
 		}
 		return items;
 	}
-
+	
 	/**
 	 * Restituisce la lista di lingue definite nel sistema.
-	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire
+	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire 
 	 * una corretta visualizzazione della pagina.
 	 * @return La lista di lingue definite nel sistema.
 	 */
 	public List<Lang> getLangs() {
 		return this.getLangManager().getLangs();
 	}
-
+	
 	public static String buildContentOnSessionMarker(Content content, int operation) {
 		String marker = null;
 		switch (operation) {
@@ -152,14 +156,14 @@ public abstract class AbstractContentAction extends BaseAction {
 		}
 		return marker;
 	}
-
+	
 	public String getContentOnSessionMarker() {
 		return _contentOnSessionMarker;
 	}
 	public void setContentOnSessionMarker(String contentOnSessionMarker) {
 		this._contentOnSessionMarker = contentOnSessionMarker;
 	}
-
+	
 	/**
 	 * Restituisce il manager gestore delle operazioni sui contenuti.
 	 * @return Il manager gestore delle operazioni sui contenuti.
@@ -167,7 +171,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
-
+	
 	/**
 	 * Setta il manager gestore delle operazioni sui contenuti.
 	 * @param contentManager Il manager gestore delle operazioni sui contenuti.
@@ -175,7 +179,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
-
+	
 	/**
 	 * Restituisce la classe helper della gestione contenuti.
 	 * @return La classe helper della gestione contenuti.
@@ -183,7 +187,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	protected IContentActionHelper getContentActionHelper() {
 		return _contentActionHelper;
 	}
-
+	
 	/**
 	 * Setta la classe helper della gestione contenuti.
 	 * @param contentActionHelper La classe helper della gestione contenuti.
@@ -191,9 +195,9 @@ public abstract class AbstractContentAction extends BaseAction {
 	public void setContentActionHelper(IContentActionHelper contentActionHelper) {
 		this._contentActionHelper = contentActionHelper;
 	}
-
+	
 	/**
-	 * Restituisce la mappa dei gruppi presenti nel sistema.
+	 * Restituisce la mappa dei gruppi presenti nel sistema. 
 	 * La mappa è indicizzata in base al nome del gruppo.
 	 * @return La mappa dei gruppi presenti nel sistema.
 	 * @deprecated
@@ -201,7 +205,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	public Map<String, Group> getGroupsMap() {
 		return this.getGroupManager().getGroupsMap();
 	}
-
+	
 	/**
 	 * Restituisce un gruppo in base al nome.
 	 * @param groupName Il nome del gruppo da restituire.
@@ -210,7 +214,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	public Group getGroup(String groupName) {
 		return this.getGroupManager().getGroup(groupName);
 	}
-
+	
 	/**
 	 * Restituisce un tipo di contenuto in forma small.
 	 * @param typeCode Il codice del tipo di contenuto.
@@ -220,11 +224,11 @@ public abstract class AbstractContentAction extends BaseAction {
 		Map<String, SmallContentType> smallContentTypes = this.getContentManager().getSmallContentTypesMap();
 		return (SmallContentType) smallContentTypes.get(typeCode);
 	}
-
+	
 	public List<Group> getAllowedGroups() {
 		return this.getContentActionHelper().getAllowedGroups(this.getCurrentUser());
 	}
-
+	
 	/**
 	 * Restituisce la lista ordinata dei gruppi presenti nel sistema.
 	 * @return La lista dei gruppi presenti nel sistema.
@@ -232,7 +236,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	public List<Group> getGroups() {
 		return this.getGroupManager().getGroups();
 	}
-
+	
 	/**
 	 * Restituisce il manager dei gruppi.
 	 * @return Il manager dei gruppi.
@@ -240,7 +244,7 @@ public abstract class AbstractContentAction extends BaseAction {
 	protected IGroupManager getGroupManager() {
 		return _groupManager;
 	}
-
+	
 	/**
 	 * Setta il manager dei gruppi.
 	 * @param groupManager Il manager dei gruppi.
@@ -248,12 +252,12 @@ public abstract class AbstractContentAction extends BaseAction {
 	public void setGroupManager(IGroupManager groupManager) {
 		this._groupManager = groupManager;
 	}
-
+	
 	private String _contentOnSessionMarker;
-
+	
 	private IContentManager _contentManager;
 	private IContentActionHelper _contentActionHelper;
-
+	
 	private IGroupManager _groupManager;
-
+	
 }

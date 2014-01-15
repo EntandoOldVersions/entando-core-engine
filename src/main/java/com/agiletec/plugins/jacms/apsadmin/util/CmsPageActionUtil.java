@@ -22,17 +22,22 @@ import java.util.Collection;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+import com.agiletec.plugins.jacms.apsadmin.tags.ResourceInfoTag;
 
 /**
  * @author E.Santoboni
  */
 public class CmsPageActionUtil {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CmsPageActionUtil.class);
 	
 	public static boolean isContentPublishableOnPage(Content publishingContent, IPage page) {
 		if (publishingContent.getMainGroup().equals(Group.FREE_GROUP_NAME) || publishingContent.getGroups().contains(Group.FREE_GROUP_NAME)) {
@@ -98,7 +103,8 @@ public class CmsPageActionUtil {
 				return true;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, CmsPageActionUtil.class, "isViewerPage", "Error while checking page '" + page.getCode() + "'");
+			_logger.error("Error while checking page '{}'", page.getCode(), t);
+			//ApsSystemUtils.logThrowable(t, CmsPageActionUtil.class, "isViewerPage", "Error while checking page '" + page.getCode() + "'");
 		}
 		return false;
 	}

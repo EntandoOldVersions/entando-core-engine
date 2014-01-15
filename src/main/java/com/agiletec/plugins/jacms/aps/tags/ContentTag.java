@@ -21,7 +21,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -32,6 +34,8 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderiza
  * Displays the content given its ID.
  */
 public class ContentTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentTag.class);
 	
 	public ContentTag() {
 		super();
@@ -56,7 +60,8 @@ public class ContentTag extends TagSupport {
 				this.pageContext.setAttribute(this.getAttributeValuesByRoleVar(), renderInfo.getAttributeValues());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error detected while initialising the tag", t);
 		}
 		return EVAL_PAGE;

@@ -24,7 +24,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -45,6 +47,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterO
  * @author E.Santoboni
  */
 public class ContentListTag extends TagSupport implements IContentListTagBean {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentListTag.class);
 	
 	public ContentListTag() {
 		super();
@@ -71,7 +75,8 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			List<String> contents = this.getContentsId(helper, reqCtx);
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("error in end tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error detected while finalising the tag", t);
 		}
 		this.release();
@@ -97,7 +102,8 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 				contents = contents.subList(0, maxElements);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentsId");
+			_logger.error("Error extracting content ids", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentsId");
 			throw new ApsSystemException("Error extracting content ids", t);
 		}
 		return contents;
@@ -119,7 +125,8 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractExtraShowletParameters", "Error extracting extra parameters");
+			_logger.error("Error extracting extra parameters", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractExtraShowletParameters", "Error extracting extra parameters");
 		}
 	}
 	

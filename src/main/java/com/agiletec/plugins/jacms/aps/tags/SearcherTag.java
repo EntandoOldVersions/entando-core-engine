@@ -23,7 +23,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.plugins.jacms.aps.tags.util.SearcherTagHelper;
 
@@ -33,6 +35,8 @@ import com.agiletec.plugins.jacms.aps.tags.util.SearcherTagHelper;
  * @author E.Santoboni
  */
 public class SearcherTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SearcherTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -44,9 +48,10 @@ public class SearcherTag extends TagSupport {
 			List<String> result = helper.executeSearch(word, reqCtx);
 			this.pageContext.setAttribute(this.getListName(), result);
 			request.setAttribute("search", word);
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doStartTag");
-			throw new JspException("Error detected while initialising the tag", e);
+		} catch (Throwable t) {
+			_logger.error("error in do start tag", t);
+			//ApsSystemUtils.logThrowable(e, this, "doStartTag");
+			throw new JspException("Error detected while initialising the tag", t);
 		}
 		return SKIP_BODY;
 	}

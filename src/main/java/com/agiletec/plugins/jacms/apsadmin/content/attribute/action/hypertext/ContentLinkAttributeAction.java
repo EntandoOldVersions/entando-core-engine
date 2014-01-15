@@ -19,7 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.content.attribute.action.hypertext;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
@@ -30,6 +32,8 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentFinderAction;
  * @author E.Santoboni
  */
 public class ContentLinkAttributeAction extends ContentFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentLinkAttributeAction.class);
 	
 	@Override
 	public List<String> getContents() {
@@ -38,8 +42,9 @@ public class ContentLinkAttributeAction extends ContentFinderAction {
 			List<String> allowedGroups = this.getContentGroupCodes();
 			result = this.getContentManager().loadPublicContentsId(null, this.getFilters(), allowedGroups);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContents");
-			throw new RuntimeException("Errore in ricerca contenuti", t);
+			_logger.error("error in getContents", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContents");
+			throw new RuntimeException("error in getContents", t);
 		}
 		return result;
 	}

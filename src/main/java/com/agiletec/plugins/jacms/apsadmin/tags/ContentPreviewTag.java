@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.tags;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -33,7 +35,9 @@ import com.agiletec.plugins.jacms.aps.tags.ContentTag;
  * @author E.Santoboni
  */
 public class ContentPreviewTag extends ContentTag {
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentPreviewTag.class);
+			
 	@Override
 	public int doStartTag() throws JspException {
 		ServletRequest request =  this.pageContext.getRequest();
@@ -42,9 +46,10 @@ public class ContentPreviewTag extends ContentTag {
 			IContentViewerHelper helper = (IContentViewerHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_PREVIEW_VIEWER_HELPER, this.pageContext);
 			String renderedContent = helper.getRenderedContent(null, null, reqCtx);
 			this.pageContext.getOut().print(renderedContent);
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doStartTag");
-			throw new JspException("Error detected during tag initialisation", e);
+		} catch (Throwable t) {
+			_logger.error("error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			throw new JspException("Error detected during tag initialisation", t);
 		}
 		return EVAL_PAGE;
 	}

@@ -21,7 +21,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -37,6 +39,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentLis
  * @author E.Santoboni
  */
 public class ContentListFilterTag extends TagSupport implements IEntityFilterBean {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentListFilterTag.class);
 	
 	public ContentListFilterTag() {
 		super();
@@ -65,7 +69,8 @@ public class ContentListFilterTag extends TagSupport implements IEntityFilterBea
 				parent.addFilter(filter);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("error in end tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Tag error detected ", t);
 		}
 		return super.doEndTag();

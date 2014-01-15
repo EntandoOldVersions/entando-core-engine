@@ -23,8 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.struts2.interceptor.ServletResponseAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -37,6 +38,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class ContentPreviewAction extends AbstractContentAction implements IContentPreviewAction, ServletResponseAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentFinderAction.class);
 	
 	@Override
 	public String preview() {
@@ -51,7 +54,8 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 			}
 			this.setPreviewPageCode(previewPageCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "preview", "Error");
+			_logger.error("error in preview", t);
+			//ApsSystemUtils.logThrowable(t, this, "preview", "Error");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -83,9 +87,8 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 			this.prepareForwardParams(pageDestCode);
 			this.getRequest().setCharacterEncoding("UTF-8");
 		} catch (Throwable t) {
-			String message = "Error";
-			ApsSystemUtils.logThrowable(t, this, "executePreview", message);
-			throw new RuntimeException(message, t);
+			_logger.error("error in executePreview", t);
+			throw new RuntimeException("error in executePreview", t);
 		}
 		return SUCCESS;
 	}

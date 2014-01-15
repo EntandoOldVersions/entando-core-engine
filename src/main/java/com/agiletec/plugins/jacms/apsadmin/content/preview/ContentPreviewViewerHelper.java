@@ -19,6 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.content.preview;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -29,6 +32,7 @@ import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelper;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+import com.agiletec.plugins.jacms.apsadmin.content.model.ContentModelAction;
 
 /**
  * Classe helper per la showlet di erogazione contenuti per la funzione preview da redazione contenuti.
@@ -36,6 +40,8 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
  * @author E.Santoboni
  */
 public class ContentPreviewViewerHelper extends ContentViewerHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentPreviewViewerHelper.class);
 	
 	@Override
 	public String getRenderedContent(String contentId, String modelId, RequestContext reqCtx) throws ApsSystemException {
@@ -64,9 +70,9 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 								+ modelId);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getRenderedContent");
-			throw new ApsSystemException(
-					"Errore in fase di preparazione del contenuto per preview", t);
+			_logger.error("error loading rendered content for preview", t);
+			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent");
+			throw new ApsSystemException("error loading rendered content for preview", t);
 		}
 		return renderedContent;
 	}

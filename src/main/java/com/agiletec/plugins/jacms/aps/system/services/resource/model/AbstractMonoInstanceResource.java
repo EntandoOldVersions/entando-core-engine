@@ -20,6 +20,9 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 import java.io.File;
 import java.io.InputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
@@ -30,6 +33,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM
  * @author E.Santoboni
  */
 public abstract class AbstractMonoInstanceResource extends AbstractResource {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractMonoInstanceResource.class);
 	
 	/**
      * Implementazione del metodo isMultiInstance() di AbstractResource.
@@ -54,7 +59,8 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 		try {
 			return this.getStorageManager().getStream(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getResourceStream");
+			_logger.error("Error on extracting resource Stream", t);
+			//ApsSystemUtils.logThrowable(t, this, "getResourceStream");
 			throw new RuntimeException("Error on extracting resource Stream", t);
 		}
 	}
@@ -70,7 +76,8 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 			}
 			return null;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getFile");
+			_logger.error("Error on extracting file", t);
+			//ApsSystemUtils.logThrowable(t, this, "getFile");
 			throw new RuntimeException("Error on extracting file", t);
 		}
 	}
@@ -86,7 +93,8 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 		    String subPath = this.getDiskSubFolder() + docName;
 			this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
+			_logger.error("Error on deleting resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
 			throw new ApsSystemException("Error on deleting resource instances", t);
 		}
 	}

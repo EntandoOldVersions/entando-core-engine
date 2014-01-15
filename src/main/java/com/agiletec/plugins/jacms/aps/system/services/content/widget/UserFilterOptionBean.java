@@ -25,7 +25,9 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -43,6 +45,8 @@ import com.agiletec.apsadmin.util.CheckFormatUtil;
  * @author E.Santoboni
  */
 public class UserFilterOptionBean {
+
+	private static final Logger _logger = LoggerFactory.getLogger(UserFilterOptionBean.class);
 	
 	public UserFilterOptionBean(Properties properties, IApsEntity prototype) throws Throwable {
 		this.setKey(properties.getProperty(PARAM_KEY));
@@ -151,7 +155,8 @@ public class UserFilterOptionBean {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractFormParameters");
+			_logger.error("Error extracting form parameters", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractFormParameters");
 			throw new ApsSystemException("Error extracting form parameters", t);
 		}
 		this.setFormFieldNames(formFieldNames);
@@ -267,7 +272,8 @@ public class UserFilterOptionBean {
 				filter = new EntitySearchFilter(attribute.getName(), true, startNumber, endNumber);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getFilter");
+			_logger.error("Error extracting entity search filters", t);
+			//ApsSystemUtils.logThrowable(t, this, "getFilter");
 			throw new ApsSystemException("Error extracting entity search filters", t);
 		}
 		return filter;

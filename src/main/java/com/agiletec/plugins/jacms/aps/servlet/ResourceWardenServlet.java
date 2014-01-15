@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -58,6 +59,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public class ResourceWardenServlet extends HttpServlet {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceWardenServlet.class);
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
@@ -113,7 +116,8 @@ public class ResourceWardenServlet extends HttpServlet {
 				this.createResponse(response, resource, instance);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "service");
+			_logger.error("Error extracting protected resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "service");
 			throw new ServletException("Error extracting protected resource", t);
 		}
 	}
@@ -143,7 +147,8 @@ public class ResourceWardenServlet extends HttpServlet {
 				is.close();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createResponse");
+			_logger.error("Error extracting protected resource", t);
+			//ApsSystemUtils.logThrowable(t, this, "createResponse");
 			throw new ServletException("Error extracting protected resource", t);
 		} finally {
 			out.close();
@@ -164,7 +169,8 @@ public class ResourceWardenServlet extends HttpServlet {
 			String url = urlManager.createUrl(page, langManager.getDefaultLang(), params);
 			response.sendRedirect(url);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeLoginRedirect");
+			_logger.error("Error executing redirect login page", t);
+			//ApsSystemUtils.logThrowable(t, this, "executeLoginRedirect");
 			throw new ServletException("Error executing redirect login page", t);
 		}
 	}

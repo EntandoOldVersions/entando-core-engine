@@ -26,8 +26,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.storage.IStorageManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
@@ -38,6 +39,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM
  * @author W.Ambu - E.Santoboni
  */
 public abstract class AbstractResource implements ResourceInterface, Serializable {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractResource.class);
 	
 	/**
 	 * Inizializza gli elementi base costituenti la Risorsa.
@@ -412,7 +415,8 @@ public abstract class AbstractResource implements ResourceInterface, Serializabl
 			outStream.close();
 			is.close();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveTempFile");
+			_logger.error("Error on saving temporary file '{}'", filename, t);
+			//ApsSystemUtils.logThrowable(t, this, "saveTempFile");
 			throw new ApsSystemException("Error on saving temporary file", t);
 		}
 		return new File(filePath);

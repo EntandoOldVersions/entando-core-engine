@@ -18,6 +18,7 @@
 package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -42,6 +43,8 @@ import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispense
  * @author W.Ambu - E.Santoboni
  */
 public class ContentViewerHelper implements IContentViewerHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentViewerHelper.class);
 	
 	@Override
 	public String getRenderedContent(String contentId, String modelId, RequestContext reqCtx) throws ApsSystemException {
@@ -95,7 +98,8 @@ public class ContentViewerHelper implements IContentViewerHelper {
             			"contenuto=" + contentId + " modello=" + modelId);
             }
         } catch (Throwable t) {
-        	ApsSystemUtils.logThrowable(t, this, "getRenderizationInfo");
+        	_logger.error("Error extracting renderization info", t);
+        	//ApsSystemUtils.logThrowable(t, this, "getRenderizationInfo");
     		throw new ApsSystemException("Error extracting renderization info", t);
     	}
         return renderizationInfo;
@@ -116,7 +120,8 @@ public class ContentViewerHelper implements IContentViewerHelper {
 				ApsSystemUtils.getLogger().info("Null authorization info by content '" + contentId + "'");
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAuthorizationInfo");
+			_logger.error("Error extracting content authorization info by content {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getAuthorizationInfo");
 			throw new ApsSystemException("Error extracting content authorization info by content '" + contentId + "'", t);
 		}
 		return authInfo;

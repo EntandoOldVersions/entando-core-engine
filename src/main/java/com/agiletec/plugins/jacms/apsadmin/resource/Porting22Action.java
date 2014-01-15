@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
 import com.agiletec.apsadmin.system.BaseAction;
@@ -31,6 +33,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
  * @author E.Santoboni
  */
 public class Porting22Action extends BaseAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(Porting22Action.class);
 	
 	public String showResources() {
 		try {
@@ -42,7 +46,8 @@ public class Porting22Action extends BaseAction {
 			List<String> resourcesId = this.getResourceManager().searchResourcesId(null, null, null, groupCodes);
 			this.setResourcesId(resourcesId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "showResources");
+			_logger.error("error in showResources", t);
+			//ApsSystemUtils.logThrowable(t, this, "showResources");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -52,7 +57,8 @@ public class Porting22Action extends BaseAction {
 		try {
 			this.getResourceManager().refreshMasterFileNames();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "startReload");
+			_logger.error("error in startReload", t);
+			//ApsSystemUtils.logThrowable(t, this, "startReload");
 			return FAILURE;
 		}
 		return SUCCESS;

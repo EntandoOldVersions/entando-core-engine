@@ -21,8 +21,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -30,6 +31,7 @@ import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingObserver;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.plugins.jacms.aps.servlet.ResourceWardenServlet;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -48,10 +50,12 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  */
 public class CmsCacheWrapperManager extends AbstractService 
 		implements ICmsCacheWrapperManager, /*PublicContentChangedObserver, */ContentModelChangedObserver, EntityTypesChangingObserver, ResourceChangedObserver {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CmsCacheWrapperManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
+		_logger.debug("{} ready.", this.getClass().getName());
 	}
 	/*
 	@Override
@@ -73,13 +77,12 @@ public class CmsCacheWrapperManager extends AbstractService
 	public void updateFromContentModelChanged(ContentModelChangedEvent event) {
 		try {
 			ContentModel model = event.getContentModel();
-			Logger log = ApsSystemUtils.getLogger();
-			log.info("Notified content model update : type " + model.getId());
+			_logger.info("Notified content model update : type {}",model.getId());
 			String cacheGroupKey = JacmsSystemConstants.CONTENT_MODEL_CACHE_GROUP_PREFIX + model.getId();
 			this.getCacheInfoManager().flushGroup(cacheGroupKey);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromContentModelChanged", 
-					"Error notifing event " + ContentModelChangedEvent.class.getName());
+			_logger.error("Error notifing event {}",ContentModelChangedEvent.class.getName(), t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromContentModelChanged", "Error notifing event " + ContentModelChangedEvent.class.getName());
 		}
 	}
 	
@@ -90,13 +93,12 @@ public class CmsCacheWrapperManager extends AbstractService
 			if (!entityManagerName.equals(JacmsSystemConstants.CONTENT_MANAGER)) return;
 			if (event.getOperationCode() == EntityTypesChangingEvent.INSERT_OPERATION_CODE) return;
 			IApsEntity oldEntityType = event.getOldEntityType();
-			Logger log = ApsSystemUtils.getLogger();
-			log.info("Notified content type modify : type " + oldEntityType.getTypeCode());
+			_logger.info("Notified content type modify : type {}", oldEntityType.getTypeCode());
 			String typeGroupKey = JacmsSystemConstants.CONTENT_TYPE_CACHE_GROUP_PREFIX + oldEntityType.getTypeCode();
 			this.getCacheInfoManager().flushGroup(typeGroupKey);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromEntityTypesChanging", 
-					"Error notifing event " + EntityTypesChangingEvent.class.getName());
+			//ApsSystemUtils.logThrowable(t, this, "updateFromEntityTypesChanging", 	"Error notifing event " + EntityTypesChangingEvent.class.getName());
+			_logger.error("Error notifing event {}", EntityTypesChangingEvent.class.getName(), t);
 		}
 	}
 	
@@ -116,8 +118,8 @@ public class CmsCacheWrapperManager extends AbstractService
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateFromResourceChanged", 
-					"Error notifing event " + ResourceChangedEvent.class.getName());
+			_logger.error("Error notifing event {}", ResourceChangedEvent.class.getName(), t);
+			//ApsSystemUtils.logThrowable(t, this, "updateFromResourceChanged", "Error notifing event " + ResourceChangedEvent.class.getName());
 		}
 	}
 	

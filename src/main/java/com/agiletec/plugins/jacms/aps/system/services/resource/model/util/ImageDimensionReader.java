@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.aps.system.services.resource.model.util;
 import java.io.Serializable;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.RefreshableBean;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -34,6 +36,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ImageDimens
  * @author E.Santoboni
  */
 public class ImageDimensionReader implements IImageDimensionReader, RefreshableBean, Serializable {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ImageDimensionReader.class);
 	
 	/**
 	 * Inizializzazione della classe.
@@ -49,7 +53,8 @@ public class ImageDimensionReader implements IImageDimensionReader, RefreshableB
     		ImageDimensionDOM dimensionDom = new ImageDimensionDOM(xml);
     		this._imageDimensions = dimensionDom.getDimensions();
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "init");
+    		_logger.error("Error loading dimensions", t);
+    		//ApsSystemUtils.logThrowable(t, this, "init");
     		throw new ApsSystemException("Error loading dimensions", t);
     	}
 	}

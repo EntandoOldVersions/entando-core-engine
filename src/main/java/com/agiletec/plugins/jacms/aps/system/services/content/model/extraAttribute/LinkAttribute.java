@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -44,7 +45,9 @@ import com.agiletec.plugins.jacms.aps.system.services.linkresolver.ILinkResolver
  * @author W.Ambu - S.Didaci
  */
 public class LinkAttribute extends TextAttribute implements IReferenceableAttribute {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(LinkAttribute.class);
+	
 	@Override
     public Element getJDOMElement() {
 		Element attributeElement = this.createRootElement("attribute");
@@ -188,7 +191,8 @@ public class LinkAttribute extends TextAttribute implements IReferenceableAttrib
                 errors.add(error);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating link attribute", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new RuntimeException("Error validating link attribute", t);
         }
         return errors;

@@ -22,8 +22,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
@@ -43,6 +44,8 @@ import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
  * @author E.Santoboni
  */
 public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageAction.class);
 	
 	@Override
 	public void validate() {
@@ -76,7 +79,8 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate");
+			_logger.error("Error on validate page", t);
+			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException("Error on validate page", t);
 		}
 	}
@@ -150,7 +154,8 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 			}
 		} catch (Throwable t) {
 			String msg = "Error extracting published contents on page '" + pageCode + "'";
-			ApsSystemUtils.logThrowable(t, this, "getPublishedContents", msg );
+			_logger.error("Error extracting published contents on page '{}'", pageCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "getPublishedContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return contents;
@@ -168,8 +173,9 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 				}
 			}
 		} catch (Throwable t) {
+			_logger.error("Error getting referencing contents by page '{}'", pageCode, t);
 			String msg = "Error getting referencing contents by page '" + pageCode + "'";
-			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContents;
@@ -180,8 +186,9 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		try {
 			referencingContentsId = ((PageUtilizer) this.getContentManager()).getPageUtilizers(pageCode);
 		} catch (Throwable t) {
+			_logger.error("Error getting referencing contents by page '{}'", pageCode, t);
 			String msg = "Error getting referencing contents by page '" + pageCode + "'";
-			ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
+			//ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContentsId;

@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
@@ -48,6 +50,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
  */
 public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction implements IContentListViewerWidgetAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ContentListViewerWidgetAction.class);
+	
 	@Override
 	public void validate() {
 		super.validate();
@@ -65,7 +69,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.validateTitle();
 			this.validateLink();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate", "Error validating list viewer");
+			_logger.error("Error validating list viewer", t);
+			//ApsSystemUtils.logThrowable(t, this, "validate", "Error validating list viewer");
 		}
 	}
 
@@ -121,7 +126,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.extractUserFiltersProperties(config);
 			this.extractCategories(config);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "init");
+			_logger.error("error in init", t);
+			//ApsSystemUtils.logThrowable(t, this, "init");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -134,7 +140,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			widget.getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_CONTENT_TYPE, this.getContentType());
 			this.setShowlet(widget);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "init");
+			_logger.error("error in configContentType", t);
+			//ApsSystemUtils.logThrowable(t, this, "init");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -146,7 +153,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			Widget widget = super.createNewShowlet();
 			this.setShowlet(widget);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "changeContentType");
+			_logger.error("error in changeContentType", t);
+			//ApsSystemUtils.logThrowable(t, this, "changeContentType");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -178,7 +186,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.getWidget().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_CATEGORIES, categories);
 		} catch (Throwable t) {
 			String marker = (add) ? "adding" : "removing";
-			ApsSystemUtils.logThrowable(t, this, "addRemoveCategory", "Error " + marker + " category : '" + this.getCategoryCode() + "'");
+			_logger.error("Error {} category : '{}'",marker, this.getCategoryCode(), t);
+			//ApsSystemUtils.logThrowable(t, this, "addRemoveCategory", "Error " + marker + " category : '" + this.getCategoryCode() + "'");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -199,7 +208,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedUserFilterTypes");
+			_logger.error("Error extracting allowed user filter types", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedUserFilterTypes");
 			throw new ApsSystemException("Error extracting allowed user filter types", t);
 		}
 		return types;
@@ -220,7 +230,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedFilterTypes");
+			_logger.error("Error extracting allowed filter types", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedFilterTypes");
 			throw new ApsSystemException("Error extracting allowed filter types", t);
 		}
 		return types;
@@ -248,7 +259,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			String newShowletParam = FilterUtils.getShowletParam(userFiltersProperties);
 			this.getWidget().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addUserFilter");
+			_logger.error("error in addUserFilter", t);
+			//ApsSystemUtils.logThrowable(t, this, "addUserFilter");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -275,7 +287,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			}
 			if (properties.isEmpty()) return null;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addUserFilter");
+			_logger.error("Error creating user filter", t);
+			//ApsSystemUtils.logThrowable(t, this, "addUserFilter");
 			throw new ApsSystemException("Error creating user filter", t);
 		}
 		return properties;
@@ -316,7 +329,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.getWidget().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_USER_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
-			ApsSystemUtils.logThrowable(t, this, "removeMoveUserFilter", "Error " + marker + " userFilter");
+			_logger.error("Error {} userFilter",marker, t);
+			//ApsSystemUtils.logThrowable(t, this, "removeMoveUserFilter", "Error " + marker + " userFilter");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -331,7 +345,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			String newShowletParam = FilterUtils.getShowletParam(properties);
 			this.getWidget().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addFilter");
+			_logger.error("error in addFilter", t);
+			//ApsSystemUtils.logThrowable(t, this, "addFilter");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -372,7 +387,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.getWidget().getConfig().setProperty(IContentListWidgetHelper.WIDGET_PARAM_FILTERS, newShowletParam);
 		} catch (Throwable t) {
 			String marker = (move) ? "moving" : "removing";
-			ApsSystemUtils.logThrowable(t, this, "removeMoveFilter", "Error " + marker + " filter");
+			_logger.error("Error {} filter", marker, t);
+			//ApsSystemUtils.logThrowable(t, this, "removeMoveFilter", "Error " + marker + " filter");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -387,7 +403,8 @@ public class ContentListViewerWidgetAction extends SimpleWidgetConfigAction impl
 			this.extractUserFiltersProperties(config);
 			this.extractCategories(config);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createValuedShowlet", "Error creating valued showlet");
+			_logger.error("Error creating user filter", t);
+			//ApsSystemUtils.logThrowable(t, this, "createValuedShowlet", "Error creating valued showlet");
 			throw new ApsSystemException("Error creating user filter", t);
 		}
 	}

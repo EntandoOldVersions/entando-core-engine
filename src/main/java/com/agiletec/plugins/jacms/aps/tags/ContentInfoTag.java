@@ -22,8 +22,9 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
@@ -48,6 +49,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.IContentVie
  * @author E.Santoboni
  */
 public class ContentInfoTag extends OutSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentInfoTag.class);
 	
 	public ContentInfoTag() {
 		super();
@@ -91,7 +94,8 @@ public class ContentInfoTag extends OutSupport {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error detected while initializing the tag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error detected while initializing the tag", t);
 		}
 		return super.doStartTag();

@@ -17,9 +17,10 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.renderer.EntityWrapper;
@@ -37,6 +38,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.SymbolicLink
  * @author M.Diana - E.Santoboni
  */
 public class ContentWrapper extends EntityWrapper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentWrapper.class);
 	
 	/**
 	 * Inizializzazione del Wrapper. 
@@ -60,7 +63,8 @@ public class ContentWrapper extends EntityWrapper {
             if (!authManager.isAuthOnGroup(currentUser, this.getEntity().getMainGroup())) return false;
             if (null != permissionName && permissionName.trim().length() > 0 && !authManager.isAuthOnPermission(currentUser, permissionName)) return false;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking authority - permission " + permissionName);
+        	_logger.error("Error checking authority - permission {}", permissionName, t);
+            //ApsSystemUtils.logThrowable(t, this, "isUserAllowed", "Error checking authority - permission " + permissionName);
 			return false;
         }
         return true;
@@ -77,7 +81,8 @@ public class ContentWrapper extends EntityWrapper {
             ConfigInterface configManager = (ConfigInterface) this.getBeanFactory().getBean(SystemConstants.BASE_CONFIG_MANAGER);
             return configManager.getParam(paramName);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConfigParameter", "Error extracting config parameter - parameter " + paramName);
+        	_logger.error("Error extracting config parameter - parameter ", paramName, t);
+            //ApsSystemUtils.logThrowable(t, this, "getConfigParameter", "Error extracting config parameter - parameter " + paramName);
 			return null;
         }
     }

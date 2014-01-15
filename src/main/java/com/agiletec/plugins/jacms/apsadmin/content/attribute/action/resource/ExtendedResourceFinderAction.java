@@ -22,7 +22,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInterface;
@@ -35,6 +37,8 @@ import com.agiletec.plugins.jacms.apsadmin.resource.ResourceFinderAction;
  * @author E.Santoboni
  */
 public class ExtendedResourceFinderAction extends ResourceFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ExtendedResourceFinderAction.class);
 	
 	public String entryFindResource() {
 		this.setCategoryCode(null);
@@ -53,7 +57,8 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 			resourcesId = this.getResourceManager().searchResourcesId(this.getResourceTypeCode(), 
 					this.getText(), this.getCategoryCode(), groupCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getResources");
+			_logger.error("error in getResources", t);
+			//ApsSystemUtils.logThrowable(t, this, "getResources");
 			throw t;
 		}
 		return resourcesId;
@@ -79,7 +84,8 @@ public class ExtendedResourceFinderAction extends ResourceFinderAction {
 			this.buildEntryContentAnchorDest();
 			ResourceAttributeActionHelper.joinResource(resource, this.getRequest());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "joinResource");
+			_logger.error("error in joinResource", t);
+			//ApsSystemUtils.logThrowable(t, this, "joinResource");
 			return FAILURE;
 		}
 		return SUCCESS;

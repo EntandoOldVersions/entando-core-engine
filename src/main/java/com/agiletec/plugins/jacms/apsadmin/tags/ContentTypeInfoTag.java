@@ -19,7 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.tags;
 
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -37,6 +39,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class ContentTypeInfoTag extends EntityTypeInfoTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentTypeInfoTag.class);
 	
 	@Override
 	protected String getEntityManagerName() {
@@ -56,9 +60,8 @@ public class ContentTypeInfoTag extends EntityTypeInfoTag {
 					(IContentAuthorizationHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_AUTHORIZATION_HELPER, this.pageContext);
 			return helper.isAuthToEdit(currentUser, prototype);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getPropertyValue", 
-					"Error extracting property value : Master Object '" 
-						+ masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
+			_logger.error("Error extracting property value : Master Object '{}' - property '{}'",masterObject.getClass().getName(), propertyValue,  t);
+			//ApsSystemUtils.logThrowable(t, this, "getPropertyValue", "Error extracting property value : Master Object '" + masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
 		}
 		return null;
 	}

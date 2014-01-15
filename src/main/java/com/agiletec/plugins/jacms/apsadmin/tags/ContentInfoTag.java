@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.tags;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -44,6 +46,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @author E.Santoboni
  */
 public class ContentInfoTag extends AbstractObjectInfoTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentInfoTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -71,7 +75,8 @@ public class ContentInfoTag extends AbstractObjectInfoTag {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag", "Error on doStartTag");
+			_logger.error("error in doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag", "Error on doStartTag");
 			throw new JspException("Error on doStartTag", t);
 		}
 		return result;
@@ -87,9 +92,9 @@ public class ContentInfoTag extends AbstractObjectInfoTag {
 				this.setMasterObject(contentManager.loadContent(keyValue, !this.isWorkVersion()));
 			}
 		} catch (Throwable t) {
-			String message = "Error extracting content : id '" + keyValue + "' - " +
-					"record " + this.isRecord() + "' - work version " + this.isWorkVersion();
-			ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
+			_logger.error("Error extracting content : id '{}' - record {} - work version {}", keyValue, this.isRecord(), this.isWorkVersion(), t);
+			String message = "Error extracting content : id '" + keyValue + "' - " + "record " + this.isRecord() + "' - work version " + this.isWorkVersion();
+			//ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
 			throw new ApsSystemException(message, t);
 		}
 		return this.getMasterObject();

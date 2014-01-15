@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
@@ -47,17 +49,20 @@ import com.agiletec.plugins.jacms.apsadmin.content.helper.IContentActionHelper;
  */
 public class ContentFinderAction extends AbstractApsEntityFinderAction implements IContentFinderAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ContentFinderAction.class);
+	
 	@Override
 	public String execute() {
 		try {
 			this.createFilters();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "execute");
+			_logger.error("error in execute", t);
+			//ApsSystemUtils.logThrowable(t, this, "execute");
 			return FAILURE;
 		}
 		return SUCCESS;
 	}
-
+	
 	@Override
 	public List<String> getContents() {
 		List<String> result = null;
@@ -70,12 +75,13 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			}
 			result = this.getContentManager().loadWorkContentsId(categories, this.getFilters(), allowedGroups);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContents");
-			throw new RuntimeException("Errore in ricerca contenuti", t);
+			_logger.error("error in getContents", t);
+			//ApsSystemUtils.logThrowable(t, this, "getContents");
+			throw new RuntimeException("error in getContents", t);
 		}
 		return result;
 	}
-
+	
 	/**
 	 * Restituisce la lista di gruppi (codici) dei contenuti che devono essere visualizzati in lista.
 	 * La lista viene ricavata in base alle autorizzazioni dall'utente corrente.
@@ -91,7 +97,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
     	}
     	return allowedGroups;
 	}
-
+	
 	/**
 	 * Restitusce i filtri per la selezione e l'ordinamento dei contenuti erogati nell'interfaccia.
 	 * @return Il filtri di selezione ed ordinamento dei contenuti.
@@ -123,7 +129,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 		super.addFilter(orderFilter);
 		return this.getFilters();
 	}
-
+	
 	public String changeOrder() {
 		try {
 			if (null == this.getGroupBy()) return SUCCESS;
@@ -136,12 +142,13 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			}
 			this.setLastGroupBy(this.getGroupBy());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "changeOrder");
-			throw new RuntimeException("Errore in cambiamento ordinamento", t);
+			_logger.error("error in changeOrder", t);
+			//ApsSystemUtils.logThrowable(t, this, "changeOrder");
+			throw new RuntimeException("error in changeOrder", t);
 		}
 		return this.execute();
 	}
-
+	
 	@Override
 	public String insertOnLine() {
 		try {
@@ -171,7 +178,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().insertOnLineContent(contentToPublish);
-				ApsSystemUtils.getLogger().info("Published content " + contentToPublish.getId()
+				ApsSystemUtils.getLogger().info("Published content " + contentToPublish.getId() 
 						+ " by user " + this.getCurrentUser().getUsername());
 				publishedContents.add(contentToPublish);
 				this.addActivityStreamInfo(contentToPublish, (ApsAdminSystemConstants.ADD + 10), true);
@@ -179,12 +186,13 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			// RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.publishedContents", publishedContents);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "insertOnLine");
+			_logger.error("error in insertOnLine", t);
+			//ApsSystemUtils.logThrowable(t, this, "insertOnLine");
 			throw new RuntimeException("Error publishing contents", t);
 		}
 		return SUCCESS;
 	}
-
+	
 	@Override
 	public String removeOnLine() {
 		try {
@@ -197,7 +205,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			while (contentsIdsItr.hasNext()) {
 			String contentId = (String) contentsIdsItr.next();
 				Content contentToSuspend = this.getContentManager().loadContent(contentId, false);
-				String[] msgArg = new String[1];
+				String[] msgArg = new String[1];					
 				if (null == contentToSuspend) {
 					msgArg[0] = contentId;
 					this.addActionError(this.getText("error.content.contentToSuspendNull", msgArg));
@@ -214,7 +222,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().removeOnLineContent(contentToSuspend);
-				ApsSystemUtils.getLogger().info("Suspended Content '" + contentToSuspend.getId()
+				ApsSystemUtils.getLogger().info("Suspended Content '" + contentToSuspend.getId() 
 						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
 				removedContents.add(contentToSuspend);
 				this.addActivityStreamInfo(contentToSuspend, (ApsAdminSystemConstants.DELETE + 10), true);
@@ -222,12 +230,13 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			// RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.suspendedContents", removedContents);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeOnLine");
+			_logger.error("Error on suspending contents", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeOnLine");
 			throw new RuntimeException("Error on suspending contents", t);
 		}
 		return SUCCESS;
 	}
-
+	
 	/**
 	 * We've moved to deletion check here in the 'trash' action so to have errors notified immediately. Be design we
 	 * share all the messages with the 'delete' action.
@@ -249,8 +258,8 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					msgArg[0] = currentContentId;
 					this.addActionError(this.getText("error.content.contentToDeleteNull", msgArg));
 					continue;
-				}
-				msgArg[0] = contentToTrash.getDescr();
+				} 
+				msgArg[0] = contentToTrash.getDescr();			
 				if (!this.isUserAllowed(contentToTrash)) {
 					this.addActionError(this.getText("error.content.userNotAllowedToContentToDelete", msgArg));
 					continue;
@@ -261,13 +270,14 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("Error on deleting contents - trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			throw new RuntimeException("Error on deleting contents", t);
 		}
 		if (this.getActionErrors().isEmpty()) return SUCCESS;
 		return "cannotProceed";
 	}
-
+	
 	@Override
 	public String delete() {
 		try {
@@ -285,7 +295,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					msgArg[0] = contentId;
 					this.addActionError(this.getText("error.content.contentToDeleteNull", msgArg));
 					continue;
-				}
+				} 
 				msgArg[0] = contentToDelete.getDescr();
 				if (!this.isUserAllowed(contentToDelete)) {
 					this.addActionError(this.getText("error.content.userNotAllowedToContentToDelete", msgArg));
@@ -296,7 +306,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().deleteContent(contentToDelete);
-				ApsSystemUtils.getLogger().info("Deleted Content '" + contentToDelete.getId()
+				ApsSystemUtils.getLogger().info("Deleted Content '" + contentToDelete.getId() 
 						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
 				deletedContents.add(contentToDelete);
 				this.addActivityStreamInfo(contentToDelete, ApsAdminSystemConstants.DELETE, false);
@@ -304,16 +314,17 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			//RIVISITARE LABEL e LOGICA DI COSTRUZIONE LABEL
 			this.addConfirmMessage("message.content.deletedContents", deletedContents);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("Error deleting contentd - delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			throw new RuntimeException("Errore in cancellazione contenuti", t);
 		}
 		return SUCCESS;
 	}
-
+	
 	protected boolean isUserAllowed(Content content) {
 		return this.getContentActionHelper().isUserAllowed(content, this.getCurrentUser());
 	}
-
+	
 	private void addConfirmMessage(String key, List<Content> deletedContents) {
 		if (deletedContents.size()>0) {
 			//RIVISITARE LOGICA DI COSTRUZIONE MESSAGGIO
@@ -326,7 +337,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 			this.addActionMessage(confirm);
 		}
 	}
-
+	
 	/**
 	 * Restituisce il contenuto vo in base all'identificativo.
 	 * @param contentId L'identificativo del contenuto.
@@ -337,23 +348,24 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 		try {
 			contentVo = this.getContentManager().loadContentVO(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVo");
+			_logger.error("error in getContentVo for content {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentVo");
 			throw new RuntimeException("Errore in caricamento contenuto vo", t);
 		}
 		return contentVo;
 	}
-
+	
 	public List<SmallContentType> getContentTypes() {
 		return this.getContentManager().getSmallContentTypes();
 	}
-
+	
 	public SmallContentType getSmallContentType(String code) {
 		return this.getContentManager().getSmallContentTypesMap().get(code);
 	}
-
+	
 	/**
 	 * Restituisce la lista di stati di contenuto definiti nel sistema, come insieme di chiave e valore
-	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire
+	 * Il metodo è a servizio delle jsp che richiedono questo dato per fornire 
 	 * una corretta visualizzazione della pagina.
 	 * @return La lista di stati di contenuto definiti nel sistema.
 	 */
@@ -366,12 +378,12 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 		}
 		return items;
 	}
-
+	
 	protected void addActivityStreamInfo(Content content, int strutsAction, boolean addLink) {
 		ActivityStreamInfo asi = this.getContentActionHelper().createActivityStreamInfo(content, strutsAction, addLink);
 		super.addActivityStreamInfo(asi);
 	}
-
+	
 	/**
 	 * Restituisce un gruppo in base al nome.
 	 * @param groupName Il nome del gruppo da restituire.
@@ -380,11 +392,11 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 	public Group getGroup(String groupName) {
 		return this.getGroupManager().getGroup(groupName);
 	}
-
+	
 	public List<Group> getAllowedGroups() {
 		return this.getContentActionHelper().getAllowedGroups(this.getCurrentUser());
 	}
-
+	
 	/**
 	 * Restituisce la lista ordinata dei gruppi presenti nel sistema.
 	 * @return La lista dei gruppi presenti nel sistema.
@@ -392,20 +404,20 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 	public List<Group> getGroups() {
 		return this.getGroupManager().getGroups();
 	}
-
+	
 	public Category getCategoryRoot() {
 		return (Category) this.getCategoryManager().getRoot();
 	}
-
+	
 	protected IContentActionHelper getContentActionHelper() {
 		return (IContentActionHelper) super.getEntityActionHelper();
 	}
-
+	
 	@Override
 	protected void deleteEntity(String entityId) throws Throwable {
 		// method not supported
 	}
-
+	
 	@Override
 	protected IEntityManager getEntityManager() {
 		return this.getContentManager();
@@ -417,163 +429,163 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 	public void setContentType(String contentType) {
 		super.setEntityTypeCode(contentType);
 	}
-
+	
 	public String getState() {
 		return _state;
 	}
 	public void setState(String state) {
 		this._state = state;
 	}
-
+	
 	public String getText() {
 		return _text;
 	}
 	public void setText(String text) {
 		this._text = text;
 	}
-
+	
 	public String getOnLineState() {
 		return _onLineState;
 	}
 	public void setOnLineState(String onLineState) {
 		this._onLineState = onLineState;
 	}
-
+	
 	public void setContentIdToken(String contentIdToken) {
 		this._contentIdToken = contentIdToken;
 	}
 	public String getContentIdToken() {
 		return _contentIdToken;
 	}
-
+	
 	public String getOwnerGroupName() {
 		return _ownerGroupName;
 	}
 	public void setOwnerGroupName(String ownerGroupName) {
 		this._ownerGroupName = ownerGroupName;
 	}
-
+	
 	public String getCategoryCode() {
 		return _categoryCode;
 	}
 	public void setCategoryCode(String categoryCode) {
 		this._categoryCode = categoryCode;
 	}
-
+	
 	public String getLastOrder() {
 		return _lastOrder;
 	}
 	public void setLastOrder(String order) {
 		this._lastOrder = order;
 	}
-
+	
 	public String getLastGroupBy() {
 		return _lastGroupBy;
 	}
 	public void setLastGroupBy(String lastGroupBy) {
 		this._lastGroupBy = lastGroupBy;
 	}
-
+	
 	public String getGroupBy() {
 		return _groupBy;
 	}
 	public void setGroupBy(String groupBy) {
 		this._groupBy = groupBy;
 	}
-
+	
 	public boolean isViewCode() {
 		return _viewCode;
 	}
 	public void setViewCode(boolean viewCode) {
 		this._viewCode = viewCode;
 	}
-
+	
 	public boolean isViewStatus() {
 		return _viewStatus;
 	}
 	public void setViewStatus(boolean viewStatus) {
 		this._viewStatus = viewStatus;
 	}
-
+	
 	public boolean isViewCreationDate() {
 		return _viewCreationDate;
 	}
 	public void setViewCreationDate(boolean viewCreationDate) {
 		this._viewCreationDate = viewCreationDate;
 	}
-
+	
 	public boolean getViewGroup() {
 		return _viewGroup;
 	}
 	public void setViewGroup(boolean viewGroup) {
 		this._viewGroup = viewGroup;
 	}
-
+	
 	public boolean getViewTypeDescr() {
 		return _viewTypeDescr;
 	}
 	public void setViewTypeDescr(boolean viewTypeDescr) {
 		this._viewTypeDescr = viewTypeDescr;
 	}
-
+	
 	public Set<String> getContentIds() {
 		return _contentIds;
 	}
 	public void setContentIds(Set<String> contentIds) {
 		this._contentIds = contentIds;
 	}
-
+	
 	public String getActionCode() {
 		return _actionCode;
 	}
 	public void setActionCode(String actionCode) {
 		this._actionCode = actionCode;
 	}
-
+	
 	protected IContentManager getContentManager() {
 		return _contentManager;
 	}
 	public void setContentManager(IContentManager contentManager) {
 		this._contentManager = contentManager;
 	}
-
+	
 	protected IGroupManager getGroupManager() {
 		return _groupManager;
 	}
 	public void setGroupManager(IGroupManager groupManager) {
 		this._groupManager = groupManager;
 	}
-
+	
 	protected ICategoryManager getCategoryManager() {
 		return _categoryManager;
 	}
 	public void setCategoryManager(ICategoryManager categoryManager) {
 		this._categoryManager = categoryManager;
 	}
-
+	
 	private String _state = "";
 	private String _text = "";
 	private String _onLineState = "";
 	private String _contentIdToken = "";
 	private String _ownerGroupName;
 	private String _categoryCode;
-
+	
 	private String _lastOrder;
 	private String _lastGroupBy;
 	private String _groupBy;
-
+	
 	private boolean _viewCode;
 	private boolean _viewGroup;
 	private boolean _viewStatus;
 	private boolean _viewTypeDescr;
 	private boolean _viewCreationDate;
-
+	
 	private Set<String> _contentIds;
-
+	
 	private String _actionCode = null;
-
+	
 	private IContentManager _contentManager;
 	private IGroupManager _groupManager;
 	private ICategoryManager _categoryManager;
-
+	
 }

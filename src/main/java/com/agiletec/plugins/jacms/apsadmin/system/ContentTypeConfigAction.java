@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.system;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
@@ -35,6 +37,8 @@ import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
  * @author E.Santoboni
  */
 public class ContentTypeConfigAction extends EntityTypeConfigAction {
+	
+	private static final Logger _logger = LoggerFactory.getLogger(ContentTypeConfigAction.class);
 	
 	@Override
 	protected IApsEntity updateEntityOnSession() {
@@ -81,7 +85,8 @@ public class ContentTypeConfigAction extends EntityTypeConfigAction {
 		try {
 			models = this.getContentModelManager().getModelsForContentType(typeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getModels");
+			_logger.error("Error on extracting models by type  {}", typeCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "getModels");
 			throw new RuntimeException("Error on extracting models by type " + typeCode, t);
 		}
 		return models;

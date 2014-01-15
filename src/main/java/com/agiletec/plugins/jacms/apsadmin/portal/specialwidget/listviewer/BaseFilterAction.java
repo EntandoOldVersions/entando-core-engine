@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
@@ -41,6 +43,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class BaseFilterAction extends SimpleWidgetConfigAction implements IContentListFilterAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseFilterAction.class);
 	
 	@Override
 	public String newFilter() {
@@ -75,7 +79,8 @@ public class BaseFilterAction extends SimpleWidgetConfigAction implements IConte
 				this.setFilterKey(null);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "setFilterType");
+			_logger.error("error in setFilterType", t);
+			//ApsSystemUtils.logThrowable(t, this, "setFilterType");
 			return FAILURE;
 		}
 		return SUCCESS;

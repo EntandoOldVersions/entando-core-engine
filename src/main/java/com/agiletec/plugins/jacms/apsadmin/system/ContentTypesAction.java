@@ -17,7 +17,9 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.system;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.apsadmin.system.entity.type.EntityTypesAction;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
 
@@ -25,14 +27,17 @@ import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEng
  * @author E.Santoboni
  */
 public class ContentTypesAction extends EntityTypesAction implements IContentReferencesReloadingAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentTypesAction.class);
 	
 	@Override
 	public String reloadContentsIndexes() {
 		try {
 			this.getSearchEngineManager().startReloadContentsReferences();
-			ApsSystemUtils.getLogger().info("Ricaricamento indicizzazione dei contenuti avviata");
+			_logger.info("Reload context index started");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadContentsIndexs");
+			_logger.error("error in reloadContentsIndexs", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadContentsIndexs");
 			return FAILURE;
 		}
 		return SUCCESS;

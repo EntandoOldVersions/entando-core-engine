@@ -23,7 +23,9 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.BaseFilterUtils;
@@ -40,6 +42,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.widget.UserFilterO
  * @author E.Santoboni
  */
 public class FilterUtils extends BaseFilterUtils {
+
+	private static final Logger _logger = LoggerFactory.getLogger(FilterUtils.class);
 	
 	/**
 	 * Return the showlet parameters in the form of property list
@@ -84,8 +88,8 @@ public class FilterUtils extends BaseFilterUtils {
 				UserFilterOptionBean filterBean = new UserFilterOptionBean(properties, prototype, currentFrame, currentLang, dateFormat, request);
 				list.add(filterBean);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilters", 
-						"Error extracting user filter by string '" + fullFilterString + "' for type '" + prototype.getTypeCode() + "'");
+				_logger.error("Error extracting user filter by string '{}' for type '{}'", fullFilterString, prototype.getTypeCode(), t);
+				//ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilters", "Error extracting user filter by string '" + fullFilterString + "' for type '" + prototype.getTypeCode() + "'");
 			}
 		}
 		return list;
@@ -119,7 +123,8 @@ public class FilterUtils extends BaseFilterUtils {
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 			filter = new UserFilterOptionBean(props, prototype, currentFrame, currentLang, dateFormat, reqCtx.getRequest());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilter", "Error creating user filter");
+			_logger.error("Error creating user filter", t);
+			//ApsSystemUtils.logThrowable(t, FilterUtils.class, "getUserFilter", "Error creating user filter");
 		}
 		return filter;
 	}

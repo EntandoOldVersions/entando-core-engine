@@ -17,7 +17,9 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.resource.model;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -25,6 +27,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author W.Ambu - E.Santoboni
  */
 public class AttachResource extends AbstractMonoInstanceResource  {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AttachResource.class);
 	
     /**
      * Restituisce il path della risorsa attach.
@@ -63,7 +67,8 @@ public class AttachResource extends AbstractMonoInstanceResource  {
 			instance.setFileLength(bean.getFileSize() + " Kb");
 			this.addInstance(instance);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveResourceInstances");
+			_logger.error("Error on saving attach resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveResourceInstances");
 			throw new ApsSystemException("Error on saving attach resource instances", t);
 		}
 	}

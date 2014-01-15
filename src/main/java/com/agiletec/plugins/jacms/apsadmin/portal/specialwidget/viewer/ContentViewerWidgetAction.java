@@ -20,7 +20,9 @@ package com.agiletec.plugins.jacms.apsadmin.portal.specialwidget.viewer;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -35,6 +37,8 @@ import com.agiletec.plugins.jacms.apsadmin.util.CmsPageActionUtil;
  * @author E.Santoboni
  */
 public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implements IContentViewerWidgetAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentViewerWidgetAction.class);
 	
 	@Override
 	public void validate() {
@@ -56,7 +60,8 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 					}
 				}
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "validate", "Errore in validazione contenuto con id " + this.getContentId());
+				_logger.error("Error validating content {}", this.getContentId(), t);
+				//ApsSystemUtils.logThrowable(t, this, "validate", "Errore in validazione contenuto con id " + this.getContentId());
 				throw new RuntimeException("Errore in validazione contenuto con id " + this.getContentId(), t);
 			}
 		}
@@ -64,7 +69,8 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 			try {
 				this.createValuedShowlet();
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "validate", "Errore in creazione showlet valorizzata");
+				_logger.error("error creating new widget", t);
+				//ApsSystemUtils.logThrowable(t, this, "validate", "Errore in creazione showlet valorizzata");
 				throw new RuntimeException("Errore in creazione showlet valorizzata", t);
 			}
 		}
@@ -75,7 +81,8 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 		try {
 			this.createValuedShowlet();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "joinContent");
+			_logger.error("error in joinContent", t);
+			//ApsSystemUtils.logThrowable(t, this, "joinContent");
 			throw new RuntimeException("Errore in associazione contenuto", t);
 		}
 		return SUCCESS;
@@ -91,7 +98,8 @@ public class ContentViewerWidgetAction extends SimpleWidgetConfigAction implemen
 		try {
 			contentVo = this.getContentManager().loadContentVO(contentId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getContentVo");
+			_logger.error("error in getContentVo for content {}", contentId, t);
+			//ApsSystemUtils.logThrowable(t, this, "getContentVo");
 			throw new RuntimeException("Errore in caricamento contenuto vo", t);
 		}
 		return contentVo;

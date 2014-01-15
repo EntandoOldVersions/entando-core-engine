@@ -27,7 +27,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 
@@ -36,6 +38,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
  * @author E.Santoboni
  */
 public class DefaultImageResizer extends AbstractImageResizer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DefaultImageResizer.class);
 	
 	@Override
 	@Deprecated
@@ -45,9 +49,10 @@ public class DefaultImageResizer extends AbstractImageResizer {
 			File file = new File(filePath);
 	        ImageIO.write(outImage, this.getFileExtension(filePath), file);
 		} catch (Throwable t) {
-			String msg = "Error creating resigned Image";
-			ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
-			throw new ApsSystemException(msg, t);
+			_logger.error("Error creating resized Image", t);
+			//String msg = "Error creating resigned Image";
+			//ApsSystemUtils.logThrowable(t, this, "saveImageResized", msg);
+			throw new ApsSystemException("Error creating resized Image", t);
 		}
 	}
 	
@@ -69,9 +74,9 @@ public class DefaultImageResizer extends AbstractImageResizer {
 			g2d.dispose();
 			return outImage;
 		} catch (Throwable t) {
-			String msg = "Error creating resigned Image";
-			ApsSystemUtils.logThrowable(t, this, "getResizedImage", msg);
-			throw new ApsSystemException(msg, t);
+			_logger.error("Error creating resized Image", t);
+			//ApsSystemUtils.logThrowable(t, this, "getResizedImage", msg);
+			throw new ApsSystemException("Error creating resized Image", t);
 		}
 	}
 	

@@ -22,7 +22,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -38,6 +40,8 @@ import com.agiletec.plugins.jacms.apsadmin.resource.ResourceAction;
  * @author E.Santoboni
  */
 public class ExtendedResourceAction extends ResourceAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ExtendedResourceAction.class);
 	
 	public String entryFindResource() {
 		this.setCategoryCode(null);
@@ -53,7 +57,8 @@ public class ExtendedResourceAction extends ResourceAction {
 				ResourceAttributeActionHelper.joinResource(resource, this.getRequest());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;

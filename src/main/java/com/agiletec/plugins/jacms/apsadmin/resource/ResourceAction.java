@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -38,6 +40,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public class ResourceAction extends AbstractResourceAction implements IResourceAction, ResourceDataBean {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceAction.class);
 	
 	@Override
 	public void validate() {
@@ -84,8 +88,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
                                 }
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkDuplicateFile", 
-					"Error while check duplicate file - master file name '" + formFileName + "'");
+			_logger.error("Error while check duplicate file - master file name '{}'", formFileName, t);
+			//ApsSystemUtils.logThrowable(t, this, "checkDuplicateFile", 	"Error while check duplicate file - master file name '" + formFileName + "'");
 		}
 	}
 	
@@ -112,7 +116,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 				this.setMainGroup(Group.FREE_GROUP_NAME);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "newResource");
+			_logger.error("error in newResource", t);
+			//ApsSystemUtils.logThrowable(t, this, "newResource");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -132,7 +137,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 			this.setMainGroup(resource.getMainGroup());
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -147,7 +153,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 				this.getResourceManager().updateResource(this);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -159,7 +166,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 			String result = this.checkDeleteResource();
 			if (null != result) return result;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -173,7 +181,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 			ResourceInterface resource = this.loadResource(this.getResourceId());
 			this.getResourceManager().deleteResource(resource);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -225,7 +234,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 				categories.remove(categoryCode);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "joinRemoveCategory");
+			_logger.error("error in joinRemoveCategory", t);
+			//ApsSystemUtils.logThrowable(t, this, "joinRemoveCategory");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -255,7 +265,8 @@ public class ResourceAction extends AbstractResourceAction implements IResourceA
 				this._references = this.getResourceActionHelper().getReferencingObjects(this.getResourceId(), this.getRequest());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getReferences", "Error extracting references");
+			_logger.error("Error extracting references", t);
+			//ApsSystemUtils.logThrowable(t, this, "getReferences", "Error extracting references");
 		}
 		return _references;
 	}

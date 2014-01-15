@@ -27,8 +27,9 @@ import javax.swing.ImageIcon;
 
 import org.im4java.core.ConvertCmd;
 import org.im4java.core.IMOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer.IImageResizer;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
@@ -38,6 +39,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImage
  * @author W.Ambu - E.Santoboni
  */
 public class ImageResource extends AbstractMultiInstanceResource {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ImageResource.class);
 	
     /**
      * Restituisce il path dell'immagine (relativa al size immesso).
@@ -63,7 +66,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 		try {
 			return this.getStorageManager().getStream(subPath, this.isProtectedResource());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getFileIs");
+			_logger.error("Error on extracting file", t);
+			//ApsSystemUtils.logThrowable(t, this, "getFileIs");
 			throw new RuntimeException("Error on extracting file", t);
 		}
 	}
@@ -85,7 +89,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			}
 			return null;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getFile");
+			_logger.error("Error on extracting file", t);
+			//ApsSystemUtils.logThrowable(t, this, "getFile");
 			throw new RuntimeException("Error on extracting file", t);
 		}
 	}
@@ -151,7 +156,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 					this.isProtectedResource(), new FileInputStream(tempMasterFile));
 			tempMasterFile.delete();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveResourceInstances");
+			_logger.error("Error saving image resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveResourceInstances");
 			throw new ApsSystemException("Error saving image resource instances", t);
 		}
 	}
@@ -172,7 +178,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			this.saveResizedInstances(bean, tempMasterFile.getAbsolutePath());
 			tempMasterFile.delete();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadResourceInstances");
+			_logger.error("Error reloading image resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadResourceInstances");
 			throw new ApsSystemException("Error reloading image resource instances", t);
 		}
     }
@@ -192,7 +199,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveResizedInstances");
+			_logger.error("Error saving resized image resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveResizedInstances");
 			throw new ApsSystemException("Error saving resized image resource instances", t);
 		}
 	}
@@ -239,7 +247,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 			this.getStorageManager().saveFile(subPath, this.isProtectedResource(), new FileInputStream(tempFile));
 			tempFile.delete();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
+			_logger.error("Error creating resource file instance '{}'", subPath, t);
+			//ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
 			throw new ApsSystemException("Error creating resource file instance '" + subPath + "'", t);
 		}
 	}
@@ -259,7 +268,8 @@ public class ImageResource extends AbstractMultiInstanceResource {
 					resizer.saveResizedImage(subPath, this.isProtectedResource(), imageIcon, dimension);
 			this.addInstance(resizedInstance);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
+			_logger.error("Error creating resource file instance '{}'", subPath, t);
+			//ApsSystemUtils.logThrowable(t, this, "saveResizedImage");
 			throw new ApsSystemException("Error creating resource file instance '" + subPath + "'", t);
 		}
 	}

@@ -23,6 +23,8 @@ import java.util.List;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
@@ -41,6 +43,8 @@ import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModel
  * @author M.Diana - W.Ambu - E.Santoboni
  */
 public class BaseContentRenderer extends BaseEntityRenderer implements IContentRenderer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseContentRenderer.class);
 	
 	@Override
 	public String render(Content content, long modelId, String langCode, RequestContext reqCtx) {
@@ -66,7 +70,8 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 			stringWriter.flush();
 			renderedEntity = stringWriter.toString();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "render", "Error rendering content");
+			_logger.error("Error rendering content", t);
+			//ApsSystemUtils.logThrowable(t, this, "render", "Error rendering content");
 			renderedEntity = "";
 		} finally {
 			if (null != conversions) {

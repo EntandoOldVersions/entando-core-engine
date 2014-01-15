@@ -25,7 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
@@ -35,6 +37,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM
  * @author E.Santoboni
  */
 public abstract class AbstractMultiInstanceResource extends AbstractResource {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractMultiInstanceResource.class);
 	
 	/**
 	 * Inizializza la mappa delle istanze della risorsa.
@@ -58,7 +62,8 @@ public abstract class AbstractMultiInstanceResource extends AbstractResource {
 				this.getStorageManager().deleteFile(subPath, this.isProtectedResource());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
+			_logger.error("Error on deleting resource instances", t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteResourceInstances");
 			throw new ApsSystemException("Error on deleting resource instances", t);
 		}
 	}

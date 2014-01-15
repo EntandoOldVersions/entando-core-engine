@@ -17,7 +17,9 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
@@ -27,6 +29,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class IntroNewContentAction extends AbstractContentAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(IntroNewContentAction.class);
 	
 	/**
 	 * Punto di ingresso della redazione nuovo contenuto.
@@ -41,7 +45,8 @@ public class IntroNewContentAction extends AbstractContentAction {
 				this.setContentMainGroup(Group.FREE_GROUP_NAME);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "openNew");
+			_logger.error("error in openNew", t);
+			//ApsSystemUtils.logThrowable(t, this, "openNew");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -60,9 +65,10 @@ public class IntroNewContentAction extends AbstractContentAction {
 			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
-			ApsSystemUtils.getLogger().debug("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
+			_logger.debug("Created ed inserted on session content prototype of type {}", prototype.getTypeCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createNewVoid");
+			_logger.error("error in createNewVoid", t);
+			//ApsSystemUtils.logThrowable(t, this, "createNewVoid");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -78,9 +84,10 @@ public class IntroNewContentAction extends AbstractContentAction {
 			String marker = buildContentOnSessionMarker(prototype, ApsAdminSystemConstants.ADD);
 			super.setContentOnSessionMarker(marker);
 			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + marker, prototype);
-			ApsSystemUtils.getLogger().debug("Created ed inserted on session content prototype of type " + prototype.getTypeCode());
+			_logger.debug("Created ed inserted on session content prototype of type {}", prototype.getTypeCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createNewVoid");
+			_logger.error("error in createNewVoid", t);
+			//ApsSystemUtils.logThrowable(t, this, "createNewVoid");
 			return FAILURE;
 		}
 		return SUCCESS;

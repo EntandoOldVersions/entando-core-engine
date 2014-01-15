@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
@@ -48,7 +49,9 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  */
 public abstract class AbstractResourceAttribute extends TextAttribute
         implements IReferenceableAttribute, ResourceAttributeInterface {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractResourceAttribute.class);
+	
     /**
      * Setta una risorsa sull'attributo.
      * @param resource La risorsa da associare all'attributo.
@@ -199,7 +202,8 @@ public abstract class AbstractResourceAttribute extends TextAttribute
 				value.setRestResourcePath(restResourcePath.toString());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getJAXBValue");
+			_logger.error("Error creating jaxb response. lang: {}", langCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "getJAXBValue");
 			throw new RuntimeException("Error creating jaxb response", t);
 		}
         return value;
@@ -227,7 +231,8 @@ public abstract class AbstractResourceAttribute extends TextAttribute
 			}
             this.getTextMap().put(this.getDefaultLangCode(), text.toString());
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "valueFrom", "Error extracting resource from jaxbAttribute");
+        	_logger.error("Error extracting resource from jaxbAttribute", e);
+            //ApsSystemUtils.logThrowable(e, this, "valueFrom", "Error extracting resource from jaxbAttribute");
         }
     }
     
@@ -286,7 +291,8 @@ public abstract class AbstractResourceAttribute extends TextAttribute
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "validate");
+        	_logger.error("Error validating text attribute", t);
+            //ApsSystemUtils.logThrowable(t, this, "validate");
             throw new RuntimeException("Error validating text attribute", t);
         }
         return errors;

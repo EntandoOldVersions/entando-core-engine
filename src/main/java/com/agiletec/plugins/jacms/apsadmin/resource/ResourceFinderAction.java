@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.util.IImageDimensionReader;
 import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
@@ -35,14 +36,17 @@ import com.agiletec.plugins.jacms.apsadmin.util.ResourceIconUtil;
  * @author E.Santoboni
  */
 public class ResourceFinderAction extends AbstractResourceAction implements IResourceFinderAction {
-    
+ 
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceFinderAction.class);
+	
     public List<String> getResources() throws Throwable {
         List<String> resources = null;
         try {
             resources = this.getResourceActionHelper().searchResources(this.getResourceTypeCode(),
                     this.getText(), this.getOwnerGroupName(), this.getFileName(), this.getCategoryCode(), this.getCurrentUser());
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getResources");
+        	_logger.error("error in getResources", t);
+            //ApsSystemUtils.logThrowable(t, this, "getResources");
             throw t;
         }
         return resources;

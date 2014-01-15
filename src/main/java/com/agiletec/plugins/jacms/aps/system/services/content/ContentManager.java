@@ -28,6 +28,8 @@ import java.util.Map;
 import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
@@ -56,13 +58,14 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.ResourceUtilizer;
  */
 public class ContentManager extends ApsEntityManager 
 		implements IContentManager, GroupUtilizer, PageUtilizer, ContentUtilizer, ResourceUtilizer, CategoryUtilizer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		super.init();
 		this.createSmallContentTypes();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": inizializated " + 
-				super.getEntityTypes().size() + " content types");
+		_logger.debug("{} ready. Initialized {} content types",this.getClass().getName(), super.getEntityTypes().size());
 	}
 	
 	@Override
@@ -210,7 +213,8 @@ public class ContentManager extends ApsEntityManager
 				}
 			}
 		} catch (ApsSystemException e) {
-			ApsSystemUtils.logThrowable(e, this, "loadContent");
+			_logger.error("Error while loading content : id {}", id, e);
+			//ApsSystemUtils.logThrowable(e, this, "loadContent");
 			throw new ApsSystemException("Error while loading content : id " + id, e);
 		}
 		return content;
@@ -229,7 +233,8 @@ public class ContentManager extends ApsEntityManager
 		try {
 			contentVo = (ContentRecordVO) this.getContentDAO().loadEntityRecord(id);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadContentVO");
+			_logger.error("Error while loading content vo : id {}", id, t);
+			//ApsSystemUtils.logThrowable(t, this, "loadContentVO");
 			throw new ApsSystemException("Error while loading content vo : id " + id, t);
 		}
 		return contentVo;
@@ -263,7 +268,8 @@ public class ContentManager extends ApsEntityManager
 				this.getContentDAO().updateEntity(content);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveContent");
+			_logger.error("Error while saving content", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveContent");
 			throw new ApsSystemException("Error while saving content", t);
 		}
 	}
@@ -295,7 +301,8 @@ public class ContentManager extends ApsEntityManager
 			}
 			this.notifyPublicContentChanging(content, operationEventCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "insertOnLineContent");
+			_logger.error("Error while inserting content on line", t);
+			//ApsSystemUtils.logThrowable(t, this, "insertOnLineContent");
 			throw new ApsSystemException("Error while inserting content on line", t);
 		}
 	}
@@ -324,8 +331,8 @@ public class ContentManager extends ApsEntityManager
 			}
 			ApsSystemUtils.getLogger().info("Reloaded content references for content " + entityId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", 
-					"Error while reloading content references for content " + entityId);
+			_logger.error("Error while reloading content references for content {}", entityId, t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", "Error while reloading content references for content " + entityId);
 		}
 	}
 	
@@ -349,7 +356,8 @@ public class ContentManager extends ApsEntityManager
 			this.getContentDAO().removeOnLineContent(content);
 			this.notifyPublicContentChanging(content, PublicContentChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeOnLineContent");
+			_logger.error("Error while removing onLine content", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeOnLineContent");
 			throw new ApsSystemException("Error while removing onLine content", t);
 		}
 	}
@@ -393,7 +401,8 @@ public class ContentManager extends ApsEntityManager
 		try {
 			this.getContentDAO().deleteEntity(content.getId());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteContent");
+			_logger.error("Error while deleting content {}", content.getId(), t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteContent");
 			throw new ApsSystemException("Error while deleting content " + content.getId(), t);
 		}
 	}
@@ -411,7 +420,8 @@ public class ContentManager extends ApsEntityManager
 		try {
 			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadContentsId");
+			_logger.error("Error while loading contents", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadContentsId");
 			throw new ApsSystemException("Error while loading contents", t);
 		}
 		return contentsId;
@@ -430,7 +440,8 @@ public class ContentManager extends ApsEntityManager
 		try {
 			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadContentsId");
+			_logger.error("Error while loading contents", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadContentsId");
 			throw new ApsSystemException("Error while loading contents", t);
 		}
 		return contentsId;
@@ -462,7 +473,8 @@ public class ContentManager extends ApsEntityManager
 		try {
 			contentsId = this.getWorkContentSearcherDAO().loadContentsId(categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "loadWorkContentsId");
+			_logger.error("Error while loading work contents", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadWorkContentsId");
 			throw new ApsSystemException("Error while loading work contents", t);
 		}
 		return contentsId;

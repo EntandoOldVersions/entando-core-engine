@@ -17,6 +17,9 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.linkresolver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
@@ -40,10 +43,12 @@ import com.agiletec.plugins.jacms.aps.system.services.contentpagemapper.IContent
  * @author M.Diana - E.Santoboni
  */
 public class LinkResolverManager extends AbstractService implements ILinkResolverManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LinkResolverManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": inizializzato " );
+		_logger.debug("{} ready.", this.getClass().getName());
 	}
 	
 	/**
@@ -126,7 +131,8 @@ public class LinkResolverManager extends AbstractService implements ILinkResolve
 				url = pageUrl.getURL();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "resolveLink", "Error resolve link from SymbolicLink");
+			_logger.error("Error resolve link from SymbolicLink", t);
+			//ApsSystemUtils.logThrowable(t, this, "resolveLink", "Error resolve link from SymbolicLink");
 			throw new RuntimeException("Error resolve link from SymbolicLink", t);
 		}
 		return url;

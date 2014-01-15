@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
@@ -31,6 +32,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class IndexLoaderThread extends Thread {
+
+	private static final Logger _logger = LoggerFactory.getLogger(IndexLoaderThread.class);
 	
 	public IndexLoaderThread(SearchEngineManager searchEngineManager, 
 			IContentManager contentManager, IIndexerDAO indexerDao) {
@@ -47,7 +50,8 @@ public class IndexLoaderThread extends Thread {
 			reloadInfo.setResult(LastReloadInfo.ID_SUCCESS_RESULT);
 		} catch (Throwable t) {
 			reloadInfo.setResult(LastReloadInfo.ID_FAILURE_RESULT);
-			ApsSystemUtils.logThrowable(t, this, "run");
+			_logger.error("error in run", t);
+			//ApsSystemUtils.logThrowable(t, this, "run");
 		} finally {
 			reloadInfo.setDate(new Date());
 			this._searchEngineManager.notifyEndingIndexLoading(reloadInfo, this._indexerDao);
@@ -64,7 +68,8 @@ public class IndexLoaderThread extends Thread {
 			}
 			ApsSystemUtils.getLogger().info("Indicizzazione effettuata");
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadIndex");
+			_logger.error("error in reloadIndex", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadIndex");
 			throw t;
 		}
 	}
@@ -78,7 +83,8 @@ public class IndexLoaderThread extends Thread {
 				log.info("Indexed content " + content.getId());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadContentIndex", "Error reloading index: content id" + id);
+			_logger.error("Error reloading index: content id {}", id, t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadContentIndex", "Error reloading index: content id" + id);
 		}
 	}
 	

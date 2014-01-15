@@ -19,7 +19,9 @@ package com.agiletec.plugins.jacms.aps.system.services.renderer;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -35,6 +37,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class SystemInfoWrapper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SystemInfoWrapper.class);
 	
 	public SystemInfoWrapper(RequestContext reqCtx) {
 		this.setReqCtx(reqCtx);
@@ -51,7 +55,10 @@ public class SystemInfoWrapper {
 					(ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, this.getReqCtx().getRequest());
             return configManager.getParam(paramName);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getConfigParameter", "Error extracting config parameter - parameter " + paramName);
+        	
+        	_logger.error("Error extracting config parameter - parameter ", paramName, t);
+        	
+            //ApsSystemUtils.logThrowable(t, this, "getConfigParameter", "Error extracting config parameter - parameter " + paramName);
 			return null;
         }
     }
@@ -61,7 +68,8 @@ public class SystemInfoWrapper {
             IPage page = (IPage) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
             return page;
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getCurrentPage", "Error current page");
+        	_logger.error("Error getting current page", t);
+            //ApsSystemUtils.logThrowable(t, this, "getCurrentPage", "Error current page");
 			return null;
         }
     }
@@ -76,7 +84,8 @@ public class SystemInfoWrapper {
     		}
     		return page;
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error getting page with widget: " + widgetCode);
+    		_logger.error("Error getting page with widget: {}", widgetCode, t);
+    		//ApsSystemUtils.logThrowable(t, this, "getPageWithWidget", "Error getting page with widget: " + widgetCode);
     		return null;
     	}
     }
@@ -91,7 +100,8 @@ public class SystemInfoWrapper {
     		pageUrl.setPage(page);
     		url = pageUrl.getURL();
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "getPageURLWithWidget", "Error getting pageUrl with widget: " + widgetCode);
+    		_logger.error("Error getting pageUrl with widget: {}", widgetCode, t);
+    		//ApsSystemUtils.logThrowable(t, this, "getPageURLWithWidget", "Error getting pageUrl with widget: " + widgetCode);
     		return null;
     	}
     	return url;
@@ -101,7 +111,8 @@ public class SystemInfoWrapper {
 		try {
             return (Lang) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getCurrentLang", "Error current lang");
+        	_logger.error("Error getting current lang", t);
+            //ApsSystemUtils.logThrowable(t, this, "getCurrentLang", "Error current lang");
 			return null;
         }
     }
@@ -118,7 +129,8 @@ public class SystemInfoWrapper {
 			try {
 				return (Widget) this.getReqCtx().getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "getCurrentWidget", "Error current Widget");
+				_logger.error("Error getting current Widget", t);
+				//ApsSystemUtils.logThrowable(t, this, "getCurrentWidget", "Error current Widget");
 				return null;
 			}
 		}

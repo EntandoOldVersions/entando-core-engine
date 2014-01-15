@@ -24,6 +24,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -40,6 +43,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ResourceInt
  * @author E.Santoboni
  */
 public class ResourceActionHelper extends BaseActionHelper implements IResourceActionHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ResourceActionHelper.class);
 	
 	@Override
 	public Map<String, List> getReferencingObjects(ResourceInterface resource, HttpServletRequest request) throws ApsSystemException {
@@ -60,7 +65,8 @@ public class ResourceActionHelper extends BaseActionHelper implements IResourceA
 				try {
 					service = ApsWebApplicationUtils.getWebApplicationContext(request).getBean(defNames[i]);
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "getReferencingObjects");
+					_logger.error("error in getReferencingObjects", t);
+					//ApsSystemUtils.logThrowable(t, this, "getReferencingObjects");
 					service = null;
 				}
 				if (service != null) {
@@ -72,7 +78,8 @@ public class ResourceActionHelper extends BaseActionHelper implements IResourceA
 				}
 			}
     	} catch (Throwable t) {
-    		ApsSystemUtils.logThrowable(t, this, "getReferencingObjects", "Error extracting referencing objects by resource '" + resourceId +"'");
+    		_logger.error("Error extracting referencing objects by resource '{}'", resourceId, t);
+    		//ApsSystemUtils.logThrowable(t, this, "getReferencingObjects", "Error extracting referencing objects by resource '" + resourceId +"'");
     		throw new ApsSystemException("Errore in getReferencingObjects", t);
     	}
     	return references;
