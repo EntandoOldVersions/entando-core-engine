@@ -28,7 +28,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public interface IPageDAO {
 
 	/**
-	 * Load a sorted list of the pages and the configuration of the showlets 
+	 * Load a sorted list of the pages and the configuration of the showlets
 	 * @return the list of pages
 	 */
 	public List<IPage> loadPages();
@@ -59,14 +59,22 @@ public interface IPageDAO {
 	public void updatePosition(IPage pageDown, IPage pageUp);
 
 	/**
+	 *
+	 * @param pageCode the page
+	 * @param widgetDown The widget to move downwards
+	 * @param widgetUp The widget to move upwards
+	 */
+	public void updateWidgetPosition(String pageCode, Integer frameToMove, Integer destFrame);
+
+	/**
 	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
 	 */
 	public void joinShowlet(String pageCode, Widget widget, int pos);
 
 	/**
 	 * Setta il widget (comprensiva della sua configurazione) nella pagina e nel frame specificato.
-	 * Nel caso che la posizione specificata sia già occupata, il widget corrente 
-	 * sarà sostituita da quella specificata. 
+	 * Nel caso che la posizione specificata sia già occupata, il widget corrente
+	 * sarà sostituita da quella specificata.
 	 * @param pageCode Il codice della pagina in cui settare il widget.
 	 * @param widget il widget da settare.
 	 * @param pos La posizione della pagina su cui settare il widget.

@@ -86,7 +86,26 @@ public class PageTreeAction extends AbstractTreeAction implements IPageTreeActio
 		}
 		return SUCCESS;
 	}
-	
+
+	public String moveWidgetUp() {
+		return this.moveWidget(this.getFrame() - 1);
+	}
+
+	public String moveWidgetDown() {
+		return this.moveWidget(this.getFrame() + 1);
+	}
+
+	protected String moveWidget(int destFrame) {
+		try {
+			int frame = this.getFrame();
+			this.getPageManager().moveWidget(this.getSelectedNode(), frame, destFrame);
+		} catch (Throwable t) {
+			_logger.error("error in moveWidget", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
 	@Override
 	public String copy() {
 		String selectedNode = this.getSelectedNode();
@@ -166,7 +185,14 @@ public class PageTreeAction extends AbstractTreeAction implements IPageTreeActio
 	public void setCopyingPageCode(String copyingPageCode) {
 		this._copyingPageCode = copyingPageCode;
 	}
-	
+
+	public Integer getFrame() {
+		return _frame;
+	}
+	public void setFrame(Integer frame) {
+		this._frame = frame;
+	}
+
 	@Override
 	protected IPageActionHelper getTreeHelper() {
 		return (IPageActionHelper) super.getTreeHelper();
@@ -182,7 +208,10 @@ public class PageTreeAction extends AbstractTreeAction implements IPageTreeActio
 	private String _selectedNode;
 	
 	private String _copyingPageCode;
+
+	private Integer _frame;
 	
 	private IPageManager _pageManager;
-	
+
+
 }

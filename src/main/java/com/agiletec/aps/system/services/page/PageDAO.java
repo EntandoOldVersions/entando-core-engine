@@ -354,6 +354,52 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 	}
 
 	/**
+	 * Updates the position for the page movement
+	 * @param pageDown The page to move downwards
+	 * @param pageUp The page to move upwards
+	 */
+	@Override
+	public void updateWidgetPosition(String pageCode, Integer frameToMove, Integer destFrame) {
+		Connection conn = null;
+		PreparedStatement stat = null;
+		PreparedStatement stat2 = null;
+		PreparedStatement stat3 = null;
+		int TEMP_FRAME_POSITION = -9999;
+		try {
+			conn = this.getConnection();
+			conn.setAutoCommit(false);
+
+			stat = conn.prepareStatement(MOVE_WIDGET);
+			stat.setInt(1, TEMP_FRAME_POSITION);
+			stat.setString(2, pageCode);
+			stat.setInt(3, frameToMove);
+			stat.executeUpdate();
+
+			stat2 = conn.prepareStatement(MOVE_WIDGET);
+			stat2.setInt(1, frameToMove);
+			stat2.setString(2, pageCode);
+			stat2.setInt(3, destFrame);
+			stat2.executeUpdate();
+
+			stat3 = conn.prepareStatement(MOVE_WIDGET);
+			stat3.setInt(1, destFrame);
+			stat3.setString(2, pageCode);
+			stat3.setInt(3, TEMP_FRAME_POSITION);
+			stat3.executeUpdate();
+			
+			conn.commit();
+		} catch (Throwable t) {
+			this.executeRollback(conn);
+			_logger.error("Error while updating WidgetPosition. page: {} from position: {} to position {}", pageCode, frameToMove, destFrame,  t);
+			throw new RuntimeException("Error while updating widget position", t);
+		} finally {
+			closeDaoResources(null, stat);
+			closeDaoResources(null, stat2);
+			closeDaoResources(null, stat3, conn);
+		}
+	}
+
+	/**
 	 * Updates a page record in the database.
 	 * @param page The page to update
 	 */
@@ -578,5 +624,10 @@ public class PageDAO extends AbstractDAO implements IPageDAO {
 
 	private static final String ADD_WIDGET_FOR_PAGE = 
 		"INSERT INTO widgetconfig (pagecode, framepos, widgetcode, config, publishedcontent) VALUES ( ?, ?, ?, ?, ?)";
+
+	private static final String MOVE_WIDGET =
+		"UPDATE widgetconfig SET framepos = ? WHERE pagecode = ? and framepos = ? ";
+
+
 
 }

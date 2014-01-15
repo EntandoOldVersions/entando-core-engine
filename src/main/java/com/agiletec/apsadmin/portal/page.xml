@@ -139,6 +139,22 @@
         	<interceptor-ref name="entandoActionLogger" />
             <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
         </action>
+
+        <action name="moveWidgetUp" class="pageTreeAction" method="moveWidgetUp">
+        	<result type="redirectAction">
+    			<param name="actionName">configure</param>
+    			<param name="selectedNode">${selectedNode}</param>
+            </result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
+
+        <action name="moveWidgetDown" class="pageTreeAction" method="moveWidgetDown">
+        	<result type="redirectAction">
+    			<param name="actionName">configure</param>
+    			<param name="selectedNode">${selectedNode}</param>
+            </result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
+        </action>
         
         <!-- ######### FINE OPERAZIONI CONFIGURAZIONE FRAME PAGINA ######### -->
         

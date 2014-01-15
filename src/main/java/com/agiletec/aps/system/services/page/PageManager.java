@@ -216,6 +216,53 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		return resultOperation;
 	}
 
+	@Override
+	public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws ApsSystemException {
+		boolean resultOperation = true;
+		try {
+			IPage currentPage = this.getPage(pageCode);
+			if (null == currentPage) {
+				throw new ApsSystemException("The page '" + pageCode + "' does not exist!");
+			}
+			Widget currentWidget = currentPage.getWidgets()[frameToMove];
+			if (null == currentWidget) {
+				throw new ApsSystemException("No widget found in frame '" + frameToMove + "' and page '" + pageCode + "'");
+			}
+			boolean movementEnabled = isMovementEnabled(frameToMove, destFrame, currentPage.getWidgets().length);
+			if (!movementEnabled) {
+				return false;
+			} else {
+				this.getPageDAO().updateWidgetPosition(pageCode, frameToMove, destFrame);
+			}
+			this.notifyPageChangedEvent(currentPage, PageChangedEvent.EDIT_FRAME_OPERATION_CODE, frameToMove);
+		} catch (Throwable t) {
+			_logger.error("Error while moving widget. page {} from position {} to position {}", pageCode, frameToMove, destFrame, t);
+			throw new ApsSystemException("Error while moving a widget", t);
+		}
+		this.loadPageTree();
+		return resultOperation;
+	}
+
+	private boolean isMovementEnabled(Integer frameToMove, Integer destFrame, int dimension) {
+		boolean isEnabled = true;
+		if (frameToMove.intValue() == destFrame.intValue()) {
+			return false;
+		}
+		if (frameToMove > dimension) {
+			return false;
+		}
+		if (frameToMove < 0) {
+			return false;
+		}
+		if (destFrame > dimension-1) {
+			return false;
+		}
+		if (destFrame < 0) {
+			return false;
+		}
+		return isEnabled;
+	}
+
 	/**
 	 * Verify the possibility of the page to be moved elsewhere.
 	 * @param position The position of the page to move

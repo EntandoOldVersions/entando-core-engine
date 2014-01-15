@@ -59,6 +59,16 @@ public interface IPageManager extends ITreeNodeManager {
 	public boolean movePage(String pageCode, boolean moveUp) throws ApsSystemException;
 
 	/**
+	 * Move a widget.
+	 * @param pageCode The code of the page to configure.
+	 * @param frameToMove the frame position to move .
+	 * @param destFrame the frame final position .
+	 * @return The result of the operation: false if the move request could not be satisfied, true otherwise.
+	 * @throws ApsSystemException In case of database access error.
+	 */
+	public boolean moveWidget(String pageCode, Integer frameToMove, Integer destFrame) throws ApsSystemException;
+
+	/**
 	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
 	 */
 	public void joinShowlet(String pageCode, Widget widget, int pos) throws ApsSystemException;
