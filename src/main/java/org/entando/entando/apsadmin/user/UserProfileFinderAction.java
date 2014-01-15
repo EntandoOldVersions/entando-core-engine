@@ -59,7 +59,6 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
             this.addFilter(filter);
         } catch (Throwable t) {
         	_logger.error("error in execute", t);
-            //ApsSystemUtils.logThrowable(t, this, "execute");
             return FAILURE;
         }
         return super.execute();

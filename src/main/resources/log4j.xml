@@ -53,12 +53,12 @@
 	</logger>
 
 	<logger name="com.agiletec" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="async" />
 	</logger>
 	
 	<logger name="org.entando" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="async" />
 	</logger>
 

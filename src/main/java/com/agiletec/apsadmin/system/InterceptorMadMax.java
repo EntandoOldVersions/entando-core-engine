@@ -34,7 +34,7 @@ import com.opensymphony.xwork2.ActionInvocation;
  */
 public class InterceptorMadMax extends BaseInterceptorMadMax {
 
-	private static final Logger _logger = LoggerFactory.getLogger(ApsFileUploadInterceptor.class);
+	private static final Logger _logger = LoggerFactory.getLogger(InterceptorMadMax.class);
 	
     /**
      * Return the single required permission.
@@ -89,7 +89,7 @@ public class InterceptorMadMax extends BaseInterceptorMadMax {
     protected String invoke(ActionInvocation invocation) throws Exception {
         HttpSession session = ServletActionContext.getRequest().getSession();
         UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-        _logger.info("Action invoked '{}' on namespace '{}' from user '{}'", invocation.getProxy().getActionName(), invocation.getProxy().getNamespace(),currentUser.getUsername());
+        _logger.debug("Action invoked '{}' on namespace '{}' from user '{}'", invocation.getProxy().getActionName(), invocation.getProxy().getNamespace(),currentUser.getUsername());
         return super.invoke(invocation);
     }
     

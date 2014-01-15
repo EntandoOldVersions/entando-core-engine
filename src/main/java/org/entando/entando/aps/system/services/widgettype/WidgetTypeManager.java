@@ -168,7 +168,7 @@ public class WidgetTypeManager extends AbstractService
 				return;
 			}
 			if (type.isLocked()) {
-				_logger.error("A loked widget can't be deleted - type {}", widgetTypeCode);
+				_logger.error("A locked widget can't be deleted - type {}", widgetTypeCode);
 				return;
 			}
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
