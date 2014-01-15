@@ -28,7 +28,8 @@ public class ActivityStreamCommentAction extends BaseAction{
 	
 	public String addComment() {
 		try {
-			this.getActionLogManager().addActionCommentRecord(this.getCurrentUser().getUsername(), this.getCommentText(), this.getStreamRecordId());
+			String username = this.getCurrentUser().getUsername();
+			this.getActionLogManager().addActionCommentRecord(username, this.getCommentText(), this.getStreamRecordId());
 		} catch (Throwable t) {
             ApsSystemUtils.logThrowable(t, this, "addComment", "Error on adding comment on activity");
         }

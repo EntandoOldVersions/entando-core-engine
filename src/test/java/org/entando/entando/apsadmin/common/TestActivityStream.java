@@ -32,7 +32,6 @@ import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
-import com.agiletec.plugins.jacms.apsadmin.content.ContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 import com.opensymphony.xwork2.Action;

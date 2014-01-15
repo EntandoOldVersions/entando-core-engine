@@ -235,7 +235,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			} while (!ids.isEmpty());
 			this.getActionLogDAO().addActionCommentRecord(key, streamId, username, commentText);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addActionCommentRecord");
+			_logger.error("Error adding a comment record to stream with id:{}", streamId, t);
 			throw new ApsSystemException("Error adding a comment record", t);
 		}
 	}
@@ -246,7 +246,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 		try {
 			this.getActionLogDAO().deleteActionCommentRecord(id, streamId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteActionCommentRecord");
+			_logger.error("Error deleting comment with id {} from stream with id {}", id, streamId, t);
 			throw new ApsSystemException("Error deleting comment", t);
 		}
 	}
@@ -265,7 +265,8 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 				lastUpdate = actionRecord.getUpdateDate();
 			}
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getLastUpdate", "Error on loading updated activities");
+			_logger.error("Error on loading updated activities", t);
+			throw new ApsSystemException("Error on loading updated activities", t);
         }
 		return lastUpdate;
 	}
@@ -287,7 +288,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
+			_logger.error("Error extracting activity stream like records for stream with id {}", id, t);
 			throw new ApsSystemException("Error extracting activity stream like records", t);
 		}
 		return infos;

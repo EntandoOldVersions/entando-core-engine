@@ -59,6 +59,7 @@ import com.agiletec.apsadmin.user.group.TestGroupAction;
 import com.agiletec.apsadmin.user.group.TestGroupFinderAction;
 import com.agiletec.apsadmin.user.role.TestRoleAction;
 import com.agiletec.apsadmin.user.role.TestRoleFinderAction;
+import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
 import org.entando.entando.apsadmin.common.TestActivityStreamAction;
 import org.entando.entando.apsadmin.common.currentuser.TestCurrentUserProfileAction;
 import org.entando.entando.apsadmin.user.TestUserProfileAction;
