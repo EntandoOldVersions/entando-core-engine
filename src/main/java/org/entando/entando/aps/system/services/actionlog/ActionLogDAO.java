@@ -410,7 +410,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(DELETE_LOG_LIKE_RECORD);
-			stat.setString(1, username);
+			stat.setInt(1, id);
+			stat.setString(2, username);
 			stat.executeUpdate();
 			stat = conn.prepareStatement(ADD_ACTION_LIKE_RECORD);
 			stat.setInt(1, id);
