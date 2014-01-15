@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.parse.AttributeDisablingCodesDOM;
 import com.agiletec.aps.util.FileTextReader;
@@ -90,7 +89,7 @@ public final class AttributeDisablingCodesLoader {
 	private String extractConfigFile(String fileName) throws Throwable {
 		InputStream is = this.getEntityManager().getClass().getResourceAsStream(fileName);
 		if (null == is) {
-			ApsSystemUtils.getLogger().debug(this.getEntityManager().getClass().getName() + ": there isn't any object to load : file " + fileName);
+			_logger.debug("{} : there isn't any object to load : file {}", this.getEntityManager().getClass().getName(), fileName);
 			return null;
 		}
 		return FileTextReader.getText(is);

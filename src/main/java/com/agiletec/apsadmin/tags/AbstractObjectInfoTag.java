@@ -28,7 +28,6 @@ import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.opensymphony.xwork2.util.ValueStack;
 
 /**
@@ -45,13 +44,13 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 			String keyValue = (String) super.findValue(this.getKey(), String.class);
 			Object masterObject = this.getMasterObject(keyValue);
 			if (null == masterObject ) {
-				ApsSystemUtils.getLogger().debug(this.getNullMasterObjectLogMessage(keyValue));
+				_logger.debug(this.getNullMasterObjectLogMessage(keyValue));
 				return super.doStartTag();
 			}
 			String propertyValue = (null != this.getProperty()) ? (String) super.findValue(this.getProperty(), String.class) : null;
 			Object requiredObject = (null != propertyValue) ? this.getPropertyValue(masterObject, propertyValue) : masterObject;
 			if (null == requiredObject) {
-				ApsSystemUtils.getLogger().debug(this.getNullObjectLogMessage(keyValue, propertyValue));
+				_logger.debug(this.getNullObjectLogMessage(keyValue, propertyValue));
 				return super.doStartTag();
 			}
 			if (null != this.getVar()) {

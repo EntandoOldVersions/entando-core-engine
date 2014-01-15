@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -54,6 +56,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author M.Diana
  */
 public class NavigatorParser implements INavigatorParser {
+
+	private static final Logger _logger = LoggerFactory.getLogger(NavigatorParser.class);
 	
 	@Override
 	public List<NavigatorExpression> getExpressions(String spec) {
@@ -179,7 +183,7 @@ public class NavigatorParser implements INavigatorParser {
 			String code = navExpression.getSpecCode();
 			IPage basePageTemp = this.getPageManager().getPage(code);
 			if (null == basePageTemp) {
-				ApsSystemUtils.getLogger().error("Invalid Page Specification (null): Code " + code + " - Pagina " + page.getCode());
+				_logger.error("Invalid Page Specification (null): Code {} - Page: {}", code, page.getCode());
 				return targets;
 			}
 			if (basePageTemp.isShowable() && this.isUserAllowed(user, basePageTemp)) {

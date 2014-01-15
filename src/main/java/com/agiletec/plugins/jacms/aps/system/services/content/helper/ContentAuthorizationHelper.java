@@ -23,9 +23,10 @@ import java.util.Set;
 
 import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -39,11 +40,13 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author E.Santoboni
  */
 public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentAuthorizationHelper.class);
 	
 	@Override
 	public boolean isAuth(UserDetails user, Content content) throws ApsSystemException {
 		if (null == content) {
-			ApsSystemUtils.getLogger().error("Null content");
+			_logger.error("Null content");
 			return false;
 		}
 		Set<String> groupCodes = this.getContentGroups(content);
@@ -78,7 +81,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	
 	protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws ApsSystemException {
 		if (null == user) {
-			ApsSystemUtils.getLogger().error("Null user");
+			_logger.error("Null user");
 			return false;
 		}
 		if (groupCodes.contains(Group.FREE_GROUP_NAME)) return true;
@@ -95,7 +98,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	@Override
 	public boolean isAuthToEdit(UserDetails user, Content content) throws ApsSystemException {
 		if (null == content) {
-			ApsSystemUtils.getLogger().error("Null content");
+			_logger.error("Null content");
 			return false;
 		}
 		String mainGroupName = content.getMainGroup();
@@ -110,7 +113,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 	
 	private boolean isAuthToEdit(UserDetails user, String mainGroupName) throws ApsSystemException {
 		if (null == user) {
-			ApsSystemUtils.getLogger().error("Null user");
+			_logger.error("Null user");
 			return false;
 		}
 		return (this.getAuthorizationManager().isAuthOnPermission(user, JacmsSystemConstants.PERMISSION_EDIT_CONTENTS) 
@@ -133,7 +136,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 			Content content = this.getContentManager().loadContent(contentId, true);
 			authInfo = new PublicContentAuthorizationInfo(content);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getAuthorizationInfo", t);
+			_logger.error("error in getAuthorizationInfo for content {}", contentId, t);
 		}
 		return authInfo;
 	}

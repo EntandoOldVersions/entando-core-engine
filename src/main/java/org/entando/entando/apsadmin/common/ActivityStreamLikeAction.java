@@ -21,7 +21,6 @@ import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -43,7 +42,7 @@ public class ActivityStreamLikeAction extends BaseAction {
 	public String editLikeActivity(boolean add) {
 		try {
 			if (null == this.getRecordId()) {
-				ApsSystemUtils.getLogger().error(this + " - Null record id");
+				_logger.error("Null record id");
 				return SUCCESS;
 			}
 			UserDetails user = super.getCurrentUser();

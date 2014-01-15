@@ -29,7 +29,6 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
@@ -122,7 +121,7 @@ public class PageModelDOM {
 		String widgetCode = defaultWidgetElement.getAttributeValue(ATTRIBUTE_CODE);
 		WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
 		if (null == type) {
-			ApsSystemUtils.getLogger().error("Unknown code of the default widget - '" + widgetCode + "'");
+			_logger.error("Unknown code of the default widget - '{}'", widgetCode);
 			return;
 		}
 		widget.setType(type);

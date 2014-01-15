@@ -29,7 +29,6 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInf
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.ITextAttribute;
@@ -86,7 +85,7 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 				}
             }
         } catch (Throwable t) {
-        	ApsSystemUtils.getLogger().error("ContentActionHelper - updateContent", t);
+        	_logger.error("ContentActionHelper - updateContent", t);
         	throw new RuntimeException("Error updating Content", t);
         }
 	}
@@ -95,7 +94,7 @@ public class ContentActionHelper extends EntityActionHelper implements IContentA
 	public void scanEntity(IApsEntity entity, ActionSupport action) {
 		Content content = (Content) entity;
 		if (null == content) {
-    		ApsSystemUtils.getLogger().error("Null Content");
+    		_logger.error("Null Content");
     		return;
     	}
 		String descr = content.getDescr();

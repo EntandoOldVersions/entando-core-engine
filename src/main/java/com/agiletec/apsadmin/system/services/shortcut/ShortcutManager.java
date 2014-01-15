@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ServletContextAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
@@ -65,8 +64,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 			ShortcutLoader loader = new ShortcutLoader(this.getLocationPatterns(), this.getServletContext());
 			this.setMenuSections(loader.getManuSections());
 			this.setShortcuts(loader.getShortcuts());
-			ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized - " +
-					"Sections menu " + this.getMenuSections().size() + " - Shortcuts " + this.getShortcuts().size());
+			_logger.debug("{} ready: initialized  Sections menu:{} - Shortcuts:{}",  this.getClass().getName(), this.getMenuSections().size(), this.getShortcuts().size());
 		} catch (Throwable t) {
 			this.setMenuSections(new HashMap<String, MenuSection>());
 			this.setShortcuts(new HashMap<String, Shortcut>());
@@ -89,7 +87,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 	@Override
 	public String[] saveUserConfig(UserDetails user, String[] config) throws ApsSystemException {
 		if (null == user) {
-			ApsSystemUtils.getLogger().info("Required operation for null user");
+			_logger.info("Required operation for null user");
 			return null;
 		}
 		try {
@@ -115,7 +113,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 	public String[] getUserConfig(UserDetails user) throws ApsSystemException {
 		String[] config = null;
 		if (null == user) {
-			ApsSystemUtils.getLogger().info("Required shortcut config for null user");
+			_logger.info("Required shortcut config for null user");
 			return null;
 		}
 		try {

@@ -26,8 +26,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -37,6 +38,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class LangDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LangDOM.class);
 	
 	/**
 	 * Costruttore base della classe dom.
@@ -134,7 +137,7 @@ public class LangDOM {
 		try {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
+			_logger.error("Error while parsing xml : {}", xmlText, t);
 			throw new ApsSystemException("Error detected while parsing the XML", t);
 		}
 	}

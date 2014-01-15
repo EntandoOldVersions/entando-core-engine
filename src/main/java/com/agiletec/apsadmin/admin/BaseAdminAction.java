@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.event.ReloadingEntitiesReferencesEvent;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -49,7 +48,7 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
     public String reloadConfig() {
         try {
             ApsWebApplicationUtils.executeSystemRefresh(this.getRequest());
-            ApsSystemUtils.getLogger().info("Reload config started");
+            _logger.info("Reload config started");
             this.setReloadingResult(SUCCESS_RELOADING_RESULT_CODE);
         } catch (Throwable t) {
         	_logger.error("error in reloadConfig", t);

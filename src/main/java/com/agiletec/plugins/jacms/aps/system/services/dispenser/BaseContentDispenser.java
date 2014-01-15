@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -58,7 +57,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug("{} ready", this.getClass().getName());
+		_logger.debug("{} ready", this.getClass().getName());
 	}
 	
 	@Override
@@ -133,7 +132,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	
 	protected String buildRenderedContent(Content content, long modelId, String langCode, RequestContext reqCtx) {
 		if (null == content) {
-			ApsSystemUtils.getLogger().warn("Null The content can't be rendered");
+			_logger.warn("Null The content can't be rendered");
 			return null;
 		}
 		String renderedContent = null;
@@ -142,10 +141,10 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			renderedContent = this.getContentRender().render(content, modelId, langCode, reqCtx);
 			ok = true;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getRenderedContent", t);
+			_logger.error("error in buildRenderedContent",  t);
 		}
 		if (!ok) {
-			ApsSystemUtils.getLogger().warn("The content " + content.getId() + " can't be rendered");
+			_logger.warn("The content {} can't be rendered", content.getId());
 		}
 		return renderedContent;
 	}

@@ -35,7 +35,6 @@ import org.entando.entando.aps.system.init.model.TableDumpResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.DateConverter;
 
@@ -51,7 +50,7 @@ public class TableDataUtils {
 		try {
             String[] queries = (null != script) ? QueryExtractor.extractQueries(script) : null;
 			if (null == queries || queries.length == 0) {
-				ApsSystemUtils.getLogger().info("Script file for db " + databaseName + " void");
+				_logger.info("Script file for db {} void", databaseName);
 				if (null != schemaReport) {
 					schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.NOT_AVAILABLE);
 				}

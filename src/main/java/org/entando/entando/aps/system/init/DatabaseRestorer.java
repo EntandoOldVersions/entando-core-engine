@@ -30,7 +30,6 @@ import org.entando.entando.aps.system.init.util.TableFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -62,7 +61,7 @@ public class DatabaseRestorer extends AbstractDatabaseUtils {
 			String[] queryCreateSchema = new String[]{"CREATE SCHEMA " + username.toUpperCase()};
 			TableDataUtils.executeQueries(dataSource, queryCreateSchema, false);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().info("Error creating derby schema - " + t.getMessage());
+			_logger.info("Error creating derby schema" + t);
 			throw new ApsSystemException("Error creating derby schema", t);
 		}
 		try {

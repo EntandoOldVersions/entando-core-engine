@@ -26,7 +26,6 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractDAO;
 
 /**
@@ -56,7 +55,7 @@ public class InstallationReportDAO extends AbstractDAO {
 			}
 		} catch (SQLException sqle) {
 			//NOT_AVAILABLE
-			ApsSystemUtils.getLogger().info("Report not available - " + sqle.getMessage());
+			_logger.info("Report not available" + sqle);
 			return null;
 		} catch (Throwable t) {
 			_logger.error("Error while loading component installation report - version: {}", version,  t);

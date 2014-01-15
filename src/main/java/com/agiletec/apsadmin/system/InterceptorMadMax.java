@@ -21,8 +21,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -33,7 +33,9 @@ import com.opensymphony.xwork2.ActionInvocation;
  * @author E.Santoboni
  */
 public class InterceptorMadMax extends BaseInterceptorMadMax {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsFileUploadInterceptor.class);
+	
     /**
      * Return the single required permission.
      * @return The required permission.
@@ -85,12 +87,9 @@ public class InterceptorMadMax extends BaseInterceptorMadMax {
     }
     
     protected String invoke(ActionInvocation invocation) throws Exception {
-        Logger log = ApsSystemUtils.getLogger();
         HttpSession session = ServletActionContext.getRequest().getSession();
         UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
-        String message = "Action invoked '" + invocation.getProxy().getActionName() + "' on namespace '"
-        		+ invocation.getProxy().getNamespace() + "' from user '" + currentUser.getUsername() + "'";
-        log.info(message);
+        _logger.info("Action invoked '{}' on namespace '{}' from user '{}'", invocation.getProxy().getActionName(), invocation.getProxy().getNamespace(),currentUser.getUsername());
         return super.invoke(invocation);
     }
     

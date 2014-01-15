@@ -21,7 +21,6 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
@@ -80,7 +79,6 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 
 	@Override
 	public String joinWidget() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			String result = this.checkBaseParams();
 			if (null != result) return result;
@@ -88,8 +86,7 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
 				return INPUT;
 			}
-			log.debug("code=" + this.getWidgetTypeCode() + ", pageCode=" 
-					+ this.getPageCode() + ", frame=" + this.getFrame());
+			_logger.debug("code={}, pageCode={}, frame={}" + this.getWidgetTypeCode(),this.getPageCode() ,this.getFrame());
 			WidgetType widgetType = this.getShowletType(this.getWidgetTypeCode());
 			if (null == widgetType) {
 				this.addActionError(this.getText("error.page.widgetTypeCodeUnknown"));
@@ -166,20 +163,19 @@ public class PageConfigAction extends AbstractPortalAction implements IPageConfi
 	
 	//TODO METODO COMUNE ALLA CONFIG SPECIAL WIDGET
 	protected String checkBaseParams() {
-		Logger log = ApsSystemUtils.getLogger();
 		IPage page = this.getPage(this.getPageCode());
 		if (!this.isUserAllowed(page)) {
-			log.info("Curent user not allowed");
+			_logger.info("Curent user not allowed");
 			this.addActionError(this.getText("error.page.userNotAllowed"));
 			return "pageTree";
 		}
 		if (null == page) {
-			log.info("Null page code");
+			_logger.info("Null page code");
 			this.addActionError(this.getText("error.page.invalidPageCode"));
 			return "pageTree";
 		}
 		if (this.getFrame() == -1 || this.getFrame() >= page.getWidgets().length) {
-			log.info("Mandatory frame id or invalid - '" + this.getFrame() + "'");
+			_logger.info("Mandatory frame id or invalid - '{}'", this.getFrame());
 			this.addActionError(this.getText("error.page.invalidPageFrame"));
 			return "pageTree";
 		}

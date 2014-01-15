@@ -19,7 +19,9 @@ package com.agiletec.plugins.jacms.apsadmin.content.preview;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser;
@@ -31,6 +33,8 @@ import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
  * @author E.Santoboni
  */
 public class ContentPreviewDispenser extends BaseContentDispenser {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentPreviewDispenser.class);
 	
 	@Override
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx) {
@@ -52,10 +56,10 @@ public class ContentPreviewDispenser extends BaseContentDispenser {
 			renderedContent = this.getContentRender().render(content, modelId, langCode, reqCtx);
 			ok = true;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "getRenderedContent", t);
+			_logger.error("Error in getRenderedContent",  t);
 		}
 		if (!ok) {
-			ApsSystemUtils.getLogger().warn("Impossibile fornire preview per il contenuto " + content.getId());
+			_logger.warn("Preview problem for {}", content.getId());
 			return "";
 		}
 		renderedContent = this.getLinkResolverManager().resolveLinks(renderedContent, reqCtx);

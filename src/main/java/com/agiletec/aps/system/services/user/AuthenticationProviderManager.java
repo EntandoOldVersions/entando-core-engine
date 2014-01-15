@@ -19,7 +19,9 @@ package com.agiletec.aps.system.services.user;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -37,9 +39,11 @@ import com.agiletec.aps.system.services.authorization.authorizator.IApsAuthority
  */
 public class AuthenticationProviderManager extends AbstractService 
 		implements IAuthenticationProviderManager {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(AuthenticationProviderManager.class);
+	
     public void init() throws Exception {
-        ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
+        _logger.debug("{} ready", this.getClass().getName() );
     }
     
     public UserDetails getUser(String username) throws ApsSystemException {
@@ -63,13 +67,13 @@ public class AuthenticationProviderManager extends AbstractService
             }
             if (!user.getUsername().equals(SystemConstants.ADMIN_USER_NAME)) {
                 if (!user.isAccountNotExpired()) {
-                    ApsSystemUtils.getLogger().info("USER ACCOUNT '" + user.getUsername() + "' EXPIRED");
+                    _logger.info("USER ACCOUNT '{}' EXPIRED", user.getUsername());
                     return user;
                 }
             }
             this.getUserManager().updateLastAccess(user);
             if (!user.isCredentialsNotExpired()) {
-                ApsSystemUtils.getLogger().info("USER '" + user.getUsername() + "' credentials EXPIRED");
+                _logger.info("USER '{}' credentials EXPIRED", user.getUsername());
                 return user;
             }
             this.addUserAuthorizations(user);

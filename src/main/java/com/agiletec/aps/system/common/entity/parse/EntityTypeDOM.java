@@ -35,7 +35,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.loader.ExtraAttributeLoader;
@@ -220,7 +219,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 			entity.setEntityDOM(entityDom);
 			this.fillEntityType(entity, element);
 			entity.setDefaultLang(this.getLangManager().getDefaultLang().getCode());
-			ApsSystemUtils.getLogger().debug("Entity Type '" + entity.getTypeCode() + "' defined");
+			_logger.debug("Entity Type '{}' defined", entity.getTypeCode());
 		} catch (Throwable t) {
 			_logger.error("Error extracting entity type", t);
 			//ApsSystemUtils.logThrowable(t, this, "doParsing", "Error extracting entity type");
@@ -248,8 +247,7 @@ public class EntityTypeDOM implements IEntityTypeDOM, BeanFactoryAware {
 				AttributeInterface attribute = this.createAttribute(currentAttrElem);
 				attribute.setParentEntity(entityType);
 				entityType.addAttribute(attribute);
-				ApsSystemUtils.getLogger().debug("The Attribute " + attribute.getName() + " of type " 
-						+ attribute.getType() + " was successfully inserted in the Entity Type " + entityType.getTypeCode());
+				_logger.debug("The Attribute {} of type {} was successfully inserted in the Entity Type {}" , attribute.getName(), attribute.getType(), entityType.getTypeCode());
 			}
 		} catch (Throwable t) {
 			throw new ApsSystemException("Configuration error of the Entity Type "+entityType.getTypeCode()+" detected", t);

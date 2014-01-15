@@ -68,7 +68,7 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 				url.addParam(RequestContext.PAR_REDIRECT_FLAG, "1");
 				url.setEscapeAmp(false);
 				String redirUrl = url.getURL();
-				this._log.debug("Redirecting to " + redirUrl);
+				_logger.debug("Redirecting to {}", redirUrl);
 				return this.redirectUrl(redirUrl, reqCtx);
 			} else {
 				reqCtx.setHTTPError(HttpServletResponse.SC_BAD_REQUEST);

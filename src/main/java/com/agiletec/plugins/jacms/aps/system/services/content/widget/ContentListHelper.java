@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.helper.IEntityFilterBean;
@@ -323,7 +322,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			String contentTypeCode = config.getProperty(WIDGET_PARAM_CONTENT_TYPE);
 			IApsEntity prototype = this.getContentManager().getEntityPrototype(contentTypeCode);
 			if (null == prototype) {
-				ApsSystemUtils.getLogger().error("Null content type by code '" + contentTypeCode + "'");
+				_logger.error("Null content type by code '{}'", contentTypeCode);
 				return null;
 			}
 			Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);

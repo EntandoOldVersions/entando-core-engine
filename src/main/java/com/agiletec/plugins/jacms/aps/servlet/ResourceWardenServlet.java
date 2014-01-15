@@ -32,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -64,8 +63,7 @@ public class ResourceWardenServlet extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-		Logger log = ApsSystemUtils.getLogger();
-		log.debug("Request:" + request.getRequestURI());
+		_logger.debug("Request: {}", request.getRequestURI());
 		//Sintassi /<RES_ID>/<SIZE>/<LANG_CODE>/
 		String[] uriSegments = request.getRequestURI().split("/");
 		int segments = uriSegments.length;

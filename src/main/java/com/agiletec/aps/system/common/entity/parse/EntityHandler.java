@@ -17,11 +17,12 @@
 */
 package com.agiletec.aps.system.common.entity.parse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -39,7 +40,9 @@ import com.agiletec.aps.system.services.category.ICategoryManager;
  * @author M.Diana - E.Santoboni
  */
 public class EntityHandler extends DefaultHandler {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityHandler.class);
+	
     /**
      * Handler initialization.
      * @param entity The Entity Prototype to fill with data. 
@@ -101,7 +104,7 @@ public class EntityHandler extends DefaultHandler {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().error("error in " + this.getClass().getName() + ": {} - {}", "startElement", t);
+            _logger.error("error in startElement", t);
             throw new SAXException(t.getMessage(), new Exception(t));
         }
     }
@@ -167,7 +170,7 @@ public class EntityHandler extends DefaultHandler {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().error("error in " + this.getClass().getName() + ": {} - {}", "endElement", t);
+        	_logger.error("error in endElement", t);
             throw new SAXException(t.getMessage(), new Exception(t));
         }
     }

@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.entity.ApsEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityDAO;
@@ -329,7 +328,7 @@ public class ContentManager extends ApsEntityManager
 			if (workcontent != null) {
 				this.getContentDAO().reloadWorkContentReferences(workcontent);
 			}
-			ApsSystemUtils.getLogger().info("Reloaded content references for content " + entityId);
+			_logger.info("Reloaded content references for content {}", entityId);
 		} catch (Throwable t) {
 			_logger.error("Error while reloading content references for content {}", entityId, t);
 			//ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", "Error while reloading content references for content " + entityId);

@@ -19,10 +19,11 @@ package com.agiletec.plugins.jacms.aps.system.services.content.parse;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.parse.EntityHandler;
 import com.agiletec.aps.util.DateConverter;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
@@ -34,6 +35,8 @@ import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
  * @author M.Diana - E.Santoboni
  */
 public class ContentHandler extends EntityHandler {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ContentHandler.class);
 	
 	@Override
 	protected void startEntityElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -50,10 +53,10 @@ public class ContentHandler extends EntityHandler {
 				this.startLastModified(attributes, qName);
 			}
 		} catch (SAXException e) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "startElement",e);
+			_logger.error("error in start element", e);
 			throw e;
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "startElement",t);
+			_logger.error("error in start element", t);
 			throw new SAXException(t.getMessage());
 		}
 	}
@@ -73,7 +76,7 @@ public class ContentHandler extends EntityHandler {
 				this.endLastModified();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "endEntityElement" ,t);
+			_logger.error("error in end element", t);
 			throw new SAXException(t.getMessage());
 		}
 	}

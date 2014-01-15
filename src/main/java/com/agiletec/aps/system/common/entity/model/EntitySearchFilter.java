@@ -30,7 +30,6 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.BooleanAttribute;
@@ -504,7 +503,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 				data = dataF.parse(dateString);
 			}
 		} catch (ParseException ex) {
-			ApsSystemUtils.getLogger().error("Invalid string - '" + dateString + "'");
+			_logger.error("Invalid string - '{}'", dateString);
 		}
 		return data;
 	}
@@ -514,7 +513,7 @@ public class EntitySearchFilter<T> extends FieldSearchFilter implements Serializ
 		try {
 			number = new BigDecimal(numberString);
 		} catch (NumberFormatException e) {
-			ApsSystemUtils.getLogger().error("Invalid string - '" + numberString + "'");
+			_logger.error("Invalid string - '{}'", numberString);
 		}
 		return number;
 	}

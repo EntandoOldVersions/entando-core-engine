@@ -75,7 +75,7 @@ public class AdminPagerTagHelper extends PagerTagHelper {
 			try {
 				item = Integer.parseInt(stringItem);
 			} catch (NumberFormatException e) {
-				ApsSystemUtils.getLogger().error("Errore in parsing stringItem " + stringItem);
+				_logger.error("Errore in parsing stringItem {}", stringItem, e);
 			}
 		}
 		return item;

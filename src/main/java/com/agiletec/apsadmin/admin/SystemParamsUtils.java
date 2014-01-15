@@ -28,8 +28,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -37,7 +38,9 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class SystemParamsUtils {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(SystemParamsUtils.class);
+	
     /**
      * Return the configuration params contained in the given XML.
      * @param xmlParams XML string containing the parameters to fetch.
@@ -136,7 +139,7 @@ public class SystemParamsUtils {
             StringReader reader = new StringReader(xmlText);
             doc = builder.build(reader);
         } catch (Throwable t) {
-            ApsSystemUtils.getLogger().error("Error parsing: " + t.getMessage());
+            _logger.error("Error parsing xml: {} ", xmlText, t);
             throw new ApsSystemException("Error parsing document", t);
         }
         return doc;

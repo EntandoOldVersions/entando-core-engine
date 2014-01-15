@@ -31,7 +31,6 @@ import org.entando.entando.aps.system.init.model.SystemInstallationReport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
@@ -156,7 +155,7 @@ public class TableFactory {
 		try {
 			result = ApsTableUtils.createTable(connectionSource, tableClass);
 			if (result > 0) {
-				ApsSystemUtils.getLogger().info("Created table - " + logTableName);
+				_logger.info("Created table - {}", logTableName);
 				Object tableModel = tableClass.newInstance();
 				if (tableModel instanceof ExtendedColumnDefinition) {
 					String[] extensions = ((ExtendedColumnDefinition) tableModel).extensions(this.getType());

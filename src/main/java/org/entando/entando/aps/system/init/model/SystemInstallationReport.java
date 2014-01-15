@@ -27,14 +27,17 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.DateConverter;
 
 /**
  * @author E.Santoboni
  */
 public class SystemInstallationReport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SystemInstallationReport.class);
 	
 	private SystemInstallationReport(Status status) {
 		this.setStatus(status);
@@ -76,7 +79,7 @@ public class SystemInstallationReport {
 				this.getReports().add(report);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error parsing Report: " + t.getMessage());
+			_logger.error("Error parsing Report. xml: {} ", xmlText, t);
 			throw new RuntimeException("Error detected while parsing the XML", t);
 		}
 	}

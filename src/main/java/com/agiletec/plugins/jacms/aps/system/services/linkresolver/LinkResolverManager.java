@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.aps.system.services.linkresolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -100,7 +99,7 @@ public class LinkResolverManager extends AbstractService implements ILinkResolve
 	@Override
 	public String resolveLink(SymbolicLink symbolicLink, RequestContext reqCtx) {
 		if (null == symbolicLink) {
-			ApsSystemUtils.getLogger().error("Null Symbolic Link");
+			_logger.error("Null Symbolic Link");
 			return "";
 		}
 		String url = null;

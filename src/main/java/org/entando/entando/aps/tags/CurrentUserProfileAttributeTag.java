@@ -20,8 +20,10 @@ package org.entando.entando.aps.tags;
 import javax.servlet.http.HttpSession;
 
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 
@@ -31,13 +33,15 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author E.Santoboni
  */
 public class CurrentUserProfileAttributeTag extends UserProfileAttributeTag {
-    
+
+	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeManager.class);
+	
 	@Override
     protected IUserProfile getUserProfile() throws Throwable {
         HttpSession session = this.pageContext.getSession();
         UserDetails currentUser = (UserDetails) session.getAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER);
         if (currentUser == null || currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME) || null == currentUser.getProfile()) {
-            ApsSystemUtils.getLogger().error("User '" + currentUser + "' : Null user, or guest user or user without profile");
+            _logger.error("User '{}' : Null user, or guest user or user without profile", currentUser);
             return null;
         }
         return (IUserProfile) currentUser.getProfile();

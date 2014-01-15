@@ -29,7 +29,6 @@ import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -62,7 +61,7 @@ public class PageInfoTag extends OutSupport implements IParameterParentTag {
 				(IPageManager) ApsWebApplicationUtils.getBean(SystemConstants.PAGE_MANAGER, this.pageContext);
 			IPage page = pageManager.getPage(this.getPageCode());
 			if (null == page) {
-				ApsSystemUtils.getLogger().error("Required info for null page : inserted code '" + this.getPageCode() + "'");
+				_logger.error("Required info for null page : inserted code '{}'", this.getPageCode());
 			}
 			if (this.getInfo() == null || this.getInfo().equals(CODE_INFO)) {
 				this.setValue(page.getCode());

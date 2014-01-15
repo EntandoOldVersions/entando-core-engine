@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
@@ -37,11 +40,13 @@ import com.agiletec.aps.util.FileTextReader;
  * @author M.Diana - E.Santoboni
  */
 public class LangManager extends AbstractService implements ILangManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LangManager.class);
 	
 	@Override
 	public void init() throws Exception {
 		this.loadSystemLangs();
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized " + this._langList.size() + " languages");
+		_logger.debug("{} ready: initialized {} languages", this.getClass().getName(),this._langList.size());
 	}
 	
 	/**

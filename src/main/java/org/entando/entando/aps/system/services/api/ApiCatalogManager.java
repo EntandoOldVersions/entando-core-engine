@@ -30,7 +30,6 @@ import org.entando.entando.aps.system.services.api.model.ApiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -58,7 +57,7 @@ public class ApiCatalogManager extends AbstractService implements IApiCatalogMan
             ApiResourceLoader loader = new ApiResourceLoader(this.getLocationPatterns());
             Map<String, ApiResource> resources = loader.getResources();
             this.setMasterResources(resources);
-            ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized Api Methods");
+            _logger.debug("{}: initialized Api Methods", this.getClass().getName());
             this.getApiCatalogDAO().loadApiStatus(resources);
         } catch (Throwable t) {
         	_logger.error("Error loading Api Resources definitions", t);

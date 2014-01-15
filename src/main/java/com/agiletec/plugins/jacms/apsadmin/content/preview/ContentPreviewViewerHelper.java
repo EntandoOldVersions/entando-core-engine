@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -64,9 +63,7 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 				this.setStylesheet(longModelId, reqCtx);
 				renderedContent = this.getContentDispenser().getRenderedContent(contentId, longModelId, langCode, reqCtx);
 			} else {
-				ApsSystemUtils.getLogger().warn(
-						"Parametri visualizzazione contenuto incompleti: contenuto=" + contentId + " modello="
-								+ modelId);
+				_logger.warn("Parametri visualizzazione contenuto incompleti: contenuto={} modello={}", contentId, modelId);
 			}
 		} catch (Throwable t) {
 			_logger.error("error loading rendered content for preview", t);

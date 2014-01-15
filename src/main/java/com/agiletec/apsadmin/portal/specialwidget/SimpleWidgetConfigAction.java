@@ -49,21 +49,18 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	protected String extractInitConfig() {
 		if (null != this.getWidget()) return SUCCESS;
 		Widget widget = this.getCurrentPage().getWidgets()[this.getFrame()];
-		Logger log = ApsSystemUtils.getLogger();
 		if (null == widget) {
 			try {
 				widget = this.createNewShowlet();
 			} catch (Exception e) {
-				log.error(e.getMessage());
+				_logger.error("error in extractInitConfig", e);
 				//TODO METTI MESSAGGIO DI ERRORE NON PREVISTO... Vai in pageTree con messaggio di errore Azione non prevista o cosa del genere
 				this.addActionError(this.getText("Message.userNotAllowed"));
 				return "pageTree";
 			}
-			log.info("Configurating new Widget " + this.getWidgetTypeCode() + 
-					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
+			_logger.info("Configurating new Widget {} - Page {} - Frame {}", this.getWidgetTypeCode(), this.getPageCode(), this.getFrame());
 		} else {
-			log.info("Edit Widget config " + widget.getType().getCode() + 
-					" - Page " + this.getPageCode() + " - Frame " + this.getFrame());
+			_logger.info("Edit Widget config {} - Page {} - Frame {}", this.getWidgetTypeCode(), this.getPageCode(), this.getFrame());
 			widget = this.createCloneFrom(widget);
 		}
 		this.setShowlet(widget);
@@ -136,12 +133,12 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	protected String checkBaseParams() {
 		IPage page = this.getPage(this.getPageCode());
 		if (null== page || !this.isUserAllowed(page)) {
-			ApsSystemUtils.getLogger().info("User not allowed");
+			_logger.info("User not allowed");
 			this.addActionError(this.getText("error.page.userNotAllowed"));
 			return "pageTree";
 		}
 		if (this.getFrame() == -1 || this.getFrame()>= page.getWidgets().length) {
-			ApsSystemUtils.getLogger().info("invalid frame '" + this.getFrame() + "'");
+			_logger.info("invalid frame '{}'", this.getFrame());
 			this.addActionError(this.getText("error.page.invalidPageFrame"));
 			return "pageTree";
 		}

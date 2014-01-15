@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.apsadmin.content;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.searchengine.ICmsSearchEngineManager;
@@ -53,7 +52,7 @@ public class ContentAdminAction extends BaseAction implements IContentAdminActio
 		try {
 			String typeCode = null;
 			this.getContentManager().reloadEntitiesReferences(typeCode);
-			ApsSystemUtils.getLogger().info("Reload contents reference started");
+			_logger.info("Reload contents reference started");
 		} catch (Throwable t) {
 			_logger.error("error in reloadContentsReference", t);
 			//ApsSystemUtils.logThrowable(t, this, "reloadContentsReference");

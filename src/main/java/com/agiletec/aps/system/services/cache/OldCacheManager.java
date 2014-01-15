@@ -19,8 +19,9 @@ package com.agiletec.aps.system.services.cache;
 
 import org.entando.entando.aps.system.services.cache.CacheInfoManager;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 
 /**
@@ -28,10 +29,12 @@ import com.agiletec.aps.system.common.AbstractService;
  * @author E.Santoboni
  */
 public class OldCacheManager extends AbstractService implements ICacheManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(OldCacheManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": cache service initialized");
+		_logger.debug("{} (cache service initialized) ready", this.getClass().getName());
 	}
 	
 	@Override

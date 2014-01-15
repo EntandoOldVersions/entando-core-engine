@@ -20,8 +20,8 @@ package com.agiletec.apsadmin.common;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
@@ -33,22 +33,23 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class DispatchAction extends BaseAction implements IDispatchAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(DispatchAction.class);
 	
 	@Override
     public void validate() {
 		super.validate();
 		if (this.hasFieldErrors()) return;
-		Logger log = ApsSystemUtils.getLogger();
-    	log.debug("Authentication : user " + this.getUsername() + " - password ******** ");
+    	_logger.debug("Authentication : user {} - password ******** ", this.getUsername());
     	UserDetails user = null;
 		try {
 			user = this.getAuthenticationProvider().getUser(this.getUsername(), this.getPassword());
 		} catch (Throwable t) {
-			log.error("error in LoginAction {}", "validate", t);
+			_logger.error("error in LoginAction ",  t);
 			throw new RuntimeException("Login error : username " + this.getUsername(), t);
 		}
 		if (null == user) {
-        	log.debug("Login failed : username " + this.getUsername() + " - password ******** ");
+        	_logger.debug("Login failed : username {} - password ******** ", this.getUsername());
         	this.addActionError(this.getText("error.user.login.loginFailed"));
         } else {
         	//UTENTE RICONOSCIUTO ED ATTIVO
@@ -64,7 +65,7 @@ public class DispatchAction extends BaseAction implements IDispatchAction {
         	}
         	if (this.getAuthorizationManager().isAuthOnPermission(user, Permission.SUPERUSER) 
         			|| this.getAuthorizationManager().isAuthOnPermission(user, Permission.BACKOFFICE)) {
-    			log.info("User - " + user.getUsername() + " logged");
+    			_logger.info("User - {} logged", user.getUsername());
     		} else {
     			this.addActionError(this.getText("error.user.login.userNotAbilitated"));
     		}

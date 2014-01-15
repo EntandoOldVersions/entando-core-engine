@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
@@ -46,8 +45,7 @@ public class ControllerServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         RequestContext reqCtx = new RequestContext();
-        Logger log = ApsSystemUtils.getLogger();
-        log.debug("Request:" + request.getServletPath());
+        _logger.debug("Request:" + request.getServletPath());
         request.setAttribute(RequestContext.REQCTX, reqCtx);
         reqCtx.setRequest(request);
         reqCtx.setResponse(response);
@@ -56,19 +54,15 @@ public class ControllerServlet extends HttpServlet {
         int status = controller.service(reqCtx);
         if (status == ControllerManager.REDIRECT) {
 
-            log.debug("Redirection");
+        	_logger.debug("Redirection");
             this.redirect(reqCtx, response);
         } else if (status == ControllerManager.OUTPUT) {
-            log.debug("Output");
+        	_logger.debug("Output");
         } else if (status == ControllerManager.ERROR) {
             this.outputError(reqCtx, response);
-  
-            log.debug("Error");
+            _logger.debug("Error");
         } else {
-            log.error("Error: final status = "
-                    + ControllerManager.getStatusDescription(status)
-                    + " - request: ");
-            log.error(request.getServletPath());
+        	_logger.error("Error: final status = {} - request: {}", ControllerManager.getStatusDescription(status),request.getServletPath());
             throw new ServletException("Service not available");
         }
         return;

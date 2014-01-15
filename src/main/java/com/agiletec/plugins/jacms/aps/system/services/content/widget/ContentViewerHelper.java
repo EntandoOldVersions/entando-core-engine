@@ -20,7 +20,6 @@ package com.agiletec.plugins.jacms.aps.system.services.content.widget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -78,7 +77,6 @@ public class ContentViewerHelper implements IContentViewerHelper {
 			String modelId, boolean publishExtraTitle, RequestContext reqCtx) throws ApsSystemException {
 		ContentRenderizationInfo renderizationInfo = null;
         try {
-        	Logger log = ApsSystemUtils.getLogger();
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
             String langCode = currentLang.getCode();
             Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
@@ -90,12 +88,11 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	            this.setStylesheet(longModelId, reqCtx);
 	            renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
 	            if (null == renderizationInfo) {
-	            	log.warn("Null Renderization informations: content=" + contentId);
+	            	_logger.warn("Null Renderization informations: content={}", contentId);
 	            }
 	            this.manageAttributeValues(renderizationInfo, publishExtraTitle, reqCtx);
             } else {
-            	log.warn("Parametri visualizzazione contenuto incompleti: " +
-            			"contenuto=" + contentId + " modello=" + modelId);
+            	_logger.warn("Parametri visualizzazione contenuto incompleti: " +"contenuto={} modello={}", contentId, modelId);
             }
         } catch (Throwable t) {
         	_logger.error("Error extracting renderization info", t);
@@ -112,12 +109,12 @@ public class ContentViewerHelper implements IContentViewerHelper {
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			contentId = this.extractContentId(contentId, widget.getConfig(), reqCtx);
 			if (null == contentId) {
-				ApsSystemUtils.getLogger().info("Null contentId");
+				_logger.info("Null contentId");
 				return null;
 			}
 			authInfo = this.getContentAuthorizationHelper().getAuthorizationInfo(contentId);
 			if (null == authInfo) {
-				ApsSystemUtils.getLogger().info("Null authorization info by content '" + contentId + "'");
+				_logger.info("Null authorization info by content '" + contentId + "'");
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting content authorization info by content {}", contentId, t);

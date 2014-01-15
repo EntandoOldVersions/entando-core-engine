@@ -22,14 +22,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for date handling. 
  * @author E.Santoboni
  */
 public class DateConverter {
-	
+
+	private static final Logger _logger = LoggerFactory.getLogger(DateConverter.class);
 	/**
 	 * Utility method. Return a formatted string representing the given date
 	 * @param date the date object to convert into a string
@@ -77,7 +79,7 @@ public class DateConverter {
 				data = format.parse(stringData);
 			}
 		} catch (ParseException ex) {
-			ApsSystemUtils.getLogger().error("Wrong date format detected : " + stringData);
+			_logger.error("Wrong date format detected : {}", stringData, ex);
 		}
 		return data;
 	}

@@ -26,7 +26,6 @@ import org.apache.velocity.context.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.renderer.BaseEntityRenderer;
@@ -93,8 +92,8 @@ public class BaseContentRenderer extends BaseEntityRenderer implements IContentR
 			shape = model.getContentShape();
 		} 
 		if (shape == null) {
-			shape = "Content model " + modelId + " undefined";
-			ApsSystemUtils.getLogger().error(shape);
+			//shape = "Content model " + modelId + " undefined";
+			_logger.error("Content model {} undefined", modelId);
 		}
 		return shape;
 	}

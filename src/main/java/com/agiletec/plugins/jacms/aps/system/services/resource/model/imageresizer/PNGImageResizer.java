@@ -34,7 +34,9 @@ import java.io.File;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
 
@@ -43,6 +45,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
  * @author E.Santoboni
  */
 public class PNGImageResizer extends AbstractImageResizer {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PNGImageResizer.class);
 	
 	@Override
 	@Deprecated
@@ -53,7 +57,7 @@ public class PNGImageResizer extends AbstractImageResizer {
 	        ImageIO.write(imageResized, this.getFileExtension(filePath), file);
 		} catch (Throwable t) {
 			String msg = this.getClass().getName() + ": saveResizedImage: " + t.toString();
-			ApsSystemUtils.getLogger().error(this.getClass().getName(), "saveResizedImage",t);
+			_logger.error(" Error in saveResizedImage",t);
 			throw new ApsSystemException(msg, t);
 		}
 	}

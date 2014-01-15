@@ -27,8 +27,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Classe per la lettura e scrittura delle Properties da xml.
@@ -43,6 +43,8 @@ import com.agiletec.aps.system.ApsSystemUtils;
  * @author E.Santoboni
  */
 public class ApsPropertiesDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsPropertiesDOM.class);
 	
 	/**
 	 * Costruisce il Jdom Document in base alle properties inserite.
@@ -85,7 +87,7 @@ public class ApsPropertiesDOM {
 			_doc = builder.build(reader);
 			_rootElement = _doc.getRootElement();
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Parsing error: " + t.getMessage());
+			_logger.error("Parsing error. xml: {}", xmlText, t);
 			throw new RuntimeException("Error detected while parsing the XML", t);
 		}
 	}

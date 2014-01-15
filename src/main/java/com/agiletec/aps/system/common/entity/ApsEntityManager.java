@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.entity.event.EntityTypesChangingEvent;
 import com.agiletec.aps.system.common.entity.event.ReloadingEntitiesReferencesEvent;
@@ -551,19 +550,18 @@ public abstract class ApsEntityManager extends AbstractService
 	@Override
 	public Thread reloadEntitiesReferences(String typeCode) {
 		ReloadingReferencesThread reloadThread = null;
-		Logger log = ApsSystemUtils.getLogger();
 		if (this.getStatus() == STATUS_READY || this.getStatus(typeCode) != STATUS_RELOADING_REFERENCES_IN_PROGRESS) {
 			try {
 				reloadThread = new ReloadingReferencesThread(this, typeCode);
 				String threadName = RELOAD_REFERENCES_THREAD_NAME_PREFIX + this.getName() + "_" + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
 				reloadThread.setName(threadName);
 				reloadThread.start();
-				log.info("Reloading references started");
+				_logger.info("Reloading references started");
 			} catch (Throwable t) {
 				throw new RuntimeException("Error while starting up the reference reload procedure", t);
 			}
 		} else {
-			log.info("Reloading entity references suspended: status " + this.getStatus(typeCode));
+			_logger.info("Reloading entity references suspended: status {}",this.getStatus(typeCode));
 		}
 		return reloadThread;
 	}
@@ -601,7 +599,7 @@ public abstract class ApsEntityManager extends AbstractService
 			if (entity != null) {
 				this.getEntityDao().reloadEntitySearchRecords(entityId, entity);
 			}
-			ApsSystemUtils.getLogger().info("Entities search references reloaded " + entityId);
+			_logger.info("Entities search references reloaded {}", entityId);
 		} catch (Throwable t) {
 			_logger.error("Error reloading the entities search references: {}", entityId, t);
 			//ApsSystemUtils.logThrowable(t, this, "reloadEntityReferences", "Error reloading the entities search references: " + entityId);

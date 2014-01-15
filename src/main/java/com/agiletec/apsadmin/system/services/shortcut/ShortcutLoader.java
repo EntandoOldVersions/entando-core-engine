@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.aps.util.FileTextReader;
@@ -62,7 +61,6 @@ public class ShortcutLoader {
 	}
 	
 	private void loadShortcutObjects(String locationPattern, ServletContext servletContext) throws Exception {
-		Logger log = ApsSystemUtils.getLogger();
 		Resource[] resources = ApsWebApplicationUtils.getResources(locationPattern, servletContext);
 		ShortcutDefDOM dom = null;
 		for (int i = 0; i < resources.length; i++) {
@@ -75,7 +73,7 @@ public class ShortcutLoader {
 				dom = new ShortcutDefDOM(xml, path);
 				this.getManuSections().putAll(dom.getSectionMenus());
 				this.getShortcuts().putAll(dom.getShortcuts());
-				log.info("Loaded Shortcut definition by file " + path);
+				_logger.info("Loaded Shortcut definition by file {}", path);
 			} catch (Throwable t) {
 				_logger.error("Error loading Shortcut definition by file {}", locationPattern, t);
 				//ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definition by file " + locationPattern);

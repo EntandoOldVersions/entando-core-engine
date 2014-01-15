@@ -26,10 +26,13 @@ import java.util.Map;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResourceDimension;
+import com.agiletec.plugins.jacms.aps.system.services.resource.model.imageresizer.PNGImageResizer;
 
 /**
  * Questa classe opera per caricare le diverse dimensioni di resize
@@ -39,6 +42,8 @@ import com.agiletec.plugins.jacms.aps.system.services.resource.model.ImageResour
  */
 public class ImageDimensionDOM {
 
+	private static final Logger _logger = LoggerFactory.getLogger(ImageDimensionDOM.class);
+	
 	/**
 	 * Costruttore della classe.
 	 * @param xmlText La stringa xml da interpretare.
@@ -77,7 +82,7 @@ public class ImageDimensionDOM {
 					dimension.setDimy(Integer.parseInt(dimy));
 				}
 				dimensions.put(new Integer(dimension.getIdDim()), dimension);
-				ApsSystemUtils.getLogger().debug("Definita dimensione di resize: " + dimension.getIdDim());
+				_logger.debug("Definita dimensione di resize: {}", dimension.getIdDim());
 			}
 		}
 		return dimensions;
@@ -90,7 +95,7 @@ public class ImageDimensionDOM {
 		try {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Errore nel parsing: " + t.getMessage());
+			_logger.error("Error parsing xml. {}", xmlText, t);
 			throw new ApsSystemException("Errore nel parsing della configurazione Dimensioni di resize", t);
 		}
 	}

@@ -27,7 +27,6 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInf
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.services.category.Category;
@@ -178,8 +177,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().insertOnLineContent(contentToPublish);
-				ApsSystemUtils.getLogger().info("Published content " + contentToPublish.getId() 
-						+ " by user " + this.getCurrentUser().getUsername());
+				_logger.info("Published content {} by user {}", contentToPublish.getId(), this.getCurrentUser().getUsername());
 				publishedContents.add(contentToPublish);
 				this.addActivityStreamInfo(contentToPublish, (ApsAdminSystemConstants.ADD + 10), true);
 			}
@@ -222,8 +220,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().removeOnLineContent(contentToSuspend);
-				ApsSystemUtils.getLogger().info("Suspended Content '" + contentToSuspend.getId() 
-						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
+				_logger.info("Suspended Content '{}' by user {}",contentToSuspend.getId(), this.getCurrentUser().getUsername());
 				removedContents.add(contentToSuspend);
 				this.addActivityStreamInfo(contentToSuspend, (ApsAdminSystemConstants.DELETE + 10), true);
 			}
@@ -306,8 +303,7 @@ public class ContentFinderAction extends AbstractApsEntityFinderAction implement
 					continue;
 				}
 				this.getContentManager().deleteContent(contentToDelete);
-				ApsSystemUtils.getLogger().info("Deleted Content '" + contentToDelete.getId() 
-						+ "' by user '" + this.getCurrentUser().getUsername() + "'");
+				_logger.info("Deleted Content '{}' by user {}",contentToDelete.getId(), this.getCurrentUser().getUsername());
 				deletedContents.add(contentToDelete);
 				this.addActivityStreamInfo(contentToDelete, ApsAdminSystemConstants.DELETE, false);
 			}

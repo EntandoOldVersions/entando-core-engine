@@ -28,7 +28,6 @@ import org.apache.velocity.runtime.log.LogChute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
@@ -50,7 +49,7 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 			//ApsSystemUtils.logThrowable(t, this, "init");
 			throw new ApsSystemException("Error initializing the VelocityEngine", t);
 		}
-		ApsSystemUtils.getLogger().debug(this.getName() + ": initialized");
+		_logger.debug("{} ready.", this.getName());
 	}
 	
 	@Override
@@ -91,30 +90,29 @@ public class DefaultVelocityRenderer extends AbstractService implements LogChute
 	
 	@Override
 	public void log(int level, String message, Throwable t) {
-		Logger logger = ApsSystemUtils.getLogger();
 		if (t == null) {
 			switch (level) {
 				case TRACE_ID:
-					logger.trace(message);
+					_logger.trace(message);
 					break;
 				case DEBUG_ID:
-					logger.debug(message);
+					_logger.debug(message);
 					break;
 				case INFO_ID:
-					logger.info(message);
+					_logger.info(message);
 					break;
 				case WARN_ID:
-					logger.warn(message);
+					_logger.warn(message, t);
 					break;
 				case ERROR_ID:
-					logger.error(message);
+					_logger.error(message, t);
 					break;
 				default:
-					logger.info(message);
+					_logger.info(message);
 					break;
 			}
 		} else {
-			logger.error(message, t);
+			_logger.error(message, t);
 		}
 	}
 	

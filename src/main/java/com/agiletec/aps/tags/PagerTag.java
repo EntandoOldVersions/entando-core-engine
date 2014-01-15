@@ -26,7 +26,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.aps.tags.util.PagerTagHelper;
 
@@ -46,7 +45,7 @@ public class PagerTag extends TagSupport {
 		try {
 			Collection object = (Collection) this.pageContext.getAttribute(this.getListName());
 			if (object == null) {
-				ApsSystemUtils.getLogger().error("There is no list in the request");
+				_logger.error("There is no list in the request");
 			} else {
 				PagerTagHelper helper = new PagerTagHelper();
 				IPagerVO pagerVo = helper.getPagerVO(object, this.getPagerId(), 

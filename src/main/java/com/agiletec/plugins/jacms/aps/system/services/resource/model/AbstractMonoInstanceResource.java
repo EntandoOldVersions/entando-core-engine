@@ -23,7 +23,6 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.plugins.jacms.aps.system.services.resource.parse.ResourceDOM;
 
@@ -86,7 +85,7 @@ public abstract class AbstractMonoInstanceResource extends AbstractResource {
 	public void deleteResourceInstances() throws ApsSystemException {
 		try {
 			if (null == this.getInstance()) {
-				ApsSystemUtils.getLogger().debug("Null instance for resource " + this.getId());
+				_logger.debug("Null instance for resource {}", this.getId());
 				return;
 			}
 			String docName = this.getInstance().getFileName();

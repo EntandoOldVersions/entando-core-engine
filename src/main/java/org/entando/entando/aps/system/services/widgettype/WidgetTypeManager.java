@@ -26,7 +26,6 @@ import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChang
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
@@ -130,7 +129,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetType.getCode());
 			if (null != type) {
-				ApsSystemUtils.getLogger().error("Type already exists : type code" + widgetType.getCode());
+				_logger.error("Type already exists : type code {}", widgetType.getCode());
 				return;
 			}
 			String parentTypeCode = widgetType.getParentTypeCode();
@@ -165,11 +164,11 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().error("Type not exists : type code" + widgetTypeCode);
+				_logger.error("Type not exists : type code {}", widgetTypeCode);
 				return;
 			}
 			if (type.isLocked()) {
-				ApsSystemUtils.getLogger().error("A loked widget can't be deleted - type " + widgetTypeCode);
+				_logger.error("A loked widget can't be deleted - type {}", widgetTypeCode);
 				return;
 			}
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
@@ -187,7 +186,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().error("Type not exists : type code" + showletTypeCode);
+				_logger.error("Type not exists : type code {}", showletTypeCode);
 				return;
 			}
 			this.updateWidgetType(showletTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
@@ -211,7 +210,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().error("Type not exists : type code" + widgetTypeCode);
+				_logger.error("Type not exists : type code {}", widgetTypeCode);
 				return;
 			}
 			if (type.isLocked() || !type.isLogic() || !type.isUserType()) {
@@ -237,7 +236,7 @@ public class WidgetTypeManager extends AbstractService
 		try {
 			WidgetType type = this._widgetTypes.get(showletTypeCode);
 			if (null == type) {
-				ApsSystemUtils.getLogger().error("Type not exists : type code" + showletTypeCode);
+				_logger.error("Type not exists : type code {}", showletTypeCode);
 				return;
 			}
 			this.getWidgetTypeDAO().updateShowletTypeTitles(showletTypeCode, titles);

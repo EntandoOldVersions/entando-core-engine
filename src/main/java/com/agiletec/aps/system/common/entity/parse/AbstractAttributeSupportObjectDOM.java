@@ -34,7 +34,6 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -58,7 +57,7 @@ public abstract class AbstractAttributeSupportObjectDOM {
 	        xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
 	        Source source = new StreamSource(xmlIs);
 	        validator.validate(source);
-	        ApsSystemUtils.getLogger().info("Valid definition : " + definitionPath);
+	        _logger.info("Valid definition : {}", definitionPath);
         } catch (Throwable t) {
         	String message = "Error validating definition : " + definitionPath;
         	_logger.error("Error validating definition : {}", definitionPath, t);

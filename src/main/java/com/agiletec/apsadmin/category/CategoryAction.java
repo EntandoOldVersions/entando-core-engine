@@ -25,7 +25,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.category.Category;
 import com.agiletec.aps.system.services.category.ICategoryManager;
@@ -171,17 +170,17 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 	protected String chechDelete() {
 		Category currentCategory = this.getCategory(this.getSelectedNode());
 		if (null == currentCategory) {
-			ApsSystemUtils.getLogger().info("Required a selected node");
+			_logger.info("Required a selected node");
 			this.addActionError(this.getText("error.category.selectCategory"));
 			return "categoryTree";
 		}
 		if (currentCategory.getCode().equals(currentCategory.getParentCode())) {
-			ApsSystemUtils.getLogger().info("Home category not deletable");
+			_logger.info("Home category not deletable");
 			this.addActionError(this.getText("error.category.homeDelete.notAllowed"));
 			return "categoryTree";
 		}
 		if (currentCategory.getChildren().length != 0) {
-			ApsSystemUtils.getLogger().info("Category with children not deletable");
+			_logger.info("Category with children not deletable");
 			this.addActionError(this.getText("error.category.deleteWithChildren.notAllowed"));
 			return "categoryTree";
         }

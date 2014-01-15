@@ -44,7 +44,6 @@ import org.entando.entando.aps.system.services.oauth.model.TokenUpdaterThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -222,7 +221,7 @@ public class OAuthConsumerManager extends AbstractService implements IOAuthConsu
         try {
             UserDetails user = (UserDetails) properties.get(SystemConstants.API_USER_PARAMETER);
             if (null == user) {
-                ApsSystemUtils.getLogger().info("Unable to delete access token form null user");
+                _logger.info("Unable to delete access token form null user");
             }
             String username = user.getUsername();
             String accessToken = properties.getProperty("accessToken");

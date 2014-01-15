@@ -19,8 +19,11 @@ package org.entando.entando.aps.system.services.userprofile.parse;
 
 import java.util.List;
 
+import org.entando.entando.aps.system.services.oauth.OAuthConsumerManager;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
@@ -34,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class UserProfileTypeDOM extends EntityTypeDOM {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileTypeDOM.class);
 	
 	@Override
 	@Deprecated (/** inserted to guarantee compatibility with previous version of jpuserprofile 1.6 plugin (of jAPS 2.2.0) */)
@@ -49,7 +54,7 @@ public class UserProfileTypeDOM extends EntityTypeDOM {
 			//this.extractRole(currentContentElem, entity, "firstNameAttributeName", SystemConstants.ATTRIBUTE_ROLE_FIRST_NAME);
 			//this.extractRole(currentContentElem, entity, "surnameAttributeName", SystemConstants.ATTRIBUTE_ROLE_SURNAME);
 			this.extractRole(currentContentElem, entity, "mailAttributeName", SystemConstants.USER_PROFILE_ATTRIBUTE_ROLE_MAIL);
-			ApsSystemUtils.getLogger().debug("Definining the Entity Type: " + entity.getTypeCode());
+			_logger.debug("Definining the Entity Type: {}", entity.getTypeCode());
 		}
 	}
 	

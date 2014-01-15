@@ -25,7 +25,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
@@ -60,7 +59,7 @@ public class ContentLinkAction extends ContentFinderAction {
 	public String joinContentLink() {
 		ContentRecordVO contentVo = this.getContentVo(this.getContentId());
 		if (null == contentVo || !contentVo.isOnLine()) {
-			ApsSystemUtils.getLogger().error("Contenuto '" + this.getContentId() + "' INESISTENTE O NON PUBBLICO");
+			_logger.error("Content '{}' does not exists or is not public", this.getContentId());
 			return FAILURE;
 		}
 		if (this.isContentOnPageType()) {

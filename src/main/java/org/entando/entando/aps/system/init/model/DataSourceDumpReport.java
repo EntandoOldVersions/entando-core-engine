@@ -34,7 +34,6 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.util.DateConverter;
 
 /**
@@ -98,7 +97,7 @@ public class DataSourceDumpReport {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error parsing Report: " + t.getMessage());
+			_logger.error("Error parsing Report. xml:{} ", xmlText, t);
 			throw new RuntimeException("Error detected while parsing the XML", t);
 		}
 	}

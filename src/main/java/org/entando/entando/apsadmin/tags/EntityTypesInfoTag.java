@@ -26,7 +26,6 @@ import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -56,7 +55,7 @@ public class EntityTypesInfoTag extends AbstractObjectInfoTag {
 				}
 				return entityTypes;
 			} else {
-				ApsSystemUtils.getLogger().debug("Null entity manager : service name '" + managerNameValue + "'");
+				_logger.debug("Null entity manager : service name '{}'", managerNameValue);
 			}
 		} catch (Throwable t) {
 			String message = "Error extracting entity types : entity manager '" + managerNameValue + "'";

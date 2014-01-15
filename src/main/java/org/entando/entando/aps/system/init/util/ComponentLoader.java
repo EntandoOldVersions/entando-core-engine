@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -60,7 +59,6 @@ public class ComponentLoader {
 					new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
 		ComponentDefDOM dom = null;
-		Logger logger = ApsSystemUtils.getLogger();
 		Set<String> codes = new HashSet<String>();
 		for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
@@ -73,10 +71,10 @@ public class ComponentLoader {
 				Component component = dom.getComponent(postProcessClasses);
 				if (null != component) {
 					if (codes.add(component.getCode())) {
-						logger.debug("Component '" + component.getCode() + "' loaded");
+						_logger.debug("Component '{}' loaded", component.getCode());
 						this.getComponents().put(component.getCode(), component);
 					} else {
-						logger.debug("Component '" + component.getCode() + "' already loaded");
+						_logger.debug("Component '{}' already loaded", component.getCode());
 					}
 				}
             } catch (Throwable t) {

@@ -27,8 +27,9 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -36,6 +37,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public class PageExtraConfigDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageExtraConfigDOM.class);
 	
 	public void addExtraConfig(Page page, String xml) throws ApsSystemException {
 		Document doc = this.decodeDOM(xml);
@@ -81,7 +84,7 @@ public class PageExtraConfigDOM {
 		try {
 			doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
+			_logger.error("Error while parsing xml: {} ", xml, t);
 			throw new ApsSystemException("Error detected while parsing the XML", t);
 		}
 		return doc;

@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -30,7 +31,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.util.DateConverter;
 
@@ -41,6 +41,8 @@ import com.agiletec.aps.util.DateConverter;
 public class NotifyManager implements INotifyManager, ApplicationListener, 
 BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 
+	private static final Logger _logger = LoggerFactory.getLogger(NotifyManager.class);
+	
 	@Override
 	public void onApplicationEvent(ApplicationEvent event) {
 		if (event instanceof ApsEvent) {
@@ -49,7 +51,7 @@ BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 			thread.start();
 			return;
 		}
-		ApsSystemUtils.getLogger().debug("Unhandled generic event detected: "+ event.getClass().getName());
+		_logger.debug("Unhandled generic event detected: {}", event.getClass().getName());
 	}
 
 	/**
@@ -57,7 +59,6 @@ BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 	 * @param event L'evento da notificare.
 	 */
 	protected void notify(ApsEvent event) {
-		Logger log = ApsSystemUtils.getLogger();
 		ListableBeanFactory factory = (ListableBeanFactory) this._beanFactory;
 		String[] defNames = factory.getBeanNamesForType(event.getObserverInterface());
 		for (int i=0; i<defNames.length; i++) {
@@ -69,10 +70,10 @@ BeanFactoryAware, ApplicationEventPublisherAware, Serializable {
 			}
 			if (observer != null) {
 				((ObserverService) observer).update(event);
-				log.debug("The event " + event.getClass().getName() + " was notified to the " + observer.getClass().getName()+" service");
+				_logger.debug("The event {} was notified to the {} service", event.getClass().getName(), observer.getClass().getName());
 			}
 		}
-		log.debug("The " + event.getClass().getName()+" has been notified");
+		_logger.debug("The {} has been notified", event.getClass().getName());
 	}
 
 	@Override

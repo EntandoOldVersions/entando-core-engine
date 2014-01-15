@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
@@ -346,7 +345,7 @@ public class ResourceManager extends AbstractService
     
     protected void startResourceReloaderThread(String resourceTypeCode, int operationCode) throws ApsSystemException {
     	if (this.getStatus() != STATUS_READY) {
-    		ApsSystemUtils.getLogger().info("Service not ready : status " + this.getStatus());
+    		_logger.info("Service not ready : status {}", this.getStatus());
     		return;
 		}
     	String threadName = this.getName() + "_resourceReloader_" + DateConverter.getFormattedDate(new Date(), "yyyyMMdd");
@@ -355,7 +354,7 @@ public class ResourceManager extends AbstractService
 			ResourceReloaderThread thread = new ResourceReloaderThread(this, operationCode, resources);
     		thread.setName(threadName);
 			thread.start();
-			ApsSystemUtils.getLogger().info("Reloader started");
+			_logger.info("Reloader started");
 		} catch (Throwable t) {
 			_logger.error("Error refreshing Resource of type {} - Thread Name '{}'",resourceTypeCode, threadName, t);
 			//ApsSystemUtils.logThrowable(t, this, "startResourceReloaderThread", "Error refreshing Resource of type " + resourceTypeCode + " - Thread Name '" + threadName + "'");

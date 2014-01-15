@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.FileTextReader;
 
@@ -56,7 +55,6 @@ public class ApiResourceLoader {
     }
     
     private void loadApiResources(String locationPattern) throws Exception {
-        Logger log = ApsSystemUtils.getLogger();
 		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 		Resource[] resources = resolver.getResources(locationPattern);
         ApiResourcesDefDOM dom = null;
@@ -74,16 +72,12 @@ public class ApiResourceLoader {
                     while (extractedResourcesIter.hasNext()) {
                         ApiResource apiResource = extractedResourcesIter.next();
                         if (null != this.getResources().get(apiResource.getCode())) {
-                            String alertMessage = "Into definition file '" + path + "' "
-                                    + "there is an API with namespace '" + apiResource.getNamespace() 
-									+ "', resource '" + apiResource.getResourceName()
-                                    + "' and there is just one already present - The old definition will be overrided!!!";
-                            ApsSystemUtils.getLogger().info(alertMessage);
+                            _logger.info("Into definition file '{}' there is an API with namespace '{}', resource '{}' and there is just one already present - The old definition will be overrided!!!", path, apiResource.getNamespace(), apiResource.getResourceName());
                         }
                         this.getResources().put(apiResource.getCode(), apiResource);
                     }
                 }
-                log.info("Loaded Api Resources definition by file " + path);
+                _logger.info("Loaded Api Resources definition by file {}", path);
             } catch (Throwable t) {
             	_logger.error("Error loading Api Resources definition by location Pattern '{}'",path, t);
                 //ApsSystemUtils.logThrowable(t, this, "loadApiResources", "Error loading Api Resources definition by location Pattern '" + path + "'");

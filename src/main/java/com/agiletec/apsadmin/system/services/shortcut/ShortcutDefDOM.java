@@ -40,7 +40,6 @@ import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.services.shortcut.model.AbstractBaseBean;
 import com.agiletec.apsadmin.system.services.shortcut.model.MenuSection;
@@ -172,7 +171,7 @@ public class ShortcutDefDOM {
 		try {
 			this._doc = builder.build(reader);
 		} catch (Throwable t) {
-			ApsSystemUtils.getLogger().error("Error while parsing: " + t.getMessage());
+			_logger.error("Error while parsing. xml: {} ", xmlText,t);
 			throw new ApsSystemException("Error detected while parsing the XML", t);
 		}
 	}

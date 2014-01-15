@@ -37,7 +37,6 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
@@ -49,7 +48,7 @@ public class ComponentDefDOM {
 	
     protected ComponentDefDOM(String xmlText, String configPath) throws ApsSystemException {
         this.validate(xmlText, configPath);
-        ApsSystemUtils.getLogger().debug("Loading Component from file : " + configPath);
+        _logger.debug("Loading Component from file : {}", configPath);
         this.decodeDOM(xmlText);
     }
     
@@ -66,7 +65,7 @@ public class ComponentDefDOM {
             xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
             Source source = new StreamSource(xmlIs);
             validator.validate(source);
-            ApsSystemUtils.getLogger().debug("Valid Component definition : " + configPath);
+            _logger.debug("Valid Component definition : {}", configPath);
         } catch (Throwable t) {
             _logger.error("Error validating Component definition : {}", configPath, t);
         	String message = "Error validating Component definition : " + configPath;

@@ -19,8 +19,9 @@ package com.agiletec.apsadmin.system;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.FileUploadInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -31,6 +32,8 @@ import com.opensymphony.xwork2.ActionInvocation;
  * @author E.Santoboni
  */
 public class ApsFileUploadInterceptor extends FileUploadInterceptor {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ApsFileUploadInterceptor.class);
 	
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
@@ -41,8 +44,7 @@ public class ApsFileUploadInterceptor extends FileUploadInterceptor {
 				try {
 					this.setMaximumSize(Long.parseLong(maxSizeParam));
 				} catch (Throwable t) {
-					ApsSystemUtils.getLogger().error("Error parsing param 'maxSize' - "
-							+ "value '" + maxSizeParam + "' - message " + t.getMessage());
+					_logger.error("Error parsing param 'maxSize' - value '{}' - message ", maxSizeParam, t);
 				}
 			}
 		}

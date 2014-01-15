@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.ICategoryManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -102,8 +101,7 @@ public class ResourceActionHelper extends BaseActionHelper implements IResourceA
 		List<String> allowedGroups = new ArrayList<String>();
 		if (null != groupName && groupName.trim().length() > 0) {
 			if (!this.getAuthorizationManager().isAuthOnGroup(currentUser, groupName)) {
-				ApsSystemUtils.getLogger().info("User '" + currentUser.getUsername() 
-						+ "' not allowed to manage resources of group '" + groupName + "'");
+				_logger.info("User '{}' not allowed to manage resources of group '{}'", currentUser.getUsername(), groupName);
 				return new ArrayList<String>();
 			}
 			allowedGroups.add(groupName);

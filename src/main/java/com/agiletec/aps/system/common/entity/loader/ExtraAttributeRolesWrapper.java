@@ -24,7 +24,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeRole;
@@ -52,12 +51,10 @@ public class ExtraAttributeRolesWrapper extends AbstractExtraAttributeSupportObj
 			for (int i = 0; i < roles.size(); i++) {
 				AttributeRole role = roles.get(i);
 				if (collectionToFill.containsKey(role.getName())) {
-					ApsSystemUtils.getLogger().error("You can't override existing attribute role : " 
-							+ role.getName() + " - " + role.getDescription());
+					_logger.warn("You can't override existing attribute role : {} - {}", role.getName(), role.getDescription());
 				} else {
 					collectionToFill.put(role.getName(), role);
-					ApsSystemUtils.getLogger().info("Added new attribute role : " 
-							+ role.getName() + " - " + role.getDescription());
+					_logger.info("Added new attribute role : {} - {}",role.getName(), role.getDescription());
 				}
 			}
 		} catch (Throwable t) {

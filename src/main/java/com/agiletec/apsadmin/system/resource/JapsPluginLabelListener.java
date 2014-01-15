@@ -32,7 +32,6 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
 /**
@@ -65,7 +64,7 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		itr = jaredPlugins.iterator();
 		while (itr.hasNext()) {
 			String cur = itr.next();
-			ApsSystemUtils.getLogger().debug("Trying to load resources @ "+cur);
+			_logger.debug("Trying to load resources @{}", cur);
 			LocalizedTextUtil.addDefaultResourceBundle(cur+this.PLUGIN_RESOURCE_NAME);
 		}
 		_logger.info("JapsPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size()+jaredPlugins.size()), classPlugins.size());

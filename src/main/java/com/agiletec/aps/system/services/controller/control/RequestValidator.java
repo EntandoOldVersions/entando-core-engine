@@ -68,7 +68,7 @@ public class RequestValidator extends AbstractControlService {
 	 */
 	@Override
 	public int service(RequestContext reqCtx, int status) {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName()+" invoked");
+		_logger.debug("{} invoked", this.getClass().getName());
 		int retStatus = ControllerManager.INVALID_STATUS;
 		// Se si è verificato un errore in un altro sottoservizio, termina subito
 		if (status == ControllerManager.ERROR) {

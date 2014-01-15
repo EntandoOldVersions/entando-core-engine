@@ -25,7 +25,6 @@ import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -112,7 +111,7 @@ public class InfoTag extends OutSupport {
 	@Override
 	public int doEndTag() throws JspException {
 		if (null == this._info) {
-			ApsSystemUtils.getLogger().debug("Null information - key '" + this.getKey() + "' - parameter '" + this.getParamName() + "'");
+			_logger.debug("Null information - key '{}' - parameter '{}'", this.getKey(), this.getParamName());
 			return super.doEndTag();
 		}
 		if (this._varName != null) {

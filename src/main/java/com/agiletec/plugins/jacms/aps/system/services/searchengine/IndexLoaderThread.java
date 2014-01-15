@@ -23,7 +23,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 
@@ -66,7 +65,7 @@ public class IndexLoaderThread extends Thread {
 				String id = contentsId.get(i);
 				this.reloadContentIndex(id);
 			}
-			ApsSystemUtils.getLogger().info("Indicizzazione effettuata");
+			_logger.info("Indicizzazione effettuata");
 		} catch (Throwable t) {
 			_logger.error("error in reloadIndex", t);
 			//ApsSystemUtils.logThrowable(t, this, "reloadIndex");
@@ -79,8 +78,7 @@ public class IndexLoaderThread extends Thread {
 			Content content = this._contentManager.loadContent(id, true);
 			if (content != null) {
 				this._indexerDao.add(content);
-				Logger log = ApsSystemUtils.getLogger();
-				log.info("Indexed content " + content.getId());
+				_logger.info("Indexed content {}", content.getId());
 			}
 		} catch (Throwable t) {
 			_logger.error("Error reloading index: content id {}", id, t);

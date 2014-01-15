@@ -21,7 +21,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -37,10 +39,12 @@ import com.agiletec.aps.system.services.page.PageUtils;
  * @author M.Diana - E.Santoboni
  */
 public class URLManager extends AbstractURLManager {
+
+	private static final Logger _logger = LoggerFactory.getLogger(URLManager.class);
 	
 	@Override
 	public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized");
+		_logger.debug("{} ready", this.getClass().getName());
 	}
 
 	/**

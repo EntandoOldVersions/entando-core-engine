@@ -107,7 +107,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
             if (null != user) {
                 properties.put(SystemConstants.API_USER_PARAMETER, user);
             } else {
-				ApsSystemUtils.getLogger().error("Admin user missing");
+				_logger.error("Admin user missing");
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting parameters", t);
@@ -176,7 +176,7 @@ public class SelfRestCaller implements IPostProcessor, BeanFactoryAware {
 				log.append("the post processes will be stopped.\n");
 			}
 		}
-		ApsSystemUtils.getLogger().info(log.toString());
+		_logger.info(log.toString());
 		System.out.println(log.toString());
 		if (!validResponse && selfRestCall.isFailOnError()) {
 			throw new InvalidPostProcessResultException(responseStatus.getStatusCode(), 

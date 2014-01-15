@@ -20,8 +20,6 @@ package com.agiletec.plugins.jacms.apsadmin.resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-
 /**
  * Action delegated to execute administrative tasks on resources
  * @author E.Santoboni
@@ -34,7 +32,7 @@ public class ResourceAdminAction extends AbstractResourceAction implements IReso
 	public String refreshResourcesInstances() {
 		try {
 			this.getResourceManager().refreshResourcesInstances(this.getResourceTypeCode());
-			ApsSystemUtils.getLogger().info("Refreshing started");
+			_logger.info("Refreshing started");
 		} catch (Throwable t) {
 			_logger.error("error in refreshResourcesInstances", t);
 			//ApsSystemUtils.logThrowable(t, this, "refreshResourcesInstances");
