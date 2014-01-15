@@ -33,13 +33,6 @@ import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.entando.entando.aps.system.services.userprofile.IUserProfileManager;
-import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-
 /**
  * @author E.Santoboni
  */
@@ -98,7 +91,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
                 }
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+        	_logger.error("Error while searching entity Ids", t);
             throw new RuntimeException("Error while searching entity Ids", t);
         }
         return searchResult;
@@ -109,7 +102,7 @@ public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
         try {
             user = this.getUserManager().getUser(username);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "getUser");
+        	_logger.error("Error extracting user {}", username, t);
             throw new RuntimeException("Error extracting user " + username, t);
         }
         return user;
