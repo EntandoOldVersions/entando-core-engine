@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -35,6 +36,8 @@ import com.agiletec.apsadmin.system.entity.IEntityReferencesReloadingAction;
  * @author E.Santoboni
  */
 public class EntityTypesAction extends AbstractEntityConfigAction implements IEntityTypesAction, IEntityReferencesReloadingAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityTypesAction.class);
 	
 	@Override
 	public void validate() {
@@ -55,7 +58,8 @@ public class EntityTypesAction extends AbstractEntityConfigAction implements IEn
 			String typeCode = this.getEntityTypeCode();
 			this.getEntityManager().reloadEntitiesReferences(typeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntityManagerReferences");
+			_logger.error("reloadEntityManagerReferences", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntityManagerReferences");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -75,7 +79,8 @@ public class EntityTypesAction extends AbstractEntityConfigAction implements IEn
 			BeanComparator comparator = new BeanComparator("typeDescr");
 			Collections.sort(entityPrototypes, comparator);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityPrototypes");
+			_logger.error("Error on extracting entity prototypes", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityPrototypes");
 			throw new RuntimeException("Error on extracting entity prototypes", t);
 		}
 		return entityPrototypes;
@@ -95,7 +100,8 @@ public class EntityTypesAction extends AbstractEntityConfigAction implements IEn
 				return "wrongEntityType";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "initEditEntityType");
+			_logger.error("error in initEditEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "initEditEntityType");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -112,7 +118,8 @@ public class EntityTypesAction extends AbstractEntityConfigAction implements IEn
 			String checkResult = this.checkDelete();
 			if (null != checkResult) return checkResult;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trashEntityType");
+			_logger.error("error in trashEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "trashEntityType");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -126,7 +133,8 @@ public class EntityTypesAction extends AbstractEntityConfigAction implements IEn
 			IEntityTypesConfigurer entityManager = (IEntityTypesConfigurer) this.getEntityManager();
 			entityManager.removeEntityPrototype(this.getEntityTypeCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeEntityType");
+			_logger.error("error in removeEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeEntityType");
 			return FAILURE;
 		}
 		return SUCCESS;

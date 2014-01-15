@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.tree.ITreeNode;
@@ -40,6 +41,8 @@ import com.agiletec.apsadmin.system.BaseActionHelper;
  * @author E.Santoboni - G.Cocco
  */
 public class CategoryAction extends AbstractTreeAction implements ICategoryAction, ICategoryTreeAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CategoryAction.class);
 	
 	@Override
 	public void validate() {
@@ -90,7 +93,8 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
 			this.setParentCategoryCode(selectedNode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "add");
+			_logger.error("error in add", t);
+			//ApsSystemUtils.logThrowable(t, this, "add");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -122,7 +126,8 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 			this.setCategoryCode(category.getCode());
 			this.setTitles(category.getTitles());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractCategoryFormValues");
+			_logger.error("error in extractCategoryFormValues", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractCategoryFormValues");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -134,7 +139,8 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 			String check = this.chechDelete();
 			if (null != check) return check;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -150,7 +156,8 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 			this.getCategoryManager().deleteCategory(selectedNode);
 			this.setSelectedNode(currentCategory.getParent().getCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -195,26 +202,27 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by category '" + categoryCode + "'");
+			_logger.error("Error extracting referenced objects by category {}", categoryCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by category '" + categoryCode + "'");
 		}
 	}
 	
 	@Override
 	public String save() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
 				Category category = this.getCategory(this.getCategoryCode());
 				category.setTitles(this.getTitles());
 				this.getCategoryManager().updateCategory(category);
-				log.debug("Updated category " + category.getCode());
+				_logger.debug("Updated category {}", category.getCode());
 			} else {
 				Category category = this.getHelper().buildNewCategory(this.getCategoryCode(), this.getParentCategoryCode(), this.getTitles());
 				this.getCategoryManager().addCategory(category);
-				log.debug("Added new category " + this.getCategoryCode());
+				_logger.debug("Added new category {}", this.getCategoryCode());
 			}
 		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "save");
+			_logger.error("error in save", e);
+			//ApsSystemUtils.logThrowable(e, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -236,7 +244,8 @@ public class CategoryAction extends AbstractTreeAction implements ICategoryActio
 		try {
 			node = this.getHelper().getAllowedTreeRoot(new ArrayList<String>());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getTreeRootNode");
+			_logger.error("error in getTreeRootNode", t);
+			//ApsSystemUtils.logThrowable(t, this, "getTreeRootNode");
 		}
 		return node;
 	}

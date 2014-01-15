@@ -17,7 +17,9 @@
 */
 package com.agiletec.apsadmin.tags;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -30,6 +32,8 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
  * @author E.Santoboni
  */
 public class EntityInfoTag extends AbstractObjectInfoTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityInfoTag.class);
 	
 	@Override
 	protected Object getMasterObject(String keyValue) throws Throwable {
@@ -40,12 +44,12 @@ public class EntityInfoTag extends AbstractObjectInfoTag {
 				return entityManager.getEntity(keyValue);
 			}
 		} catch (Throwable t) {
-			String message = "Error extracting entity : key '" 
-				+ keyValue + "' - entity manager '" + managerNameValue + "'";
-			ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
+			String message = "Error extracting entity : key '" 	+ keyValue + "' - entity manager '" + managerNameValue + "'";
+			_logger.error("Error extracting entity : key '{}' - entity manager '{}'", keyValue, managerNameValue, t);
+			//ApsSystemUtils.logThrowable(t, this, "getMasterObject", message);
 			throw new ApsSystemException(message, t);
 		}
-		ApsSystemUtils.getLogger().debug("Null entity manager : service name '" + managerNameValue + "'");
+		_logger.debug("Null entity manager : service name '{}'", managerNameValue);
 		return null;
 	}
 	

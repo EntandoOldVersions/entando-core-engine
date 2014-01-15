@@ -20,7 +20,9 @@ package com.agiletec.apsadmin.user.group;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.IGroupManager;
@@ -33,6 +35,8 @@ import com.agiletec.apsadmin.user.group.helper.IGroupActionHelper;
  * @author E.Santoboni - E.Mezzano
  */
 public class GroupAction extends BaseAction implements IGroupAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(GroupAction.class);
 	
 	@Override
 	public void validate() {
@@ -85,7 +89,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 			this.setName(group.getName());
 			this.setDescription(group.getDescr());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractGroupFormValues");
+			_logger.error("error in extractGroupFormValues", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractGroupFormValues");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -103,7 +108,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 				this.getGroupManager().updateGroup(group);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -115,7 +121,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 			String check = this.checkGroupForDelete();
 			if (null != check) return check;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -130,7 +137,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 			Group group = groupManager.getGroup(this.getName());
 			this.getGroupManager().removeGroup(group);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -179,7 +187,8 @@ public class GroupAction extends BaseAction implements IGroupAction {
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by group '" + groupCode + "'");
+			_logger.error("Error extracting referenced objects by group '{}'", groupCode, t);
+			//ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by group '" + groupCode + "'");
 		}
 	}
 	

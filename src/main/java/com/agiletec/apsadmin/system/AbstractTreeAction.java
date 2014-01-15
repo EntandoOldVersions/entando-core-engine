@@ -21,7 +21,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.tree.ITreeNode;
 
 /**
@@ -29,6 +31,8 @@ import com.agiletec.aps.system.common.tree.ITreeNode;
  * @author E.Santoboni
  */
 public abstract class AbstractTreeAction extends BaseAction implements ITreeAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractTreeAction.class);
 	
 	@Override
 	public String buildTree() {
@@ -44,7 +48,8 @@ public abstract class AbstractTreeAction extends BaseAction implements ITreeActi
 			}
 			this.setTreeNodesToOpen(targets);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildTree");
+			_logger.error("error in buildTree", t);
+			//ApsSystemUtils.logThrowable(t, this, "buildTree");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -57,7 +62,8 @@ public abstract class AbstractTreeAction extends BaseAction implements ITreeActi
 			ITreeNode allowedTree = this.getAllowedTreeRootNode();
 			node = this.getTreeHelper().getShowableTree(this.getTreeNodesToOpen(), allowedTree, this.getNodeGroupCodes());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getShowableTree");
+			_logger.error("error in getShowableTree", t);
+			//ApsSystemUtils.logThrowable(t, this, "getShowableTree");
 		}
 		return node;
 	}
@@ -68,7 +74,8 @@ public abstract class AbstractTreeAction extends BaseAction implements ITreeActi
 		try {
 			node = this.getTreeHelper().getAllowedTreeRoot(this.getNodeGroupCodes());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedTreeRootNode");
+			_logger.error("error in getAllowedTreeRootNode", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedTreeRootNode");
 		}
 		return node;
 	}

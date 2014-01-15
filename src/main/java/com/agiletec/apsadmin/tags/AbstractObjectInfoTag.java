@@ -25,6 +25,8 @@ import java.lang.reflect.Method;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -34,6 +36,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @author E.Santoboni
  */
 public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractObjectInfoTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -58,7 +62,8 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 				this.pageContext.getOut().print(requiredObject);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error on doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error on doStartTag", t);
 		}
         return super.doStartTag();
@@ -85,12 +90,10 @@ public abstract class AbstractObjectInfoTag extends StrutsBodyTagSupport {
 				Object[] args = null;
 				return method.invoke(masterObject, args);
 			}
-				ApsSystemUtils.getLogger().debug("Invalid required object property : Master Object '" 
-						+ masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
+				_logger.debug("Invalid required object property : Master Object '{}' - property '{}'", masterObject.getClass().getName(), propertyValue);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getPropertyValue", 
-					"Error extracting property value : Master Object '" 
-						+ masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
+			_logger.error("Error extracting property value : Master Object {} - property: '{}'", masterObject.getClass().getName(), propertyValue, t);
+			//ApsSystemUtils.logThrowable(t, this, "getPropertyValue", "Error extracting property value : Master Object '" + masterObject.getClass().getName() + "' - property '" + propertyValue + "'");
 		}
 		return null;
 	}

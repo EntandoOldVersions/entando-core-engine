@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -41,6 +43,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  */
 public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(BaseAdminAction.class);
+	
     @Override
     public String reloadConfig() {
         try {
@@ -48,7 +52,8 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             ApsSystemUtils.getLogger().info("Reload config started");
             this.setReloadingResult(SUCCESS_RELOADING_RESULT_CODE);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "reloadConfig");
+        	_logger.error("error in reloadConfig", t);
+            //ApsSystemUtils.logThrowable(t, this, "reloadConfig");
             this.setReloadingResult(FAILURE_RELOADING_RESULT_CODE);
         }
         return SUCCESS;
@@ -60,9 +65,10 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             ReloadingEntitiesReferencesEvent event = new ReloadingEntitiesReferencesEvent();
             WebApplicationContext wac = ApsWebApplicationUtils.getWebApplicationContext(this.getRequest());
             wac.publishEvent(event);
-            ApsSystemUtils.getLogger().info("Reloading entity references started");
+            _logger.info("Reloading entity references started");
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "reloadEntitiesReferences");
+        	_logger.error("error in reloadEntitiesReferences", t);
+            //ApsSystemUtils.logThrowable(t, this, "reloadEntitiesReferences");
             return FAILURE;
         }
         return SUCCESS;
@@ -81,7 +87,8 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
         try {
             this.initLocalMap();
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "configSystemParams");
+        	_logger.error("error in configSystemParams", t);
+            //ApsSystemUtils.logThrowable(t, this, "configSystemParams");
             return FAILURE;
         }
         return SUCCESS;
@@ -98,7 +105,8 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
             this.addActionMessage(this.getText("message.configSystemParams.ok"));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateSystemParams");
+        	_logger.error("error in updateSystemParams", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateSystemParams");
             return FAILURE;
         }
         return SUCCESS;
@@ -115,7 +123,8 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
             this.getConfigManager().updateConfigItem(SystemConstants.CONFIG_ITEM_PARAMS, newXmlParams);
             this.addActionMessage(this.getText("message.configSystemParams.ok"));
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "updateSystemParams");
+        	_logger.error("error in updateSystemParams ajax", t);
+            //ApsSystemUtils.logThrowable(t, this, "updateSystemParams");
             return FAILURE;
         }
         return SUCCESS;
@@ -162,7 +171,8 @@ public class BaseAdminAction extends BaseAction implements IBaseAdminAction {
                 }
             }
         } catch (Exception e) {
-            ApsSystemUtils.logThrowable(e, this, "extractExtraParameters", "Error extracting extra parameters");
+        	_logger.error("Error extracting extra parameters", e);
+            //ApsSystemUtils.logThrowable(e, this, "extractExtraParameters", "Error extracting extra parameters");
         }
     }
 

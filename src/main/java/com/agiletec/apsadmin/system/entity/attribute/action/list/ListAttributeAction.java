@@ -20,8 +20,8 @@ package com.agiletec.apsadmin.system.entity.attribute.action.list;
 import java.util.List;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 import com.agiletec.aps.system.common.entity.model.attribute.ListAttribute;
@@ -34,11 +34,12 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public abstract class ListAttributeAction extends BaseAction implements IListAttributeAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ListAttributeAction.class);
 	
 	@Override
 	public String addListElement() {
 		IApsEntity entity = this.getCurrentApsEntity();
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			ListAttributeInterface currentAttribute = (ListAttributeInterface) entity.getAttribute(this.getAttributeName());
 			if (currentAttribute instanceof MonoListAttribute) {
@@ -46,9 +47,10 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 			} else if (currentAttribute instanceof ListAttribute) {
 				((ListAttribute) currentAttribute).addAttribute(this.getListLangCode());
 			}
-			log.debug("Added element of type " + currentAttribute.getNestedAttributeTypeCode() + " to the list " + currentAttribute.getName());
+			_logger.debug("Added element of type {} to the list {}", currentAttribute.getNestedAttributeTypeCode(), currentAttribute.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addListElement");
+			_logger.error("error in addListElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "addListElement");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -57,7 +59,6 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 	@Override
 	public String moveListElement() {
 		IApsEntity entity = this.getCurrentApsEntity();
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			int elementIndex = this.getElementIndex();
 			ListAttributeInterface currentAttribute = (ListAttributeInterface) entity.getAttribute(this.getAttributeName());
@@ -68,11 +69,10 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 				List<AttributeInterface> list = ((ListAttribute) currentAttribute).getAttributeList(this.getListLangCode());
 				this.moveListElement(list, elementIndex, this.getMovement());
 			}
-			log.debug("Moved element of type " + currentAttribute.getNestedAttributeTypeCode() + 
-					" of the list " + currentAttribute.getName() + 
-					" in the position " + elementIndex + " with a '" + this.getMovement() + "' movement ");
+			_logger.debug("Moved element of type {} of the list {} in the position {} with a '{}' movement ", currentAttribute.getNestedAttributeTypeCode(), currentAttribute.getName(), elementIndex, this.getMovement());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "moveListElement");
+			_logger.error("error in moveListElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "moveListElement");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -103,7 +103,6 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 	@Override
 	public String removeListElement() {
 		IApsEntity entity = this.getCurrentApsEntity();
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			int elementIndex = this.getElementIndex();
 			ListAttributeInterface currentAttribute = (ListAttributeInterface) entity.getAttribute(this.getAttributeName());
@@ -112,9 +111,10 @@ public abstract class ListAttributeAction extends BaseAction implements IListAtt
 			} else if (currentAttribute instanceof ListAttribute) {
 				((ListAttribute) currentAttribute).removeAttribute(this.getListLangCode(), elementIndex);
 			}
-			log.debug("Element oy type " + currentAttribute.getNestedAttributeTypeCode() + " removed fomr the list " + currentAttribute.getName());
+			_logger.debug("Element oy type {} removed fomr the list {}", currentAttribute.getNestedAttributeTypeCode(), currentAttribute.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeListElement");
+			_logger.error("error in removeListElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeListElement");
 			return FAILURE;
 		}
 		return SUCCESS;

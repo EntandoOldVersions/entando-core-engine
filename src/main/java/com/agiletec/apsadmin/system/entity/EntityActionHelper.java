@@ -22,11 +22,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.model.AttributeFieldError;
 import com.agiletec.aps.system.common.entity.model.AttributeTracer;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
@@ -51,6 +52,8 @@ import com.opensymphony.xwork2.ActionSupport;
  */
 public class EntityActionHelper extends BaseActionHelper implements IEntityActionHelper, BeanFactoryAware {
 
+	private static final Logger _logger = LoggerFactory.getLogger(EntityActionHelper.class);
+	
 	@Override
 	public void updateEntity(IApsEntity currentEntity, HttpServletRequest request) {
 		try {
@@ -65,11 +68,12 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "updateEntity");
+			_logger.error("Error updating Entity", t);
+			//ApsSystemUtils.logThrowable(t, this, "updateEntity");
 			throw new RuntimeException("Error updating Entity", t);
 		}
 	}
-
+    
 	@Override
 	public void scanEntity(IApsEntity currentEntity, ActionSupport action) {
 		try {
@@ -93,11 +97,12 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "scanEntity");
+			_logger.error("Error scanning Entity", t);
+			//ApsSystemUtils.logThrowable(t, this, "scanEntity");
 			throw new RuntimeException("Error scanning Entity", t);
 		}
 	}
-
+    
     private String createErrorMessageAttributePositionPrefix(ActionSupport action, AttributeInterface attribute, com.agiletec.aps.system.common.entity.model.AttributeTracer tracer) {
         if (tracer.isMonoListElement()) {
             if (tracer.isCompositeElement()) {
@@ -118,7 +123,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
             return action.getText("EntityAttribute.singleAttribute.errorMessage.prefix", args);
         }
     }
-
+    
 	protected AttributeManagerInterface getManager(AttributeInterface attribute) {
 		String managerClassName = attribute.getAttributeManagerClassName();
         try {
@@ -130,21 +135,22 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 				manager.setBeanFactory(this.getBeanFactory());
 				return manager;
 			}
-        } catch (Throwable e) {
+        } catch (Throwable t) {
             String message = "Error creating manager of attribute '"
                     + attribute.getName() + "' type '" + attribute.getType() + "' -  Manager class '" + managerClassName + "'";
-            ApsSystemUtils.logThrowable(e, this, "getManager", message);;
-            throw new RuntimeException(message, e);
+            _logger.error("Error creating manager of attribute '{}', type: {} - Manager class: {}", attribute.getName(),attribute.getType(), managerClassName,  t);
+            //ApsSystemUtils.logThrowable(t, this, "getManager", message);;
+            throw new RuntimeException(message, t);
         }
         return null;
     }
-
+	
 	@Override
 	@Deprecated
 	public EntitySearchFilter[] getSearchFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
 		return this.getAttributeFilters(entityFinderAction, prototype);
 	}
-
+	
 	@Override
 	public EntitySearchFilter[] getRoleFilters(AbstractApsEntityFinderAction entityFinderAction) {
 		EntitySearchFilter[] filters = new EntitySearchFilter[0];
@@ -183,7 +189,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		}
 		return filters;
 	}
-
+	
 	@Override
 	public EntitySearchFilter[] getAttributeFilters(AbstractApsEntityFinderAction entityFinderAction, IApsEntity prototype) {
 		EntitySearchFilter[] filters = new EntitySearchFilter[0];
@@ -193,7 +199,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		List<AttributeInterface> contentAttributes = prototype.getAttributeList();
 		for (int i = 0; i < contentAttributes.size(); i++) {
 			AttributeInterface attribute = contentAttributes.get(i);
-			if (attribute.isActive() && attribute.isSearchable()) {
+			if (attribute.isActive() && attribute.isSearcheable()) {
 				if (attribute instanceof ITextAttribute) {
 					String insertedText = entityFinderAction.getSearchFormFieldValue(attribute.getName() + "_textFieldName");
 					if (null != insertedText && insertedText.trim().length() > 0) {
@@ -225,7 +231,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 		}
 		return filters;
 	}
-
+	
     private Date getDateSearchFormValue(AbstractApsEntityFinderAction entityFinderAction,
             String fieldName, String dateFieldNameSuffix, boolean start) {
         String inputFormName = fieldName + dateFieldNameSuffix;
@@ -265,7 +271,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         }
         return bigdecimal;
     }
-
+	
     private EntitySearchFilter[] addFilter(EntitySearchFilter[] filters, EntitySearchFilter filterToAdd) {
         int len = filters.length;
         EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
@@ -275,7 +281,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
         newFilters[len] = filterToAdd;
         return newFilters;
     }
-
+    
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
 	}
@@ -283,7 +289,7 @@ public class EntityActionHelper extends BaseActionHelper implements IEntityActio
 	public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
 		this._beanFactory = beanFactory;
 	}
-
+	
 	private BeanFactory _beanFactory;
-
+	
 }

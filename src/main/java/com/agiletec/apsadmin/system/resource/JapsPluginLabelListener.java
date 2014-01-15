@@ -29,6 +29,9 @@ import java.util.jar.JarInputStream;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.opensymphony.xwork2.util.LocalizedTextUtil;
 
@@ -45,6 +48,8 @@ import com.opensymphony.xwork2.util.LocalizedTextUtil;
  */
 public class JapsPluginLabelListener implements ServletContextListener {
 
+	private static final Logger _logger = LoggerFactory.getLogger(JapsPluginLabelListener.class);
+	
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		Set<String> jaredPlugins = new HashSet<String>();
@@ -54,7 +59,7 @@ public class JapsPluginLabelListener implements ServletContextListener {
 		Iterator<String> itr = classPlugins.iterator();
 		while (itr.hasNext()) {
 			String cur = itr.next();
-			ApsSystemUtils.getLogger().debug("Trying to load resources under development @ "+cur);
+			_logger.debug("Trying to load resources under development @ {}", cur);
 			LocalizedTextUtil.addDefaultResourceBundle(cur+this.PLUGIN_RESOURCE_NAME);
 		}
 		itr = jaredPlugins.iterator();
@@ -63,7 +68,7 @@ public class JapsPluginLabelListener implements ServletContextListener {
 			ApsSystemUtils.getLogger().debug("Trying to load resources @ "+cur);
 			LocalizedTextUtil.addDefaultResourceBundle(cur+this.PLUGIN_RESOURCE_NAME);
 		}
-		ApsSystemUtils.getLogger().info("JapsPluginLabelListener summary: "+(classPlugins.size()+jaredPlugins.size())+" plugin detected ("+classPlugins.size()+" under development)");
+		_logger.info("JapsPluginLabelListener summary: {} plugin detected ({} under development)", (classPlugins.size()+jaredPlugins.size()), classPlugins.size());
 	}
 
 	/**
@@ -140,7 +145,8 @@ public class JapsPluginLabelListener implements ServletContextListener {
 				}
 			} while (je != null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "discoverJarPlugin");
+			_logger.error("error in discoverJarPlugin", t);
+			//ApsSystemUtils.logThrowable(t, this, "discoverJarPlugin");
 		}
 		return plugins;
 	}

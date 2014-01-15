@@ -19,7 +19,9 @@ package com.agiletec.apsadmin.admin.lang;
 
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -28,13 +30,16 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class LangFinderAction extends BaseAction implements ILangFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LangFinderAction.class);
 	
 	public List<Lang> getLangs() {
 		List<Lang> langs = null;
 		try {
 			langs = this.getLangManager().getLangs();
 		} catch(Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getLangs");
+			_logger.error("Error extracting system lang ", t);
+			//ApsSystemUtils.logThrowable(t, this, "getLangs");
 			throw new RuntimeException("Error extracting system lang", t);
 		}
 		return langs;
@@ -49,7 +54,8 @@ public class LangFinderAction extends BaseAction implements ILangFinderAction {
 		try {
 			assignableLangs = this.getLangManager().getAssignableLangs();
 		} catch(Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAssignableLangs");
+			_logger.error("Error extracting assignable langs", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAssignableLangs");
 			throw new RuntimeException("Error extracting assignable langs", t);
 		}
 		return assignableLangs;

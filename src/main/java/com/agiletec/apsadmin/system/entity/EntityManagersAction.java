@@ -20,12 +20,13 @@ package com.agiletec.apsadmin.system.entity;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -33,6 +34,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class EntityManagersAction extends BaseAction implements IEntityReferencesReloadingAction, BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityManagersAction.class);
 	
 	@Override
 	public void validate() {
@@ -55,7 +58,8 @@ public class EntityManagersAction extends BaseAction implements IEntityReference
 			String[] defNames = factory.getBeanNamesForType(IEntityManager.class);
 			serviceNames = Arrays.asList(defNames);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityManagers");
+			_logger.error("Error while extracting entity managers", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityManagers");
 			throw new RuntimeException("Error while extracting entity managers", t);
 		}
 		return serviceNames;
@@ -69,7 +73,8 @@ public class EntityManagersAction extends BaseAction implements IEntityReference
 			String typeCode = null;
 			entityManager.reloadEntitiesReferences(typeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "reloadEntityManagerReferences");
+			_logger.error("reloadEntityManagerReferences", t);
+			//ApsSystemUtils.logThrowable(t, this, "reloadEntityManagerReferences");
 			return FAILURE;
 		}
 		return SUCCESS;

@@ -21,8 +21,9 @@ import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
@@ -34,6 +35,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTypeAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(WidgetTypeAction.class);
 	
 	@Override
 	public void validate() {
@@ -46,7 +49,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 				this.checkNewShowlet();
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "validate");
+			_logger.error("error in validate", t);
+			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException(t);
 		}
 	}
@@ -67,7 +71,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
 			this.setMainGroup(Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "newUserWidget");
+			_logger.error("error in newUserWidget", t);
+			//ApsSystemUtils.logThrowable(t, this, "newUserWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -81,7 +86,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			this.setStrutsAction(ApsAdminSystemConstants.PASTE);
 			this.setMainGroup(Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "copy");
+			_logger.error("error in copy", t);
+			//ApsSystemUtils.logThrowable(t, this, "copy");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -109,7 +115,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			}
 			this.getWidgetTypeManager().updateWidgetType(this.getWidgetTypeCode(), titles, configToSet, mainGroupToSet);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -147,7 +154,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 				return "replaceOnPage";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveUserShowlet");
+			_logger.error("error in saveUserShowlet", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveUserShowlet");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -247,7 +255,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			this.setEnglishTitle(titles.getProperty("en"));
 			this.setMainGroup(type.getMainGroup());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "editShowletTitles");
+			_logger.error("error in editWidgetTitles", t);
+			//ApsSystemUtils.logThrowable(t, this, "editShowletTitles");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -268,7 +277,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			String check = this.checkDeleteShowletType();
 			if (null != check) return check;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -281,7 +291,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 			if (null != check) return check;
 			this.getWidgetTypeManager().deleteWidgetType(this.getWidgetTypeCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -302,7 +313,8 @@ public class WidgetTypeAction extends AbstractPortalAction implements IWidgetTyp
 				return "inputShowletTypes";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkDeleteShowletType");
+			_logger.error("Error on checking delete operatione : showlet type code {}",this.getWidgetTypeCode(), t);
+			//ApsSystemUtils.logThrowable(t, this, "checkDeleteShowletType");
 			throw new RuntimeException("Error on checking delete operatione : showlet type code " + this.getWidgetTypeCode(), t);
 		}
 		return null;

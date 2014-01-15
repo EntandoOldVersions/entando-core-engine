@@ -27,8 +27,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.dispatcher.ServletRedirectResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
@@ -46,6 +47,8 @@ import com.opensymphony.xwork2.util.reflection.ReflectionExceptionHandler;
  */
 public class FrontServletActionRedirectResult extends ServletRedirectResult implements ReflectionExceptionHandler {
 
+	private static final Logger _logger = LoggerFactory.getLogger(FrontServletActionRedirectResult.class);
+	
     protected String _actionName;
     protected String _namespace;
     protected String _method;
@@ -110,7 +113,8 @@ public class FrontServletActionRedirectResult extends ServletRedirectResult impl
             }
             this.setLocation(url);
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "execute");
+        	_logger.error("error in execute", t);
+            //ApsSystemUtils.logThrowable(t, this, "execute");
         }
         super.execute(invocation);
     }

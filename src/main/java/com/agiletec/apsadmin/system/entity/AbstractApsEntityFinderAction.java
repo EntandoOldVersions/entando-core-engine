@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -36,13 +37,16 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public abstract class AbstractApsEntityFinderAction extends BaseAction implements IApsEntityFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractApsEntityFinderAction.class);
 	
 	@Override
 	public String execute() {
 		try {
 			this.createBaseFilters();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "execute");
+			_logger.error("error in execute", t);
+			//ApsSystemUtils.logThrowable(t, this, "execute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -62,7 +66,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			}
 			this.setAddedAttributeFilter(this.getFilters().length > initSize);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "createBaseFilters");
+			_logger.error("Error while creating entity filters", t);
+			//ApsSystemUtils.logThrowable(t, this, "createBaseFilters");
 			throw new RuntimeException("Error while creating entity filters", t);
 		}
 	}
@@ -74,7 +79,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			IEntityManager entityManager = this.getEntityManager();
 			result = entityManager.searchId(this.getFilters());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getSearchResult");
+			_logger.error("Error while searching entity Ids", t);
+			//ApsSystemUtils.logThrowable(t, this, "getSearchResult");
 			throw new RuntimeException("Error while searching entity Ids", t);
 		}
 		return result;
@@ -104,7 +110,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			String checkResult = this.checkDeletingEntity();
 			if (null != checkResult) return checkResult;
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("Error while trashing entity", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			throw new RuntimeException("Error while trashing entity", t);
 		}
 		return SUCCESS;
@@ -117,7 +124,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			if (null != checkResult) return checkResult;
 			this.deleteEntity(this.getEntityId());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("Error while deleting entity", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			throw new RuntimeException("Error while deleting entity", t);
 		}
 		return SUCCESS;
@@ -148,7 +156,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			BeanComparator comparator = new BeanComparator("typeDescr");
 			Collections.sort(entityPrototypes, comparator);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntityPrototypes");
+			_logger.error("Error while extracting entity prototypes", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntityPrototypes");
 			throw new RuntimeException("Error while extracting entity prototypes", t);
 		}
 		return entityPrototypes;
@@ -160,7 +169,8 @@ public abstract class AbstractApsEntityFinderAction extends BaseAction implement
 			IEntityManager entityManager = this.getEntityManager();
 			entity = entityManager.getEntity(entityId);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEntity");
+			_logger.error("Error while extracting entity", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEntity");
 			throw new RuntimeException("Error while extracting entity", t);
 		}
 		return entity;

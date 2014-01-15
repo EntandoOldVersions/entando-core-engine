@@ -17,7 +17,9 @@
 */
 package com.agiletec.apsadmin.system.entity.type;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
 
@@ -25,6 +27,8 @@ import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
  * @author E.Santoboni
  */
 public class ListElementAttributeConfigAction extends AbstractBaseEntityAttributeConfigAction implements IListElementAttributeConfigAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ListElementAttributeConfigAction.class);
 	
 	@Override
 	public String configureListElement() {
@@ -40,7 +44,8 @@ public class ListElementAttributeConfigAction extends AbstractBaseEntityAttribut
 			this.getRequest().getSession().removeAttribute(IListElementAttributeConfigAction.LIST_ATTRIBUTE_ON_EDIT_SESSION_PARAM);
 			this.getRequest().getSession().removeAttribute(IListElementAttributeConfigAction.LIST_ELEMENT_ON_EDIT_SESSION_PARAM);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveListElement");
+			_logger.error("error in saveListElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveListElement");
 			return FAILURE;
 		}
 		return SUCCESS;

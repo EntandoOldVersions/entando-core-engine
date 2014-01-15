@@ -26,6 +26,7 @@ import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -40,6 +41,8 @@ import com.agiletec.apsadmin.system.services.shortcut.model.Shortcut;
  * @author E.Santoboni
  */
 public class ShortcutLoader {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ShortcutLoader.class);
 	
 	protected ShortcutLoader(String locationPatterns, ServletContext servletContext) throws ApsSystemException {
 		this.setSectionMenus(new HashMap<String, MenuSection>());
@@ -52,7 +55,8 @@ public class ShortcutLoader {
 			}
 			this.completeLoading();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "ShortcutLoader", "Error loading Shortcut definitions");
+			_logger.error("Error loading Shortcut definitions", t);
+			//ApsSystemUtils.logThrowable(t, this, "ShortcutLoader", "Error loading Shortcut definitions");
 			throw new ApsSystemException("Error loading Shortcut definitions", t);
 		}
 	}
@@ -73,7 +77,8 @@ public class ShortcutLoader {
 				this.getShortcuts().putAll(dom.getShortcuts());
 				log.info("Loaded Shortcut definition by file " + path);
 			} catch (Throwable t) {
-				ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definition by file " + locationPattern);
+				_logger.error("Error loading Shortcut definition by file {}", locationPattern, t);
+				//ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definition by file " + locationPattern);
 			} finally {
 				if (null != is) {
 					is.close();

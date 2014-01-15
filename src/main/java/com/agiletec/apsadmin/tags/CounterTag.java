@@ -20,7 +20,9 @@ package com.agiletec.apsadmin.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.apsadmin.tags.util.AutoIndexingTagHelper;
 import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
 
@@ -30,6 +32,8 @@ import com.agiletec.apsadmin.tags.util.IAutoIndexingTag;
  * @author E.Santoboni
  */
 public class CounterTag extends TagSupport implements IAutoIndexingTag {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CounterTag.class);
 	
 	public CounterTag() {
 		super();
@@ -42,7 +46,8 @@ public class CounterTag extends TagSupport implements IAutoIndexingTag {
 			String currentCounter = this.getCurrentIndex();
 			this.pageContext.getOut().print(currentCounter);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag", "error creating (or modifying) counter");
+			_logger.error("error creating (or modifying) counter", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag", "error creating (or modifying) counter");
 			throw new JspException("error creating (or modifying) counter", t);
 		}
 		return super.doStartTag();

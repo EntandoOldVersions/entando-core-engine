@@ -23,12 +23,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.ListableBeanFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AttributeInterface;
@@ -50,6 +51,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class AbstractBaseEntityAttributeConfigAction extends BaseAction implements BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AbstractBaseEntityAttributeConfigAction.class);
 	
 	/**
 	 * Fill form fields.
@@ -252,7 +255,8 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 			AttributeInterface attribute = this.getAttributePrototype(attributeTypeCode);
 			return (null == attribute.getIndexingType());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "isIndexableOptionSupported");
+			_logger.error("error in isIndexableOptionSupported", t);
+			//ApsSystemUtils.logThrowable(t, this, "isIndexableOptionSupported");
 		}
 		return false;
 	}
@@ -262,7 +266,8 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 			AttributeInterface attribute = this.getAttributePrototype(attributeTypeCode);
 			return attribute.isSearchableOptionSupported();
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "isSearchableOptionSupported");
+			_logger.error("error in isSearchableOptionSupported", t);
+			//ApsSystemUtils.logThrowable(t, this, "isSearchableOptionSupported");
 		}
 		return false;
 	}
@@ -346,7 +351,8 @@ public class AbstractBaseEntityAttributeConfigAction extends BaseAction implemen
 			String[] defNames = factory.getBeanNamesForType(EnumeratorAttributeItemsExtractor.class);
 			extractors = Arrays.asList(defNames);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getEnumeratorExtractorBeans");
+			_logger.error("Error while extracting enumerator extractor beans", t);
+			//ApsSystemUtils.logThrowable(t, this, "getEnumeratorExtractorBeans");
 			throw new RuntimeException("Error while extracting enumerator extractor beans", t);
 		}
 		return extractors;

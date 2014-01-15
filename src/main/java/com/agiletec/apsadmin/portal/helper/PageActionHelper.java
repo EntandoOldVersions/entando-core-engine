@@ -27,8 +27,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.common.tree.TreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -49,6 +50,8 @@ import com.agiletec.apsadmin.system.TreeNodeBaseActionHelper;
  * @author E.Santoboni
  */
 public class PageActionHelper extends TreeNodeBaseActionHelper implements IPageActionHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageActionHelper.class);
 	
 	@Override
 	public List<Group> getAllowedGroups(UserDetails currentUser) {
@@ -65,7 +68,8 @@ public class PageActionHelper extends TreeNodeBaseActionHelper implements IPageA
 				try {
 					service = ApsWebApplicationUtils.getWebApplicationContext(request).getBean(defNames[i]);
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
+					_logger.error("error in hasReferencingObjects", t);
+					//ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
 					service = null;
 				}
 				if (service != null) {

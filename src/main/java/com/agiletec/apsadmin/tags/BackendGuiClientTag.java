@@ -20,7 +20,8 @@ package com.agiletec.apsadmin.tags;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Print the style of the back-office. Can be normal|advanced.
@@ -28,6 +29,8 @@ import com.agiletec.aps.system.ApsSystemUtils;
  * @author E.Santoboni
  */
 public class BackendGuiClientTag extends TagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BackendGuiClientTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {
@@ -39,9 +42,10 @@ public class BackendGuiClientTag extends TagSupport {
 			} else {
 				pageContext.getOut().print(client);
 			}
-		} catch (Throwable e) {
-			ApsSystemUtils.logThrowable(e, this, "doEndTag");
-			throw new JspException("Error on ClientTag", e);
+		} catch (Throwable t) {
+			_logger.error("Error on ClientTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			throw new JspException("Error on ClientTag", t);
 		}
 		return super.doEndTag();
 	}

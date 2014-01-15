@@ -22,7 +22,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.common.tree.TreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -32,6 +34,8 @@ import com.agiletec.aps.system.exception.ApsSystemException;
  * @author E.Santoboni
  */
 public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implements ITreeNodeBaseActionHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(TreeNodeBaseActionHelper.class);
 	
 	/**
 	 * Costruisce il codice univoco di un nodo in base ai parametri specificato.
@@ -94,7 +98,8 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkTargetNodes");
+			_logger.error("Error check target nodes", t);
+			//ApsSystemUtils.logThrowable(t, this, "checkTargetNodes");
 			throw new ApsSystemException("Error check target nodes", t);
 		}
 		return checkedTargetNodes;
@@ -127,7 +132,8 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 				checkedTargetNodes.add(nodeToClose.getParent().getCode());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkTargetNodesOnClosing");
+			_logger.error("Error check target nodes on closing tree", t);
+			//ApsSystemUtils.logThrowable(t, this, "checkTargetNodesOnClosing");
 			throw new ApsSystemException("Error check target nodes on closing tree", t);
 		}
 		return checkedTargetNodes;
@@ -135,12 +141,12 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 	
 	protected boolean checkNode(String nodeCode, Collection<String> groupCodes) {
 		if (!this.isNodeAllowed(nodeCode, groupCodes)) {
-			ApsSystemUtils.getLogger().error("Node '" + nodeCode + "' not allowed ");
+			_logger.error("Node '{}' not allowed ", nodeCode);
 			return false;
 		}
 		ITreeNode treeNode = this.getTreeNode(nodeCode);
 		if (null == treeNode) {
-			ApsSystemUtils.getLogger().error("Node '" + nodeCode + "' null ");
+			_logger.error("Node '{}' null", nodeCode);
 			return false;
 		}
 		return true;
@@ -149,7 +155,7 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 	@Override
 	public TreeNodeWrapper getShowableTree(Set<String> treeNodesToOpen, ITreeNode fullTree, Collection<String> groupCodes) throws ApsSystemException {
 		if (null == treeNodesToOpen || treeNodesToOpen.isEmpty()) {
-			ApsSystemUtils.getLogger().info("No selected nodes");
+			_logger.warn("No selected nodes");
 			return new TreeNodeWrapper(fullTree);
 		}
 		TreeNodeWrapper root = null;
@@ -160,7 +166,8 @@ public abstract class TreeNodeBaseActionHelper extends BaseActionHelper implemen
 			root.setParent(root);
 			this.builShowableTree(root, null, fullTree, checkNodes);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getShowableTree");
+			_logger.error("Error creating showalble tree", t);
+			//ApsSystemUtils.logThrowable(t, this, "getShowableTree");
 			throw new ApsSystemException("Error creating showalble tree", t);
 		}
 		return root;

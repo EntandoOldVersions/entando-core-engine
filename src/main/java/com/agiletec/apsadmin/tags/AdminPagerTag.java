@@ -24,8 +24,9 @@ import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.util.SubsetIteratorFilter;
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.apsadmin.tags.util.AdminPagerTagHelper;
 import com.agiletec.apsadmin.tags.util.ComponentPagerVO;
@@ -37,6 +38,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @author E.Santoboni
  */
 public class AdminPagerTag extends StrutsBodyTagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AdminPagerTag.class);
 	
 	@Override
 	public int doStartTag() throws JspException {
@@ -52,7 +55,8 @@ public class AdminPagerTag extends StrutsBodyTagSupport {
 			stack.getContext().put(this.getObjectName(), compPagerVo);
 			stack.setValue("#attr['" + this.getObjectName() + "']", compPagerVo, false);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error creating the pager", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error creating the pager", t);
 		}
 		SubsetIteratorFilter subsetIteratorFilter = new SubsetIteratorFilter();

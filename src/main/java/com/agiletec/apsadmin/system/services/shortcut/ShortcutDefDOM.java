@@ -37,6 +37,8 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -48,6 +50,8 @@ import com.agiletec.apsadmin.system.services.shortcut.model.Shortcut;
  * @author E.Santoboni
  */
 public class ShortcutDefDOM {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ShortcutDefDOM.class);
 	
 	public ShortcutDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
 		this.validate(xmlText, definitionPath);
@@ -67,17 +71,19 @@ public class ShortcutDefDOM {
 	        xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
 	        Source source = new StreamSource(xmlIs);
 	        validator.validate(source);
-	        ApsSystemUtils.getLogger().info("Valid Shortcut definition : " + definitionPath);
+	        _logger.info("Valid Shortcut definition : " + definitionPath);
         } catch (Throwable t) {
         	String message = "Error validating Shortcut definition : " + definitionPath;
-        	ApsSystemUtils.logThrowable(t, this, "this", message);
+        	_logger.error("Error validating Shortcut definition : {}", definitionPath, t);
+        	//ApsSystemUtils.logThrowable(t, this, "this", message);
         	throw new ApsSystemException(message, t);
         } finally {
         	try {
 				if (null != schemaIs) schemaIs.close();
 				if (null != xmlIs) xmlIs.close();
 			} catch (IOException e) {
-				ApsSystemUtils.logThrowable(e, this, "this");
+				_logger.error("error in validate. path:{} - xml: {}",definitionPath, xmlText, e);
+				//ApsSystemUtils.logThrowable(e, this, "this");
 			}
         }
 	}

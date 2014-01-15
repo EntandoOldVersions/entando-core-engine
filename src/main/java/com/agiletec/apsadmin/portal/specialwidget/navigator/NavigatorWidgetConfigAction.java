@@ -21,8 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.page.widget.INavigatorParser;
@@ -35,6 +36,8 @@ import com.agiletec.apsadmin.portal.specialwidget.SimpleWidgetConfigAction;
  */
 public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implements INavigatorWidgetConfigAction {
 
+	private static final Logger _logger = LoggerFactory.getLogger(NavigatorWidgetConfigAction.class);
+	
 	@Override
 	public void validate() {
 		super.validate();
@@ -68,7 +71,8 @@ public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implem
 			this.createExpressions(navSpec);
 			this.setNavSpec(navSpec);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "extractInitConfig");
+			_logger.error("error in extractInitConfig", t);
+			//ApsSystemUtils.logThrowable(t, this, "extractInitConfig");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -82,7 +86,8 @@ public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implem
 			expressions.add(newExpression);
 			this.createNavigatorParams(expressions);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addExpression");
+			_logger.error("error in addExpression", t);
+			//ApsSystemUtils.logThrowable(t, this, "addExpression");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -113,7 +118,8 @@ public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implem
 			this.executeMoveExpression(expressions);
 			this.createNavigatorParams(expressions);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "moveExpression");
+			_logger.error("error in moveExpression", t);
+			//ApsSystemUtils.logThrowable(t, this, "moveExpression");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -152,7 +158,8 @@ public class NavigatorWidgetConfigAction extends SimpleWidgetConfigAction implem
 			}
 			this.createNavigatorParams(expressions);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeExpression");
+			_logger.error("error in removeExpression", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeExpression");
 			return FAILURE;
 		}
 		return SUCCESS;

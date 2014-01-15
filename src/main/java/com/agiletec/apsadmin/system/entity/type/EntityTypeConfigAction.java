@@ -23,8 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.IEntityTypesConfigurer;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
@@ -35,6 +36,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class EntityTypeConfigAction extends AbstractEntityConfigAction implements IEntityTypeConfigAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityTypeConfigAction.class);
 	
 	@Override
 	public void validate() {
@@ -57,7 +60,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 			IApsEntity entityType = (IApsEntity) entityClass.newInstance();
 			this.initSessionParams(entityType, ApsAdminSystemConstants.ADD);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addEntityType");
+			_logger.error("error in addEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "addEntityType");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -76,7 +80,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 			}
 			this.initSessionParams(entityType, ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "editEntityType");
+			_logger.error("error in editEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "editEntityType");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -128,7 +133,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 				return INPUT;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addAttribute");
+			_logger.error("error in addAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "addAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -144,7 +150,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 				return INPUT;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "editAttribute");
+			_logger.error("error in editAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "editAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -169,7 +176,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "moveAttribute");
+			_logger.error("error in moveAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "moveAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -185,7 +193,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 			attributes.remove(elementIndex);
 			entity.getAttributeMap().remove(attributeToRemove.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeAttribute");
+			_logger.error("error in removeAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -204,7 +213,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 			String entityManagerName = (String) this.getRequest().getSession().getAttribute(ENTITY_TYPE_MANAGER_SESSION_PARAM);
 			this.setEntityManagerName(entityManagerName);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveEntityType");
+			_logger.error("error in saveEntityType", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveEntityType");
 			return FAILURE;
 		} finally {
 			this.getRequest().getSession().removeAttribute(ENTITY_TYPE_MANAGER_SESSION_PARAM);
@@ -222,7 +232,8 @@ public class EntityTypeConfigAction extends AbstractEntityConfigAction implement
 			attributes = new ArrayList<AttributeInterface>(attributeTypes.values());
 			Collections.sort(attributes, new BeanComparator("type"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAttributeTypes");
+			_logger.error("Error while extracting attribute Types", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAttributeTypes");
 			throw new RuntimeException("Error while extracting attribute Types", t);
 		}
 		return attributes;

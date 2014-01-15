@@ -21,6 +21,9 @@ import java.util.Collection;
 
 import javax.servlet.ServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.tags.util.IPagerVO;
@@ -32,6 +35,8 @@ import com.agiletec.apsadmin.util.ApsRequestParamsUtil;
  * @author E.Santoboni
  */
 public class AdminPagerTagHelper extends PagerTagHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(AdminPagerTagHelper.class);
 	
 	public IPagerVO getPagerVO(Collection collection, int max, boolean isAdvanced, 
 			int offset, ServletRequest request) throws ApsSystemException {
@@ -45,7 +50,8 @@ public class AdminPagerTagHelper extends PagerTagHelper {
 			int item = this.getItemNumber(pagerId, request);
 			pagerVo = this.buildPageVO(collection, item, max, pagerId, isAdvanced, offset);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getPagerVO");
+			_logger.error("Error while building pagerVo", t);
+			//ApsSystemUtils.logThrowable(t, this, "getPagerVO");
 			throw new ApsSystemException("Error while building pagerVo", t);
 		}
 		return pagerVo;

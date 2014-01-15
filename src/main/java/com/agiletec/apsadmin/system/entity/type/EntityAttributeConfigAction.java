@@ -24,9 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
@@ -43,6 +44,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConfigAction implements IEntityAttributeConfigAction, BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(EntityAttributeConfigAction.class);
 	
 	@Override
 	public void validate() {
@@ -95,7 +98,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				this.setListNestedType(listAttribute.getNestedAttributeTypeCode());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "editAttribute");
+			_logger.error("error in editAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "editAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -127,7 +131,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				this.getAttributeRoles().add(attributeRoleName);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addAttributeRole");
+			_logger.error("error in addAttributeRole", t);
+			//ApsSystemUtils.logThrowable(t, this, "addAttributeRole");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -144,7 +149,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				this.getAttributeRoles().remove(attributeRoleName);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeAttributeRole");
+			_logger.error("error in removeAttributeRole", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeAttributeRole");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -161,7 +167,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				this.getDisablingCodes().add(disablingCode);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "addAttributeDisablingCode");
+			_logger.error("error in addAttributeDisablingCode", t);
+			//ApsSystemUtils.logThrowable(t, this, "addAttributeDisablingCode");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -178,7 +185,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				this.getDisablingCodes().remove(disablingCode);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeAttributeDisablingCode");
+			_logger.error("error in removeAttributeDisablingCode", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeAttributeDisablingCode");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -200,7 +208,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 				return resultCode;
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAttribute");
+			_logger.error("error in saveAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -267,7 +276,8 @@ public class EntityAttributeConfigAction extends AbstractBaseEntityAttributeConf
 			}
 			Collections.sort(attributes, new BeanComparator("type"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedNestedTypes");
+			_logger.error("Error while extracting Allowed Nested Types", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedNestedTypes");
 			throw new RuntimeException("Error while extracting Allowed Nested Types", t);
 		}
 		return attributes;

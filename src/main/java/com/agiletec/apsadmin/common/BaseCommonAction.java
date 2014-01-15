@@ -17,7 +17,9 @@
 */
 package com.agiletec.apsadmin.common;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.user.IUserManager;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -28,6 +30,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class BaseCommonAction extends BaseAction implements IBaseCommonAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseCommonAction.class);
 	
 	@Override
 	public void validate() {
@@ -58,7 +62,8 @@ public class BaseCommonAction extends BaseAction implements IBaseCommonAction {
 			this.getUserManager().changePassword(this.getUsername(), this.getPassword());
 			this.addActionMessage(this.getText("message.passwordChanged"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "changePassword");
+			_logger.error("error in changePassword", t);
+			//ApsSystemUtils.logThrowable(t, this, "changePassword");
 			return FAILURE;
 		}
 		return SUCCESS;

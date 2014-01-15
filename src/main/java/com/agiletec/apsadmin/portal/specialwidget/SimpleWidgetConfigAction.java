@@ -23,6 +23,7 @@ import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInf
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.page.IPage;
@@ -36,6 +37,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class SimpleWidgetConfigAction extends AbstractPortalAction implements ISimpleWidgetConfigAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(SimpleWidgetConfigAction.class);
 	
 	@Override
 	public String init() {
@@ -90,18 +93,17 @@ public class SimpleWidgetConfigAction extends AbstractPortalAction implements IS
 	
 	@Override
 	public String save() {
-		Logger log = ApsSystemUtils.getLogger();
 		try {
 			this.checkBaseParams();
 			this.createValuedShowlet();
 			IPage page = this.getPage(this.getPageCode());
 			int strutsAction = (null != page.getWidgets()[this.getFrame()]) ? ApsAdminSystemConstants.ADD : ApsAdminSystemConstants.EDIT;
 			this.getPageManager().joinWidget(this.getPageCode(), this.getWidget(), this.getFrame());
-			log.debug("Saving Widget - code = " + this.getWidget().getType().getCode() + 
-					", pageCode = " + this.getPageCode() + ", frame = " + this.getFrame());
+			_logger.debug("Saving Widget - code: {}, pageCode: {}, frame: {}", this.getWidget().getType().getCode(), this.getPageCode(), this.getFrame());
 			this.addActivityStreamInfo(strutsAction, true);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return "configure";

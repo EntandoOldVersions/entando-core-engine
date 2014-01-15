@@ -21,8 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 
 import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -37,6 +38,8 @@ import com.opensymphony.xwork2.util.ValueStack;
  * @author E.Santoboni
  */
 public class UserShortcutsConfigTag extends StrutsBodyTagSupport {
+
+	private static final Logger _logger = LoggerFactory.getLogger(UserShortcutsConfigTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {
@@ -55,7 +58,8 @@ public class UserShortcutsConfigTag extends StrutsBodyTagSupport {
 	            stack.setValue("#attr['" + this.getVar() + "']", config, false);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doStartTag");
+			_logger.error("Error on doStartTag", t);
+			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error on doStartTag", t);
 		}
 		return super.doEndTag();

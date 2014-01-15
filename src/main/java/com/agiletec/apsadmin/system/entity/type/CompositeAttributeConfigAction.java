@@ -24,9 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.common.entity.IEntityManager;
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.common.entity.model.attribute.AbstractListAttribute;
@@ -40,6 +41,8 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
  * @author E.Santoboni
  */
 public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeConfigAction implements ICompositeAttributeConfigAction, BeanFactoryAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CompositeAttributeConfigAction.class);
 	
 	@Override
 	public void validate() {
@@ -76,7 +79,8 @@ public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeC
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "moveAttribute");
+			_logger.error("error in moveAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "moveAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -91,7 +95,8 @@ public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeC
 			composite.getAttributes().remove(elementIndex);
 			composite.getAttributeMap().remove(attributeToRemove.getName());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "removeAttribute");
+			_logger.error("error in removeAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "removeAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -111,7 +116,8 @@ public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeC
 				composite.getAttributeMap().put(attribute.getName(), attribute);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAttributeElement");
+			_logger.error("error in saveAttributeElement", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveAttributeElement");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -132,7 +138,8 @@ public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeC
 			}
 			this.getRequest().getSession().removeAttribute(COMPOSITE_ATTRIBUTE_ON_EDIT_SESSION_PARAM);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveAttribute");
+			_logger.error("error in saveAttribute", t);
+			//ApsSystemUtils.logThrowable(t, this, "saveAttribute");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -152,7 +159,8 @@ public class CompositeAttributeConfigAction extends AbstractBaseEntityAttributeC
 			}
 			Collections.sort(attributes, new BeanComparator("type"));
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedAttributeElementTypes");
+			_logger.error("Error extracting the allowed types of attribute elements", t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedAttributeElementTypes");
 			throw new RuntimeException("Error extracting the allowed types of attribute elements", t);
 		}
 		return attributes;

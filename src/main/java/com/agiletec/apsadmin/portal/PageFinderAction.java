@@ -23,8 +23,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.user.UserDetails;
@@ -34,6 +35,8 @@ import com.agiletec.aps.system.services.user.UserDetails;
  * @author M.E. Minnai
  */
 public class PageFinderAction extends AbstractPortalAction implements IPageFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageFinderAction.class);
 	
 	@Override
 	public List<IPage> getPagesFound() {	
@@ -44,7 +47,8 @@ public class PageFinderAction extends AbstractPortalAction implements IPageFinde
 			BeanComparator comparator = new BeanComparator("code");
 			Collections.sort(result, comparator);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "Error on searching pages");
+			_logger.error("Error on searching pages", t);
+			//ApsSystemUtils.logThrowable(t, this, "Error on searching pages");
 			throw new RuntimeException("Error on searching pages", t);
 		}
 		return result;

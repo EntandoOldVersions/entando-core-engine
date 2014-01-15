@@ -27,6 +27,8 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.context.ServletContextAware;
 
 import com.agiletec.aps.system.ApsSystemUtils;
@@ -43,10 +45,12 @@ import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
  * @author E.Santoboni
  */
 public class ShortcutManager extends AbstractService implements IShortcutManager, ServletContextAware {
+
+	private static final Logger _logger = LoggerFactory.getLogger(ShortcutManager.class);
 	
 	@Override
     public void init() throws Exception {
-		ApsSystemUtils.getLogger().debug(this.getClass().getName() + ": initialized ");
+		_logger.debug("{} ready", this.getClass().getName());
 	}
 	
 	@Override
@@ -66,7 +70,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 		} catch (Throwable t) {
 			this.setMenuSections(new HashMap<String, MenuSection>());
 			this.setShortcuts(new HashMap<String, Shortcut>());
-			ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definitions");
+			_logger.error("Error loading Shortcut definitions", t);
+			//ApsSystemUtils.logThrowable(t, this, "loadShortcuts", "Error loading Shortcut definitions");
 		}
 	}
 	
@@ -74,7 +79,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 	public UserConfigBean saveUserConfigBean(UserDetails user, UserConfigBean userConfig) throws ApsSystemException {
 		if (null == user || null == userConfig 
 				|| userConfig.getUsername().equals(user.getUsername())) {
-			ApsSystemUtils.getLogger().info("Required operation for null user or invalid user config");
+			_logger.info("Required operation for null user or invalid user config");
 			return null;
 		}
 		String[] config = this.saveUserConfig(user, userConfig.getConfig());
@@ -92,7 +97,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 			String xml = UserShortcutConfigDOM.createUserConfigXml(config);
 			this.getUserShortcutDAO().saveUserConfig(user.getUsername(), xml);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "saveUserConfig");
+			_logger.error("Error saving user config by user ", user.getUsername(), t);
+			//ApsSystemUtils.logThrowable(t, this, "saveUserConfig");
 			throw new ApsSystemException("Error saving user config by user " + user.getUsername(), t);
 		}
 		return config;
@@ -117,7 +123,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 			config = UserShortcutConfigDOM.extractUserConfig(xml, this.getUserShortcutsMaxNumber());
 			config = this.checkShortcutConfig(user, config);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUserConfig");
+			_logger.error("Error loading user config", t);
+			//ApsSystemUtils.logThrowable(t, this, "getUserConfig");
 			throw new ApsSystemException("Error loading user config", t);
 		}
 		return config;
@@ -145,7 +152,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "checkShortcutConfig");
+			_logger.error("Error checking Shortcut Config by user {}", user.getUsername(), t);
+			//ApsSystemUtils.logThrowable(t, this, "checkShortcutConfig");
 			throw new ApsSystemException("Error checking Shortcut Config by user " + user.getUsername(), t);
 		}
 		return config;
@@ -156,7 +164,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 		try {
 			this.getUserShortcutDAO().deleteUserConfig(username);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "deleteUserConfig");
+			_logger.error("Error deleting user config by user {}", username, t);
+			//ApsSystemUtils.logThrowable(t, this, "deleteUserConfig");
 			throw new ApsSystemException("Error deleting user config by user " + username, t);
 		}
 	}
@@ -165,7 +174,7 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 	public List<Shortcut> getAllowedShortcuts(UserDetails user) throws ApsSystemException {
 		List<Shortcut> allowedShortcuts = new ArrayList<Shortcut>();
 		if (null == user) {
-			ApsSystemUtils.getLogger().info("Required allowed shortcut for null user");
+			_logger.info("Required allowed shortcut for null user");
 			return allowedShortcuts;
 		}
 		try {
@@ -178,7 +187,8 @@ public class ShortcutManager extends AbstractService implements IShortcutManager
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
+			_logger.error("Error extracting allowed shortcuts by user {}", user.getUsername(), t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
 			throw new ApsSystemException("Error extracting allowed shortcuts by user " + user.getUsername(), t);
 		}
 		BeanComparator comparator = new BeanComparator("source");

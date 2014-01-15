@@ -24,8 +24,9 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -40,7 +41,9 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
  * @author E.Santoboni
  */
 public abstract class BaseInterceptorMadMax extends AbstractInterceptor {
-    
+
+	private static final Logger _logger = LoggerFactory.getLogger(BaseInterceptorMadMax.class);
+	
     public String intercept(ActionInvocation invocation) throws Exception {
         boolean isAuthorized = false;
         try {
@@ -63,7 +66,8 @@ public abstract class BaseInterceptorMadMax extends AbstractInterceptor {
                 return this.invoke(invocation);
             }
         } catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "intercept", "Error occurred verifying authority of current user");
+        	_logger.error("Error occurred verifying authority of current user", t);
+            //ApsSystemUtils.logThrowable(t, this, "intercept", "Error occurred verifying authority of current user");
             return BaseAction.FAILURE;
         }
         return this.getErrorResultName();

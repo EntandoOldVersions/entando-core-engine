@@ -22,7 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.role.IRoleManager;
 import com.agiletec.aps.system.services.role.Permission;
@@ -36,6 +38,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Mezzano - E.Santoboni
  */
 public class RoleAction extends BaseAction implements IRoleAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(RoleAction.class);
 	
 	@Override
 	public void validate() {
@@ -76,7 +80,8 @@ public class RoleAction extends BaseAction implements IRoleAction {
 			this.setDescription(role.getDescription());
 			this.setPermissionNames(role.getPermissions());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -92,7 +97,8 @@ public class RoleAction extends BaseAction implements IRoleAction {
 				this.getRoleManager().updateRole(role);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -110,7 +116,8 @@ public class RoleAction extends BaseAction implements IRoleAction {
 			this.setDescription(role.getDescription());
 			this.setPermissionNames(role.getPermissions());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "view");
+			_logger.error("error in view", t);
+			//ApsSystemUtils.logThrowable(t, this, "view");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -123,7 +130,8 @@ public class RoleAction extends BaseAction implements IRoleAction {
 				return "roleList";
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "trash");
+			_logger.error("error in trash", t);
+			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -139,7 +147,8 @@ public class RoleAction extends BaseAction implements IRoleAction {
 			Role role = roleManager.getRole(this.getName());
 			roleManager.removeRole(role);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "delete");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;

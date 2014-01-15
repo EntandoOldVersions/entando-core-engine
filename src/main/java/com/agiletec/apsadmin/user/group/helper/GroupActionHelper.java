@@ -23,12 +23,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.agiletec.apsadmin.system.BaseActionHelper;
+import com.agiletec.apsadmin.tags.UserShortcutsConfigTag;
 
 /**
  * Classe action helper della gestione Gruppi.
@@ -36,6 +40,8 @@ import com.agiletec.apsadmin.system.BaseActionHelper;
  * @author E.Santoboni
  */
 public class GroupActionHelper extends BaseActionHelper implements IGroupActionHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(GroupActionHelper.class);
 	
 	@Override
 	public Map<String, List<Object>> getReferencingObjects(Group group, HttpServletRequest request) throws ApsSystemException {
@@ -47,7 +53,8 @@ public class GroupActionHelper extends BaseActionHelper implements IGroupActionH
 				try {
 					service = ApsWebApplicationUtils.getWebApplicationContext(request).getBean(defNames[i]);
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
+					_logger.error("error in hasReferencingObjects", t);
+					//ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
 					service = null;
 				}
 				if (service != null) {

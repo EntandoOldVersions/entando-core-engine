@@ -20,8 +20,9 @@ package com.agiletec.apsadmin.portal;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 
@@ -29,6 +30,8 @@ import com.agiletec.aps.system.services.page.IPage;
  * @author E.Santoboni
  */
 public class WidgetsViewerAction extends AbstractPortalAction implements IWidgetsViewerAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(WidgetsViewerAction.class);
 	
 	/**
 	 * @deprecated Use {@link #viewWidgets()} instead
@@ -55,7 +58,8 @@ public class WidgetsViewerAction extends AbstractPortalAction implements IWidget
 		try {
 			utilizers = this.getPageManager().getWidgetUtilizers(widgetTypeCode);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers");
+			_logger.error("Error on extracting widgetUtilizers : widget type code {}", t);
+			//ApsSystemUtils.logThrowable(t, this, "getWidgetUtilizers");
 			throw new RuntimeException("Error on extracting widgetUtilizers : widget type code " + widgetTypeCode, t);
 		}
 		return utilizers;

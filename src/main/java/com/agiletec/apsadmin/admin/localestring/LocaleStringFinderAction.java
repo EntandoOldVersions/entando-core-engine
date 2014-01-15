@@ -22,7 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
@@ -33,6 +35,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class LocaleStringFinderAction extends BaseAction implements ILocaleStringFinderAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LocaleStringFinderAction.class);
 	
 	public List<String> getLocaleStrings() {
 		List<String> labelKeys = new ArrayList<String>();
@@ -53,7 +57,8 @@ public class LocaleStringFinderAction extends BaseAction implements ILocaleStrin
 				Collections.sort(labelKeys);
 			}
 		} catch (Exception e) {
-			ApsSystemUtils.logThrowable(e, this, "getLocaleStrings");
+			_logger.error("error in getLocaleStrings", e);
+			//ApsSystemUtils.logThrowable(e, this, "getLocaleStrings");
 		}
 		return labelKeys;
 	}

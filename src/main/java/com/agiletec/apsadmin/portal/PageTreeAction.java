@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
@@ -34,6 +36,8 @@ import com.agiletec.apsadmin.system.AbstractTreeAction;
  * @author E.Santoboni
  */
 public class PageTreeAction extends AbstractTreeAction implements IPageTreeAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(PageTreeAction.class);
 	
 	@Override
 	public String execute() throws Exception {
@@ -76,7 +80,8 @@ public class PageTreeAction extends AbstractTreeAction implements IPageTreeActio
 				}
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "movePage");
+			_logger.error("error in movePage", t);
+			//ApsSystemUtils.logThrowable(t, this, "movePage");
 			return FAILURE;
 		}
 		return SUCCESS;

@@ -17,7 +17,9 @@
 */
 package com.agiletec.apsadmin.admin.lang;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -26,6 +28,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class LangAction extends BaseAction implements ILangAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LangAction.class);
 	
 	@Override
 	public String add() {
@@ -38,7 +42,8 @@ public class LangAction extends BaseAction implements ILangAction {
 			}
 			this.getLangManager().addLang(this.getLangCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "add");
+			_logger.error("error in add", t);
+			//ApsSystemUtils.logThrowable(t, this, "add");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -54,7 +59,8 @@ public class LangAction extends BaseAction implements ILangAction {
 			}
 			this.getLangManager().removeLang(this.getLangCode());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "remove");
+			_logger.error("error in remove", t);
+			//ApsSystemUtils.logThrowable(t, this, "remove");
 			return FAILURE;
 		}
 		return SUCCESS;

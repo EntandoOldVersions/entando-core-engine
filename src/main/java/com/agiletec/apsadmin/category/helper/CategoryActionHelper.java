@@ -24,7 +24,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.common.tree.ITreeNode;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.category.Category;
@@ -40,6 +42,8 @@ import com.agiletec.apsadmin.system.TreeNodeBaseActionHelper;
  * @author E.Santoboni
  */
 public class CategoryActionHelper extends TreeNodeBaseActionHelper implements ICategoryActionHelper {
+
+	private static final Logger _logger = LoggerFactory.getLogger(CategoryActionHelper.class);
 	
 	@Override
 	public Map getReferencingObjects(Category category, HttpServletRequest request) throws ApsSystemException {
@@ -51,7 +55,8 @@ public class CategoryActionHelper extends TreeNodeBaseActionHelper implements IC
 				try {
 					service = ApsWebApplicationUtils.getWebApplicationContext(request).getBean(defNames[i]);
 				} catch (Throwable t) {
-					ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
+					_logger.error("error checking Referencing Objects", t);
+					//ApsSystemUtils.logThrowable(t, this, "hasReferencingObjects");
 					service = null;
 				}
 				if (service != null) {
@@ -84,7 +89,8 @@ public class CategoryActionHelper extends TreeNodeBaseActionHelper implements IC
 				category.setCode(categoryCode);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "buildNewCategory");
+			_logger.error("Error creating new category", t);
+			//ApsSystemUtils.logThrowable(t, this, "buildNewCategory");
 			throw new ApsSystemException("Error creating new category", t);
 		}
 		return category;

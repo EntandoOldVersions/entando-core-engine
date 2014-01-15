@@ -20,7 +20,9 @@ package com.agiletec.apsadmin.admin.localestring;
 import java.util.Iterator;
 import java.util.List;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.services.i18n.II18nManager;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.util.ApsProperties;
@@ -32,6 +34,8 @@ import com.agiletec.apsadmin.system.BaseAction;
  * @author E.Santoboni
  */
 public class LocaleStringAction extends BaseAction implements ILocaleStringAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(LocaleStringAction.class);
 	
 	@Override
 	public void validate() {
@@ -54,7 +58,8 @@ public class LocaleStringAction extends BaseAction implements ILocaleStringActio
 			this.setLabels(labels);
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in edit", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -70,7 +75,8 @@ public class LocaleStringAction extends BaseAction implements ILocaleStringActio
 				this.getI18nManager().updateLabelGroup(this.getKey(), this.getLabels());
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "save");
+			_logger.error("error in save", t);
+			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -81,7 +87,8 @@ public class LocaleStringAction extends BaseAction implements ILocaleStringActio
 		try {
 			this.getI18nManager().deleteLabelGroup(this.getKey());
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "edit");
+			_logger.error("error in delete", t);
+			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;

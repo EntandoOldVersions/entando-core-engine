@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.SelectItem;
@@ -40,6 +41,8 @@ import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
  * @author E.Santoboni
  */
 public class MyShortcutConfigAction extends BaseAction implements IMyShortcutConfigAction {
+
+	private static final Logger _logger = LoggerFactory.getLogger(MyShortcutConfigAction.class);
 	
 	@Override
 	public String joinMyShortcut() {
@@ -66,7 +69,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 			this.setUserConfig(savedConfig);
 			this.setPosition(null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "executeUpdateConfig");
+			_logger.error("error in executeUpdateConfig", t);
+			//ApsSystemUtils.logThrowable(t, this, "executeUpdateConfig");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -87,7 +91,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 			this.setPositionDest(null);
 			this.setPositionTarget(null);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "swapMyShortcut");
+			_logger.error("error in swapMyShortcut", t);
+			//ApsSystemUtils.logThrowable(t, this, "swapMyShortcut");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -102,7 +107,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 			}
 			myShortcuts = this.getShortcutManager().getAllowedShortcuts(currentUser);
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
+			_logger.error("Error extracting allowed shortcuts by user {}", this.getCurrentUser(), t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
 			throw new RuntimeException("Error extracting allowed shortcuts by user " + this.getCurrentUser(), t);
 		}
 		return myShortcuts;
@@ -154,7 +160,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 				items.addAll(itemsByGroup);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getAllowedShortcutItems");
+			_logger.error("Error extracting allowed shortcut items by user {}", this.getCurrentUser(), t);
+			//ApsSystemUtils.logThrowable(t, this, "getAllowedShortcutItems");
 			throw new RuntimeException("Error extracting allowed shortcut items by user " + this.getCurrentUser(), t);
 		}
 		return items;
@@ -173,7 +180,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 				this.setUserConfigBean(config);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "getUserConfigBean");
+			_logger.error("Error extracting user config bean by user {}", this.getCurrentUser(), t);
+			//ApsSystemUtils.logThrowable(t, this, "getUserConfigBean");
 			throw new RuntimeException("Error extracting user config bean by user " + this.getCurrentUser(), t);
 		}
 		return config;
