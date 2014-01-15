@@ -20,7 +20,6 @@ package org.entando.entando.aps.tags;
 import javax.servlet.http.HttpSession;
 
 import org.entando.entando.aps.system.services.userprofile.model.IUserProfile;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +33,7 @@ import com.agiletec.aps.system.services.user.UserDetails;
  */
 public class CurrentUserProfileAttributeTag extends UserProfileAttributeTag {
 
-	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeManager.class);
+	private static final Logger _logger =  LoggerFactory.getLogger(CurrentUserProfileAttributeTag.class);
 	
 	@Override
     protected IUserProfile getUserProfile() throws Throwable {
