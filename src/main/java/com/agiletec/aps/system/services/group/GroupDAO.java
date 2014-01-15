@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.services.authorization.authorizator.AbstractApsAutorityDAO;
+import com.agiletec.aps.system.services.category.CategoryDAO;
 
 /**
  * Data Access Object per gli oggetti Group. 
