@@ -38,6 +38,8 @@ import com.agiletec.apsadmin.system.entity.AbstractApsEntityFinderAction;
  */
 public class UserProfileFinderAction extends AbstractApsEntityFinderAction {
 	
+	private static final Logger _logger =  LoggerFactory.getLogger(UserProfileFinderAction.class);
+	
 	public String list() {
 		this.setUsername(null);
 		return this.execute();
