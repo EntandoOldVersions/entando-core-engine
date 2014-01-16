@@ -18,6 +18,7 @@
 package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -35,5 +36,7 @@ public interface IActionLogRecordSearchBean {
 	public String getActionName();
 	
 	public String getParams();
+	
+	public List<String> getUserGroupCodes();
 	
 }

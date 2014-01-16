@@ -139,7 +139,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			ManagerConfiguration config = this.getManagerConfiguration();
 			if (null != recordIds && null != config &&
 					config.getCleanOldActivities() && config.getMaxActivitySizeByGroup() < recordIds.size()) {
-				ActivityStreamCleanerThread thread = new ActivityStreamCleanerThread(config.getMaxActivitySizeByGroup(), this.getActionLogDAO());
+				ActivityStreamCleanerThread thread = new ActivityStreamCleanerThread(config.getNumberOfStreamsOnHistory(), this.getActionLogDAO());
 				String threadName = LOG_CLEANER_THREAD_NAME_PREFIX + DateConverter.getFormattedDate(new Date(), "yyyyMMddHHmmss");
     			thread.setName(threadName);
     			thread.start();
@@ -159,6 +159,10 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	public List<Integer> getActivityStream(IActivityStreamSearchBean activityStreamSearchBean) {
 		List<Integer> recordIds = null;
 		recordIds = this.getActionLogDAO().getActionRecords(activityStreamSearchBean);
+		ManagerConfiguration config = this.getManagerConfiguration();
+		if (null != config && null != recordIds && recordIds.size() > config.getMaxActivitySizeByGroup()) {
+			recordIds = recordIds.subList(0, config.getMaxActivitySizeByGroup());
+		}
 		return recordIds;
 	}
 	

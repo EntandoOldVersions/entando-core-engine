@@ -126,12 +126,36 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	@Override
 	public List<Integer> getActionRecords(IActionLogRecordSearchBean searchBean) {
 		FieldSearchFilter[] filters = this.createFilters(searchBean);
+		if(searchBean.getUserGroupCodes() != null && !searchBean.getUserGroupCodes().isEmpty()){
+			return this.getActionRecords(filters, searchBean.getUserGroupCodes());
+		}
 		return this.getActionRecords(filters);
 	}
 
 	@Override
 	public List<Integer> getActivityStreamRecords(IActivityStreamSearchBean searchBean) {
 		return getActionRecords(searchBean);
+	}
+
+	@Override
+	public List<Integer> getActionRecords(FieldSearchFilter[] filters, List<String> userGroupCodes) {
+		Connection conn = null;
+		List<Integer> idList = new ArrayList<Integer>();
+		PreparedStatement stat = null;
+		ResultSet result = null;
+		try {
+			conn = this.getConnection();
+			List<String> groupCodes = (null != userGroupCodes && userGroupCodes.contains(Group.ADMINS_GROUP_NAME)) ? null : userGroupCodes;
+			stat = this.buildStatement(filters, groupCodes, conn);
+			result = stat.executeQuery();
+			while (result.next()) {
+				idList.add(result.getInt(1));
+			}
+
+		} catch (Throwable t) {
+			processDaoException(t, "Error loading actionlogger records", "getActionRecords");
+		}
+		return idList;
 	}
 
 	@Override
@@ -205,8 +229,10 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			hasAppendWhereClause = this.verifyWhereClauseAppend(query, hasAppendWhereClause);
 			query.append(" ( ");
 			int size = groupCodes.size();
-			for (int i=0; i<size; i++) {
-				if (i!=0) query.append("OR ");
+			for (int i = 0; i < size; i++) {
+				if (i != 0) {
+					query.append("OR ");
+				}
 				query.append("actionlogrelations.refgroup = ? ");
 			}
 			query.append(") ");
@@ -221,8 +247,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 		String masterTableName = this.getMasterTableName();
 		String masterTableIdFieldName = this.getMasterTableIdFieldName();
-			query.append("INNER JOIN ");
-			query.append("actionlogrelations").append(" ON ")
+		query.append("INNER JOIN ");
+		query.append("actionlogrelations").append(" ON ")
 				.append(masterTableName).append(".").append(masterTableIdFieldName).append(" = ")
 				.append("actionlogrelations").append(".").append("recordid").append(" ");
 	}
@@ -270,7 +296,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 				filter.setOrder(FieldSearchFilter.Order.DESC);
 				filters = super.addFilter(filters, filter);
 			}
-			if(searchBean instanceof IActivityStreamSearchBean) {
+			if (searchBean instanceof IActivityStreamSearchBean) {
 				FieldSearchFilter filter = new FieldSearchFilter("activitystreaminfo");
 				filters = super.addFilter(filters, filter);
 			}
@@ -556,35 +582,35 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		}
 	}
 
-	private static final String ADD_ACTION_RECORD =
-			"INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) " +
-			"VALUES ( ? , ? , ? , ? , ? , ? , ? )";
+	private static final String ADD_ACTION_RECORD
+			= "INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo) "
+			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? )";
 
-	private static final String ADD_ACTION_LIKE_RECORD =
-			"INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
+	private static final String ADD_ACTION_LIKE_RECORD
+			= "INSERT INTO actionloglikerecords ( recordid, username, likedate) VALUES ( ? , ? , ? )";
 
-	private static final String GET_ACTION_RECORD =
-			"SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
+	private static final String GET_ACTION_RECORD
+			= "SELECT username, actiondate, namespace, actionname, parameters, activitystreaminfo FROM actionlogrecords WHERE id = ?";
 
-	private static final String DELETE_LOG_RECORD =
-			"DELETE from actionlogrecords where id = ?";
+	private static final String DELETE_LOG_RECORD
+			= "DELETE from actionlogrecords where id = ?";
 
-	private static final String DELETE_LOG_RECORD_RELATIONS =
-			"DELETE from actionlogrelations where recordid = ?";
+	private static final String DELETE_LOG_RECORD_RELATIONS
+			= "DELETE from actionlogrelations where recordid = ?";
 
-	private final String ADD_LOG_RECORD_RELATION =
-			"INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
+	private final String ADD_LOG_RECORD_RELATION
+			= "INSERT INTO actionlogrelations (recordid, refgroup) VALUES ( ? , ? )";
 
-	private static final String DELETE_LOG_LIKE_RECORDS =
-			"DELETE from actionloglikerecords where recordid = ? ";
+	private static final String DELETE_LOG_LIKE_RECORDS
+			= "DELETE from actionloglikerecords where recordid = ? ";
 
-	private static final String DELETE_LOG_LIKE_RECORD =
-			DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
+	private static final String DELETE_LOG_LIKE_RECORD
+			= DELETE_LOG_LIKE_RECORDS + "AND username = ? ";
 
-	private static final String GET_ACTION_LIKE_RECORDS =
-			"SELECT username from actionloglikerecords where recordid = ? ";
+	private static final String GET_ACTION_LIKE_RECORDS
+			= "SELECT username from actionloglikerecords where recordid = ? ";
 
-	private static final String GET_GROUP_OCCURRENCES =
-			"SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
+	private static final String GET_GROUP_OCCURRENCES
+			= "SELECT refgroup, count(refgroup) FROM actionlogrelations GROUP BY refgroup";
 
 }

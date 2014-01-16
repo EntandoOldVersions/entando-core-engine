@@ -37,6 +37,8 @@ public interface IActionLogDAO {
 	
 	public List<Integer> getActionRecords(FieldSearchFilter[] filters);
 	
+	public List<Integer> getActionRecords(FieldSearchFilter[] filters, List<String> userGroupCodes);
+	
 	public void addActionRecord(ActionLogRecord actionRecord);
 	
 	public ActionLogRecord getActionRecord(int id);

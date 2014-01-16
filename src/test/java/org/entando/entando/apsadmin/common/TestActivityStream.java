@@ -17,17 +17,6 @@
 */
 package org.entando.entando.apsadmin.common;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.entando.entando.aps.system.services.actionlog.ActionLoggerTestHelper;
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
-import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
-
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.lang.ILangManager;
@@ -38,12 +27,29 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamInfo;
 import com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.AbstractContentAction;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
+
 import com.opensymphony.xwork2.Action;
+import java.util.Date;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+
+import org.entando.entando.aps.system.services.actionlog.ActionLoggerTestHelper;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
+import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecordSearchBean;
+import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
 
 /**
  * @author E.Santoboni
@@ -190,6 +196,67 @@ public class TestActivityStream extends ApsAdminBaseTestCase {
 			UserDetails editorCoach = super.getUser("editorCoach");
 			List<Integer> activityStreamCoachUser = this._actionLoggerManager.getActivityStream(editorCoach);
 			assertEquals(1, activityStreamCoachUser.size());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._contentManager.deleteContent(content);
+			assertNull(this._contentManager.loadContent(contentId, false));
+		}
+	}
+	
+	
+	public void testActivityStreamSearchBean() throws Throwable {
+		Content content = this._contentManager.loadContent("EVN41", false);//"coach" group
+		String contentOnSessionMarker = AbstractContentAction.buildContentOnSessionMarker(content, ApsAdminSystemConstants.ADD);
+		content.setId(null);
+		String contentId = null;
+		Date dateBeforeSave = new Date();
+		Thread.sleep(1000);
+		try {
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			String result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+			Date firstDate = new Date();
+			ActionLogRecordSearchBean searchBean = this._helper.createSearchBean("admin", null, null, null, null, null);
+			List<Integer> ids = this._actionLoggerManager.getActionRecords(searchBean);
+			assertEquals(1, ids.size());
+			
+			ActivityStreamSeachBean activityStreamSeachBean = new ActivityStreamSeachBean();
+			activityStreamSeachBean.setEnd(firstDate);
+			List<Integer> activityStreamEndDate = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
+			assertEquals(1, activityStreamEndDate.size());
+			
+			activityStreamSeachBean = new ActivityStreamSeachBean();
+			activityStreamSeachBean.setEnd(dateBeforeSave);
+			List<Integer> activityStreamDateBeforeSave = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
+			assertEquals(0, activityStreamDateBeforeSave.size());
+			
+			Thread.sleep(1000);
+			this.getRequest().getSession().setAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker, content);
+			this.initContentAction("/do/jacms/Content", "save", contentOnSessionMarker);
+			this.setUserOnSession("admin");
+			result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			contentId = content.getId();
+			assertNotNull(this._contentManager.loadContent(contentId, false));
+			super.waitThreads(IActionLogManager.LOG_APPENDER_THREAD_NAME_PREFIX);
+			
+			activityStreamSeachBean = new ActivityStreamSeachBean();
+			activityStreamSeachBean.setStart(dateBeforeSave);
+			activityStreamSeachBean.setEnd(firstDate);
+			List<Integer> activityStreamBetweenSave = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
+			assertEquals(1, activityStreamBetweenSave.size());
+			
+			activityStreamSeachBean = new ActivityStreamSeachBean();
+			activityStreamSeachBean.setStart(dateBeforeSave);
+			activityStreamSeachBean.setEnd(new Date());
+			List<Integer> activityStreamBetweenSave2 = this._actionLoggerManager.getActivityStream(activityStreamSeachBean);
+			assertEquals(2, activityStreamBetweenSave2.size());
 		} catch (Throwable t) {
 			throw t;
 		} finally {

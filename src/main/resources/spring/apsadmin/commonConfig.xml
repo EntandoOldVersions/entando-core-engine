@@ -67,4 +67,9 @@
 		<property name="actionLogManager" ref="ActionLogManager"/>
 	</bean>
 	
+	<bean id="activityStreamAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.common.ActivityStreamAction" parent="abstractBaseAction">
+		<property name="actionLogManager" ref="ActionLogManager"/>
+	</bean>
+	
 </beans>

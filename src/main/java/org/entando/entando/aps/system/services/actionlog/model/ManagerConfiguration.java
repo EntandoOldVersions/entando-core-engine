@@ -35,8 +35,17 @@ public class ManagerConfiguration {
 	public void setMaxActivitySizeByGroup(Integer maxActivitySizeByGroup) {
 		this._maxActivitySizeByGroup = maxActivitySizeByGroup;
 	}
+
+	public Integer getNumberOfStreamsOnHistory() {
+		return _numberOfStreamsOnHistory;
+	}
+
+	public void setNumberOfStreamsOnHistory(Integer numberOfStreamsOnHistory) {
+		this._numberOfStreamsOnHistory = numberOfStreamsOnHistory;
+	}
 	
 	private Boolean _cleanOldActivities = false;
 	private Integer _maxActivitySizeByGroup = 10;
+	private Integer _numberOfStreamsOnHistory = 500;
 	
 }

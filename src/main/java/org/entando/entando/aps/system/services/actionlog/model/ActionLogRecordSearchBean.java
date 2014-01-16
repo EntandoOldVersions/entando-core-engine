@@ -18,6 +18,7 @@
 package org.entando.entando.aps.system.services.actionlog.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author E.Santoboni - S.Puddu
@@ -71,6 +72,14 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 	public void setParams(String params) {
 		this._params = params;
 	}
+
+	public List<String> getUserGroupCodes() {
+		return _userGroupCodes;
+	}
+
+	public void setUserGroupCodes(List<String> userGroupCodes) {
+		this._userGroupCodes = userGroupCodes;
+	}
 	
 	private Date _start;
 	private Date _end;
@@ -78,5 +87,5 @@ public class ActionLogRecordSearchBean implements IActionLogRecordSearchBean {
 	private String _namespace;
 	private String _actionName;
 	private String _params;
-	
+	private List<String> _userGroupCodes;
 }
