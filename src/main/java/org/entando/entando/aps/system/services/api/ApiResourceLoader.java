@@ -61,7 +61,7 @@ public class ApiResourceLoader {
         for (int i = 0; i < resources.length; i++) {
             Resource resource = resources[i];
             InputStream is = null;
-            String path = resource.getURI().getPath();
+            String path = resource.getURL().getPath();
             try {
                 is = resource.getInputStream();
                 String xml = FileTextReader.getText(is);
@@ -77,7 +77,7 @@ public class ApiResourceLoader {
                         this.getResources().put(apiResource.getCode(), apiResource);
                     }
                 }
-                _logger.info("Loaded Api Resources definition by file {}", path);
+                _logger.debug("Loaded Api Resources definition by file {}", path);
             } catch (Throwable t) {
             	_logger.error("Error loading Api Resources definition by location Pattern '{}'",path, t);
                 //ApsSystemUtils.logThrowable(t, this, "loadApiResources", "Error loading Api Resources definition by location Pattern '" + path + "'");

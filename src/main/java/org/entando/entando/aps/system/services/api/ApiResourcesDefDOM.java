@@ -51,7 +51,7 @@ public class ApiResourcesDefDOM {
 	
     public ApiResourcesDefDOM(String xmlText, String definitionPath) throws ApsSystemException {
         this.validate(xmlText, definitionPath);
-        _logger.info("Loading Resources from file : {}", definitionPath);
+        _logger.debug("Loading Resources from file : {}", definitionPath);
         this.decodeDOM(xmlText);
     }
     
@@ -68,7 +68,7 @@ public class ApiResourcesDefDOM {
             xmlIs = new ByteArrayInputStream(xmlText.getBytes("UTF-8"));
             Source source = new StreamSource(xmlIs);
             validator.validate(source);
-            _logger.info("Valid api methods definition : {}", definitionPath);
+            _logger.debug("Valid api methods definition : {}", definitionPath);
         } catch (Throwable t) {
             String message = "Error validating api methods definition : " + definitionPath;
             _logger.error("Error validating api methods definition : {}", definitionPath, t);
