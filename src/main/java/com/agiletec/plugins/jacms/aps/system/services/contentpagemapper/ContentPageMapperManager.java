@@ -70,8 +70,7 @@ public class ContentPageMapperManager extends AbstractService
             IPage root = this.getPageManager().getRoot();
             this.searchPublishedContents(root);
         } catch (Throwable t) {
-        	_logger.error("Errore loading ContentPageMapper", t);
-            //ApsSystemUtils.logThrowable(t, this, "createContentPageMapper");
+        	_logger.error("Error loading ContentPageMapper", t);
             throw new ApsSystemException("Errore loading ContentPageMapper", t);
         }
     }
@@ -107,10 +106,9 @@ public class ContentPageMapperManager extends AbstractService
 	public void updateFromPageChanged(PageChangedEvent event) {
 		try {
 			this.reloadContentPageMapper();
-			_logger.info("Notificato modifica pagina {}", event.getPage().getCode());
+			_logger.debug("Notified page change envent for page '{}'", event.getPage().getCode());
 		} catch (Throwable t) {
 			_logger.error("Error notifying event", t);
-			//ApsSystemUtils.logThrowable(t, this, "updateFromPageChanged", "Errore in notificazione Evento");
 		}
 	}
     
