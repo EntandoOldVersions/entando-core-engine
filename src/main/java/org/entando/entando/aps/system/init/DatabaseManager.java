@@ -109,7 +109,6 @@ public class DatabaseManager extends AbstractInitializerManager
 				report.setStatus(SystemInstallationReport.Status.INCOMPLETE);
 			}
 			_logger.error("Error while initializating Db Installer", t);
-			//ApsSystemUtils.logThrowable(t, this, "installDatabase", "Error while initializating Db Installer");
 			throw new Exception("Error while initializating Db Installer", t);
 		}
 		return report;
@@ -161,7 +160,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			_logger.debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			_logger.error("Error initializating master databases", t);
-			//ApsSystemUtils.logThrowable(t, this, "initMasterDatabases");
 			throw new ApsSystemException("Error initializating master databases", t);
 		}
 	}
@@ -182,7 +180,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		} catch (Throwable t) {
 			schemaReport.getDatabaseStatus().put(databaseName, SystemInstallationReport.Status.INCOMPLETE);
 			_logger.error("Error creating master tables to db {}", databaseName,  t);
-			//ApsSystemUtils.logThrowable(t, this, "initMasterDatabase", "Error inizializating db " + databaseName);
 			throw new ApsSystemException("Error creating master tables to db " + databaseName, t);
 		}
 	}
@@ -243,7 +240,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			_logger.debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			_logger.error("Error initializating component {}", componentConfiguration.getCode(), t);
-			//ApsSystemUtils.logThrowable(t, this, "initComponent","Error initializating component " + componentConfiguration.getCode());
 			throw new ApsSystemException("Error initializating component " + componentConfiguration.getCode(), t);
 		}
 	}
@@ -256,7 +252,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			tableFactory.createTables(tableClassNames, schemaReport);
 		} catch (Throwable t) {
 			_logger.error("Error creating tables to db {}", databaseName, t);
-			//ApsSystemUtils.logThrowable(t, this, "createTables", "Error creating tables into db " + databaseName);
 			throw new ApsSystemException("Error creating tables to db " + databaseName, t);
 		}
 	}
@@ -320,7 +315,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			_logger.debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			_logger.error("Error initializating master DefaultResource", t);
-			//ApsSystemUtils.logThrowable(t, this, "initMasterDefaultResource");
 			throw new ApsSystemException("Error initializating master DefaultResource", t);
 		}
 	}
@@ -382,7 +376,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			_logger.debug(logPrefix + "\n" + logPrefix + "Installation complete\n" + logPrefix);
 		} catch (Throwable t) {
 			_logger.error("Error restoring default resources of component {}", componentConfiguration.getCode(), t);
-			//ApsSystemUtils.logThrowable(t, this, "initComponent", "Error restoring default resources of component " + componentConfiguration.getCode());
 			throw new ApsSystemException("Error restoring default resources of component " + componentConfiguration.getCode(), t);
 		}
 	}
@@ -406,7 +399,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			}
 		} catch (Throwable t) {
 			_logger.error("Error restoring default Dump", t);
-			//ApsSystemUtils.logThrowable(t, this, "restoreDefaultDump", "Error restoring default Dump");
 			throw new ApsSystemException("Error restoring default Dump", t);
 		}
 	}
@@ -425,7 +417,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			text = FileTextReader.getText(is);
 		} catch (Throwable t) {
 			_logger.error("Error reading resource", t);
-			//ApsSystemUtils.logThrowable(t, this, "readFile", "Error reading resource");
 			throw new ApsSystemException("Error reading resource", t);
 		} finally {
 			if (null != is) {
@@ -448,7 +439,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			thread.start();
 		} catch (Throwable t) {
 			_logger.error("Error while creating backup", t);
-			//ApsSystemUtils.logThrowable(t, this, "createBackup");
 			throw new ApsSystemException("Error while creating backup", t);
 		}
 	}
@@ -459,7 +449,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			this.getDatabaseDumper().createBackup(this.getEnvironment(), this.extractReport());
 		} catch (Throwable t) {
 			_logger.error("Error while creating backup", t);
-			//ApsSystemUtils.logThrowable(t, this, "executeBackup");
 			throw new ApsSystemException("Error while creating backup", t);
 		} finally {
 			this.setStatus(DatabaseManager.STATUS_READY);
@@ -473,7 +462,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			this.getStorageManager().deleteDirectory(directoryName, true);
 		} catch (Throwable t) {
 			_logger.error("Error while deleting backup", t);
-			//ApsSystemUtils.logThrowable(t, this, "deleteBackup");
 			throw new ApsSystemException("Error while deleting backup", t);
 		}
 	}
@@ -497,7 +485,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while extracting Backup Report of subfolder {}", subFolderName, t);
-			//ApsSystemUtils.logThrowable(t, this, "getBackurReport");
 			throw new RuntimeException("Error while extracting Backup Report of subfolder " + subFolderName);
 		}
 		return null;
@@ -521,7 +508,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			Collections.sort(reports, new BeanComparator("date"));
 		} catch (Throwable t) {
 			_logger.error("Error while extracting Backup Reports", t);
-			//ApsSystemUtils.logThrowable(t, this, "getBackupReports");
 			throw new RuntimeException("Error while extracting Backup Reports");
 		}
 		return reports;
@@ -529,16 +515,19 @@ public class DatabaseManager extends AbstractInitializerManager
 
 	private boolean checkBackupFolder(String subFolderName) throws ApsSystemException {
 		String dirName = this.getLocalBackupsFolder();
+		/* shouldn't be no need to check if there is a folder for each Data Source defined
 		String[] dataSourceNames = this.extractBeanNames(DataSource.class);
 		for (int i = 0; i < dataSourceNames.length; i++) {
-			String folderName = dirName + /*File.separator + */subFolderName + File.separator + dataSourceNames[i] + File.separator;
+			String folderName = dirName + subFolderName + File.separator + dataSourceNames[i] + File.separator;
 			String[] directoryContent = this.getStorageManager().listFile(folderName, true);
 			if (null == directoryContent || directoryContent.length == 0) {
 				return false;
 			}
 		}
+		 */
 		String reportFileName = dirName + subFolderName + File.separator + DUMP_REPORT_FILE_NAME;
 		if (!this.getStorageManager().exists(reportFileName, true)) {
+			_logger.warn("dump report file name not found in path {}", reportFileName);
 			return false;
 		}
 		return true;
@@ -554,7 +543,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			report = new DataSourceDumpReport(xml);
 		} catch (Throwable t) {
 			_logger.error("Error while extracting Dump Report of subfolder {}", subFolderName, t);
-			//ApsSystemUtils.logThrowable(t, this, "getDumpReport");
 			throw new RuntimeException("Error while extracting Dump Report of subfolder " + subFolderName);
 		} finally {
 			if (null != is) {
@@ -580,7 +568,6 @@ public class DatabaseManager extends AbstractInitializerManager
 		} catch (Throwable t) {
 			//TODO future improvement - restore 'lifeline' backup
 			_logger.error("Error while restoring backup - subfolder {}", subFolderName, t);
-			//ApsSystemUtils.logThrowable(t, this, "dropAndRestoreBackup");
 			throw new ApsSystemException("Error while restoring backup - subfolder " + subFolderName, t);
 		} finally {
 			//TODO future improvement - delete 'lifeline' backup
@@ -597,7 +584,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			return true;
 		} catch (Throwable t) {
 			_logger.error("Error while restoring local backup", t);
-			//ApsSystemUtils.logThrowable(t, this, "restoreLastBackup");
 			throw new ApsSystemException("Error while restoring local backup", t);
 		}
 	}
@@ -619,7 +605,6 @@ public class DatabaseManager extends AbstractInitializerManager
 			return this.getStorageManager().getStream(fileName.toString(), true);
 		} catch (Throwable t) {
 			_logger.error("Error while extracting table dump - " + "table '{}' - datasource '{}' - SubFolder '{}'", tableName, dataSourceName, subFolderName, t);
-			//ApsSystemUtils.logThrowable(t, this, "getTableDump");
 			throw new RuntimeException("Error while extracting table dump - " + "table '" + tableName + "' - datasource '" + dataSourceName + "' - SubFolder '" + subFolderName + "'", t);
 		}
 	}
