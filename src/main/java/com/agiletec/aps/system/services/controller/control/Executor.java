@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 
 /**
@@ -59,13 +60,11 @@ public class Executor implements ControlServiceInterface {
 			_logger.debug("Executed forward to {}", jspPath);
 			retStatus = ControllerManager.OUTPUT;
 		} catch (ServletException t) {
-			_logger.error("Error while building page portal", t);
-			//ApsSystemUtils.logThrowable(t, this, "service", "Error while building page portal");
+			_logger.error("Error while building page portal {}", reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE), t);
 			retStatus = ControllerManager.ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} catch (Throwable t) {
 			_logger.error("Error while forwarding to main.jsp", t);
-			//ApsSystemUtils.logThrowable(t, this, "service", "Error while forwarding to main.jsp");
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
