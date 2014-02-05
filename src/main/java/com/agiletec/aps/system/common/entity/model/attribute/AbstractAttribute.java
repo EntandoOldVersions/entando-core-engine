@@ -296,12 +296,12 @@ public abstract class AbstractAttribute implements AttributeInterface, BeanFacto
     }
 	
 	protected Element createRootElement(String elementName) {
-		Element attributeElement = new Element(this.getTypeConfigElementName());
+		Element attributeElement = new Element(elementName);
         attributeElement.setAttribute("name", this.getName());
         attributeElement.setAttribute("attributetype", this.getType());
 		return attributeElement;
 	}
-
+	
     private void addArrayElement(Element configElement, String[] values, String elementName, String subElementName) {
         if (null != values) {
             Element arrayElem = new Element(elementName);
