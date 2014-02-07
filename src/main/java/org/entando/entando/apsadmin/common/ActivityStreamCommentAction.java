@@ -18,21 +18,25 @@
 
 package org.entando.entando.apsadmin.common;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.apsadmin.system.BaseAction;
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * @author S.Loru
  */
 public class ActivityStreamCommentAction extends BaseAction{
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ActivityStreamCommentAction.class);
 	
 	public String addComment() {
 		try {
 			String username = this.getCurrentUser().getUsername();
 			this.getActionLogManager().addActionCommentRecord(username, this.getCommentText(), this.getStreamRecordId());
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "addComment", "Error on adding comment on activity");
+			_logger.error("Error on adding comment on activity", t);
         }
 		return SUCCESS;
 	}
@@ -41,7 +45,7 @@ public class ActivityStreamCommentAction extends BaseAction{
 		try {
 			this.getActionLogManager().deleteActionCommentRecord(this.getCommentId(), this.getStreamRecordId());
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "removeComment", "Error on removing comment on activity");
+			_logger.error("Error on removing comment on activity", t);
         }
 		return SUCCESS;
 	}

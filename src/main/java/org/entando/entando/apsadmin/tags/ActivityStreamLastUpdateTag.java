@@ -18,21 +18,27 @@
 
 package org.entando.entando.apsadmin.tags;
 
-import com.agiletec.aps.system.ApsSystemUtils;
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.JspException;
+
+import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
+import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import com.opensymphony.xwork2.util.ValueStack;
-import java.util.Date;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
-import org.apache.struts2.views.jsp.StrutsBodyTagSupport;
-import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 
 /**
  * @author S.Loru
  */
 public class ActivityStreamLastUpdateTag extends StrutsBodyTagSupport {
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ActivityStreamLastUpdateTag.class);
 	
 	@Override
 	public int doEndTag() throws JspException {
@@ -47,7 +53,7 @@ public class ActivityStreamLastUpdateTag extends StrutsBodyTagSupport {
 	            stack.setValue("#attr['" + this.getVar() + "']", lastUpdate, false);
 			}
 		} catch (Throwable t) {
-			ApsSystemUtils.logThrowable(t, this, "doEndTag");
+			_logger.error("Error on doStartTag", t);
 			throw new JspException("Error on doStartTag", t);
 		}
 		return super.doEndTag();

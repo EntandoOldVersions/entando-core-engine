@@ -21,17 +21,24 @@ package org.entando.entando.apsadmin.common;
 import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.apsadmin.system.BaseAction;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
 import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
+import org.entando.entando.apsadmin.admin.DatabaseAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author S.Loru
  */
 public class ActivityStreamAction extends BaseAction{
+
+	private static final Logger _logger =  LoggerFactory.getLogger(ActivityStreamAction.class);
 	
 	public String viewMore(){
 		List<Integer> actionRecordIds = new ArrayList<Integer>();
@@ -46,7 +53,7 @@ public class ActivityStreamAction extends BaseAction{
 			searchBean.setEndCreation(timestamp);
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "viewMore", "Error on loading more activities");
+			_logger.error("Error on loading more activities", t);
         }
 		this.setActionRecordIds(actionRecordIds);
 		return SUCCESS;
@@ -66,7 +73,7 @@ public class ActivityStreamAction extends BaseAction{
 			searchBean.setEndUpdate(new Date());
 			actionRecordIds = this.getActionLogManager().getActionRecords(searchBean);
 		} catch (Throwable t) {
-            ApsSystemUtils.logThrowable(t, this, "update", "Error on loading updated activities");
+			_logger.error("Error on loading updated activities", t);
         }
 		this.setActionRecordIds(actionRecordIds);
 		return SUCCESS;
