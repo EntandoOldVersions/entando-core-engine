@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.services.group.Group;
+
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamComment;
 import org.entando.entando.aps.system.services.actionlog.model.IActivityStreamSearchBean;
 
@@ -153,9 +154,9 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			while (result.next()) {
 				idList.add(result.getInt(1));
 			}
-
 		} catch (Throwable t) {
-			processDaoException(t, "Error loading actionlogger records", "getActionRecords");
+			_logger.error("Error loading actionlogger records",  t);
+			throw new RuntimeException("Error loading actionlogger records", t);
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -176,7 +177,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} catch (Throwable t) {
 			_logger.error("Error loading actionlogger records",  t);
 			throw new RuntimeException("Error loading actionlogger records", t);
-			//processDaoException(t, "Error loading actionlogger records", "getActionRecords");
 		}
 		return actionRecords;
 	}
@@ -202,7 +202,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} catch (Throwable t) {
 			_logger.error("Error loading activity stream records",  t);
 			throw new RuntimeException("Error loading activity stream records", t);
-			//processDaoException(t, "Error while loading activity stream records", "getActivityStream");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -465,7 +464,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			stat.executeUpdate();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error on insert actionlogger like record", "updateRecordUpdateDate");
+			_logger.error("Error on insert actionlogger like record",  t);
+			throw new RuntimeException("Error on insert actionlogger like record", t);
 		} 
 	}
 			
@@ -476,9 +476,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			stat.setInt(1, id);
 			stat.executeUpdate();
 		} catch (Throwable t) {
-			_logger.error("Error on delete record: {}", id,  t);
+			_logger.error("Error on delete record: {}", id, t);
 			throw new RuntimeException("Error on delete record: " + id, t);
-			//processDaoException(t, "Error on delete record: " + id , "deleteRecord");
 		} finally {
 			closeDaoResources(null, stat);
 		}
@@ -503,7 +502,6 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 		} catch (Throwable t) {
 			_logger.error("Error while loading activity stream like records",  t);
 			throw new RuntimeException("Error while loading activity stream like records", t);
-			//processDaoException(t, "Error while loading activity stream like records", "getActionLikeRecords");
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -532,7 +530,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 				comments.add(comment);
 			}
 		} catch (Throwable t) {
-			processDaoException(t, "Error while loading activity stream comment records", "getActionCommentRecords");
+			_logger.error("Error while loading activity stream comment records",  t);
+			throw new RuntimeException("Error while loading activity stream comment records", t);
 		} finally {
 			closeDaoResources(result, stat, conn);
 		}
@@ -558,7 +557,9 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error on insert actionlogger comment record", "addActionCommentRecord");
+			_logger.error("Error on insert actionlogger comment record",  t);
+			throw new RuntimeException("Error on insert actionlogger comment record", t);
+			//processDaoException(t, "Error on insert actionlogger comment record", "addActionCommentRecord");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -578,7 +579,8 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			processDaoException(t, "Error on delete comment record: " + id, "deleteActionCommentRecord");
+			_logger.error("Error on delete comment record {}", id, t);
+			throw new RuntimeException("Error on delete comment record: " + id, t);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
