@@ -18,20 +18,17 @@
 
 package org.entando.entando.apsadmin.common;
 
-import com.agiletec.aps.system.ApsSystemUtils;
-import com.agiletec.aps.system.services.group.Group;
-import com.agiletec.apsadmin.system.BaseAction;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.actionlog.IActionLogManager;
-import org.entando.entando.aps.system.services.actionlog.model.ActionLogRecord;
 import org.entando.entando.aps.system.services.actionlog.model.ActivityStreamSeachBean;
-import org.entando.entando.apsadmin.admin.DatabaseAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.services.group.Group;
+import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * @author S.Loru
