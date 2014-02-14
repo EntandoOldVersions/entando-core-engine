@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.ApsSystemUtils;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
@@ -57,7 +56,7 @@ public class RequestValidator extends AbstractControlService {
 	
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		_logger.debug("{} : initialized", this.getClass().getName());
+		_logger.debug("{} ready", this.getClass().getName());
 	}
 	
 	/**
@@ -91,7 +90,6 @@ public class RequestValidator extends AbstractControlService {
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			_logger.error("Error while validating the client request", t);
-			//ApsSystemUtils.logThrowable(t, this, "service", "Error while validating the client request");
 		}
 		return retStatus;
 	}

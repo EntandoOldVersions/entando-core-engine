@@ -44,7 +44,7 @@ public class Authenticator extends AbstractControlService {
 	
 	@Override
     public void afterPropertiesSet() throws Exception {
-    	_logger.debug("{}: initialized", this.getClass().getName());
+    	_logger.debug("{} ready", this.getClass().getName());
 	}
     
 	/**
@@ -61,7 +61,7 @@ public class Authenticator extends AbstractControlService {
      */
 	@Override
     public int service(RequestContext reqCtx, int status) {
-    	_log.debug("Invocata " + this.getClass().getName());
+    	_logger.debug("Invoked {}", this.getClass().getName());
         int retStatus = ControllerManager.INVALID_STATUS;
         if (status == ControllerManager.ERROR) {
         	return status;
@@ -75,14 +75,14 @@ public class Authenticator extends AbstractControlService {
             if (username != null && password != null) {
 				String returnUrl = req.getParameter("returnUrl");
 				returnUrl = (null != returnUrl && returnUrl.trim().length() > 0) ? returnUrl : null;
-            	this._log.debug("user " + username + " - password ******** ");
+            	_logger.debug("user {} - password ******** ", username );
                 UserDetails user = this.getAuthenticationProvider().getUser(username, password);
                 if (user != null) {
                 	if (!user.isAccountNotExpired()) {
                 		req.setAttribute("accountExpired", new Boolean(true));
                 	} else {
                 		session.setAttribute(SystemConstants.SESSIONPARAM_CURRENT_USER, user);
-                		this._log.debug("New user: " + user.getUsername());
+                		_logger.debug("New user: {}", user.getUsername());
 						if (null != returnUrl) {
 							return super.redirectUrl(URLDecoder.decode(returnUrl, "ISO-8859-1"), reqCtx);
 						}
@@ -102,7 +102,6 @@ public class Authenticator extends AbstractControlService {
             retStatus = ControllerManager.CONTINUE;
         } catch (Throwable t) {
         	_logger.error("Error, could not fulfill the request", t);
-            //ApsSystemUtils.logThrowable(e, this, "service", "Error, could not fulfill the request");
             retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }

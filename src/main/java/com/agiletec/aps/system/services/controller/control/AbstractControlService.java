@@ -78,7 +78,6 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			_logger.error("Error on creation redirect to page {}", redirDestPage, t);
-			//ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to page " + redirDestPage);
 		}
 		return retStatus;
 	}
@@ -93,7 +92,6 @@ public abstract class AbstractControlService implements ControlServiceInterface 
 			retStatus = ControllerManager.SYS_ERROR;
 			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			_logger.error("Error on creation redirect to url {}", urlDest, t);
-			//ApsSystemUtils.logThrowable(t, this, "redirect", "Error on creation redirect to url " + urlDest);
 		}
 		return retStatus;
 	}
