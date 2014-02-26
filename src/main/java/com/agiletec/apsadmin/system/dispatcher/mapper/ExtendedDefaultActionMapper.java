@@ -17,16 +17,33 @@
 */
 package com.agiletec.apsadmin.system.dispatcher.mapper;
 
+import com.opensymphony.xwork2.config.ConfigurationManager;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
 /**
- * Estensione del Action Mapper a servizio della servlet delegata all'erogazione 
- * di funzionalità in "Internal Servlet".
+ * Extension of Default Action mapper for the Entando Servlet used by "Internal Servlet" functionality.
  * @author E.Santoboni
  */
 public class ExtendedDefaultActionMapper extends DefaultActionMapper {
+	
+	@Override
+	public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
+        ActionMapping mapping = new ActionMapping();
+        String uri = this.getUri(request);
+        int indexOfSemicolon = uri.indexOf(";");
+        uri = (indexOfSemicolon > -1) ? uri.substring(0, indexOfSemicolon) : uri;
+        uri = super.dropExtension(uri, mapping);
+        if (uri == null) {
+            return null;
+        }
+        super.parseNameAndNamespace(uri, mapping, configManager);
+        super.handleSpecialParameters(request, mapping);
+        return super.parseActionName(mapping);
+    }
 	
     /**
      * Gets the uri from the request
@@ -35,8 +52,8 @@ public class ExtendedDefaultActionMapper extends DefaultActionMapper {
      */
     protected String getUri(HttpServletRequest request) {
         // handle http dispatcher includes.
-        String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
-        uri = (String) request.getAttribute("javax.servlet.include.request_uri");
+        //String uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
+		String uri = (String) request.getAttribute("javax.servlet.include.request_uri");
         if (uri == null || "".equals(uri)) {
         	uri = (String) request.getAttribute("javax.servlet.include.servlet_path");
         } else {
