@@ -51,7 +51,7 @@ public class FilterUtils extends BaseFilterUtils {
 	 * @return The property list.
 	 */
 	public static List<Properties> getFiltersProperties(String filtersShowletParam) {
-		if (null == filtersShowletParam) {
+		if (null == filtersShowletParam || filtersShowletParam.trim().length() == 0) {
 			return new ArrayList<Properties>();
 		}
 		String[] filterStrings = filtersShowletParam.split("\\+");
