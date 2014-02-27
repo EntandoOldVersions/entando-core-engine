@@ -68,8 +68,8 @@
 		<test.database.port.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testPort;create=true</test.database.port.url>
 		<test.database.serv.url>jdbc:derby:${project.build.directory}/test/db/${project.artifactId}testServ;create=true</test.database.serv.url>
 
-		<spring.version>3.2.3.RELEASE</spring.version>
-		<struts2.version>2.3.15.1</struts2.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
+		<struts2.version>2.3.16</struts2.version>
 		<cxf.version>2.7.5</cxf.version>
 	</properties>
 	<build>
@@ -318,6 +318,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<!--
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
@@ -325,6 +326,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		-->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -553,6 +555,12 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>tomcat-servlet-api</artifactId>
+			<version>7.0.50</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
