@@ -183,6 +183,8 @@
 	</package>
 
 	<package name="jacms_do/jacms/Content/Hypertext" namespace="/do/jacms/Content/Hypertext" extends="entando-default">
+	
+	
 		<action name="configInternalLink" class="jacmsHypertextAttributeAction">
 			<!-- configInternalLink: is deprecated use entandoInternalLink-->
 			<result type="dispatcher">/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/entando-link.jsp</result>
@@ -202,6 +204,11 @@
 			<result type="dispatcher">/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/entando-pageLink.jsp</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
 		</action>
+
+        <action name="openCloseTreeNode" class="jacmsPageLinkHypertextAttributeAction" method="buildTree">
+    		<result type="tiles">/WEB-INF/plugins/jacms/apsadmin/jsp/content/modules/include/hypertextAttribute/entando-pageLink.jsp</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
+        </action>
 
 		<action name="introContentLink" class="jacmsContentLinkHypertextAttributeAction">
 			<!-- introContentLink is deprecated, use entandoIntroContentLink -->

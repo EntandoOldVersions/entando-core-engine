@@ -120,6 +120,11 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		this.checkTestOpenPageTree_ART102();
 	}
 
+	public void testOpenPageTree_4() throws Throwable {
+		this.openTreeOnDemand("editorCustomers", "ART102", "homepage");
+		this.checkTestOpenPageTree_ART102();
+	}
+	
 	private void checkTestOpenPageTree_ART102() throws Throwable {
 		ITreeNode root = ((IPageTreeAction) this.getAction()).getAllowedTreeRootNode();
 		assertNotNull(root);
@@ -150,4 +155,14 @@ public class TestHypertextAttributeAction extends AbstractBaseTestContentAction 
 		assertEquals(Action.SUCCESS, result);
 	}
 
+	private void openTreeOnDemand(String username, String contentId, String nodeToOpen) throws Throwable {
+		this.executeEdit(contentId, username);
+		String contentOnSessionMarker = super.extractSessionMarker(contentId, ApsAdminSystemConstants.EDIT);
+		this.initContentAction("/do/jacms/Content/Hypertext", "openCloseTreeNode", contentOnSessionMarker);
+		this.addParameter("treeNodeActionMarkerCode", ITreeAction.ACTION_MARKER_OPEN);
+		this.addParameter("targetNode", nodeToOpen);
+		String result = this.executeAction();
+		assertEquals(Action.SUCCESS, result);
+	}
+	
 }
