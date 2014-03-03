@@ -46,7 +46,7 @@ public interface IShortcutManager {
 	 * The saved config shold be not equals than the given, the invalid position 
 	 * (with invalid shortcut code, or with shortcut not allowed to the user) will be emptied.
 	 * @param user The user owner of the config to save.
-	 * @param config The config to save.
+	 * @param userConfig The config to save.
 	 * @return The saved config.
 	 * @throws ApsSystemException In case of error.
 	 */

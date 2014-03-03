@@ -17,19 +17,9 @@
 */
 package com.agiletec.apsadmin.common;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.beanutils.BeanComparator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.user.UserDetails;
-import com.agiletec.aps.util.SelectItem;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import com.agiletec.apsadmin.system.services.shortcut.IShortcutManager;
@@ -43,7 +33,7 @@ import com.agiletec.apsadmin.system.services.shortcut.model.UserConfigBean;
 public class MyShortcutConfigAction extends BaseAction implements IMyShortcutConfigAction {
 
 	private static final Logger _logger = LoggerFactory.getLogger(MyShortcutConfigAction.class);
-	
+
 	@Override
 	public String joinMyShortcut() {
 		if (this.getStrutsAction() != ApsAdminSystemConstants.ADD) {
@@ -67,10 +57,8 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 			config[position] = shortcutCode;
 			String[] savedConfig = this.getShortcutManager().saveUserConfig(this.getCurrentUser(), config);
 			this.setUserConfig(savedConfig);
-			this.setPosition(null);
 		} catch (Throwable t) {
 			_logger.error("error in executeUpdateConfig", t);
-			//ApsSystemUtils.logThrowable(t, this, "executeUpdateConfig");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -97,76 +85,7 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 		}
 		return SUCCESS;
 	}
-	
-	public List<Shortcut> getAllowedShortcuts() {
-		List<Shortcut> myShortcuts = null;
-		try {
-			UserDetails currentUser = this.getCurrentUser();
-			if (null == currentUser || currentUser.getUsername().equals(SystemConstants.GUEST_USER_NAME)) {
-				return myShortcuts;
-			}
-			myShortcuts = this.getShortcutManager().getAllowedShortcuts(currentUser);
-		} catch (Throwable t) {
-			_logger.error("Error extracting allowed shortcuts by user {}", this.getCurrentUser(), t);
-			//ApsSystemUtils.logThrowable(t, this, "getAllowedShortcuts");
-			throw new RuntimeException("Error extracting allowed shortcuts by user " + this.getCurrentUser(), t);
-		}
-		return myShortcuts;
-	}
-	
-	public List<SelectItem> getAllowedShortcutSelectItems() {
-		List<SelectItem> items = new ArrayList<SelectItem>();
-		try {
-			List<Shortcut> myShortcuts = this.getAllowedShortcuts();
-			Map<String, List<SelectItem>> groups = new HashMap<String, List<SelectItem>>();
-			for (int i = 0; i < myShortcuts.size(); i++) {
-				Shortcut shortcut = myShortcuts.get(i);
-				String groupCode = shortcut.getSource();
-				String optgroup = shortcut.getSource();
-				if (groupCode.equals("core")) {
-					groupCode += " - " + shortcut.getMenuSection().getId();
-					String sectDescrKey = shortcut.getMenuSection().getDescriptionKey();
-					String sectDescr = this.getText(sectDescrKey);
-					if (null == sectDescrKey || sectDescrKey.equals(sectDescr)) {
-						sectDescr = shortcut.getMenuSection().getDescription();
-					}
-					optgroup += " - " + sectDescr;
-				} else {
-					String labelCode = optgroup + ".name";
-					String optgroupDescr = this.getText(labelCode);
-					if (!optgroupDescr.equals(labelCode)) {
-						optgroup = optgroupDescr;
-					}
-				}
-				String descrKey = shortcut.getDescriptionKey();
-				String descr = this.getText(descrKey);
-				if (null == descrKey || descrKey.equals(descr)) {
-					descr = shortcut.getDescription();
-				}
-				List<SelectItem> itemsByGroup = groups.get(groupCode);
-				if (null == itemsByGroup) {
-					itemsByGroup = new ArrayList<SelectItem>();
-					groups.put(groupCode, itemsByGroup);
-				}
-				SelectItem selectItem = new SelectItem(shortcut.getId(), descr, optgroup);
-				itemsByGroup.add(selectItem);
-			}
-			List<String> keys = new ArrayList<String>(groups.keySet());
-			Collections.sort(keys);
-			for (int i = 0; i < keys.size(); i++) {
-				List<SelectItem> itemsByGroup = groups.get(keys.get(i));
-				BeanComparator comparator = new BeanComparator("value");
-				Collections.sort(itemsByGroup, comparator);
-				items.addAll(itemsByGroup);
-			}
-		} catch (Throwable t) {
-			_logger.error("Error extracting allowed shortcut items by user {}", this.getCurrentUser(), t);
-			//ApsSystemUtils.logThrowable(t, this, "getAllowedShortcutItems");
-			throw new RuntimeException("Error extracting allowed shortcut items by user " + this.getCurrentUser(), t);
-		}
-		return items;
-	}
-	
+
 	public String[] getUserConfig() {
 		return this.getUserConfigBean().getConfig();
 	}
@@ -181,7 +100,6 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting user config bean by user {}", this.getCurrentUser(), t);
-			//ApsSystemUtils.logThrowable(t, this, "getUserConfigBean");
 			throw new RuntimeException("Error extracting user config bean by user " + this.getCurrentUser(), t);
 		}
 		return config;
@@ -254,7 +172,7 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 	public void setShortcutManager(IShortcutManager shortcutManager) {
 		this._shortcutManager = shortcutManager;
 	}
-	
+
 	private Integer _strutsAction;
 	private Integer _position;
 	private String _shortcutCode;
@@ -263,5 +181,4 @@ public class MyShortcutConfigAction extends BaseAction implements IMyShortcutCon
 	private Integer _positionDest;
 	
 	private IShortcutManager _shortcutManager;
-	
 }

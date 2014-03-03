@@ -76,14 +76,14 @@
 		</action>
 		
 		<action name="joinMyShortcut" class="myShortcutConfigAction" method="joinMyShortcut" >
-			<result name="input" type="tiles">admin.intro</result>
-			<result type="tiles">admin.intro</result>
+			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/shortcut/ajax/shortcut-result.jsp</result>
+			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/shortcut/ajax/shortcut-result.jsp</result>
 			<interceptor-ref name="entandoValidationStack" />
 		</action>
 		
 		<action name="removeMyShortcut" class="myShortcutConfigAction" method="removeMyShortcut" >
-			<result name="input" type="tiles">admin.intro</result>
-			<result type="tiles">admin.intro</result>
+			<result name="input" type="dispatcher">/WEB-INF/apsadmin/jsp/common/shortcut/ajax/shortcut-result.jsp</result>
+			<result type="dispatcher">/WEB-INF/apsadmin/jsp/common/shortcut/ajax/shortcut-result.jsp</result>
 			<interceptor-ref name="entandoValidationStack" />
 		</action>
 		

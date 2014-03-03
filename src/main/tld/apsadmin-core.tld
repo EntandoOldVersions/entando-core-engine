@@ -324,35 +324,6 @@
 	</tag>
 	<tag>
 		<description>
-			<![CDATA[Returns a shortcut (or one of its property) through the code.
-			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property using the "property" attribute.]]>
-		</description>
-		<name>shortcut</name>
-		<tag-class>com.agiletec.apsadmin.tags.ShortcutInfoTag</tag-class>
-		<body-content>empty</body-content>
-		<attribute>
-			<description><![CDATA[The code of the shortcut to return.]]></description>
-			<name>key</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[Name used to reference the shortcut (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
-			<name>var</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
-				"id", "descriptionKey", "description", "longDescription", "longDescriptionKey",
-				"requiredPermission", "menuSectionCode", "menuSection", "source", "namespace", "actionName", "parameters".]]></description>
-			<name>property</name>
-			<required>false</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	<tag>
-		<description>
 			<![CDATA[Returns a widget type (or one of its property) given its code.
 			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property
 			using the "property" attribute.]]>
@@ -490,6 +461,37 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
+	
+	<!-- SHORTCUT START -->
+	<tag>
+		<description>
+			<![CDATA[Returns a shortcut (or one of its property) through the code.
+			You can choose whether to return the entire object (leaving the attribute "property" empty) or a single property using the "property" attribute.]]>
+		</description>
+		<name>shortcut</name>
+		<tag-class>com.agiletec.apsadmin.tags.ShortcutInfoTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the shortcut to return.]]></description>
+			<name>key</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the shortcut (or one of its property) pushed into the Value Stack. If not specified, the tag will print the returned value.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[The name of the property to return. It can be one of the following:<br/>
+				"id", "descriptionKey", "description", "longDescription", "longDescriptionKey",
+				"requiredPermission", "menuSectionCode", "menuSection", "source", "namespace", "actionName", "parameters".]]></description>
+			<name>property</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
 	<tag>
 		<description>
 			<![CDATA[Returns the configured shortcuts of the current user.]]>
@@ -504,6 +506,27 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
+	<tag>
+		<description><![CDATA[Entando Shortcuts utility tag]]></description>
+		<name>shortcutList</name>
+		<tag-class>org.entando.entando.apsadmin.tags.ShortcutListTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[Name of the type to extract. 'list_items' extract a List<SelectItem>, 'list_object' to extract a List<Shortcut>]]></description>
+			<name>type</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name used to reference the value pushed into the Value Stack]]></description>
+			<name>var</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	<!-- SHORTCUT END -->
+	
 	
 	<tag>
 		<description>
