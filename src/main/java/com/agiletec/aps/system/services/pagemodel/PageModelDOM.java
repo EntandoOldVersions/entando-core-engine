@@ -17,25 +17,29 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.Widget;
+import com.agiletec.aps.util.ApsProperties;
+import com.agiletec.aps.util.ApsPropertiesDOM;
+
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.Widget;
-import com.agiletec.aps.util.ApsProperties;
-
 /**
- * Classe di di supporto all'interpretazione dell'XML 
- * che rappresenta la configurazione di un modello di pagina.
+ * Helper class for xml descriptor of page model.
  * @author E.Santoboni
  */
 public class PageModelDOM {
@@ -43,14 +47,45 @@ public class PageModelDOM {
 	private static final Logger _logger = LoggerFactory.getLogger(PageModelDOM.class);
 	
 	/**
-	 * Costruttore della classe.
-	 * @param xmlText La stringa xml da interpretare.
-	 * @param widgetTypeManager Il manager gestore dei tipi di widget.
-	 * @throws ApsSystemException
+	 * Constructor of the dom. This constructor has to be used 
+	 * for create a page model from xml.
+	 * @param xmlText The xml tring to parse.
+	 * @param widgetTypeManager The manager of widget types.
+	 * @throws ApsSystemException in case of errors.
 	 */
 	public PageModelDOM(String xmlText, IWidgetTypeManager widgetTypeManager) throws ApsSystemException {
 		this.decodeDOM(xmlText);
 		this.buildFrames(widgetTypeManager);
+	}
+	
+	public PageModelDOM(PageModel pageModel) throws ApsSystemException {
+		this._doc = new Document();
+		Element root = new Element("frames");
+		this._doc.setRootElement(root);
+		String[] frames = pageModel.getFrames();
+		Widget[] defaultWidgets = pageModel.getDefaultWidget();
+		for (int i = 0; i < frames.length; i++) {
+			String frameDescription = frames[i];
+			Element frameElement = new Element(TAB_FRAME);
+			frameElement.setAttribute(ATTRIBUTE_POS, String.valueOf(i));
+			Element descrElement = new Element(TAB_DESCR);
+			descrElement.setText(frameDescription);
+			frameElement.addContent(descrElement);
+			Widget defaultWidget = (null != defaultWidgets) ? defaultWidgets[i] : null;
+			if (null != defaultWidget) {
+				Element defaultWidgetElement = new Element(TAB_DEFAULT_WIDGET);
+				defaultWidgetElement.setAttribute(ATTRIBUTE_CODE, defaultWidget.getType().getCode());
+				ApsProperties properties = defaultWidget.getConfig();
+				if (null != properties && !properties.isEmpty()) {
+					ApsPropertiesDOM propertiesDom = new ApsPropertiesDOM();
+					propertiesDom.buildJDOM(properties);
+					Element widgetConfigElement = propertiesDom.getRootElement();
+					defaultWidgetElement.addContent(widgetConfigElement);
+				}
+				frameElement.addContent(defaultWidgetElement);
+			}
+			root.addContent(frameElement);
+		}
 	}
 	
 	private void decodeDOM(String xmlText) throws ApsSystemException {
@@ -61,7 +96,6 @@ public class PageModelDOM {
 			_doc = builder.build(reader);
 		} catch (Throwable t) {
 			_logger.error("Error parsing the page model XML: {}", xmlText, t);
-			//ApsSystemUtils.logThrowable(t, this, "decodeDOM");
 			throw new ApsSystemException("Error parsing the page model XML", t);
 		}
 	}
@@ -157,13 +191,21 @@ public class PageModelDOM {
 		}
 	}
 	
+	public String getXMLDocument(){
+		XMLOutputter out = new XMLOutputter();
+		Format format = Format.getPrettyFormat();
+		format.setIndent("\t");
+		out.setFormat(format);
+		return out.outputString(this._doc);
+	}
+	
 	/**
 	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
 	public Widget[] getDefaultShowlet() {
 		return getDefaultWidget();
 	}
-
+	
 	/**
 	 * Restituisce la configurazione dei widget di default.
 	 * @return Il widget di default.

@@ -79,6 +79,10 @@ public class ApsPropertiesDOM {
 		return out.outputString(_doc);
 	}
 	
+	public Element getRootElement() {
+		return this._doc.getRootElement();
+	}
+	
 	private void decodeDOM(String xmlText) {
 		SAXBuilder builder = new SAXBuilder();
 		builder.setValidation(false);

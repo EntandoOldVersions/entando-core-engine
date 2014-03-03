@@ -31,4 +31,10 @@ public interface IPageModelDAO {
 	 */
 	public Map<String, PageModel> loadModels();
 	
+	public void addModel(PageModel model);
+	
+	public void updateModel(PageModel model);
+	
+	public void deleteModel(String code);
+	
 }
