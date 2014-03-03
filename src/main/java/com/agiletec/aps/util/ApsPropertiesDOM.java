@@ -80,7 +80,7 @@ public class ApsPropertiesDOM {
 	}
 	
 	public Element getRootElement() {
-		return this._doc.getRootElement();
+		return (Element) this._doc.getRootElement().clone();
 	}
 	
 	private void decodeDOM(String xmlText) {
