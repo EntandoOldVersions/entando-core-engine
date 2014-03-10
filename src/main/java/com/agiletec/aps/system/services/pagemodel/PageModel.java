@@ -21,74 +21,91 @@ import java.io.Serializable;
 
 import com.agiletec.aps.system.services.page.Widget;
 
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import org.apache.commons.lang.math.Fraction;
+
 /**
- * Rappresentazione di un modello di pagina. Questo oggetto contiene
- * solo la descrizione e la definizione dei "frames" disponibili. La
- * vera definizione del modello è in forma di jsp. Si assume che la jsp
- * associata abbia nome identico al codice del modello. I "frames" sono
- * le porzioni di pagina che possono ospitare un "widget".
+ * Representation of a page template. 
+ * This object contains the description and the definition of "frames" available. 
+ * The definition of the page model is in the form of jsp or freemarker template. 
+ * In the case of representation on jsp, the file name is equals then the model code.
+ * The "frames" are page sections that can contains a "widget".
  * @author M.Diana
  */
 public class PageModel implements Serializable {
 	
 	/**
-	 * Restituisce il codice univoco del modello
-	 * @return Il codice
+	 * Return the code of page model.
+	 * @return The code of page model.
 	 */
 	public String getCode() {
 		return _code;
 	}
-
+	
 	/**
-	 * Imposta il codice univoco del modello
-	 * @param code Il codice da impostare
+	 * Set the code of page model.
+	 * @param code The code to set
 	 */
 	public void setCode(String code) {
 		this._code = code;
 	}
 	
+	/**
+	 * Return the description of page model.
+	 * @return The description of page model.
+	 */
 	public String getDescription() {
 		return _description;
 	}
+	
+	/**
+	 * Set the description of page model.
+	 * @param description The description to set
+	 */
 	public void setDescription(String description) {
 		this._description = description;
 	}
-
+	
 	/**
-	 * Restituisce la descrizione del modello
-	 * @return La descrizione
-	 * @deprecated use getDescription
+	 * Return the description of page model.
+	 * @return The description of page model.
+	 * @deprecated use getDescription()
 	 */
 	public String getDescr() {
 		return this.getDescription();
 	}
-
+	
 	/**
-	 * Imposta la descrizione del modello
-	 * @param descr La descrizione da impostare
-	 * @deprecated use setDescription
+	 * Set the description of page model.
+	 * @param descr The code to set
+	 * @deprecated use setDescription(String)
 	 */
 	public void setDescr(String descr) {
 		this.setDescription(descr);
 	}
-
+	
 	/**
-	 * Restituisce l'insieme ordinato delle descrizioni dei "frames"
-	 * del modello.
+	 * Restituisce l'insieme ordinato delle descrizioni dei "frames" del modello.
 	 * @return L'insieme delle descrizioni dei "frames"
 	 */
 	public String[] getFrames() {
-		return _frames;
+		Frame[] configuration = this.getConfiguration();
+		String[] descriptions = new String[configuration.length];
+		for (int i = 0; i < configuration.length; i++) {
+			Frame frame = configuration[i];
+			descriptions[i] = frame.getDescription();
+		}
+		return descriptions;
 	}
-
-	/**
-	 * Imposta l'insieme ordinato delle descrizioni dei "frames"
-	 * del modello. 
+	
+	/*
+	 * Imposta l'insieme ordinato delle descrizioni dei "frames" del modello. 
 	 * @param frames L'insieme delle descrizioni dei "frames"
 	 */
-	public void setFrames(String[] frames) {
-		this._frames = frames;
-	}
+	//public void setFrames(String[] frames) {
+	//	this._frames = frames;
+	//}
 
 	/**
 	 * Restituisce il numero relativo del mainFrame.
@@ -106,39 +123,53 @@ public class PageModel implements Serializable {
 		this._mainFrame = mainFrame;
 	}
 	
-	/**
+	/*
 	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
-	public Widget[] getDefaultShowlet() {
-		return this.getDefaultWidget();
-	}
+	//public Widget[] getDefaultShowlet() {
+	//	return this.getDefaultWidget();
+	//}
 	
 	/**
 	 * Restituisce la configurazione dei widget di default.
-	 * @return Le showlet di default.
+	 * @return I widget di default.
 	 */
 	public Widget[] getDefaultWidget() {
-		return _defaultWidget;
+		Frame[] configuration = this.getConfiguration();
+		Widget[] defaultWidgets = new Widget[configuration.length];
+		for (int i = 0; i < configuration.length; i++) {
+			Frame frame = configuration[i];
+			defaultWidgets[i] = frame.getDefaultWidget();
+		}
+		return defaultWidgets;
 	}
 	
-	/**
+	/*
 	 * @deprecated Use {@link #setDefaultWidget(Widget[])} instead
 	 */
-	public void setDefaultShowlet(Widget[] defaultShowlet) {
-		this.setDefaultWidget(defaultShowlet);
-	}
+	//public void setDefaultShowlet(Widget[] defaultShowlet) {
+	//	this.setDefaultWidget(defaultShowlet);
+	//}
 	
-	/**
+	/*
 	 * Setta la configurazione dei widget di default.
 	 * @param defaultWidget I widget di default.
 	 */
-	public void setDefaultWidget(Widget[] defaultWidget) {
-		this._defaultWidget = defaultWidget;
+	//public void setDefaultWidget(Widget[] defaultWidget) {
+	//	this._defaultWidget = defaultWidget;
+	//}
+	
+	public Frame[] getConfiguration() {
+		return _configuration;
+	}
+	
+	public void setConfiguration(Frame[] configuration) {
+		this._configuration = configuration;
 	}
 	
 	/**
 	 * Return the code of the plugin owner of page model.
-	 * The field is null if the page model belong to jAPS Core.
+	 * The field is null if the page model belong to Entando Core.
 	 * @return The plugin code.
 	 */
 	public String getPluginCode() {
@@ -170,10 +201,12 @@ public class PageModel implements Serializable {
 	 */
 	private String _description;
 	
-	/**
+	/*
 	 * L'insieme delle descrizioni dei frames.
 	 */
-	private String[] _frames = new String[0];
+	//private String[] _frames = new String[0];
+	
+	private Frame[] _configuration;
 	
 	/**
 	 * La posizione del frame principale, se esiste;
@@ -181,10 +214,10 @@ public class PageModel implements Serializable {
 	 */
 	private int _mainFrame = -1;
 	
-	/**
+	/*
 	 * L'insieme dei widget di default.
 	 */
-	private Widget[] _defaultWidget;
+	//private Widget[] _defaultWidget;
 	
 	/**
 	 * The code of the plugin owner of page model.

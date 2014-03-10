@@ -96,9 +96,10 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 				return;
 			}
 			this.getPageModelDAO().updateModel(pageModel);
-			pageModelToUpdate.setDefaultWidget(pageModel.getDefaultWidget());
+			//pageModelToUpdate.setDefaultWidget(pageModel.getDefaultWidget());
 			pageModelToUpdate.setDescription(pageModel.getDescription());
-			pageModelToUpdate.setFrames(pageModel.getFrames());
+			//pageModelToUpdate.setFrames(pageModel.getFrames());
+			pageModelToUpdate.setConfiguration(pageModel.getConfiguration());
 			pageModelToUpdate.setMainFrame(pageModel.getMainFrame());
 			pageModelToUpdate.setPluginCode(pageModel.getPluginCode());
 			pageModelToUpdate.setTemplate(pageModel.getTemplate());

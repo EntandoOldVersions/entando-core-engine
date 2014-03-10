@@ -62,16 +62,19 @@ public class PageModelDOM {
 		this._doc = new Document();
 		Element root = new Element("frames");
 		this._doc.setRootElement(root);
-		String[] frames = pageModel.getFrames();
-		Widget[] defaultWidgets = pageModel.getDefaultWidget();
+		Frame[] frames = pageModel.getConfiguration();
+		//String[] frames = pageModel.getFrames();
+		//Widget[] defaultWidgets = pageModel.getDefaultWidget();
 		for (int i = 0; i < frames.length; i++) {
-			String frameDescription = frames[i];
+			//String frameDescription = frames[i];
+			Frame frame = frames[i];
 			Element frameElement = new Element(TAB_FRAME);
 			frameElement.setAttribute(ATTRIBUTE_POS, String.valueOf(i));
 			Element descrElement = new Element(TAB_DESCR);
-			descrElement.setText(frameDescription);
+			//descrElement.setText(frameDescription);
+			descrElement.setText(frame.getDescription());
 			frameElement.addContent(descrElement);
-			Widget defaultWidget = (null != defaultWidgets) ? defaultWidgets[i] : null;
+			Widget defaultWidget = frame.getDefaultWidget(); //(null != defaultWidgets) ? defaultWidgets[i] : null;
 			if (null != defaultWidget) {
 				Element defaultWidgetElement = new Element(TAB_DEFAULT_WIDGET);
 				defaultWidgetElement.setAttribute(ATTRIBUTE_CODE, defaultWidget.getType().getCode());
@@ -118,9 +121,10 @@ public class PageModelDOM {
 		List<Element> frameElements = this._doc.getRootElement().getChildren(TAB_FRAME);
 		if (null != frameElements && frameElements.size() > 0) {
 			int framesNumber = frameElements.size();
-			_frames = new String[framesNumber];
-			_defaultWidget = new Widget[framesNumber];
-			_existMainFrame = false;
+			//_frames = new String[framesNumber];
+			//_defaultWidget = new Widget[framesNumber];
+			this._configuration = new Frame[framesNumber];
+			this._existMainFrame = false;
 			Iterator<Element> frameElementsIter = frameElements.iterator();
 			while (frameElementsIter.hasNext()) {
 				Element frameElement = frameElementsIter.next();
@@ -128,14 +132,18 @@ public class PageModelDOM {
 				if(pos >= framesNumber) {
 					throw new ApsSystemException("The position '" + pos + "' exceeds the number of frames defined in the page model");
 				}
+				Frame frame = new Frame();
+				frame.setPos(pos);
 				String main = frameElement.getAttributeValue(ATTRIBUTE_MAIN);
 				if (null != main && main.equals("true")) {
 					_existMainFrame = true;
 					_mainFrame = pos;
+					frame.setMainFrame(true);
 				}
 				Element frameDescrElement = frameElement.getChild(TAB_DESCR);
 				if (null != frameDescrElement) {
-					_frames[pos] = frameDescrElement.getText();
+					//_frames[pos] = frameDescrElement.getText();
+					frame.setDescription(frameDescrElement.getText());
 				}
 				Element defaultWidgetElement = frameElement.getChild(TAB_DEFAULT_WIDGET);
 				//to guaranted compatibility with previsous version of Entamdo 3.3.1 *** Start Block
@@ -144,15 +152,33 @@ public class PageModelDOM {
 				}
 				//to guaranted compatibility with previsous version of Entamdo 3.3.1 *** End Block
 				if (null != defaultWidgetElement) {
-					this.buildDefaultWidget(defaultWidgetElement, pos, widgetTypeManager);
+					this.buildDefaultWidget(frame, defaultWidgetElement, pos, widgetTypeManager);
 				}
 			}
 		} else {
-			_frames = new String[0];
-			_defaultWidget = new Widget[0];
+			this._configuration = new Frame[0];
 		}
 	}
 	
+	private void buildDefaultWidget(Frame frame, Element defaultWidgetElement, int pos, IWidgetTypeManager widgetTypeManager) {
+		Widget widget = new Widget();
+		String widgetCode = defaultWidgetElement.getAttributeValue(ATTRIBUTE_CODE);
+		WidgetType type = widgetTypeManager.getWidgetType(widgetCode);
+		if (null == type) {
+			_logger.error("Unknown code of the default widget - '{}'", widgetCode);
+			return;
+		}
+		widget.setType(type);
+		Element propertiesElement = defaultWidgetElement.getChild(TAB_PROPERTIES);
+		if (null != propertiesElement) {
+			ApsProperties prop = this.buildProperties(propertiesElement);
+			widget.setConfig(prop);
+		}// else {
+		//	widget.setConfig(new ApsProperties());
+		//}
+		frame.setDefaultWidget(widget);
+	}
+	/*
 	private void buildDefaultWidget(Element defaultWidgetElement, int pos, IWidgetTypeManager widgetTypeManager) {
 		Widget widget = new Widget();
 		String widgetCode = defaultWidgetElement.getAttributeValue(ATTRIBUTE_CODE);
@@ -171,15 +197,15 @@ public class PageModelDOM {
 		//}
 		_defaultWidget[pos] = widget;
 	}
-	
-	/**
+	*/
+	/*
 	 * Restituisce l'insieme ordinato delle descrizioni dei "frames"
 	 * del modello.  
 	 * @return L'insieme delle descrizioni dei "frames"
 	 */
-	public String[] getFrames() {
-		return this._frames;
-	}
+	//public String[] getFrames() {
+	//	return this._frames;
+	//}
 	
 	/**
 	 * La posizione del frame principale, se esiste;
@@ -202,19 +228,21 @@ public class PageModelDOM {
 		return out.outputString(this._doc);
 	}
 	
-	/**
+	/*
 	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
-	public Widget[] getDefaultShowlet() {
-		return getDefaultWidget();
-	}
-	
-	/**
+	//public Widget[] getDefaultShowlet() {
+	//	return getDefaultWidget();
+	//}
+	/*
 	 * Restituisce la configurazione dei widget di default.
 	 * @return Il widget di default.
 	 */
-	public Widget[] getDefaultWidget() {
-		return this._defaultWidget;
+	//public Widget[] getDefaultWidget() {
+	//	return this._defaultWidget;
+	//}
+	public Frame[] getConfiguration() {
+		return _configuration;
 	}
 	
 	private Document _doc;
@@ -229,7 +257,8 @@ public class PageModelDOM {
 	private final String ATTRIBUTE_KEY = "key";
 	private boolean _existMainFrame;
 	private int _mainFrame;
-	private String[] _frames;
-	private Widget[] _defaultWidget;
+	//private String[] _frames;
+	//private Widget[] _defaultWidget;
+	private Frame[] _configuration;
 	
 }
