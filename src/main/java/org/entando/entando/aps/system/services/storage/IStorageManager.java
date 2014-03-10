@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import java.io.File;
+import java.util.List;
 
 /**
  * @author E.Santoboni
@@ -46,5 +48,26 @@ public interface IStorageManager extends Serializable {
 	public String[] listDirectory(String subPath, boolean isProtectedResource) throws ApsSystemException;
 	
 	public String[] listFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
+	
+	public boolean isFileRootResource(File file, boolean isProtectedResource);
+	
+	public String getSubPathFromFile(File file, boolean isProtectedResource);
+	
+	/***
+	 * this file list all files that exist in a subpath of resource, in the position 0 the file is listed the current folder 
+	 * @param subPath
+	 * @param isProtectedResource
+	 * @return a collection of file
+	 * @throws ApsSystemException 
+	 */
+	public List<File> fileList(String subPath, boolean isProtectedResource);
+	
+	public File getFile(String subPath, boolean isProtectedResource);
+	
+	public String readFile(String subPath, boolean isProtectedResource) throws ApsSystemException;
+	
+	public void editFile(String subPath, boolean isProtectedResource, String text) throws ApsSystemException;
+	
+//	public String[] getAllowedEditExtensions();
 	
 }
