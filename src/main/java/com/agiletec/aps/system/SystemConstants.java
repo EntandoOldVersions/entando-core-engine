@@ -182,6 +182,11 @@ public interface SystemConstants {
      * Name of the LicenseKey Manager.
      */
     public static final String LICENSE_KEY_MANAGER = "LicenseKeyManager";
+	
+	/**
+     * Name of the Storage Manager.
+     */
+    public static final String STORAGE_MANAGER = "StorageManager";
     
     /**
      * Nome del servizio gestore cache.
