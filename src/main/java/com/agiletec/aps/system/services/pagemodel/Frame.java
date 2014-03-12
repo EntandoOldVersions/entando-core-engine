@@ -18,12 +18,20 @@ package com.agiletec.aps.system.services.pagemodel;
 
 import com.agiletec.aps.system.services.page.Widget;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+
 /**
  * Representation of a frame of page model
  * @author E.Santoboni
  */
+@XmlRootElement(name = "frame")
+@XmlType(propOrder = {"pos", "description", "mainFrame"})
 public class Frame {
 	
+	@XmlElement(name = "code", required = true)
 	public int getPos() {
 		return _pos;
 	}
@@ -31,6 +39,7 @@ public class Frame {
 		this._pos = pos;
 	}
 	
+	@XmlElement(name = "description", required = true)
 	public String getDescription() {
 		return _description;
 	}
@@ -38,6 +47,7 @@ public class Frame {
 		this._description = description;
 	}
 	
+	@XmlElement(name = "mainFrame", required = false)
 	public boolean isMainFrame() {
 		return _mainFrame;
 	}
@@ -45,6 +55,7 @@ public class Frame {
 		this._mainFrame = mainFrame;
 	}
 	
+	@XmlTransient
 	public Widget getDefaultWidget() {
 		return _defaultWidget;
 	}

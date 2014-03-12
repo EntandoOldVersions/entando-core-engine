@@ -21,10 +21,8 @@ import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.page.Widget;
 
 /**
- * @version 1.0
  * @author M.Diana
  */
 public class TestPageModelDOM extends BaseTestCase {
@@ -33,10 +31,9 @@ public class TestPageModelDOM extends BaseTestCase {
 		IWidgetTypeManager widgetTypeManager = 
         	(IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
         PageModelDOM pageModelDOM = new PageModelDOM(FRAMES_XML, widgetTypeManager);
-        String[] frames = pageModelDOM.getFrames();
-        assertEquals(frames[0].equals("Box sinistra alto"), true);
-        Widget[] defaultWidgets = pageModelDOM.getDefaultWidget();
-        assertEquals("content_viewer", defaultWidgets[1].getType().getCode());
+		Frame[] configuration = pageModelDOM.getConfiguration();
+        assertTrue(configuration[0].getDescription().equals("Box sinistra alto"));
+        assertEquals("content_viewer",configuration[1].getDefaultWidget().getType().getCode());
 	} 
     
     public final static String FRAMES_XML = "<frames>" 

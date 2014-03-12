@@ -17,13 +17,18 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
-import java.io.Serializable;
-
 import com.agiletec.aps.system.services.page.Widget;
 
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-import org.apache.commons.lang.math.Fraction;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
 
 /**
  * Representation of a page template. 
@@ -33,12 +38,15 @@ import org.apache.commons.lang.math.Fraction;
  * The "frames" are page sections that can contains a "widget".
  * @author M.Diana
  */
+@XmlRootElement(name = "pageModel")
+@XmlType(propOrder = {"code", "description", "pluginCode", "template", "configuration"})
 public class PageModel implements Serializable {
 	
 	/**
 	 * Return the code of page model.
 	 * @return The code of page model.
 	 */
+	@XmlElement(name = "code", required = true)
 	public String getCode() {
 		return _code;
 	}
@@ -55,6 +63,7 @@ public class PageModel implements Serializable {
 	 * Return the description of page model.
 	 * @return The description of page model.
 	 */
+	@XmlElement(name = "description", required = true)
 	public String getDescription() {
 		return _description;
 	}
@@ -72,6 +81,7 @@ public class PageModel implements Serializable {
 	 * @return The description of page model.
 	 * @deprecated use getDescription()
 	 */
+	@XmlTransient
 	public String getDescr() {
 		return this.getDescription();
 	}
@@ -99,18 +109,11 @@ public class PageModel implements Serializable {
 		return descriptions;
 	}
 	
-	/*
-	 * Imposta l'insieme ordinato delle descrizioni dei "frames" del modello. 
-	 * @param frames L'insieme delle descrizioni dei "frames"
-	 */
-	//public void setFrames(String[] frames) {
-	//	this._frames = frames;
-	//}
-
 	/**
 	 * Restituisce il numero relativo del mainFrame.
 	 * @return Il numero relativo del mainFrame.
 	 */
+	@XmlTransient
 	public int getMainFrame() {
 		return _mainFrame;
 	}
@@ -123,17 +126,11 @@ public class PageModel implements Serializable {
 		this._mainFrame = mainFrame;
 	}
 	
-	/*
-	 * @deprecated Use {@link #getDefaultWidget()} instead
-	 */
-	//public Widget[] getDefaultShowlet() {
-	//	return this.getDefaultWidget();
-	//}
-	
 	/**
 	 * Restituisce la configurazione dei widget di default.
 	 * @return I widget di default.
 	 */
+	@XmlTransient
 	public Widget[] getDefaultWidget() {
 		Frame[] configuration = this.getConfiguration();
 		Widget[] defaultWidgets = new Widget[configuration.length];
@@ -144,22 +141,9 @@ public class PageModel implements Serializable {
 		return defaultWidgets;
 	}
 	
-	/*
-	 * @deprecated Use {@link #setDefaultWidget(Widget[])} instead
-	 */
-	//public void setDefaultShowlet(Widget[] defaultShowlet) {
-	//	this.setDefaultWidget(defaultShowlet);
-	//}
-	
-	/*
-	 * Setta la configurazione dei widget di default.
-	 * @param defaultWidget I widget di default.
-	 */
-	//public void setDefaultWidget(Widget[] defaultWidget) {
-	//	this._defaultWidget = defaultWidget;
-	//}
-	
-	public Frame[] getConfiguration() {
+	@XmlElement(name = "frame", required = false)
+    @XmlElementWrapper(name = "configuration")
+    public Frame[] getConfiguration() {
 		return _configuration;
 	}
 	
@@ -172,6 +156,7 @@ public class PageModel implements Serializable {
 	 * The field is null if the page model belong to Entando Core.
 	 * @return The plugin code.
 	 */
+	@XmlElement(name = "pluginCode", required = false)
 	public String getPluginCode() {
 		return _pluginCode;
 	}
@@ -184,6 +169,8 @@ public class PageModel implements Serializable {
 		this._pluginCode = pluginCode;
 	}
 	
+	@XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
+	@XmlElement(name = "template", required = false)
 	public String getTemplate() {
 		return _template;
 	}
@@ -201,11 +188,6 @@ public class PageModel implements Serializable {
 	 */
 	private String _description;
 	
-	/*
-	 * L'insieme delle descrizioni dei frames.
-	 */
-	//private String[] _frames = new String[0];
-	
 	private Frame[] _configuration;
 	
 	/**
@@ -213,11 +195,6 @@ public class PageModel implements Serializable {
 	 * vale -1 se non esiste;
 	 */
 	private int _mainFrame = -1;
-	
-	/*
-	 * L'insieme dei widget di default.
-	 */
-	//private Widget[] _defaultWidget;
 	
 	/**
 	 * The code of the plugin owner of page model.

@@ -137,22 +137,24 @@ public class TestPageModelManager extends BaseTestCase {
 			this._pageModelManager.addPageModel(mockModel);
 			PageModel extractedMockModel = this._pageModelManager.getPageModel(testPageModelCode);
 			extractedMockModel.setDescription("Modified Description");
-			String[] frames = {"Freme 0", "Frame 1", "Frame 2", "Frame 3"};
-			extractedMockModel.setFrames(frames);
-			Widget[] extractedDefaultWidgets = new Widget[4];
-			extractedDefaultWidgets[0] = extractedMockModel.getDefaultWidget()[1];
-			extractedDefaultWidgets[1] = extractedMockModel.getDefaultWidget()[2];
-			extractedDefaultWidgets[2] = extractedMockModel.getDefaultWidget()[0];
+			Frame[] configuration = extractedMockModel.getConfiguration();
+			Frame[] newConfiguration = new Frame[4];
+			for (int i = 0; i < configuration.length; i++) {
+				newConfiguration[i] = configuration[i];
+			}
+			Frame frame3 = new Frame();
+			frame3.setPos(3);
+			frame3.setDescription("Freme 3");
 			Widget defWidg3ToSet = new Widget();
 			defWidg3ToSet.setType(this._widgetTypeManager.getWidgetType("content_viewer"));
 			ApsProperties props3 = new ApsProperties();
 			props3.setProperty("contentId", "ART187");
 			defWidg3ToSet.setConfig(props3);
-			extractedDefaultWidgets[3] = defWidg3ToSet;
-			extractedMockModel.setDefaultWidget(extractedDefaultWidgets);
+			frame3.setDefaultWidget(defWidg3ToSet);
+			newConfiguration[3] = frame3;
+			extractedMockModel.setConfiguration(newConfiguration);
 			extractedMockModel.setTemplate("<strong>Modified Freemarker template content</strong>");
 			this._pageModelManager.updatePageModel(extractedMockModel);
-			
 			extractedMockModel = this._pageModelManager.getPageModel(testPageModelCode);
 			assertNotNull(extractedMockModel);
 			assertEquals(testPageModelCode, extractedMockModel.getCode());
@@ -195,19 +197,27 @@ public class TestPageModelManager extends BaseTestCase {
 		PageModel model = new PageModel();
 		model.setCode(code);
 		model.setDescription("Description of model " + code);
-		String[] frames = {"Freme 0", "Frame 1", "Frame 2"};
-		model.setFrames(frames);
-		Widget[] defaultWidgets = new Widget[3];
+		Frame frame0 = new Frame();
+		frame0.setPos(0);
+		frame0.setDescription("Freme 0");
+		frame0.setMainFrame(true);
+		Frame frame1 = new Frame();
+		frame1.setPos(1);
+		frame1.setDescription("Freme 1");
 		Widget defWidg1 = new Widget();
 		defWidg1.setType(this._widgetTypeManager.getWidgetType("content_viewer_list"));
 		ApsProperties props1 = new ApsProperties();
 		props1.setProperty("contentType", "ART");
 		defWidg1.setConfig(props1);
-		defaultWidgets[1] = defWidg1;
+		frame1.setDefaultWidget(defWidg1);
+		Frame frame2 = new Frame();
+		frame2.setPos(1);
+		frame2.setDescription("Freme 2");
 		Widget defWidg2 = new Widget();
 		defWidg2.setType(this._widgetTypeManager.getWidgetType("login_form"));
-		defaultWidgets[2] = defWidg2;
-		model.setDefaultWidget(defaultWidgets);
+		frame2.setDefaultWidget(defWidg2);
+		Frame[] configuration = {frame0, frame1, frame2};
+		model.setConfiguration(configuration);
 		model.setTemplate("<strong>Freemarker template content</strong>");
 		return model;
 	}
