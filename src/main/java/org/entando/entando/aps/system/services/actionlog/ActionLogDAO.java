@@ -694,7 +694,7 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 			closeDaoResources(result, stat);
 		}
 	}
-
+	
 	private static final String ADD_ACTION_RECORD
 			= "INSERT INTO actionlogrecords ( id, username, actiondate, namespace, actionname, parameters, activitystreaminfo, updatedate) "
 			+ "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? )";
@@ -729,18 +729,13 @@ public class ActionLogDAO extends AbstractSearcherDAO implements IActionLogDAO {
 	private static final String UPDATE_UPDATEDATE_ACTION_RECORD
 			= "UPDATE actionlogrecords SET updatedate = ? WHERE id = ?";
 	
-	// COMMENT QUERIES
-	
 	private static final String ADD_ACTION_COMMENT_RECORD
 			= "INSERT INTO actionlogcommentrecords (id, recordid, username, comment, commentdate) VALUES ( ? , ? , ? , ? , ? )";
 	
-	private static final String DELETE_ACTION_COMMENT_RECORDS
-			= "DELETE from actionlogcommentrecords where recordid = ?";
-
 	private static final String DELETE_ACTION_COMMENT_RECORD
 			= "DELETE from actionlogcommentrecords where id = ?";
 	
 	private static final String GET_ACTION_COMMENT_RECORDS
-			= "SELECT id, username, comment, commentDate FROM actionlogcommentrecords WHERE recordid = ? ORDER BY commentDate ASC";
-
+			= "SELECT id, username, comment, commentdate FROM actionlogcommentrecords WHERE recordid = ? ORDER BY commentdate ASC";
+	
 }
