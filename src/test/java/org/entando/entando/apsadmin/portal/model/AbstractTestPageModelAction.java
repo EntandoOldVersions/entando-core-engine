@@ -36,45 +36,7 @@ public abstract class AbstractTestPageModelAction extends ApsAdminBaseTestCase {
 		super.setUp();
 		this.init();
 	}
-	/*
-	public void testGetPageModels_1() throws Throwable {
-		String result = this.executeList("admin");
-		assertEquals(Action.SUCCESS, result);
-		PageModelFinderAction pageModelFinderAction = (PageModelFinderAction) this.getAction();
-		List<PageModel> models = pageModelFinderAction.getModels();
-		assertEquals(3, models.size());
-		assertEquals("internal", models.get(0).getCode());
-		assertEquals("home", models.get(1).getCode());
-		assertEquals("service", models.get(2).getCode());
-	}
 	
-	public void testGetPageModels_2() throws Throwable {
-		String testPageModelCode = "test_pagemodel";
-		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
-		try {
-			PageModel mockModel = this.createMockPageModel(testPageModelCode);
-			this._pageModelManager.addPageModel(mockModel);
-			
-			String result = this.executeList("admin");
-			assertEquals(Action.SUCCESS, result);
-			PageModelFinderAction pageModelFinderAction = (PageModelFinderAction) this.getAction();
-			List<PageModel> models = pageModelFinderAction.getModels();
-			assertEquals(4, models.size());
-			assertEquals(testPageModelCode, models.get(0).getCode());
-		} catch (Exception e) {
-			throw e;
-		} finally {
-			this._pageModelManager.deletePageModel(testPageModelCode);
-			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
-		}
-	}
-	
-	private String executeList(String currentUser) throws Throwable {
-		this.setUserOnSession(currentUser);
-		this.initAction("/do/PageModel", "list");
-		return this.executeAction();
-	}
-	*/
 	protected PageModel createMockPageModel(String code) {
 		PageModel model = new PageModel();
 		model.setCode(code);

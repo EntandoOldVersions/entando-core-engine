@@ -29,7 +29,7 @@ import org.apache.commons.beanutils.BeanComparator;
  */
 public class PageModelFinderAction extends AbstractPageModelAction {
 	
-	public List<PageModel> getModels() {
+	public List<PageModel> getPageModels() {
 		List<PageModel> models = new ArrayList<PageModel>();
 		models.addAll(this.getPageModelManager().getPageModels());
 		BeanComparator c = new BeanComparator("description");

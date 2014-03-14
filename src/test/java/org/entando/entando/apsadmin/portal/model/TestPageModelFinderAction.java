@@ -30,7 +30,7 @@ public class TestPageModelFinderAction extends AbstractTestPageModelAction {
 		String result = this.executeList("admin");
 		assertEquals(Action.SUCCESS, result);
 		PageModelFinderAction pageModelFinderAction = (PageModelFinderAction) this.getAction();
-		List<PageModel> models = pageModelFinderAction.getModels();
+		List<PageModel> models = pageModelFinderAction.getPageModels();
 		assertEquals(3, models.size());
 		assertEquals("internal", models.get(0).getCode());
 		assertEquals("home", models.get(1).getCode());
@@ -47,7 +47,7 @@ public class TestPageModelFinderAction extends AbstractTestPageModelAction {
 			String result = this.executeList("admin");
 			assertEquals(Action.SUCCESS, result);
 			PageModelFinderAction pageModelFinderAction = (PageModelFinderAction) this.getAction();
-			List<PageModel> models = pageModelFinderAction.getModels();
+			List<PageModel> models = pageModelFinderAction.getPageModels();
 			assertEquals(4, models.size());
 			assertEquals(testPageModelCode, models.get(0).getCode());
 		} catch (Exception e) {
