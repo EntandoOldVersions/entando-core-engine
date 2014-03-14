@@ -68,12 +68,42 @@ public class AuthorizationManager extends AbstractService implements IAuthorizat
             return true;
         }
         Set<String> groups = entity.getGroups();
+        return isAuth(user, groups);
+    }
+    
+    /*public boolean isAuth(UserDetails user, IApsEntity entity) {
+        if (null == entity) {
+            return false;
+        }
+        String mainGroupName = entity.getMainGroup();
+        //Group group = this.getGroupManager().getGroup(mainGroupName);
+        if (mainGroupName.equals(Group.FREE_GROUP_NAME) 
+        		|| this.checkAuth(user, mainGroupName, AuthorityType.GROUP) 
+        		|| this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)) {
+            return true;
+        }
+        Set<String> groups = entity.getGroups();
         Iterator<String> iter = groups.iterator();
         while (iter.hasNext()) {
             String groupName = iter.next();
             //group = this.getGroupManager().getGroup(groupName);
             if (groupName.equals(Group.FREE_GROUP_NAME) 
             		|| this.checkAuth(user, groupName, AuthorityType.GROUP)) {
+                return true;
+            }
+        }
+        return false;
+    }*/
+    
+    public boolean isAuth(UserDetails user, Set<String> groups) {
+        if (this.checkAuth(user, Group.ADMINS_GROUP_NAME, AuthorityType.GROUP)) {
+            return true;
+        }
+        if (null == groups || groups.isEmpty()) return false;
+        Iterator<String> iter = groups.iterator();
+        while (iter.hasNext()) {
+            String groupName = iter.next();
+            if (groupName.equals(Group.FREE_GROUP_NAME) || this.checkAuth(user, groupName, AuthorityType.GROUP)) {
                 return true;
             }
         }

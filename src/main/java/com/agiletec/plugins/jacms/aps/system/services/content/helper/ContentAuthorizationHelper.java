@@ -17,7 +17,6 @@
 */
 package com.agiletec.plugins.jacms.aps.system.services.content.helper;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,8 +48,7 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 			_logger.error("Null content");
 			return false;
 		}
-		Set<String> groupCodes = this.getContentGroups(content);
-		return this.isAuth(user, groupCodes);
+		return this.getAuthorizationManager().isAuth(user, content); 
 	}
 	
 	@Override
@@ -69,30 +67,12 @@ public class ContentAuthorizationHelper implements IContentAuthorizationHelper {
 		return this.isAuth(user, content);
 	}
 	
-	private Set<String> getContentGroups(Content content) {
-		Set<String> groupCodes = new HashSet<String>();
-		groupCodes.add(content.getMainGroup());
-		Set<String> extraGroupCodes = content.getGroups();
-		if (null != extraGroupCodes) {
-			groupCodes.addAll(extraGroupCodes);
-		}
-		return groupCodes;
-	}
-	
 	protected boolean isAuth(UserDetails user, Set<String> groupCodes) throws ApsSystemException {
 		if (null == user) {
 			_logger.error("Null user");
 			return false;
 		}
-		if (groupCodes.contains(Group.FREE_GROUP_NAME)) return true;
-		List<Group> userGroups = this.getAuthorizationManager().getUserGroups(user);
-		if (null != userGroups) {
-			for (int i = 0; i < userGroups.size(); i++) {
-				Group group = userGroups.get(i);
-				if (groupCodes.contains(group.getName())) return true;
-			}
-		}
-		return false;
+		return this.getAuthorizationManager().isAuth(user, groupCodes);
 	}
 	
 	@Override

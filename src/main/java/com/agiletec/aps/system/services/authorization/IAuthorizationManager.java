@@ -18,6 +18,7 @@
 package com.agiletec.aps.system.services.authorization;
 
 import java.util.List;
+import java.util.Set;
 
 import com.agiletec.aps.system.common.entity.model.IApsEntity;
 import com.agiletec.aps.system.services.group.Group;
@@ -98,6 +99,14 @@ public interface IAuthorizationManager {
 	 * @return True se l'utente possiede il permesso di accesso all'entità, false in caso contrario.
 	 */
 	public boolean isAuth(UserDetails user, IApsEntity entity);
+	
+	/**
+	 * Check if the user has at least one of the specified groups.
+	 * @param user the user to check. Must be not null
+	 * @param groups A set of group codes to check against user's groups
+	 * @return True if the user has at least one group specified in groups, or if groups contains "free" or if the user belongs to the "administrators" group
+	 */
+	public boolean isAuth(UserDetails user, Set<String> groups);
 	
 	/**
 	 * Returns the groups of the given user
