@@ -63,6 +63,8 @@ import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
 import org.entando.entando.apsadmin.common.TestActivityStream;
 import org.entando.entando.apsadmin.common.TestActivityStreamAction;
 import org.entando.entando.apsadmin.common.currentuser.TestCurrentUserProfileAction;
+import org.entando.entando.apsadmin.portal.model.TestPageModelAction;
+import org.entando.entando.apsadmin.portal.model.TestPageModelFinderAction;
 import org.entando.entando.apsadmin.user.TestUserProfileAction;
 import org.entando.entando.apsadmin.user.TestUserProfileFinderAction;
 
@@ -97,7 +99,7 @@ public class AllTests {
 		//Category
 		suite.addTestSuite(TestCategoryAction.class);
 		
-		// Page
+		// Portal
 		suite.addTestSuite(TestPageAction.class);
 		suite.addTestSuite(TestPageConfigAction.class);
 		suite.addTestSuite(TestPageTreeAction.class);
@@ -105,6 +107,8 @@ public class AllTests {
 		suite.addTestSuite(TestWidgetTypeAction.class);
 		suite.addTestSuite(TestSimpleWidgetConfigAction.class);
 		suite.addTestSuite(TestNavigatorWidgetConfigAction.class);
+		suite.addTestSuite(TestPageModelFinderAction.class);
+		suite.addTestSuite(TestPageModelAction.class);
 		
 		//Entity
 		suite.addTestSuite(TestEntityManagersAction.class);
