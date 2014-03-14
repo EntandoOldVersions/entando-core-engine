@@ -48,6 +48,7 @@ import com.agiletec.aps.system.services.page.TestPageDAO;
 import com.agiletec.aps.system.services.page.TestPageManager;
 import com.agiletec.aps.system.services.page.showlet.TestNavigatorExpression;
 import com.agiletec.aps.system.services.page.showlet.TestNavigatorParser;
+import com.agiletec.aps.system.services.pagemodel.TestJaxbPageModel;
 import com.agiletec.aps.system.services.pagemodel.TestPageModelDAO;
 import com.agiletec.aps.system.services.pagemodel.TestPageModelDOM;
 import com.agiletec.aps.system.services.pagemodel.TestPageModelManager;
@@ -110,6 +111,7 @@ public class AllTests {
 		suite.addTestSuite(TestNavigatorExpression.class);
 		suite.addTestSuite(TestNavigatorParser.class);
 		//
+		suite.addTestSuite(TestJaxbPageModel.class);
 		suite.addTestSuite(TestPageModelDAO.class);
 		suite.addTestSuite(TestPageModelDOM.class);
 		suite.addTestSuite(TestPageModelManager.class);

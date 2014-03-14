@@ -99,12 +99,15 @@ public class PageModel implements Serializable {
 	 * Restituisce l'insieme ordinato delle descrizioni dei "frames" del modello.
 	 * @return L'insieme delle descrizioni dei "frames"
 	 */
+	@XmlTransient
 	public String[] getFrames() {
 		Frame[] configuration = this.getConfiguration();
 		String[] descriptions = new String[configuration.length];
 		for (int i = 0; i < configuration.length; i++) {
 			Frame frame = configuration[i];
-			descriptions[i] = frame.getDescription();
+			if (null != frame) {
+				descriptions[i] = frame.getDescription();
+			}
 		}
 		return descriptions;
 	}
@@ -136,7 +139,9 @@ public class PageModel implements Serializable {
 		Widget[] defaultWidgets = new Widget[configuration.length];
 		for (int i = 0; i < configuration.length; i++) {
 			Frame frame = configuration[i];
-			defaultWidgets[i] = frame.getDefaultWidget();
+			if (null != frame) {
+				defaultWidgets[i] = frame.getDefaultWidget();
+			}
 		}
 		return defaultWidgets;
 	}
