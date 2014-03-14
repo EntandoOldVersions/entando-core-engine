@@ -7,3 +7,7 @@ nbactions.xml
 .settings/*
 .DS_Store
 /target
+.externalToolBuilders/
+.gitignore~
+maven-eclipse.xml
+
