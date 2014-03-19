@@ -56,7 +56,11 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 	 */
 	@Override
 	public PageModel getPageModel(String name) {
-		return (PageModel) _models.get(name);
+		PageModel pageModel = (PageModel) _models.get(name);
+		if (null != pageModel) {
+			return pageModel.clone();
+		}
+		return null;
 	}
 	
 	/**

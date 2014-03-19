@@ -17,6 +17,7 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 
 import java.io.Serializable;
@@ -144,6 +145,40 @@ public class PageModel implements Serializable {
 			}
 		}
 		return defaultWidgets;
+	}
+	
+	@Override
+	public PageModel clone() {
+		PageModel clone = new PageModel();
+		clone.setCode(this.getCode());
+		clone.setDescription(this.getDescription());
+		clone.setMainFrame(this.getMainFrame());
+		clone.setPluginCode(this.getPluginCode());
+		clone.setTemplate(this.getTemplate());
+		Frame[] frames = this.getConfiguration();
+		if (null != frames) {
+			Frame[] framesClone = new Frame[frames.length];
+			for (int i = 0; i < frames.length; i++) {
+				Frame frame = frames[i];
+				if (null != frame) {
+					framesClone[i] = frame.clone();
+				}
+			}
+			clone.setConfiguration(framesClone);
+		}
+		return clone;
+	}
+	
+	@XmlTransient
+	public String getPageModelJspPath() {
+		String pluginCode = this.getPluginCode();
+		boolean isPluginPageModel = (null != pluginCode && pluginCode.trim().length()>0);
+		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
+		if (isPluginPageModel) {
+			jspPath.append("plugins/").append(pluginCode.trim()).append("/");
+		}
+		jspPath.append("aps/jsp/models/").append(this.getCode()).append(".jsp");
+		return jspPath.toString();
 	}
 	
 	@XmlElement(name = "frame", required = false)

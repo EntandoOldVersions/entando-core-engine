@@ -56,7 +56,7 @@ public class PageExecutorService implements ExecutorServiceInterface {
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 			PageModel model = page.getModel();
 			if (StringUtils.isBlank(model.getTemplate())) {
-				String jspPath = this.getPageModelJspPath(page);
+				String jspPath = model.getPageModelJspPath();
 				RequestDispatcher dispatcher = request.getSession().getServletContext().getRequestDispatcher(jspPath);
 				dispatcher.forward(request, response);
 			} else {
@@ -72,29 +72,12 @@ public class PageExecutorService implements ExecutorServiceInterface {
 		} catch (ServletException e) {
 			String msg = "Error detected while including a page model";
 			_logger.error(msg, e);
-			//ApsSystemUtils.logThrowable(e, this, "doEndTag", msg);
 			throw new RuntimeException(msg, e);
 		} catch (IOException e) {
 			String msg = "IO error detected while including the page model";
 			_logger.error(msg, e);
 			throw new RuntimeException(msg, e);
 		}
-	}
-
-	/**
-	 * Return the jsp path of current page model.
-	 * @param page The current page.
-	 * @return The jsp path of current page model.
-	 */
-	protected String getPageModelJspPath(IPage page) {
-		String pluginCode = page.getModel().getPluginCode();
-		boolean isPluginPageModel = (null != pluginCode && pluginCode.trim().length()>0);
-		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
-		if (isPluginPageModel) {
-			jspPath.append("plugins/").append(pluginCode.trim()).append("/");
-		}
-		jspPath.append("aps/jsp/models/").append(page.getModel().getCode()).append(".jsp");
-		return jspPath.toString();
 	}
 	
 }

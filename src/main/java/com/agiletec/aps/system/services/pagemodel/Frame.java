@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
@@ -85,6 +86,16 @@ public class Frame {
 	
 	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
 		this._widgetTypeManager = widgetTypeManager;
+	}
+	
+	@Override
+	public Frame clone() {
+		Frame clone = new Frame();
+		clone.setDefaultWidget(this.getDefaultWidget());
+		clone.setDescription(this.getDescription());
+		clone.setMainFrame(this.isMainFrame());
+		clone.setPos(this.getPos());
+		return clone;
 	}
 	
 	private int _pos;
