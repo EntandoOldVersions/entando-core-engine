@@ -85,10 +85,6 @@
 		
 		<action name="uploadFile" class="filebrowserAction">
 			<result type="tiles">admin.Filebrowser.upload</result>
-			<result type="redirectAction">
-    			<param name="actionName">list</param>
-    			<param name="currentPath">${currentPath}</param>
-            </result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
 				<param name="requestAuth.requiredPermission">manageResources</param>
