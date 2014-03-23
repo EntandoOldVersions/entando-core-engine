@@ -17,7 +17,9 @@
 package org.entando.entando.apsadmin.portal.model;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.opensymphony.xwork2.Action;
+import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +28,47 @@ import java.util.Map;
  * @author E.Santoboni
  */
 public class TestPageModelAction extends AbstractTestPageModelAction {
+	
+	public void testEditPageModels() throws Throwable {
+		String testPageModelCode = "test_pagemodel";
+		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+		try {
+			String result = this.executeAction("admin", "edit", testPageModelCode);
+			assertEquals("pageModelList", result);
+			PageModel mockModel = this.createMockPageModel(testPageModelCode);
+			this._pageModelManager.addPageModel(mockModel);
+			result = this.executeAction("admin", "edit", testPageModelCode);
+			assertEquals(Action.SUCCESS, result);
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this._pageModelManager.deletePageModel(testPageModelCode);
+			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+		}
+	}
+	
+	public void testValidate_1() throws Throwable {
+		String testPageModelCode = "test_pagemodel";
+		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+		try {
+			this.setUserOnSession("admin");
+			this.initAction("/do/PageModel", "save");
+			super.addParameter("code", "test_pagemodel");
+			super.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
+			String result = this.executeAction();
+			ActionSupport action = super.getAction();
+			assertEquals(Action.INPUT, result);
+			assertEquals(3, action.getFieldErrors().size());
+		} catch (Exception e) {
+			this._pageModelManager.deletePageModel(testPageModelCode);
+			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+			throw e;
+		}
+	}
+	
+	
+	
+	
 	
 	public void testTrashPageModels_1() throws Throwable {
 		String result = this.executeAction("admin", "trash", null);

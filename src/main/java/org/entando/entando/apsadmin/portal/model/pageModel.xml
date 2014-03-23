@@ -29,7 +29,7 @@
     	<action name="save" class="pageModelAction" method="save">
 			<result name="input" type="tiles">admin.PageModel.entry</result>
             <result type="chain">list</result>
-            <interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+            <interceptor-ref name="entandoValidationStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
         
     	<action name="details" class="pageModelAction" method="showDetails">

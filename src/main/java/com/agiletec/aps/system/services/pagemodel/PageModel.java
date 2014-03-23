@@ -171,13 +171,17 @@ public class PageModel implements Serializable {
 	
 	@XmlTransient
 	public String getPageModelJspPath() {
-		String pluginCode = this.getPluginCode();
+		return PageModel.getPageModelJspPath(this.getCode(), this.getPluginCode());
+	}
+	
+	@XmlTransient
+	public static String getPageModelJspPath(String code, String pluginCode) {
 		boolean isPluginPageModel = (null != pluginCode && pluginCode.trim().length()>0);
 		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
 		if (isPluginPageModel) {
 			jspPath.append("plugins/").append(pluginCode.trim()).append("/");
 		}
-		jspPath.append("aps/jsp/models/").append(this.getCode()).append(".jsp");
+		jspPath.append("aps/jsp/models/").append(code.trim()).append(".jsp");
 		return jspPath.toString();
 	}
 	

@@ -13,6 +13,7 @@
 	<bean id="pageModelAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.portal.model.PageModelAction" parent="abstractBaseAction">
 		<property name="pageModelManager" ref="PageModelManager" />
+		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="pageModelActionHelper">
 			<bean class="org.entando.entando.apsadmin.portal.model.helper.PageModelActionHelper" parent="abstractBaseActionHelper" />
 		</property>

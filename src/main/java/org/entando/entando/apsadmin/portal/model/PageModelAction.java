@@ -21,13 +21,15 @@ import com.agiletec.aps.system.services.pagemodel.Frame;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
+
+import java.io.File;
 
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang.StringUtils;
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.apsadmin.portal.model.helper.IPageModelActionHelper;
 
 import org.slf4j.Logger;
@@ -43,12 +45,20 @@ public class PageModelAction extends AbstractPageModelAction {
 	@Override
 	public void validate() {
 		super.validate();
-		if (this.hasActionErrors() || this.hasFieldErrors()) {
-			String template = this.getTemplate();
-			if (!StringUtils.isBlank(template)) {
-				//to che
+		List<String> codeFieldErrors = this.getFieldErrors().get("code");
+		if (null == codeFieldErrors || codeFieldErrors.isEmpty()) {
+			try {
+				String template = this.getTemplate();
+				if (StringUtils.isBlank(template)) {
+					String jspTemplatePath = PageModel.getPageModelJspPath(this.getCode(), this.getPluginCode());
+					File file = new File(jspTemplatePath);
+					if (!file.exists()) {
+						this.addFieldError("template", this.getText("error.pageModel.templateRequired"));
+					}
+				}
+			} catch (Throwable t) {
+				_logger.error("error in validate", t);
 			}
-			return;
 		}
 	}
 	
@@ -118,7 +128,12 @@ public class PageModelAction extends AbstractPageModelAction {
 	
 	public String save() {
 		try {
-			
+			PageModel model = this.createPageModel();
+			if (ApsAdminSystemConstants.ADD == this.getStrutsAction()) {
+				this.getPageModelManager().addPageModel(model);
+			} else {
+				this.getPageModelManager().updatePageModel(model);
+			}
 		} catch (Throwable t) {
 			_logger.error("error in save", t);
 			return FAILURE;
@@ -153,9 +168,6 @@ public class PageModelAction extends AbstractPageModelAction {
 			_logger.error("error in creating page model", t);
 			throw t;
 		}
-		
-		
-		
 		return model;
 	}
 	
@@ -193,10 +205,10 @@ public class PageModelAction extends AbstractPageModelAction {
 		this._code = code;
 	}
 	
-	public int getStrutsAction() {
+	public Integer getStrutsAction() {
 		return _strutsAction;
 	}
-	public void setStrutsAction(int strutsAction) {
+	public void setStrutsAction(Integer strutsAction) {
 		this._strutsAction = strutsAction;
 	}
 	
@@ -252,7 +264,7 @@ public class PageModelAction extends AbstractPageModelAction {
 	}
 	
 	private String _code;
-	private int _strutsAction;
+	private Integer _strutsAction;
 	private String _description;
 	private String _pluginCode;
 	@Deprecated
