@@ -63,18 +63,14 @@ public class PageModelDOM {
 		Element root = new Element("frames");
 		this._doc.setRootElement(root);
 		Frame[] frames = pageModel.getConfiguration();
-		//String[] frames = pageModel.getFrames();
-		//Widget[] defaultWidgets = pageModel.getDefaultWidget();
 		for (int i = 0; i < frames.length; i++) {
-			//String frameDescription = frames[i];
 			Frame frame = frames[i];
 			Element frameElement = new Element(TAB_FRAME);
 			frameElement.setAttribute(ATTRIBUTE_POS, String.valueOf(i));
 			Element descrElement = new Element(TAB_DESCR);
-			//descrElement.setText(frameDescription);
 			descrElement.setText(frame.getDescription());
 			frameElement.addContent(descrElement);
-			Widget defaultWidget = frame.getDefaultWidget(); //(null != defaultWidgets) ? defaultWidgets[i] : null;
+			Widget defaultWidget = frame.getDefaultWidget();
 			if (null != defaultWidget) {
 				Element defaultWidgetElement = new Element(TAB_DEFAULT_WIDGET);
 				defaultWidgetElement.setAttribute(ATTRIBUTE_CODE, defaultWidget.getType().getCode());
@@ -125,11 +121,10 @@ public class PageModelDOM {
 			//_defaultWidget = new Widget[framesNumber];
 			this._configuration = new Frame[framesNumber];
 			this._existMainFrame = false;
-			Iterator<Element> frameElementsIter = frameElements.iterator();
-			while (frameElementsIter.hasNext()) {
-				Element frameElement = frameElementsIter.next();
+			for (int i = 0; i < frameElements.size(); i++) {
+				Element frameElement = frameElements.get(i);
 				int pos = Integer.parseInt(frameElement.getAttributeValue(ATTRIBUTE_POS));
-				if(pos >= framesNumber) {
+				if (pos >= framesNumber) {
 					throw new ApsSystemException("The position '" + pos + "' exceeds the number of frames defined in the page model");
 				}
 				Frame frame = new Frame();
@@ -154,6 +149,7 @@ public class PageModelDOM {
 				if (null != defaultWidgetElement) {
 					this.buildDefaultWidget(frame, defaultWidgetElement, pos, widgetTypeManager);
 				}
+				this._configuration[pos] = frame;
 			}
 		} else {
 			this._configuration = new Frame[0];

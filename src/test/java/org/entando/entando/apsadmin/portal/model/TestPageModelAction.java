@@ -17,12 +17,14 @@
 package org.entando.entando.apsadmin.portal.model;
 
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;
 import java.util.Map;
+import static junit.framework.Assert.assertNull;
 
 /**
  * @author E.Santoboni
@@ -47,7 +49,7 @@ public class TestPageModelAction extends AbstractTestPageModelAction {
 		}
 	}
 	
-	public void testValidate_1() throws Throwable {
+	public void testValidate() throws Throwable {
 		String testPageModelCode = "test_pagemodel";
 		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
 		try {
@@ -59,6 +61,9 @@ public class TestPageModelAction extends AbstractTestPageModelAction {
 			ActionSupport action = super.getAction();
 			assertEquals(Action.INPUT, result);
 			assertEquals(3, action.getFieldErrors().size());
+			assertNotNull(action.getFieldErrors().get("description"));
+			assertNotNull(action.getFieldErrors().get("template"));
+			assertNotNull(action.getFieldErrors().get("xmlConfiguration"));
 		} catch (Exception e) {
 			this._pageModelManager.deletePageModel(testPageModelCode);
 			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
@@ -66,9 +71,29 @@ public class TestPageModelAction extends AbstractTestPageModelAction {
 		}
 	}
 	
-	
-	
-	
+	public void testSave() throws Throwable {
+		String testPageModelCode = "test_pagemodel";
+		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+		try {
+			PageModel mockModel = this.createMockPageModel(testPageModelCode);
+			this.setUserOnSession("admin");
+			this.initAction("/do/PageModel", "save");
+			super.addParameter("code", mockModel.getCode());
+			super.addParameter("description", mockModel.getDescription());
+			super.addParameter("template", mockModel.getTemplate());
+			PageModelDOM dom = new PageModelDOM(mockModel);
+			super.addParameter("xmlConfiguration", dom.getXMLDocument());
+			super.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
+			String result = this.executeAction();
+			assertEquals(Action.SUCCESS, result);
+			assertNotNull(this._pageModelManager.getPageModel(testPageModelCode));
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this._pageModelManager.deletePageModel(testPageModelCode);
+			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+		}
+	}
 	
 	public void testTrashPageModels_1() throws Throwable {
 		String result = this.executeAction("admin", "trash", null);
