@@ -90,9 +90,11 @@ public class PageModelAction extends AbstractPageModelAction {
 			this.setPluginCode(pageModel.getPluginCode());
 			
 			//TO DELETE - start
-			PageModelDOM dom = new PageModelDOM(pageModel);
-			String xml = dom.getXMLDocument();
-			this.setXmlConfiguration(xml);
+			if (null != pageModel.getConfiguration()) {
+				PageModelDOM dom = new PageModelDOM(pageModel);
+				String xml = dom.getXMLDocument();
+				this.setXmlConfiguration(xml);
+			}
 			//TO DELETE - end
 			
 			this.setTemplate(pageModel.getTemplate());

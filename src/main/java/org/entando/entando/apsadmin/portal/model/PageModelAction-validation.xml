@@ -19,10 +19,12 @@
 			<param name="trim">true</param>
            <message key="stringlength" />
 		</field-validator>
+		<!--
         <field-validator type="regex" short-circuit="true">
            <param name="regex"><![CDATA[([a-zA-Z0-9_])+]]></param>
            <message key="wrongCharacters" />
         </field-validator>
+		-->
     </field>
     
     <field name="description">

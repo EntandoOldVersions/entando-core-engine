@@ -62,7 +62,6 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 		} catch (Throwable t) {
 			_logger.error("Error loading the page models",  t);
 			throw new RuntimeException("Error loading the page models", t);
-			//processDaoException(t, "Error loading the page models", "loadModels");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
@@ -85,9 +84,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			String xmlFrames = res.getString(3);
 			if (null != xmlFrames && xmlFrames.length() > 0) {
 				PageModelDOM pageModelDOM = new PageModelDOM(xmlFrames, this.getWidgetTypeManager());
-				//pageModel.setFrames(pageModelDOM.getFrames());
 				pageModel.setMainFrame(pageModelDOM.getMainFrame());
-				//pageModel.setDefaultWidget(pageModelDOM.getDefaultWidget());
 				pageModel.setConfiguration(pageModelDOM.getConfiguration());
 			}
 			pageModel.setPluginCode(res.getString(4));
@@ -107,7 +104,6 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(ADD_PAGEMODEL);
-			//code, descr, frames, plugincode, template
 			stat.setString(1, model.getCode());
 			stat.setString(2, model.getDescription());
 			PageModelDOM dom = new PageModelDOM(model);
@@ -184,13 +180,13 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 	private IWidgetTypeManager _widgetTypeManager;
 	
 	private final String ALL_PAGEMODEL = 
-			"SELECT code, descr, frames, plugincode, template FROM pagemodels";
+			"SELECT code, descr, frames, plugincode, templategui FROM pagemodels";
 	
 	private static final String ADD_PAGEMODEL =
-			"INSERT INTO pagemodels (code, descr, frames, plugincode, template) VALUES ( ? , ? , ? , ? , ? )";
+			"INSERT INTO pagemodels (code, descr, frames, plugincode, templategui) VALUES ( ? , ? , ? , ? , ? )";
 	
 	private static final String UPDATE_PAGEMODEL =
-			"UPDATE pagemodels SET descr = ? , frames = ? , plugincode = ? , template = ? WHERE code = ?";
+			"UPDATE pagemodels SET descr = ? , frames = ? , plugincode = ? , templategui = ? WHERE code = ?";
 	
 	private static final String DELETE_PAGEMODEL =
 			"DELETE FROM pagemodels WHERE code = ?";

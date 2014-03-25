@@ -26,7 +26,11 @@ import com.agiletec.apsadmin.system.BaseAction;
 public abstract class AbstractPageModelAction extends BaseAction {
 	
 	protected PageModel getPageModel(String code) {
-		return this.getPageModelManager().getPageModel(code);
+		PageModel pageModel = this.getPageModelManager().getPageModel(code);
+		if (null != pageModel) {
+			return pageModel.clone();
+		}
+		return null;
 	}
 	
 	protected IPageModelManager getPageModelManager() {

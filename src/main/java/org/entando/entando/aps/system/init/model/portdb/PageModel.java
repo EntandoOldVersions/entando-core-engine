@@ -52,10 +52,10 @@ public class PageModel {
 			canBeNull = true)
 	private String _pluginCode;
 	
-	@DatabaseField(columnName = "template", 
+	@DatabaseField(columnName = "templategui", 
 			dataType = DataType.LONG_STRING, 
 			canBeNull = true)
-	private String _template;
+	private String _templateGui;
 	
 	public static final String TABLE_NAME = "pagemodels";
 	
@@ -67,7 +67,7 @@ CREATE TABLE pagemodels
   descr character varying(50) NOT NULL,
   frames character varying,
   plugincode character varying(30),
-  template text,
+  templategui text,
   CONSTRAINT pagemodels_pkey PRIMARY KEY (code )
 )
  */
