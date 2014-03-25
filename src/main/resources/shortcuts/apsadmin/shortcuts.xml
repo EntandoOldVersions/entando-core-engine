@@ -17,9 +17,9 @@
 			<longdesc key="core.portal.menuSection.longDesc" />
 		</menusection>
 	</menusections>
-	
+
 	<shortcuts>
-		
+
 		<!-- Component short-cut -->
 		<shortcut id="core.component.user.new" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.user.new.shortDesc" >New User</description><!-- key e corpo alternativo -->
@@ -31,7 +31,7 @@
 				<param name="actionName">new</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.user.list" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.user.list.shortDesc" >User List</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.user.list.longDesc">
@@ -42,7 +42,7 @@
 				<param name="actionName">list</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.group.new" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.group.new.shortDesc" >New Group</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.group.new.longDesc">
@@ -64,7 +64,7 @@
 				<param name="actionName">list</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.role.new" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.role.new.shortDesc" >New Role</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.role.new.longDesc">
@@ -75,7 +75,7 @@
 				<param name="actionName">new</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.role.list" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.role.list.shortDesc" >Role List</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.role.list.longDesc">
@@ -86,7 +86,7 @@
 				<param name="actionName">list</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.categories" requiredPermission="manageCategories" menusection="components" source="core">
 			<description key="core.shortcut.component.categories.shortDesc" >Categories</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.categories.longDesc">
@@ -97,7 +97,7 @@
 				<param name="actionName">viewTree</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.labels.new" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.labels.new.shortDesc" >New Label</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.labels.new.longDesc">
@@ -108,7 +108,7 @@
 				<param name="actionName">new</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.labels.list" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.labels.list.shortDesc" >Labels</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.labels.list.longDesc">
@@ -119,7 +119,7 @@
 				<param name="actionName">list</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.component.lang" requiredPermission="superuser" menusection="components" source="core">
 			<description key="core.shortcut.component.lang.shortDesc" >Languages</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.component.lang.longDesc">
@@ -129,8 +129,8 @@
 				<param name="namespace">/do/Lang</param>
 				<param name="actionName">list</param>
 			</url>
-		</shortcut>	
-		
+		</shortcut>
+
 		<!-- Portal Management short-cut -->
 		<shortcut id="core.portal.pageTree" requiredPermission="managePages" menusection="portal" source="core">
 			<description key="core.shortcut.portal.pageTree.shortDesc" >Pages</description><!-- key e corpo alternativo -->
@@ -152,7 +152,7 @@
 				<param name="actionName">viewWidgets</param>
 			</url>
 		</shortcut>
-		
+
 		<!-- System short-cut -->
 		<shortcut id="core.tools.setting" requiredPermission="superuser" menusection="tools" source="core">
 			<description key="core.shortcut.tools.setting.shortDesc" >Settings</description><!-- key e corpo alternativo -->
@@ -162,7 +162,7 @@
 				<param name="actionName">configSystemParams</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.tools.entities" requiredPermission="superuser" menusection="tools" source="core">
 			<description key="core.shortcut.tools.entities.shortDesc" >Entities</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.tools.entities.longDesc">
@@ -173,7 +173,7 @@
 				<param name="actionName">viewManagers</param>
 			</url>
 		</shortcut>
-		
+
 		<shortcut id="core.tools.entities" requiredPermission="superuser" menusection="tools" source="core">
 			<description key="core.shortcut.tools.reload.shortDesc" >Reload Configuration</description><!-- key e corpo alternativo -->
 			<longdesc key="core.shortcut.tools.reload.longDesc">
@@ -184,7 +184,7 @@
 				<param name="actionName">reloadConfig</param>
 			</url>
 		</shortcut>
-		
+
 		<!--
 		<shortcut id="userprofile.profile.current.entry" requiredPermission="superuser" menusection="plugins" source="userprofile">
 			<description key="userprofile.shortcut.profile.current.entry.shortDesc" >Your Profile</description>
@@ -197,6 +197,6 @@
 			</url>
 		</shortcut>
 		-->
-		
+
 	</shortcuts>
 </shortcut-def>
