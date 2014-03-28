@@ -17,7 +17,6 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
-import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 
 import java.io.Serializable;
@@ -103,6 +102,9 @@ public class PageModel implements Serializable {
 	@XmlTransient
 	public String[] getFrames() {
 		Frame[] configuration = this.getConfiguration();
+		if (null == configuration) {
+			return new String[0];
+		}
 		String[] descriptions = new String[configuration.length];
 		for (int i = 0; i < configuration.length; i++) {
 			Frame frame = configuration[i];
@@ -231,7 +233,7 @@ public class PageModel implements Serializable {
 	 */
 	private String _description;
 	
-	private Frame[] _configuration;
+	private Frame[] _configuration = new Frame[0];
 	
 	/**
 	 * La posizione del frame principale, se esiste;
