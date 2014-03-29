@@ -20,14 +20,22 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
+import freemarker.ext.jsp.TaglibFactory;
+import freemarker.ext.servlet.AllHttpScopesHashModel;
+import static freemarker.ext.servlet.FreemarkerServlet.KEY_APPLICATION;
+import static freemarker.ext.servlet.FreemarkerServlet.KEY_APPLICATION_PRIVATE;
+import freemarker.ext.servlet.ServletContextHashModel;
 
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.ServletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +55,7 @@ import org.slf4j.LoggerFactory;
 public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
-	
+	/*
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.service(request, response);
@@ -57,7 +65,7 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		this.service(request, response);
 	}
-    
+    */
 	@Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -81,7 +89,7 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 				config.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
 				config.setObjectWrapper(wrapper);
 				config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
-				TemplateModel templateModel = super.createModel(wrapper, this.getServletContext(), request, response);
+				TemplateModel templateModel = this.createModel(wrapper, this.getServletContext(), request, response);
 				ExecutorBeanContainer ebc = new ExecutorBeanContainer(config, templateModel);
 				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
 				List<ExecutorServiceInterface> executors = 
@@ -103,7 +111,27 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
         }
         return;
     }
-    
+	
+	@Override
+	protected TemplateModel createModel(ObjectWrapper wrapper, ServletContext servletContext, 
+			HttpServletRequest request, HttpServletResponse response) throws TemplateModelException {
+		TemplateModel template = super.createModel(wrapper, servletContext, request, response);
+		if (template instanceof AllHttpScopesHashModel) {
+			AllHttpScopesHashModel hashModel = ((AllHttpScopesHashModel) template);
+			ServletContextHashModel servletContextModel = (ServletContextHashModel) hashModel.get(KEY_APPLICATION);
+			if (null == servletContextModel.getServlet()) {
+				ServletContextHashModel newServletContextModel = new ServletContextHashModel(this, wrapper);
+				servletContextModel = new ServletContextHashModel(this, wrapper);
+				servletContext.setAttribute(ATTR_APPLICATION_MODEL, servletContextModel);
+				TaglibFactory taglibs = new TaglibFactory(servletContext);
+				servletContext.setAttribute(ATTR_JSP_TAGLIBS_MODEL, taglibs);
+				hashModel.putUnlistedModel(KEY_APPLICATION, newServletContextModel);
+				hashModel.putUnlistedModel(KEY_APPLICATION_PRIVATE, newServletContextModel);
+			}
+		}
+		return template;
+	}
+	
     private void redirect(RequestContext reqCtx, HttpServletResponse response) throws ServletException {
         try {
             String url = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
@@ -125,9 +153,11 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
             }
         } catch (IOException e) {
         	_logger.error("outputError", e);
-            //ApsSystemUtils.logThrowable(e, this, "outputError");
             throw new ServletException("Service not available");
         }
     }
     
+	private static final String ATTR_APPLICATION_MODEL = ".freemarker.Application";
+	private static final String ATTR_JSP_TAGLIBS_MODEL = ".freemarker.JspTaglibs";
+	
 }
