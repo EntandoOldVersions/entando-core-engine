@@ -27,6 +27,8 @@ import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 /**
  * @author M.Diana - E.Santoboni
@@ -56,7 +58,7 @@ public class TestPageModelDAO extends BaseTestCase {
 			PageModel extractedMockModel = models.get(testPageModelCode);
 			assertNotNull(extractedMockModel);
 			assertEquals(testPageModelCode, extractedMockModel.getCode());
-			assertTrue(extractedMockModel.getDescr().contains(testPageModelCode));
+			assertTrue(extractedMockModel.getDescription().contains(testPageModelCode));
 			assertEquals(3, extractedMockModel.getFrames().length);
 			Widget[] defaultWidgets = extractedMockModel.getDefaultWidget();
 			assertEquals(3, defaultWidgets.length);
@@ -114,24 +116,24 @@ public class TestPageModelDAO extends BaseTestCase {
 			extractedMockModel = models.get(testPageModelCode);
 			assertNotNull(extractedMockModel);
 			assertEquals(testPageModelCode, extractedMockModel.getCode());
-			assertEquals("Modified Description", extractedMockModel.getDescr());
+			assertEquals("Modified Description", extractedMockModel.getDescription());
 			assertEquals(4, extractedMockModel.getFrames().length);
 			Widget[] defaultWidgets = extractedMockModel.getDefaultWidget();
 			assertEquals(4, defaultWidgets.length);
 			
 			Widget defWidg0 = defaultWidgets[0];
-			assertNotNull(defWidg0);
-			assertEquals("content_viewer_list", defWidg0.getType().getCode());
-			assertEquals(1, defWidg0.getConfig().size());
-			assertEquals("ART", defWidg0.getConfig().get("contentType"));
+			assertNull(defWidg0);
 			
 			Widget defWidg1 = defaultWidgets[1];
 			assertNotNull(defWidg1);
-			assertEquals("login_form", defWidg1.getType().getCode());
-			assertNull(defWidg1.getConfig());
+			assertEquals("content_viewer_list", defWidg1.getType().getCode());
+			assertEquals(1, defWidg1.getConfig().size());
+			assertEquals("ART", defWidg1.getConfig().get("contentType"));
 			
 			Widget defWidg2 = defaultWidgets[2];
-			assertNull(defWidg2);
+			assertNotNull(defWidg2);
+			assertEquals("login_form", defWidg2.getType().getCode());
+			assertNull(defWidg2.getConfig());
 			
 			Widget defWidg3 = defaultWidgets[3];
 			assertNotNull(defWidg3);

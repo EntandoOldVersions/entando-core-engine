@@ -25,6 +25,8 @@ import com.agiletec.aps.util.ApsProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
 
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -164,18 +166,18 @@ public class TestPageModelManager extends BaseTestCase {
 			assertEquals(4, defaultWidgets.length);
 			
 			Widget defWidg0 = defaultWidgets[0];
-			assertNotNull(defWidg0);
-			assertEquals("content_viewer_list", defWidg0.getType().getCode());
-			assertEquals(1, defWidg0.getConfig().size());
-			assertEquals("ART", defWidg0.getConfig().get("contentType"));
+			assertNull(defWidg0);
 			
 			Widget defWidg1 = defaultWidgets[1];
 			assertNotNull(defWidg1);
-			assertEquals("login_form", defWidg1.getType().getCode());
-			assertNull(defWidg1.getConfig());
+			assertEquals("content_viewer_list", defWidg1.getType().getCode());
+			assertEquals(1, defWidg1.getConfig().size());
+			assertEquals("ART", defWidg1.getConfig().get("contentType"));
 			
 			Widget defWidg2 = defaultWidgets[2];
-			assertNull(defWidg2);
+			assertNotNull(defWidg2);
+			assertEquals("login_form", defWidg2.getType().getCode());
+			assertNull(defWidg2.getConfig());
 			
 			Widget defWidg3 = defaultWidgets[3];
 			assertNotNull(defWidg3);
