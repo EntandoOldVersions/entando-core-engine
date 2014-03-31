@@ -223,7 +223,7 @@ public class ApiRestServer {
     }
 
     protected Properties extractRequestParameters(UriInfo ui) {
-        MultivaluedMap<String, String> queryParams = ui.getQueryParameters();
+        MultivaluedMap<String, String> queryParams = ui.getQueryParameters(false);
         Properties properties = new Properties();
         if (null != queryParams) {
             List<String> reservedParameters = Arrays.asList(SystemConstants.API_RESERVED_PARAMETERS);
