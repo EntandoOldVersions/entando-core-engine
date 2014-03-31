@@ -61,21 +61,21 @@ public class TestShortcutManager extends BaseTestCase {
     public void testSaveShortcutConfig_1() throws Throwable {
     	String username = "admin";
     	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
-    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
+    	String[] expected = {null, null, null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, true);
     }
     
     public void testSaveShortcutConfig_2() throws Throwable {
     	String username = "admin";
     	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", "shortcut.invalid", null};
-    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
+    	String[] expected = {null, null, null, null, "jacms.content.list", "core.portal.widgetType", null, "core.tools.setting", null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, true);
     }
     
     public void testSaveShortcutConfig_3() throws Throwable {
     	String username = "editorCoach";
     	String[] configToSave = {null, "jacms.content.new", null, null, "jacms.content.list"};
-    	String[] expected = {null, "jacms.content.new", null, null, "jacms.content.list", null, null, null, null, null};
+    	String[] expected = {null, null, null, null, "jacms.content.list", null, null, null, null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, false);
     }
     
@@ -83,7 +83,7 @@ public class TestShortcutManager extends BaseTestCase {
     	String username = "editorCoach";
     	String[] configToSave = {null, "jacms.content.new", null, null, "core.tools.setting", 
     			"jacms.content.list", "shortcut.invalid", null, null, null, "jacms.content.new"};
-    	String[] expected = {null, "jacms.content.new", null, null, null, "jacms.content.list", null, null, null, null};
+    	String[] expected = {null, null, null, null, null, "jacms.content.list", null, null, null, null};
     	this.addDeleteShortcutConfig(username, configToSave, expected, false);
     }
     
