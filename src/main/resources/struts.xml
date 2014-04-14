@@ -197,6 +197,7 @@
 	<include file="com/agiletec/apsadmin/portal/page.xml" />
 	<include file="com/agiletec/apsadmin/portal/specialwidget/specialWidget.xml" />
 	<include file="com/agiletec/apsadmin/portal/widgetType.xml" />
+	<include file="org/entando/entando/apsadmin/portal/guifragment/guiFragment.xml"/>
 	<include file="org/entando/entando/apsadmin/portal/model/pageModel.xml" />
 	
 	<include file="org/entando/entando/apsadmin/user/user.xml" />

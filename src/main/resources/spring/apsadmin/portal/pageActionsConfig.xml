@@ -49,4 +49,16 @@
 			class="com.agiletec.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
 	</bean>
 	
+	<bean id="guiFragmentFinderAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.portal.guifragment.GuiFragmentFinderAction" 
+			parent="abstractBaseAction" >
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+	</bean>
+	
+	<bean id="guiFragmentAction" scope="prototype" 
+			class="org.entando.entando.apsadmin.portal.guifragment.GuiFragmentAction" 
+			parent="abstractBaseAction" >
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+	</bean>
+	
 </beans>
