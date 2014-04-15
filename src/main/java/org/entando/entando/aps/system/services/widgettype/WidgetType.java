@@ -59,16 +59,16 @@ public class WidgetType implements Serializable {
 	}
 	
 	/**
-	 * Restituisce il codice del tipo di showlet.
-	 * @return Il codice del tipo di showlet
+	 * Restituisce il codice del tipo di widget.
+	 * @return Il codice del tipo di widget
 	 */
 	public String getCode() {
 		return _code;
 	}
 
 	/**
-	 * Imposta il codice del tipo di showlet.
-	 * @param code Il codice del tipo di showlet
+	 * Imposta il codice del tipo di widget.
+	 * @param code Il codice del tipo di widget
 	 */
 	public void setCode(String code) {
 		this._code = code;
@@ -82,7 +82,7 @@ public class WidgetType implements Serializable {
 	}
 	
 	/**
-	 * restituisce la lista dei parametri previsti per il tipo di showlet.
+	 * Restituisce la lista dei parametri previsti per il tipo di widget.
 	 * @return La lista di parametri in oggetti del tipo WidgetTypeParameter.
 	 */
 	public List<WidgetTypeParameter> getTypeParameters() {
@@ -90,7 +90,7 @@ public class WidgetType implements Serializable {
 	}
 
 	/**
-	 * Imposta la lista dei parametri previsti per il tipo di showlet.
+	 * Imposta la lista dei parametri previsti per il tipo di widget.
 	 * La lista deve essere composta da oggetti del tipo WidgetTypeParameter.
 	 * @param typeParameters The parameters to set.
 	 */
@@ -99,7 +99,7 @@ public class WidgetType implements Serializable {
 	}
 	
 	/**
-	 * Restituisce il nome della action specifica che gestisce questo tipo di showlet.
+	 * Restituisce il nome della action specifica che gestisce questo tipo di widget.
 	 * @return Il nome della action specifica, null se non vi è nessun action specifica.
 	 */
 	public String getAction() {
@@ -107,7 +107,7 @@ public class WidgetType implements Serializable {
 	}
 
 	/**
-	 * Setta il nome della action specifica che gestisce questo tipo di showlet.
+	 * Setta il nome della action specifica che gestisce questo tipo di widget.
 	 * @param action Il nome della action specifica.
 	 */
 	public void setAction(String action) {
@@ -115,8 +115,8 @@ public class WidgetType implements Serializable {
 	}
 	
 	/**
-	 * Return the code of the plugin owner of showlet type.
-	 * The field is null if the showlet type belong to jAPS Core.
+	 * Return the code of the plugin owner of widget type.
+	 * The field is null if the showlet type belong to Entando Core.
 	 * @return The plugin code.
 	 */
 	public String getPluginCode() {
@@ -124,7 +124,7 @@ public class WidgetType implements Serializable {
 	}
 	
 	/**
-	 * Set the code of the plugin owner of showlet type.
+	 * Set the code of the plugin owner of widget type.
 	 * @param pluginCode The plugin code. 
 	 */
 	public void setPluginCode(String pluginCode) {
@@ -177,26 +177,38 @@ public class WidgetType implements Serializable {
 		this._mainGroup = mainGroup;
 	}
 	
+	public String getJspPath() {
+		WidgetType widgetType = (this.isLogic()) ? this.getParentType(): this;
+		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
+		String pluginCode = widgetType.getPluginCode();
+		boolean isWidgetPlugin = (null != pluginCode && pluginCode.trim().length() > 0);
+		if (isWidgetPlugin) {
+			jspPath.append("plugins/").append(pluginCode.trim()).append("/");
+		}
+		jspPath.append(WIDGET_LOCATION).append(widgetType.getCode()).append(".jsp");
+		return jspPath.toString();
+	}
+	
 	/**
-	 * Il codice del tipo di showlet.
+	 * Il codice del tipo di widget.
 	 */
 	private String _code;
 	
 	private ApsProperties _titles;
 	
 	/**
-	 * La lista dei parametri previsti per il tipo di showlet.
+	 * La lista dei parametri previsti per il tipo di widget.
 	 */
 	private List<WidgetTypeParameter> _parameters;
 	
 	/**
-	 * Il nome della action specifica che gestisce questo tipo di showlet.
+	 * Il nome della action specifica che gestisce questo tipo di widget.
 	 * null se non vi è nessun action specifica.
 	 */
 	private String _action;
 	
 	/**
-	 * The code of the plugin owner of showlet type.
+	 * The code of the plugin owner of widget type.
 	 */
 	private String _pluginCode;
 	
@@ -209,5 +221,7 @@ public class WidgetType implements Serializable {
 	private boolean _locked;
 	
 	private String _mainGroup;
+	
+	public final static String WIDGET_LOCATION = "aps/jsp/widgets/";
 	
 }
