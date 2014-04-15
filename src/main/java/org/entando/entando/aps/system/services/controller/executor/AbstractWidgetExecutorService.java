@@ -37,9 +37,7 @@ import java.io.StringReader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -50,8 +48,10 @@ import org.apache.commons.beanutils.BeanComparator;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.web.context.WebApplicationContext;
 
 /**
@@ -118,8 +118,7 @@ public abstract class AbstractWidgetExecutorService {
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Writer out = new OutputStreamWriter(baos);
 				Template template = new Template(type.getCode(), new StringReader(guiFragment.getGui()), ebc.getConfiguration());
-				Map<String, Object> data = new HashMap<String, Object>();
-				template.process(data, out);
+				template.process(ebc.getTemplateModel(), out);
 				out.flush();
 				return baos.toString();
 			} else {
