@@ -47,6 +47,7 @@
 	
 	<bean id="widgetTypeAction" scope="prototype" 
 			class="com.agiletec.apsadmin.portal.WidgetTypeAction" parent="abstractPortalAction">
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
 	</bean>
 	
 	<bean id="guiFragmentFinderAction" scope="prototype" 
