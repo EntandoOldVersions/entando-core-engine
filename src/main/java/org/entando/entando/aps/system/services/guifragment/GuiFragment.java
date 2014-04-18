@@ -31,14 +31,23 @@ public class GuiFragment {
 	public void setCode(String code) {
 		this._code = code;
 	}
-
+	
+	@Deprecated
 	public String getWidgetCode() {
-		return _widgetCode;
+		return this.getWidgetTypeCode();
 	}
+	@Deprecated
 	public void setWidgetCode(String widgetCode) {
-		this._widgetCode = widgetCode;
+		this.setWidgetTypeCode(widgetCode);
 	}
-
+	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+	
 	public String getPluginCode() {
 		return _pluginCode;
 	}
@@ -52,12 +61,11 @@ public class GuiFragment {
 	public void setGui(String gui) {
 		this._gui = gui;
 	}
-
 	
 	private int _id;
 	private String _code;
-	private String _widgetCode;
+	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
-
+	
 }

@@ -38,10 +38,10 @@ public class GuiFragment implements ExtendedColumnDefinition {
 			canBeNull = false)
 	private String _code;
 	
-	@DatabaseField(foreign = true, columnName = "widgetcode",
+	@DatabaseField(foreign = true, columnName = "widgettypecode",
 			width = 40,
 			canBeNull = true)
-	private WidgetCatalog _widget;
+	private WidgetCatalog _widgetType;
 	
 	@DatabaseField(columnName = "plugincode",
 			dataType = DataType.STRING,
@@ -63,7 +63,7 @@ public class GuiFragment implements ExtendedColumnDefinition {
 		}
 		String[] queries = new String[1];
 		queries[0] = "ALTER TABLE " + tableName + " "
-				+ "ADD CONSTRAINT " + TABLE_NAME + "_widgetcode_fkey FOREIGN KEY (widgetcode) "
+				+ "ADD CONSTRAINT " + TABLE_NAME + "_wdgtypecode_fkey FOREIGN KEY (widgettypecode) "
 				+ "REFERENCES " + widgetCatalogTableName + " (code)";
 		return queries;
 	}

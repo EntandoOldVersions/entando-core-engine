@@ -160,7 +160,7 @@ public class WidgetType implements Serializable {
 	}
 	
 	public boolean isUserType() {
-		return (this.isLogic() && !this.isLocked());
+		return (this.isLogic() && !this.isLocked() || (!this.isLogic() && !this.isLocked()));
 	}
 	
 	public boolean isLocked() {

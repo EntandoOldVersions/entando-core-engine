@@ -16,16 +16,22 @@
 */
 package org.entando.entando.apsadmin.portal.guifragment;
 
+import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.portal.AbstractPortalAction;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.BaseAction;
+
+import java.util.List;
+import java.util.Map;
+
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GuiFragmentAction extends BaseAction {
+public class GuiFragmentAction extends AbstractPortalAction {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentAction.class);
 	
@@ -117,7 +123,7 @@ public class GuiFragmentAction extends BaseAction {
 	private void populateForm(GuiFragment guiFragment) throws Throwable {
 		this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
-		this.setWidgetCode(guiFragment.getWidgetCode());
+		this.setWidgetTypeCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
 		this.setGui(guiFragment.getGui());
 	}
@@ -126,13 +132,19 @@ public class GuiFragmentAction extends BaseAction {
 		GuiFragment guiFragment = new GuiFragment();
 		guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
-		guiFragment.setWidgetCode(this.getWidgetCode());
+		guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
 		guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
 		return guiFragment;
 	}
 	
-
+	@Override
+	protected void addFlavourWidgetType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
+		if (!type.isLogic()) {
+			super.addFlavourWidgetType(mapCode, type, mapping);
+		}
+	}
+	
 	public int getStrutsAction() {
 		return _strutsAction;
 	}
@@ -153,14 +165,23 @@ public class GuiFragmentAction extends BaseAction {
 	public void setCode(String code) {
 		this._code = code;
 	}
-
+	
+	@Deprecated
 	public String getWidgetCode() {
-		return _widgetCode;
+		return this.getWidgetTypeCode();
 	}
+	@Deprecated
 	public void setWidgetCode(String widgetCode) {
-		this._widgetCode = widgetCode;
+		this.setWidgetTypeCode(widgetCode);
 	}
-
+	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
+	}
+	
 	public String getPluginCode() {
 		return _pluginCode;
 	}
@@ -185,7 +206,8 @@ public class GuiFragmentAction extends BaseAction {
 	private int _strutsAction;
 	private int _id;
 	private String _code;
-	private String _widgetCode;
+	//private String _widgetCode;
+	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
 	

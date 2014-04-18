@@ -20,12 +20,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import com.agiletec.aps.system.common.AbstractSearcherDAO;
 import com.agiletec.aps.system.common.FieldSearchFilter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,7 +75,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		ResultSet res = null;
 		try {
 			conn = this.getConnection();
-			stat = conn.prepareStatement(LOAD_GUISECTIONS_ID);
+			stat = conn.prepareStatement(LOAD_GUIFRAGMENTS_ID);
 			res = stat.executeQuery();
 			while (res.next()) {
 				int id = res.getInt("id");
@@ -109,16 +111,16 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	public void insertGuiFragment(GuiFragment guiFragment, Connection conn) {
 		PreparedStatement stat = null;
 		try {
-			stat = conn.prepareStatement(ADD_GUISECTION);
+			stat = conn.prepareStatement(ADD_GUIFRAGMENT);
 			int index = 1;
 			stat.setInt(index++, guiFragment.getId());
  			stat.setString(index++, guiFragment.getCode());
- 			if(StringUtils.isNotBlank(guiFragment.getWidgetCode())) {
-				stat.setString(index++, guiFragment.getWidgetCode());				
+ 			if (StringUtils.isNotBlank(guiFragment.getWidgetTypeCode())) {
+				stat.setString(index++, guiFragment.getWidgetTypeCode());				
 			} else {
 				stat.setNull(index++, Types.VARCHAR);
 			}
- 			if(StringUtils.isNotBlank(guiFragment.getPluginCode())) {
+ 			if (StringUtils.isNotBlank(guiFragment.getPluginCode())) {
 				stat.setString(index++, guiFragment.getPluginCode());				
 			} else {
 				stat.setNull(index++, Types.VARCHAR);
@@ -154,12 +156,12 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	public void updateGuiFragment(GuiFragment guiFragment, Connection conn) {
 		PreparedStatement stat = null;
 		try {
-			stat = conn.prepareStatement(UPDATE_GUISECTION);
+			stat = conn.prepareStatement(UPDATE_GUIFRAGMENT);
 			int index = 1;
 
  			stat.setString(index++, guiFragment.getCode());
- 			if(StringUtils.isNotBlank(guiFragment.getWidgetCode())) {
-				stat.setString(index++, guiFragment.getWidgetCode());				
+ 			if(StringUtils.isNotBlank(guiFragment.getWidgetTypeCode())) {
+				stat.setString(index++, guiFragment.getWidgetTypeCode());				
 			} else {
 				stat.setNull(index++, Types.VARCHAR);
 			}
@@ -200,7 +202,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	public void removeGuiFragment(int id, Connection conn) {
 		PreparedStatement stat = null;
 		try {
-			stat = conn.prepareStatement(DELETE_GUISECTION);
+			stat = conn.prepareStatement(DELETE_GUIFRAGMENT);
 			int index = 1;
 			stat.setInt(index++, id);
 			stat.executeUpdate();
@@ -211,7 +213,8 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			this.closeDaoResources(null, stat, null);
 		}
 	}
-
+	
+	@Override
 	public GuiFragment loadGuiFragment(int id) {
 		GuiFragment guiFragment = null;
 		Connection conn = null;
@@ -234,7 +237,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		PreparedStatement stat = null;
 		ResultSet res = null;
 		try {
-			stat = conn.prepareStatement(LOAD_GUISECTION);
+			stat = conn.prepareStatement(LOAD_GUIFRAGMENT);
 			int index = 1;
 			stat.setInt(index++, id);
 			res = stat.executeQuery();
@@ -256,7 +259,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			guiFragment = new GuiFragment();				
 			guiFragment.setId(res.getInt("id"));
 			guiFragment.setCode(res.getString("code"));
-			guiFragment.setWidgetCode(res.getString("widgetcode"));
+			guiFragment.setWidgetTypeCode(res.getString("widgettypecode"));
 			guiFragment.setPluginCode(res.getString("plugincode"));
 			guiFragment.setGui(res.getString("gui"));
 		} catch (Throwable t) {
@@ -265,14 +268,14 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		return guiFragment;
 	}
 	
-	private static final String ADD_GUISECTION = "INSERT INTO guifragment (id, code, widgetcode, plugincode, gui ) VALUES (?, ?, ?, ?, ? )";
+	private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (id, code, widgettypecode, plugincode, gui ) VALUES (?, ?, ?, ?, ? )";
 
-	private static final String UPDATE_GUISECTION = "UPDATE guifragment SET code=?,  widgetcode=?,  plugincode=?, gui=? WHERE id = ?";
+	private static final String UPDATE_GUIFRAGMENT = "UPDATE guifragment SET code = ?, widgettypecode = ?,  plugincode = ?, gui = ? WHERE id = ?";
 
-	private static final String DELETE_GUISECTION = "DELETE FROM guifragment WHERE id = ?";
+	private static final String DELETE_GUIFRAGMENT = "DELETE FROM guifragment WHERE id = ?";
 	
-	private static final String LOAD_GUISECTION = "SELECT id, code, widgetcode, plugincode, gui  FROM guifragment WHERE id = ?";
+	private static final String LOAD_GUIFRAGMENT = "SELECT id, code, widgettypecode, plugincode, gui  FROM guifragment WHERE id = ?";
 	
-	private static final String LOAD_GUISECTIONS_ID  = "SELECT id FROM guifragment";
+	private static final String LOAD_GUIFRAGMENTS_ID  = "SELECT id FROM guifragment";
 	
 }

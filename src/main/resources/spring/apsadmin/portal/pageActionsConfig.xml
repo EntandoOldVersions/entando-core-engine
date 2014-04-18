@@ -58,7 +58,7 @@
 	
 	<bean id="guiFragmentAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.portal.guifragment.GuiFragmentAction" 
-			parent="abstractBaseAction" >
+			parent="abstractPortalAction" >
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
 	</bean>
 	
