@@ -49,12 +49,12 @@ public class GuiFragmentFinderAction extends BaseAction {
 			}
 			if (StringUtils.isNotBlank(this.getWidgetCode())) {
 				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("widgetCode"), this.getWidgetCode(), true);
+				FieldSearchFilter filterToAdd = new FieldSearchFilter(("widgettypecode"), this.getWidgetCode(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
 			if (StringUtils.isNotBlank(this.getPluginCode())) {
 				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("pluginCode"), this.getPluginCode(), true);
+				FieldSearchFilter filterToAdd = new FieldSearchFilter(("plugincode"), this.getPluginCode(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
 			if (StringUtils.isNotBlank(this.getGui())) {

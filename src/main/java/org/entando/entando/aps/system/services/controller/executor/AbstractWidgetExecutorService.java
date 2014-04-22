@@ -105,7 +105,7 @@ public abstract class AbstractWidgetExecutorService {
 	protected String extractWidgetOutput(RequestContext reqCtx, WidgetType type) throws ApsSystemException {
 		try {
 			String widgetTypeCode = type.getCode();
-			FieldSearchFilter filter = new FieldSearchFilter("widgetcode", widgetTypeCode, false);
+			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
 			FieldSearchFilter[] filters = {filter};
 			IGuiFragmentManager guiFragmentManager = 
 					(IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, reqCtx.getRequest());

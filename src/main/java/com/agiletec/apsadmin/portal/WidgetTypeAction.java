@@ -166,7 +166,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 						guiFragment.setCode(this.getWidgetTypeCode());
 						guiFragment.setPluginCode(type.getPluginCode());
 						guiFragment.setGui(this.getGui());
-						guiFragment.setWidgetCode(this.getWidgetTypeCode());
+						guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
 						this.getGuiFragmentManager().addGuiFragment(guiFragment);
 					} else {
 						guiFragment.setGui(this.getGui());
@@ -338,7 +338,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	}
 	
 	protected GuiFragment extractGuiFragment(String widgetTypeCode) throws ApsSystemException {
-		FieldSearchFilter filter = new FieldSearchFilter("widgetcode", widgetTypeCode, false);
+		FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
 		FieldSearchFilter[] filters = {filter};
 		List<Integer> ids = this.getGuiFragmentManager().searchGuiFragments(filters);
 		if (null != ids && !ids.isEmpty()) {

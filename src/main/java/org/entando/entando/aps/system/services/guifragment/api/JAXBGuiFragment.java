@@ -18,6 +18,7 @@ package org.entando.entando.aps.system.services.guifragment.api;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -29,20 +30,21 @@ public class JAXBGuiFragment {
     public JAXBGuiFragment() {
         super();
     }
-
+	
     public JAXBGuiFragment(GuiFragment guiFragment) {
 		this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
-		this.setWidgetCode(guiFragment.getWidgetCode());
+		this.setWidgetCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
 		this.setGui(guiFragment.getGui());
     }
     
+	@XmlTransient
     public GuiFragment getGuiFragment() {
     	GuiFragment guiFragment = new GuiFragment();
 		guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
-		guiFragment.setWidgetCode(this.getWidgetCode());
+		guiFragment.setWidgetTypeCode(this.getWidgetCode());
 		guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
     	return guiFragment;

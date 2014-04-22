@@ -212,8 +212,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 		event.setOperationCode(operationCode);
 		this.notifyEvent(event);
 	}
-
-
+	
 	protected IKeyGeneratorManager getKeyGeneratorManager() {
 		return _keyGeneratorManager;
 	}
@@ -230,4 +229,5 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 
 	private IKeyGeneratorManager _keyGeneratorManager;
 	private IGuiFragmentDAO _guiFragmentDAO;
+	
 }
