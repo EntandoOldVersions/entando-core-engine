@@ -24,15 +24,15 @@ import javax.xml.bind.annotation.XmlType;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 
 @XmlRootElement(name = "guiFragment")
-@XmlType(propOrder = {"id", "code", "widgetCode", "pluginCode", "gui"})
+@XmlType(propOrder = {/*"id", */"code", "widgetCode", "pluginCode", "gui"})
 public class JAXBGuiFragment {
-
+	
     public JAXBGuiFragment() {
         super();
     }
 	
     public JAXBGuiFragment(GuiFragment guiFragment) {
-		this.setId(guiFragment.getId());
+		//this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
 		this.setWidgetCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
@@ -42,14 +42,14 @@ public class JAXBGuiFragment {
 	@XmlTransient
     public GuiFragment getGuiFragment() {
     	GuiFragment guiFragment = new GuiFragment();
-		guiFragment.setId(this.getId());
+		//guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
 		guiFragment.setWidgetTypeCode(this.getWidgetCode());
 		guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
     	return guiFragment;
     }
-
+	/*
 	@XmlElement(name = "id", required = true)
 	public int getId() {
 		return _id;
@@ -57,7 +57,7 @@ public class JAXBGuiFragment {
 	public void setId(int id) {
 		this._id = id;
 	}
-
+	*/
 	@XmlElement(name = "code", required = true)
 	public String getCode() {
 		return _code;
@@ -89,12 +89,11 @@ public class JAXBGuiFragment {
 	public void setGui(String gui) {
 		this._gui = gui;
 	}
-
-
-	private int _id;
+	
+	//private int _id;
 	private String _code;
 	private String _widgetCode;
 	private String _pluginCode;
 	private String _gui;
-
+	
 }

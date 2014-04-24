@@ -21,18 +21,17 @@ import java.util.List;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
 public interface IGuiFragmentDAO {
-
-	public List<Integer> searchGuiFragments(FieldSearchFilter[] filters);
 	
-	public GuiFragment loadGuiFragment(int id);
-
-	public List<Integer> loadGuiFragments();
-
-	public void removeGuiFragment(int id);
+	public List<String> searchGuiFragments(FieldSearchFilter[] filters);
+	
+	public GuiFragment loadGuiFragment(String code);
+	
+	public List<String> loadGuiFragments();
+	
+	public void removeGuiFragment(String code);
 	
 	public void updateGuiFragment(GuiFragment guiFragment);
-
+	
 	public void insertGuiFragment(GuiFragment guiFragment);
 	
-
 }

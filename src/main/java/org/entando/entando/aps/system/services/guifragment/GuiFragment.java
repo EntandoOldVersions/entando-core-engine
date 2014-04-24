@@ -17,14 +17,7 @@
 package org.entando.entando.aps.system.services.guifragment;
 
 public class GuiFragment {
-
-	public int getId() {
-		return _id;
-	}
-	public void setId(int id) {
-		this._id = id;
-	}
-
+	
 	public String getCode() {
 		return _code;
 	}
@@ -62,7 +55,6 @@ public class GuiFragment {
 		this._gui = gui;
 	}
 	
-	private int _id;
 	private String _code;
 	private String _widgetTypeCode;
 	private String _pluginCode;

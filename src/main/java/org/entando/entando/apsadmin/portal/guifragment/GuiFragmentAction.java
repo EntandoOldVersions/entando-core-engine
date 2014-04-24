@@ -47,7 +47,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	
 	public String edit() {
 		try {
-			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getId());
+			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
 			if (null == guiFragment) {
 				this.addActionError(this.getText("error.guiFragment.null"));
 				return INPUT;
@@ -79,7 +79,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	
 	public String trash() {
 		try {
-			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getId());
+			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
 			if (null == guiFragment) {
 				this.addActionError(this.getText("error.guiFragment.null"));
 				return INPUT;
@@ -96,7 +96,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	public String delete() {
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.DELETE) {
-				this.getGuiFragmentManager().deleteGuiFragment(this.getId());
+				this.getGuiFragmentManager().deleteGuiFragment(this.getCode());
 			}
 		} catch (Throwable t) {
 			_logger.error("error in delete", t);
@@ -107,7 +107,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	
 	public String view() {
 		try {
-			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getId());
+			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
 			if (null == guiFragment) {
 				this.addActionError(this.getText("error.guiFragment.null"));
 				return INPUT;
@@ -121,7 +121,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	}
 	
 	private void populateForm(GuiFragment guiFragment) throws Throwable {
-		this.setId(guiFragment.getId());
+		//this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
 		this.setWidgetTypeCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
@@ -130,7 +130,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	
 	private GuiFragment createGuiFragment() {
 		GuiFragment guiFragment = new GuiFragment();
-		guiFragment.setId(this.getId());
+		//guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
 		guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
 		guiFragment.setPluginCode(this.getPluginCode());
@@ -151,14 +151,14 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	public void setStrutsAction(int strutsAction) {
 		this._strutsAction = strutsAction;
 	}
-	
+	/*
 	public int getId() {
 		return _id;
 	}
 	public void setId(int id) {
 		this._id = id;
 	}
-
+	*/
 	public String getCode() {
 		return _code;
 	}
@@ -204,7 +204,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	}
 	
 	private int _strutsAction;
-	private int _id;
+	//private int _id;
 	private String _code;
 	//private String _widgetCode;
 	private String _widgetTypeCode;

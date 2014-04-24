@@ -56,7 +56,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("error in validate", t);
-			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException(t);
 		}
 	}
@@ -116,7 +115,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			this.setMainGroup(Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
 			_logger.error("error in copy", t);
-			//ApsSystemUtils.logThrowable(t, this, "copy");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -163,7 +161,8 @@ public class WidgetTypeAction extends AbstractPortalAction {
 				if (StringUtils.isNotBlank(this.getGui())) {
 					if (null == guiFragment) {
 						guiFragment = new GuiFragment();
-						guiFragment.setCode(this.getWidgetTypeCode());
+						String code = this.extractUniqueGuiFragmentCode(this.getWidgetTypeCode());
+						guiFragment.setCode(code);
 						guiFragment.setPluginCode(type.getPluginCode());
 						guiFragment.setGui(this.getGui());
 						guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
@@ -174,16 +173,29 @@ public class WidgetTypeAction extends AbstractPortalAction {
 					}
 				} else {
 					if (null != guiFragment) {
-						this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getId());
+						this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
 					}
 				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in save", t);
-			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	protected String extractUniqueGuiFragmentCode(String widgetTypeCode) throws ApsSystemException {
+		String uniqueCode = widgetTypeCode;
+		if (null != this.getGuiFragmentManager().getGuiFragment(uniqueCode)) {
+			int index = 0;
+			String currentCode = null;
+			do {
+				index++;
+				currentCode = uniqueCode + "_" + index;
+			} while (null != this.getGuiFragmentManager().getGuiFragment(currentCode));
+			uniqueCode = currentCode;
+		}
+		return uniqueCode;
 	}
 	
 	@Deprecated
@@ -224,7 +236,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("error in saveUserWidget", t);
-			//ApsSystemUtils.logThrowable(t, this, "saveUserWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -234,8 +245,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 		IPage page = this.getPageManager().getPage(this.getPageCode());
 		if (null == page) return null;
 		Widget[] widgets = page.getWidgets();
-		Widget widget = widgets[this.getFramePos()];
-		return widget;
+		return widgets[this.getFramePos()];
 	}
 	
 	private String checkNewUserWidget() throws Throwable {
@@ -340,12 +350,11 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	protected GuiFragment extractGuiFragment(String widgetTypeCode) throws ApsSystemException {
 		FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
 		FieldSearchFilter[] filters = {filter};
-		List<Integer> ids = this.getGuiFragmentManager().searchGuiFragments(filters);
-		if (null != ids && !ids.isEmpty()) {
-			Object idObject = ids.get(0);
-			Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
-			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(id);
-			return guiFragment;
+		List<String> codes = this.getGuiFragmentManager().searchGuiFragments(filters);
+		if (null != codes && !codes.isEmpty()) {
+			String code = codes.get(0);
+			//Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
+			return this.getGuiFragmentManager().getGuiFragment(code);
 		}
 		return null;
 	}

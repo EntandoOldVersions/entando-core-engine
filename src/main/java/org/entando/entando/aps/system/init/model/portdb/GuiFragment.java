@@ -27,15 +27,16 @@ import org.entando.entando.aps.system.init.model.ExtendedColumnDefinition;
 public class GuiFragment implements ExtendedColumnDefinition {
 	
 	public GuiFragment() {}
-	
+	/*
 	@DatabaseField(columnName = "id",
 			dataType = DataType.INTEGER,
 			canBeNull = false, id = true)
 	private int _id;
-	
+	*/
 	@DatabaseField(columnName = "code",
-			dataType = DataType.LONG_STRING,
-			canBeNull = false)
+			width = 50,
+			dataType = DataType.STRING,
+			canBeNull = false, id = true)
 	private String _code;
 	
 	@DatabaseField(foreign = true, columnName = "widgettypecode",
@@ -52,7 +53,7 @@ public class GuiFragment implements ExtendedColumnDefinition {
 			dataType = DataType.LONG_STRING,
 			canBeNull = false)
 	private String _gui;
-
+	
 	@Override
 	public String[] extensions(IDatabaseManager.DatabaseType type) {
 		String tableName = TABLE_NAME;

@@ -31,17 +31,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class GuiFragmentFinderAction extends BaseAction {
-
+	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentFinderAction.class);
-
-	public List<Integer> getGuiFragmentsId() {
+	
+	public List<String> getGuiFragmentsCodes() {
 		try {
 			FieldSearchFilter[] filters = new FieldSearchFilter[0];
-			if (null != this.getId()) {
+			//if (null != this.getId()) {
 				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("id"), this.getId(), false);
-				filters = this.addFilter(filters, filterToAdd);
-			}
+			//	FieldSearchFilter filterToAdd = new FieldSearchFilter(("id"), this.getId(), false);
+			//	filters = this.addFilter(filters, filterToAdd);
+			//}
 			if (StringUtils.isNotBlank(this.getCode())) {
 				//TODO add a constant into your IGuiFragmentManager class
 				FieldSearchFilter filterToAdd = new FieldSearchFilter(("code"), this.getCode(), true);
@@ -62,7 +62,7 @@ public class GuiFragmentFinderAction extends BaseAction {
 				FieldSearchFilter filterToAdd = new FieldSearchFilter(("gui"), this.getGui(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
-			List<Integer> guiFragments = this.getGuiFragmentManager().searchGuiFragments(filters);
+			List<String> guiFragments = this.getGuiFragmentManager().searchGuiFragments(filters);
 			return guiFragments;
 		} catch (Throwable t) {
 			_logger.error("Error getting guiFragments list", t);
@@ -80,24 +80,24 @@ public class GuiFragmentFinderAction extends BaseAction {
 		return newFilters;
 	}
 	
-	public GuiFragment getGuiFragment(int id) {
+	public GuiFragment getGuiFragment(String code) {
 		GuiFragment guiFragment = null;
 		try {
-			guiFragment = this.getGuiFragmentManager().getGuiFragment(id);
+			guiFragment = this.getGuiFragmentManager().getGuiFragment(code);
 		} catch (Throwable t) {
-			_logger.error("Error getting guiFragment with id {}", id, t);
-			throw new RuntimeException("Error getting guiFragment with id " + id, t);
+			_logger.error("Error getting guiFragment with code {}", code, t);
+			throw new RuntimeException("Error getting guiFragment with code " + code, t);
 		}
 		return guiFragment;
 	}
-	
+	/*
 	public Integer getId() {
 		return _id;
 	}
 	public void setId(Integer id) {
 		this._id = id;
 	}
-	
+	*/
 	public String getCode() {
 		return _code;
 	}
@@ -133,7 +133,7 @@ public class GuiFragmentFinderAction extends BaseAction {
 		this._guiFragmentManager = guiFragmentManager;
 	}
 	
-	private Integer _id;
+	//private Integer _id;
 	private String _code;
 	private String _widgetCode;
 	private String _pluginCode;

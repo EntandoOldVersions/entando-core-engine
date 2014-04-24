@@ -87,10 +87,11 @@ public abstract class AbstractWidgetExecutorService {
 			}
 			buffer.append(this.extractDecoratorsOutput(reqCtx, widget, decorators, false, true));
 			if (null != widget && this.isUserAllowed(reqCtx, widget)) {
+				String widgetOutput = this.extractWidgetOutput(reqCtx, widget.getType());
 				//String widgetJspPath = widget.getType().getJspPath();
 				buffer.append(this.extractDecoratorsOutput(reqCtx, widget, decorators, true, true));
 				//buffer.append(this.extractJspOutput(reqCtx, widgetJspPath));
-				buffer.append(this.extractWidgetOutput(reqCtx, widget.getType()));
+				buffer.append(widgetOutput);
 				buffer.append(this.extractDecoratorsOutput(reqCtx, widget, decorators, true, false));
 			}
 			buffer.append(this.extractDecoratorsOutput(reqCtx, widget, decorators, false, false));
@@ -109,11 +110,11 @@ public abstract class AbstractWidgetExecutorService {
 			FieldSearchFilter[] filters = {filter};
 			IGuiFragmentManager guiFragmentManager = 
 					(IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, reqCtx.getRequest());
-			List<Integer> ids = guiFragmentManager.searchGuiFragments(filters);
-			if (null != ids && !ids.isEmpty()) {
-				Object idObject = ids.get(0);
-				Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
-				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(id);
+			List<String> codes = guiFragmentManager.searchGuiFragments(filters);
+			if (null != codes && !codes.isEmpty()) {
+				String code = codes.get(0);
+				//Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
+				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(code);
 				ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Writer out = new OutputStreamWriter(baos);

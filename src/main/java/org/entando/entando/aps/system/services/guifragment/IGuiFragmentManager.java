@@ -23,17 +23,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
 public interface IGuiFragmentManager {
-
-	public GuiFragment getGuiFragment(int id) throws ApsSystemException;
-
-	public List<Integer> getGuiFragments() throws ApsSystemException;
-
-	public List<Integer> searchGuiFragments(FieldSearchFilter filters[]) throws ApsSystemException;
-
+	
+	public GuiFragment getGuiFragment(String code) throws ApsSystemException;
+	
+	public List<String> getGuiFragments() throws ApsSystemException;
+	
+	public List<String> searchGuiFragments(FieldSearchFilter filters[]) throws ApsSystemException;
+	
 	public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
-
+	
 	public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
-
-	public void deleteGuiFragment(int id) throws ApsSystemException;
-
+	
+	public void deleteGuiFragment(String code) throws ApsSystemException;
+	
 }
