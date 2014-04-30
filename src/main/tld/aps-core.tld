@@ -229,6 +229,36 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
+	
+	<tag>
+		<description>
+			<![CDATA[Print a gui fragment by the given code.]]>
+		</description>
+		<name>fragment</name>
+		<tag-class>org.entando.entando.aps.tags.GuiFragmentTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<description><![CDATA[The code of the fragment to return.]]></description>
+			<name>code</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Name of the page context variable where the requested information is pushed.
+				In this case the special characters <b>will not</b> be escaped.]]></description>
+			<name>var</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[Toggles the escape of the special characters. Admitted value are (true|false), the
+				default is "true".]]></description>
+			<name>escapeXml</name>
+			<required>false</required>
+			<rtexprvalue>false</rtexprvalue>
+		</attribute>
+	</tag>
+	
 	<tag><!--  SPECIAL SYSTEM TAG // Use only within widgets -->
 		<description><![CDATA[Declares the information to insert in the header of the HTML page.
 			The information can be passed as an attribute or, in an indirect manner,
