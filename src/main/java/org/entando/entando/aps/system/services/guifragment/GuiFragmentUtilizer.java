@@ -20,23 +20,24 @@ import java.util.List;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
-
 /**
+ * Basic interface for those services whose handled elements are based on fragment.
  * @author E.Santoboni
  */
-public interface IGuiFragmentManager {
+public interface GuiFragmentUtilizer {
 	
-	public GuiFragment getGuiFragment(String code) throws ApsSystemException;
+	/**
+	 * Return the id of the utilizing service.
+	 * @return The id of the utilizer.
+	 */
+	public String getName();
 	
-	public List<String> getGuiFragments() throws ApsSystemException;
-	
-	public List<String> searchGuiFragments(FieldSearchFilter filters[]) throws ApsSystemException;
-	
-	public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
-	
-	public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException;
-	
-	public void deleteGuiFragment(String code) throws ApsSystemException;
+	/**
+	 * Return the list of the objects that use the fragment with the given name.
+	 * @param guiFragmentCode The name of the fragment
+	 * @return The list of the objects that use the fragment with the given code.
+	 * @throws ApsSystemException In case of error
+	 */
+	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException;
 	
 }

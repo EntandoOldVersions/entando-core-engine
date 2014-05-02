@@ -30,6 +30,9 @@ import com.agiletec.apsadmin.system.BaseAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentFinderAction extends BaseAction {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentFinderAction.class);
@@ -37,11 +40,6 @@ public class GuiFragmentFinderAction extends BaseAction {
 	public List<String> getGuiFragmentsCodes() {
 		try {
 			FieldSearchFilter[] filters = new FieldSearchFilter[0];
-			//if (null != this.getId()) {
-				//TODO add a constant into your IGuiFragmentManager class
-			//	FieldSearchFilter filterToAdd = new FieldSearchFilter(("id"), this.getId(), false);
-			//	filters = this.addFilter(filters, filterToAdd);
-			//}
 			if (StringUtils.isNotBlank(this.getCode())) {
 				//TODO add a constant into your IGuiFragmentManager class
 				FieldSearchFilter filterToAdd = new FieldSearchFilter(("code"), this.getCode(), true);
@@ -90,14 +88,7 @@ public class GuiFragmentFinderAction extends BaseAction {
 		}
 		return guiFragment;
 	}
-	/*
-	public Integer getId() {
-		return _id;
-	}
-	public void setId(Integer id) {
-		this._id = id;
-	}
-	*/
+	
 	public String getCode() {
 		return _code;
 	}
@@ -133,7 +124,6 @@ public class GuiFragmentFinderAction extends BaseAction {
 		this._guiFragmentManager = guiFragmentManager;
 	}
 	
-	//private Integer _id;
 	private String _code;
 	private String _widgetCode;
 	private String _pluginCode;

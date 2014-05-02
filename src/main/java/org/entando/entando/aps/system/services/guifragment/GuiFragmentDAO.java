@@ -21,7 +21,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +30,9 @@ import com.agiletec.aps.system.common.FieldSearchFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentDAO {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentDAO.class);
@@ -69,27 +71,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	
 	@Override
 	public List<String> loadGuiFragments() {
-		/*
-		List<String> guiFragmentsId = new ArrayList<String>();
-		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
-		try {
-			conn = this.getConnection();
-			stat = conn.prepareStatement(LOAD_GUIFRAGMENTS_ID);
-			res = stat.executeQuery();
-			while (res.next()) {
-				String id = res.getString("code");
-				guiFragmentsId.add(id);
-			}
-		} catch (Throwable t) {
-			_logger.error("Error loading GuiFragment list",  t);
-			throw new RuntimeException("Error loading GuiFragment list", t);
-		} finally {
-			closeDaoResources(res, stat, conn);
-		}
-		return guiFragmentsId;
-		*/
 		return this.searchGuiFragments(null);
 	}
 	
@@ -129,6 +110,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 				stat.setNull(index++, Types.VARCHAR);
 			}
  			stat.setString(index++, guiFragment.getGui());
+ 			stat.setInt(index++, 0);
 			stat.executeUpdate();
 		} catch (Throwable t) {
 			_logger.error("Error on insert guiFragment",  t);
@@ -266,19 +248,22 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			guiFragment.setWidgetTypeCode(res.getString("widgettypecode"));
 			guiFragment.setPluginCode(res.getString("plugincode"));
 			guiFragment.setGui(res.getString("gui"));
+			guiFragment.setDefaultGui(res.getString("defaultgui"));
+			Integer locked = res.getInt("locked");
+			guiFragment.setLocked(null != locked && locked.intValue() == 1);
 		} catch (Throwable t) {
 			_logger.error("Error in buildGuiFragmentFromRes", t);
 		}
 		return guiFragment;
 	}
 	
-	private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (code, widgettypecode, plugincode, gui ) VALUES (?, ?, ?, ? )";
+	private static final String ADD_GUIFRAGMENT = "INSERT INTO guifragment (code, widgettypecode, plugincode, gui, locked ) VALUES (? , ? , ? , ? , ?)";
 
 	private static final String UPDATE_GUIFRAGMENT = "UPDATE guifragment SET widgettypecode = ?, plugincode = ? , gui = ? WHERE code = ? ";
 
 	private static final String DELETE_GUIFRAGMENT = "DELETE FROM guifragment WHERE code = ?";
 	
-	private static final String LOAD_GUIFRAGMENT = "SELECT code, widgettypecode, plugincode, gui FROM guifragment WHERE code = ?";
+	private static final String LOAD_GUIFRAGMENT = "SELECT code, widgettypecode, plugincode, gui, defaultgui, locked FROM guifragment WHERE code = ?";
 	
 	//private static final String LOAD_GUIFRAGMENTS_ID  = "SELECT code FROM guifragment";
 	

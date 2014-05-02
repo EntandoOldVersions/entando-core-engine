@@ -18,6 +18,9 @@ package org.entando.entando.aps.system.services.guifragment.event;
 
 import com.agiletec.aps.system.common.notify.ObserverService;
 
+/**
+ * @author E.Santoboni
+ */
 public interface GuiFragmentChangedObserver extends ObserverService {
 	
 	public void updateFromGuiFragmentChanged(GuiFragmentChangedEvent event);

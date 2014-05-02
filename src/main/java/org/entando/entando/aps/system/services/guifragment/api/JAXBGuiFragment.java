@@ -23,8 +23,11 @@ import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 
+/**
+ * @author E.Santoboni
+ */
 @XmlRootElement(name = "guiFragment")
-@XmlType(propOrder = {/*"id", */"code", "widgetCode", "pluginCode", "gui"})
+@XmlType(propOrder = {"code", "widgetCode", "pluginCode", "gui", "defaultGui", "locked"})
 public class JAXBGuiFragment {
 	
     public JAXBGuiFragment() {
@@ -32,32 +35,26 @@ public class JAXBGuiFragment {
     }
 	
     public JAXBGuiFragment(GuiFragment guiFragment) {
-		//this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
 		this.setWidgetCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
 		this.setGui(guiFragment.getGui());
+		this.setDefaultGui(guiFragment.getDefaultGui());
+		this.setLocked(guiFragment.isLocked());
     }
     
 	@XmlTransient
     public GuiFragment getGuiFragment() {
     	GuiFragment guiFragment = new GuiFragment();
-		//guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
 		guiFragment.setWidgetTypeCode(this.getWidgetCode());
 		guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
+    	guiFragment.setDefaultGui(this.getDefaultGui());
+    	guiFragment.setLocked(this.isLocked());
     	return guiFragment;
     }
-	/*
-	@XmlElement(name = "id", required = true)
-	public int getId() {
-		return _id;
-	}
-	public void setId(int id) {
-		this._id = id;
-	}
-	*/
+	
 	@XmlElement(name = "code", required = true)
 	public String getCode() {
 		return _code;
@@ -90,10 +87,27 @@ public class JAXBGuiFragment {
 		this._gui = gui;
 	}
 	
-	//private int _id;
+	@XmlElement(name = "defaultGui", required = true)
+	public String getDefaultGui() {
+		return _defaultGui;
+	}
+	public void setDefaultGui(String defaultGui) {
+		this._defaultGui = defaultGui;
+	}
+	
+	@XmlElement(name = "locked", required = true)
+	public boolean isLocked() {
+		return _locked;
+	}
+	public void setLocked(boolean locked) {
+		this._locked = locked;
+	}
+	
 	private String _code;
 	private String _widgetCode;
 	private String _pluginCode;
 	private String _gui;
+	private String _defaultGui;
+	private boolean _locked;
 	
 }

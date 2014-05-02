@@ -31,6 +31,9 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentAction extends AbstractPortalAction {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentAction.class);

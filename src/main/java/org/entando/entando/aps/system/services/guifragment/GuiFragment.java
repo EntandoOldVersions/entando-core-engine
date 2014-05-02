@@ -16,7 +16,12 @@
 */
 package org.entando.entando.aps.system.services.guifragment;
 
-public class GuiFragment {
+import java.io.Serializable;
+
+/**
+ * @author E.Santoboni
+ */
+public class GuiFragment implements Serializable {
 	
 	public String getCode() {
 		return _code;
@@ -47,7 +52,7 @@ public class GuiFragment {
 	public void setPluginCode(String pluginCode) {
 		this._pluginCode = pluginCode;
 	}
-
+	
 	public String getGui() {
 		return _gui;
 	}
@@ -55,9 +60,25 @@ public class GuiFragment {
 		this._gui = gui;
 	}
 	
+	public String getDefaultGui() {
+		return _defaultGui;
+	}
+	public void setDefaultGui(String defaultGui) {
+		this._defaultGui = defaultGui;
+	}
+	
+	public boolean isLocked() {
+		return _locked;
+	}
+	public void setLocked(boolean locked) {
+		this._locked = locked;
+	}
+	
 	private String _code;
 	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
+	private String _defaultGui;
+	private boolean _locked;
 	
 }

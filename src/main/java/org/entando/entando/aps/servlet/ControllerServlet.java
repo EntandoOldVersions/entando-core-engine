@@ -22,8 +22,6 @@ import com.agiletec.aps.system.services.controller.ControllerManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.AllHttpScopesHashModel;
-import static freemarker.ext.servlet.FreemarkerServlet.KEY_APPLICATION;
-import static freemarker.ext.servlet.FreemarkerServlet.KEY_APPLICATION_PRIVATE;
 import freemarker.ext.servlet.ServletContextHashModel;
 
 import freemarker.template.Configuration;
@@ -40,8 +38,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 
+import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 import org.entando.entando.aps.system.services.controller.executor.ExecutorServiceInterface;
 
 import org.slf4j.Logger;
@@ -55,17 +53,7 @@ import org.slf4j.LoggerFactory;
 public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
-	/*
-	@Override
-	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.service(request, response);
-	}
 	
-	@Override
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		this.service(request, response);
-	}
-    */
 	@Override
     protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

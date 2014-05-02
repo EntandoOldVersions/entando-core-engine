@@ -16,23 +16,30 @@
 */
 package org.entando.entando.aps.system.services.guifragment;
 
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
+
 import java.util.List;
 import java.util.Properties;
 
 import javax.ws.rs.core.Response;
 
-import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
-import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
-
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
+import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
+import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
+import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentManager extends AbstractService implements IGuiFragmentManager {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentManager.class);
@@ -43,6 +50,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	}
 	
 	@Override
+	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
 	public GuiFragment getGuiFragment(String code) throws ApsSystemException {
 		GuiFragment guiFragment = null;
 		try {
@@ -79,10 +87,9 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	}
 	
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
 	public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
 		try {
-			//int key = this.getKeyGeneratorManager().getUniqueKeyCurrentValue();
-			//guiFragment.setId(key);
 			this.getGuiFragmentDAO().insertGuiFragment(guiFragment);
 			this.notifyGuiFragmentChangedEvent(guiFragment, GuiFragmentChangedEvent.INSERT_OPERATION_CODE);
 		} catch (Throwable t) {
@@ -92,6 +99,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	}
 	
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
 	public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
 		try {
 			this.getGuiFragmentDAO().updateGuiFragment(guiFragment);
@@ -103,6 +111,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	}
 	
 	@Override
+	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
 	public void deleteGuiFragment(String code) throws ApsSystemException {
 		try {
 			GuiFragment guiFragment = this.getGuiFragment(code);

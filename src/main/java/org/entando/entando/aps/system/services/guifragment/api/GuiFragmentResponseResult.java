@@ -20,11 +20,13 @@ import javax.xml.bind.annotation.XmlElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
-
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentResponseResult extends AbstractApiResponseResult {
     
     @Override
-    @XmlElement(name = "guiSection", required = false)
+    @XmlElement(name = "guiFragment", required = false)
     public JAXBGuiFragment getResult() {
         return (JAXBGuiFragment) this.getMainResult();
     }

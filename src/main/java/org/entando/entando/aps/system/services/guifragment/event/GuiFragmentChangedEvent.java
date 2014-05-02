@@ -20,7 +20,9 @@ import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.common.notify.ApsEvent;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 
-
+/**
+ * @author E.Santoboni
+ */
 public class GuiFragmentChangedEvent extends ApsEvent {
 	
 	@Override

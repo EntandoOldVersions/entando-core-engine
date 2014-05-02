@@ -143,6 +143,7 @@
 				<property name="langManager" ref="LangManager"/>
 			</bean>
 		</property>
+		<property name="guiFragmentManager" ref="GuiFragmentManager"/>
 	</bean>
 	
 	<bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager" 

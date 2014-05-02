@@ -26,9 +26,13 @@ import javax.xml.bind.annotation.XmlSeeAlso;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 import org.entando.entando.aps.system.services.api.model.ListResponse;
 
+/**
+ * @author E.Santoboni
+ */
 @XmlSeeAlso({JAXBGuiFragment.class})
 public class GuiFragmentListResponseResult extends AbstractApiResponseResult {
     
+	@Override
     @XmlElement(name = "items", required = false)
     public ListResponse<JAXBGuiFragment> getResult() {
         if (this.getMainResult() instanceof Collection) {

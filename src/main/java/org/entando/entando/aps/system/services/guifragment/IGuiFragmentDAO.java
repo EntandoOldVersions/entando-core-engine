@@ -20,6 +20,9 @@ import java.util.List;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
 
+/**
+ * @author E.Santoboni
+ */
 public interface IGuiFragmentDAO {
 	
 	public List<String> searchGuiFragments(FieldSearchFilter[] filters);

@@ -22,7 +22,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
 
-
+/**
+ * @author E.Santoboni
+ */
 @XmlRootElement(name = "response")
 public class GuiFragmentResponse extends AbstractApiResponse {
     

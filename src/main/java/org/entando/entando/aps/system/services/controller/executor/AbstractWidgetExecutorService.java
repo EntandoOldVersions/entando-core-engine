@@ -31,6 +31,7 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import freemarker.template.Template;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -72,6 +73,7 @@ public abstract class AbstractWidgetExecutorService {
 			}
 		} catch (Throwable t) {
 			String msg = "Error detected during widget preprocessing";
+			_logger.error(msg, t);
 			throw new ApsSystemException(msg, t);
 		}
 	}
@@ -113,7 +115,6 @@ public abstract class AbstractWidgetExecutorService {
 			List<String> codes = guiFragmentManager.searchGuiFragments(filters);
 			if (null != codes && !codes.isEmpty()) {
 				String code = codes.get(0);
-				//Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
 				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(code);
 				ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -124,7 +125,7 @@ public abstract class AbstractWidgetExecutorService {
 				return baos.toString();
 			} else {
 				String widgetJspPath = type.getJspPath();
-				return this.extractJspOutput(reqCtx, widgetJspPath);
+				return this.extractJspWidgetOutput(widgetTypeCode, reqCtx, widgetJspPath);
 			}
 		} catch (Throwable t) {
 			String msg = "Error creating widget output";
@@ -193,6 +194,18 @@ public abstract class AbstractWidgetExecutorService {
 		return false;
 	}
 	
+	protected String extractJspWidgetOutput(String widgetTypeCode, RequestContext reqCtx, String jspPath) throws Throwable {
+		try {
+			return this.extractJspOutput(reqCtx, jspPath);
+		} catch (IOException e) {
+			_logger.error("The widget '{}' is unavailable. Expected jsp path '{}'", widgetTypeCode, jspPath, e);
+			return "The widget '" + widgetTypeCode + "' is unavailable";
+		} catch (Throwable t) {
+			_logger.error("Error extracting jsp output", t);
+			throw t;
+		}
+	}
+	
 	protected String extractJspOutput(RequestContext reqCtx, String jspPath) throws ServletException, IOException {
 		HttpServletRequest request = reqCtx.getRequest();
 		HttpServletResponse response = reqCtx.getResponse();
@@ -203,7 +216,5 @@ public abstract class AbstractWidgetExecutorService {
 		dispatcher.include(request, wrapper);
 		return wrapper.getOutput();
 	}
-	
-	protected final String JSP_FOLDER = "/WEB-INF/aps/jsp/";
 	
 }

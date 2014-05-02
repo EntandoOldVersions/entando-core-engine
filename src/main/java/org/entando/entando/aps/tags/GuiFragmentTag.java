@@ -53,7 +53,7 @@ public class GuiFragmentTag extends OutSupport {
 		try {
 			Object extractedValue = this.extractFragmentOutput(reqCtx);
             if (null == extractedValue) {
-                return super.doStartTag();
+				extractedValue = "The fragment '" + this.getCode() + "' is unavailable";
             }
             if (this.getVar() != null) {
                 this.pageContext.setAttribute(this.getVar(), extractedValue);

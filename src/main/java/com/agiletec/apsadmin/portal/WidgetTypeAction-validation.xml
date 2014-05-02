@@ -4,7 +4,7 @@
 
 <validators>
 	
-    <field name="showletTypeCode">
+    <field name="widgetTypeCode">
         <field-validator type="requiredstring">
             <message key="requiredstring" />
         </field-validator>

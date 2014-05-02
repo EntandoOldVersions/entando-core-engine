@@ -28,6 +28,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import com.agiletec.aps.services.mock.MockWidgetTypeDAO;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.common.IManager;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
@@ -37,6 +38,9 @@ import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
+
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 /**
  * @author E.Santoboni
@@ -381,14 +385,14 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
-			assertEquals(1, fieldErrors.get("showletTypeCode").size());
+			assertEquals(1, fieldErrors.get("widgetTypeCode").size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
 			result = this.executePasteUserWidgetType("admin", "content_viewer_list", null, "it", "customers_page", "2");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
-			assertEquals(1, fieldErrors.get("showletTypeCode").size());
+			assertEquals(1, fieldErrors.get("widgetTypeCode").size());
 			assertEquals(1, fieldErrors.get("englishTitle").size());
 		} catch (Throwable t) {
 			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
@@ -409,14 +413,14 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
-			assertEquals(1, fieldErrors.get("showletTypeCode").size());
+			assertEquals(1, fieldErrors.get("widgetTypeCode").size());
 			assertEquals(1, fieldErrors.get("italianTitle").size());
 			
 			result = this.executeAddUserWidgetType("admin", "messages_system", null, "it", "content_viewer_list");
 			assertEquals(Action.INPUT, result);
 			fieldErrors = this.getAction().getFieldErrors();
 			assertEquals(2, fieldErrors.size());
-			assertEquals(1, fieldErrors.get("showletTypeCode").size());
+			assertEquals(1, fieldErrors.get("widgetTypeCode").size());
 			assertEquals(1, fieldErrors.get("englishTitle").size());
 		} catch (Throwable t) {
 			throw t;
@@ -524,6 +528,45 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
+	//TODO ADD MORE TESTS for add new widget
+	
+	public void testAddNewWidgetType() throws Throwable {
+		String widgetTypeCode = "randomWidgetCode_4";
+		List<String> fragmantCodes = null;
+		try {
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._guiFragmentManager.getGuiFragment(widgetTypeCode));
+			String result = this.executeAddWidgetType("admin", widgetTypeCode, "**GUI**");
+			assertEquals(Action.SUCCESS, result);
+			WidgetType addedType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+			assertNotNull(addedType);
+			
+			FieldSearchFilter filterByType = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
+			FieldSearchFilter[] filters = {filterByType};
+			fragmantCodes = this._guiFragmentManager.searchGuiFragments(filters);
+			assertNotNull(fragmantCodes);
+			assertEquals(1, fragmantCodes.size());
+			assertEquals(widgetTypeCode, fragmantCodes.get(0));
+			GuiFragment guiFragment = this._guiFragmentManager.getGuiFragment(fragmantCodes.get(0));
+			assertNotNull(guiFragment);
+			assertEquals(widgetTypeCode, guiFragment.getWidgetTypeCode());
+			assertEquals("**GUI**", guiFragment.getGui());
+			assertFalse(guiFragment.isLocked());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null != fragmantCodes) {
+				for (int i = 0; i < fragmantCodes.size(); i++) {
+					String code = fragmantCodes.get(i);
+					this._guiFragmentManager.deleteGuiFragment(code);
+				}
+			}
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+		}
+	}
+	
+	//
+	
 	private String executePasteUserWidgetType(String username, String code, 
 			String englishTitle, String italianTitle, String pageCode, String framePos) throws Throwable {
 		this.setUserOnSession(username);
@@ -548,10 +591,22 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
+	private String executeAddWidgetType(String username, String code, String gui) throws Throwable {
+		this.setUserOnSession(username);
+		this.initAction("/do/Portal/WidgetType", "save");
+		this.addParameter("widgetTypeCode", code);
+		this.addParameter("englishTitle", "Englis title of " + code);
+		this.addParameter("italianTitle", "Italian title of " + code);
+		this.addParameter("gui", gui);
+		this.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
+		return this.executeAction();
+	}
+	
 	private void init() throws Exception {
 		try {
 			this._pageManager = (IPageManager) this.getService(SystemConstants.PAGE_MANAGER);
 			this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
+			this._guiFragmentManager = (IGuiFragmentManager) this.getService(SystemConstants.GUI_FRAGMENT_MANAGER);
 			DataSource dataSource = (DataSource) this.getApplicationContext().getBean("portDataSource");
 			this._mockWidgetTypeDAO = new MockWidgetTypeDAO();
 			this._mockWidgetTypeDAO.setDataSource(dataSource);
@@ -559,9 +614,10 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			throw new Exception(e);
 		}
 	}
-    
+	
 	private IPageManager _pageManager = null;
-    private IWidgetTypeManager _widgetTypeManager = null;
-    private MockWidgetTypeDAO _mockWidgetTypeDAO;
+	private IWidgetTypeManager _widgetTypeManager = null;
+	private IGuiFragmentManager _guiFragmentManager = null;
+	private MockWidgetTypeDAO _mockWidgetTypeDAO;
 	
 }
