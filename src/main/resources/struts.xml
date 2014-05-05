@@ -16,7 +16,7 @@
     	
 		<result-types>
 			<result-type name="redirectActionWithAnchor" class="com.agiletec.apsadmin.system.dispatcher.ServletActionRedirectResultWithAnchor" />
-			<!-- "redirect-action" result **Deprecated** : inserted to ensure compatibility with previous of jAPS 2.0 version 2.0.6 -->
+			<!-- "redirect-action" result **Deprecated** : inserted to ensure compatibility with previous of Entando 2.0 version 2.0.6 -->
 			<result-type name="redirect-action" class="org.apache.struts2.dispatcher.ServletActionRedirectResult"/>	
 			<result-type name="json" class="org.apache.struts2.json.JSONResult"/>
 		</result-types>
@@ -102,12 +102,12 @@
 	<package name="entando-front-default" extends="entando-default">
 		
 		<result-types>
-			<result-type name="frontRedirectAction" class="com.agiletec.apsadmin.system.dispatcher.FrontServletActionRedirectResult" />
+			<result-type name="frontRedirectAction" class="org.entando.entando.aps.internalservlet.system.dispatcher.FrontServletActionRedirectResult" />
 		</result-types>
         
 		<interceptors>
             
-			<interceptor name="i18nFrontEnd" class="com.agiletec.apsadmin.system.I18nFrontEndInterceptor" />
+			<interceptor name="i18nFrontEnd" class="org.entando.entando.aps.internalservlet.system.I18nFrontEndInterceptor" />
             
 			<interceptor-stack name="entandoFrontEndFreeStack">
 				<interceptor-ref name="exception"/>
