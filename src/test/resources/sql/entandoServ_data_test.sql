@@ -82,7 +82,7 @@ INSERT INTO authusers (username, passwd, registrationdate, lastaccess, lastpassw
 INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<shortcuts>
 	<box pos="0"></box>
 	<box pos="1">core.component.user.list</box>
-	<box pos="2">jacms.content.new</box>
+	<box pos="2"></box>
 	<box pos="3">jacms.content.list</box>
 	<box pos="4">core.portal.pageTree</box>
 	<box pos="5">core.portal.widgetType</box>

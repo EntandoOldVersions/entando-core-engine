@@ -42,7 +42,7 @@ public class TestShortcutConfigAction extends ApsAdminBaseTestCase {
 		MyShortcutConfigAction action = (MyShortcutConfigAction) this.getAction();
 		String[] config = action.getUserConfig();
 		for (int i = 0; i < config.length; i++) {
-			if (i==0 || i>7) {
+			if (i==0 || i==2 || i>7) {
 				assertNull(config[i]);
 			} else {
 				assertNotNull(config[i]);
@@ -280,8 +280,8 @@ public class TestShortcutConfigAction extends ApsAdminBaseTestCase {
     }
 
     private IShortcutManager _shortcutManager = null;
-
-    private final String[] ADMIN_CONFIG = {null, "core.component.user.list", "jacms.content.new", "jacms.content.list", "core.portal.pageTree",
+    
+    private final String[] ADMIN_CONFIG = {null, "core.component.user.list", null, "jacms.content.list", "core.portal.pageTree", 
     		"core.portal.widgetType", "core.tools.setting", "core.tools.entities", null, null};
 
 }

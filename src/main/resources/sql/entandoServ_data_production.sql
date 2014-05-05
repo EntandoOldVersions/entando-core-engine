@@ -51,7 +51,7 @@ INSERT INTO authusershortcuts (username, config) VALUES ('admin', '<?xml version
 	<box pos="0">core.component.user.list</box>
 	<box pos="1">core.component.categories</box>
 	<box pos="2">core.component.labels.list</box>
-	<box pos="3">jacms.content.new</box>
+	<box pos="3"></box>
 	<box pos="4">jacms.content.list</box>
 	<box pos="5">jacms.contentType</box>
 	<box pos="6">core.portal.pageTree</box>
