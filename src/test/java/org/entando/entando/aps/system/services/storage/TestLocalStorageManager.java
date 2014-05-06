@@ -1,35 +1,37 @@
 /*
-*
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando Enterprise Edition software.
-* You can redistribute it and/or modify it
-* under the terms of the Entando's EULA
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
-
+ *
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando Enterprise Edition software.
+ * You can redistribute it and/or modify it
+ * under the terms of the Entando's EULA
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2014 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.aps.system.services.storage;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+
+import org.apache.commons.io.IOUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author S.Loru
+ * @author S.Loru - E.Santoboni
  */
 public class TestLocalStorageManager extends BaseTestCase {
 	
@@ -40,22 +42,30 @@ public class TestLocalStorageManager extends BaseTestCase {
 		super.setUp();
 		this.init();
 	}
-	
+
 	public void testInitialize() {
 		assertNotNull(this._localStorageManager);
 	}
 	
-	public void testGetParent(){
-		File file = this._localStorageManager.getFile("conf" + File.separator, false);
-		assertTrue(file.exists());
-		assertTrue(file.isDirectory());
-		boolean isRoot = this._localStorageManager.isFileRootResource(file, false);
-		assertFalse(isRoot);
-		file = this._localStorageManager.getFile("" + File.separator, false);
-		assertTrue(file.exists());
-		assertTrue(file.isDirectory());
-		isRoot = this._localStorageManager.isFileRootResource(file, false);
-		assertTrue(isRoot);
+	public void testStorageFileList() throws Throwable {
+		String[] filenames = this._localStorageManager.listFile("", false);
+		assertEquals(1, filenames.length);
+		assertEquals("entando_logo.jpg", filenames[0]);
+		filenames = this._localStorageManager.listFile("conf" + File.separator, false);
+		assertEquals(2, filenames.length);
+		for (int i = 0; i < filenames.length; i++) {
+			String filename = filenames[i];
+			assertTrue(filename.equals("contextTestParams.properties") || filename.equals("systemParams.properties"));
+		}
+	}
+	
+	public void testStorageDirectoryList() throws Throwable {
+		String[] directoryNames = this._localStorageManager.listDirectory("", false);
+		assertEquals(1, directoryNames.length);
+		assertEquals("conf", directoryNames[0]);
+		
+		directoryNames = this._localStorageManager.listDirectory("conf" + File.separator, false);
+		assertEquals(0, directoryNames.length);
 	}
 	
 	public void testStorageList() {
@@ -64,74 +74,63 @@ public class TestLocalStorageManager extends BaseTestCase {
 		int fileCounter = 0;
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
-			if(file.isDirectory()) {
+			if (file.isDirectory()) {
 				dirCounter++;
 			} else {
 				fileCounter++;
 			}
 		}
-		assertEquals(3, fileList.size());
+		assertEquals(2, fileList.size());
 		assertEquals(1, dirCounter);
-		assertEquals(2, fileCounter);
+		assertEquals(1, fileCounter);
 	}
-	
+
 	public void testStorageList_2() {
 		List<File> fileList = this._localStorageManager.fileList("conf" + File.separator, false);
 		int dirCounter = 0;
 		int fileCounter = 0;
 		for (int i = 0; i < fileList.size(); i++) {
 			File file = fileList.get(i);
-			if(file.isDirectory()) {
+			if (file.isDirectory()) {
 				dirCounter++;
 			} else {
 				fileCounter++;
 			}
 		}
-		assertEquals(3, fileList.size());
-		assertEquals(1, dirCounter);
+		assertEquals(2, fileList.size());
+		assertEquals(0, dirCounter);
 		assertEquals(2, fileCounter);
 	}
 	
-	public void testReadFile() throws ApsSystemException {
-			String readFile = this._localStorageManager.readFile("test.txt", false);
-			assertEquals("test_test", readFile);
+	public void testSaveEditDeleteFile() throws Throwable {
+		String testFilePath = "testfolder/test.txt";
+		InputStream stream = this._localStorageManager.getStream(testFilePath, false);
+		assertNull(stream);
+		try {
+			String content = "Content of new text file";
+			this._localStorageManager.saveFile(testFilePath, false, new ByteArrayInputStream(content.getBytes()));
+			stream = this._localStorageManager.getStream(testFilePath, false);
+			assertNotNull(stream);
+			String extractedString = IOUtils.toString(stream, "UTF-8");
+			assertEquals(content, extractedString);
+			String newContent = "This is the new content of text file";
+			this._localStorageManager.editFile(testFilePath, false, new ByteArrayInputStream(newContent.getBytes()));
+			stream = this._localStorageManager.getStream(testFilePath, false);
+			String extractedNewString = IOUtils.toString(stream, "UTF-8");
+			assertEquals(newContent, extractedNewString);
+			String readfileAfterWriteBackup = this._localStorageManager.readFile(testFilePath, false);
+			assertEquals(extractedNewString, readfileAfterWriteBackup);
+			this._localStorageManager.deleteFile(testFilePath, false);
+			stream = this._localStorageManager.getStream(testFilePath, false);
+			assertNull(stream);
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._localStorageManager.deleteDirectory("testfolder/", false);
+			stream = this._localStorageManager.getStream(testFilePath, false);
+			assertNull(stream);
+		}
 	}
-	
-	public void testEditFile() throws ApsSystemException{
-			String testtxt = "test.txt";
-			String readFile = this._localStorageManager.readFile(testtxt, false);
-			assertEquals("test_test", readFile);
-			String backup = readFile;
-			String text = "asd_test";
-			this._localStorageManager.editFile(testtxt, false,  text);
-			String readfileAfterWrite = this._localStorageManager.readFile(testtxt, false);
-			assertEquals(text, readfileAfterWrite);
-			this._localStorageManager.editFile(testtxt, false, backup);
-			String readfileAfterWriteBackup = this._localStorageManager.readFile(testtxt, false);
-			assertEquals(backup, readfileAfterWriteBackup);
-	}
-	
-	public void testSaveAndDeleteFile() throws IOException, ApsSystemException {
-			String testtxt = "test.txt";
-			String newFiletxt = "newFile.txt";
-			File newF = this._localStorageManager.getFile(newFiletxt, false);
-			assertFalse(newF.exists());
-			newF.createNewFile();
-			assertTrue(newF.exists());
-			this._localStorageManager.saveFile("test/"+newFiletxt, false, FileUtils.openInputStream(newF));
-			assertTrue(this._localStorageManager.getFile("test/"+newFiletxt, false).exists());
-			assertTrue(StringUtils.isBlank(this._localStorageManager.readFile(newFiletxt, false)));
-			this._localStorageManager.editFile(newFiletxt, false, "TEST");
-			String readFile1 = this._localStorageManager.readFile(newFiletxt, false);
-			assertEquals("TEST", readFile1);
-			this._localStorageManager.deleteFile("test/"+newFiletxt, false);
-			assertFalse(this._localStorageManager.getFile("test/"+newFiletxt, false).exists());
-			this._localStorageManager.deleteFile(newFiletxt, false);
-			assertFalse(this._localStorageManager.getFile(newFiletxt, false).exists());
-			this._localStorageManager.deleteDirectory("test", false);
-			assertFalse(this._localStorageManager.getFile("test", false).exists());
-	}
-	
 	
 	public void testCreateDeleteDir() throws ApsSystemException {
 		String[] listDirectory = this._localStorageManager.listDirectory("", false);
@@ -145,12 +144,12 @@ public class TestLocalStorageManager extends BaseTestCase {
 	}
 	
 	private void init() throws Exception {
-    	try {
-    		this._localStorageManager = (IStorageManager) this.getApplicationContext().getBean(SystemConstants.STORAGE_MANAGER);
+		try {
+			this._localStorageManager = (IStorageManager) this.getApplicationContext().getBean(SystemConstants.STORAGE_MANAGER);
 		} catch (Throwable t) {
 			_logger.error("error on init", t);
 		}
-    }
+	}
 	
 	private IStorageManager _localStorageManager;
 	

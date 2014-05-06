@@ -24,13 +24,15 @@ import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.CharEncoding;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author E.Santoboni
@@ -42,7 +44,6 @@ public class LocalStorageManager implements IStorageManager {
 	public void init() throws Exception {
 		_logger.debug("{} ready", this.getClass().getName());
 	}
-	
 	
 	@Override
 	public void saveFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException {
@@ -64,7 +65,6 @@ public class LocalStorageManager implements IStorageManager {
 			is.close();
 		} catch (Throwable t) {
 			_logger.error("Error on saving file", t);
-			//ApsSystemUtils.logThrowable(t, this, "save");
 			throw new ApsSystemException("Error on saving file", t);
 		}
 	}
@@ -88,13 +88,6 @@ public class LocalStorageManager implements IStorageManager {
 		if (!dir.exists() || !dir.isDirectory()) {
 			dir.mkdirs();
 		}
-	}
-
-	@Override
-	public File getFile(String subPath, boolean isProtectedResource) {
-		subPath = (null == subPath)? "" : subPath;
-		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		return new File(fullPath);
 	}
 	
 	@Override
@@ -132,7 +125,6 @@ public class LocalStorageManager implements IStorageManager {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting stream", t);
-			//ApsSystemUtils.logThrowable(t, this, "getStream");
 			throw new ApsSystemException("Error extracting stream", t);
 		}
 		return null;
@@ -152,20 +144,15 @@ public class LocalStorageManager implements IStorageManager {
 		String baseUrl = (!isProtectedResource) ? this.getBaseURL() : this.getProtectedBaseURL();
 		return this.createPath(baseUrl, subPath, true);
 	}
-
+	
 	@Override
+	@Deprecated
 	public List<File> fileList(String subPath, boolean isProtectedResource) {
 		subPath = (null == subPath)? "" : subPath; 
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
 		List<File> listFiles = new ArrayList<File>();
 		File file = new File(fullPath);
 		if (file.exists() && file.isDirectory()) {
-			if(StringUtils.isNotBlank(subPath)){
-				File parent = new File(file.getParent());
-				if(parent.exists()){
-					listFiles.add(parent);
-				}
-			}
 			listFiles.addAll(Arrays.asList(file.listFiles()));
 		}
 		return listFiles;
@@ -196,15 +183,32 @@ public class LocalStorageManager implements IStorageManager {
 	}
 	
 	@Override
-	public void editFile(String subPath, boolean isProtectedResource, String text) throws ApsSystemException {
+	public void editFile(String subPath, boolean isProtectedResource, InputStream is) throws ApsSystemException {
 		subPath = (null == subPath)? "" : subPath;
 		String fullPath = this.createFullPath(subPath, isProtectedResource);
-		File file = new File(fullPath);
+		String tempFilePath = null;
 		try {
-			FileUtils.writeStringToFile(file, text, CharEncoding.UTF_8);
+			File oldFile = new File(fullPath);
+			if (oldFile.exists()) {
+				String tempDir = System.getProperty("java.io.tmpdir");
+				tempFilePath = tempDir + File.separator + subPath;
+				FileUtils.moveFile(oldFile, new File(tempFilePath));
+			}
+			this.saveFile(subPath, isProtectedResource, is);
 		} catch (Throwable t) {
+			try {
+				if (null != tempFilePath) {
+					FileUtils.moveFile(new File(tempFilePath), new File(fullPath));
+				}
+			} catch (Throwable tr) {
+				_logger.error("Error restoring File from path {} to path", tempFilePath, fullPath, tr);
+			}
 			_logger.error("Error writing File with path {}", subPath, t);
 			throw new ApsSystemException("Error editing file", t);
+		} finally {
+			if (null != tempFilePath) {
+				new File(tempFilePath).delete();
+			}
 		}
 	}
 	
@@ -216,25 +220,6 @@ public class LocalStorageManager implements IStorageManager {
 	@Override
 	public String[] listFile(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		return this.list(subPath, isProtectedResource, false);
-	}
-	
-	@Override
-	public boolean isFileRootResource(File file, boolean isProtectedResource) {
-		if(file == null){
-			return false;
-		}
-		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
-		diskRoot = removeSeparatorFromEndOfPath(diskRoot);
-		String filePath = removeSeparatorFromEndOfPath(file.getPath());
-		_logger.debug("diskroot: "+ diskRoot);
-		_logger.debug("file.getPath(): "+ file.getPath());
-		return diskRoot.equals(filePath);
-	}
-	
-	@Override
-	public String getSubPathFromFile(File file, boolean isProtectedResource) {
-		String diskRoot = (!isProtectedResource) ? this.getBaseDiskRoot() : this.getProtectedBaseDiskRoot();
-		return StringUtils.remove(file.getPath(), diskRoot);
 	}
 	
 	private String[] list(String subPath, boolean isProtectedResource, boolean searchDirectory) throws ApsSystemException {
@@ -291,15 +276,6 @@ public class LocalStorageManager implements IStorageManager {
 		}
 	}
 	
-	private String removeSeparatorFromEndOfPath(String path) {
-		while(null != path && path.endsWith(File.separator) &&  path.length() > 0){
-			path = path.substring(0, path.length() - File.separator.length());
-		}
-		return path;
-	}
-	
-	
-	
 	protected String getBaseURL() {
 		return _baseURL;
 	}
@@ -327,23 +303,13 @@ public class LocalStorageManager implements IStorageManager {
 	public void setProtectedBaseURL(String protBaseURL) {
 		this._protectedBaseURL = protBaseURL;
 	}
-
-//	@Override
-//	public String[] getAllowedEditExtensions() {
-//		if(null == _allowedEditExtensions){
-//			return new String[0];
-//		}
-//		return _allowedEditExtensions.split(",");
-//	}
-
+	
 	public void setAllowedEditExtensions(String allowedEditExtensions) {
 		this._allowedEditExtensions = allowedEditExtensions;
 	}
-
 	public String getAllowedEditExtensions() {
 		return _allowedEditExtensions;
 	}
-	
 	
 	private String _baseURL;
 	private String _baseDiskRoot;
