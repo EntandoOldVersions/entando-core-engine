@@ -68,37 +68,42 @@ public class TestLocalStorageManager extends BaseTestCase {
 		directoryNames = this._localStorageManager.listDirectory("conf" + File.separator, false);
 		assertEquals(0, directoryNames.length);
 	}
-	/*
-	public void testStorageList() {
-		List<File> fileList = this._localStorageManager.fileList("", false);
-		int dirCounter = 0;
-		int fileCounter = 0;
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			if (file.isDirectory()) {
-				dirCounter++;
-			} else {
-				fileCounter++;
+	
+	public void testListAttributes() throws Throwable {
+		BasicFileAttributeView[] fileAttributes = this._localStorageManager.listAttributes("", false);
+		boolean containsConf = false;
+		boolean prevDirectory = true;
+		String prevName = null;
+		for (int i = 0; i < fileAttributes.length; i++) {
+			BasicFileAttributeView bfav = fileAttributes[i];
+			if (!prevDirectory && bfav.isDirectory()) {
+				fail();
 			}
+			if (bfav.isDirectory() && bfav.getName().equals("conf")) {
+				containsConf = true;
+			}
+			if ((bfav.isDirectory() == prevDirectory) && null != prevName) {
+				assertTrue(bfav.getName().compareTo(prevName) > 0);
+			}
+			prevName = bfav.getName();
+			prevDirectory = bfav.isDirectory();
 		}
-		assertEquals(2, fileList.size());
-		assertEquals(1, dirCounter);
-		assertEquals(1, fileCounter);
+		assertTrue(containsConf);
 	}
-	*/
-	public void testStorageList_2() {
-		List<File> fileList = this._localStorageManager.fileList("conf" + File.separator, false);
+	
+	public void testListAttributes_2() throws Throwable {
+		BasicFileAttributeView[] fileAttributes = this._localStorageManager.listAttributes("conf" + File.separator, false);
+		assertEquals(2, fileAttributes.length);
 		int dirCounter = 0;
 		int fileCounter = 0;
-		for (int i = 0; i < fileList.size(); i++) {
-			File file = fileList.get(i);
-			if (file.isDirectory()) {
+		for (int i = 0; i < fileAttributes.length; i++) {
+			BasicFileAttributeView bfav = fileAttributes[i];
+			if (bfav.isDirectory()) {
 				dirCounter++;
 			} else {
 				fileCounter++;
 			}
 		}
-		assertEquals(2, fileList.size());
 		assertEquals(0, dirCounter);
 		assertEquals(2, fileCounter);
 	}
