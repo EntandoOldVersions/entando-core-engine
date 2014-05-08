@@ -16,16 +16,12 @@
 */
 package org.entando.entando.apsadmin.portal.guifragment;
 
-import com.agiletec.aps.util.SelectItem;
-import com.agiletec.apsadmin.portal.AbstractPortalAction;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import com.agiletec.apsadmin.system.BaseAction;
+
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
-
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-
-import java.util.List;
-import java.util.Map;
-
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import org.slf4j.Logger;
@@ -34,7 +30,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class GuiFragmentAction extends AbstractPortalAction {
+public class GuiFragmentAction extends BaseAction {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentAction.class);
 	
@@ -66,8 +62,8 @@ public class GuiFragmentAction extends AbstractPortalAction {
 
 	public String save() {
 		try {
-			GuiFragment guiFragment = this.createGuiFragment();
 			int strutsAction = this.getStrutsAction();
+			GuiFragment guiFragment = this.createGuiFragment();
 			if (ApsAdminSystemConstants.ADD == strutsAction) {
 				this.getGuiFragmentManager().addGuiFragment(guiFragment);
 			} else if (ApsAdminSystemConstants.EDIT == strutsAction) {
@@ -131,20 +127,24 @@ public class GuiFragmentAction extends AbstractPortalAction {
 		this.setDefaultGui(guiFragment.getDefaultGui());
 	}
 	
-	private GuiFragment createGuiFragment() {
-		GuiFragment guiFragment = new GuiFragment();
-		guiFragment.setCode(this.getCode());
-		guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
-		guiFragment.setPluginCode(this.getPluginCode());
+	private GuiFragment createGuiFragment() throws Throwable {
+		GuiFragment guiFragment = null;
+		int strutsAction = this.getStrutsAction();
+		if (ApsAdminSystemConstants.ADD == strutsAction) {
+			guiFragment = new GuiFragment();
+			guiFragment.setCode(this.getCode());
+		} else {
+			guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
+		}
+		//GuiFragment guiFragment = new GuiFragment();
+		//guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
+		//guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
 		return guiFragment;
 	}
 	
-	@Override
-	protected void addFlavourWidgetType(String mapCode, WidgetType type, Map<String, List<SelectItem>> mapping) {
-		if (!type.isLogic()) {
-			super.addFlavourWidgetType(mapCode, type, mapping);
-		}
+	public WidgetType getWidgetType(String widgetTypeCode) {
+		return this.getWidgetTypeManager().getWidgetType(widgetTypeCode);
 	}
 	
 	public int getStrutsAction() {
@@ -205,6 +205,13 @@ public class GuiFragmentAction extends AbstractPortalAction {
 		this._guiFragmentManager = guiFragmentManager;
 	}
 	
+	protected IWidgetTypeManager getWidgetTypeManager() {
+		return _widgetTypeManager;
+	}
+	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
+		this._widgetTypeManager = widgetTypeManager;
+	}
+	
 	private int _strutsAction;
 	private String _code;
 	private String _widgetTypeCode;
@@ -213,5 +220,6 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	private String _defaultGui;
 	
 	private IGuiFragmentManager _guiFragmentManager;
+	private IWidgetTypeManager _widgetTypeManager;
 	
 }

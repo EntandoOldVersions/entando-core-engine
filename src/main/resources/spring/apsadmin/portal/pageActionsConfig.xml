@@ -52,13 +52,14 @@
 	
 	<bean id="guiFragmentFinderAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.portal.guifragment.GuiFragmentFinderAction" 
-			parent="abstractBaseAction" >
+			parent="abstractPortalAction" >
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
 	</bean>
 	
 	<bean id="guiFragmentAction" scope="prototype" 
 			class="org.entando.entando.apsadmin.portal.guifragment.GuiFragmentAction" 
-			parent="abstractPortalAction" >
+			parent="abstractBaseAction" >
+		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
 	</bean>
 	

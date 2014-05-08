@@ -21,11 +21,11 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.apsadmin.portal.AbstractPortalAction;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
-
-import com.agiletec.apsadmin.system.BaseAction;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class GuiFragmentFinderAction extends BaseAction {
+public class GuiFragmentFinderAction extends AbstractPortalAction {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentFinderAction.class);
 	
@@ -41,25 +41,23 @@ public class GuiFragmentFinderAction extends BaseAction {
 		try {
 			FieldSearchFilter[] filters = new FieldSearchFilter[0];
 			if (StringUtils.isNotBlank(this.getCode())) {
-				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("code"), this.getCode(), true);
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("code", this.getCode(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
-			if (StringUtils.isNotBlank(this.getWidgetCode())) {
-				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("widgettypecode"), this.getWidgetCode(), true);
+			if (StringUtils.isNotBlank(this.getWidgetTypeCode())) {
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("widgettypecode", this.getWidgetTypeCode(), false);
 				filters = this.addFilter(filters, filterToAdd);
 			}
 			if (StringUtils.isNotBlank(this.getPluginCode())) {
-				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("plugincode"), this.getPluginCode(), true);
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("plugincode", this.getPluginCode(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
+			/*
 			if (StringUtils.isNotBlank(this.getGui())) {
-				//TODO add a constant into your IGuiFragmentManager class
-				FieldSearchFilter filterToAdd = new FieldSearchFilter(("gui"), this.getGui(), true);
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("gui", this.getGui(), true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
+			*/
 			List<String> guiFragments = this.getGuiFragmentManager().searchGuiFragments(filters);
 			return guiFragments;
 		} catch (Throwable t) {
@@ -89,6 +87,10 @@ public class GuiFragmentFinderAction extends BaseAction {
 		return guiFragment;
 	}
 	
+	public WidgetType getWidgetType(String widgetTypeCode) {
+		return this.getWidgetTypeManager().getWidgetType(widgetTypeCode);
+	}
+	
 	public String getCode() {
 		return _code;
 	}
@@ -96,11 +98,11 @@ public class GuiFragmentFinderAction extends BaseAction {
 		this._code = code;
 	}
 	
-	public String getWidgetCode() {
-		return _widgetCode;
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
 	}
-	public void setWidgetCode(String widgetCode) {
-		this._widgetCode = widgetCode;
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
 	}
 	
 	public String getPluginCode() {
@@ -125,9 +127,10 @@ public class GuiFragmentFinderAction extends BaseAction {
 	}
 	
 	private String _code;
-	private String _widgetCode;
+	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
+	
 	private IGuiFragmentManager _guiFragmentManager;
 	
 }
