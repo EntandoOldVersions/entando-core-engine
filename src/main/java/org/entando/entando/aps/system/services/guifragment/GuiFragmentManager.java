@@ -16,31 +16,39 @@
 */
 package org.entando.entando.aps.system.services.guifragment;
 
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.common.FieldSearchFilter;
-import com.agiletec.aps.system.exception.ApsSystemException;
-
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
 import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
+import com.agiletec.aps.system.common.entity.model.EntitySearchFilter;
+import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * @author E.Santoboni
  */
-public class GuiFragmentManager extends AbstractService implements IGuiFragmentManager {
+public class GuiFragmentManager extends AbstractService implements IGuiFragmentManager, GuiFragmentUtilizer {
 	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentManager.class);
 	
@@ -216,6 +224,66 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 		event.setOperationCode(operationCode);
 		this.notifyEvent(event);
 	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public List getGuiFragmentUtilizers(String guiFragmentCode)	throws ApsSystemException {
+		List<GuiFragment> utilizers = new ArrayList<GuiFragment>();
+		try {
+			String strToSearch = "code=\""+guiFragmentCode + "\"";
+			Set<String> results = new HashSet<String>();
+			results.addAll(this.searchFragments(strToSearch, "gui"));
+			results.addAll(this.searchFragments(strToSearch, "defaultgui"));
+			
+			if (!results.isEmpty()) {
+				Pattern pattern = Pattern.compile("<@wp\\.fragment.*code=\""+ guiFragmentCode + "\".*/>", Pattern.MULTILINE);
+				Iterator<String> it = results.iterator();
+				while (it.hasNext()) {
+					String fcode = it.next();
+					GuiFragment fragment = this.getGuiFragment(fcode);
+				
+					if (this.scanTemplate(pattern, fragment.getGui()) || this.scanTemplate(pattern, fragment.getDefaultGui())) {
+						utilizers.add(fragment);						
+					}
+				}
+			}
+		} catch (Throwable t) {
+			_logger.error("Error extracting utilizers", t);
+			throw new ApsSystemException("Error extracting utilizers", t);
+		}
+		return utilizers;
+	}
+
+	protected boolean scanTemplate(Pattern pattern, String template) {
+		boolean check = false;
+		if (StringUtils.isNotBlank(template)) {
+			Matcher matcher = pattern.matcher(template);
+			if (matcher.find()) {
+				check = true;
+			}	
+		}
+		return check;
+	}
+
+	@SuppressWarnings("rawtypes")
+	protected Set<String> searchFragments(String strToSearch, String column) throws ApsSystemException {
+		EntitySearchFilter filterTag = new EntitySearchFilter(column, false, "<@wp.fragment", true);
+		EntitySearchFilter[] filters1 = new EntitySearchFilter[]{filterTag};
+		List<String> result1 = this.searchGuiFragments(filters1);
+		
+		EntitySearchFilter filterCode = new EntitySearchFilter(column, false, strToSearch, true);
+		EntitySearchFilter[] filters2 = new EntitySearchFilter[]{filterCode};
+		List<String> result2 = this.searchGuiFragments(filters2);
+		
+		Set<String> result = new HashSet<String>();
+		result.addAll(result1);
+		result.addAll(result2);
+		
+		
+		return result;
+	}
+	
+	
 	
 	public void setGuiFragmentDAO(IGuiFragmentDAO guiFragmentDAO) {
 		 this._guiFragmentDAO = guiFragmentDAO;
