@@ -124,16 +124,15 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	}
 	
 	private void populateForm(GuiFragment guiFragment) throws Throwable {
-		//this.setId(guiFragment.getId());
 		this.setCode(guiFragment.getCode());
 		this.setWidgetTypeCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
 		this.setGui(guiFragment.getGui());
+		this.setDefaultGui(guiFragment.getDefaultGui());
 	}
 	
 	private GuiFragment createGuiFragment() {
 		GuiFragment guiFragment = new GuiFragment();
-		//guiFragment.setId(this.getId());
 		guiFragment.setCode(this.getCode());
 		guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
 		guiFragment.setPluginCode(this.getPluginCode());
@@ -154,14 +153,7 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	public void setStrutsAction(int strutsAction) {
 		this._strutsAction = strutsAction;
 	}
-	/*
-	public int getId() {
-		return _id;
-	}
-	public void setId(int id) {
-		this._id = id;
-	}
-	*/
+	
 	public String getCode() {
 		return _code;
 	}
@@ -191,12 +183,19 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	public void setPluginCode(String pluginCode) {
 		this._pluginCode = pluginCode;
 	}
-
+	
 	public String getGui() {
 		return _gui;
 	}
 	public void setGui(String gui) {
 		this._gui = gui;
+	}
+	
+	public String getDefaultGui() {
+		return _defaultGui;
+	}
+	public void setDefaultGui(String defaultGui) {
+		this._defaultGui = defaultGui;
 	}
 	
 	protected IGuiFragmentManager getGuiFragmentManager() {
@@ -207,12 +206,11 @@ public class GuiFragmentAction extends AbstractPortalAction {
 	}
 	
 	private int _strutsAction;
-	//private int _id;
 	private String _code;
-	//private String _widgetCode;
 	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
+	private String _defaultGui;
 	
 	private IGuiFragmentManager _guiFragmentManager;
 	

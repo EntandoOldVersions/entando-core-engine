@@ -46,7 +46,7 @@ public class GuiFragment implements ExtendedColumnDefinition {
 	
 	@DatabaseField(columnName = "gui",
 			dataType = DataType.LONG_STRING,
-			canBeNull = false)
+			canBeNull = true)
 	private String _gui;
 	
 	@DatabaseField(columnName = "defaultgui",

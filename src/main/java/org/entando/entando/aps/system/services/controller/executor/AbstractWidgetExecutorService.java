@@ -31,7 +31,6 @@ import com.agiletec.aps.util.ApsWebApplicationUtils;
 import freemarker.template.Template;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
@@ -46,6 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -112,14 +112,19 @@ public abstract class AbstractWidgetExecutorService {
 			FieldSearchFilter[] filters = {filter};
 			IGuiFragmentManager guiFragmentManager = 
 					(IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, reqCtx.getRequest());
-			List<String> codes = guiFragmentManager.searchGuiFragments(filters);
-			if (null != codes && !codes.isEmpty()) {
-				String code = codes.get(0);
-				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(code);
+			List<String> fragmentCodes = guiFragmentManager.searchGuiFragments(filters);
+			if (null != fragmentCodes && !fragmentCodes.isEmpty()) {
+				String fragmentCode = fragmentCodes.get(0);//take the first
+				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(fragmentCode);
+				String output = (null != guiFragment) ? guiFragment.getCurrentGui() : null;
+				if (StringUtils.isBlank(output)) {
+					_logger.info("The fragment '{}' of widget '{}' is not available", fragmentCode, widgetTypeCode);
+					output = "The fragment '" + fragmentCode + "' of widget '" + widgetTypeCode + "' is not available";
+				}
 				ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				Writer out = new OutputStreamWriter(baos);
-				Template template = new Template(type.getCode(), new StringReader(guiFragment.getGui()), ebc.getConfiguration());
+				Template template = new Template(type.getCode(), new StringReader(output), ebc.getConfiguration());
 				template.process(ebc.getTemplateModel(), out);
 				out.flush();
 				return baos.toString();

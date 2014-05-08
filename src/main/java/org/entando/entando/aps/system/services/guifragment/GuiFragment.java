@@ -18,6 +18,8 @@ package org.entando.entando.aps.system.services.guifragment;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author E.Santoboni
  */
@@ -65,6 +67,20 @@ public class GuiFragment implements Serializable {
 	}
 	public void setDefaultGui(String defaultGui) {
 		this._defaultGui = defaultGui;
+	}
+	
+	/**
+	 * Return the current gui in use.
+	 * Return the default gui if the custom gui ("gui" property) are not available, else the default gui.
+	 * @return The current gui in use.
+	 */
+	public String getCurrentGui() {
+		boolean hasCustomGui = StringUtils.isNotBlank(this.getGui());
+		if (hasCustomGui) {
+			return this.getGui();
+		} else {
+			return this.getDefaultGui();
+		}
 	}
 	
 	public boolean isLocked() {

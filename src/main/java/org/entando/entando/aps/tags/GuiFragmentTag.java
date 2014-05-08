@@ -30,6 +30,8 @@ import java.io.Writer;
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.JspException;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.taglibs.standard.tag.common.core.OutSupport;
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -53,8 +55,8 @@ public class GuiFragmentTag extends OutSupport {
 		try {
 			Object extractedValue = this.extractFragmentOutput(reqCtx);
             if (null == extractedValue) {
-				_logger.info("The fragment '{}' is unavailable", this.getCode());
-				extractedValue = "The fragment '" + this.getCode() + "' is unavailable";
+				_logger.info("The fragment '{}' is not available", this.getCode());
+				extractedValue = "The fragment '" + this.getCode() + "' is not available";
             }
             if (this.getVar() != null) {
                 this.pageContext.setAttribute(this.getVar(), extractedValue);
@@ -77,12 +79,12 @@ public class GuiFragmentTag extends OutSupport {
 		try {
 			IGuiFragmentManager guiFragmentManager = (IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, this.pageContext);
 			GuiFragment guiFragment = guiFragmentManager.getGuiFragment(this.getCode());
-			if (null == guiFragment) {
+			if (null == guiFragment || StringUtils.isBlank(guiFragment.getCurrentGui())) {
 				return null;
 			}
 			ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 			Writer out = new OutputStreamWriter(baos);
-			Template template = new Template(this.getCode(), new StringReader(guiFragment.getGui()), ebc.getConfiguration());
+			Template template = new Template(this.getCode(), new StringReader(guiFragment.getCurrentGui()), ebc.getConfiguration());
 			template.process(ebc.getTemplateModel(), out);
 			out.flush();
 		} catch (Throwable t) {

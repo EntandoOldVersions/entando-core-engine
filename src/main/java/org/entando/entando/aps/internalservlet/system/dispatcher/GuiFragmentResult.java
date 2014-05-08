@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
@@ -65,6 +67,7 @@ import org.slf4j.LoggerFactory;
  *
  * <!-- END SNIPPET: example -->
  * </pre>
+ * @author E.Santoboni
  */
 public class GuiFragmentResult extends StrutsResultSupport {
 
@@ -92,14 +95,12 @@ public class GuiFragmentResult extends StrutsResultSupport {
 		IGuiFragmentManager guiFragmentManager =
 				(IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, req);
 		try {
-			String output;
 			GuiFragment guiFragment = guiFragmentManager.getGuiFragment(code);
-			if (null != guiFragment) {
-				output = guiFragment.getGui();
-			} else {
-				_logger.info("The fragment '{}' is unavailable - Action '{}' - Namespace '{}'", 
+			String output = (null != guiFragment) ? guiFragment.getCurrentGui() : null;
+			if (StringUtils.isBlank(output)) {
+				_logger.info("The fragment '{}' is not available - Action '{}' - Namespace '{}'", 
 						code, invocation.getProxy().getActionName(), invocation.getProxy().getNamespace());
-				output = "The fragment '" + code + "' is unavailable";
+				output = "The fragment '" + code + "' is not available";
 			}
 			RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 			ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
