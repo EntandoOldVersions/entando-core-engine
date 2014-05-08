@@ -17,20 +17,30 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
+import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 /**
  * The manager of the page models.
  * @author M.Diana - E.Santoboni
  */
-public class PageModelManager extends AbstractService implements IPageModelManager {
+public class PageModelManager extends AbstractService implements IPageModelManager, GuiFragmentUtilizer {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(PageModelManager.class);
 	
@@ -118,6 +128,29 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 			_logger.error("Error deleting page models", t);
 			throw new ApsSystemException("Error deleting page models", t);
 		}
+	}
+	
+	@Override
+	public List getGuiFragmentUtilizers(String guiFragmentCode)	throws ApsSystemException {
+		List<PageModel> utilizers = new ArrayList<PageModel>();
+		try {
+			Iterator<PageModel> it = this.getPageModels().iterator();
+			while (it.hasNext()) {
+				PageModel pModel = it.next();
+				String template = pModel.getTemplate();
+				if (StringUtils.isNotBlank(template)) {
+					Pattern pattern = Pattern.compile("<@wp\\.fragment.*code=\""+ guiFragmentCode + "\".*/>", Pattern.MULTILINE);
+					Matcher matcher = pattern.matcher(template);
+					if (matcher.find()) {
+						utilizers.add(pModel);
+					}
+				}
+			}
+		} catch (Throwable t) {
+			_logger.error("Error extracting utilizers", t);
+			throw new ApsSystemException("Error extracting utilizers", t);
+		}
+		return utilizers;
 	}
 	
 	protected IPageModelDAO getPageModelDAO() {

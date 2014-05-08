@@ -25,6 +25,7 @@ import com.agiletec.aps.util.ApsProperties;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
@@ -224,6 +225,68 @@ public class TestPageModelManager extends BaseTestCase {
 		return model;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void testGuiFragmentUtilizer() throws Throwable {
+		String testPageModelACode = "test_pagemodelA";
+		String testPageModelBCode = "test_pagemodelB";
+		String testPageModelCCode = "test_pagemodelC";
+		assertNull(this._pageModelManager.getPageModel(testPageModelACode));
+		assertNull(this._pageModelManager.getPageModel(testPageModelBCode));
+		assertNull(this._pageModelManager.getPageModel(testPageModelCCode));
+		try {
+			String templateA = "Hello 	<@wp.fragment code=\"CODE_1\" escapeXml=false /><@wp.fragment     code=\"CODE_1\" escapeXml=false /><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
+			PageModel mockModelA = this.createMockPageModel(testPageModelACode);
+			mockModelA.setTemplate(templateA);
+			this._pageModelManager.addPageModel(mockModelA);
+
+			String templateB = "Hello 	<@wp.fragment code=\"CODE_B\" escapeXml=false />\r\n<@wp.fragment   escapeXml=false    code=\"CODE_X\" /><@wp.fragment escapeXml=false code=\"CODE_1\"  /><@wp.fragment code=\"CODE_1\"  />world";
+			PageModel mockModelB = this.createMockPageModel(testPageModelBCode);
+			mockModelB.setTemplate(templateB);
+			this._pageModelManager.addPageModel(mockModelB);
+
+			String templateC = "Hello\r\n 	<@wp.fragment code=\"CODE_B\" escapeXml=false />\n\t<@wp.fragment     code=\"CODE_1\" escapeXml=false /><@wp.fragment escapeXml=false code=\"CODE_C\"  /><@wp.fragment code=\"CODE_1\"  />world";
+			PageModel mockModelC = this.createMockPageModel(testPageModelCCode);
+			mockModelC.setTemplate(templateC);
+			this._pageModelManager.addPageModel(mockModelC);
+			
+			String fragment = "CODE";
+			List<PageModel> list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(0, list.size());
+
+			fragment = "CODE_1";
+			list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(3, list.size());
+
+			fragment = "CODE_CC";
+			list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(0, list.size());
+
+			fragment = "CODE_C";
+			list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(1, list.size());
+
+			fragment = "CODE_B";
+			list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(2, list.size());
+
+			fragment = "CODE_X";
+			list = ((PageModelManager)this._pageModelManager).getGuiFragmentUtilizers(fragment);
+			assertEquals(1, list.size());
+
+
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			this._pageModelManager.deletePageModel(testPageModelACode);
+			this._pageModelManager.deletePageModel(testPageModelBCode);
+			this._pageModelManager.deletePageModel(testPageModelCCode);
+			assertNull(this._pageModelManager.getPageModel(testPageModelACode));
+			assertNull(this._pageModelManager.getPageModel(testPageModelBCode));
+			assertNull(this._pageModelManager.getPageModel(testPageModelCCode));
+		}
+	}
+	
 	private void init() throws Exception {
     	try {
 			this._widgetTypeManager = (IWidgetTypeManager) this.getService(SystemConstants.WIDGET_TYPE_MANAGER);
@@ -235,5 +298,5 @@ public class TestPageModelManager extends BaseTestCase {
     
 	private IWidgetTypeManager _widgetTypeManager;
     private IPageModelManager _pageModelManager = null;
-    
+
 }
