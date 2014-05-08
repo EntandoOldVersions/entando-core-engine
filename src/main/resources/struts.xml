@@ -103,6 +103,7 @@
 		
 		<result-types>
 			<result-type name="frontRedirectAction" class="org.entando.entando.aps.internalservlet.system.dispatcher.FrontServletActionRedirectResult" />
+			<result-type name="guiFragment" class="org.entando.entando.aps.internalservlet.system.dispatcher.GuiFragmentResult" />
 		</result-types>
         
 		<interceptors>
