@@ -25,6 +25,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Add information on the cacheable object. 
+ * This annotation has to be used with the annotation {@link org.springframework.cache.annotation.Cacheable}
  * @author E.Santoboni
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -33,8 +35,8 @@ import java.lang.annotation.Target;
 @Documented
 public @interface CacheableInfo {
 	
-	int expiresInMinute() default -1;
+	public int expiresInMinute() default -1;
 	
-	String groups() default "";
+	public String groups() default "";
 	
 }

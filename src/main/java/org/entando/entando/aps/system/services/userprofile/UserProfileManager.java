@@ -66,7 +66,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                     userDetails.setProfile(profile);
                 } catch (Throwable t) {
                 	_logger.error("Error injecting profile on user {}", userDetails.getUsername(), t);
-                    //ApsSystemUtils.logThrowable(t, this, "injectProfile", "Error injecting profile on user " + userDetails.getUsername());
                 }
             }
         }
@@ -82,14 +81,13 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                     this.addProfile(userDetails.getUsername(), (IUserProfile) profile);
                 } catch (Throwable t) {
                 	_logger.error("Error adding profile on user {}", userDetails.getUsername(), t);
-                    //ApsSystemUtils.logThrowable(t, this, "addProfile", "Error adding profile on user " + userDetails.getUsername());
                 }
             }
         }
     }
 	
     @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.updateUser(..)) && args(user,..)")
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'UserProfile_'.concat(#user.username)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#user.username)")
     public void updateProfile(Object user) {
         if (user != null) {
             UserDetails userDetails = (UserDetails) user;
@@ -99,14 +97,13 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                     this.updateProfile(userDetails.getUsername(), (IUserProfile) profile);
                 } catch (Throwable t) {
                 	_logger.error("Error updating profile to user {}", userDetails.getUsername(), t);
-                    //ApsSystemUtils.logThrowable(t, this, "updateProfile", "Error updating profile to user " + userDetails.getUsername());
                 }
             }
         }
     }
 	
     @AfterReturning(pointcut = "execution(* com.agiletec.aps.system.services.user.IUserManager.removeUser(..)) && args(key)")
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'UserProfile_'.concat(#key)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#key)")
     public void deleteProfile(Object key) {
         String username = null;
         if (key instanceof String) {
@@ -120,7 +117,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                 this.deleteProfile(username);
             } catch (Throwable t) {
             	_logger.error("Error deleting profile. user: {}", username, t);
-                //ApsSystemUtils.logThrowable(t, this, "deleteProfile", "ERRORE CANCELLAZIONE PROFILO su utente " + username);
             }
         }
     }
@@ -157,13 +153,12 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.notifyProfileChanging(profile, ProfileChangedEvent.INSERT_OPERATION_CODE);
         } catch (Throwable t) {
         	_logger.error("Error saving profile - user: {}", username, t);
-            //ApsSystemUtils.logThrowable(t, this, "addProfile");
             throw new ApsSystemException("Error saving profile", t);
         }
     }
     
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'UserProfile_'.concat(#username)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#username)")
     public void deleteProfile(String username) throws ApsSystemException {
         try {
             IUserProfile profileToDelete = this.getProfile(username);
@@ -174,13 +169,12 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.notifyProfileChanging(profileToDelete, ProfileChangedEvent.REMOVE_OPERATION_CODE);
         } catch (Throwable t) {
         	_logger.error("Error deleting user profile {}", username, t);
-            //ApsSystemUtils.logThrowable(t, this, "deleteProfile");
             throw new ApsSystemException("Error deleting user profile", t);
         }
     }
     
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'UserProfile_'.concat(#username)")
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#username)")
 	@CacheableInfo(groups = "'UserProfileTypes_cacheGroup'")
 	public IUserProfile getProfile(String username) throws ApsSystemException {
         IUserProfile profile = null;
@@ -191,15 +185,14 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
                 profile.setPublicProfile(profileVO.isPublicProfile());
             }
         } catch (Throwable t) {
-        	_logger.error("Error loading provileVo. user: {} ", username, t);
-            //ApsSystemUtils.logThrowable(t, this, "getProfile");
-            throw new ApsSystemException("Error loading profileVO", t);
+        	_logger.error("Error loading profile. user: {} ", username, t);
+            throw new ApsSystemException("Error loading profile", t);
         }
         return profile;
     }
     
 	@Override
-    @CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'UserProfile_'.concat(#username)")
+    @CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'UserProfile_'.concat(#username)")
 	public void updateProfile(String username, IUserProfile profile) throws ApsSystemException {
         try {
             profile.setId(username);
@@ -207,7 +200,6 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
             this.notifyProfileChanging(profile, ProfileChangedEvent.UPDATE_OPERATION_CODE);
         } catch (Throwable t) {
         	_logger.error("Error updating profile {}", username, t);
-            //ApsSystemUtils.logThrowable(t, this, "updateProfile");
             throw new ApsSystemException("Error updating profile", t);
         }
     }
@@ -220,13 +212,13 @@ public class UserProfileManager extends ApsEntityManager implements IUserProfile
     }
 	
 	@Override
-	@CacheInfoEvict(groups = "'UserProfileTypes_cacheGroup'")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'UserProfileTypes_cacheGroup'")
 	public void removeEntityPrototype(String entityTypeCode) throws ApsSystemException {
 		super.removeEntityPrototype(entityTypeCode);
 	}
 	
 	@Override
-	@CacheInfoEvict(groups = "'UserProfileTypes_cacheGroup'")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'UserProfileTypes_cacheGroup'")
 	public void updateEntityPrototype(IApsEntity entityType) throws ApsSystemException {
 		super.updateEntityPrototype(entityType);
 	}

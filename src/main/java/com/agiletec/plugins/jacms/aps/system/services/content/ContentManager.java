@@ -173,7 +173,7 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException In case of error.
 	 */
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#id)", condition = "#onLine")
 	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsCsv(#id)")
 	public Content loadContent(String id, boolean onLine) throws ApsSystemException {
@@ -279,9 +279,10 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error.
 	 */
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
+			groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void insertOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());
@@ -301,7 +302,6 @@ public class ContentManager extends ApsEntityManager
 			this.notifyPublicContentChanging(content, operationEventCode);
 		} catch (Throwable t) {
 			_logger.error("Error while inserting content on line", t);
-			//ApsSystemUtils.logThrowable(t, this, "insertOnLineContent");
 			throw new ApsSystemException("Error while inserting content on line", t);
 		}
 	}
@@ -310,7 +310,7 @@ public class ContentManager extends ApsEntityManager
 	 * Return the list of all the content IDs. 
 	 * @return The list of all the content IDs. 
 	 * @throws ApsSystemException In case of error
-	 * @deprecated Since jAPS 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
+	 * @deprecated Since Entando 2.0 version 2.0.9, use searchId(EntitySearchFilter[]) method 
 	 */
 	@Override
 	public List<String> getAllContentsId() throws ApsSystemException {
@@ -342,9 +342,10 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error
 	 */
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
+			groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void removeOnLineContent(Content content) throws ApsSystemException {
 		try {
 			content.setLastModified(new Date());
@@ -393,15 +394,15 @@ public class ContentManager extends ApsEntityManager
 	 * @throws ApsSystemException in case of error.
 	 */
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.JacmsSystemConstants).CONTENT_CACHE_PREFIX.concat(#content.id)", condition = "#content.id != null")
-	@CacheInfoEvict(groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
+			groups = "T(com.agiletec.plugins.jacms.aps.system.services.cache.CmsCacheWrapperManager).getContentCacheGroupsToEvictCsv(#content.id, #content.typeCode)")
 	public void deleteContent(Content content) throws ApsSystemException {
 		try {
 			this.getContentDAO().deleteEntity(content.getId());
 		} catch (Throwable t) {
 			_logger.error("Error while deleting content {}", content.getId(), t);
-			//ApsSystemUtils.logThrowable(t, this, "deleteContent");
 			throw new ApsSystemException("Error while deleting content " + content.getId(), t);
 		}
 	}
@@ -420,7 +421,6 @@ public class ContentManager extends ApsEntityManager
 			contentsId = this.getPublicContentSearcherDAO().loadPublicContentsId(contentType, categories, orClauseCategoryFilter, filters, userGroupCodes);
 		} catch (Throwable t) {
 			_logger.error("Error while loading contents", t);
-			//ApsSystemUtils.logThrowable(t, this, "loadContentsId");
 			throw new ApsSystemException("Error while loading contents", t);
 		}
 		return contentsId;

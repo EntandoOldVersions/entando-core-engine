@@ -70,7 +70,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	}
 	
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheKey(#contentId, #modelId, #langCode, #reqCtx)")
 	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx) {

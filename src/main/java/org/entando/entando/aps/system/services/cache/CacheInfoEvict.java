@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Annotation indicating that a method invalidates a group of objects on cache. 
  * @author E.Santoboni
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
@@ -33,6 +34,17 @@ import java.lang.annotation.Target;
 @Documented
 public @interface CacheInfoEvict {
 	
-	String groups();
+	/**
+	 * Qualifier value for the specified cached operation.
+	 * May be used to determine the target cache (or caches). 
+	 * @return Qualifier value for the specified cached operation.
+	 */
+	public String[] value();
+	
+	/**
+	 * The group to invalidate.
+	 * @return The group to invalidate.
+	 */
+	public String groups();
 	
 }

@@ -85,9 +85,9 @@ public class BaseContentListHelper implements IContentListHelper {
     }
     
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, 
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)", condition = "#bean.cacheable")
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, 
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, 
 			key = "T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user)", 
 			beforeInvocation = true, 
 			condition = "T(org.entando.entando.aps.system.services.cache.CacheInfoManager).isExpired(T(com.agiletec.plugins.jacms.aps.system.services.content.helper.BaseContentListHelper).buildCacheKey(#bean, #user))")

@@ -70,7 +70,6 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			thread.start();
 		} catch (Throwable t) {
 			_logger.error("Error adding an actionlogger record", t);
-			//ApsSystemUtils.logThrowable(t, this, "addActionRecord");
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
@@ -90,19 +89,17 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			this.getActionLogDAO().addActionRecord(actionRecord);
 		} catch (Throwable t) {
 			_logger.error("Error adding an actionlogger record", t);
-			//ApsSystemUtils.logThrowable(t, this, "addActionRecordByThread");
 			throw new ApsSystemException("Error adding an actionlogger record", t);
 		}
 	}
 
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActionLogRecord_'.concat(#id)")
 	public void deleteActionRecord(int id) throws ApsSystemException {
 		try {
 			this.getActionLogDAO().deleteActionRecord(id);
 		} catch (Throwable t) {
 			_logger.error("Error deleting the actionlogger record: {}", id, t);
-			//ApsSystemUtils.logThrowable(t, this, "deleteActionRecord");
 			throw new ApsSystemException("Error deleting the actionlogger record: " + id, t);
 		}
 	}
@@ -114,7 +111,6 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			records = this.getActionLogDAO().getActionRecords(searchBean);
 		} catch (Throwable t) {
 			_logger.error("Error loading actionlogger records", t);
-			//ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger records", t);
 		}
 		return records;
@@ -127,7 +123,6 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			record = this.getActionLogDAO().getActionRecord(id);
 		} catch (Throwable t) {
 			_logger.error("Error loading actionlogger record with id: {}", id, t);
-			//ApsSystemUtils.logThrowable(t, this, "getActionRecords");
 			throw new ApsSystemException("Error loading actionlogger record with id: " + id, t);
 		}
 		return record;
@@ -151,7 +146,6 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			}
 		} catch (Throwable t) {
 			_logger.error("Error loading activity stream records", t);
-			//ApsSystemUtils.logThrowable(t, this, "getActivityStream");
 			throw new ApsSystemException("Error loading activity stream records", t);
 		}
 		return recordIds;
@@ -169,19 +163,18 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
 	public void editActionLikeRecord(int id, String username, boolean add) throws ApsSystemException {
 		try {
 			this.getActionLogDAO().editActionLikeRecord(id, username, add);
 		} catch (Throwable t) {
 			_logger.error("Error editing activity stream like records", t);
-			//ApsSystemUtils.logThrowable(t, this, "editActionLikeRecord");
 			throw new ApsSystemException("Error editing activity stream like records", t);
 		}
 	}
 	
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamLikeRecords_id_'.concat(#id)")
 	@CacheableInfo(groups = "'ActivityStreamLikeRecords_cacheGroup'")
 	public List<ActivityStreamLikeInfo> getActionLikeRecords(int id) throws ApsSystemException {
 		List<ActivityStreamLikeInfo> infos = null;
@@ -198,7 +191,6 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting activity stream like records", t);
-			//ApsSystemUtils.logThrowable(t, this, "getActionLikeRecords");
 			throw new ApsSystemException("Error extracting activity stream like records", t);
 		}
 		return infos;
@@ -208,10 +200,9 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	public void updateFromProfileChanged(ProfileChangedEvent event) {
 		try {
 			ICacheInfoManager cacheInfoManager = (ICacheInfoManager) this.getBeanFactory().getBean(SystemConstants.CACHE_INFO_MANAGER);
-			cacheInfoManager.flushGroup("ActivityStreamLikeRecords_cacheGroup");
+			cacheInfoManager.flushGroup(ICacheInfoManager.DEFAULT_CACHE_NAME, "ActivityStreamLikeRecords_cacheGroup");
 		} catch (Throwable t) {
 			_logger.error("Error flushing cache group", t);
-			//ApsSystemUtils.logThrowable(t, this, "updateFromProfileChanged", "Error flushing cache group");
 		}
 	}
 	
@@ -222,7 +213,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
 	public void addActionCommentRecord(String username, String commentText, int streamId) throws ApsSystemException {
 		try {
 			Integer key = null;
@@ -241,7 +232,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 
 	@Override
-	@CacheEvict(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
+	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#streamId)")
 	public void deleteActionCommentRecord(int id, int streamId) throws ApsSystemException {
 		try {
 			this.getActionLogDAO().deleteActionCommentRecord(id, streamId);
@@ -250,10 +241,10 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 			throw new ApsSystemException("Error deleting comment", t);
 		}
 	}
-
+	
 	@Override
 	public Date lastUpdateDate(UserDetails loggedUser) throws ApsSystemException {
-		List<Integer> actionRecordIds = new ArrayList<Integer>();
+		List<Integer> actionRecordIds = null;
 		Date lastUpdate = new Date();
 		try {
 			ActivityStreamSeachBean searchBean = new ActivityStreamSeachBean();
@@ -272,7 +263,7 @@ public class ActionLogManager extends AbstractService implements IActionLogManag
 	}
 	
 	@Override
-	@Cacheable(value = ICacheInfoManager.CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'ActivityStreamCommentRecords_id_'.concat(#id)")
 	@CacheableInfo(groups = "'ActivityStreamCommentRecords_cacheGroup'")
 	public List<ActivityStreamComment> getActionCommentRecords(int id) throws ApsSystemException {
 		List<ActivityStreamComment> infos = null;

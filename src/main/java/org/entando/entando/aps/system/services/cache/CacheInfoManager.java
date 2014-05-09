@@ -17,6 +17,13 @@
 */
 package org.entando.entando.aps.system.services.cache;
 
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.common.AbstractService;
+import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.events.PageChangedEvent;
+import com.agiletec.aps.system.services.page.events.PageChangedObserver;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,11 +33,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -38,20 +47,13 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.support.AbstractCacheManager;
 import org.springframework.expression.EvaluationContext;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.AbstractService;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.IPage;
-import com.agiletec.aps.system.services.page.events.PageChangedEvent;
-import com.agiletec.aps.system.services.page.events.PageChangedObserver;
-
 /**
  * Manager of the System Cache
  * @author E.Santoboni
  */
 @Aspect
 public class CacheInfoManager extends AbstractService implements ICacheInfoManager, PageChangedObserver {
-
+	
 	private static final Logger _logger =  LoggerFactory.getLogger(CacheInfoManager.class);
 	
 	@Override
@@ -77,20 +79,23 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 			if (null == cacheable) {
 				return result;
 			}
+			String[] cacheNames = cacheable.value();
 			Object key = this.evaluateExpression(cacheable.key().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-			if (cacheableInfo.groups() != null && cacheableInfo.groups().trim().length() > 0) {
-				Object groupsCsv = this.evaluateExpression(cacheableInfo.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
-				if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
-					String[] groups = groupsCsv.toString().split(",");
-					this.putInGroup(key.toString(), groups);
+			for (int j = 0; j < cacheNames.length; j++) {
+				String cacheName = cacheNames[j];
+				if (cacheableInfo.groups() != null && cacheableInfo.groups().trim().length() > 0) {
+					Object groupsCsv = this.evaluateExpression(cacheableInfo.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
+					if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
+						String[] groups = groupsCsv.toString().split(",");
+						this.putInGroup(cacheName, key.toString(), groups);
+					}
 				}
-			}
-			if (cacheableInfo.expiresInMinute() > 0) {
-				this.setExpirationTime(key.toString(), cacheableInfo.expiresInMinute());
+				if (cacheableInfo.expiresInMinute() > 0) {
+					this.setExpirationTime(cacheName, key.toString(), cacheableInfo.expiresInMinute());
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while evaluating cacheableInfo annotation", t);
-			//ApsSystemUtils.logThrowable(t, this, "aroundCacheableMethod", "Error while evaluating cacheableInfo annotation");
 			throw new ApsSystemException("Error while evaluating cacheableInfo annotation", t);
 		}
 		return result;
@@ -103,29 +108,51 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 			Method targetMethod = methodSignature.getMethod();
 			Class targetClass = pjp.getTarget().getClass();
 			Method effectiveTargetMethod = targetClass.getMethod(targetMethod.getName(), targetMethod.getParameterTypes());
+			String[] cacheNames = cacheInfoEvict.value();
 			Object groupsCsv = this.evaluateExpression(cacheInfoEvict.groups().toString(), targetMethod, pjp.getArgs(), effectiveTargetMethod, targetClass);
 			if (null != groupsCsv && groupsCsv.toString().trim().length() > 0) {
 				String[] groups = groupsCsv.toString().split(",");
 				for (int i = 0; i < groups.length; i++) {
 					String group = groups[i];
-					this.flushGroup(group);
+					for (int j = 0; j < cacheNames.length; j++) {
+						String cacheName = cacheNames[j];
+						this.flushGroup(cacheName, group);
+					}
 				}
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while flushing group", t);
-			//ApsSystemUtils.logThrowable(t, this, "aroundCacheInfoEvictMethod", "Error while flushing group");
 			throw new ApsSystemException("Error while flushing group", t);
 		}
 		return pjp.proceed();
 	}
 	
+	@Deprecated
 	public void setExpirationTime(String key, int expiresInMinute) {
-		Date expirationTime = DateUtils.addMinutes(new Date(), expiresInMinute);
-		expirationTimes.put(key.toString(), expirationTime);
+		this.setExpirationTime(DEFAULT_CACHE_NAME, key, expiresInMinute);
 	}
 	
+	public void setExpirationTime(String targhetCache, String key, int expiresInMinute) {
+		Date expirationTime = DateUtils.addMinutes(new Date(), expiresInMinute);
+		this.setExpirationTime(targhetCache, key, expirationTime);
+	}
+	
+	@Deprecated
 	public void setExpirationTime(String key, long expiresInSeconds) {
+		this.setExpirationTime(DEFAULT_CACHE_NAME, key, expiresInSeconds);
+	}
+	
+	public void setExpirationTime(String targhetCache, String key, long expiresInSeconds) {
 		Date expirationTime = DateUtils.addSeconds(new Date(), (int) expiresInSeconds);
+		this.setExpirationTime(targhetCache, key, expirationTime);
+	}
+	
+	public void setExpirationTime(String targhetCache, String key, Date expirationTime) {
+		Map<String, Date> expirationTimes = _objectExpirationTimes.get(targhetCache);
+		if (null == expirationTimes) {
+			expirationTimes = new HashMap<String, Date>();
+			_objectExpirationTimes.put(targhetCache, expirationTimes);
+		}
 		expirationTimes.put(key.toString(), expirationTime);
 	}
 	
@@ -133,7 +160,7 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	public void updateFromPageChanged(PageChangedEvent event) {
 		IPage page = event.getPage();
 		String pageCacheGroupName = SystemConstants.PAGES_CACHE_GROUP_PREFIX + page.getCode();
-		this.flushGroup(pageCacheGroupName);
+		this.flushGroup(DEFAULT_CACHE_NAME, pageCacheGroupName);
 	}
 	
 	@Override
@@ -149,35 +176,79 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	}
 	
 	public void flushAll() {
-		Cache cache = this.getCache();
+		Collection<String> cacheNames = this.getSpringCacheManager().getCacheNames();
+		Iterator<String> iter = cacheNames.iterator();
+		while (iter.hasNext()) {
+			String cacheName = iter.next();
+			this.flushAll(cacheName);
+		}
+	}
+	
+	public void flushAll(String cacheName) {
+		Cache cache = this.getCache(cacheName);
 		cache.clear();
-		this._groups.clear();
+		Map<String, List<String>> objectsByGroup = this._cachesObjectGroups.get(cacheName);
+		if (null != objectsByGroup) {
+			objectsByGroup.clear();
+		}
 	}
 	
 	@Override
+	@Deprecated
 	public void flushEntry(String key) {
-		this.getCache().evict(key);
+		this.flushEntry(null, key);
 	}
 	
+	@Override
+	public void flushEntry(String targhetCache, String key) {
+		this.getCache(targhetCache).evict(key);
+	}
+	
+	/**
+	 * Put an object on the default cache.
+	 * @param key The key
+	 * @param obj The object to put into cache.
+	 * @deprecated use putInCache(String, String, Object) instead
+	 */
 	public void putInCache(String key, Object obj) {
-		Cache cache = this.getCache();
+		this.putInCache(DEFAULT_CACHE_NAME, key, obj);
+	}
+	
+	/**
+	 * Put an object on the given cache.
+	 * @param targhetCache The cache name
+	 * @param key The key
+	 * @param obj The object to put into cache.
+	 */
+	public void putInCache(String targhetCache, String key, Object obj) {
+		Cache cache = this.getCache(targhetCache);
 		cache.put(key, obj);
 	}
 	
+	@Deprecated
 	public void putInCache(String key, Object obj, String[] groups) {
-		Cache cache = this.getCache();
-		cache.put(key, obj);
-		this.accessOnGroupMapping(1, groups, key);
+		this.putInCache(DEFAULT_CACHE_NAME, key, obj, groups);
 	}
 	
+	public void putInCache(String targhetCache, String key, Object obj, String[] groups) {
+		Cache cache = this.getCache(targhetCache);
+		cache.put(key, obj);
+		this.accessOnGroupMapping(targhetCache, 1, groups, key);
+	}
+	
+	@Deprecated
 	public Object getFromCache(String key) {
-		Cache cache = this.getCache();
+		return getFromCache(DEFAULT_CACHE_NAME, key);
+	}
+	
+	public Object getFromCache(String targhetCache, String key) {
+		Cache cache = this.getCache(targhetCache);
 		Cache.ValueWrapper element = cache.get(key);
 		if (null == element) {
 			return null;
 		}
-		if (isExpired(key)) {
-			this.flushEntry(key);
+		if (isExpired(targhetCache, key)) {
+			this.flushEntry(targhetCache, key);
 			return null;
 		}
 		return element.get();
@@ -189,41 +260,66 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	}
 	
 	@Override
+	@Deprecated
 	public void flushGroup(String group) {
-		String[] groups = {group};
-		this.accessOnGroupMapping(-1, groups, null);
+		this.flushGroup(DEFAULT_CACHE_NAME, group);
 	}
 	
 	@Override
+	public void flushGroup(String targhetCache, String group) {
+		String[] groups = {group};
+		this.accessOnGroupMapping(targhetCache, -1, groups, null);
+	}
+	
+	@Override
+	@Deprecated
 	public void putInGroup(String key, String[] groups) {
 		this.accessOnGroupMapping(1, groups, key);
 	}
 	
+	@Override
+	public void putInGroup(String targhetCache, String key, String[] groups) {
+		this.accessOnGroupMapping(DEFAULT_CACHE_NAME, 1, groups, key);
+	}
+	
+	@Deprecated
 	protected synchronized void accessOnGroupMapping(int operationId, String[] groups, String key) {
+		this.accessOnGroupMapping(DEFAULT_CACHE_NAME, operationId, groups, key);
+	}
+	
+	protected synchronized void accessOnGroupMapping(String targhetCache, int operationId, String[] groups, String key) {
+		Map<String, List<String>> objectsByGroup = this._cachesObjectGroups.get(targhetCache);
 		if (operationId>0) {
-			//aggiunta
+			//add
+			if (null == objectsByGroup) {
+				objectsByGroup = new HashMap<String, List<String>>();
+				this._cachesObjectGroups.put(targhetCache, objectsByGroup);
+			}
 			for (int i = 0; i < groups.length; i++) {
 				String group = groups[i];
-				List<String> objectKeys = this._groups.get(group);
+				List<String> objectKeys = objectsByGroup.get(group);
 				if (null == objectKeys) {
 					objectKeys = new ArrayList<String>();
-					this._groups.put(group, objectKeys);
+					objectsByGroup.put(group, objectKeys);
 				}
 				if (!objectKeys.contains(key)) {
 					objectKeys.add(key);
 				}
 			}
 		} else {
-			//rimozione
+			//remove
+			if (null == objectsByGroup) {
+				return;
+			}
 			for (int i = 0; i < groups.length; i++) {
 				String group = groups[i];
-				List<String> objectKeys = this._groups.get(group);
+				List<String> objectKeys = objectsByGroup.get(group);
 				if (null != objectKeys) {
 					for (int j = 0; j < objectKeys.size(); j++) {
 						String extractedKey = objectKeys.get(j);
-						this.flushEntry(extractedKey);
+						this.flushEntry(targhetCache, extractedKey);
 					}
-					this._groups.remove(group);
+					objectsByGroup.remove(group);
 				}
 			}
 		}
@@ -247,11 +343,28 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 		return caches;
 	}
 	
+	@Deprecated
 	public static boolean isNotExpired(String key) {
-		return !isExpired(key);
+		return isNotExpired(DEFAULT_CACHE_NAME, key);
 	}
 	
+	public static boolean isNotExpired(String targhetCache, String key) {
+		return !isExpired(targhetCache, key);
+	}
+	
+	@Deprecated
 	public static boolean isExpired(String key) {
+		return isExpired(DEFAULT_CACHE_NAME, key);
+	}
+	
+	public static boolean isExpired(String targhetCache, String key) {
+		if (StringUtils.isBlank(targhetCache)) {
+			targhetCache = DEFAULT_CACHE_NAME;
+		}
+		Map<String, Date> expirationTimes = _objectExpirationTimes.get(targhetCache);
+		if (null == expirationTimes) {
+			return false;
+		}
 		Date expirationTime = expirationTimes.get(key);
 		if (null == expirationTime) {
 			return false;
@@ -264,8 +377,11 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 		}
 	}
 	
-	protected Cache getCache() {
-		return this.getSpringCacheManager().getCache(CACHE_NAME);
+	protected Cache getCache(String cacheName) {
+		if (StringUtils.isBlank(cacheName)) {
+			cacheName = DEFAULT_CACHE_NAME;
+		}
+		return this.getSpringCacheManager().getCache(cacheName);
 	}
 	
 	protected AbstractCacheManager getSpringCacheManager() {
@@ -277,8 +393,8 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	
 	private AbstractCacheManager _springCacheManager;
 	
-	private Map<String, List<String>> _groups = new HashMap<String, List<String>>();
+	private Map<String, Map<String, List<String>>> _cachesObjectGroups = new HashMap<String, Map<String, List<String>>>();
 	
-	private static Map<String, Date> expirationTimes = new HashMap<String, Date>();
+	private static Map<String, Map<String, Date>> _objectExpirationTimes = new HashMap<String, Map<String, Date>>();
 	
 }
