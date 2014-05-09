@@ -126,6 +126,10 @@ public class GuiFragmentAction extends BaseAction {
 
 	public String showDetail() {
 		try {
+			if (null == this.getCode()) {
+				this.addActionError(this.getText("error.guiFragment.null"));
+				return "guiFragmentsList";				
+			}
 			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
 			if (null == guiFragment) {
 				this.addActionError(this.getText("error.guiFragment.null"));
