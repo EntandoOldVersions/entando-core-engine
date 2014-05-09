@@ -48,6 +48,12 @@
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	
+    	<action name="detail" class="guiFragmentAction" method="showDetail">
+            <result type="tiles">admin.Portal.GuiFragment.detail</result>
+            <result name="guiFragmentsList" type="chain">list</result>
+        	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+        </action>
+    	
     </package>
    
 </struts>

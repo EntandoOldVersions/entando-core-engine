@@ -1,10 +1,5 @@
 package org.entando.entando.aps.system.services.guifragment;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.io.IOUtils;
 import org.entando.entando.aps.system.services.storage.TestLocalStorageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 
-public class TestGuiFragmentManager  extends BaseTestCase {
+public class TestGuiFragmentManager extends BaseTestCase {
 
 	private static final Logger _logger = LoggerFactory.getLogger(TestLocalStorageManager.class);
 
@@ -22,79 +17,39 @@ public class TestGuiFragmentManager  extends BaseTestCase {
 		this.init();
 	}
 
-	protected GuiFragment createMockFragment(String code, String gui, String defaultGui, String widgetTypeCode) {
-		GuiFragment mFragment = new GuiFragment();
-		mFragment.setCode(code);
-		mFragment.setGui(gui);
-		mFragment.setDefaultGui(defaultGui);
-		mFragment.setWidgetTypeCode(widgetTypeCode);
-		return mFragment;
-	}
-
-
-	public String getMockTemplate(String a, String b, String c, String d) throws Throwable {
-		String template = IOUtils.toString(this.getClass().getResourceAsStream("mockTemplate"));
-		if (null != a) {
-			template = template.replaceAll("PLACECHOLDER_A", a);
-		}
-		if (null != b) {
-			template = template.replaceAll("PLACECHOLDER_B", b);
-		}
-		if (null != c) {
-			template = template.replaceAll("PLACECHOLDER_C", c);
-		}
-		if (null != d) {
-			template = template.replaceAll("PLACECHOLDER_D", d);
-		}
-		return template;
-	}
-
-	@SuppressWarnings("unchecked")
-	public void testSearch() throws Throwable {
-		List<GuiFragment> fragments = new ArrayList<GuiFragment>(); 
-		for (int i = 0; i < 5; i++) {
-			fragments.add(this.createMockFragment("mock"+i, this.getMockTemplate("code_"+i, "mock"+i, "fixed_gui", null), null, null));
-		}
-		Iterator<GuiFragment> it = fragments.iterator();
-		while (it.hasNext()) {
-			this._guiFragmentManager.addGuiFragment(it.next());
-		}
+	public void testCrud() throws Exception {
+		String code = "mockCrud";
 		try {
+			assertNull(this._guiFragmentManager.getGuiFragment(code));
+			//add
+			GuiFragment fragment = this.createMockFragment(code, "lorem ipsum", null);
+			this._guiFragmentManager.addGuiFragment(fragment);
 
-			List<GuiFragment> list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("code_1");
-			assertEquals(1, list.size());
-
-			list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("fixed_gui");
-			assertEquals(5, list.size());
-		
-			list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("code_1");
-			assertEquals(1, list.size());
-			assertEquals("mock1", list.get(0).getCode());
-			
-			list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("code_2");
-			assertEquals(1, list.size());
-			assertEquals("mock2", list.get(0).getCode());
-
-			list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("code_3");
-			assertEquals(1, list.size());
-			assertEquals("mock3", list.get(0).getCode());
-
-			list = ((GuiFragmentUtilizer)this._guiFragmentManager).getGuiFragmentUtilizers("mock3");
-			assertEquals(1, list.size());
-			assertEquals("mock3", list.get(0).getCode());
-
+			GuiFragment fragment2 = this._guiFragmentManager.getGuiFragment(code);
+			assertNotNull(fragment2);
+			assertEquals(fragment.getGui(), fragment2.getGui());
+			//update
+			fragment2.setGui("dolor sit");
+			this._guiFragmentManager.updateGuiFragment(fragment2);
+			GuiFragment fragment3 = this._guiFragmentManager.getGuiFragment(code);
+			assertEquals(fragment2.getGui(), fragment3.getGui());
+			//delete
+			this._guiFragmentManager.deleteGuiFragment(code);
+			assertNull(this._guiFragmentManager.getGuiFragment(code));
 		} catch (Exception e) {
 			throw e;
 		} finally {
-			Iterator<GuiFragment> it1 = fragments.iterator();
-			while (it1.hasNext()) {
-				GuiFragment fragment = it1.next();
-				String code = fragment.getCode();
-				this._guiFragmentManager.deleteGuiFragment(code);
-			}
+			this._guiFragmentManager.deleteGuiFragment(code);
 		}
 	}
 
+	protected GuiFragment createMockFragment(String code, String gui, String widgetTypeCode) {
+		GuiFragment mFragment = new GuiFragment();
+		mFragment.setCode(code);
+		mFragment.setGui(gui);
+		mFragment.setWidgetTypeCode(widgetTypeCode);
+		return mFragment;
+	}
 
 	private void init() throws Exception {
 		try {

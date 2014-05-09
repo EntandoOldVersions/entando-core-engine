@@ -61,6 +61,12 @@
 			parent="abstractBaseAction" >
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+		<property name="actionHelper" ref="guiFragmentActionHelper" />
 	</bean>
+	
+	<bean id="guiFragmentActionHelper" class="org.entando.entando.apsadmin.portal.guifragment.helper.GuiFragmentActionHelper" 
+		parent="abstractBaseActionHelper">
+	</bean>
+	
 	
 </beans>

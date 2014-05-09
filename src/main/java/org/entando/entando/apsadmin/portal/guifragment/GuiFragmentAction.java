@@ -1,39 +1,43 @@
 /*
-*
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-* This file is part of Entando Enterprise Edition software.
-* You can redistribute it and/or modify it
-* under the terms of the Entando's EULA
-* 
-* See the file License for the specific language governing permissions   
-* and limitations under the License
-* 
-* 
-* 
-* Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
-*
-*/
+ *
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ * This file is part of Entando Enterprise Edition software.
+ * You can redistribute it and/or modify it
+ * under the terms of the Entando's EULA
+ * 
+ * See the file License for the specific language governing permissions   
+ * and limitations under the License
+ * 
+ * 
+ * 
+ * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
+ *
+ */
 package org.entando.entando.apsadmin.portal.guifragment;
 
-import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import com.agiletec.apsadmin.system.BaseAction;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
-
+import org.entando.entando.apsadmin.portal.guifragment.helper.IGuiFragmentActionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import com.agiletec.apsadmin.system.BaseAction;
 
 /**
  * @author E.Santoboni
  */
 public class GuiFragmentAction extends BaseAction {
-	
+
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentAction.class);
-	
+
 	public String newGuiFragment() {
 		try {
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);
@@ -43,7 +47,7 @@ public class GuiFragmentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String edit() {
 		try {
 			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
@@ -75,7 +79,7 @@ public class GuiFragmentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String trash() {
 		try {
 			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
@@ -91,7 +95,7 @@ public class GuiFragmentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String delete() {
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.DELETE) {
@@ -103,7 +107,7 @@ public class GuiFragmentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
 	public String view() {
 		try {
 			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
@@ -118,7 +122,38 @@ public class GuiFragmentAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-	
+
+
+	public String showDetail() {
+		try {
+			GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
+			if (null == guiFragment) {
+				this.addActionError(this.getText("error.guiFragment.null"));
+				return "guiFragmentsList";
+			}
+			this.populateForm(guiFragment);
+			this.extractReferencingObjects(this.getCode());
+		} catch (Throwable t) {
+			_logger.error("error in showDetail", t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+
+	protected void extractReferencingObjects(String fragmentCode) {
+		try {
+			GuiFragment fragment = this.getGuiFragmentManager().getGuiFragment(fragmentCode);
+			if (null != fragment) {
+				Map references = this.getActionHelper().getReferencingObjects(fragment, this.getRequest());
+				if (references.size() > 0) {
+					this.setReferences(references);
+				}
+			}
+		} catch (Throwable t) {
+			_logger.error("Error extracting referenced objects by guiFragment '{}'", fragmentCode, t);
+		}
+	}
+
 	private void populateForm(GuiFragment guiFragment) throws Throwable {
 		this.setCode(guiFragment.getCode());
 		this.setWidgetTypeCode(guiFragment.getWidgetTypeCode());
@@ -126,7 +161,7 @@ public class GuiFragmentAction extends BaseAction {
 		this.setGui(guiFragment.getGui());
 		this.setDefaultGui(guiFragment.getDefaultGui());
 	}
-	
+
 	private GuiFragment createGuiFragment() throws Throwable {
 		GuiFragment guiFragment = null;
 		int strutsAction = this.getStrutsAction();
@@ -142,25 +177,25 @@ public class GuiFragmentAction extends BaseAction {
 		guiFragment.setGui(this.getGui());
 		return guiFragment;
 	}
-	
+
 	public WidgetType getWidgetType(String widgetTypeCode) {
 		return this.getWidgetTypeManager().getWidgetType(widgetTypeCode);
 	}
-	
+
 	public int getStrutsAction() {
 		return _strutsAction;
 	}
 	public void setStrutsAction(int strutsAction) {
 		this._strutsAction = strutsAction;
 	}
-	
+
 	public String getCode() {
 		return _code;
 	}
 	public void setCode(String code) {
 		this._code = code;
 	}
-	
+
 	@Deprecated
 	public String getWidgetCode() {
 		return this.getWidgetTypeCode();
@@ -169,57 +204,73 @@ public class GuiFragmentAction extends BaseAction {
 	public void setWidgetCode(String widgetCode) {
 		this.setWidgetTypeCode(widgetCode);
 	}
-	
+
 	public String getWidgetTypeCode() {
 		return _widgetTypeCode;
 	}
 	public void setWidgetTypeCode(String widgetTypeCode) {
 		this._widgetTypeCode = widgetTypeCode;
 	}
-	
+
 	public String getPluginCode() {
 		return _pluginCode;
 	}
 	public void setPluginCode(String pluginCode) {
 		this._pluginCode = pluginCode;
 	}
-	
+
 	public String getGui() {
 		return _gui;
 	}
 	public void setGui(String gui) {
 		this._gui = gui;
 	}
-	
+
 	public String getDefaultGui() {
 		return _defaultGui;
 	}
 	public void setDefaultGui(String defaultGui) {
 		this._defaultGui = defaultGui;
 	}
-	
+
 	protected IGuiFragmentManager getGuiFragmentManager() {
 		return _guiFragmentManager;
 	}
 	public void setGuiFragmentManager(IGuiFragmentManager guiFragmentManager) {
 		this._guiFragmentManager = guiFragmentManager;
 	}
-	
+
 	protected IWidgetTypeManager getWidgetTypeManager() {
 		return _widgetTypeManager;
 	}
 	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
 		this._widgetTypeManager = widgetTypeManager;
 	}
-	
+
+	public Map<String, List<Object>> getReferences() {
+		return _references;
+	}
+	public void setReferences(Map<String, List<Object>> references) {
+		this._references = references;
+	}
+
+	protected IGuiFragmentActionHelper getActionHelper() {
+		return _actionHelper;
+	}
+	public void setActionHelper(IGuiFragmentActionHelper actionHelper) {
+		this._actionHelper = actionHelper;
+	}
+
 	private int _strutsAction;
 	private String _code;
 	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
 	private String _defaultGui;
-	
+
 	private IGuiFragmentManager _guiFragmentManager;
 	private IWidgetTypeManager _widgetTypeManager;
-	
+
+	private Map<String, List<Object>> _references = new HashMap<String, List<Object>>();
+	private IGuiFragmentActionHelper _actionHelper;
 }

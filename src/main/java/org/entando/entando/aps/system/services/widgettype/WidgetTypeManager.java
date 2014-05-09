@@ -260,11 +260,11 @@ public class WidgetTypeManager extends AbstractService
 	
 	@Override
 	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
-		List<WidgetType> utilizers = null;
+		List<WidgetType> utilizers = new ArrayList<WidgetType>();
 		try {
 			FieldSearchFilter codeFilter = new FieldSearchFilter("code", guiFragmentCode, false);
 			FieldSearchFilter widgetTypeFilter = new FieldSearchFilter("widgettypecode");
-			widgetTypeFilter.setNullOption(true);
+			//widgetTypeFilter.setNullOption(true);
 			FieldSearchFilter[] filters = {codeFilter, widgetTypeFilter};
 			List<String> widgetUtilizers = this.getGuiFragmentManager().searchGuiFragments(filters);
 			if (null != widgetUtilizers && !widgetUtilizers.isEmpty()) {
@@ -272,10 +272,9 @@ public class WidgetTypeManager extends AbstractService
 					String code = widgetUtilizers.get(i);
 					GuiFragment fragment = this.getGuiFragmentManager().getGuiFragment(code);
 					WidgetType widgetType = this.getWidgetType(fragment.getWidgetTypeCode());
-					if (null == widgetType) {
-						utilizers = new ArrayList<WidgetType>();
+					if (null != widgetType) {
+						utilizers.add(widgetType);
 					}
-					utilizers.add(widgetType);
 				}
 			}
 		} catch (Throwable t) {

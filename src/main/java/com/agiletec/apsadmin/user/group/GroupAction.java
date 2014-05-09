@@ -188,7 +188,6 @@ public class GroupAction extends BaseAction implements IGroupAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting referenced objects by group '{}'", groupCode, t);
-			//ApsSystemUtils.logThrowable(t, this, "extractReferencingObjects", "Error extracting referenced objects by group '" + groupCode + "'");
 		}
 	}
 	
