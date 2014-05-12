@@ -31,7 +31,13 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
+import static com.agiletec.apsadmin.portal.WidgetTypeAction.NEW_USER_WIDGET;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
+import static com.agiletec.apsadmin.system.BaseAction.USER_NOT_ALLOWED;
+import static com.opensymphony.xwork2.Action.SUCCESS;
+
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -47,12 +53,17 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	@Override
 	public void validate() {
 		super.validate();
-		if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) return;
+		//if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) return;
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 				this.checkWidgetToCopy();
 			} else if (this.getStrutsAction() == NEW_USER_WIDGET) {
 				this.checkNewUserWidget();
+			} else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
+				WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
+				if (null != type) {
+					this.buildGuisFromForm(type);
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in validate", t);
@@ -96,7 +107,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			this.setMainGroup(Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
 			_logger.error("error in newUserWidget", t);
-			//ApsSystemUtils.logThrowable(t, this, "newUserWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -156,8 +166,8 @@ public class WidgetTypeAction extends AbstractPortalAction {
 				}
 				this.getWidgetTypeManager().updateWidgetType(this.getWidgetTypeCode(), titles, configToSet, mainGroupToSet);
 			}
-			if (!type.isLogic()) {
-				GuiFragment guiFragment = this.extractGuiFragment(this.getWidgetTypeCode());
+			if (!type.isLogic() && !super.isInternalServletWidget(this.getWidgetTypeCode())) {
+				GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
 				if (StringUtils.isNotBlank(this.getGui())) {
 					if (null == guiFragment) {
 						guiFragment = new GuiFragment();
@@ -173,7 +183,26 @@ public class WidgetTypeAction extends AbstractPortalAction {
 					}
 				} else {
 					if (null != guiFragment) {
-						this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
+						if (StringUtils.isNotBlank(guiFragment.getDefaultGui())) {
+							guiFragment.setGui(null);
+							this.getGuiFragmentManager().updateGuiFragment(guiFragment);
+						} else {
+							this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
+						}
+					}
+				}
+			} else if (type.isLogic()/* && super.isInternalServletWidget(type.getParentType().getCode())*/) {
+				this.buildGuisFromForm(type);
+				List<String> guiFragmentCodes = this.extractGuiFragmentCodes(type.getCode());
+				for (int i = 0; i < guiFragmentCodes.size(); i++) {
+					String guiFragmentCode = guiFragmentCodes.get(i);
+					GuiFragment guiFragment = this.getGuiFragment(guiFragmentCode);
+					String fieldName = type.getCode() + "_" + guiFragmentCode;
+					String value = this.getGuis().getProperty(fieldName);
+					if ((null == value && null != guiFragment.getGui()) || 
+							(null != value && (StringUtils.isBlank(guiFragment.getGui()) || !value.equals(guiFragment.getGui())))) {
+						guiFragment.setGui(value);
+						this.getGuiFragmentManager().updateGuiFragment(guiFragment);
 					}
 				}
 			}
@@ -336,9 +365,21 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			this.setItalianTitle(titles.getProperty("it"));
 			this.setEnglishTitle(titles.getProperty("en"));
 			this.setMainGroup(type.getMainGroup());
-			GuiFragment guiFragment = this.extractGuiFragment(this.getWidgetTypeCode());
-			if (null != guiFragment) {
-				this.setGui(guiFragment.getGui());
+			if (type.isLogic()) {
+				List<String> guiFragmentCodes = this.extractGuiFragmentCodes(this.getWidgetTypeCode());
+				for (int i = 0; i < guiFragmentCodes.size(); i++) {
+					String guiFragmentCode = guiFragmentCodes.get(i);
+					GuiFragment guiFragment = this.getGuiFragment(guiFragmentCode);
+					if (StringUtils.isNotEmpty(guiFragment.getGui())) {
+						String fieldName = type.getCode()+"_"+guiFragmentCode;
+						this.getGuis().setProperty(fieldName, guiFragment.getGui());
+					}
+				}
+			} else {
+				GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
+				if (null != guiFragment) {
+					this.setGui(guiFragment.getGui());
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in editWidgetTitles", t);
@@ -347,16 +388,37 @@ public class WidgetTypeAction extends AbstractPortalAction {
 		return SUCCESS;
 	}
 	
-	protected GuiFragment extractGuiFragment(String widgetTypeCode) throws ApsSystemException {
-		FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
-		FieldSearchFilter[] filters = {filter};
-		List<String> codes = this.getGuiFragmentManager().searchGuiFragments(filters);
+	public List<String> extractGuiFragmentCodes(String widgetTypeCode) {
+		List<String> ids = null;
+		try {
+			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
+			FieldSearchFilter codeFilter = new FieldSearchFilter("code");
+			codeFilter.setOrder(FieldSearchFilter.Order.ASC);
+			FieldSearchFilter[] filters = {filter, codeFilter};
+			ids = this.getGuiFragmentManager().searchGuiFragments(filters);
+		} catch (Throwable t) {
+			_logger.error("error extracting gui fragment codes", t);
+			throw new RuntimeException("error extracting gui fragment codes", t);
+		}
+		return ids;
+	}
+	
+	public GuiFragment extractUniqueGuiFragment(String widgetTypeCode) {
+		List<String> codes = this.extractGuiFragmentCodes(widgetTypeCode);
 		if (null != codes && !codes.isEmpty()) {
 			String code = codes.get(0);
-			//Integer id = (idObject instanceof Integer)? (Integer) idObject : Integer.parseInt(idObject.toString());
-			return this.getGuiFragmentManager().getGuiFragment(code);
+			return this.getGuiFragment(code);
 		}
 		return null;
+	}
+	
+	public GuiFragment getGuiFragment(String guiFragmentCode) {
+		try {
+			return this.getGuiFragmentManager().getGuiFragment(guiFragmentCode);
+		} catch (Throwable t) {
+			_logger.error("error extracting gui fragment - code '{}'", guiFragmentCode, t);
+			throw new RuntimeException("error extracting gui fragment - code " + guiFragmentCode, t);
+		}
 	}
 	
 	private String checkWidgetType() {
@@ -378,7 +440,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			if (null != check) return check;
 		} catch (Throwable t) {
 			_logger.error("error in trash", t);
-			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -395,7 +456,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			this.getWidgetTypeManager().deleteWidgetType(this.getWidgetTypeCode());
 		} catch (Throwable t) {
 			_logger.error("error in delete", t);
-			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -417,7 +477,6 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error on checking delete operatione : widget type code {}",this.getWidgetTypeCode(), t);
-			//ApsSystemUtils.logThrowable(t, this, "checkDeleteWidgetType");
 			throw new RuntimeException("Error on checking delete operatione : widget type code " + this.getWidgetTypeCode(), t);
 		}
 		return null;
@@ -438,6 +497,20 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			group = super.getGroupManager().getGroup(Group.FREE_GROUP_NAME);
 		}
 		return group;
+	}
+	
+	protected void buildGuisFromForm(WidgetType type) throws Throwable {
+		if (type.isLogic()) {
+			List<String> guiFragmentCodes = this.extractGuiFragmentCodes(type.getCode());
+			for (int i = 0; i < guiFragmentCodes.size(); i++) {
+				String guiFragmentCode = guiFragmentCodes.get(i);
+				String fieldName = type.getCode()+"_"+guiFragmentCode;
+				String value = this.getRequest().getParameter(fieldName);
+				if (StringUtils.isNotBlank(value)) {
+					this.getGuis().setProperty(fieldName, value);
+				}
+			}
+		}
 	}
 	
 	public List<Group> getGroups() {
@@ -504,6 +577,13 @@ public class WidgetTypeAction extends AbstractPortalAction {
 		this._gui = gui;
 	}
 	
+	public Properties getGuis() {
+		return _guis;
+	}
+	public void setGuis(Properties guis) {
+		this._guis = guis;
+	}
+	
 	public String getPageCode() {
 		return _pageCode;
 	}
@@ -567,6 +647,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	private String _parentWidgetTypeCode;
 	
 	private String _gui;
+	private Properties _guis = new Properties();
 	
 	private String _pageCode;
 	private Integer _framePos;

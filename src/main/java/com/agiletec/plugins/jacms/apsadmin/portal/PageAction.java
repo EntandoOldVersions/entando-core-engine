@@ -80,7 +80,6 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error on validate page", t);
-			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException("Error on validate page", t);
 		}
 	}
@@ -101,7 +100,7 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 	 * @return True if the page can publish a free content, else false.
 	 */
 	public boolean isFreeViewerPage(IPage page) {
-		return CmsPageActionUtil.isFreeViewerPage(page, this.getViewerShowletCode());
+		return CmsPageActionUtil.isFreeViewerPage(page, this.getViewerWidgetCode());
 	}
 	
 	@Override
@@ -124,9 +123,9 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 			IWidgetTypeManager showletTypeManager = (IWidgetTypeManager) ApsWebApplicationUtils.getBean(SystemConstants.WIDGET_TYPE_MANAGER, this.getRequest());
 			Widget viewer = new Widget();
 			viewer.setConfig(new ApsProperties());
-			WidgetType type = showletTypeManager.getWidgetType(this.getViewerShowletCode());
+			WidgetType type = showletTypeManager.getWidgetType(this.getViewerWidgetCode());
 			if (null == type) {
-				throw new RuntimeException("Widget 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerShowletCode());
+				throw new RuntimeException("Widget 'Contenuto Singolo' assente o non valida : Codice " + this.getViewerWidgetCode());
 			}
 			viewer.setType(type);
 			Widget[] widgets = page.getWidgets();
@@ -155,7 +154,6 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		} catch (Throwable t) {
 			String msg = "Error extracting published contents on page '" + pageCode + "'";
 			_logger.error("Error extracting published contents on page '{}'", pageCode, t);
-			//ApsSystemUtils.logThrowable(t, this, "getPublishedContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return contents;
@@ -175,7 +173,6 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		} catch (Throwable t) {
 			_logger.error("Error getting referencing contents by page '{}'", pageCode, t);
 			String msg = "Error getting referencing contents by page '" + pageCode + "'";
-			//ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContents;
@@ -188,7 +185,6 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		} catch (Throwable t) {
 			_logger.error("Error getting referencing contents by page '{}'", pageCode, t);
 			String msg = "Error getting referencing contents by page '" + pageCode + "'";
-			//ApsSystemUtils.logThrowable(t, this, "getReferencingContents", msg );
 			throw new RuntimeException(msg, t);
 		}
 		return referencingContentsId;
@@ -201,11 +197,20 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 		this._viewerPage = viewerPage;
 	}
 	
+	@Deprecated
 	protected String getViewerShowletCode() {
-		return _viewerShowletCode;
+		return this.getViewerWidgetCode();
 	}
+	@Deprecated
 	public void setViewerShowletCode(String viewerShowletCode) {
-		this._viewerShowletCode = viewerShowletCode;
+		this.setViewerWidgetCode(viewerShowletCode);
+	}
+	
+	protected String getViewerWidgetCode() {
+		return _viewerWidgetCode;
+	}
+	public void setViewerWidgetCode(String viewerWidgetCode) {
+		this._viewerWidgetCode = viewerWidgetCode;
 	}
 	
 	protected IContentManager getContentManager() {
@@ -216,7 +221,7 @@ public class PageAction extends com.agiletec.apsadmin.portal.PageAction {
 	}
 	
 	private boolean _viewerPage;
-	private String _viewerShowletCode;
+	private String _viewerWidgetCode;
 	
 	private IContentManager _contentManager;
 	

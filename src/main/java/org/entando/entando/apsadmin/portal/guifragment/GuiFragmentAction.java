@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author E.Santoboni
@@ -37,7 +38,31 @@ import com.agiletec.apsadmin.system.BaseAction;
 public class GuiFragmentAction extends BaseAction {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentAction.class);
-
+	
+	@Override
+	public void validate() {
+		super.validate();
+		try {
+			boolean isGuiEmpty = StringUtils.isEmpty(this.getGui());
+			if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
+				GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(this.getCode());
+				if (null != guiFragment) {
+					if (isGuiEmpty && StringUtils.isBlank(guiFragment.getDefaultGui())) {
+						this.addFieldError("gui", this.getText("requiredstring", new String[]{"gui"}));
+					}
+				} else {
+					_logger.error("Null widget type - code '{}'", this.getWidgetTypeCode());
+					throw new RuntimeException("Null widget type - code " + this.getWidgetTypeCode());
+				}
+			} else if (isGuiEmpty) {
+				this.addFieldError("gui", this.getText("requiredstring", new String[]{"gui"}));
+			}
+		} catch (Throwable t) {
+			_logger.error("error in validate", t);
+			throw new RuntimeException(t);
+		}
+	}
+	
 	public String newGuiFragment() {
 		try {
 			this.setStrutsAction(ApsAdminSystemConstants.ADD);

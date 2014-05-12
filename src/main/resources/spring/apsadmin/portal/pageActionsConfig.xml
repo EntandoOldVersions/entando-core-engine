@@ -11,7 +11,8 @@
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="apiCatalogManager" ref="ApiCatalogManager" />
 		<property name="pageActionHelper" ref="pageActionHelper" />
-		<property name="stockWidgetCodes"><value>${showlets.stock}</value></property>
+		<property name="stockWidgetCodes"><value>${widgets.stock}</value></property>
+		<property name="internalServletWidgetCode"><value>${widgets.internalServlet}</value></property>
 	</bean>
 	
 	<bean id="pageActionHelper" class="com.agiletec.apsadmin.portal.helper.PageActionHelper" parent="abstractBaseActionHelper">

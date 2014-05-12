@@ -222,6 +222,10 @@ public abstract class AbstractPortalAction extends BaseAction {
 		return mappings;
 	}
 	
+	public boolean isInternalServletWidget(String widgetTypeCode) {
+		return this.getInternalServletWidgetCode().equals(widgetTypeCode);
+	}
+	
 	/**
 	 * Return the node selected in the tree of pages.
 	 * @return The node selected in the tree of pages.
@@ -252,6 +256,13 @@ public abstract class AbstractPortalAction extends BaseAction {
 	}
 	public void setStockWidgetCodes(String stockWidgetCodes) {
 		this._stockWidgetCodes = stockWidgetCodes;
+	}
+	
+	protected String getInternalServletWidgetCode() {
+		return _internalServletWidgetCode;
+	}
+	public void setInternalServletWidgetCode(String internalServletWidgetCode) {
+		this._internalServletWidgetCode = internalServletWidgetCode;
 	}
 	
 	protected IPageManager getPageManager() {
@@ -292,6 +303,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 	private String _selectedNode;
 	
 	private String _stockWidgetCodes;
+	private String _internalServletWidgetCode;
 	
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;

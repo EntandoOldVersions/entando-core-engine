@@ -13,9 +13,11 @@
            <message key="stringlength" />
 		</field-validator>
 	</field>
+	<!--
 	<field name="gui">
 		<field-validator type="requiredstring" short-circuit="true">
 			<message key="requiredstring"/>
 		</field-validator>
 	</field>
+	-->
 </validators>
