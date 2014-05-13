@@ -16,24 +16,22 @@
 */
 package org.entando.entando.apsadmin.portal.model;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
+import org.entando.entando.apsadmin.portal.model.helper.IPageModelActionHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.pagemodel.Frame;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-
-import java.io.File;
-
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
-import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
-import org.entando.entando.apsadmin.portal.model.helper.IPageModelActionHelper;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -51,7 +49,7 @@ public class PageModelAction extends AbstractPageModelAction {
 				String template = this.getTemplate();
 				if (StringUtils.isBlank(template)) {
 					String jspTemplatePath = PageModel.getPageModelJspPath(this.getCode(), this.getPluginCode());
-					File file = new File(jspTemplatePath);
+					File file = new File(ServletActionContext.getServletContext().getRealPath(jspTemplatePath));
 					if (!file.exists()) {
 						this.addFieldError("template", this.getText("error.pageModel.templateRequired"));
 					}
