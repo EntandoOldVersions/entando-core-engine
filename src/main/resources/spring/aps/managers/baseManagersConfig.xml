@@ -155,6 +155,10 @@
 		</property>
 	</bean>
 	
+    <bean id="ApiGuiFragmentInterface" class="org.entando.entando.aps.system.services.guifragment.api.ApiGuiFragmentInterface" >
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+    </bean>
+    
 	<bean id="PageModelManager" class="com.agiletec.aps.system.services.pagemodel.PageModelManager" 
 			parent="abstractService" >
 		<property name="pageModelDAO" >

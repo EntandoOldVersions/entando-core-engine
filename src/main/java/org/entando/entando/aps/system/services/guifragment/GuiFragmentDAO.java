@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
  * @author E.Santoboni
  */
 public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentDAO {
-
+	
 	private static final Logger _logger =  LoggerFactory.getLogger(GuiFragmentDAO.class);
-
+	
 	@Override
 	protected String getTableFieldName(String metadataFieldKey) {
 		return metadataFieldKey;
@@ -97,7 +97,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		try {
 			stat = conn.prepareStatement(ADD_GUIFRAGMENT);
 			int index = 1;
-			//stat.setInt(index++, guiFragment.getId());
  			stat.setString(index++, guiFragment.getCode());
  			if (StringUtils.isNotBlank(guiFragment.getWidgetTypeCode())) {
 				stat.setString(index++, guiFragment.getWidgetTypeCode());				
@@ -143,7 +142,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		try {
 			stat = conn.prepareStatement(UPDATE_GUIFRAGMENT);
 			int index = 1;
- 			//stat.setString(index++, guiFragment.getCode());
  			if(StringUtils.isNotBlank(guiFragment.getWidgetTypeCode())) {
 				stat.setString(index++, guiFragment.getWidgetTypeCode());				
 			} else {
@@ -155,7 +153,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 				stat.setNull(index++, Types.VARCHAR);
 			}
  			stat.setString(index++, guiFragment.getGui());
-			//stat.setInt(index++, guiFragment.getId());
 			stat.setString(index++, guiFragment.getCode());
 			stat.executeUpdate();
 		} catch (Throwable t) {
@@ -243,7 +240,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 		GuiFragment guiFragment = null;
 		try {
 			guiFragment = new GuiFragment();				
-			//guiFragment.setId(res.getInt("id"));
 			guiFragment.setCode(res.getString("code"));
 			guiFragment.setWidgetTypeCode(res.getString("widgettypecode"));
 			guiFragment.setPluginCode(res.getString("plugincode"));
@@ -264,7 +260,5 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	private static final String DELETE_GUIFRAGMENT = "DELETE FROM guifragment WHERE code = ?";
 	
 	private static final String LOAD_GUIFRAGMENT = "SELECT code, widgettypecode, plugincode, gui, defaultgui, locked FROM guifragment WHERE code = ?";
-	
-	//private static final String LOAD_GUIFRAGMENTS_ID  = "SELECT code FROM guifragment";
 	
 }

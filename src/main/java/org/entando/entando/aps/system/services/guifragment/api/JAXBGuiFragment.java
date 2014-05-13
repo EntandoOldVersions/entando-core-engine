@@ -20,14 +20,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.entando.entando.aps.system.services.api.model.CDataXmlTypeAdapter;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 
 /**
  * @author E.Santoboni
  */
 @XmlRootElement(name = "guiFragment")
-@XmlType(propOrder = {"code", "widgetCode", "pluginCode", "gui", "defaultGui", "locked"})
+@XmlType(propOrder = {"code", "widgetTypeCode", "pluginCode", "gui", "defaultGui", "locked"})
 public class JAXBGuiFragment {
 	
     public JAXBGuiFragment() {
@@ -36,7 +38,7 @@ public class JAXBGuiFragment {
 	
     public JAXBGuiFragment(GuiFragment guiFragment) {
 		this.setCode(guiFragment.getCode());
-		this.setWidgetCode(guiFragment.getWidgetTypeCode());
+		this.setWidgetTypeCode(guiFragment.getWidgetTypeCode());
 		this.setPluginCode(guiFragment.getPluginCode());
 		this.setGui(guiFragment.getGui());
 		this.setDefaultGui(guiFragment.getDefaultGui());
@@ -47,7 +49,7 @@ public class JAXBGuiFragment {
     public GuiFragment getGuiFragment() {
     	GuiFragment guiFragment = new GuiFragment();
 		guiFragment.setCode(this.getCode());
-		guiFragment.setWidgetTypeCode(this.getWidgetCode());
+		guiFragment.setWidgetTypeCode(this.getWidgetTypeCode());
 		guiFragment.setPluginCode(this.getPluginCode());
 		guiFragment.setGui(this.getGui());
     	guiFragment.setDefaultGui(this.getDefaultGui());
@@ -62,15 +64,15 @@ public class JAXBGuiFragment {
 	public void setCode(String code) {
 		this._code = code;
 	}
-
-	@XmlElement(name = "widgetCode", required = true)
-	public String getWidgetCode() {
-		return _widgetCode;
+	
+	@XmlElement(name = "widgetTypeCode", required = true)
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
 	}
-	public void setWidgetCode(String widgetCode) {
-		this._widgetCode = widgetCode;
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
 	}
-
+	
 	@XmlElement(name = "pluginCode", required = true)
 	public String getPluginCode() {
 		return _pluginCode;
@@ -78,7 +80,8 @@ public class JAXBGuiFragment {
 	public void setPluginCode(String pluginCode) {
 		this._pluginCode = pluginCode;
 	}
-
+	
+	@XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
 	@XmlElement(name = "gui", required = true)
 	public String getGui() {
 		return _gui;
@@ -87,6 +90,7 @@ public class JAXBGuiFragment {
 		this._gui = gui;
 	}
 	
+	@XmlJavaTypeAdapter(CDataXmlTypeAdapter.class)
 	@XmlElement(name = "defaultGui", required = true)
 	public String getDefaultGui() {
 		return _defaultGui;
@@ -104,7 +108,7 @@ public class JAXBGuiFragment {
 	}
 	
 	private String _code;
-	private String _widgetCode;
+	private String _widgetTypeCode;
 	private String _pluginCode;
 	private String _gui;
 	private String _defaultGui;

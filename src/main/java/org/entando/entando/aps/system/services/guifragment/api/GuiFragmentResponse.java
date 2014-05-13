@@ -33,6 +33,10 @@ public class GuiFragmentResponse extends AbstractApiResponse {
     public GuiFragmentResponseResult getResult() {
         return (GuiFragmentResponseResult) super.getResult();
     }
+	
+	public void setResult(GuiFragmentResponseResult result) {
+		super.setResult(result);
+	}
     
     @Override
     protected AbstractApiResponseResult createResponseResultInstance() {
