@@ -222,7 +222,7 @@
 	<resource name="guiFragment" namespace="core">
 		<description>The representation of the gui fragment</description>
 		<source>core</source>
-		<method httpMethod="GET" active="true" canSpawnOthers="true">
+		<method httpMethod="GET" active="true" requiredAuth="true">
 			<description>Return a gui fragment by code</description>
 			<springBean name="ApiGuiFragmentInterface" method="getGuiFragment" />
 			<responseClass>org.entando.entando.aps.system.services.guifragment.api.GuiFragmentResponse</responseClass>
@@ -248,6 +248,27 @@
 			<parameters>
 				<parameter key="code" required="true">
 					<description>The code of the gui fragment to delete</description>
+				</parameter>
+			</parameters>
+		</method>
+	</resource>
+	
+	<resource name="guiFragments" namespace="core">
+		<description>Return the gui fragment list</description>
+		<source>core</source>
+		<method httpMethod="GET" active="true" requiredAuth="true" canSpawnOthers="true">
+			<description>Return the gui fragment list</description>
+			<springBean name="ApiGuiFragmentInterface" method="getGuiFragments" />
+			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<parameters>
+				<parameter key="code" required="false">
+					<description>The code (or its part) of fragment codes to return</description>
+				</parameter>
+				<parameter key="widgettypecode" required="false">
+					<description>The widget type code (or its part) associated with fragment codes to return</description>
+				</parameter>
+				<parameter key="plugincode" required="false">
+					<description>The plugin code (or its part) associated with fragment codes to return</description>
 				</parameter>
 			</parameters>
 		</method>

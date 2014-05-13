@@ -16,6 +16,7 @@
 */
 package org.entando.entando.aps.system.services.guifragment.api;
 
+import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
 import java.util.HashMap;
@@ -47,23 +48,48 @@ import org.springframework.beans.factory.ListableBeanFactory;
 public class ApiGuiFragmentInterface implements BeanFactoryAware {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ApiGuiFragmentInterface.class);
-	/*
-	public List<JAXBGuiFragment> getGuiFragmentsForApi(Properties properties) throws Throwable {
-		List<JAXBGuiFragment> list = new ArrayList<JAXBGuiFragment>();
-		List<String> idList = this.getGuiFragmentManager().getGuiFragments();
-		if (null != idList && !idList.isEmpty()) {
-			Iterator<String> guiFragmentIterator = idList.iterator();
-			while (guiFragmentIterator.hasNext()) {
-				String code = guiFragmentIterator.next();
-				GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(code);
-				if (null != guiFragment) {
-					list.add(new JAXBGuiFragment(guiFragment));
-				}
+	
+	public List<String> getGuiFragments(Properties properties) throws Throwable {
+		List<String> list = null;
+		try {
+			String code = properties.getProperty("code");
+			String widgettypecode = properties.getProperty("widgettypecode");
+			String plugincode = properties.getProperty("plugincode");
+			FieldSearchFilter[] filters = new FieldSearchFilter[0];
+			FieldSearchFilter codeFilterToAdd = null;
+			if (StringUtils.isNotBlank(code)) {
+				codeFilterToAdd = new FieldSearchFilter("code", code, true);
+			} else {
+				codeFilterToAdd = new FieldSearchFilter("code");
 			}
+			codeFilterToAdd.setOrder(FieldSearchFilter.Order.ASC);
+			filters = this.addFilter(filters, codeFilterToAdd);
+			if (StringUtils.isNotBlank(widgettypecode)) {
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("widgettypecode", widgettypecode, true);
+				filters = this.addFilter(filters, filterToAdd);
+			}
+			if (StringUtils.isNotBlank(plugincode)) {
+				FieldSearchFilter filterToAdd = new FieldSearchFilter("plugincode", plugincode, true);
+				filters = this.addFilter(filters, filterToAdd);
+			}
+			list = this.getGuiFragmentManager().searchGuiFragments(filters);
+		} catch (Throwable t) {
+			_logger.error("Error extracting list of fragments", t);
+			throw t;
 		}
 		return list;
 	}
-	*/
+	
+	protected FieldSearchFilter[] addFilter(FieldSearchFilter[] filters, FieldSearchFilter filterToAdd) {
+		int len = filters.length;
+		FieldSearchFilter[] newFilters = new FieldSearchFilter[len + 1];
+		for(int i=0; i < len; i++){
+			newFilters[i] = filters[i];
+		}
+		newFilters[len] = filterToAdd;
+		return newFilters;
+	}
+	
     public JAXBGuiFragment getGuiFragment(Properties properties) throws ApiException, Throwable {
         String code = properties.getProperty("code");
 		JAXBGuiFragment jaxbGuiFragment = null;
