@@ -24,6 +24,25 @@ import org.apache.commons.lang.StringUtils;
  * @author E.Santoboni
  */
 public class GuiFragment implements Serializable {
+
+	/**
+	 * Returns the relative path of a Widget fragment.
+	 * If the fragment is not related to any Widget, it returns null.
+	 * This function returns the path, it doesn't not check if the file really exists.
+	 * @param guiFragment the {@link GuiFragment} the check
+	 * @return the path of a widget fragment. Eg: /WEB-INF/aps/jsp/widgets/mywidget.jsp
+	 */
+	public static String getWidgetJspPath(GuiFragment guiFragment) {
+		if (StringUtils.isBlank(guiFragment.getWidgetTypeCode())) return null;
+		boolean isPlugin = (StringUtils.isNotBlank(guiFragment.getPluginCode()));
+		
+		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
+		if (isPlugin) {
+			jspPath.append("plugins/").append(guiFragment.getPluginCode().trim()).append("/");
+		}
+		jspPath.append("aps/jsp/widgets/").append(guiFragment.getCode().trim()).append(".jsp");
+		return jspPath.toString();
+	}
 	
 	public String getCode() {
 		return _code;

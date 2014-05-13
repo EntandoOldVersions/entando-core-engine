@@ -45,8 +45,9 @@
         </action>
         
     	<action name="delete" class="guiFragmentAction" method="delete">
-    		<result name="references" type="tiles">admin.Portal.GuiFragment.references</result>
         	<result type="redirectAction">list</result>
+    		<result name="references" type="tiles">admin.Portal.GuiFragment.references</result>
+        	<result name="input" type="redirectAction">list</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
         </action>
     	

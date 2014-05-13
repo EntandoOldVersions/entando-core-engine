@@ -16,11 +16,13 @@
  */
 package org.entando.entando.apsadmin.portal.guifragment;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -32,7 +34,6 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author E.Santoboni
@@ -182,9 +183,19 @@ public class GuiFragmentAction extends BaseAction {
 			this.addActionError(this.getText("error.guiFragment.null"));
 			return INPUT;
 		}
-		this.extractReferencingObjects(code);
-		if (null != this.getReferences() && this.getReferences().size() > 0) {
-	        return "references";
+		if (guiFragment.isLocked()) {
+			this.addActionError(this.getText("error.guiFragment.locked"));
+			return INPUT;			
+		}
+	
+		String jspPath = GuiFragment.getWidgetJspPath(guiFragment);
+		
+		boolean existsJsp = StringUtils.isNotBlank(jspPath) && new File(ServletActionContext.getServletContext().getRealPath(jspPath)).exists();
+		if (!existsJsp) {
+			this.extractReferencingObjects(code);
+			if (null != this.getReferences() && this.getReferences().size() > 0) {
+				return "references";
+			}
 		}
 		return null;
 	}
