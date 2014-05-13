@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -28,6 +29,7 @@ import org.entando.entando.apsadmin.portal.guifragment.helper.IGuiFragmentAction
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 import org.apache.commons.lang.StringUtils;
@@ -112,6 +114,9 @@ public class GuiFragmentAction extends BaseAction {
 				this.addActionError(this.getText("error.guiFragment.null"));
 				return INPUT;
 			}
+			String check = this.checkDelete(this.getCode());
+			if (StringUtils.isNotBlank(check)) return check;
+			
 			this.populateForm(guiFragment);
 			this.setStrutsAction(ApsAdminSystemConstants.DELETE);
 		} catch (Throwable t) {
@@ -123,6 +128,8 @@ public class GuiFragmentAction extends BaseAction {
 
 	public String delete() {
 		try {
+			String check = this.checkDelete(this.getCode());
+			if (StringUtils.isNotBlank(check)) return check;
 			if (this.getStrutsAction() == ApsAdminSystemConstants.DELETE) {
 				this.getGuiFragmentManager().deleteGuiFragment(this.getCode());
 			}
@@ -169,6 +176,19 @@ public class GuiFragmentAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	private String checkDelete(String code) throws ApsSystemException {
+		GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(code);
+		if (null == guiFragment) {
+			this.addActionError(this.getText("error.guiFragment.null"));
+			return INPUT;
+		}
+		this.extractReferencingObjects(code);
+		if (null != this.getReferences() && this.getReferences().size() > 0) {
+	        return "references";
+		}
+		return null;
+	}
+	
 	protected void extractReferencingObjects(String fragmentCode) {
 		try {
 			GuiFragment fragment = this.getGuiFragmentManager().getGuiFragment(fragmentCode);
