@@ -16,16 +16,16 @@
 */
 package org.entando.entando.apsadmin.portal.model;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.apsadmin.portal.model.helper.IPageModelActionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.pagemodel.Frame;
@@ -49,8 +49,13 @@ public class PageModelAction extends AbstractPageModelAction {
 				String template = this.getTemplate();
 				if (StringUtils.isBlank(template)) {
 					String jspTemplatePath = PageModel.getPageModelJspPath(this.getCode(), this.getPluginCode());
-					File file = new File(ServletActionContext.getServletContext().getRealPath(jspTemplatePath));
-					if (!file.exists()) {
+					boolean existsJsp = false;
+					if (StringUtils.isNotBlank(jspTemplatePath)) {
+						PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+						Resource[] resources = resolver.getResources("file:" + jspTemplatePath);
+						existsJsp = null != resources && resources.length > 0;
+					}
+					if (!existsJsp) {
 						this.addFieldError("template", this.getText("error.pageModel.templateRequired"));
 					}
 				}

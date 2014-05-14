@@ -16,13 +16,11 @@
  */
 package org.entando.entando.apsadmin.portal.guifragment;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -30,8 +28,9 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import org.entando.entando.apsadmin.portal.guifragment.helper.IGuiFragmentActionHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 
@@ -177,7 +176,7 @@ public class GuiFragmentAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private String checkDelete(String code) throws ApsSystemException {
+	private String checkDelete(String code) throws Throwable {
 		GuiFragment guiFragment = this.getGuiFragmentManager().getGuiFragment(code);
 		if (null == guiFragment) {
 			this.addActionError(this.getText("error.guiFragment.null"));
@@ -187,10 +186,13 @@ public class GuiFragmentAction extends BaseAction {
 			this.addActionError(this.getText("error.guiFragment.locked"));
 			return INPUT;			
 		}
-	
+		boolean existsJsp = false;
 		String jspPath = GuiFragment.getWidgetJspPath(guiFragment);
-		
-		boolean existsJsp = StringUtils.isNotBlank(jspPath) && new File(ServletActionContext.getServletContext().getRealPath(jspPath)).exists();
+		if (StringUtils.isNotBlank(jspPath)) {
+			PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+			Resource[] resources = resolver.getResources("file:" + jspPath);
+			existsJsp = null != resources && resources.length > 0;
+		}
 		if (!existsJsp) {
 			this.extractReferencingObjects(code);
 			if (null != this.getReferences() && this.getReferences().size() > 0) {
