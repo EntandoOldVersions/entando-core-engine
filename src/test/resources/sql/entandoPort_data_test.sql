@@ -375,6 +375,9 @@ INSERT INTO sysconfig (version, item, descr, config) VALUES ('test', 'params', '
 	<Param name="treeStyle_page">classic</Param>
 	<Param name="treeStyle_category">classic</Param>
 	<Param name="startLangFromBrowser">false</Param>
+	<Param name="firstTimeMessages">true</Param>
+	<Param name="baseUrl">static</Param>
+	<Param name="baseUrlContext">true</Param>
 	<SpecialPages>
 		<Param name="notFoundPageCode">notfound</Param>
 		<Param name="homePageCode">homepage</Param>

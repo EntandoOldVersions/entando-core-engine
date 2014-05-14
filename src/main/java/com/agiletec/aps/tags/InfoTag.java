@@ -30,6 +30,7 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.baseconfig.ConfigInterface;
 import com.agiletec.aps.system.services.lang.ILangManager;
 import com.agiletec.aps.system.services.lang.Lang;
+import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
 /**
@@ -65,12 +66,16 @@ public class InfoTag extends OutSupport {
 				ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
 				this._info = langManager.getLangs();
 			} else if ("systemParam".equals(this._key)) {
-				ConfigInterface confManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, this.pageContext);
-				this._info = confManager.getParam(this.getParamName());
+				if (SystemConstants.PAR_APPL_BASE_URL.equals(this.getParamName())) {
+					IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, this.pageContext);
+					this._info = urlManager.getApplicationBaseURL((HttpServletRequest) request);
+				} else {
+					ConfigInterface confManager = (ConfigInterface) ApsWebApplicationUtils.getBean(SystemConstants.BASE_CONFIG_MANAGER, this.pageContext);
+					this._info = confManager.getParam(this.getParamName());
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("Error during tag initialization", t);
-			//ApsSystemUtils.logThrowable(t, this, "doStartTag");
 			throw new JspException("Error during tag initialization", t);
 		}
 		return EVAL_BODY_INCLUDE;
@@ -94,7 +99,6 @@ public class InfoTag extends OutSupport {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting start lang", t);
-			//ApsSystemUtils.logThrowable(t, this, "extractStartLang", "Error extracting start lang");
 		} finally {
 			if (null == startLang) {
 				startLang = langManager.getDefaultLang();
@@ -125,7 +129,6 @@ public class InfoTag extends OutSupport {
 				}
 			} catch (Throwable t) {
 				_logger.error("Error closing tag", t);
-				//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 				throw new JspException("Error closing tag", t);
 			}
 		}

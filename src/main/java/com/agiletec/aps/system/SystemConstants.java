@@ -89,7 +89,7 @@ public interface SystemConstants {
      * Nome parametro extra per requestContext: Head Info Container
      */
     public static final String EXTRAPAR_HEAD_INFO_CONTAINER = "HeadInfoContainer";
-    
+	
     /**
      * Nome parametro di sessione: utente corrente
      */
@@ -261,20 +261,24 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_URL_STYLE = "urlStyle";
     
     public static final String CONFIG_PARAM_TREE_STYLE_PAGE = "treeStyle_page";
-    
     public static final String CONFIG_PARAM_TREE_STYLE_CATEGORY = "treeStyle_category";
     
+	public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
+	
+	public static final String CONFIG_PARAM_BASE_URL_RELATIVE = "relative";
+	public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
+	public static final String CONFIG_PARAM_BASE_URL_STATIC = "static";
+	
+	public static final String CONFIG_PARAM_BASE_URL_CONTEXT = "baseUrlContext";
+	
     public static final String TREE_STYLE_CLASSIC = "classic";
-    
     public static final String TREE_STYLE_REQUEST = "request";
-    
     public static final String TREE_STYLE_LEVEL = "level";
     
     public static final String CONFIG_PARAM_URL_STYLE_CLASSIC = "classic";
+	public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = "breadcrumbs";
     
     public static final String CONFIG_PARAM_START_LANG_FROM_BROWSER = "startLangFromBrowser";
-    
-    public static final String CONFIG_PARAM_URL_STYLE_BREADCRUMBS = "breadcrumbs";
     
     public static final String CONFIG_PARAM_HOMEPAGE_PAGE_CODE = "homePageCode";
     
