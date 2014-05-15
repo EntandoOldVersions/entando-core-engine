@@ -292,8 +292,7 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 
 
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('content_viewer', 'content_viewer', 'jacms', '<#assign jacms=JspTaglibs["/jacms-aps-core"]>
-<@jacms.content publishExtraTitle=true />', '<#assign jacms=JspTaglibs["/jacms-aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('content_viewer', 'content_viewer', 'jacms', NULL, '<#assign jacms=JspTaglibs["/jacms-aps-core"]>
 <@jacms.content publishExtraTitle=true />', 1);
 
 
