@@ -107,7 +107,7 @@ public abstract class AbstractWidgetExecutorService {
 	
 	protected String extractWidgetOutput(RequestContext reqCtx, WidgetType type) throws ApsSystemException {
 		try {
-			String widgetTypeCode = type.getCode();
+			String widgetTypeCode = (type.isLogic()) ? type.getParentType().getCode() : type.getCode();
 			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
 			FieldSearchFilter[] filters = {filter};
 			IGuiFragmentManager guiFragmentManager = 
