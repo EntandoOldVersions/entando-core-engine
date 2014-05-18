@@ -17,31 +17,26 @@
 */
 package com.agiletec.apsadmin.portal;
 
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
-import java.util.List;
-
-import org.entando.entando.aps.system.services.widgettype.WidgetType;
-import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.services.group.Group;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
-import static com.agiletec.apsadmin.portal.WidgetTypeAction.NEW_USER_WIDGET;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
-import static com.agiletec.apsadmin.system.BaseAction.FAILURE;
-import static com.agiletec.apsadmin.system.BaseAction.USER_NOT_ALLOWED;
-import static com.opensymphony.xwork2.Action.SUCCESS;
 
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+import org.entando.entando.aps.system.services.widgettype.WidgetType;
+import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author E.Santoboni
@@ -167,7 +162,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 				this.getWidgetTypeManager().updateWidgetType(this.getWidgetTypeCode(), titles, configToSet, mainGroupToSet);
 			}
 			if (!type.isLogic() && !super.isInternalServletWidget(this.getWidgetTypeCode())) {
-				GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
+				GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(this.getWidgetTypeCode());
 				if (StringUtils.isNotBlank(this.getGui())) {
 					if (null == guiFragment) {
 						guiFragment = new GuiFragment();
@@ -376,13 +371,13 @@ public class WidgetTypeAction extends AbstractPortalAction {
 					}
 				}
 			} else {
-				GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
+				GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(this.getWidgetTypeCode());
 				if (null != guiFragment) {
 					this.setGui(guiFragment.getGui());
 				}
 			}
 		} catch (Throwable t) {
-			_logger.error("error in editWidgetTitles", t);
+			_logger.error("error in edit", t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -391,25 +386,12 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	public List<String> extractGuiFragmentCodes(String widgetTypeCode) {
 		List<String> ids = null;
 		try {
-			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
-			FieldSearchFilter codeFilter = new FieldSearchFilter("code");
-			codeFilter.setOrder(FieldSearchFilter.Order.ASC);
-			FieldSearchFilter[] filters = {filter, codeFilter};
-			ids = this.getGuiFragmentManager().searchGuiFragments(filters);
+			ids = this.getGuiFragmentManager().getGuiFragmentCodesByWidgetType(widgetTypeCode);
 		} catch (Throwable t) {
 			_logger.error("error extracting gui fragment codes", t);
 			throw new RuntimeException("error extracting gui fragment codes", t);
 		}
 		return ids;
-	}
-	
-	public GuiFragment extractUniqueGuiFragment(String widgetTypeCode) {
-		List<String> codes = this.extractGuiFragmentCodes(widgetTypeCode);
-		if (null != codes && !codes.isEmpty()) {
-			String code = codes.get(0);
-			return this.getGuiFragment(code);
-		}
-		return null;
 	}
 	
 	public GuiFragment getGuiFragment(String guiFragmentCode) {

@@ -18,7 +18,6 @@ package org.entando.entando.aps.system.services.controller.executor;
 
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.group.Group;
@@ -108,18 +107,14 @@ public abstract class AbstractWidgetExecutorService {
 	protected String extractWidgetOutput(RequestContext reqCtx, WidgetType type) throws ApsSystemException {
 		try {
 			String widgetTypeCode = (type.isLogic()) ? type.getParentType().getCode() : type.getCode();
-			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
-			FieldSearchFilter[] filters = {filter};
 			IGuiFragmentManager guiFragmentManager = 
 					(IGuiFragmentManager) ApsWebApplicationUtils.getBean(SystemConstants.GUI_FRAGMENT_MANAGER, reqCtx.getRequest());
-			List<String> fragmentCodes = guiFragmentManager.searchGuiFragments(filters);
-			if (null != fragmentCodes && !fragmentCodes.isEmpty()) {
-				String fragmentCode = fragmentCodes.get(0);//take the first
-				GuiFragment guiFragment = guiFragmentManager.getGuiFragment(fragmentCode);
-				String output = (null != guiFragment) ? guiFragment.getCurrentGui() : null;
+			GuiFragment guiFragment = guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode);
+			if (null != guiFragment) {
+				String output = guiFragment.getCurrentGui();
 				if (StringUtils.isBlank(output)) {
-					_logger.info("The fragment '{}' of widget '{}' is not available", fragmentCode, widgetTypeCode);
-					output = "The fragment '" + fragmentCode + "' of widget '" + widgetTypeCode + "' is not available";
+					_logger.info("The fragment '{}' of widget '{}' is not available", guiFragment.getCode(), widgetTypeCode);
+					output = "The fragment '" + guiFragment.getCode() + "' of widget '" + widgetTypeCode + "' is not available";
 				}
 				ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -26,6 +26,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
+import org.entando.entando.aps.system.services.cache.CacheInfoEvict;
+import org.entando.entando.aps.system.services.cache.CacheableInfo;
 import org.entando.entando.aps.system.services.cache.ICacheInfoManager;
 import org.entando.entando.aps.system.services.guifragment.event.GuiFragmentChangedEvent;
 
@@ -90,6 +92,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	
 	@Override
 	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
 	public void addGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
 		try {
 			this.getGuiFragmentDAO().insertGuiFragment(guiFragment);
@@ -102,6 +105,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	
 	@Override
 	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#guiFragment.code)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
 	public void updateGuiFragment(GuiFragment guiFragment) throws ApsSystemException {
 		try {
 			this.getGuiFragmentDAO().updateGuiFragment(guiFragment);
@@ -114,6 +118,7 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 	
 	@Override
 	@CacheEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_'.concat(#code)")
+	@CacheInfoEvict(value = ICacheInfoManager.DEFAULT_CACHE_NAME, groups = "'GuiFragment_uniqueByWidgetTypeGroup,GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
 	public void deleteGuiFragment(String code) throws ApsSystemException {
 		try {
 			GuiFragment guiFragment = this.getGuiFragment(code);
@@ -130,6 +135,43 @@ public class GuiFragmentManager extends AbstractService implements IGuiFragmentM
 		event.setGuiFragment(guiFragment);
 		event.setOperationCode(operationCode);
 		this.notifyEvent(event);
+	}
+	
+	@Override
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_uniqueByWidgetType_'.concat(#widgetTypeCode)")
+	@CacheableInfo(groups = "'GuiFragment_uniqueByWidgetTypeGroup'")//TODO improve group handling
+	public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws ApsSystemException {
+		GuiFragment guiFragment = null;
+		try {
+			List<String> fragmentCodes = this.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			if (null != fragmentCodes && !fragmentCodes.isEmpty()) {
+				if (fragmentCodes.size() > 1) {
+					_logger.warn("There are more then one fragment joined with widget '{}'", widgetTypeCode);
+				}
+				guiFragment = this.getGuiFragment(fragmentCodes.get(0));
+			}
+		} catch (Throwable t) {
+			_logger.error("Error loading guiFragment by widget '{}'", widgetTypeCode,  t);
+			throw new ApsSystemException("Error loading guiFragment by widget " + widgetTypeCode, t);
+		}
+		return guiFragment;
+	}
+	
+	@Override
+	@Cacheable(value = ICacheInfoManager.DEFAULT_CACHE_NAME, key = "'GuiFragment_codesByWidgetType_'.concat(#widgetTypeCode)")
+	@CacheableInfo(groups = "'GuiFragment_codesByWidgetTypeGroup'")//TODO improve group handling
+	public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws ApsSystemException {
+		List<String> codes = null;
+		try {
+			FieldSearchFilter filter = new FieldSearchFilter("widgettypecode", widgetTypeCode, false);
+			filter.setOrder(FieldSearchFilter.Order.ASC);
+			FieldSearchFilter[] filters = {filter};
+			codes = this.searchGuiFragments(filters);
+		} catch (Throwable t) {
+			_logger.error("Error loading fragments code by widget '{}'", widgetTypeCode,  t);
+			throw new ApsSystemException("Error loading fragment codes by widget " + widgetTypeCode, t);
+		}
+		return codes;
 	}
 	
 	@Override

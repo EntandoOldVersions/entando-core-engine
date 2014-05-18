@@ -39,4 +39,8 @@ public interface IGuiFragmentManager {
 	
 	public void deleteGuiFragment(String code) throws ApsSystemException;
 	
+	public GuiFragment getUniqueGuiFragmentByWidgetType(String widgetTypeCode) throws ApsSystemException;
+	
+	public List<String> getGuiFragmentCodesByWidgetType(String widgetTypeCode) throws ApsSystemException;
+	
 }
