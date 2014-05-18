@@ -24,12 +24,12 @@ ATTRIBUTI:
 ', NULL);
 INSERT INTO contentmodels (modelid, contenttype, descr, model, stylesheet) VALUES (1, 'ART', 'Main Model', '#if ($content.Titolo.text != "")<h1 class="titolo">$content.Titolo.text</h1>#end
 #if ($content.Data.longDate != "")<p>Data: $content.Data.longDate</p>#end
-$content.TextBody.getTextBeforeImage(0)
+$content.CorpoTesto.getTextBeforeImage(0)
 #if ( $content.Foto.imagePath("2") != "" )
 <img class="left" src="$content.Foto.imagePath("2")" alt="$content.Foto.text" />
 #end
 $content.CorpoTesto.getTextAfterImage(0)
-#if ($content.Numero.Number != null)<p>Numero: $content.Numero.Number</p>#end
+#if ($content.Numero.number)<p>Numero: $content.Numero.number</p>#end
 #if ($content.Autori && $content.Autori.size() > 0)
 <h2 class="titolo">Autori:</h2>
 <ul title="Authors">
@@ -292,7 +292,8 @@ INSERT INTO widgetcatalog (code, titles, parameters, plugincode, parenttypecode,
 
 
 
-INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('content_viewer', 'content_viewer', 'jacms', NULL, '<#assign jacms=JspTaglibs["/jacms-aps-core"]>
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('content_viewer', 'content_viewer', 'jacms', NULL, '<#assign jacms=JspTaglibs["target/classes/META-INF/jacms-aps-core.tld"]>
+<!-- relative tld path for test execution -->
 <@jacms.content publishExtraTitle=true />', 1);
 
 

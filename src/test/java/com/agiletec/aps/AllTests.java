@@ -66,6 +66,7 @@ import com.agiletec.aps.util.TestHtmlHandler;
 
 import org.entando.entando.aps.system.services.actionlog.TestActionLogDAO;
 import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
+import org.entando.entando.aps.system.services.controller.executor.TestWidgetExecutorService;
 import org.entando.entando.aps.system.services.guifragment.TestGuiFragmentManager;
 import org.entando.entando.aps.system.services.storage.TestLocalStorageManager;
 
@@ -147,6 +148,8 @@ public class AllTests {
 		suite.addTestSuite(org.entando.entando.aps.system.services.userprofile.TestUserManager.class);
 		//
 		suite.addTestSuite(TestGuiFragmentManager.class);
+		//
+		suite.addTestSuite(TestWidgetExecutorService.class);
 		
 		return suite;
 	}

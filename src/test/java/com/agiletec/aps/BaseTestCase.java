@@ -65,13 +65,13 @@ public class BaseTestCase extends TestCase {
     	RequestContext reqCtx = new RequestContext();
     	srvCtx.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext);
     	MockHttpServletRequest request = new MockHttpServletRequest();
+		request.setAttribute(RequestContext.REQCTX, reqCtx);
     	MockHttpServletResponse response = new MockHttpServletResponse();
 		MockHttpSession session = new MockHttpSession(srvCtx);
 		request.setSession(session);
 		reqCtx.setRequest(request);
 		reqCtx.setResponse(response);
 		
-		//TODO SETTARE PERAMETRI BASE DEL CONTESTO DELLA RICHIESTA.
 		ILangManager langManager = (ILangManager) this.getService(SystemConstants.LANGUAGE_MANAGER);
 		Lang defaultLang = langManager.getDefaultLang();
 		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, defaultLang);
