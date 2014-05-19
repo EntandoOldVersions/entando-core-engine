@@ -162,7 +162,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 				this.getWidgetTypeManager().updateWidgetType(this.getWidgetTypeCode(), titles, configToSet, mainGroupToSet);
 			}
 			if (!type.isLogic() && !super.isInternalServletWidget(this.getWidgetTypeCode())) {
-				GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(this.getWidgetTypeCode());
+				GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
 				if (StringUtils.isNotBlank(this.getGui())) {
 					if (null == guiFragment) {
 						guiFragment = new GuiFragment();
@@ -392,6 +392,17 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			throw new RuntimeException("error extracting gui fragment codes", t);
 		}
 		return ids;
+	}
+	
+	public GuiFragment extractUniqueGuiFragment(String widgetTypeCode) {
+		GuiFragment fragment = null;
+		try {
+			fragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetTypeCode);
+		} catch (Throwable t) {
+			_logger.error("error extracting gui fragment by widget '{}'", widgetTypeCode, t);
+			throw new RuntimeException("\"error extracting gui fragment by widget " + widgetTypeCode, t);
+		}
+		return fragment;
 	}
 	
 	public GuiFragment getGuiFragment(String guiFragmentCode) {
