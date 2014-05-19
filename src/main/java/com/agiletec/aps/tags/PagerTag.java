@@ -29,26 +29,29 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.tags.util.IPagerVO;
 import com.agiletec.aps.tags.util.PagerTagHelper;
 
+import freemarker.template.SimpleSequence;
+
 /**
  * Pager tag. Please note that the advanced mode of the tag is used when the list to 
  * iterate over is huge. The "offset" attribute lets you to control how the list is iterated
  * by specifying the numeric value of each forward or backward step.
- * 
  * @author E.Santoboni
  */
 public class PagerTag extends TagSupport {
 
 	private static final Logger _logger = LoggerFactory.getLogger(PagerTag.class);
 	
+	@Override
 	public int doStartTag() throws JspException {
 		ServletRequest request =  this.pageContext.getRequest();
 		try {
-			Collection object = (Collection) this.pageContext.getAttribute(this.getListName());
-			if (object == null) {
+			Object object = this.pageContext.getAttribute(this.getListName());
+			Collection collection = (null != object && object instanceof SimpleSequence) ? ((SimpleSequence) object).toList() : (Collection) object;
+			if (collection == null) {
 				_logger.error("There is no list in the request");
 			} else {
 				PagerTagHelper helper = new PagerTagHelper();
-				IPagerVO pagerVo = helper.getPagerVO(object, this.getPagerId(), 
+				IPagerVO pagerVo = helper.getPagerVO(collection, this.getPagerId(), 
 						this.isPagerIdFromFrame(), this.getMax(),  this.isAdvanced(), this.getOffset(), request);
 				this.pageContext.setAttribute(this.getObjectName(), pagerVo);
 			}
@@ -59,12 +62,14 @@ public class PagerTag extends TagSupport {
 		}
 		return EVAL_BODY_INCLUDE;
 	}
-
+	
+	@Override
 	public int doEndTag() throws JspException {
 		this.release();
 		return super.doEndTag();
 	}
-
+	
+	@Override
 	public void release() {
 		this._listName = null;
 		this._objectName = null;
