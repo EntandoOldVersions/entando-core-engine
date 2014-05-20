@@ -16,6 +16,7 @@
 		</action>
 		
 		<action name="edit" class="filebrowserAction" method="edit">
+			<result name="input" type="tiles">admin.Filebrowser.list</result>
 			<result type="tiles">admin.Filebrowser.edit</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
@@ -23,7 +24,7 @@
 			</interceptor-ref>
 		</action>
 		
-		<action name="newFileEntry" class="filebrowserAction">
+		<action name="newFileEntry" class="filebrowserAction" method="newFile">
 			<result type="tiles">admin.Filebrowser.newFile</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
@@ -31,7 +32,7 @@
 			</interceptor-ref>
 		</action>
 		
-		<action name="newDirEntry" class="filebrowserAction">
+		<action name="newDirEntry" class="filebrowserAction" method="newDirectory">
 			<result type="tiles">admin.Filebrowser.newDir</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>

@@ -17,6 +17,7 @@
 package org.entando.entando.apsadmin.filebrowser;
 
 import com.agiletec.aps.util.SelectItem;
+import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.apsadmin.system.BaseAction;
 
 import java.io.ByteArrayInputStream;
@@ -25,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -46,13 +48,24 @@ public class FileBrowserAction extends BaseAction {
 	}
 	
 	public String edit() {
-		String text;
 		try {
-			text = this.getStorageManager().readFile(this.getCurrentPath() + this.getFilename(), false);
+			String result = this.validateTextFileExtension(this.getFilename());
+			if (null != result) return result;
+			String text = this.getStorageManager().readFile(this.getCurrentPath() + this.getFilename(), false);
 			this.setFileText(text);
 		} catch (Throwable t) {
 			_logger.error("error editing file, fullPath: {}", this.getCurrentPath(), t);
 		}
+		return SUCCESS;
+	}
+	
+	public String newFile() {
+		this.setStrutsAction(ApsAdminSystemConstants.ADD);
+		return SUCCESS;
+	}
+	
+	public String newDirectory() {
+		this.setStrutsAction(ApsAdminSystemConstants.ADD);
 		return SUCCESS;
 	}
 	
@@ -84,16 +97,46 @@ public class FileBrowserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-
+	
 	public String save() {
 		try {
 			InputStream stream = new ByteArrayInputStream(this.getFileText().getBytes());
-			this.getStorageManager().editFile(this.getCurrentPath() + this.getFilename(), false, stream);
+			String filename = this.getFilename();
+			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+				filename += "." + this.getTextFileExtension();
+			}
+			String result = this.validateTextFileExtension(filename);
+			if (null != result) return result;
+			this.getStorageManager().editFile(this.getCurrentPath() + filename, false, stream);
 		} catch (Throwable t) {
-			_logger.error("error saving file, fullPath: {} text:  {}", this.getCurrentPath(), this.getFileText(), t);
+			_logger.error("error saving file, fullPath: {} text: {}", this.getCurrentPath(), this.getFileText(), t);
 			return FAILURE;
 		}
 		return SUCCESS;
+	}
+	
+	public boolean isTextFile(String filename) {
+		int index = filename.lastIndexOf(".");
+		String extension = (index > 0) ? filename.substring(index+1) : null;
+		if (StringUtils.isBlank(extension)) {
+			return false;
+		}
+		String[] extensions = this.getTextFileTypes();
+		for (int i = 0; i < extensions.length; i++) {
+			String allowedExtension = extensions[i];
+			if (allowedExtension.equalsIgnoreCase(extension)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected String validateTextFileExtension(String filename) {
+		if (!this.isTextFile(filename)) {
+			this.addActionError(this.getText("filebrowser.error.addTextFile.wrongExtension"));
+			return INPUT;
+		}
+		return null;
 	}
 	
 	public String createDir() {
@@ -185,28 +228,28 @@ public class FileBrowserAction extends BaseAction {
 		fileText = (null != fileText) ? fileText : "";
 		this._fileText = fileText;
 	}
-
+	
+	public String getTextFileExtension() {
+		return _textFileExtension;
+	}
+	public void setTextFileExtension(String textFileExtension) {
+		this._textFileExtension = textFileExtension;
+	}
+	
+	public int getStrutsAction() {
+		return _strutsAction;
+	}
+	public void setStrutsAction(int strutsAction) {
+		this._strutsAction = strutsAction;
+	}
+	
 	public void setUpload(File file) {
 		this._file = file;
 	}
 	public File getUpload() {
 		return this._file;
 	}
-
-	public String getUploadFileName() {
-		return _uploadFileName;
-	}
-	public void setUploadFileName(String uploadFileName) {
-		this._uploadFileName = uploadFileName;
-	}
-
-	public InputStream getUploadInputStream() {
-		return _uploadInputStream;
-	}
-	public void setUploadInputStream(InputStream uploadInputStream) {
-		this._uploadInputStream = uploadInputStream;
-	}
-
+	
 	public int getFileSize() {
 		return (int) this._file.length() / 1000;
 	}
@@ -246,6 +289,31 @@ public class FileBrowserAction extends BaseAction {
 		this._deleteFile = deleteFile;
 	}
 	
+	public String getUploadFileName() {
+		return _uploadFileName;
+	}
+	public void setUploadFileName(String uploadFileName) {
+		this._uploadFileName = uploadFileName;
+	}
+	
+	public InputStream getUploadInputStream() {
+		return _uploadInputStream;
+	}
+	public void setUploadInputStream(InputStream uploadInputStream) {
+		this._uploadInputStream = uploadInputStream;
+	}
+	
+	public String[] getTextFileTypes() {
+		return this.getTextFileTypesCSV().split(",");
+	}
+	
+	protected String getTextFileTypesCSV() {
+		return _textFileTypesCSV;
+	}
+	public void setTextFileTypesCSV(String textFileTypesCSV) {
+		this._textFileTypesCSV = textFileTypesCSV;
+	}
+	
 	public InputStream getDownloadInputStream() {
 		return _downloadInputStream;
 	}
@@ -270,14 +338,17 @@ public class FileBrowserAction extends BaseAction {
 	private String _currentPath;
 	
 	private String _fileText;
+	private String _textFileExtension;
 	private String _filename;
 	private String _dirname;
 	private Boolean _deleteFile;
+	private int _strutsAction;
 	
 	//variables for file upload
 	private File _file;
 	private String _uploadFileName;
 	private InputStream _uploadInputStream;
+	private String _textFileTypesCSV;
 	
 	private InputStream _downloadInputStream;
 	private String _downloadContentType;

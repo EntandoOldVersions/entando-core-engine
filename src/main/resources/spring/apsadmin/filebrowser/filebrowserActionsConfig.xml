@@ -9,6 +9,7 @@
 			class=" org.entando.entando.apsadmin.filebrowser.FileBrowserAction" 
 			scope="prototype" parent="abstractBaseAction" >
 		<property name="storageManager" ref="StorageManager" />
+		<property name="textFileTypesCSV"><value>txt,css</value></property>
 	</bean>
-
+	
 </beans>
