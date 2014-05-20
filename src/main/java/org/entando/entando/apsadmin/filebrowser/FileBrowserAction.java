@@ -23,6 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,12 +95,30 @@ public class FileBrowserAction extends BaseAction {
 		}
 		return SUCCESS;
 	}
-
+	
 	public String createDir() {
 		try {
 			this.getStorageManager().createDirectory(this.getCurrentPath() + this.getDirname(), false);
 		} catch (Throwable t) {
 			_logger.error("error creating dir, fullPath: {} text:  {}", this.getCurrentPath(), this.getDirname(), t);
+			return FAILURE;
+		}
+		return SUCCESS;
+	}
+	
+	public String download() {
+		try {
+			InputStream is = this.getStorageManager().getStream(this.getCurrentPath() + this.getFilename(), false);
+			if (null == is) {
+				this.addActionError(this.getText("filebrowser.error.download.missingFile"));
+				return INPUT;
+			}
+			this.setDownloadInputStream(is);
+			String contentType = URLConnection.guessContentTypeFromName(this.getFilename());
+			this.setDownloadContentType(contentType);
+			//this.getStorageManager().createDirectory(this.getCurrentPath() + this.getDirname(), false);
+		} catch (Throwable t) {
+			_logger.error("error downloading file, fullPath: '{}' file: '{}'", this.getCurrentPath(), this.getFilename(), t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -227,6 +246,20 @@ public class FileBrowserAction extends BaseAction {
 		this._deleteFile = deleteFile;
 	}
 	
+	public InputStream getDownloadInputStream() {
+		return _downloadInputStream;
+	}
+	public void setDownloadInputStream(InputStream downloadInputStream) {
+		this._downloadInputStream = downloadInputStream;
+	}
+	
+	public String getDownloadContentType() {
+		return _downloadContentType;
+	}
+	public void setDownloadContentType(String downloadContentType) {
+		this._downloadContentType = downloadContentType;
+	}
+	
 	protected IStorageManager getStorageManager() {
 		return _storageManager;
 	}
@@ -245,6 +278,9 @@ public class FileBrowserAction extends BaseAction {
 	private File _file;
 	private String _uploadFileName;
 	private InputStream _uploadInputStream;
+	
+	private InputStream _downloadInputStream;
+	private String _downloadContentType;
 	
 	private IStorageManager _storageManager;
 	

@@ -11,7 +11,7 @@
 			<result type="tiles">admin.Filebrowser.list</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -19,7 +19,7 @@
 			<result type="tiles">admin.Filebrowser.edit</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -27,7 +27,7 @@
 			<result type="tiles">admin.Filebrowser.newFile</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -35,7 +35,7 @@
 			<result type="tiles">admin.Filebrowser.newDir</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -47,7 +47,7 @@
             </result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -59,7 +59,7 @@
             </result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -67,7 +67,7 @@
 			<result type="tiles">admin.Filebrowser.delete</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -79,7 +79,7 @@
             </result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -87,7 +87,7 @@
 			<result type="tiles">admin.Filebrowser.upload</result>
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
@@ -100,10 +100,21 @@
 			<interceptor-ref name="fileUpload"><param name="maximumSize">10485760</param></interceptor-ref><!-- maximun Size = 10 Mb -->
 			<interceptor-ref name="entandoDefaultStack">
 				<param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
-				<param name="requestAuth.requiredPermission">manageResources</param>
+				<param name="requestAuth.requiredPermission">superuser</param>
 			</interceptor-ref>
 		</action>
 		
+		<action name="download" class="filebrowserAction" method="download">
+			<result name="input" type="tiles">admin.Filebrowser.list</result>
+			<result name="success" type="stream">
+				<param name="contentType">${downloadContentType}</param>
+				<param name="inputName">downloadInputStream</param>
+				<param name="contentDisposition">attachment;filename="${filename}"</param>
+				<param name="bufferSize">1024</param>
+			</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+        
 	</package>
 	
 </struts>
