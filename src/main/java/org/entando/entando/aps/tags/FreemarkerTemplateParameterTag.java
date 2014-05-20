@@ -24,6 +24,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 
+import freemarker.core.Environment;
+import freemarker.ext.beans.StringModel;
 import freemarker.ext.servlet.AllHttpScopesHashModel;
 import freemarker.template.TemplateModel;
 
@@ -45,11 +47,23 @@ public class FreemarkerTemplateParameterTag extends TagSupport {
 		ServletRequest request = this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
 		try {
-			Object object = this.pageContext.getAttribute(this.getValueName());
 			ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
 			TemplateModel templateModel = ebc.getTemplateModel();
-			if (null != object && (templateModel instanceof AllHttpScopesHashModel)) {
-				AllHttpScopesHashModel hashModel = (AllHttpScopesHashModel) templateModel;
+			if (!(templateModel instanceof AllHttpScopesHashModel)) {
+				return EVAL_BODY_INCLUDE;
+			}
+			AllHttpScopesHashModel hashModel = (AllHttpScopesHashModel) templateModel;
+			Object object = this.pageContext.getAttribute(this.getValueName());
+			if (null == object) {
+				Environment environment = Environment.getCurrentEnvironment();
+				if (null != environment) {
+					Object wrapper = environment.getVariable(this.getValueName());
+					if (null != wrapper && (wrapper instanceof StringModel)) {
+						object = ((StringModel) wrapper).getWrappedObject();
+					}
+				}
+			}
+			if (null != object) {
 				hashModel.put(this.getVar(), object);
 			}
         } catch (Throwable t) {

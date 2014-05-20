@@ -278,6 +278,17 @@ public class UserFilterOptionBean {
 		}
 		return filter;
 	}
+	
+	public String getFormFieldValue(String formName) {
+		String value = null;
+		if (null != this.getFormFieldValues()) {
+			value = this.getFormFieldValues().get(formName);
+		}
+		if (null != value) {
+			return value;
+		}
+		return "";
+	}
 
 	public String[] getFormFieldNames() {
 		return _formFieldNames;
