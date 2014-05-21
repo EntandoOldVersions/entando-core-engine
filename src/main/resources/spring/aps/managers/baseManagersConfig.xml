@@ -169,6 +169,10 @@
 		</property>
 	</bean>
 	
+    <bean id="ApiPageModelInterface" class="org.entando.entando.aps.system.services.pagemodel.api.ApiPageModelInterface" >
+		<property name="pageModelManager" ref="PageModelManager" />
+    </bean>
+    
 	<bean id="PageManager" class="com.agiletec.aps.system.services.page.PageManager" 
 			parent="abstractService" >
 		<property name="pageDAO" >
