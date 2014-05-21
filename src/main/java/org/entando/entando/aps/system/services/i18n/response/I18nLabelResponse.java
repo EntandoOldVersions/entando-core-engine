@@ -22,6 +22,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponse;
 import org.entando.entando.aps.system.services.api.model.AbstractApiResponseResult;
+import org.entando.entando.aps.system.services.userprofile.api.response.UserProfileResponseResult;
 
 /**
  * @author E.Santoboni
@@ -35,6 +36,10 @@ public class I18nLabelResponse extends AbstractApiResponse {
         return (I18nLabelResponseResult) super.getResult();
     }
     
+	public void setResult(I18nLabelResponseResult result) {
+		super.setResult(result);
+	}
+	
     @Override
     protected AbstractApiResponseResult createResponseResultInstance() {
         return new I18nLabelResponseResult();
