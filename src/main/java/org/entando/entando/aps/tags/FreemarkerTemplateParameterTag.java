@@ -58,8 +58,12 @@ public class FreemarkerTemplateParameterTag extends TagSupport {
 				Environment environment = Environment.getCurrentEnvironment();
 				if (null != environment) {
 					Object wrapper = environment.getVariable(this.getValueName());
-					if (null != wrapper && (wrapper instanceof StringModel)) {
-						object = ((StringModel) wrapper).getWrappedObject();
+					if (null != wrapper) {
+						if (wrapper instanceof StringModel) {
+							object = ((StringModel) wrapper).getWrappedObject();
+						} else {
+							object = wrapper;
+						}
 					}
 				}
 			}
