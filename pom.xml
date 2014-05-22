@@ -258,22 +258,6 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>2.6</version>
-				<configuration>
-					<instrumentation>
-						<ignores>
-							<ignore>com.agiletec.aps.tags.*</ignore>
-							<ignore>com.agiletec.apsadmin.tags.*</ignore>
-							<ignore>org.entando.entando.aps.tags.*</ignore>
-							<ignore>org.entando.entando.apsadmin.tags.*</ignore>
-						</ignores>
-						<excludes>
-							<exclude>com/agiletec/aps/system/services/**/I*.class</exclude>
-							<exclude>com/agiletec/apsadmin/**/I*.class</exclude>
-							<exclude>org/entando/entando/aps/system/services/**/I*.class</exclude>
-							<exclude>org/entando/entando/apsadmin/**/I*.class</exclude>
-						</excludes>
-					</instrumentation>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>
