@@ -19,6 +19,9 @@ package org.entando.entando.aps.system.services.controller.executor;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Widget;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.controller.AbstractTestExecutorService;
 
@@ -40,6 +43,12 @@ public class TestWidgetExecutorService extends AbstractTestExecutorService {
 		for (int i = 0; i < widgetOutput.length; i++) {
 			String output = widgetOutput[i];
 			assertNotNull(output);
+			Widget currentWidget = currentPage.getWidgets()[i];
+			if (null == currentWidget) {
+				assertTrue(StringUtils.isBlank(output));
+			} else {
+				assertTrue(StringUtils.isNotBlank(output));
+			}
 		}
 	}
 	
