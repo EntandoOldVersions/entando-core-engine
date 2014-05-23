@@ -56,8 +56,14 @@ public class GuiFragmentAction extends BaseAction {
 					_logger.error("Null widget type - code '{}'", this.getWidgetTypeCode());
 					throw new RuntimeException("Null widget type - code " + this.getWidgetTypeCode());
 				}
-			} else if (isGuiEmpty) {
-				this.addFieldError("gui", this.getText("requiredstring", new String[]{"gui"}));
+			} else {
+				if (null != this.getGuiFragmentManager().getGuiFragment(this.getCode())) {
+					String[] args = {this.getCode()};
+					this.addFieldError("code", this.getText("error.guiFragment.duplicateCode", args));
+				}
+				if (isGuiEmpty) {
+					this.addFieldError("gui", this.getText("requiredstring", new String[]{"gui"}));
+				}
 			}
 		} catch (Throwable t) {
 			_logger.error("error in validate", t);
