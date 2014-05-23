@@ -146,6 +146,12 @@
 		<property name="guiFragmentManager" ref="GuiFragmentManager"/>
 	</bean>
 	
+    <bean id="ApiWidgetTypeInterface" class="org.entando.entando.aps.system.services.widgettype.api.ApiWidgetTypeInterface" >
+		<property name="pageManager" ref="PageManager" />
+		<property name="widgetTypeManager" ref="WidgetTypeManager" />
+		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+    </bean>
+    
 	<bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager" 
 			parent="abstractService">
 		<property name="guiFragmentDAO">

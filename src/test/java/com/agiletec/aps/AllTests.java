@@ -69,6 +69,7 @@ import org.entando.entando.aps.system.services.actionlog.TestActionLogManager;
 import org.entando.entando.aps.system.services.controller.executor.TestWidgetExecutorService;
 import org.entando.entando.aps.system.services.guifragment.TestGuiFragmentManager;
 import org.entando.entando.aps.system.services.storage.TestLocalStorageManager;
+import org.entando.entando.aps.system.services.widgettype.api.TestApiWidgetTypeInterface;
 
 /**
  * @author W.Ambu
@@ -142,6 +143,8 @@ public class AllTests {
 		suite.addTestSuite(TestActionLogDAO.class);
 		suite.addTestSuite(TestActionLogManager.class);
 		//
+		suite.addTestSuite(TestWidgetExecutorService.class);
+		//
 		suite.addTestSuite(TestLocalStorageManager.class);
 		//
 		suite.addTestSuite(TestUserProfileManager.class);
@@ -149,7 +152,7 @@ public class AllTests {
 		//
 		suite.addTestSuite(TestGuiFragmentManager.class);
 		//
-		suite.addTestSuite(TestWidgetExecutorService.class);
+		suite.addTestSuite(TestApiWidgetTypeInterface.class);
 		
 		return suite;
 	}
