@@ -49,13 +49,13 @@ public class TestPageModelAction extends AbstractTestPageModelAction {
 		}
 	}
 	
-	public void testValidate() throws Throwable {
+	public void testValidate_1() throws Throwable {
 		String testPageModelCode = "test_pagemodel";
 		assertNull(this._pageModelManager.getPageModel(testPageModelCode));
 		try {
 			this.setUserOnSession("admin");
 			this.initAction("/do/PageModel", "save");
-			super.addParameter("code", "test_pagemodel");
+			super.addParameter("code", testPageModelCode);
 			super.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
 			String result = this.executeAction();
 			ActionSupport action = super.getAction();
@@ -67,6 +67,29 @@ public class TestPageModelAction extends AbstractTestPageModelAction {
 		} catch (Exception e) {
 			this._pageModelManager.deletePageModel(testPageModelCode);
 			assertNull(this._pageModelManager.getPageModel(testPageModelCode));
+			throw e;
+		}
+	}
+	
+	public void testValidate_2() throws Throwable {
+		String testPageModelCode = "internal";
+		PageModel model = this._pageModelManager.getPageModel(testPageModelCode);
+		assertNotNull(model);
+		try {
+			this.setUserOnSession("admin");
+			this.initAction("/do/PageModel", "save");
+			super.addParameter("code", testPageModelCode);
+			super.addParameter("description", "Description");
+			super.addParameter("strutsAction", ApsAdminSystemConstants.ADD);
+			String result = this.executeAction();
+			ActionSupport action = super.getAction();
+			assertEquals(Action.INPUT, result);
+			assertEquals(3, action.getFieldErrors().size());
+			assertNotNull(action.getFieldErrors().get("code"));
+			assertNotNull(action.getFieldErrors().get("template"));
+			assertNotNull(action.getFieldErrors().get("xmlConfiguration"));
+		} catch (Exception e) {
+			this._pageModelManager.updatePageModel(model);
 			throw e;
 		}
 	}

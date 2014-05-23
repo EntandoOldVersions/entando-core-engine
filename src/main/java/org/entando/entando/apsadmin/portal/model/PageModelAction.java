@@ -22,8 +22,10 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.apsadmin.portal.model.helper.IPageModelActionHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -45,6 +47,13 @@ public class PageModelAction extends AbstractPageModelAction {
 		super.validate();
 		List<String> codeFieldErrors = this.getFieldErrors().get("code");
 		if (null == codeFieldErrors || codeFieldErrors.isEmpty()) {
+			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+				String currectCode = this.getCode();
+				if (currectCode.length() > 0 && null != this.getPageModel(currectCode)) {
+					String[] args = {currectCode};
+					this.addFieldError("code", this.getText("error.pageModel.duplicateCode", args));
+				}
+			}
 			try {
 				String template = this.getTemplate();
 				if (StringUtils.isBlank(template)) {
