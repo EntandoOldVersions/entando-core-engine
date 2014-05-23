@@ -19,12 +19,12 @@ package org.entando.entando.apsadmin.portal.model;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;
 import java.util.Map;
-import static junit.framework.Assert.assertNull;
 
 /**
  * @author E.Santoboni

@@ -53,7 +53,13 @@ public class PageModelAction extends AbstractPageModelAction {
 					if (StringUtils.isNotBlank(jspTemplatePath)) {
 						PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
 						Resource[] resources = resolver.getResources("file:" + jspTemplatePath);
-						existsJsp = null != resources && resources.length > 0;
+						for (int i = 0; i < resources.length; i++) {
+							Resource resource = resources[i];
+							if (resource.getFile().exists()) {
+								existsJsp = true;
+								break;
+							}
+						}
 					}
 					if (!existsJsp) {
 						this.addFieldError("template", this.getText("error.pageModel.templateRequired"));
