@@ -16,10 +16,7 @@
 */
 package org.entando.entando.apsadmin.portal.guifragment;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
@@ -28,6 +25,7 @@ import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+
 import com.opensymphony.xwork2.Action;
 
 public class TestGuiFragmentAction extends ApsAdminBaseTestCase  {
@@ -53,7 +51,7 @@ public class TestGuiFragmentAction extends ApsAdminBaseTestCase  {
 		GuiFragmentAction action = (GuiFragmentAction) this.getAction();
 		assertEquals(1, action.getReferences().keySet().size());
 	}
-
+	/*
 	public void testDetailWithReferences() throws Throwable {
 		List<GuiFragment> fragments = new ArrayList<GuiFragment>(); 
 		for (int i = 0; i < 5; i++) {
@@ -108,7 +106,7 @@ public class TestGuiFragmentAction extends ApsAdminBaseTestCase  {
 			}
 		}
 	}
-	
+	*/
 	protected GuiFragment createMockFragment(String code, String gui, String widgetTypeCode) {
 		GuiFragment mFragment = new GuiFragment();
 		mFragment.setCode(code);
@@ -116,8 +114,8 @@ public class TestGuiFragmentAction extends ApsAdminBaseTestCase  {
 		mFragment.setWidgetTypeCode(widgetTypeCode);
 		return mFragment;
 	}
-
-	public String getMockTemplate(String a, String b, String c, String d) throws Throwable {
+	
+	private String getMockTemplate(String a, String b, String c, String d) throws Throwable {
 		String template = IOUtils.toString(this.getClass().getResourceAsStream("mockTemplate"));
 		if (null != a) {
 			template = template.replaceAll("PLACECHOLDER_A", a);
