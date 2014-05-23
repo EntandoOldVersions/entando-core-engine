@@ -400,7 +400,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			fragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(widgetTypeCode);
 		} catch (Throwable t) {
 			_logger.error("error extracting gui fragment by widget '{}'", widgetTypeCode, t);
-			throw new RuntimeException("\"error extracting gui fragment by widget " + widgetTypeCode, t);
+			throw new RuntimeException("error extracting gui fragment by widget " + widgetTypeCode, t);
 		}
 		return fragment;
 	}
