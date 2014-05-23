@@ -54,24 +54,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 	
 	private void testJaxbWidgetType(String widgetTypeCode) throws Throwable {
 		WidgetType widgetType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
-		assertNotNull(widgetType);
-		GuiFragment singleGuiFragment = null;
-		List<GuiFragment> fragments = new ArrayList<GuiFragment>();
-		if (!widgetType.isLogic()) {
-			singleGuiFragment = this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode);
-		} else {
-			List<String> fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
-			if (null != fragmentCodes) {
-				for (int i = 0; i < fragmentCodes.size(); i++) {
-					String fragmentCode = fragmentCodes.get(i);
-					GuiFragment fragment = this._guiFragmentManager.getGuiFragment(fragmentCode);
-					if (null != fragment) {
-						fragments.add(fragment);
-					}
-				}
-			}
-		}
-		JAXBWidgetType jaxbWidgetType = new JAXBWidgetType(widgetType, singleGuiFragment, fragments);
+		JAXBWidgetType jaxbWidgetType = this.getJaxbWidgetType(widgetType);
 		String body = this.getMarshalledObject(jaxbWidgetType);
 		assertNotNull(body);
 	}
@@ -110,6 +93,79 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		}
+	}
+	
+	public void testUpdateJaxbWidgetType() throws Throwable {
+		this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", null, false);
+		this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", "**testjaxb_login_form** gui", true);
+		this.testInvokeAddJaxbWidgetType("testjaxb_formAction", "formAction", null, false);
+		this.testInvokeAddJaxbWidgetType("testjaxb_formAction", "formAction", "**testjaxb_formAction** gui", true);
+		this.testInvokeAddJaxbWidgetType("testjaxb_content_viewer", "content_viewer", null, false);
+		this.testInvokeAddJaxbWidgetType("testjaxb_content_viewer", "content_viewer", "**testjaxb_formAction** gui", true);
+		this.testInvokeAddJaxbWidgetType("testjaxb_logic_type", "logic_type", null, true);
+		this.testInvokeAddJaxbWidgetType("testjaxb_logic_type", "logic_type", "**testjaxb_logic_type** gui", false);
+		this.testInvokeAddJaxbWidgetType("testjaxb_entando_apis", "entando_apis", null, false);
+	}
+	
+	private void testInvokeAddJaxbWidgetType(String newWidgetTypeCode, String widgetToClone, String customSingleGui, boolean expectedSuccess) throws Throwable {
+		WidgetType widgetType = this._widgetTypeManager.getWidgetType(widgetToClone);
+		assertNotNull(widgetType);
+		WidgetType newWidgetType = widgetType.clone();
+		assertNull(this._widgetTypeManager.getWidgetType(newWidgetTypeCode));
+		newWidgetType.setCode(newWidgetTypeCode);
+		try {
+			JAXBWidgetType jaxbWidgetType = this.getJaxbWidgetType(newWidgetType);
+			if (null != customSingleGui) {
+				jaxbWidgetType.setGui(customSingleGui);
+			}
+			this._apiWidgetTypeInterface.addWidgetType(jaxbWidgetType);
+			if (!expectedSuccess) {
+				fail();
+			}
+			WidgetType extractedWidgetType = this._widgetTypeManager.getWidgetType(newWidgetTypeCode);
+			assertNotNull(extractedWidgetType);
+			assertEquals(newWidgetType.getConfig(), extractedWidgetType.getConfig());
+			assertEquals(newWidgetType.getMainGroup(), extractedWidgetType.getMainGroup());
+			assertEquals(newWidgetType.getTitles(), extractedWidgetType.getTitles());
+			assertEquals(newWidgetType.getTypeParameters(), extractedWidgetType.getTypeParameters());
+			assertFalse(extractedWidgetType.isLocked());
+		} catch (ApiException ae) {
+			if (expectedSuccess) {
+				fail();
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			List<String> codes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(newWidgetTypeCode);
+			if (null != codes) {
+				for (int i = 0; i < codes.size(); i++) {
+					String code = codes.get(i);
+					this._guiFragmentManager.deleteGuiFragment(code);
+				}
+			}
+			this._widgetTypeManager.deleteWidgetType(newWidgetTypeCode);
+		}
+	}
+	
+	private JAXBWidgetType getJaxbWidgetType(WidgetType widgetType) throws Throwable {
+		assertNotNull(widgetType);
+		GuiFragment singleGuiFragment = null;
+		List<GuiFragment> fragments = new ArrayList<GuiFragment>();
+		if (!widgetType.isLogic()) {
+			singleGuiFragment = this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetType.getCode());
+		} else {
+			List<String> fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetType.getCode());
+			if (null != fragmentCodes) {
+				for (int i = 0; i < fragmentCodes.size(); i++) {
+					String fragmentCode = fragmentCodes.get(i);
+					GuiFragment fragment = this._guiFragmentManager.getGuiFragment(fragmentCode);
+					if (null != fragment) {
+						fragments.add(fragment);
+					}
+				}
+			}
+		}
+		return new JAXBWidgetType(widgetType, singleGuiFragment, fragments);
 	}
 	
 	private void init() throws Exception {

@@ -25,7 +25,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -38,7 +37,7 @@ import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
  * @author E.Santoboni
  */
 @XmlRootElement(name = "widgetType")
-@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "fragment", "fragments"})
+@XmlType(propOrder = {"code", "titles", "pluginCode", "mainGroup", "typeParameters", "action", "parentTypeCode", "config", "locked", "gui", "fragments"})
 public class JAXBWidgetType implements Serializable {
 	
 	public JAXBWidgetType() {}
@@ -49,13 +48,14 @@ public class JAXBWidgetType implements Serializable {
 		this.setConfig(widgetType.getConfig());
 		this.setLocked(widgetType.isLocked());
 		this.setMainGroup(widgetType.getMainGroup());
-		this.setParentTypeCode(widgetType.getPluginCode());
+		if (null != widgetType.getParentType()) {
+			this.setParentTypeCode(widgetType.getParentType().getCode());
+		}
 		this.setPluginCode(widgetType.getPluginCode());
 		this.setTitles(widgetType.getTitles());
 		this.setTypeParameters(widgetType.getTypeParameters());
 		if (null != fragment) {
-			JAXBGuiFragment jaxbGuiFragment = new JAXBGuiFragment(fragment);
-			this.setFragment(jaxbGuiFragment);
+			this.setGui(fragment.getCurrentGui());
 		}
 		if (null != fragments) {
 			List<JAXBGuiFragment> jaxbFragments = null;
@@ -81,17 +81,18 @@ public class JAXBWidgetType implements Serializable {
 		if (null != parameters && !parameters.isEmpty()) {
 			type.setTypeParameters(parameters);
 			type.setAction("configSimpleParameter");
+		} else {
+			ApsProperties configuration = this.getConfig();
+			String parentTypeCode = this.getParentTypeCode();
+			if (null != parentTypeCode && null != configuration && !configuration.isEmpty()) {
+				WidgetType parentType = widgetTypeManager.getWidgetType(parentTypeCode);
+				type.setParentType(parentType);
+				type.setConfig(configuration);
+			}
 		}
 		type.setMainGroup(this.getMainGroup());
-		type.setLocked(this.isLocked());
+		//type.setLocked(this.isLocked());
 		type.setPluginCode(this.getPluginCode());
-		ApsProperties configuration = this.getConfig();
-		String parentTypeCode = this.getParentTypeCode();
-		if (null != parentTypeCode && null != configuration && !configuration.isEmpty()) {
-			WidgetType parentType = widgetTypeManager.getWidgetType(parentTypeCode);
-			type.setParentType(parentType);
-			type.setConfig(configuration);
-		}
 		return type;
 	}
 	
@@ -109,8 +110,8 @@ public class JAXBWidgetType implements Serializable {
 			}
 		}
 		type.setMainGroup(this.getMainGroup());
-		type.setLocked(this.isLocked());
-		type.setPluginCode(this.getPluginCode());
+		//type.setLocked(this.isLocked());
+		//type.setPluginCode(this.getPluginCode());
 		return type;
 	}
 	
@@ -122,7 +123,8 @@ public class JAXBWidgetType implements Serializable {
 		this._code = code;
 	}
 	
-	@XmlElement(name = "titles", required = false)
+	@XmlElement(name = "title", required = false)
+    @XmlElementWrapper(name = "titles", required = false)
 	public ApsProperties getTitles() {
 		return _titles;
 	}
@@ -188,12 +190,12 @@ public class JAXBWidgetType implements Serializable {
 		this._mainGroup = mainGroup;
 	}
 	
-	@XmlElement(name = "fragment", required = false)
-	public JAXBGuiFragment getFragment() {
-		return _fragment;
+	@XmlElement(name = "gui", required = false)
+	public String getGui() {
+		return _gui;
 	}
-	protected void setFragment(JAXBGuiFragment fragment) {
-		this._fragment = fragment;
+	public void setGui(String gui) {
+		this._gui = gui;
 	}
 	
 	@XmlElement(name = "fragment", required = false)
@@ -214,7 +216,7 @@ public class JAXBWidgetType implements Serializable {
 	private ApsProperties _config;
 	private boolean _locked;
 	private String _mainGroup;
-	private JAXBGuiFragment _fragment;
+	private String _gui;
 	private List<JAXBGuiFragment> _fragments;
 	
 }

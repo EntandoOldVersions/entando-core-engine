@@ -150,6 +150,7 @@
 		<property name="pageManager" ref="PageManager" />
 		<property name="widgetTypeManager" ref="WidgetTypeManager" />
 		<property name="guiFragmentManager" ref="GuiFragmentManager" />
+		<property name="internalServletWidgetCode"><value>${widgets.internalServlet}</value></property>
     </bean>
     
 	<bean id="GuiFragmentManager" class="org.entando.entando.aps.system.services.guifragment.GuiFragmentManager" 
