@@ -16,23 +16,17 @@
 */
 package org.entando.entando.aps.system.services.guifragment;
 
-import org.entando.entando.aps.system.services.storage.TestLocalStorageManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
 
 import java.util.List;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * @author S.Puddu - E.Santoboni
  */
 public class TestGuiFragmentManager extends BaseTestCase {
-
-	private static final Logger _logger = LoggerFactory.getLogger(TestLocalStorageManager.class);
-
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -103,9 +97,12 @@ public class TestGuiFragmentManager extends BaseTestCase {
 		} catch (Exception e) {
 			throw e;
 		} finally {
+			this._guiFragmentManager.deleteGuiFragment(codeSlave);
 			GuiFragment guiFragment = this._guiFragmentManager.getGuiFragment(codeMaster);
 			guiFragment.setGui(null);
 			this._guiFragmentManager.updateGuiFragment(guiFragment);
+			codes = this._guiFragmentManager.searchGuiFragments(null);
+			assertEquals(1, codes.size());
 		}
 	}
 	
@@ -121,7 +118,7 @@ public class TestGuiFragmentManager extends BaseTestCase {
 		try {
 			this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);
 		} catch (Throwable t) {
-			_logger.error("error on init", t);
+			throw new Exception(t);
 		}
 	}
 	

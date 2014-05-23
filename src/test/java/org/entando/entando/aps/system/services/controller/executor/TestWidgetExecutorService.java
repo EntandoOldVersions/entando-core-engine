@@ -24,11 +24,19 @@ import com.agiletec.aps.system.services.page.Widget;
 import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.controller.AbstractTestExecutorService;
+import org.entando.entando.aps.system.services.guifragment.GuiFragment;
+import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 
 /**
  * @author E.Santoboni
  */
 public class TestWidgetExecutorService extends AbstractTestExecutorService {
+	
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		this.init();
+	}
 	
 	public void testExecutor() throws Exception {
 		super.setUserOnSession("admin");
@@ -47,9 +55,23 @@ public class TestWidgetExecutorService extends AbstractTestExecutorService {
 			if (null == currentWidget) {
 				assertTrue(StringUtils.isBlank(output));
 			} else {
-				assertTrue(StringUtils.isNotBlank(output));
+				GuiFragment fragment = this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(currentWidget.getType().getCode());
+				if (null == fragment) {
+					assertTrue(StringUtils.isBlank(output));
+				} else {
+					assertTrue(StringUtils.isNotBlank(output));
+				}
 			}
 		}
 	}
 	
+	private void init() throws Exception {
+		try {
+			this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);
+		} catch (Throwable t) {
+			throw new Exception(t);
+		}
+	}
+	
+	private IGuiFragmentManager _guiFragmentManager;
 }
