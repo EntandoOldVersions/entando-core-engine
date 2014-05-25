@@ -64,9 +64,6 @@ public class CacheInfoManager extends AbstractService implements ICacheInfoManag
 	@Around("@annotation(cacheableInfo)")
 	public Object aroundCacheableMethod(ProceedingJoinPoint pjp, CacheableInfo cacheableInfo) throws Throwable {
 		Object result = pjp.proceed();
-		if (null == result) {
-			return result;
-		}
 		if (cacheableInfo.expiresInMinute() < 0 && (cacheableInfo.groups() == null || cacheableInfo.groups().trim().length() == 0)) {
 			return result;
 		}
