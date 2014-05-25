@@ -151,9 +151,10 @@ public class WidgetTypeManager extends AbstractService
 	public void deleteShowletType(String widgetTypeCode) throws ApsSystemException {
 		this.deleteWidgetType(widgetTypeCode);
 	}
-
+	
 	@Override
 	public void deleteWidgetType(String widgetTypeCode) throws ApsSystemException {
+		List<GuiFragment> deletedFragments = new ArrayList<GuiFragment>();
 		try {
 			WidgetType type = this._widgetTypes.get(widgetTypeCode);
 			if (null == type) {
@@ -164,9 +165,24 @@ public class WidgetTypeManager extends AbstractService
 				_logger.error("A locked widget can't be deleted - type {}", widgetTypeCode);
 				return;
 			}
+			List<String> fragmentCodes = this.getGuiFragmentManager().getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			if (null != fragmentCodes) {
+				for (int i = 0; i < fragmentCodes.size(); i++) {
+					String fragmentCode = fragmentCodes.get(i);
+					GuiFragment fragmentToDelete = this.getGuiFragmentManager().getGuiFragment(fragmentCode);
+					deletedFragments.add(fragmentToDelete);
+					this.getGuiFragmentManager().deleteGuiFragment(fragmentCode);
+				}
+			}
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
 			this._widgetTypes.remove(widgetTypeCode);
 		} catch (Throwable t) {
+			for (int i = 0; i < deletedFragments.size(); i++) {
+				GuiFragment guiFragment = deletedFragments.get(i);
+				if (null == this.getGuiFragmentManager().getGuiFragment(guiFragment.getCode())) {
+					this.getGuiFragmentManager().addGuiFragment(guiFragment);
+				}
+			}
 			_logger.error("Error deleting widget type", t);
 			throw new ApsSystemException("Error deleting widget type", t);
 		}
@@ -262,17 +278,21 @@ public class WidgetTypeManager extends AbstractService
 	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
 		List<WidgetType> utilizers = new ArrayList<WidgetType>();
 		try {
+			System.out.println("AAAAAAAAAAAA");
 			FieldSearchFilter codeFilter = new FieldSearchFilter("code", guiFragmentCode, false);
 			FieldSearchFilter widgetTypeFilter = new FieldSearchFilter("widgettypecode");
 			//widgetTypeFilter.setNullOption(true);
 			FieldSearchFilter[] filters = {codeFilter, widgetTypeFilter};
 			List<String> widgetUtilizers = this.getGuiFragmentManager().searchGuiFragments(filters);
+			System.out.println("BBBBBBBBB " + widgetUtilizers);
 			if (null != widgetUtilizers && !widgetUtilizers.isEmpty()) {
 				for (int i = 0; i < widgetUtilizers.size(); i++) {
 					String code = widgetUtilizers.get(i);
 					GuiFragment fragment = this.getGuiFragmentManager().getGuiFragment(code);
+					System.out.println("CCCCCCCCCC " + fragment.getWidgetTypeCode());
 					WidgetType widgetType = this.getWidgetType(fragment.getWidgetTypeCode());
 					if (null != widgetType) {
+						System.out.println("AGGIUNTO " + widgetType);
 						utilizers.add(widgetType);
 					}
 				}
