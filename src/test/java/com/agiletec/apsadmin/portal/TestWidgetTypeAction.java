@@ -54,15 +54,15 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     }
 	
 	public void testFailureUpdateTitles() throws Throwable {
-		String result = this.executeUpdate("content_viewer", "italian title", "english title", "editorCustomers");
+		String result = this.executeUpdate("content_viewer", "italian title", "english title", "editorCustomers", "*GUI*");
 		assertEquals("userNotAllowed", result);
 		
-		result = this.executeUpdate("content_viewer", "italian title", "", "admin");
+		result = this.executeUpdate("content_viewer", "italian title", "", "admin", null);
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
-		assertEquals(1, action.getFieldErrors().size());
+		assertEquals(2, action.getFieldErrors().size());
 		
-		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin");
+		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin", "*GUI*");
 		assertEquals("inputWidgetTypes", result);
 		action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
@@ -74,11 +74,11 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     	try {
 			WidgetType type = this.createNewWidgetType(widgetTypeCode);
 			this._widgetTypeManager.addWidgetType(type);
-			String result = this.executeUpdate(widgetTypeCode, "", "english title", "admin");
+			String result = this.executeUpdate(widgetTypeCode, "", "english title", "admin", null);
 			assertEquals(Action.INPUT, result);
 			ActionSupport action = this.getAction();
-			assertEquals(1, action.getFieldErrors().size());
-			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin");
+			assertEquals(2, action.getFieldErrors().size());
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", "*GUI*");
 			assertEquals(Action.SUCCESS, result);
 			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
@@ -102,7 +102,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			this._widgetTypeManager.addWidgetType(type);
 			ApsProperties newProperties = new ApsProperties();
 			newProperties.put("contentId", "EVN191");
-			String result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", newProperties);
+			String result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", newProperties, "**GUI**");
 			assertEquals(Action.SUCCESS, result);
 			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
@@ -111,7 +111,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			assertEquals("EVN191", extracted.getConfig().getProperty("contentId"));
 			
 			newProperties.put("contentId", "EVN194");
-			result = this.executeUpdate(widgetTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties);
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato 2", "Modified title 2", "pageManagerCoach", newProperties, "*GUI*");
 			assertEquals(Action.SUCCESS, result);
 			extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
@@ -137,7 +137,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		ActionSupport action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
 		
-		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin");
+		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin", "*GUI*");
 		assertEquals("inputWidgetTypes", result);
 		action = this.getAction();
 		assertEquals(1, action.getActionErrors().size());
@@ -229,17 +229,18 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		return this.executeAction();
 	}
 	
-	private String executeUpdate(String widgetTypeCode, String italianTitle, String englishTitle, String username) throws Throwable {
-		return this.executeUpdate(widgetTypeCode, italianTitle, englishTitle, username, null);
+	private String executeUpdate(String widgetTypeCode, String italianTitle, String englishTitle, String username, String gui) throws Throwable {
+		return this.executeUpdate(widgetTypeCode, italianTitle, englishTitle, username, null, gui);
 	}
 	
 	private String executeUpdate(String widgetTypeCode, String italianTitle, 
-			String englishTitle, String username, ApsProperties properties) throws Throwable {
+			String englishTitle, String username, ApsProperties properties, String gui) throws Throwable {
 		this.setUserOnSession(username);
 		this.initAction("/do/Portal/WidgetType", "save");
 		this.addParameter("widgetTypeCode", widgetTypeCode);
 		this.addParameter("italianTitle", italianTitle);
 		this.addParameter("englishTitle", englishTitle);
+		this.addParameter("gui", gui);
 		this.addParameter("strutsAction", ApsAdminSystemConstants.EDIT);
 		if (null != properties) {
 			this.addParameters(properties);
