@@ -23,18 +23,16 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.StrutsResultSupport;
-
-import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.ServletDispatcherResult;
 
 import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -45,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Renders a view using a GuiFragment (Entando object) builded by Freemarker.
+ * If the fragment isn't available, includes or forwards to a view (usually a jsp) {@link ServletDispatcherResult}
  *
  * <b>This result type takes the following parameters:</b>
  *
@@ -53,6 +52,7 @@ import org.slf4j.LoggerFactory;
  * <ul>
  *
  * <li><b>code (default)</b> - the code of the fragment to process.</li>
+ * <li><b>jspLocation</b> - the location to go to after execution (jsp) if the fragment isn't available.</li>
  *
  * </ul>
  *
@@ -69,27 +69,47 @@ import org.slf4j.LoggerFactory;
  * </pre>
  * @author E.Santoboni
  */
-public class GuiFragmentResult extends StrutsResultSupport {
+public class GuiFragmentResult extends ServletDispatcherResult {
 
 	private static final Logger _logger = LoggerFactory.getLogger(GuiFragmentResult.class);
+	
+	/** The default parameter */
+    public static final String DEFAULT_PARAM = "code";
+	
 	private Writer _writer;
+	
+	protected String _code;
+	protected String _jspLocation;
 	
 	public GuiFragmentResult() {
 		super();
 	}
-
+	
 	public GuiFragmentResult(String code) {
 		super(code);
+		this._code = code;
+	}
+	
+	public GuiFragmentResult(String code, String jspLocation) {
+		super(code);
+		this._code = code;
+		this._jspLocation = jspLocation;
 	}
 	
 	/**
-	 * Execute this result, using the specified fragment. The fragment code has
-	 * already been interoplated for any variable substitutions
+	 * Execute this result, using the specified fragment.
 	 * @param code The code of the fragment
 	 * @param invocation The invocation
 	 */
 	@Override
-	public void doExecute(String code, ActionInvocation invocation) throws IOException, TemplateException {
+	public void doExecute(String code, ActionInvocation invocation) throws Exception {
+		if (null == code) {
+			code = conditionalParse(this._code, invocation);
+		}
+		if (null == code) {
+			this.executeDispatcherResult(invocation);
+			return;
+		}
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
 		IGuiFragmentManager guiFragmentManager =
@@ -100,7 +120,10 @@ public class GuiFragmentResult extends StrutsResultSupport {
 			if (StringUtils.isBlank(output)) {
 				_logger.info("The fragment '{}' is not available - Action '{}' - Namespace '{}'", 
 						code, invocation.getProxy().getActionName(), invocation.getProxy().getNamespace());
-				output = "The fragment '" + code + "' is not available";
+				boolean execution = this.executeDispatcherResult(invocation);
+				if (!execution) {
+					output = "The fragment '" + code + "' is not available";
+				}
 			}
 			RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 			ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
@@ -110,9 +133,16 @@ public class GuiFragmentResult extends StrutsResultSupport {
 		} catch (Throwable t) {
 			_logger.error("Error processing GuiFragment result!", t);
 			throw new RuntimeException("Error processing GuiFragment result!", t);
-		} finally {
-			
 		}
+	}
+	
+	protected boolean executeDispatcherResult(ActionInvocation invocation) throws Exception {
+		String finalLocation = conditionalParse(this._jspLocation, invocation);
+		if (null != finalLocation) {
+			super.doExecute(finalLocation, invocation);
+			return true;
+		}
+		return false;
 	}
 	
 	public void setWriter(Writer writer) {
@@ -124,6 +154,14 @@ public class GuiFragmentResult extends StrutsResultSupport {
 			return _writer;
 		}
 		return ServletActionContext.getResponse().getWriter();
+	}
+	
+	public void setCode(String code) {
+		this._code = code;
+	}
+	
+	public void setJspLocation(String jspLocation) {
+		this._jspLocation = jspLocation;
 	}
 	
 }
