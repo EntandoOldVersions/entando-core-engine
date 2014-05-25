@@ -179,13 +179,16 @@ public class WidgetType implements Serializable {
 	
 	public String getJspPath() {
 		WidgetType widgetType = (this.isLogic()) ? this.getParentType(): this;
+		return getJspPath(widgetType.getCode(), widgetType.getPluginCode());
+	}
+	
+	public static String getJspPath(String code, String pluginCode) {
 		StringBuilder jspPath = new StringBuilder("/WEB-INF/");
-		String pluginCode = widgetType.getPluginCode();
 		boolean isWidgetPlugin = (null != pluginCode && pluginCode.trim().length() > 0);
 		if (isWidgetPlugin) {
 			jspPath.append("plugins/").append(pluginCode.trim()).append("/");
 		}
-		jspPath.append(WIDGET_LOCATION).append(widgetType.getCode()).append(".jsp");
+		jspPath.append(WIDGET_LOCATION).append(code).append(".jsp");
 		return jspPath.toString();
 	}
 	

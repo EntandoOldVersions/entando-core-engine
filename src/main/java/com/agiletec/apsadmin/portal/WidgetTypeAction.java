@@ -25,6 +25,7 @@ import com.agiletec.aps.system.services.role.Permission;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
+import java.io.File;
 import java.util.List;
 import java.util.Properties;
 
@@ -37,6 +38,8 @@ import org.entando.entando.aps.system.services.widgettype.WidgetTypeParameter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 /**
  * @author E.Santoboni
@@ -50,6 +53,12 @@ public class WidgetTypeAction extends AbstractPortalAction {
 		super.validate();
 		//if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) return;
 		try {
+			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+				WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
+				if (null != type) {
+					this.addFieldError("widgetTypeCode", this.getText("error.widgetType.guiRequired"));
+				}
+			}
 			if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 				this.checkWidgetToCopy();
 			} else if (this.getStrutsAction() == NEW_USER_WIDGET) {
@@ -60,10 +69,39 @@ public class WidgetTypeAction extends AbstractPortalAction {
 					this.buildGuisFromForm(type);
 				}
 			}
+			if (!this.checkGui()) {
+				this.addFieldError("gui", this.getText("error.widgetType.guiRequired"));
+			}
 		} catch (Throwable t) {
 			_logger.error("error in validate", t);
 			throw new RuntimeException(t);
 		}
+	}
+	
+	private boolean checkGui() throws Throwable {
+		boolean isNew = (this.getStrutsAction() == ApsAdminSystemConstants.ADD);
+		boolean isEdit = (this.getStrutsAction() == ApsAdminSystemConstants.EDIT);
+		if (!(isNew || (isEdit && null == this.getParentWidgetTypeCode()))) {
+			return true;
+		}
+		if (StringUtils.isNotBlank(this.getGui())) {
+			return true;
+		}
+		String jspPath = WidgetType.getJspPath(this.getWidgetTypeCode(), null);
+		String folderPath = this.getRequest().getSession().getServletContext().getRealPath("/");
+		boolean existsJsp = (new File(folderPath + jspPath)).exists();
+		if (existsJsp) {
+			return true;
+		}
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		Resource[] resources = resolver.getResources("file:**" + jspPath);
+		for (int i = 0; i < resources.length; i++) {
+			Resource resource = resources[i];
+			if (resource.exists()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
