@@ -35,6 +35,8 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelDOM;
 import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 
+import java.io.File;
+
 /**
  * @author E.Santoboni
  */
@@ -60,14 +62,10 @@ public class PageModelAction extends AbstractPageModelAction {
 					String jspTemplatePath = PageModel.getPageModelJspPath(this.getCode(), this.getPluginCode());
 					boolean existsJsp = false;
 					if (StringUtils.isNotBlank(jspTemplatePath)) {
-						PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-						Resource[] resources = resolver.getResources("file:" + jspTemplatePath);
-						for (int i = 0; i < resources.length; i++) {
-							Resource resource = resources[i];
-							if (resource.getFile().exists()) {
-								existsJsp = true;
-								break;
-							}
+						String folderPath = this.getRequest().getSession().getServletContext().getRealPath("/");
+						existsJsp = (new File(folderPath + jspTemplatePath)).exists();
+						if (!existsJsp) {
+							existsJsp = this.checkModelResource("file:**" + jspTemplatePath);
 						}
 					}
 					if (!existsJsp) {
@@ -78,6 +76,22 @@ public class PageModelAction extends AbstractPageModelAction {
 				_logger.error("error in validate", t);
 			}
 		}
+	}
+	
+	private boolean checkModelResource(String path) throws Throwable {
+		boolean existsJsp = false;
+		if (StringUtils.isBlank(path)) {
+			return existsJsp;
+		}
+		PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+		Resource[] resources = resolver.getResources(path);
+		for (int i = 0; i < resources.length; i++) {
+			Resource resource = resources[i];
+			if (resource.exists()) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public String newModel() {
