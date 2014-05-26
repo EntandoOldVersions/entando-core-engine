@@ -18,6 +18,9 @@ package org.entando.entando.aps.system.services.widgettype.api;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 
 import java.io.StringWriter;
@@ -26,6 +29,10 @@ import java.util.List;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -238,9 +245,99 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 		return new JAXBWidgetType(widgetType, singleGuiFragment, fragments);
 	}
 	
+	public void testDeleteJaxbWidgetType_1() throws Throwable {
+		this.testInvokeDeleteJaxbNoLogicWidgetType("login_form", false);
+		this.testInvokeDeleteJaxbNoLogicWidgetType("content_viewer", false);
+	}
+	
+	public void testDeleteJaxbWidgetType_2() throws Throwable {
+		String code = "jaxb_test_delete_1";
+		assertNull(this._widgetTypeManager.getWidgetType(code));
+		try {
+			this.addMockWidget(code);
+			assertNotNull(this._widgetTypeManager.getWidgetType(code));
+			this.testInvokeDeleteJaxbNoLogicWidgetType(code, true);
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this._widgetTypeManager.deleteWidgetType(code);
+			assertNull(this._widgetTypeManager.getWidgetType(code));
+		}
+	}
+	
+	public void testDeleteJaxbWidgetType_3() throws Throwable {
+		String code = "jaxb_test_delete_2";
+		assertNull(this._widgetTypeManager.getWidgetType(code));
+		IPage homepage = this._pageManager.getPage("homepage");
+		assertNull(homepage.getWidgets()[5]);
+		try {
+			this.addMockWidget(code);
+			WidgetType addedWidgetType = this._widgetTypeManager.getWidgetType(code);
+			assertNotNull(addedWidgetType);
+			Widget widget = new Widget();
+			widget.setType(addedWidgetType);
+			homepage.getWidgets()[5] = widget;
+			this._pageManager.updatePage(homepage);
+			this.testInvokeDeleteJaxbNoLogicWidgetType(code, false);
+			homepage.getWidgets()[5] = null;
+			this._pageManager.updatePage(homepage);
+			this.testInvokeDeleteJaxbNoLogicWidgetType(code, true);
+		} catch (Throwable t) {
+			homepage = this._pageManager.getPage("homepage");
+			homepage.getWidgets()[5] = null;
+			this._pageManager.updatePage(homepage);
+			throw t;
+		} finally {
+			this._widgetTypeManager.deleteWidgetType(code);
+			assertNull(this._widgetTypeManager.getWidgetType(code));
+		}
+	}
+	
+	private void testInvokeDeleteJaxbNoLogicWidgetType(String widgetTypeCode, boolean expectedSuccess) throws Throwable {
+		Properties properties = new Properties();
+		properties.put(SystemConstants.API_USER_PARAMETER, super.getUser("admin"));
+		properties.put("code", widgetTypeCode);
+		WidgetType widgetType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+		assertNotNull(widgetType);
+		WidgetType widgetTypeToDelete = widgetType.clone();
+		GuiFragment previousFragment = this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode);
+		try {
+			this._apiWidgetTypeInterface.deleteWidgetType(properties);
+			if (!expectedSuccess) {
+				fail();
+			}
+			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+			assertNull(this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode));
+		} catch (ApiException ae) {
+			if (expectedSuccess) {
+				fail();
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null != previousFragment && null == this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode)) {
+				this._guiFragmentManager.addGuiFragment(previousFragment);
+			}
+			if (null == this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+				this._widgetTypeManager.addWidgetType(widgetTypeToDelete);
+			}
+		}
+	}
+	
+	private void addMockWidget(String widgetTypeCode) throws Throwable {
+		WidgetType type = new WidgetType();
+		type.setCode(widgetTypeCode);
+		ApsProperties titles = new ApsProperties();
+		titles.setProperty("en", "English title");
+		titles.setProperty("it", "Italian title");
+		type.setTitles(titles);
+		this._widgetTypeManager.addWidgetType(type);
+	}
+	
 	private void init() throws Exception {
 		try {
 			this._widgetTypeManager = (IWidgetTypeManager) this.getApplicationContext().getBean(SystemConstants.WIDGET_TYPE_MANAGER);
+			this._pageManager = (IPageManager) this.getApplicationContext().getBean(SystemConstants.PAGE_MANAGER);
 			this._guiFragmentManager = (IGuiFragmentManager) this.getApplicationContext().getBean(SystemConstants.GUI_FRAGMENT_MANAGER);
 			this._apiWidgetTypeInterface = (ApiWidgetTypeInterface) this.getApplicationContext().getBean("ApiWidgetTypeInterface");
 		} catch (Throwable t) {
@@ -249,6 +346,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 	}
 	
 	private IWidgetTypeManager _widgetTypeManager;
+	private IPageManager _pageManager;
 	private IGuiFragmentManager _guiFragmentManager;
 	private ApiWidgetTypeInterface _apiWidgetTypeInterface;
 	

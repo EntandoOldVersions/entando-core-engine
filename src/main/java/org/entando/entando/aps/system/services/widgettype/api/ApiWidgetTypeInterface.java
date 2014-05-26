@@ -17,6 +17,7 @@
 package org.entando.entando.aps.system.services.widgettype.api;
 
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 
 import java.util.ArrayList;
@@ -261,46 +262,28 @@ public class ApiWidgetTypeInterface {
 		return uniqueCode;
 	}
 	
-	
-	/*
-    public void deletePageModel(Properties properties) throws ApiException, Throwable {
-        String code = properties.getProperty("code");
+	public void deleteWidgetType(Properties properties) throws ApiException, Throwable {
+		String code = properties.getProperty("code");
 		try {
-			PageModel pageModel = this.getPageModelManager().getPageModel(code);
-			if (null == pageModel) {
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "PageModel with code '" + code + "' does not exist", Response.Status.CONFLICT);
+			WidgetType widgetType = this.getWidgetTypeManager().getWidgetType(code);
+			if (null == widgetType) {
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Widget Type with code " + code + " does not exists", Response.Status.CONFLICT);
 			}
-			Map<String, List<Object>> references = new HashMap<String, List<Object>>();
-			ListableBeanFactory factory = (ListableBeanFactory) this.getBeanFactory();
-			String[] defNames = factory.getBeanNamesForType(PageModelUtilizer.class);
-			for (int i=0; i < defNames.length; i++) {
-				Object service = null;
-				try {
-					service = this.getBeanFactory().getBean(defNames[i]);
-				} catch (Throwable t) {
-					_logger.error("error extracting bean with name '{}'", defNames[i], t);
-					throw new ApsSystemException("error extracting bean with name '" + defNames[i] + "'", t);
-				}
-				if (service != null) {
-					PageModelUtilizer pageModelUtilizer = (PageModelUtilizer) service;
-					List<Object> utilizers = pageModelUtilizer.getPageModelUtilizers(code);
-					if (utilizers != null && !utilizers.isEmpty()) {
-						references.put(pageModelUtilizer.getName(), utilizers);
-					}
-				}
+			if (widgetType.isLocked()) {
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Widget Type '" + code + "' is locked", Response.Status.CONFLICT);
 			}
-			if (!references.isEmpty()) {
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "PageModel with code " + code + " has references with other object", Response.Status.CONFLICT);
+			List<IPage> referencedPages = this.getPageManager().getWidgetUtilizers(code);
+			if (null != referencedPages && !referencedPages.isEmpty()) {
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Widget Type '" + code + "' is published into some pages", Response.Status.CONFLICT);
 			}
-			this.getPageModelManager().deletePageModel(code);
+			this.getWidgetTypeManager().deleteWidgetType(code);
 		} catch (ApiException ae) {
 			throw ae;
 		} catch (Throwable t) {
-			_logger.error("Error deleting page model throw api", t);
+			_logger.error("Error deleting widget type throw api", t);
 			throw t;
 		}
-    }
-	*/
+	}
 	
 	public boolean isInternalServletWidget(String widgetTypeCode) {
 		return this.getInternalServletWidgetCode().equals(widgetTypeCode);
