@@ -17,15 +17,6 @@
 */
 package org.entando.entando.aps.system.services.widgettype;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
@@ -34,9 +25,19 @@ import com.agiletec.aps.system.services.group.GroupUtilizer;
 import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
+import org.entando.entando.aps.system.services.widgettype.events.WidgetTypeChangedEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Servizio di gestione dei tipi di widget (WidgetType) definiti
@@ -278,21 +279,16 @@ public class WidgetTypeManager extends AbstractService
 	public List getGuiFragmentUtilizers(String guiFragmentCode) throws ApsSystemException {
 		List<WidgetType> utilizers = new ArrayList<WidgetType>();
 		try {
-			System.out.println("AAAAAAAAAAAA");
 			FieldSearchFilter codeFilter = new FieldSearchFilter("code", guiFragmentCode, false);
 			FieldSearchFilter widgetTypeFilter = new FieldSearchFilter("widgettypecode");
-			//widgetTypeFilter.setNullOption(true);
 			FieldSearchFilter[] filters = {codeFilter, widgetTypeFilter};
 			List<String> widgetUtilizers = this.getGuiFragmentManager().searchGuiFragments(filters);
-			System.out.println("BBBBBBBBB " + widgetUtilizers);
 			if (null != widgetUtilizers && !widgetUtilizers.isEmpty()) {
 				for (int i = 0; i < widgetUtilizers.size(); i++) {
 					String code = widgetUtilizers.get(i);
 					GuiFragment fragment = this.getGuiFragmentManager().getGuiFragment(code);
-					System.out.println("CCCCCCCCCC " + fragment.getWidgetTypeCode());
 					WidgetType widgetType = this.getWidgetType(fragment.getWidgetTypeCode());
 					if (null != widgetType) {
-						System.out.println("AGGIUNTO " + widgetType);
 						utilizers.add(widgetType);
 					}
 				}
