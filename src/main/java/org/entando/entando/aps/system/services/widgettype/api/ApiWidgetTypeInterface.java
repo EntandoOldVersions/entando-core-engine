@@ -27,7 +27,10 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.StringApiResponse;
+import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
@@ -98,6 +101,8 @@ public class ApiWidgetTypeInterface {
     }
 	
     public void addWidgetType(JAXBWidgetType jaxbWidgetType) throws ApiException, Throwable {
+		List<GuiFragment> addedFragments = new ArrayList<GuiFragment>();
+		List<GuiFragment> updatedFragments = new ArrayList<GuiFragment>();
 		try {
 			WidgetType widgetType = this.getWidgetTypeManager().getWidgetType(jaxbWidgetType.getCode());
 			if (null != widgetType) {
@@ -115,43 +120,62 @@ public class ApiWidgetTypeInterface {
 			}
 			this.getWidgetTypeManager().addWidgetType(widgetType);
 			if (!widgetType.isLogic()) {
-				this.checkAndSaveFragment(widgetType, jaxbWidgetType, true);
+				this.checkAndSaveFragment(widgetType, jaxbWidgetType, true, null, addedFragments, updatedFragments);
 			}
 		} catch (ApiException ae) {
+			this.revertPreviousObject(null, addedFragments, updatedFragments);
 			throw ae;
 		} catch (Throwable t) {
-			List<String> codes = this.getGuiFragmentManager().getGuiFragmentCodesByWidgetType(jaxbWidgetType.getCode());
-			if (null != codes) {
-				for (int i = 0; i < codes.size(); i++) {
-					String code = codes.get(i);
-					this.getGuiFragmentManager().deleteGuiFragment(code);
-				}
-			}
+			this.revertPreviousObject(null, addedFragments, updatedFragments);
 			this.getWidgetTypeManager().deleteWidgetType(jaxbWidgetType.getCode());
 			_logger.error("Error adding new widget type", t);
 			throw t;
 		}
     }
 	
-	/*
-    public void updatePageModel(PageModel pageModel) throws ApiException, Throwable {
+    public StringApiResponse updateWidgetType(JAXBWidgetType jaxbWidgetType) throws ApiException, Throwable {
+		StringApiResponse response = new StringApiResponse();
+		WidgetType widgetTypeToUpdate = null;
+		List<GuiFragment> addedFragments = new ArrayList<GuiFragment>();
+		List<GuiFragment> updatedFragments = new ArrayList<GuiFragment>();
 		try {
-			if (null != this.getPageModelManager().getPageModel(pageModel.getCode())) {
-				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "PageModel with code '" + pageModel.getCode() + "' does not exist", Response.Status.CONFLICT);
+			widgetTypeToUpdate = this.getWidgetTypeManager().getWidgetType(jaxbWidgetType.getCode());
+			if (null == widgetTypeToUpdate) {
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "WidgetType with code " + jaxbWidgetType.getCode() + " does not exists", Response.Status.CONFLICT);
 			}
-			this.getPageModelManager().updatePageModel(pageModel);
+			WidgetType widgetType = jaxbWidgetType.getModifiedWidgetType(this.getWidgetTypeManager());
+			this.checkAndSaveFragment(widgetType, jaxbWidgetType, false, response, addedFragments, updatedFragments);
+			this.getWidgetTypeManager().updateWidgetType(widgetType.getCode(), 
+					widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup());
+			response.setResult(IResponseBuilder.SUCCESS, null);
 		} catch (ApiException ae) {
+			this.revertPreviousObject(widgetTypeToUpdate, addedFragments, updatedFragments);
 			throw ae;
 		} catch (Throwable t) {
-			_logger.error("Error updating page model", t);
+			this.revertPreviousObject(widgetTypeToUpdate, addedFragments, updatedFragments);
+			_logger.error("Error updating widget type", t);
 			throw t;
 		}
+		return response;
     }
-	*/
 	
+	private void revertPreviousObject(WidgetType widgetTypeToUpdate, List<GuiFragment> addedFragments, List<GuiFragment> updatedFragments) throws Throwable {
+		if (null != widgetTypeToUpdate) {
+			this.getWidgetTypeManager().updateWidgetType(widgetTypeToUpdate.getCode(), 
+					widgetTypeToUpdate.getTitles(), widgetTypeToUpdate.getConfig(), widgetTypeToUpdate.getMainGroup());
+		}
+		for (int i = 0; i < addedFragments.size(); i++) {
+			GuiFragment guiFragment = addedFragments.get(i);
+			this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
+		}
+		for (int i = 0; i < updatedFragments.size(); i++) {
+			GuiFragment guiFragment = updatedFragments.get(i);
+			this.getGuiFragmentManager().updateGuiFragment(guiFragment);
+		}
+	}
 	
-	
-	protected void checkAndSaveFragment(WidgetType type, JAXBWidgetType jaxbWidgetType, boolean isAdd) throws Throwable {
+	protected void checkAndSaveFragment(WidgetType type, JAXBWidgetType jaxbWidgetType, 
+			boolean isAdd, StringApiResponse response, List<GuiFragment> addedFragments, List<GuiFragment> updatedFragment) throws Throwable {
 		try {
 			if (!type.isLogic() && !this.isInternalServletWidget(type.getCode())) {
 				GuiFragment guiFragment = this.getGuiFragmentManager().getUniqueGuiFragmentByWidgetType(type.getCode());
@@ -163,32 +187,55 @@ public class ApiWidgetTypeInterface {
 						guiFragment.setPluginCode(type.getPluginCode());
 						guiFragment.setGui(jaxbWidgetType.getGui());
 						guiFragment.setWidgetTypeCode(type.getCode());
+						addedFragments.add(guiFragment);
 						this.getGuiFragmentManager().addGuiFragment(guiFragment);
 					} else if (!isAdd) {
-						guiFragment.setGui(jaxbWidgetType.getGui());
-						this.getGuiFragmentManager().updateGuiFragment(guiFragment);
+						GuiFragment clone = guiFragment.clone();
+						updatedFragment.add(guiFragment);
+						clone.setGui(jaxbWidgetType.getGui());
+						this.getGuiFragmentManager().updateGuiFragment(clone);
 					}
 				} else {
 					if (null != guiFragment && !isAdd) {
 						if (StringUtils.isNotBlank(guiFragment.getDefaultGui())) {
-							guiFragment.setGui(null);
-							this.getGuiFragmentManager().updateGuiFragment(guiFragment);
+							GuiFragment clone = guiFragment.clone();
+							updatedFragment.add(guiFragment);
+							clone.setGui(null);
+							this.getGuiFragmentManager().updateGuiFragment(clone);
 						} else {
-							this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
+							//nothing to do...
+							//this.getGuiFragmentManager().deleteGuiFragment(guiFragment.getCode());
 						}
 					}
 				}
 			} else if (type.isLogic() && !isAdd) {
-				List<JAXBGuiFragment> fragments = jaxbWidgetType.getFragments();
-				if (null != fragments) {
-					for (int i = 0; i < fragments.size(); i++) {
-						JAXBGuiFragment jaxbGuiFragment = fragments.get(i);
-						GuiFragment guiFragment = jaxbGuiFragment.getGuiFragment();
-						GuiFragment extractedGuiFragment = this.getGuiFragmentManager().getGuiFragment(type.getCode());
-						if (null != guiFragment && null != extractedGuiFragment 
-								&& null != guiFragment.getWidgetTypeCode() && guiFragment.getWidgetTypeCode().equals(extractedGuiFragment.getWidgetTypeCode())) {
-							extractedGuiFragment.setGui(guiFragment.getCurrentGui());
-							this.getGuiFragmentManager().updateGuiFragment(extractedGuiFragment);
+				boolean isInternalServlet = this.isInternalServletWidget(type.getParentType().getCode());
+				if (!isInternalServlet && (null != jaxbWidgetType.getFragments() && jaxbWidgetType.getFragments().size() > 0)) {
+					if (null != response) {
+						ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Fragments mustn't be updated on a 'not internal servlet' logic widget type");
+						response.addError(error);
+					}
+					//throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Fragments mustn't be updated on a 'not internal servlet' logic widget type", Response.Status.CONFLICT);
+				} else {
+					List<JAXBGuiFragment> fragments = jaxbWidgetType.getFragments();
+					if (null != fragments && fragments.size() > 0) {
+						for (int i = 0; i < fragments.size(); i++) {
+							JAXBGuiFragment jaxbGuiFragment = fragments.get(i);
+							GuiFragment fragment = jaxbGuiFragment.getGuiFragment();
+							GuiFragment existingFragment = this.getGuiFragmentManager().getGuiFragment(fragment.getCode());
+							if (null != existingFragment) {
+								if (StringUtils.isBlank(existingFragment.getDefaultGui()) && StringUtils.isBlank(jaxbWidgetType.getGui())) {
+									ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "one between A and B must be valued on fragment '" + existingFragment.getCode() + "'");
+									response.addError(error);
+									continue;
+								}
+								GuiFragment clone = existingFragment.clone();
+								updatedFragment.add(existingFragment);
+								clone.setGui(jaxbGuiFragment.getGui());
+							} else {
+								ApiError error = new ApiError(IApiErrorCodes.API_VALIDATION_ERROR, "Fragment '" + fragment.getCode() + "' does not exists");
+								response.addError(error);
+							}
 						}
 					}
 				}

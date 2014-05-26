@@ -18,6 +18,7 @@ package org.entando.entando.aps.system.services.widgettype.api;
 
 import com.agiletec.aps.BaseTestCase;
 import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.aps.util.ApsProperties;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -26,9 +27,10 @@ import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
-
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
 import org.entando.entando.aps.system.services.widgettype.WidgetType;
@@ -95,7 +97,7 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 		}
 	}
 	
-	public void testUpdateJaxbWidgetType() throws Throwable {
+	public void testAddJaxbWidgetType() throws Throwable {
 		this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", null, false);
 		this.testInvokeAddJaxbWidgetType("testjaxb_login_form", "login_form", "**testjaxb_login_form** gui", true);
 		this.testInvokeAddJaxbWidgetType("testjaxb_formAction", "formAction", null, false);
@@ -144,6 +146,74 @@ public class TestApiWidgetTypeInterface extends BaseTestCase {
 				}
 			}
 			this._widgetTypeManager.deleteWidgetType(newWidgetTypeCode);
+		}
+	}
+	
+	public void testUpdateJaxbWidgetType() throws Throwable {
+		ApsProperties titles = new ApsProperties();
+		titles.setProperty("en", "English title");
+		titles.setProperty("it", "Italian title");
+		this.testInvokeUpdateJaxbNoLogicWidgetType("login_form", titles, true, null, true);
+		this.testInvokeUpdateJaxbNoLogicWidgetType("login_form", titles, true, "Gui of login_form", true);
+		this.testInvokeUpdateJaxbNoLogicWidgetType("content_viewer", null, false, null, false);
+		this.testInvokeUpdateJaxbNoLogicWidgetType("content_viewer", titles, false, null, false);
+		this.testInvokeUpdateJaxbNoLogicWidgetType("content_viewer", titles, true, null, true);
+		this.testInvokeUpdateJaxbNoLogicWidgetType("content_viewer", titles, true, "new gui", true);
+	}
+	
+	private void testInvokeUpdateJaxbNoLogicWidgetType(String widgetTypeCode, ApsProperties titles, 
+			boolean removeParametersFromCall, String customSingleGui, boolean expectedSuccess) throws Throwable {
+		WidgetType widgetType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+		assertNotNull(widgetType);
+		WidgetType widgetTypeToEdit = widgetType.clone();
+		GuiFragment previousFragment = this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode);
+		try {
+			JAXBWidgetType jaxbWidgetType = this.getJaxbWidgetType(widgetTypeToEdit);
+			if (StringUtils.isNotBlank(customSingleGui)) {
+				jaxbWidgetType.setGui(customSingleGui);
+			}
+			if (null != titles) {
+				jaxbWidgetType.setTitles(titles);
+			}
+			if (removeParametersFromCall) {
+				jaxbWidgetType.setTypeParameters(null);
+			}
+			this._apiWidgetTypeInterface.updateWidgetType(jaxbWidgetType);
+			if (!expectedSuccess) {
+				fail();
+			}
+			WidgetType extractedWidgetType = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+			assertNotNull(extractedWidgetType);
+			assertEquals(widgetType.getMainGroup(), extractedWidgetType.getMainGroup());
+			assertEquals(titles, extractedWidgetType.getTitles());
+			assertEquals(widgetType.getTypeParameters(), extractedWidgetType.getTypeParameters());
+			assertEquals(widgetType.isLocked(), extractedWidgetType.isLocked());
+			if (StringUtils.isNotBlank(customSingleGui) && null == previousFragment) {
+				assertNotNull(this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode));
+			}
+		} catch (ApiException ae) {
+			if (expectedSuccess) {
+				fail();
+			}
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			if (null == previousFragment) {
+				List<String> codes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+				if (null != codes) {
+					for (int i = 0; i < codes.size(); i++) {
+						String code = codes.get(i);
+						this._guiFragmentManager.deleteGuiFragment(code);
+					}
+				}
+			} else {
+				if (null == this._guiFragmentManager.getUniqueGuiFragmentByWidgetType(widgetTypeCode)) {
+					this._guiFragmentManager.addGuiFragment(previousFragment);
+				} else {
+					this._guiFragmentManager.updateGuiFragment(previousFragment);
+				}
+			}
+			this._widgetTypeManager.updateWidgetType(widgetType.getCode(), widgetType.getTitles(), widgetType.getConfig(), widgetType.getMainGroup());
 		}
 	}
 	

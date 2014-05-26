@@ -22,11 +22,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.model.ApiException;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.api.JAXBGuiFragment;
 import org.entando.entando.aps.system.services.widgettype.IWidgetTypeManager;
@@ -96,7 +100,7 @@ public class JAXBWidgetType implements Serializable {
 		return type;
 	}
 	
-	public WidgetType getModifiedWidgetType(IWidgetTypeManager widgetTypeManager) {
+	public WidgetType getModifiedWidgetType(IWidgetTypeManager widgetTypeManager) throws ApiException {
 		WidgetType type = widgetTypeManager.getWidgetType(this.getCode());
 		type.setTitles(this.getTitles());
 		if (type.isLogic()) {
@@ -105,8 +109,10 @@ public class JAXBWidgetType implements Serializable {
 		} else {
 			List<WidgetTypeParameter> parameters = this.getTypeParameters();
 			if (null != parameters && !parameters.isEmpty()) {
-				type.setTypeParameters(parameters);
-				type.setAction("configSimpleParameter");
+				//Parameters of existing widget mustn't been changed
+				//type.setTypeParameters(parameters);
+				//type.setAction("configSimpleParameter");
+				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Parameters of existing widget mustn't been changed", Response.Status.CONFLICT);
 			}
 		}
 		type.setMainGroup(this.getMainGroup());

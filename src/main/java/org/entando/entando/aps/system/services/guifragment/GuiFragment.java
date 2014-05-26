@@ -25,6 +25,18 @@ import org.apache.commons.lang.StringUtils;
  */
 public class GuiFragment implements Serializable {
 	
+	@Override
+	public GuiFragment clone() {
+		GuiFragment clone = new GuiFragment();
+		clone.setCode(this.getCode());
+		clone.setDefaultGui(this.getDefaultGui());
+		clone.setGui(this.getGui());
+		clone.setLocked(this.isLocked());
+		clone.setPluginCode(this.getPluginCode());
+		clone.setWidgetTypeCode(this.getWidgetTypeCode());
+		return clone;
+	}
+	
 	public String getCode() {
 		return _code;
 	}
