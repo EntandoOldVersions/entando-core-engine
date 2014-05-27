@@ -21,6 +21,7 @@ import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import javax.ws.rs.core.Response;
@@ -47,25 +48,22 @@ import org.slf4j.LoggerFactory;
 public class ApiWidgetTypeInterface {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ApiWidgetTypeInterface.class);
-	/*
-	public List<String> getPageModels(Properties properties) throws Throwable {
+	
+	public List<String> getWidgetTypes(Properties properties) throws Throwable {
 		List<String> list = new ArrayList<String>();
 		try {
-			Collection<PageModel> pageModels = this.getPageModelManager().getPageModels();
-			if (null != pageModels) {
-				Iterator<PageModel> iter = pageModels.iterator();
-				while (iter.hasNext()) {
-					PageModel pageModel = iter.next();
-					list.add(pageModel.getCode());
-				}
+			List<WidgetType> types = this._widgetTypeManager.getWidgetTypes();
+			for (int i = 0; i < types.size(); i++) {
+				WidgetType widgetType = types.get(i);
+				list.add(widgetType.getCode());
 			}
+			Collections.sort(list);
 		} catch (Throwable t) {
-			_logger.error("Error extracting list of models", t);
+			_logger.error("Error extracting list of widget types", t);
 			throw t;
 		}
 		return list;
 	}
-	*/
 	
     public JAXBWidgetType getWidgetType(Properties properties) throws ApiException, Throwable {
         String widgetTypeCode = properties.getProperty("code");

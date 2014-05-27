@@ -320,4 +320,50 @@
 		</method>
 	</resource>
 	
+	<!-- *********** Widget Type *********** -->
+	
+	<resource name="widgetType" namespace="core">
+		<description>The representation of the widget type</description>
+		<source>core</source>
+		<method httpMethod="GET" active="true" requiredAuth="true">
+			<description>Return a widget type by code</description>
+			<springBean name="ApiWidgetTypeInterface" method="getWidgetType" />
+			<responseClass>org.entando.entando.aps.system.services.widgettype.api.WidgetTypeResponse</responseClass>
+			<parameters>
+				<parameter key="code" required="true">
+					<description>The code of the page model to return</description>
+				</parameter>
+			</parameters>
+		</method>
+		<method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Add a widget type</description>
+			<springBean name="ApiWidgetTypeInterface" method="addWidgetType" />
+			<expectedType>org.entando.entando.aps.system.services.widgettype.api.JAXBWidgetType</expectedType>
+		</method>
+		<method httpMethod="PUT" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Update a widget type</description>
+			<springBean name="ApiWidgetTypeInterface" method="updateWidgetType" />
+			<expectedType>org.entando.entando.aps.system.services.widgettype.api.JAXBWidgetType</expectedType>
+		</method>
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Delete a widget type by code</description>
+			<springBean name="ApiWidgetTypeInterface" method="deleteWidgetType" />
+			<parameters>
+				<parameter key="code" required="true">
+					<description>The code of the widget type to delete</description>
+				</parameter>
+			</parameters>
+		</method>
+	</resource>
+	
+	<resource name="widgetTypes" namespace="core">
+		<description>Return the widget type list</description>
+		<source>core</source>
+		<method httpMethod="GET" active="true" requiredAuth="true" canSpawnOthers="true">
+			<description>Return the widget type list</description>
+			<springBean name="ApiWidgetTypeInterface" method="getWidgetTypes" />
+			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+		</method>
+	</resource>
+	
 </apiMethodDefinitions>
