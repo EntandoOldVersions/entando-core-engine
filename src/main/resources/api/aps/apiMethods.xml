@@ -362,7 +362,7 @@
 		<method httpMethod="GET" active="true" requiredAuth="true" canSpawnOthers="true">
 			<description>Return the widget type list</description>
 			<springBean name="ApiWidgetTypeInterface" method="getWidgetTypes" />
-			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<responseClass>org.entando.entando.aps.system.services.api.model.LinkedListApiResponse</responseClass>
 		</method>
 	</resource>
 	

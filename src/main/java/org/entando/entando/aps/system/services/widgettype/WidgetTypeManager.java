@@ -27,9 +27,11 @@ import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.util.ApsProperties;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.beanutils.BeanComparator;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
@@ -47,9 +49,8 @@ import org.slf4j.LoggerFactory;
  */
 public class WidgetTypeManager extends AbstractService 
 		implements IWidgetTypeManager, LangsChangedObserver, GroupUtilizer, GuiFragmentUtilizer {
-
-	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeManager.class);
 	
+	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeManager.class);
 	
 	@Override
 	public void init() throws Exception {
@@ -112,6 +113,8 @@ public class WidgetTypeManager extends AbstractService
 			WidgetType widgetType = masterTypesIter.next();
 			types.add(widgetType.clone());
 		}
+		BeanComparator comparator = new BeanComparator("code");
+		Collections.sort(types, comparator);
 		return types;
 	}
 	

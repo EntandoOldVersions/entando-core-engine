@@ -16,21 +16,24 @@
 */
 package org.entando.entando.aps.system.services.widgettype.api;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.IApiExportable;
 import org.entando.entando.aps.system.services.api.model.ApiError;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.LinkedListItem;
 import org.entando.entando.aps.system.services.api.model.StringApiResponse;
 import org.entando.entando.aps.system.services.api.server.IResponseBuilder;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -45,19 +48,23 @@ import org.slf4j.LoggerFactory;
 /**
  * @author E.Santoboni
  */
-public class ApiWidgetTypeInterface {
+public class ApiWidgetTypeInterface implements IApiExportable {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ApiWidgetTypeInterface.class);
 	
-	public List<String> getWidgetTypes(Properties properties) throws Throwable {
-		List<String> list = new ArrayList<String>();
+	public List<LinkedListItem> getWidgetTypes(Properties properties) throws Throwable {
+		List<LinkedListItem> list = new ArrayList<LinkedListItem>();
 		try {
 			List<WidgetType> types = this._widgetTypeManager.getWidgetTypes();
 			for (int i = 0; i < types.size(); i++) {
 				WidgetType widgetType = types.get(i);
-				list.add(widgetType.getCode());
+				String url = this.getApiResourceUrl(widgetType, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
+						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+				LinkedListItem item = new LinkedListItem();
+				item.setCode(widgetType.getCode());
+				item.setUrl(url);
+				list.add(item);
 			}
-			Collections.sort(list);
 		} catch (Throwable t) {
 			_logger.error("Error extracting list of widget types", t);
 			throw t;
@@ -281,6 +288,17 @@ public class ApiWidgetTypeInterface {
 			_logger.error("Error deleting widget type throw api", t);
 			throw t;
 		}
+	}
+	
+	@Override
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+		if (!(object instanceof WidgetType) || null == applicationBaseUrl || null == langCode) {
+			return null;
+		}
+		WidgetType WidgetType = (WidgetType) object;
+		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
+		stringBuilder.append("api/rs/").append(langCode).append("/core/widgetType?code=").append(WidgetType.getCode());
+		return stringBuilder.toString();
 	}
 	
 	public boolean isInternalServletWidget(String widgetTypeCode) {

@@ -62,6 +62,7 @@ import org.slf4j.LoggerFactory;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.authorization.IAuthorizationManager;
 import com.agiletec.aps.system.services.lang.ILangManager;
+import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.aps.system.services.user.IAuthenticationProviderManager;
 import com.agiletec.aps.system.services.user.UserDetails;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
@@ -187,6 +188,10 @@ public class ApiRestServer {
 			if (null == langManager.getLang(langCode)) {
 				langCode = langManager.getDefaultLang().getCode();
 			}
+			String applicationBaseUrl = this.extractApplicationBaseUrl(request);
+			if (null != applicationBaseUrl) {
+				properties.put(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER, applicationBaseUrl);
+			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
@@ -208,6 +213,10 @@ public class ApiRestServer {
             Properties properties = this.extractRequestParameters(ui);
             if (null == langManager.getLang(langCode)) {
 				langCode = langManager.getDefaultLang().getCode();
+			}
+			String applicationBaseUrl = this.extractApplicationBaseUrl(request);
+			if (null != applicationBaseUrl) {
+				properties.put(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER, applicationBaseUrl);
 			}
             properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
             ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
@@ -240,7 +249,18 @@ public class ApiRestServer {
         }
         return properties;
     }
-
+	
+	protected String extractApplicationBaseUrl(HttpServletRequest request) throws Throwable {
+		String applicationBaseUrl = null;
+		try {
+			IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, request);
+			applicationBaseUrl = urlManager.getApplicationBaseURL(request);
+		} catch (Throwable t) {
+            _logger.error("Error extracting application base url", t);
+        }
+		return applicationBaseUrl;
+    }
+	
     protected StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName, Throwable t) {
         StringBuilder buffer = new StringBuilder();
         buffer.append("Method '").append(httpMethod).append("' Resource '").append(resourceName).append("'");
