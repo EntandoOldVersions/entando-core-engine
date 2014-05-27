@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class StringListApiResponseResult extends AbstractApiResponseResult {
     
+	@Override
     @XmlElement(name = "items", required = false)
     public ListResponse<String> getResult() {
         if (null != this.getMainResult()) {

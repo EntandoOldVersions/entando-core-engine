@@ -26,11 +26,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "response")
 public class StringListApiResponse extends AbstractApiResponse {
     
+	@Override
     @XmlElement(name = "result", required = true)
     public StringListApiResponseResult getResult() {
         return (StringListApiResponseResult) super.getResult();
     }
+	
+	public void setResult(StringListApiResponseResult result) {
+		super.setResult(result);
+	}
     
+	@Override
     protected AbstractApiResponseResult createResponseResultInstance() {
         return new StringListApiResponseResult();
     }
