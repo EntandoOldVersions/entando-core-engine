@@ -16,6 +16,7 @@
 */
 package org.entando.entando.aps.system.services.pagemodel.api;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
@@ -32,7 +33,9 @@ import java.util.Properties;
 import javax.ws.rs.core.Response;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.IApiExportable;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.LinkedListItem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,19 +48,24 @@ import org.springframework.beans.factory.ListableBeanFactory;
 /**
  * @author E.Santoboni
  */
-public class ApiPageModelInterface implements BeanFactoryAware {
+public class ApiPageModelInterface implements BeanFactoryAware, IApiExportable {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ApiPageModelInterface.class);
 	
-	public List<String> getPageModels(Properties properties) throws Throwable {
-		List<String> list = new ArrayList<String>();
+	public List<LinkedListItem> getPageModels(Properties properties) throws Throwable {
+		List<LinkedListItem> list = new ArrayList<LinkedListItem>();
 		try {
 			Collection<PageModel> pageModels = this.getPageModelManager().getPageModels();
 			if (null != pageModels) {
 				Iterator<PageModel> iter = pageModels.iterator();
 				while (iter.hasNext()) {
 					PageModel pageModel = iter.next();
-					list.add(pageModel.getCode());
+					String url = this.getApiResourceUrl(pageModel, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
+							properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+					LinkedListItem item = new LinkedListItem();
+					item.setCode(pageModel.getCode());
+					item.setUrl(url);
+					list.add(item);
 				}
 			}
 		} catch (Throwable t) {
@@ -149,6 +157,17 @@ public class ApiPageModelInterface implements BeanFactoryAware {
 			throw t;
 		}
     }
+	
+	@Override
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+		if (!(object instanceof PageModel) || null == applicationBaseUrl || null == langCode) {
+			return null;
+		}
+		PageModel pageModel = (PageModel) object;
+		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
+		stringBuilder.append("api/rs/").append(langCode).append("/core/pageModel?code=").append(pageModel.getCode());
+		return stringBuilder.toString();
+	}
 	
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;

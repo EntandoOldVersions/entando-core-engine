@@ -259,7 +259,7 @@
 		<method httpMethod="GET" active="true" requiredAuth="true" canSpawnOthers="true">
 			<description>Return the gui fragment list</description>
 			<springBean name="ApiGuiFragmentInterface" method="getGuiFragments" />
-			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<responseClass>org.entando.entando.aps.system.services.api.model.LinkedListApiResponse</responseClass>
 			<parameters>
 				<parameter key="code" required="false">
 					<description>The code (or its part) of fragment codes to return</description>
@@ -316,7 +316,7 @@
 		<method httpMethod="GET" active="true" requiredAuth="true" canSpawnOthers="true">
 			<description>Return the page model list</description>
 			<springBean name="ApiPageModelInterface" method="getPageModels" />
-			<responseClass>org.entando.entando.aps.system.services.api.model.StringListApiResponse</responseClass>
+			<responseClass>org.entando.entando.aps.system.services.api.model.LinkedListApiResponse</responseClass>
 		</method>
 	</resource>
 	

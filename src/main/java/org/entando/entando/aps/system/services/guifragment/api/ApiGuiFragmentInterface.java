@@ -16,9 +16,11 @@
 */
 package org.entando.entando.aps.system.services.guifragment.api;
 
+import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.common.FieldSearchFilter;
 import com.agiletec.aps.system.exception.ApsSystemException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,9 @@ import javax.ws.rs.core.Response;
 import org.apache.commons.lang.StringUtils;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
+import org.entando.entando.aps.system.services.api.IApiExportable;
 import org.entando.entando.aps.system.services.api.model.ApiException;
+import org.entando.entando.aps.system.services.api.model.LinkedListItem;
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
 import org.entando.entando.aps.system.services.guifragment.GuiFragmentUtilizer;
 import org.entando.entando.aps.system.services.guifragment.IGuiFragmentManager;
@@ -45,12 +49,12 @@ import org.springframework.beans.factory.ListableBeanFactory;
 /**
  * @author E.Santoboni
  */
-public class ApiGuiFragmentInterface implements BeanFactoryAware {
+public class ApiGuiFragmentInterface implements BeanFactoryAware, IApiExportable {
 	
 	private static final Logger _logger = LoggerFactory.getLogger(ApiGuiFragmentInterface.class);
 	
-	public List<String> getGuiFragments(Properties properties) throws Throwable {
-		List<String> list = null;
+	public List<LinkedListItem> getGuiFragments(Properties properties) throws Throwable {
+		List<LinkedListItem> list = new ArrayList<LinkedListItem>();
 		try {
 			String code = properties.getProperty("code");
 			String widgettypecode = properties.getProperty("widgettypecode");
@@ -72,7 +76,16 @@ public class ApiGuiFragmentInterface implements BeanFactoryAware {
 				FieldSearchFilter filterToAdd = new FieldSearchFilter("plugincode", plugincode, true);
 				filters = this.addFilter(filters, filterToAdd);
 			}
-			list = this.getGuiFragmentManager().searchGuiFragments(filters);
+			List<String> codes = this.getGuiFragmentManager().searchGuiFragments(filters);
+			for (int i = 0; i < codes.size(); i++) {
+				String fragmantCode = codes.get(i);
+				String url = this.getApiResourceUrl(fragmantCode, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
+						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+				LinkedListItem item = new LinkedListItem();
+				item.setCode(fragmantCode);
+				item.setUrl(url);
+				list.add(item);
+			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting list of fragments", t);
 			throw t;
@@ -184,6 +197,24 @@ public class ApiGuiFragmentInterface implements BeanFactoryAware {
 			throw t;
 		}
     }
+	
+	@Override
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+		if (!(object instanceof GuiFragment)) {
+			return null;
+		}
+		GuiFragment fragment = (GuiFragment) object;
+		return this.getApiResourceUrl(fragment.getCode(), applicationBaseUrl, langCode);
+	}
+	
+	private String getApiResourceUrl(String fragmentCode, String applicationBaseUrl, String langCode) {
+		if (null == fragmentCode || null == applicationBaseUrl || null == langCode) {
+			return null;
+		}
+		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
+		stringBuilder.append("api/rs/").append(langCode).append("/core/guiFragment?code=").append(fragmentCode);
+		return stringBuilder.toString();
+	}
 	
 	protected BeanFactory getBeanFactory() {
 		return _beanFactory;
