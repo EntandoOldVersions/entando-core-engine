@@ -55,7 +55,7 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 	public List<LinkedListItem> getWidgetTypes(Properties properties) throws Throwable {
 		List<LinkedListItem> list = new ArrayList<LinkedListItem>();
 		try {
-			List<WidgetType> types = this._widgetTypeManager.getWidgetTypes();
+			List<WidgetType> types = this.getWidgetTypeManager().getWidgetTypes();
 			for (int i = 0; i < types.size(); i++) {
 				WidgetType widgetType = types.get(i);
 				String url = this.getApiResourceUrl(widgetType, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
@@ -295,9 +295,9 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 		if (!(object instanceof WidgetType) || null == applicationBaseUrl || null == langCode) {
 			return null;
 		}
-		WidgetType WidgetType = (WidgetType) object;
+		WidgetType widgetType = (WidgetType) object;
 		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
-		stringBuilder.append("api/rs/").append(langCode).append("/core/widgetType?code=").append(WidgetType.getCode());
+		stringBuilder.append("api/rs/").append(langCode).append("/core/widgetType?code=").append(widgetType.getCode());
 		return stringBuilder.toString();
 	}
 	
