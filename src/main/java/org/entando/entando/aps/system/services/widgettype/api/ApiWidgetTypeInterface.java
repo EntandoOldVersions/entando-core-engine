@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
@@ -59,7 +60,7 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 			for (int i = 0; i < types.size(); i++) {
 				WidgetType widgetType = types.get(i);
 				String url = this.getApiResourceUrl(widgetType, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
-						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER), (MediaType) properties.get(SystemConstants.API_PRODUCES_MEDIA_TYPE_PARAMETER));
 				LinkedListItem item = new LinkedListItem();
 				item.setCode(widgetType.getCode());
 				item.setUrl(url);
@@ -291,13 +292,19 @@ public class ApiWidgetTypeInterface implements IApiExportable {
 	}
 	
 	@Override
-	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode, MediaType mediaType) {
 		if (!(object instanceof WidgetType) || null == applicationBaseUrl || null == langCode) {
 			return null;
 		}
 		WidgetType widgetType = (WidgetType) object;
 		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
-		stringBuilder.append("api/rs/").append(langCode).append("/core/widgetType?code=").append(widgetType.getCode());
+		stringBuilder.append("api/rs/").append(langCode).append("/core/widgetType");//?code=").append(widgetType.getCode());
+		if (null == mediaType || mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
+			stringBuilder.append(".xml");
+		} else {
+			stringBuilder.append(".json");
+		}
+		stringBuilder.append("?code=").append(widgetType.getCode());
 		return stringBuilder.toString();
 	}
 	

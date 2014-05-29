@@ -16,6 +16,8 @@
 */
 package org.entando.entando.aps.system.services.api;
 
+import javax.ws.rs.core.MediaType;
+
 /**
  * Interface implemented by all those services or beans 
  * which handle objects suitable to be exported through API calls.
@@ -28,8 +30,9 @@ public interface IApiExportable {
 	 * @param object The object
 	 * @param applicationBaseUrl The application base url.
 	 * @param langCode The current lang code
+	 * @param mediaType The produces media type
 	 * @return The uniform resource locator of the given object.
 	 */
-	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode);
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode, MediaType mediaType);
 	
 }

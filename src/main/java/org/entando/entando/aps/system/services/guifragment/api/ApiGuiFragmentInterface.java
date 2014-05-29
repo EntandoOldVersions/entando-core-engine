@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.lang.StringUtils;
@@ -80,7 +81,7 @@ public class ApiGuiFragmentInterface implements BeanFactoryAware, IApiExportable
 			for (int i = 0; i < codes.size(); i++) {
 				String fragmantCode = codes.get(i);
 				String url = this.getApiResourceUrl(fragmantCode, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
-						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+						properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER), (MediaType) properties.get(SystemConstants.API_PRODUCES_MEDIA_TYPE_PARAMETER));
 				LinkedListItem item = new LinkedListItem();
 				item.setCode(fragmantCode);
 				item.setUrl(url);
@@ -199,20 +200,26 @@ public class ApiGuiFragmentInterface implements BeanFactoryAware, IApiExportable
     }
 	
 	@Override
-	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode, MediaType mediaType) {
 		if (!(object instanceof GuiFragment)) {
 			return null;
 		}
 		GuiFragment fragment = (GuiFragment) object;
-		return this.getApiResourceUrl(fragment.getCode(), applicationBaseUrl, langCode);
+		return this.getApiResourceUrl(fragment.getCode(), applicationBaseUrl, langCode, mediaType);
 	}
 	
-	private String getApiResourceUrl(String fragmentCode, String applicationBaseUrl, String langCode) {
+	private String getApiResourceUrl(String fragmentCode, String applicationBaseUrl, String langCode, MediaType mediaType) {
 		if (null == fragmentCode || null == applicationBaseUrl || null == langCode) {
 			return null;
 		}
 		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
-		stringBuilder.append("api/rs/").append(langCode).append("/core/guiFragment?code=").append(fragmentCode);
+		stringBuilder.append("api/rs/").append(langCode).append("/core/guiFragment");//?code=").append(fragmentCode);
+		if (null == mediaType || mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
+			stringBuilder.append(".xml");
+		} else {
+			stringBuilder.append(".json");
+		}
+		stringBuilder.append("?code=").append(fragmentCode);
 		return stringBuilder.toString();
 	}
 	

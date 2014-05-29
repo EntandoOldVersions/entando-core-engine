@@ -183,17 +183,8 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
-            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
-            Properties properties = this.extractRequestParameters(ui);
-			if (null == langManager.getLang(langCode)) {
-				langCode = langManager.getDefaultLang().getCode();
-			}
-			String applicationBaseUrl = this.extractApplicationBaseUrl(request);
-			if (null != applicationBaseUrl) {
-				properties.put(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER, applicationBaseUrl);
-			}
-            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
-            ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
+            Properties properties = this.extractProperties(langCode, ui, request);
+			ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
             responseObject = responseBuilder.createResponse(apiMethod, properties);
         } catch (ApiException ae) {
@@ -209,17 +200,8 @@ public class ApiRestServer {
         Object responseObject = null;
         try {
             IResponseBuilder responseBuilder = (IResponseBuilder) ApsWebApplicationUtils.getBean(SystemConstants.API_RESPONSE_BUILDER, request);
-            ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
-            Properties properties = this.extractRequestParameters(ui);
-            if (null == langManager.getLang(langCode)) {
-				langCode = langManager.getDefaultLang().getCode();
-			}
-			String applicationBaseUrl = this.extractApplicationBaseUrl(request);
-			if (null != applicationBaseUrl) {
-				properties.put(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER, applicationBaseUrl);
-			}
-            properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
-            ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
+            Properties properties = this.extractProperties(langCode, ui, request);
+			ApiMethod apiMethod = responseBuilder.extractApiMethod(httpMethod, namespace, resourceName);
             this.extractOAuthParameters(apiMethod, request, response, properties);
 			Object bodyObject = UnmarshalUtils.unmarshal(apiMethod, request, mediaType);
             responseObject = responseBuilder.createResponse(apiMethod, bodyObject, properties);
@@ -230,6 +212,21 @@ public class ApiRestServer {
         }
         return this.createResponse(responseObject);
     }
+	
+	protected Properties extractProperties(String langCode, UriInfo ui, HttpServletRequest request) throws Throwable {
+		ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, request);
+		Properties properties = this.extractRequestParameters(ui);
+		if (null == langManager.getLang(langCode)) {
+			langCode = langManager.getDefaultLang().getCode();
+		}
+		String applicationBaseUrl = this.extractApplicationBaseUrl(request);
+		if (null != applicationBaseUrl) {
+			properties.put(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER, applicationBaseUrl);
+		}
+		properties.put(SystemConstants.API_LANG_CODE_PARAMETER, langCode);
+		properties.put(SystemConstants.API_PRODUCES_MEDIA_TYPE_PARAMETER, this.extractProducesMediaType(request));
+		return properties;
+	}
 
     protected Properties extractRequestParameters(UriInfo ui) {
         MultivaluedMap<String, String> queryParams = ui.getQueryParameters(false);
@@ -260,6 +257,21 @@ public class ApiRestServer {
         }
 		return applicationBaseUrl;
     }
+	
+	protected MediaType extractProducesMediaType(HttpServletRequest request) {
+		String pathInfo = request.getPathInfo();
+		int index = pathInfo.indexOf(".");
+		if (index < 0) {
+			return MediaType.APPLICATION_XML_TYPE;
+		}
+		String extension = pathInfo.substring(index+1);
+		System.out.println("************* " + extension);
+		if (extension.equalsIgnoreCase("json")) {
+			return MediaType.APPLICATION_JSON_TYPE;
+		} else {
+			return MediaType.APPLICATION_XML_TYPE;
+		}
+	}
 	
     protected StringApiResponse buildErrorResponse(ApiMethod.HttpMethod httpMethod, String namespace, String resourceName, Throwable t) {
         StringBuilder buffer = new StringBuilder();

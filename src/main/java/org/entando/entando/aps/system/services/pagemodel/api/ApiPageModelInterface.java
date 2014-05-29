@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
@@ -61,7 +62,7 @@ public class ApiPageModelInterface implements BeanFactoryAware, IApiExportable {
 				while (iter.hasNext()) {
 					PageModel pageModel = iter.next();
 					String url = this.getApiResourceUrl(pageModel, properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER), 
-							properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER));
+							properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER), (MediaType) properties.get(SystemConstants.API_PRODUCES_MEDIA_TYPE_PARAMETER));
 					LinkedListItem item = new LinkedListItem();
 					item.setCode(pageModel.getCode());
 					item.setUrl(url);
@@ -159,13 +160,19 @@ public class ApiPageModelInterface implements BeanFactoryAware, IApiExportable {
     }
 	
 	@Override
-	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode) {
+	public String getApiResourceUrl(Object object, String applicationBaseUrl, String langCode, MediaType mediaType) {
 		if (!(object instanceof PageModel) || null == applicationBaseUrl || null == langCode) {
 			return null;
 		}
 		PageModel pageModel = (PageModel) object;
 		StringBuilder stringBuilder = new StringBuilder(applicationBaseUrl);
-		stringBuilder.append("api/rs/").append(langCode).append("/core/pageModel?code=").append(pageModel.getCode());
+		stringBuilder.append("api/rs/").append(langCode).append("/core/pageModel");//?code=").append(pageModel.getCode());
+		if (null == mediaType || mediaType.equals(MediaType.APPLICATION_XML_TYPE)) {
+			stringBuilder.append(".xml");
+		} else {
+			stringBuilder.append(".json");
+		}
+		stringBuilder.append("?code=").append(pageModel.getCode());
 		return stringBuilder.toString();
 	}
 	
