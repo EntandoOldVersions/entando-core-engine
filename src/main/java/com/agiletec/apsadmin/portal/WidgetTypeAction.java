@@ -87,7 +87,14 @@ public class WidgetTypeAction extends AbstractPortalAction {
 		if (StringUtils.isNotBlank(this.getGui())) {
 			return true;
 		}
-		String jspPath = WidgetType.getJspPath(this.getWidgetTypeCode(), null);
+		String pluginCode = null;
+		if (isEdit) {
+			WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
+			if (null != type) {
+				pluginCode = type.getPluginCode();
+			}
+		}
+		String jspPath = WidgetType.getJspPath(this.getWidgetTypeCode(), pluginCode);
 		String folderPath = this.getRequest().getSession().getServletContext().getRealPath("/");
 		boolean existsJsp = (new File(folderPath + jspPath)).exists();
 		if (existsJsp) {
@@ -101,7 +108,12 @@ public class WidgetTypeAction extends AbstractPortalAction {
 				return true;
 			}
 		}
-		return false;
+		GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
+		if (guiFragment == null || (StringUtils.isBlank(this.getGui()) && StringUtils.isBlank(guiFragment.getDefaultGui()))) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	/**
