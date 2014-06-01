@@ -65,8 +65,7 @@ public abstract class AbstractPortalAction extends BaseAction {
 			}
 			this.addGroup(STOCK_WIDGETS_CODE, mapping, group);
 		} catch (Throwable t) {
-			_logger.error("error in getShowletFlavours", t);
-			//ApsSystemUtils.logThrowable(t, this, "getShowletFlavours");
+			_logger.error("error in getWidgetFlavours", t);
 			throw new RuntimeException("Error extracting Widget flavours", t);
 		}
 		return group;
@@ -208,13 +207,17 @@ public abstract class AbstractPortalAction extends BaseAction {
 		return this.getGroupManager().getGroupsMap();
 	}
 	
+	@Deprecated
 	public Map<String, ApiMethod> getShowletTypeApiMappings() {
+		return this.getWidgetTypeApiMappings();
+	}
+	
+	public Map<String, ApiMethod> getWidgetTypeApiMappings() {
 		Map<String, ApiMethod> mappings = null;
 		try {
-			mappings = this.getApiCatalogManager().getRelatedShowletMethods();
+			mappings = this.getApiCatalogManager().getRelatedWidgetMethods();
 		} catch (Throwable t) {
-			_logger.error("error in getShowletTypeApiMapping", t);
-			//ApsSystemUtils.logThrowable(t, this, "getShowletTypeApiMapping");
+			_logger.error("error in getWidgetTypeApiMappings", t);
 		}
 		return mappings;
 	}

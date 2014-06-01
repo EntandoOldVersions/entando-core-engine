@@ -32,14 +32,17 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public interface IApiCatalogManager {
     
     /**
-     * Return the api related whith the given showlet, if exist.
-     * @param showletCode The showlet code.
+     * Return the api related whith the given widget, if exist.
+     * @param widgetCode The widget code.
      * @return The api method related.
      * @throws ApsSystemException In case of error.
      */
-    public ApiMethod getRelatedMethod(String showletCode) throws ApsSystemException;
+    public ApiMethod getRelatedMethod(String widgetCode) throws ApsSystemException;
     
+	@Deprecated
     public Map<String, ApiMethod> getRelatedShowletMethods() throws ApsSystemException;
+    
+    public Map<String, ApiMethod> getRelatedWidgetMethods() throws ApsSystemException;
     
     /**
      * Return the map of GET methods indexed by api method name.
@@ -64,6 +67,7 @@ public interface IApiCatalogManager {
     
     /**
      * Return a GET methods by name.
+	 * @param resourceName the resource name
      * @return a GET methods.
      * @throws ApsSystemException In case of error
      * @deprecated use getMethod(ApiMethod.HttpMethod, resourceName) method

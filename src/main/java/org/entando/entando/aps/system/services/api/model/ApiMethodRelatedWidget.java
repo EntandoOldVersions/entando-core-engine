@@ -33,7 +33,7 @@ public class ApiMethodRelatedWidget {
 	protected ApiMethodRelatedWidget() {}
 	
 	protected ApiMethodRelatedWidget(Element element) {
-		this.setShowletCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_WIDGET_CODE_ATTRIBUTE_NAME));
+		this.setWidgetCode(element.getAttributeValue(ApiResourcesDefDOM.RELATED_WIDGET_CODE_ATTRIBUTE_NAME));
 		this.setMapping(new ApsProperties());
 		List<Element> mappingsElements = element.getChildren(ApiResourcesDefDOM.RELATED_WIDGET_MAP_PARAMETER_ELEMENT_NAME);
 		for (int i = 0; i < mappingsElements.size(); i++) {
@@ -47,7 +47,7 @@ public class ApiMethodRelatedWidget {
 	@Override
 	public ApiMethodRelatedWidget clone() {
 		ApiMethodRelatedWidget clone = new ApiMethodRelatedWidget();
-		clone.setShowletCode(this.getShowletCode());
+		clone.setWidgetCode(this.getWidgetCode());
 		clone.setMapping(new ApsProperties());
 		Iterator<Object> keyIter = this.getMapping().keySet().iterator();
 		while (keyIter.hasNext()) {
@@ -57,11 +57,20 @@ public class ApiMethodRelatedWidget {
 		return clone;
 	}
 	
+	@Deprecated
 	public String getShowletCode() {
-		return _showletCode;
+		return this.getWidgetCode();
 	}
+	@Deprecated
 	public void setShowletCode(String showletCode) {
-		this._showletCode = showletCode;
+		this.setWidgetCode(showletCode);
+	}
+	
+	public String getWidgetCode() {
+		return _widgetCode;
+	}
+	public void setWidgetCode(String widgetCode) {
+		this._widgetCode = widgetCode;
 	}
 	
 	public ApsProperties getMapping() {
@@ -71,7 +80,7 @@ public class ApiMethodRelatedWidget {
 		this._mapping = mapping;
 	}
 	
-	private String _showletCode;
+	private String _widgetCode;
 	private ApsProperties _mapping;
 	
 }

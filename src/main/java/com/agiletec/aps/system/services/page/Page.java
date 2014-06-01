@@ -156,11 +156,9 @@ public class Page extends TreeNode implements IPage {
 	public String getTitle(Lang lang) {
 		return this.getTitle(lang.getCode());
 	}
-
-	/**
-	 * @deprecated Use {@link #getWidgets()} instead
-	 */
+	
 	@Override
+	@Deprecated
 	public Widget[] getShowlets() {
 		return getWidgets();
 	}
@@ -173,17 +171,15 @@ public class Page extends TreeNode implements IPage {
 	public Widget[] getWidgets() {
 		return _widgets;
 	}
-
-	/**
-	 * @deprecated Use {@link #setWidgets(Widget[])} instead
-	 */
+	
+	@Deprecated
 	public void setShowlets(Widget[] widgets) {
 		setWidgets(widgets);
 	}
 
 	/**
 	 * Assign a set of widgets to the current page.
-	 * @param the widgets to assign.
+	 * @param widgets the widgets to assign.
 	 */
 	public void setWidgets(Widget[] widgets) {
 		this._widgets = widgets;
@@ -248,9 +244,9 @@ public class Page extends TreeNode implements IPage {
 	 * Toggle menu visibility on and off
 	 */
 	private boolean _showable = false;
-
+	
 	/**
-	 * The showlet of the current page
+	 * The widgets of the current page
 	 */
 	private Widget[] _widgets;
 	

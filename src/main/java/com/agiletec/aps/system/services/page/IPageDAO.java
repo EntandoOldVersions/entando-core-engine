@@ -19,8 +19,6 @@ package com.agiletec.aps.system.services.page;
 
 import java.util.List;
 
-import com.agiletec.aps.system.exception.ApsSystemException;
-
 /**
  * Basic interface for the Data Acces Objects for the 'Page' objects
  * @author M.Diana - E.Santoboni
@@ -28,7 +26,7 @@ import com.agiletec.aps.system.exception.ApsSystemException;
 public interface IPageDAO {
 
 	/**
-	 * Load a sorted list of the pages and the configuration of the showlets
+	 * Load a sorted list of the pages and the configuration of the widgets
 	 * @return the list of pages
 	 */
 	public List<IPage> loadPages();
@@ -58,15 +56,15 @@ public interface IPageDAO {
 	 */
 	public void updatePosition(IPage pageDown, IPage pageUp);
 
-	/**
-	 *
-	 * @param pageCode the page
-	 * @param widgetDown The widget to move downwards
-	 * @param widgetUp The widget to move upwards
-	 */
 	public void updateWidgetPosition(String pageCode, Integer frameToMove, Integer destFrame);
-
+	
 	/**
+	 * Setta il widget (comprensiva della sua configurazione) nella pagina e nel frame specificato.
+	 * Nel caso che la posizione specificata sia già occupata, il widget corrente
+	 * sarà sostituita da quella specificata.
+	 * @param pageCode Il codice della pagina in cui settare il widget.
+	 * @param widget il widget da settare.
+	 * @param pos La posizione della pagina su cui settare il widget.
 	 * @deprecated Use {@link #joinWidget(String,Widget,int)} instead
 	 */
 	public void joinShowlet(String pageCode, Widget widget, int pos);
@@ -78,11 +76,13 @@ public interface IPageDAO {
 	 * @param pageCode Il codice della pagina in cui settare il widget.
 	 * @param widget il widget da settare.
 	 * @param pos La posizione della pagina su cui settare il widget.
-	 * @throws ApsSystemException In caso di errore.
 	 */
 	public void joinWidget(String pageCode, Widget widget, int pos);
 
 	/**
+	 * Rimuove una widget nella pagina specificata.
+	 * @param pageCode Il codice della pagina nel quale rimuovere il widget.
+	 * @param pos La posizione dal liberare.
 	 * @deprecated Use {@link #removeWidget(String,int)} instead
 	 */
 	public void removeShowlet(String pageCode, int pos);
@@ -91,7 +91,6 @@ public interface IPageDAO {
 	 * Rimuove una widget nella pagina specificata.
 	 * @param pageCode Il codice della pagina nel quale rimuovere il widget.
 	 * @param pos La posizione dal liberare.
-	 * @throws ApsSystemException In caso di errore.
 	 */
 	public void removeWidget(String pageCode, int pos);
 

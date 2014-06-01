@@ -53,7 +53,7 @@ public interface IPage extends ITreeNode {
 	public void removeExtraGroup(String groupName);
 	
 	/**
-	 * WARING: this method is reserved to the page manager service only.
+	 * WARNING: this method is reserved to the page manager service only.
 	 * Return the code of the father of this page. This methods exists only to
 	 * simplify the loading of the pages structure, it cannot be used in any other 
 	 * circumstance.
@@ -64,8 +64,9 @@ public interface IPage extends ITreeNode {
 	/**
 	 * Return the sorted group of the children of the current page, that is the 
 	 * pages belonging to the lower level
-	 * @return L'array di pagine 
+	 * @return the sorted group of the children
 	 */
+	@Override
 	public IPage[] getChildren();
 
 	/**
@@ -73,6 +74,7 @@ public interface IPage extends ITreeNode {
 	 * If the current page is the root, the root page itself is returned
 	 * @return The father of the current page
 	 */
+	@Override
 	public IPage getParent();
 	
 	/**
@@ -90,6 +92,8 @@ public interface IPage extends ITreeNode {
 	public boolean isUseExtraTitles();
 	
 	/**
+	 * Return the widgets configured in this page.
+	 * @return all the widgets of the current page
 	 * @deprecated Use {@link #getWidgets()} instead
 	 */
 	public Widget[] getShowlets();

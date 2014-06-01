@@ -24,13 +24,13 @@ import org.entando.entando.aps.system.services.widgettype.WidgetType;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * This class represent an instance of a showlet configured in a page frame. 
+ * This class represent an instance of a widget configured in a page frame. 
  * @author M.Diana - E.Santoboni
  */
 public class Widget implements Serializable {
 
 	/**
-	 * Return the configuration of the showlet
+	 * Return the configuration of the widget
 	 * @return The configuration properties
 	 */
 	public ApsProperties getConfig() {
@@ -41,39 +41,39 @@ public class Widget implements Serializable {
 	}
 
 	/**
-	 * Set the configuration of the showlet.
+	 * Set the configuration of the widget.
 	 * @param config The configuration properties to set
 	 */
 	public void setConfig(ApsProperties config) {
 		this._config = config;
 	}
-
+	
 	/**
-	 * Return the type of the showlet
-	 * @param The type of the showlet
+	 * Return the type of the widget
+	 * @return The type of the widget
 	 */
 	public WidgetType getType() {
 		return _type;
 	}
 
 	/**
-	 * Set the showlet type
-	 * @param type The of the showlet 
+	 * Set the widget type
+	 * @param type The of the widget 
 	 */
 	public void setType(WidgetType type) {
 		this._type = type;
 	}
 	
 	/**
-     * Return the id of the content published in the showlet, if any.
-     * @rtuen The id of the published content 
+     * Return the id of the content published in the widget, if any.
+     * @return The id of the published content 
      */
     public String getPublishedContent() {
         return _publishedContent;
     }
     
     /**
-     * Set the id of the content to publish in the current showlet.
+     * Set the id of the content to publish in the current widget.
      * @param publishedContent The id of the content to publish
      */
     public void setPublishedContent(String publishedContent) {
@@ -81,7 +81,7 @@ public class Widget implements Serializable {
     }
 	
 	/**
-	 * The type of the showlet
+	 * The type of the widget
 	 */
 	private WidgetType _type;
 	
@@ -91,7 +91,7 @@ public class Widget implements Serializable {
 	private ApsProperties _config;
 	
 	/**
-	 * id of the content published in this showlet
+	 * id of the content published in this widget
 	 */
 	private String _publishedContent;
 	

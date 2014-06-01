@@ -49,7 +49,7 @@ public class ApiResource {
 	}
     
 	public static String getCode(String namespace, String resourceName) {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		if (null != namespace && namespace.trim().length() > 0) {
 			buffer.append(namespace.trim()).append(":");
 		}

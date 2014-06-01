@@ -57,7 +57,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.checkParameters();
 		} catch (Throwable t) {
 			_logger.error("Error validating service", t);
-			//ApsSystemUtils.logThrowable(t, this, "validate");
 			throw new RuntimeException("Error validating service", t);
 		}
 	}
@@ -91,7 +90,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error checking service key", t);
-			//ApsSystemUtils.logThrowable(t, this, "checkCode");
 			throw new RuntimeException("Error checking service key", t);
 		}
 	}
@@ -117,7 +115,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error checking parameters", t);
-			//ApsSystemUtils.logThrowable(t, this, "checkParameters");
 			throw new RuntimeException("Error checking parameters", t);
 		}
 	}
@@ -156,11 +153,11 @@ public class ApiServiceAction extends AbstractApiAction {
 				return check;
 			}
 			ApiMethod masterMethod = this.getMethod(this.getNamespace(), this.getResourceName());
-			if (null != this.getShowletTypeCode() && null != masterMethod.getRelatedShowlet()) {
-				WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getShowletTypeCode());
+			if (null != this.getWidgetTypeCode() && null != masterMethod.getRelatedWidget()) {
+				WidgetType type = this.getWidgetTypeManager().getWidgetType(this.getWidgetTypeCode());
 				if (null != type && type.isLogic()) {
 					ApsProperties parameters =
-							this.extractParametersFromWidgetProperties(masterMethod.getRelatedShowlet(), type.getConfig());
+							this.extractParametersFromWidgetProperties(masterMethod.getRelatedWidget(), type.getConfig());
 					this.setApiParameterValues(parameters);
 				}
 			}
@@ -169,7 +166,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setServiceKey(this.buildTempKey(masterMethod.getResourceName()));
 		} catch (Throwable t) {
 			_logger.error("error in newService", t);
-			//ApsSystemUtils.logThrowable(t, this, "newService");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -180,7 +176,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			return this.getApiCatalogManager().getMethod(ApiMethod.HttpMethod.GET, namespace, resourceName);
 		} catch (Throwable t) {
 			_logger.error("Error extracting GET method of resource '{}' namespace '{}'", resourceName, namespace, t);
-			//ApsSystemUtils.logThrowable(t, this, "getMethod", "Error extracting GET method of resource '" + resourceName + "' namespace '" + namespace + "'");
 		}
 		return null;
 	}
@@ -221,20 +216,19 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 			Widget masterWidget = widgets[this.getFramePos()];
 			WidgetType type = (masterWidget.getType().isLogic()) ? masterWidget.getType().getParentType() : masterWidget.getType();
-			if (null == masterMethod.getRelatedShowlet()
-					|| !masterMethod.getRelatedShowlet().getShowletCode().equals(type.getCode())) {
+			if (null == masterMethod.getRelatedWidget()
+					|| !masterMethod.getRelatedWidget().getWidgetCode().equals(type.getCode())) {
 				this.addFieldError("framePos", this.getText("error.service.paste.invalidWidget",
 						new String[]{masterWidget.getType().getCode(), masterMethod.getResourceName()}));
 				return INPUT;
 			}
-			ApsProperties parameters = this.extractParametersFromWidget(masterMethod.getRelatedShowlet(), masterWidget);
+			ApsProperties parameters = this.extractParametersFromWidget(masterMethod.getRelatedWidget(), masterWidget);
 			this.setApiParameterValues(parameters);
 			this.setApiParameters(masterMethod.getParameters());
 			this.setStrutsAction(ApsAdminSystemConstants.PASTE);
 			this.setServiceKey(this.buildTempKey(masterMethod.getResourceName()));
 		} catch (Throwable t) {
 			_logger.error("error in copyFromWidget", t);
-			//ApsSystemUtils.logThrowable(t, this, "copyFromWidget");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -302,7 +296,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 		} catch (Throwable t) {
 			_logger.error("error in edit", t);
-			//ApsSystemUtils.logThrowable(t, this, "edit");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -335,7 +328,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.getApiCatalogManager().saveService(service);
 		} catch (Throwable t) {
 			_logger.error("error in save", t);
-			//ApsSystemUtils.logThrowable(t, this, "save");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -353,7 +345,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			}
 		} catch (Throwable t) {
 			_logger.error("error in trash", t);
-			//ApsSystemUtils.logThrowable(t, this, "trash");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -372,7 +363,6 @@ public class ApiServiceAction extends AbstractApiAction {
 			this.getApiCatalogManager().deleteService(this.getServiceKey());
 		} catch (Throwable t) {
 			_logger.error("error in delete", t);
-			//ApsSystemUtils.logThrowable(t, this, "delete");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -409,7 +399,6 @@ public class ApiServiceAction extends AbstractApiAction {
             return super.generateResponseBodySchema(apiService.getMaster());
         } catch (Throwable t) {
         	_logger.error("Error extracting response body Schema", t);
-            //ApsSystemUtils.logThrowable(t, this, "generateResponseBodySchema", "Error extracting response body Schema");
             return FAILURE;
         }
     }
@@ -567,12 +556,21 @@ public class ApiServiceAction extends AbstractApiAction {
 	public void setFramePos(Integer framePos) {
 		this._framePos = framePos;
 	}
-
+	
+	@Deprecated
 	public String getShowletTypeCode() {
-		return _showletTypeCode;
+		return this.getWidgetTypeCode();
 	}
+	@Deprecated
 	public void setShowletTypeCode(String showletTypeCode) {
-		this._showletTypeCode = showletTypeCode;
+		this.setWidgetTypeCode(showletTypeCode);
+	}
+	
+	public String getWidgetTypeCode() {
+		return _widgetTypeCode;
+	}
+	public void setWidgetTypeCode(String widgetTypeCode) {
+		this._widgetTypeCode = widgetTypeCode;
 	}
 	
 	protected IPageManager getPageManager() {
@@ -596,9 +594,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	public void setWidgetTypeManager(IWidgetTypeManager widgetTypeManager) {
 		this._widgetTypeManager = widgetTypeManager;
 	}
-
-
-
+	
 	private String _serviceGroup;
 	private int _strutsAction;
 	
@@ -623,7 +619,7 @@ public class ApiServiceAction extends AbstractApiAction {
 	private String _tag;
 	private String _pageCode;
 	private Integer _framePos;
-	private String _showletTypeCode;
+	private String _widgetTypeCode;
 	
 	private IPageManager _pageManager;
 	private IGroupManager _groupManager;
