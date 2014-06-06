@@ -37,6 +37,8 @@ import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
+import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
+import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedObserver;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like structure,
@@ -46,7 +48,7 @@ import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
  * @author M.Diana - E.Santoboni
  */
 public class PageManager extends AbstractService 
-		implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer {
+		implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer, PageModelChangedObserver {
 
 	private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
 	
@@ -558,6 +560,25 @@ public class PageManager extends AbstractService
 		for (int i = 0; i < children.length; i++) {
 			IPage child = children[i];
 			this.getPageModelUtilizers(child, pageModelCode, pageModelUtilizers);
+		}
+	}
+	
+	@Override
+	public void updateFromPageModelChanged(PageModelChangedEvent event) {
+		try {
+			if (event.getOperationCode() != PageModelChangedEvent.UPDATE_OPERATION_CODE) {
+				return;
+			}
+			PageModel model = event.getPageModel();
+			String pageModelCode = (null != model) ? model.getCode() : null;
+			if (null != pageModelCode) {
+				List utilizers = this.getPageModelUtilizers(pageModelCode);
+				if (null != utilizers && utilizers.size() > 0) {
+					this.init();
+				}
+			}
+		} catch (Throwable t) {
+			_logger.error("Error during refres pages", t);
 		}
 	}
 	

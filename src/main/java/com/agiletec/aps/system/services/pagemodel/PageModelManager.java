@@ -32,6 +32,9 @@ import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.common.AbstractService;
 import com.agiletec.aps.system.exception.ApsSystemException;
+import com.agiletec.aps.system.services.page.IPage;
+import com.agiletec.aps.system.services.page.events.PageChangedEvent;
+import com.agiletec.aps.system.services.pagemodel.events.PageModelChangedEvent;
 
 /**
  * The manager of the page models.
@@ -84,6 +87,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 		try {
 			this.getPageModelDAO().addModel(pageModel);
 			this._models.put(pageModel.getCode(), pageModel);
+			this.notifyPageModelChangedEvent(pageModel, PageModelChangedEvent.INSERT_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error adding page models", t);
 			throw new ApsSystemException("Error adding page models", t);
@@ -110,6 +114,7 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 			pageModelToUpdate.setMainFrame(pageModel.getMainFrame());
 			pageModelToUpdate.setPluginCode(pageModel.getPluginCode());
 			pageModelToUpdate.setTemplate(pageModel.getTemplate());
+			this.notifyPageModelChangedEvent(pageModelToUpdate, PageModelChangedEvent.UPDATE_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error updating page model {}", pageModel.getCode(), t);
 			throw new ApsSystemException("Error updating page model " + pageModel.getCode(), t);
@@ -119,12 +124,21 @@ public class PageModelManager extends AbstractService implements IPageModelManag
 	@Override
 	public void deletePageModel(String code) throws ApsSystemException {
 		try {
+			PageModel model = this.getPageModel(code);
 			this.getPageModelDAO().deleteModel(code);
 			this._models.remove(code);
+			this.notifyPageModelChangedEvent(model, PageModelChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error deleting page models", t);
 			throw new ApsSystemException("Error deleting page models", t);
 		}
+	}
+	
+	private void notifyPageModelChangedEvent(PageModel pageModel, int operationCode) {
+		PageModelChangedEvent event = new PageModelChangedEvent();
+		event.setPageModel(pageModel);
+		event.setOperationCode(operationCode);
+		this.notifyEvent(event);
 	}
 	
 	@Override
