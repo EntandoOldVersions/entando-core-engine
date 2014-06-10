@@ -41,14 +41,15 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Tag for showlet "InternalServlet".
+ * Tag for widget "InternalServlet".
  * Publish a function erogated throw a internal Servlet; the servlet is invoked by a path specificated 
- * by the tag attribute "actionPath" or by the showlet parameter of the same name.
+ * by the tag attribute "actionPath" or by the widget parameter of the same name.
  * @author M.Casari - E.Santoboni
  */
 public class InternalServletTag extends TagSupport {
-
+	
 	private static final Logger _logger = LoggerFactory.getLogger(InternalServletTag.class);
+	
 	/**
 	 * Internal class that wrappers the response, extending the
 	 * javax.servlet.http.HttpServletResponseWrapper class to
@@ -112,7 +113,7 @@ public class InternalServletTag extends TagSupport {
 	}
 	
 	/**
-	 * Invokes the showlet configured in the current page.
+	 * Invokes the widget configured in the current page.
 	 * @throws JspException in case of error that occurred in both this method 
 	 * or in one of the included JSPs
 	 */
@@ -124,7 +125,7 @@ public class InternalServletTag extends TagSupport {
 		try {
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 			ResponseWrapper responseWrapper = new ResponseWrapper((HttpServletResponse)this.pageContext.getResponse());
-			String output = this.buildShowletOutput(page, responseWrapper);
+			String output = this.buildWidgetOutput(page, responseWrapper);
 			if (responseWrapper.isRedirected()) {
 				String redirect = responseWrapper.getRedirectPath();
 				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXTERNAL_REDIRECT, redirect);
@@ -133,21 +134,25 @@ public class InternalServletTag extends TagSupport {
 				this.pageContext.getOut().print(output);
 			}
 		} catch (Throwable t) {
-			_logger.error("Error in showlet preprocessing", t);
-			String msg = "Error in showlet preprocessing";
-			//ApsSystemUtils.logThrowable(t, this, "doEndTag", msg);
+			_logger.error("Error in widget preprocessing", t);
+			String msg = "Error in widget preprocessing";
 			throw new JspException(msg, t);
 		}
 		return result;
 	}
 	
+	@Deprecated
 	protected String buildShowletOutput(IPage page, ResponseWrapper responseWrapper) throws JspException {
+		return this.buildWidgetOutput(page, responseWrapper);
+	}
+	
+	protected String buildWidgetOutput(IPage page, ResponseWrapper responseWrapper) throws JspException {
 		String output = null;
 		ServletRequest req =  this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
 		try {
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-			this.includeShowlet(reqCtx, responseWrapper, widget);
+			this.includeWidget(reqCtx, responseWrapper, widget);
 			Cookie[] cookies = responseWrapper.getCookiesToAdd();
 			if (null != cookies) {
 				for (int i = 0; i < cookies.length; i++) {
@@ -158,13 +163,18 @@ public class InternalServletTag extends TagSupport {
 			output = responseWrapper.toString();
 			responseWrapper.getWriter().close();
 		} catch (Throwable t) {
-			String msg = "Error building showlet output";
+			String msg = "Error building widget output";
 			throw new JspException(msg, t);
 		}
 		return output;
 	}
 	
+	@Deprecated
 	protected void includeShowlet(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
+		this.includeWidget(reqCtx, responseWrapper, widget);
+	}
+	
+	protected void includeWidget(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
 		HttpServletRequest request = reqCtx.getRequest();
 		try {
 			String actionPath = this.extractIntroActionPath(reqCtx, widget);
@@ -173,7 +183,7 @@ public class InternalServletTag extends TagSupport {
 				String currentFrameActionPath = request.getParameter(REQUEST_PARAM_FRAMEDEST);
 				Integer currentFrame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 				if (requestActionPath != null && currentFrameActionPath != null && currentFrame.toString().equals(currentFrameActionPath)) {
-					if (this.isAllowedRequestPath(requestActionPath)) {
+					if (this.isAllowedRequestPath(requestActionPath) && !this.isRecursivePath(requestActionPath, request)) {
 						actionPath = requestActionPath;
 					}
 				}
@@ -183,7 +193,6 @@ public class InternalServletTag extends TagSupport {
 			requestDispatcher.include(request, responseWrapper);
 		} catch (Throwable t) {
 			_logger.error("Error including widget", t);
-			//ApsSystemUtils.logThrowable(t, this, "includeShowlet", "Error including widget");
 			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/WEB-INF/aps/jsp/system/internalServlet_error.jsp");
 			requestDispatcher.include(request, responseWrapper);
 		}
@@ -206,10 +215,19 @@ public class InternalServletTag extends TagSupport {
 		return true;
 	}
 	
+	protected boolean isRecursivePath(String requestActionPath, HttpServletRequest request) {
+		String contextPath = request.getContextPath();
+		if (!requestActionPath.contains(contextPath)) {
+			return false;
+		}
+		String prefix = contextPath + "/pages/";
+		return (requestActionPath.contains(".wp") || requestActionPath.contains(".page") || requestActionPath.contains(prefix));
+	}
+	
 	/**
 	 * Extract the init Action Path. 
 	 * Return the tag attribute (if set), else the widget parameter.
-	 * @param reqCtx The request context
+	 * @param reqCtx The request context.
 	 * @param widget The current widget.
 	 * @return The init Action Path
 	 */
