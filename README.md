@@ -4,17 +4,20 @@ SQL notes
 
 -- sql - port database
 
+ALTER TABLE pagemodels ADD COLUMN templategui text;
+
 
 CREATE TABLE guifragment
 (
   code character varying(50) NOT NULL,
   widgettypecode character varying(40),
   plugincode character varying(30),
-  gui text NOT NULL,
+  gui text,
+  defaultgui text,
+  locked smallint NOT NULL,
   CONSTRAINT guifragment_pkey PRIMARY KEY (code ),
   CONSTRAINT guifragment_wdgtypecode_fkey FOREIGN KEY (widgettypecode)
-      REFERENCES widgetcatalog (code) MATCH SIMPLE
-      ON UPDATE NO ACTION ON DELETE NO ACTION
+      REFERENCES widgetcatalog (code)
 );
 
 
