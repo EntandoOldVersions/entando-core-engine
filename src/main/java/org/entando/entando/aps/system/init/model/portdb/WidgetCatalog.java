@@ -68,11 +68,6 @@ public class WidgetCatalog {
 			width = 20)
 	private String _mainGroup;
 	
-	@DatabaseField(columnName = "template", 
-			dataType = DataType.LONG_STRING, 
-			canBeNull = true)
-	private String _template;
-	
 	public static final String TABLE_NAME = "widgetcatalog";
 	
 }
@@ -87,7 +82,6 @@ CREATE TABLE widgetcatalog
   defaultconfig character varying,
   locked smallint NOT NULL,
   maingroup character varying(20),
-  template text,
   CONSTRAINT showletcatalog_pkey PRIMARY KEY (code )
 )
  */
