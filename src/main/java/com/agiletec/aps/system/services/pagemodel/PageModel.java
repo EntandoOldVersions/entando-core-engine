@@ -46,21 +46,30 @@ public class PageModel implements Serializable {
 	public void setCode(String code) {
 		this._code = code;
 	}
+	
+	public String getDescription() {
+		return _description;
+	}
+	public void setDescription(String description) {
+		this._description = description;
+	}
 
 	/**
 	 * Restituisce la descrizione del modello
 	 * @return La descrizione
+	 * @deprecated use getDescription
 	 */
 	public String getDescr() {
-		return _descr;
+		return this.getDescription();
 	}
 
 	/**
 	 * Imposta la descrizione del modello
 	 * @param descr La descrizione da impostare
+	 * @deprecated use setDescription
 	 */
 	public void setDescr(String descr) {
-		this._descr = descr;
+		this.setDescription(descr);
 	}
 
 	/**
@@ -159,7 +168,7 @@ public class PageModel implements Serializable {
 	/**
 	 * La descrizione del modello di pagina
 	 */
-	private String _descr;
+	private String _description;
 	
 	/**
 	 * L'insieme delle descrizioni dei frames.

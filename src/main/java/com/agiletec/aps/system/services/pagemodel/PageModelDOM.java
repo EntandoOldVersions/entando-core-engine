@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author E.Santoboni
  */
 public class PageModelDOM {
-
+	
 	private static final Logger _logger = LoggerFactory.getLogger(PageModelDOM.class);
 	
 	/**
@@ -101,8 +101,11 @@ public class PageModelDOM {
 	}
 	
 	private ApsProperties buildProperties(Element propertiesElement) {
-		ApsProperties prop = new ApsProperties();
 		List<Element> propertyElements = propertiesElement.getChildren(TAB_PROPERTY);
+		if (null == propertyElements || propertyElements.isEmpty()) {
+			return null;
+		}
+		ApsProperties prop = new ApsProperties();
 		Iterator<Element> propertyElementsIter = propertyElements.iterator();
 		while (propertyElementsIter.hasNext()) {
 			Element property = (Element) propertyElementsIter.next();
@@ -163,9 +166,9 @@ public class PageModelDOM {
 		if (null != propertiesElement) {
 			ApsProperties prop = this.buildProperties(propertiesElement);
 			widget.setConfig(prop);
-		} else {
-			widget.setConfig(new ApsProperties());
-		}
+		}// else {
+		//	widget.setConfig(new ApsProperties());
+		//}
 		_defaultWidget[pos] = widget;
 	}
 	

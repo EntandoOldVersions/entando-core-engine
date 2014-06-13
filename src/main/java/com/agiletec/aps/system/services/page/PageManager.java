@@ -36,6 +36,7 @@ import com.agiletec.aps.system.services.lang.events.LangsChangedEvent;
 import com.agiletec.aps.system.services.lang.events.LangsChangedObserver;
 import com.agiletec.aps.system.services.page.events.PageChangedEvent;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
+import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 
 /**
  * This is the page manager service class. Pages are held in a tree-like structure,
@@ -44,7 +45,8 @@ import com.agiletec.aps.system.services.pagemodel.PageModel;
  * in the same level is always kept.
  * @author M.Diana - E.Santoboni
  */
-public class PageManager extends AbstractService implements IPageManager, GroupUtilizer, LangsChangedObserver {
+public class PageManager extends AbstractService 
+		implements IPageManager, GroupUtilizer, LangsChangedObserver, PageModelUtilizer {
 
 	private static final Logger _logger = LoggerFactory.getLogger(PageManager.class);
 	
@@ -383,7 +385,7 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		PageModel model = currentPage.getModel();
 		if (pos < 0 || pos >= model.getFrames().length) {
 			throw new ApsSystemException("The Position '" + pos + "' is not defined in the model '" + 
-					model.getDescr() + "' of the page '" + pageCode + "'!");
+					model.getDescription()+ "' of the page '" + pageCode + "'!");
 		}
 	}
 
@@ -435,7 +437,6 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 		} catch (Throwable t) {
 			String message = "Error during searching pages with token " + pageCodeToken;
 			_logger.error("Error during searching pages with token {}", pageCodeToken, t);
-			//ApsSystemUtils.logThrowable(t, this, "searchPages", message);
 			throw new ApsSystemException(message, t);
 		}
 		return searchResult;
@@ -530,7 +531,36 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 			this.getWidgetUtilizers(child, widgetTypeCode, widgetUtilizers);
 		}
 	}
-
+	
+	@Override
+	public List getPageModelUtilizers(String pageModelCode) throws ApsSystemException {
+		List<IPage> pages = new ArrayList<IPage>();
+		try {
+			if (null == this._pages || this._pages.isEmpty() || null == pageModelCode) {
+				return pages; 
+			}
+			IPage root = this.getRoot();
+			this.getPageModelUtilizers(root, pageModelCode, pages);
+		} catch (Throwable t) {
+			String message = "Error during searching page utilizers of page model with code " + pageModelCode;
+			_logger.error("Error during searching page utilizers of page model with code {}", pageModelCode, t);
+			throw new ApsSystemException(message, t);
+		}
+		return pages;
+	}
+	
+	private void getPageModelUtilizers(IPage page, String pageModelCode, List<IPage> pageModelUtilizers) {
+		PageModel pageModel = page.getModel();
+		if (pageModelCode.equals(pageModel.getCode())) {
+			pageModelUtilizers.add(page);
+		}
+		IPage[] children = page.getChildren();
+		for (int i = 0; i < children.length; i++) {
+			IPage child = children[i];
+			this.getPageModelUtilizers(child, pageModelCode, pageModelUtilizers);
+		}
+	}
+	
 	protected IPageDAO getPageDAO() {
 		return _pageDao;
 	}
@@ -549,5 +579,5 @@ public class PageManager extends AbstractService implements IPageManager, GroupU
 	private Map<String, IPage> _pages;
 
 	private IPageDAO _pageDao;
-
+	
 }

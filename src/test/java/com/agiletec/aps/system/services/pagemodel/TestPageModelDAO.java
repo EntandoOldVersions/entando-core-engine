@@ -70,8 +70,7 @@ public class TestPageModelDAO extends BaseTestCase {
 			Widget defWidg2 = defaultWidgets[2];
 			assertNotNull(defWidg2);
 			assertEquals("login_form", defWidg2.getType().getCode());
-			assertNotNull(defWidg2.getConfig());
-			assertTrue(defWidg2.getConfig().isEmpty());
+			assertNull(defWidg2.getConfig());
 			assertEquals("<strong>Freemarker template content</strong>", extractedMockModel.getTemplate());
 		} catch (Exception e) {
 			throw e;
@@ -91,7 +90,7 @@ public class TestPageModelDAO extends BaseTestCase {
 			this._pageModelDAO.addModel(mockModel);
 			models = this._pageModelDAO.loadModels();
 			PageModel extractedMockModel = models.get(testPageModelCode);
-			extractedMockModel.setDescr("Modified Description");
+			extractedMockModel.setDescription("Modified Description");
 			String[] frames = {"Freme 0", "Frame 1", "Frame 2", "Frame 3"};
 			extractedMockModel.setFrames(frames);
 			Widget[] extractedDefaultWidgets = new Widget[4];
@@ -126,8 +125,7 @@ public class TestPageModelDAO extends BaseTestCase {
 			Widget defWidg1 = defaultWidgets[1];
 			assertNotNull(defWidg1);
 			assertEquals("login_form", defWidg1.getType().getCode());
-			assertNotNull(defWidg1.getConfig());
-			assertTrue(defWidg1.getConfig().isEmpty());
+			assertNull(defWidg1.getConfig());
 			
 			Widget defWidg2 = defaultWidgets[2];
 			assertNull(defWidg2);
@@ -152,7 +150,7 @@ public class TestPageModelDAO extends BaseTestCase {
 	private PageModel createMockPageModel(String code) {
 		PageModel model = new PageModel();
 		model.setCode(code);
-		model.setDescr("Description of model " + code);
+		model.setDescription("Description of model " + code);
 		String[] frames = {"Freme 0", "Frame 1", "Frame 2"};
 		model.setFrames(frames);
 		Widget[] defaultWidgets = new Widget[3];

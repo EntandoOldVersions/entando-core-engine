@@ -16,25 +16,32 @@
 */
 package com.agiletec.aps.system.services.pagemodel;
 
+import com.agiletec.aps.system.exception.ApsSystemException;
 import java.util.Collection;
 
 /**
- * Interfaccia base per i servizi di gestione dei modelli di pagina.
+ * Interface of the page models manager.
  * @author E.Santoboni
  */
 public interface IPageModelManager {
 
 	/**
-	 * Restituisce il modello di pagina con il codice dato
-	 * @param name Il nome del modelo di pagina
-	 * @return Il modello di pagina richiesto
+	 * Return a Page Model by the code.
+	 * @param code The code of the Page Model
+	 * @return The required Page Model
 	 */
-	public PageModel getPageModel(String name);
-
+	public PageModel getPageModel(String code);
+	
 	/**
-	 * Restituisce la Collection completa di modelli.
-	 * @return la collection completa dei modelli disponibili in oggetti PageModel.
+	 * Return the collection of defined Page Models
+	 * @return The collection of defined Page Models
 	 */
 	public Collection<PageModel> getPageModels();
-
+	
+	public void addPageModel(PageModel pageModel) throws ApsSystemException;
+	
+	public void updatePageModel(PageModel pageModel) throws ApsSystemException;
+	
+	public void deletePageModel(String code) throws ApsSystemException;
+	
 }

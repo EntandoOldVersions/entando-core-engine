@@ -81,7 +81,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 		try {
 			code = res.getString(1);
 			pageModel.setCode(code);
-			pageModel.setDescr(res.getString(2));
+			pageModel.setDescription(res.getString(2));
 			String xmlFrames = res.getString(3);
 			if (null != xmlFrames && xmlFrames.length() > 0) {
 				PageModelDOM pageModelDOM = new PageModelDOM(xmlFrames, this.getWidgetTypeManager());
@@ -108,7 +108,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			stat = conn.prepareStatement(ADD_PAGEMODEL);
 			//code, descr, frames, plugincode, template
 			stat.setString(1, model.getCode());
-			stat.setString(2, model.getDescr());
+			stat.setString(2, model.getDescription());
 			PageModelDOM dom = new PageModelDOM(model);
 			stat.setString(3, dom.getXMLDocument());
 			String pluginCode = (StringUtils.isBlank(model.getPluginCode())) ? null : model.getPluginCode();
@@ -134,7 +134,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
 			stat = conn.prepareStatement(UPDATE_PAGEMODEL);
-			stat.setString(1, model.getDescr());
+			stat.setString(1, model.getDescription());
 			PageModelDOM dom = new PageModelDOM(model);
 			stat.setString(2, dom.getXMLDocument());
 			String pluginCode = (StringUtils.isBlank(model.getPluginCode())) ? null : model.getPluginCode();
