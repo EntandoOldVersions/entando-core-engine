@@ -29,6 +29,7 @@ import com.agiletec.apsadmin.system.ApsAdminSystemConstants;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.apsadmin.content.util.AbstractBaseTestContentAction;
 import com.opensymphony.xwork2.Action;
+import static junit.framework.Assert.assertNull;
 
 /**
  * @author E.Santoboni
@@ -91,12 +92,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		assertEquals(Action.SUCCESS, result);
 
 		result = this.executePreviewPage("", contentOnSessionMarker);
-		assertEquals(Action.SUCCESS, result);
-
-		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
-		assertNotNull(reqCtx);
-		IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-		assertEquals("contentview", currentPage.getCode());
+		assertNull(result);
 	}
 
 	public void testExecutePreviewContent_2() throws Throwable {
@@ -108,12 +104,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		assertEquals(Action.SUCCESS, result);
 
 		result = this.executePreviewPage(null, contentOnSessionMarker);
-		assertEquals(Action.SUCCESS, result);
-
-		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
-		assertNotNull(reqCtx);
-		IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-		assertEquals("contentview", currentPage.getCode());
+		assertNull(result);
 	}
 
 	public void testExecutePreviewContent_3() throws Throwable {
@@ -125,12 +116,7 @@ public class TestContentPreviewAction extends AbstractBaseTestContentAction {
 		assertEquals(Action.SUCCESS, result);
 
 		result = this.executePreviewPage("pagina_2", contentOnSessionMarker);
-		assertEquals(Action.SUCCESS, result);
-
-		RequestContext reqCtx = (RequestContext) this.getRequest().getAttribute(RequestContext.REQCTX);
-		assertNotNull(reqCtx);
-		IPage currentPage = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
-		assertEquals("pagina_2", currentPage.getCode());
+		assertNull(result);
 	}
 
 	public void testFailureExecutePreviewContent() throws Throwable {
