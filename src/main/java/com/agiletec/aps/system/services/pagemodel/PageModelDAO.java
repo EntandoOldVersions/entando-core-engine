@@ -88,6 +88,7 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 				pageModel.setDefaultWidget(pageModelDOM.getDefaultWidget());
 			}
 			pageModel.setPluginCode(res.getString(4));
+			pageModel.setTemplate(res.getString(5));
 		} catch (Throwable t) {
 			_logger.error("Error building the page model code '{}'", code, t);
 			throw new RuntimeException("Error building the page model code '" + code + "'", t);
@@ -107,6 +108,6 @@ public class PageModelDAO extends AbstractDAO implements IPageModelDAO {
 	private IWidgetTypeManager _widgetTypeManager;
 	
 	private final String ALL_PAGEMODEL = 
-		"SELECT code, descr, frames, plugincode FROM pagemodels";
+		"SELECT code, descr, frames, plugincode, template FROM pagemodels";
 	
 }

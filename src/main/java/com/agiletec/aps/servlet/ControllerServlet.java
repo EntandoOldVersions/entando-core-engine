@@ -17,81 +17,11 @@
 */
 package com.agiletec.aps.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.services.controller.ControllerManager;
-import com.agiletec.aps.util.ApsWebApplicationUtils;
-
 /**
  * Servlet di controllo, punto di ingresso per le richieste di pagine del portale.
- * Predispone il contesto di richiesta, invoca il controller e ne gestisce lo stato di uscita.
+ * @deprecated Since Entando 4.1.0, use org.entando.entando.aps.servlet.ControllerServlet
  * @author  
  */
-public class ControllerServlet extends HttpServlet {
+public class ControllerServlet extends org.entando.entando.aps.servlet.ControllerServlet {
 	
-	private static final Logger _logger = LoggerFactory.getLogger(ControllerServlet.class);
-    
-    protected void service(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        RequestContext reqCtx = new RequestContext();
-        _logger.debug("Request:" + request.getServletPath());
-        request.setAttribute(RequestContext.REQCTX, reqCtx);
-        reqCtx.setRequest(request);
-        reqCtx.setResponse(response);
-        ControllerManager controller =
-                (ControllerManager) ApsWebApplicationUtils.getBean(SystemConstants.CONTROLLER_MANAGER, request);
-        int status = controller.service(reqCtx);
-        if (status == ControllerManager.REDIRECT) {
-
-        	_logger.debug("Redirection");
-            this.redirect(reqCtx, response);
-        } else if (status == ControllerManager.OUTPUT) {
-        	_logger.debug("Output");
-        } else if (status == ControllerManager.ERROR) {
-            this.outputError(reqCtx, response);
-            _logger.debug("Error");
-        } else {
-        	_logger.error("Error: final status = {} - request: {}", ControllerManager.getStatusDescription(status),request.getServletPath());
-            throw new ServletException("Service not available");
-        }
-        return;
-    }
-    
-    private void redirect(RequestContext reqCtx, HttpServletResponse response) throws ServletException {
-        try {
-            String url = (String) reqCtx.getExtraParam(RequestContext.EXTRAPAR_REDIRECT_URL);
-            response.sendRedirect(url);
-        } catch (Exception e) {
-            throw new ServletException("Service not available", e);
-        }
-    }
-    
-    private void outputError(RequestContext reqCtx, HttpServletResponse response)
-            throws ServletException {
-        try {
-            if (!response.isCommitted()) {
-                Integer httpErrorCode = (Integer) reqCtx.getExtraParam("errorCode");
-                if (httpErrorCode == null) {
-                    httpErrorCode = new Integer(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-                }
-                response.sendError(httpErrorCode.intValue());
-            }
-        } catch (IOException e) {
-        	_logger.error("outputError", e);
-            //ApsSystemUtils.logThrowable(e, this, "outputError");
-            throw new ServletException("Service not available");
-        }
-    }
-    
 }

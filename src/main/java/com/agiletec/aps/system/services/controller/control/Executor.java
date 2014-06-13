@@ -17,22 +17,14 @@
 */
 package com.agiletec.aps.system.services.controller.control;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.controller.ControllerManager;
 
 /**
- * Implementazione del sottoservizio di controllo che 
- * genera l'output destinato al client. Questa implementazione 
- * invoca la jsp "/WEB-INF/aps/jsp/system/main.jsp"
+ * Implementazione del sottoservizio di controllo che redirezione verso i servizi esecutori.
  * @author M.Diana
  */
 public class Executor implements ControlServiceInterface {
@@ -46,29 +38,10 @@ public class Executor implements ControlServiceInterface {
 	
 	@Override
 	public int service(RequestContext reqCtx, int status) {
-		int retStatus = ControllerManager.INVALID_STATUS;
 		if (status == ControllerManager.ERROR) {
 			return status;
 		}
-		try {
-			HttpServletResponse resp = reqCtx.getResponse();
-			HttpServletRequest req = reqCtx.getRequest();
-			String jspPath = "/WEB-INF/aps/jsp/system/main.jsp";
-			req.setCharacterEncoding("UTF-8");
-			RequestDispatcher dispatcher = req.getRequestDispatcher(jspPath);
-			dispatcher.forward(req, resp);
-			_logger.debug("Executed forward to {}", jspPath);
-			retStatus = ControllerManager.OUTPUT;
-		} catch (ServletException t) {
-			_logger.error("Error while building page portal {}", reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE), t);
-			retStatus = ControllerManager.ERROR;
-			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		} catch (Throwable t) {
-			_logger.error("Error while forwarding to main.jsp", t);
-			retStatus = ControllerManager.SYS_ERROR;
-			reqCtx.setHTTPError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
-		return retStatus;
+		return ControllerManager.OUTPUT;
 	}
-
+	
 }

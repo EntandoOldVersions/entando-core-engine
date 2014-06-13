@@ -17,21 +17,25 @@
 */
 package com.agiletec.plugins.jacms.apsadmin.content;
 
-import java.util.Enumeration;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.interceptor.ServletResponseAware;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.lang.Lang;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.page.IPageManager;
+import com.agiletec.aps.system.services.url.IURLManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
+
+import java.io.IOException;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.struts2.interceptor.ServletResponseAware;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Classe action delegate alla gestione della funzione di preview contenuti.
@@ -55,7 +59,6 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 			this.setPreviewPageCode(previewPageCode);
 		} catch (Throwable t) {
 			_logger.error("error in preview", t);
-			//ApsSystemUtils.logThrowable(t, this, "preview", "Error");
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -84,13 +87,13 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 		try {
 			String pageDestCode = this.getCheckPageDestinationCode();
 			if (null == pageDestCode) return INPUT;
-			this.prepareForwardParams(pageDestCode);
+			this.prepareForward(pageDestCode);
 			this.getRequest().setCharacterEncoding("UTF-8");
 		} catch (Throwable t) {
 			_logger.error("error in executePreview", t);
 			throw new RuntimeException("error in executePreview", t);
 		}
-		return SUCCESS;
+		return null;
 	}
 	
 	protected String getCheckPageDestinationCode() {
@@ -112,20 +115,17 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 		return pageDestCode;
 	}
 	
-	private void prepareForwardParams(String pageDestCode) {
-		HttpServletRequest request = this.getRequest();
-		RequestContext reqCtx = new RequestContext();
-		reqCtx.setRequest(request);
-		reqCtx.setResponse(this.getServletResponse());
+	private void prepareForward(String pageDestCode) throws IOException {
 		Lang currentLang = this.getLangManager().getLang(this.getPreviewLangCode());
 		if (null == currentLang) {
 			currentLang = this.getLangManager().getDefaultLang();
 		}
-		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG, currentLang);
 		IPageManager pageManager = this.getPageManager();
 		IPage pageDest = pageManager.getPage(pageDestCode);
-		reqCtx.addExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE, pageDest);
-		request.setAttribute(RequestContext.REQCTX, reqCtx);
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("contentOnSessionMarker", this.getContentOnSessionMarker());
+		String redirectUrl = this.getUrlManager().createUrl(pageDest, currentLang, parameters, false);
+		this.getServletResponse().sendRedirect(redirectUrl);
 	}
 	
 	@Override
@@ -157,11 +157,19 @@ public class ContentPreviewAction extends AbstractContentAction implements ICont
 		this._pageManager = pageManager;
 	}
 	
+	public IURLManager getUrlManager() {
+		return _urlManager;
+	}
+	public void setUrlManager(IURLManager urlManager) {
+		this._urlManager = urlManager;
+	}
+	
 	private HttpServletResponse _response;
 	
 	private String _previewPageCode;
 	private String _previewLangCode;
 	
 	private IPageManager _pageManager;
+	private IURLManager _urlManager;
 	
 }

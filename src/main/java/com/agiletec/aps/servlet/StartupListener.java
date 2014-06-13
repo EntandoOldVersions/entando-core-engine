@@ -17,26 +17,11 @@
 */
 package com.agiletec.aps.servlet;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
 /**
  * Init the system when the web application is started
- * @version 1.0
+ * @deprecated Since Entando 4.1.0, use org.entando.entando.aps.servlet.ControllerServlet
  * @author
  */
-public class StartupListener extends org.springframework.web.context.ContextLoaderListener {
-
-	/**
-	 * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-	 */
-	public void contextInitialized(ServletContextEvent event) {
-		ServletContext svCtx = event.getServletContext();
-		String msg = this.getClass().getName()+ ": INIT " + svCtx.getServletContextName();
-		System.out.println(msg);
-		super.contextInitialized(event);
-		msg = this.getClass().getName() + ": INIT DONE "+ svCtx.getServletContextName();
-		System.out.println(msg);
-	}
-
+public class StartupListener extends org.entando.entando.aps.servlet.StartupListener {
+	
 }

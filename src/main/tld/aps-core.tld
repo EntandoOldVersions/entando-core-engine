@@ -25,12 +25,6 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 	</tag>
-	<tag><!-- SPECIAL SYSTEM TAG //  Use only within "main.jsp" -->
-		<description><![CDATA[Builds a page generating the output.]]></description>
-		<name>buildPage</name>
-		<tag-class>com.agiletec.aps.tags.PageBuilderTag</tag-class>
-		<body-content>empty</body-content>
-	</tag>
 	<tag>
 		<description><![CDATA[Return the list of the system categories on SelectItem objects.]]></description>
 		<name>categories</name>
@@ -76,10 +70,10 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
-	<tag><!--  SPECIAL SYSTEM TAG // Use only within pagemodels -->
-		<description><![CDATA[Performs the Content Negotiation, trying to serve the specified mimeType with the given charset.
-			If the mimeType is not accepted by the User Agent it returns the
-			default text/html.]]></description>
+	
+	<tag>
+		<description><![CDATA[<b>DEPRECATED</b>; Since Entando 4.1.0, moved function into executor service.
+			DO NOTHING.]]></description>
 		<name>contentNegotiation</name>
 		<tag-class>com.agiletec.aps.tags.ContentNegotiationTag</tag-class>
 		<body-content>empty</body-content>
@@ -96,6 +90,7 @@
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
 	</tag>
+	
 	<tag>
 		<description><![CDATA[Extension of the ResourceURL tag. It returns the URL of the css files.]]></description>
 		<name>cssURL</name>
@@ -233,19 +228,6 @@
 			<required>no</required>
 			<rtexprvalue>false</rtexprvalue>
 		</attribute>
-	</tag>
-	<tag><!-- SPECIAL SYSTEM TAG //  Use only within "main.jsp" -->
-		<description><![CDATA[Triggers the preliminary execution of the widgets.<br/>It can be used <b><b>only</b></b> in the main.jsp.]]></description>
-		<name>execWidget</name>
-		<tag-class>com.agiletec.aps.tags.ExecWidgetTag</tag-class>
-		<body-content>empty</body-content>
-	</tag>
-	<tag><!-- SPECIAL SYSTEM TAG //  Use only within "main.jsp" -->
-		<description><![CDATA[<b>DEPRECATED</b>; Since Entando 4.0.0, use "execWidget" instead.<br />Triggers the preliminary execution of the widgets.<br/>
-		It can be used <b><b>only</b></b> in the main.jsp.]]></description>
-		<name>execShowlet</name>
-		<tag-class>com.agiletec.aps.tags.ExecWidgetTag</tag-class>
-		<body-content>empty</body-content>
 	</tag>
 	<tag><!--  SPECIAL SYSTEM TAG // Use only within widgets -->
 		<description><![CDATA[Declares the information to insert in the header of the HTML page.

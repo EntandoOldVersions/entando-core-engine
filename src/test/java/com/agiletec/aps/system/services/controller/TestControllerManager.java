@@ -33,7 +33,7 @@ public class TestControllerManager extends BaseTestCase {
 		RequestContext reqCtx = this.getRequestContext();
 		ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
-		request.setServletPath("/it/homepage.wp");
+		request.setServletPath("/it/homepage.page");
 		int status = controller.service(reqCtx);
 		assertEquals(ControllerManager.OUTPUT, status);
 		
@@ -47,13 +47,13 @@ public class TestControllerManager extends BaseTestCase {
 		RequestContext reqCtx = this.getRequestContext();
 		ControllerManager controller = (ControllerManager) this.getService(SystemConstants.CONTROLLER_MANAGER);
 		MockHttpServletRequest request = (MockHttpServletRequest) reqCtx.getRequest();
-		request.setServletPath("/it/customers_page.wp");
+		request.setServletPath("/it/customers_page.page");
 		int status = controller.service(reqCtx);
 		assertEquals(ControllerManager.REDIRECT, status);
 		
 		request.setParameter("username", "admin");
 		request.setParameter("password", "admin");
-		request.setServletPath("/it/customers_page.wp");
+		request.setServletPath("/it/customers_page.page");
 		status = controller.service(reqCtx);
 		assertEquals(ControllerManager.OUTPUT, status);
 	}

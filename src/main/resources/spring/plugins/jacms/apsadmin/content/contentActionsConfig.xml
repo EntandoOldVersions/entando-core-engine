@@ -64,8 +64,12 @@
 			parent="jacmsAbstractContentAction">
 		<property name="authorizationManager" ref="AuthorizationManager"/>
 		<property name="pageManager" ref="PageManager" />
+		<property name="urlManager" ref="URLManager"/>
   	</bean>
   	
+	<bean id="jacmsPreviewWidgetExecutorAspect" 
+		  class="com.agiletec.plugins.jacms.apsadmin.content.executor.PreviewWidgetExecutorAspect" />
+	
   	<!-- Servizi e bean appositi per Content Preview - INIZIO -->
 	
 	<bean id="jacmsContentPreviewViewerHelper" class="com.agiletec.plugins.jacms.apsadmin.content.preview.ContentPreviewViewerHelper" >

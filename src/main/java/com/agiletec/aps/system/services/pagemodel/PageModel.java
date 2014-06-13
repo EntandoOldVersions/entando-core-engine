@@ -101,9 +101,9 @@ public class PageModel implements Serializable {
 	 * @deprecated Use {@link #getDefaultWidget()} instead
 	 */
 	public Widget[] getDefaultShowlet() {
-		return getDefaultWidget();
+		return this.getDefaultWidget();
 	}
-
+	
 	/**
 	 * Restituisce la configurazione dei widget di default.
 	 * @return Le showlet di default.
@@ -111,20 +111,20 @@ public class PageModel implements Serializable {
 	public Widget[] getDefaultWidget() {
 		return _defaultWidget;
 	}
-
+	
 	/**
 	 * @deprecated Use {@link #setDefaultWidget(Widget[])} instead
 	 */
 	public void setDefaultShowlet(Widget[] defaultShowlet) {
-		setDefaultWidget(defaultShowlet);
+		this.setDefaultWidget(defaultShowlet);
 	}
-
+	
 	/**
 	 * Setta la configurazione dei widget di default.
-	 * @param widgetShowlet Le showlet di default.
+	 * @param defaultWidget I widget di default.
 	 */
-	public void setDefaultWidget(Widget[] widgetShowlet) {
-		this._defaultWidget = widgetShowlet;
+	public void setDefaultWidget(Widget[] defaultWidget) {
+		this._defaultWidget = defaultWidget;
 	}
 	
 	/**
@@ -142,6 +142,13 @@ public class PageModel implements Serializable {
 	 */
 	public void setPluginCode(String pluginCode) {
 		this._pluginCode = pluginCode;
+	}
+	
+	public String getTemplate() {
+		return _template;
+	}
+	public void setTemplate(String template) {
+		this._template = template;
 	}
 	
 	/**
@@ -174,5 +181,7 @@ public class PageModel implements Serializable {
 	 * The code of the plugin owner of page model.
 	 */
 	private String _pluginCode;
+	
+	private String _template;
 	
 }

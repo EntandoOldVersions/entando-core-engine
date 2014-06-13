@@ -191,7 +191,7 @@
         		<param name="actionName">executePreview</param>
         		<param name="previewPageCode">${previewPageCode}</param>
         		<param name="previewLangCode">${previewLangCode}</param>
-        		<param name="anchorDest">jAPSContentPreview</param>
+        		<param name="anchorDest">entandoContentPreview</param>
 				<param name="contentOnSessionMarker">${contentOnSessionMarker}</param>
         	</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
@@ -199,7 +199,6 @@
         
         <action name="executePreview" class="jacmsContentPreviewAction" method="executePreview">
         	<result name="input" type="chain">entryContent</result>
-        	<result type="dispatcher">/WEB-INF/plugins/jacms/apsadmin/jsp/content/preview/main.jsp</result>
         	<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">editContents</param></interceptor-ref>
         </action>    
         

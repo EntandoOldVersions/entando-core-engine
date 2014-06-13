@@ -17,29 +17,18 @@
 */
 package com.agiletec.aps.tags;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.agiletec.aps.system.RequestContext;
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.aps.system.exception.ApsSystemException;
-import com.agiletec.aps.system.services.page.IPage;
 
 /**
  * Performs the Content Negotiation.
  * Checks whether the request Mime-type is accepted by the user Agent, eventually declaring it.
  * If the Mime-Type is not accepted by the User Agent then the default text/html is declared.
  * The given charset is appended to the declaration
+ * @deprecated from Entando 4.1.0, moved function into executor service
  * @author William Ghelfi
  */
 public class ContentNegotiationTag extends TagSupport {
-
+	/*
 	private static final Logger _logger = LoggerFactory.getLogger(ContentNegotiationTag.class);
 	
 	@Override
@@ -56,11 +45,12 @@ public class ContentNegotiationTag extends TagSupport {
 		}
 		return super.doStartTag();
 	}
-	
-	/**
+	*/
+	/*
 	 * Declares the correct contentType as resulted from the Content Negotiation
 	 * @see javax.servlet.jsp.tagext.Tag#doEndTag()
 	 */
+	/*
 	@Override
 	public int doEndTag() throws JspException {
 		ServletRequest request = this.pageContext.getRequest();
@@ -93,17 +83,19 @@ public class ContentNegotiationTag extends TagSupport {
 	public String getMimeType() {
 		return _mimeType;
 	}
+	*/
 	public void setMimeType(String mimeType) {
-		this._mimeType = mimeType;
+		//this._mimeType = mimeType;
 	}
-	
+	/*
 	public String getCharset() {
 		return _charset;
 	}
+	*/
 	public void setCharset(String charset) {
-		this._charset = charset;
+		//this._charset = charset;
 	}
-	
+	/*
 	private boolean isAcceptedMimeType() throws Throwable {
 		HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 		RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
@@ -135,10 +127,10 @@ public class ContentNegotiationTag extends TagSupport {
 	
 	private String _mimeType;
 	private String _charset;
-	
-	/**
+	*/
+	/*
 	 * Default Mime-Type to use if the given one is not accepted by the User Agent.
  	 */
-	private static final String DEFAULT_MIMETYPE = "text/html";
+	//private static final String DEFAULT_MIMETYPE = "text/html";
 	
 }

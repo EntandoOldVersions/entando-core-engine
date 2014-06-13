@@ -60,6 +60,7 @@ import com.agiletec.apsadmin.user.group.TestGroupFinderAction;
 import com.agiletec.apsadmin.user.role.TestRoleAction;
 import com.agiletec.apsadmin.user.role.TestRoleFinderAction;
 import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
+import org.entando.entando.apsadmin.common.TestActivityStream;
 import org.entando.entando.apsadmin.common.TestActivityStreamAction;
 import org.entando.entando.apsadmin.common.currentuser.TestCurrentUserProfileAction;
 import org.entando.entando.apsadmin.user.TestUserProfileAction;
@@ -127,6 +128,7 @@ public class AllTests {
 		suite.addTestSuite(TestRoleAction.class);
 		suite.addTestSuite(TestRoleFinderAction.class);
 		//Activity Stream
+		suite.addTestSuite(TestActivityStream.class);
 		suite.addTestSuite(TestActivityStreamAction.class);
 		
 		return suite;
