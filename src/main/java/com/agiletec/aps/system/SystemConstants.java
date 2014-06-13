@@ -90,6 +90,8 @@ public interface SystemConstants {
      */
     public static final String EXTRAPAR_HEAD_INFO_CONTAINER = "HeadInfoContainer";
 	
+	public static final String EXTRAPAR_EXECUTOR_BEAN_CONTAINER = "reqCtx_param_ExecutorBeanContainer";
+    
     /**
      * Nome parametro di sessione: utente corrente
      */

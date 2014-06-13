@@ -20,9 +20,8 @@ import com.agiletec.aps.system.RequestContext;
 import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.services.page.IPage;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
-import freemarker.template.Configuration;
+
 import freemarker.template.Template;
-import freemarker.template.TemplateModel;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -49,7 +48,7 @@ public class PageExecutorService implements ExecutorServiceInterface {
 	}
 	
 	@Override
-	public void service(Configuration freemarkerConfig, TemplateModel templateModel, RequestContext reqCtx) {
+	public void service(RequestContext reqCtx) {
 		HttpServletRequest request = reqCtx.getRequest();
 		HttpServletResponse response = reqCtx.getResponse();
 		try {
@@ -60,9 +59,10 @@ public class PageExecutorService implements ExecutorServiceInterface {
 				RequestDispatcher dispatcher = request.getSession().getServletContext().getRequestDispatcher(jspPath);
 				dispatcher.forward(request, response);
 			} else {
-				Template template = new Template(page.getCode(), new StringReader(model.getTemplate()), freemarkerConfig);
+				ExecutorBeanContainer ebc = (ExecutorBeanContainer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER);
+				Template template = new Template(page.getCode(), new StringReader(model.getTemplate()), ebc.getConfiguration());
 				try {
-					template.process(templateModel, response.getWriter());
+					template.process(ebc.getTemplateModel(), response.getWriter());
 				} catch (Throwable t) {
 					String msg = "Error detected while including a page model " + model.getCode();
 					_logger.error(msg, t);

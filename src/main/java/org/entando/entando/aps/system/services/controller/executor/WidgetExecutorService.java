@@ -29,9 +29,6 @@ import com.agiletec.aps.tags.util.HeadInfoContainer;
 import com.agiletec.aps.tags.util.IFrameDecoratorContainer;
 import com.agiletec.aps.util.ApsWebApplicationUtils;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateModel;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +60,7 @@ public class WidgetExecutorService implements ExecutorServiceInterface {
 	}
 	
 	@Override
-	public void service(Configuration freemarkerConfig, TemplateModel templateModel, RequestContext reqCtx) {
+	public void service(RequestContext reqCtx) {
 		try {
 			reqCtx.addExtraParam(SystemConstants.EXTRAPAR_HEAD_INFO_CONTAINER, new HeadInfoContainer());
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);

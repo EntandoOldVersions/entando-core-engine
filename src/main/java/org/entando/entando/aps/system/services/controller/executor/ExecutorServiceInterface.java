@@ -22,9 +22,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.agiletec.aps.system.RequestContext;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateModel;
-
 /**
  * @author M.Diana - E.Santoboni
  */
@@ -32,10 +29,8 @@ public interface ExecutorServiceInterface extends InitializingBean, Serializable
 	
 	/**
 	 * Esegue le operazioni specifiche del sottoservizio.
-	 * @param freemarkerConfig The freemarker configuration.
-	 * @param templateModel The freemarker model.
 	 * @param reqCtx Il contesto di richiesta.
 	 */
-	public void service(Configuration freemarkerConfig, TemplateModel templateModel, RequestContext reqCtx);
+	public void service(RequestContext reqCtx);
 
 }

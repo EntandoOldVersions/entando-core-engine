@@ -21,9 +21,6 @@ import com.agiletec.aps.system.SystemConstants;
 import com.agiletec.aps.system.exception.ApsSystemException;
 import com.agiletec.aps.system.services.page.IPage;
 
-import freemarker.template.Configuration;
-import freemarker.template.TemplateModel;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,7 +44,7 @@ public class ContentNegotiationExecutorService implements ExecutorServiceInterfa
 	}
 	
 	@Override
-	public void service(Configuration freemarkerConfig, TemplateModel templateModel, RequestContext reqCtx) {
+	public void service(RequestContext reqCtx) {
 		HttpServletResponse response = reqCtx.getResponse();
 		try {
 			String mimetype = this.extractMimeType(reqCtx);

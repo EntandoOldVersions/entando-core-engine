@@ -32,6 +32,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.entando.entando.aps.system.services.controller.executor.ExecutorBeanContainer;
 
 import org.entando.entando.aps.system.services.controller.executor.ExecutorServiceInterface;
 
@@ -81,11 +82,13 @@ public class ControllerServlet extends freemarker.ext.servlet.FreemarkerServlet 
 				config.setObjectWrapper(wrapper);
 				config.setTemplateExceptionHandler(TemplateExceptionHandler.DEBUG_HANDLER);
 				TemplateModel templateModel = super.createModel(wrapper, this.getServletContext(), request, response);
+				ExecutorBeanContainer ebc = new ExecutorBeanContainer(config, templateModel);
+				reqCtx.addExtraParam(SystemConstants.EXTRAPAR_EXECUTOR_BEAN_CONTAINER, ebc);
 				List<ExecutorServiceInterface> executors = 
 						(List<ExecutorServiceInterface>) ApsWebApplicationUtils.getBean("ExecutorServices", request);
 				for (int i = 0; i < executors.size(); i++) {
 					ExecutorServiceInterface executor = executors.get(i);
-					executor.service(config, templateModel, reqCtx);
+					executor.service(reqCtx);
 				}
 			} catch (Throwable t) {
 				_logger.error("Error building response", t);
