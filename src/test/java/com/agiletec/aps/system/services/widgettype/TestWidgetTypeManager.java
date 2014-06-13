@@ -122,7 +122,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
     
     public void testFailureDeleteWidgetType_2() throws Throwable {
-    	String widgetTypeCode = "test_showletType";
+    	String widgetTypeCode = "test_widgetType";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -139,7 +139,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
 			throw t;
 		} finally {
 			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-				this._mockWidgetTypeDAO.deleteShowletType(widgetTypeCode);
+				this._mockWidgetTypeDAO.deleteWidgetType(widgetTypeCode);
 			}
 			((IManager) this._widgetTypeManager).refresh();
 			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
@@ -147,7 +147,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
     
     public void testAddDeleteWidgetType() throws Throwable {
-    	String widgetTypeCode = "test_showletType";
+    	String widgetTypeCode = "test_widgetType";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
     		this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
@@ -165,7 +165,7 @@ public class TestWidgetTypeManager extends BaseTestCase {
     }
 
     public void testUpdateTitles() throws Throwable {
-    	String widgetTypeCode = "test_showletType";
+    	String widgetTypeCode = "test_widgetType";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -204,14 +204,14 @@ public class TestWidgetTypeManager extends BaseTestCase {
 			assertEquals("ART112", extracted.getConfig().get("contentId"));
 			
 			ApsProperties newProperties = new ApsProperties();
-	    	this._widgetTypeManager.updateShowletType(widgetTypeCode, extracted.getTitles(), newProperties);
+	    	this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup());
 	    	extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertNotNull(extracted.getConfig());
 			assertEquals(0, extracted.getConfig().size());
 			
 			newProperties.put("contentId", "EVN103");
-			this._widgetTypeManager.updateShowletType(widgetTypeCode, extracted.getTitles(), newProperties);
+			this._widgetTypeManager.updateWidgetType(widgetTypeCode, extracted.getTitles(), newProperties, type.getMainGroup());
 			extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("EVN103", extracted.getConfig().get("contentId"));

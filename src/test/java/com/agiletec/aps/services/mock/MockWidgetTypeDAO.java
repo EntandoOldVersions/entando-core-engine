@@ -32,27 +32,26 @@ public class MockWidgetTypeDAO extends AbstractDAO {
 
 	private static final Logger _logger =  LoggerFactory.getLogger(MockWidgetTypeDAO.class);
 	
-	public void deleteShowletType(String widgetTypeCode) {
+	public void deleteWidgetType(String widgetTypeCode) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
 			conn = this.getConnection();
 			conn.setAutoCommit(false);
-			stat = conn.prepareStatement(DELETE_SHOWLET_TYPE);
+			stat = conn.prepareStatement(DELETE_WIDGET_TYPE);
 			stat.setString(1, widgetTypeCode);
 			stat.executeUpdate();
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
 			_logger.error("Error deleting widget type {}", widgetTypeCode,  t);
-			throw new RuntimeException("Error deleting showlet type", t);
-			//processDaoException(t, "Error deleting showlet type", "deleteShowletType");
+			throw new RuntimeException("Error deleting widget type", t);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
 	}
 	
-	private final String DELETE_SHOWLET_TYPE =
+	private final String DELETE_WIDGET_TYPE =
 		"DELETE FROM widgetcatalog WHERE code = ?";
 	
 }

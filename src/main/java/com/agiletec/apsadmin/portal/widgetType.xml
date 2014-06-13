@@ -12,6 +12,10 @@
 				<param name="namespace">/do/Page</param>
 				<param name="actionName">viewTree</param>
 			</result>
+			<result name="inputWidgetTypes" type="chain">
+				<param name="actionName">viewWidgets</param>
+			</result>
+			<!-- 'inputShowletTypes' deprecated - use inputWidgetTypes -->
 			<result name="inputShowletTypes" type="chain">
 				<param name="actionName">viewWidgets</param>
 			</result>
@@ -46,12 +50,17 @@
 		
 		<!-- edit/create/delete widget Type - start section -->
 		
+		<action name="newWidget" class="widgetTypeAction" method="newWidget">
+			<result type="tiles">admin.Portal.showletType.entry</result>
+			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
+		</action>
+		
 		<action name="edit" class="widgetTypeAction" method="edit">
 			<result type="tiles">admin.Portal.showletType.entry</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">managePages</param></interceptor-ref>
 		</action>
 		
-		<action name="new" class="widgetTypeAction" method="newUserWidget">
+		<action name="newUserWidget" class="widgetTypeAction" method="newUserWidget">
 			<result type="tiles">admin.Portal.showletType.entry</result>
 			<interceptor-ref name="entandoDefaultStack"><param name="requestAuth.requiredPermission">superuser</param></interceptor-ref>
 		</action>
