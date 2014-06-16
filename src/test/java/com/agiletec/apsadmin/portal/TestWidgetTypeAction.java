@@ -60,7 +60,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		result = this.executeUpdate("content_viewer", "italian title", "", "admin", null);
 		assertEquals(Action.INPUT, result);
 		ActionSupport action = this.getAction();
-		assertEquals(2, action.getFieldErrors().size());
+		assertEquals(1, action.getFieldErrors().size());
 		
 		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin", "*GUI*");
 		assertEquals("inputWidgetTypes", result);
@@ -200,6 +200,8 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			
 			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
 		} catch (Throwable t) {
+			throw t;
+		} finally {
 			IPage pagina_1 = this._pageManager.getPage(pageCode);
 			pagina_1.getWidgets()[frame] = null;
 			this._pageManager.updatePage(pagina_1);
@@ -208,7 +210,6 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			}
 			((IManager) this._widgetTypeManager).refresh();
 			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
-			throw t;
 		}
 	}
 	
@@ -424,9 +425,8 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 			assertEquals(1, fieldErrors.get("widgetTypeCode").size());
 			assertEquals(1, fieldErrors.get("englishTitle").size());
 		} catch (Throwable t) {
-			throw t;
-		} finally {
 			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+			throw t;
 		}
 	}
     
