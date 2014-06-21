@@ -51,23 +51,23 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	@Override
 	public void validate() {
 		super.validate();
-		//if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) return;
 		try {
 			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
 				WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
 				if (null != type) {
 					this.addFieldError("widgetTypeCode", this.getText("error.widgetType.guiRequired"));
 				}
-			}
-			if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
+			} else if (this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 				this.checkWidgetToCopy();
 			} else if (this.getStrutsAction() == NEW_USER_WIDGET) {
 				this.checkNewUserWidget();
 			} else if (this.getStrutsAction() == ApsAdminSystemConstants.EDIT) {
 				WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
-				if (null != type) {
-					this.buildGuisFromForm(type);
+				if (null == type) {
+					this.addFieldError("widgetTypeCode", this.getText("error.widgetType.invalid.null", new String[]{this.getWidgetTypeCode()}));
+					return;
 				}
+				this.buildGuisFromForm(type);
 			}
 			if (!this.checkGui()) {
 				this.addFieldError("gui", this.getText("error.widgetType.guiRequired"));
@@ -79,21 +79,21 @@ public class WidgetTypeAction extends AbstractPortalAction {
 	}
 	
 	private boolean checkGui() throws Throwable {
-		boolean isNew = (this.getStrutsAction() == ApsAdminSystemConstants.ADD);
-		boolean isEdit = (this.getStrutsAction() == ApsAdminSystemConstants.EDIT);
-		if (!(isNew || (isEdit && null == this.getParentWidgetTypeCode()))) {
+		if (this.getStrutsAction() == NEW_USER_WIDGET || this.getStrutsAction() == ApsAdminSystemConstants.PASTE) {
 			return true;
 		}
-		if (StringUtils.isNotBlank(this.getGui())) {
+		boolean isValuedGui = StringUtils.isNotBlank(this.getGui());
+		if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+			return isValuedGui;
+		}
+		if (this.getStrutsAction() != ApsAdminSystemConstants.EDIT) {
+			throw new RuntimeException("Invalid Struts Action " + this.getStrutsAction());
+		}
+		WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
+		if (type.isLogic() || this.isInternalServletWidget(this.getWidgetTypeCode())) {
 			return true;
 		}
-		String pluginCode = null;
-		if (isEdit) {
-			WidgetType type = this.getWidgetType(this.getWidgetTypeCode());
-			if (null != type) {
-				pluginCode = type.getPluginCode();
-			}
-		}
+		String pluginCode = type.getPluginCode();
 		String jspPath = WidgetType.getJspPath(this.getWidgetTypeCode(), pluginCode);
 		String folderPath = this.getRequest().getSession().getServletContext().getRealPath("/");
 		boolean existsJsp = (new File(folderPath + jspPath)).exists();
@@ -109,7 +109,7 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			}
 		}
 		GuiFragment guiFragment = this.extractUniqueGuiFragment(this.getWidgetTypeCode());
-		if (guiFragment == null || (StringUtils.isBlank(this.getGui()) && StringUtils.isBlank(guiFragment.getDefaultGui()))) {
+		if (!isValuedGui && (guiFragment == null || StringUtils.isBlank(guiFragment.getDefaultGui()))) {
 			return false;
 		} else {
 			return true;

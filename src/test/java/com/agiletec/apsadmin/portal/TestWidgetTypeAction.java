@@ -59,46 +59,77 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		
 		result = this.executeUpdate("content_viewer", "italian title", "", "admin", null);
 		assertEquals(Action.INPUT, result);
-		ActionSupport action = this.getAction();
-		assertEquals(1, action.getFieldErrors().size());
+		assertEquals(1, this.getAction().getFieldErrors().size());
 		
 		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin", "*GUI*");
-		assertEquals("inputWidgetTypes", result);
-		action = this.getAction();
-		assertEquals(1, action.getActionErrors().size());
+		assertEquals(Action.INPUT, result);
+		assertEquals(1, this.getAction().getFieldErrors().size());
 	}
-
-	public void testUpdateTitles() throws Throwable {
-    	String widgetTypeCode = "test_widgetType";
+	
+	public void testUpdate_1() throws Throwable {
+    	String widgetTypeCode = "test_widgetType_Upd1";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+		List<String> fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+		assertEquals(0, fragmentCodes.size());
     	try {
-			WidgetType type = this.createNewWidgetType(widgetTypeCode);
+			WidgetType type = this.createNewLogicWidgetType(widgetTypeCode);
 			this._widgetTypeManager.addWidgetType(type);
 			String result = this.executeUpdate(widgetTypeCode, "", "english title", "admin", null);
 			assertEquals(Action.INPUT, result);
+			fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			assertEquals(0, fragmentCodes.size());
 			ActionSupport action = this.getAction();
-			assertEquals(2, action.getFieldErrors().size());
-			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", "*GUI*");
+			assertEquals(1, action.getFieldErrors().size());
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", null);
 			assertEquals(Action.SUCCESS, result);
 			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
 			assertNotNull(extracted);
 			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
 			assertEquals("Modified title", extracted.getTitles().get("en"));
+			fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			assertEquals(0, fragmentCodes.size());
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-				this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
-			}
-			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+			this.cleanDatabase(widgetTypeCode);
 		}
     }
 	
-	public void testUpdate() throws Throwable {
-    	String widgetTypeCode = "test_widgetType";
+	public void testUpdate_2() throws Throwable {
+    	String widgetTypeCode = "test_widgetType_Upd2";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+		List<String> fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+		assertEquals(0, fragmentCodes.size());
     	try {
 			WidgetType type = this.createNewWidgetType(widgetTypeCode);
+			this._widgetTypeManager.addWidgetType(type);
+			String result = this.executeUpdate(widgetTypeCode, "", "", "admin", null);
+			assertEquals(Action.INPUT, result);
+			fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			assertEquals(0, fragmentCodes.size());
+			ActionSupport action = this.getAction();
+			assertEquals(3, action.getFieldErrors().size());
+			assertEquals(1, action.getFieldErrors().get("gui").size());
+			result = this.executeUpdate(widgetTypeCode, "Titolo modificato", "Modified title", "admin", "** GUI **");
+			assertEquals(Action.SUCCESS, result);
+			WidgetType extracted = this._widgetTypeManager.getWidgetType(widgetTypeCode);
+			assertNotNull(extracted);
+			assertEquals("Titolo modificato", extracted.getTitles().get("it"));
+			assertEquals("Modified title", extracted.getTitles().get("en"));
+			fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+			assertEquals(1, fragmentCodes.size());
+		} catch (Throwable t) {
+			throw t;
+		} finally {
+			this.cleanDatabase(widgetTypeCode);
+		}
+    }
+	
+	public void testUpdate_3() throws Throwable {
+    	String widgetTypeCode = "test_widgetType_Upd3";
+    	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+    	try {
+			WidgetType type = this.createNewLogicWidgetType(widgetTypeCode);
 			this._widgetTypeManager.addWidgetType(type);
 			ApsProperties newProperties = new ApsProperties();
 			newProperties.put("contentId", "EVN191");
@@ -121,12 +152,23 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		} catch (Throwable t) {
 			throw t;
 		} finally {
-			if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
-				this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
-			}
-			assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+			this.cleanDatabase(widgetTypeCode);
 		}
     }
+	
+	private void cleanDatabase(String widgetTypeCode) throws Throwable {
+		List<String> fragmentCodes = this._guiFragmentManager.getGuiFragmentCodesByWidgetType(widgetTypeCode);
+		if (null != fragmentCodes) {
+			for (int i = 0; i < fragmentCodes.size(); i++) {
+				String code = fragmentCodes.get(i);
+				this._guiFragmentManager.deleteGuiFragment(code);
+			}
+		}
+		if (null != this._widgetTypeManager.getWidgetType(widgetTypeCode)) {
+			this._widgetTypeManager.deleteWidgetType(widgetTypeCode);
+		}
+		assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
+	}
 	
 	public void testFailureTrashType_1() throws Throwable {
 		String result = this.executeTrash("content_viewer", "editorCustomers");
@@ -134,20 +176,18 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 		
 		result = this.executeTrash("content_viewer", "admin");
 		assertEquals("inputWidgetTypes", result);
-		ActionSupport action = this.getAction();
-		assertEquals(1, action.getActionErrors().size());
+		assertEquals(1, this.getAction().getActionErrors().size());
 		
-		result = this.executeUpdate("invalidWidgetTitles", "italian title", "english title", "admin", "*GUI*");
+		result = this.executeTrash("invalidWidgetTitles", "admin");
 		assertEquals("inputWidgetTypes", result);
-		action = this.getAction();
-		assertEquals(1, action.getActionErrors().size());
+		assertEquals(1, this.getAction().getActionErrors().size());
 	}
 	
 	public void testFailureTrashType_2() throws Throwable {
-    	String widgetTypeCode = "test_widgetType";
+    	String widgetTypeCode = "test_widgetType_trash2";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
-			WidgetType type = this.createNewWidgetType(widgetTypeCode);
+			WidgetType type = this.createNewLogicWidgetType(widgetTypeCode);
 			type.setLocked(true);
 			this._widgetTypeManager.addWidgetType(type);
 			assertNotNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
@@ -170,7 +210,7 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
 	public void testTrashType() throws Throwable {
 		String pageCode = "pagina_1";
 		int frame = 1;
-		String widgetTypeCode = "test_widgetType";
+		String widgetTypeCode = "test_widgetType_trash3";
     	assertNull(this._widgetTypeManager.getWidgetType(widgetTypeCode));
     	try {
 			WidgetType type = this.createNewWidgetType(widgetTypeCode);
@@ -270,6 +310,11 @@ public class TestWidgetTypeAction extends ApsAdminBaseTestCase {
     	titles.put("it", "Titolo");
     	titles.put("en", "Title");
     	type.setTitles(titles);
+    	return type;
+    }
+	
+	private WidgetType createNewLogicWidgetType(String code) {
+    	WidgetType type = this.createNewWidgetType(code);
     	WidgetType parent = this._widgetTypeManager.getWidgetType("content_viewer");
     	assertNotNull(parent);
     	type.setParentType(parent);
