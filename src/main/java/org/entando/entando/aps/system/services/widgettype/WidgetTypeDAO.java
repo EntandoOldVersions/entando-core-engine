@@ -42,18 +42,18 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	private static final Logger _logger =  LoggerFactory.getLogger(WidgetTypeDAO.class);
 	
 	/**
-	 * Carica e restituisce il Map dei tipi di showlet.
-	 * @return Il map dei tipi di showlet
+	 * Return the map of the widget types
+	 * @return The map of the widget types
 	 * @deprecated Use {@link #loadWidgetTypes()} instead
 	 */
 	@Override
 	public Map<String, WidgetType> loadShowletTypes() {
 		return loadWidgetTypes();
 	}
-
+	
 	/**
-	 * Carica e restituisce il Map dei tipi di showlet.
-	 * @return Il map dei tipi di showlet
+	 * Return the map of the widget types
+	 * @return The map of the widget types
 	 */
 	@Override
 	public Map<String, WidgetType> loadWidgetTypes() {
@@ -66,26 +66,24 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			stat = conn.createStatement();
 			res = stat.executeQuery(ALL_WIDGET_TYPES);
 			while (res.next()) {
-				WidgetType widgetType = this.showletTypeFromResultSet(res);
+				WidgetType widgetType = this.createWidgetTypeFromResultSet(res);
 				widgetTypes.put(widgetType.getCode(), widgetType);
 			}
 		} catch (Throwable t) {
 			_logger.error("Error loading widgets",  t);
 			throw new RuntimeException("Error loading widgets", t);
-			//processDaoException(t, "Error loading showlets", "loadShowletTypes");
 		} finally{
 			closeDaoResources(res, stat, conn);
 		}
 		return widgetTypes;
 	}
-
-	/**
-	 * Costruisce e restituisce un tipo di showlet leggendo una riga di recordset.
-	 * @param res Il resultset da leggere.
-	 * @return Il tipo di showlet generato.
-	 * @throws ApsSystemException In caso di errore
-	 */
+	
+	@Deprecated
 	protected WidgetType showletTypeFromResultSet(ResultSet res) throws ApsSystemException {
+		return this.createWidgetTypeFromResultSet(res);
+	}
+	
+	protected WidgetType createWidgetTypeFromResultSet(ResultSet res) throws ApsSystemException {
 		WidgetType widgetType = new WidgetType();
 		String code = null;
 		try {
@@ -121,14 +119,19 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error parsing the Widget Type '{}'", code, t);
-			//ApsSystemUtils.logThrowable(t, this, "showletTypeFromResultSet", "Error parsing the Widget Type '" + code + "'");
 			throw new ApsSystemException("Error in the parsing in the Widget Type '" + code + "'", t);
 		}
 		return widgetType;
 	}
 	
 	@Override
+	@Deprecated
 	public void addShowletType(WidgetType widgetType) {
+		this.addWidgetType(widgetType);
+	}
+	
+	@Override
+	public void addWidgetType(WidgetType widgetType) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -163,16 +166,13 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			this.executeRollback(conn);
 			_logger.error("Error while adding a new widget type",  t);
 			throw new RuntimeException("Error while adding a new widget type", t);
-			//processDaoException(t, "Error while adding a new showlet type", "addShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
 	}
 	
-	/**
-	 * @deprecated Use {@link #deleteWidgetType(String)} instead
-	 */
 	@Override
+	@Deprecated
 	public void deleteShowletType(String showletTypeCode) {
 		deleteWidgetType(showletTypeCode);
 	}
@@ -191,9 +191,8 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			conn.commit();
 		} catch (Throwable t) {
 			this.executeRollback(conn);
-			_logger.error("Error deleting showlet type '{}'", widgetTypeCode, t);
-			throw new RuntimeException("Error deleting showlet type", t);
-			//processDaoException(t, "Error deleting showlet type", "deleteShowletType");
+			_logger.error("Error deleting widget type '{}'", widgetTypeCode, t);
+			throw new RuntimeException("Error deleting widget type", t);
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -201,7 +200,7 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 	
 	@Override
 	@Deprecated
-	public void updateShowletTypeTitles(String widgetTypeCode,	ApsProperties titles) {
+	public void updateShowletTypeTitles(String widgetTypeCode, ApsProperties titles) {
 		Connection conn = null;
 		PreparedStatement stat = null;
 		try {
@@ -216,7 +215,6 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			this.executeRollback(conn);
 			_logger.error("Error updating titles for showlet type {}", widgetTypeCode,  t);
 			throw new RuntimeException("Error updating showlet type titles", t);
-			//processDaoException(t, "Error updating showlet type titles", "updateShowletTypeTitles");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
@@ -244,16 +242,13 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			this.executeRollback(conn);
 			_logger.error("Error updating widget type",  t);
 			throw new RuntimeException("Error updating widget type", t);
-			//processDaoException(t, "Error updating showlet type", "updateShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}
 	}
 	
-	/**
-	 * @deprecated Use {@link #updateWidgetType(String,ApsProperties,ApsProperties,String)} instead
-	 */
 	@Override
+	@Deprecated
 	public void updateShowletType(String showletTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) {
 		updateWidgetType(showletTypeCode, titles, defaultConfig, mainGroup);
 	}
@@ -280,7 +275,6 @@ public class WidgetTypeDAO extends AbstractDAO implements IWidgetTypeDAO {
 			this.executeRollback(conn);
 			_logger.error("Error updating widget type {}", widgetTypeCode,  t);
 			throw new RuntimeException("Error updating widget type", t);
-			//processDaoException(t, "Error updating showlet type", "updateShowletType");
 		} finally {
 			closeDaoResources(null, stat, conn);
 		}

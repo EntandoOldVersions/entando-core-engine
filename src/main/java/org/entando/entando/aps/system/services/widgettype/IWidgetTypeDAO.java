@@ -22,30 +22,41 @@ import java.util.Map;
 import com.agiletec.aps.util.ApsProperties;
 
 /**
- * Interfaccia base per Data Access Object dei tipi di showlet (WidgetType).
+ * Interfaccia base per Data Access Object dei tipi di widget (WidgetType).
  * @author E.Santoboni
  */
 public interface IWidgetTypeDAO {
 	
 	/**
+	 * Return the map of the widget types
+	 * @return The map of the widget types
 	 * @deprecated Use {@link #loadWidgetTypes()} instead
 	 */
 	public Map<String, WidgetType> loadShowletTypes();
 
 	/**
-	 * Carica e restituisce il Map dei tipi di showlet.
-	 * @return Il map dei tipi di showlet
+	 * Return the map of the widget types
+	 * @return The map of the widget types
 	 */
 	public Map<String, WidgetType> loadWidgetTypes();
 	
+	@Deprecated
 	public void addShowletType(WidgetType showletType);
 	
+	public void addWidgetType(WidgetType widgetType);
+	
 	/**
+	 * Delete a widget type.
+	 * @param showletTypeCode The code of widget type to delete
 	 * @deprecated Use {@link #deleteWidgetType(String)} instead
 	 */
 	public void deleteShowletType(String showletTypeCode);
-
-	public void deleteWidgetType(String showletTypeCode);
+	
+	/**
+	 * Delete a widget type.
+	 * @param widgetTypeCode The code of widget type to delete
+	 */
+	public void deleteWidgetType(String widgetTypeCode);
 	
 	@Deprecated
 	public void updateShowletTypeTitles(String showletTypeCode, ApsProperties titles);

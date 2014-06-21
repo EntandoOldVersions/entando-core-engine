@@ -142,7 +142,7 @@ public class WidgetTypeManager extends AbstractService
 			if (null != widgetType.getTypeParameters() && null != widgetType.getConfig()) {
 				throw new ApsSystemException("ERROR : Params not null and config not null");
 			}
-			this.getWidgetTypeDAO().addShowletType(widgetType);
+			this.getWidgetTypeDAO().addWidgetType(widgetType);
 			this._widgetTypes.put(widgetType.getCode(), widgetType);
 		} catch (Throwable t) {
 			_logger.error("Error adding a Widget Type", t);
