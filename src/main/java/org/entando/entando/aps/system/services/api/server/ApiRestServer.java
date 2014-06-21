@@ -265,7 +265,6 @@ public class ApiRestServer {
 			return MediaType.APPLICATION_XML_TYPE;
 		}
 		String extension = pathInfo.substring(index+1);
-		System.out.println("************* " + extension);
 		if (extension.equalsIgnoreCase("json")) {
 			return MediaType.APPLICATION_JSON_TYPE;
 		} else {
