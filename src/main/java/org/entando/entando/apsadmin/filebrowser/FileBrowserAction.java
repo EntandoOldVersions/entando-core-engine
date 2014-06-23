@@ -56,6 +56,7 @@ public class FileBrowserAction extends BaseAction {
 			this.setFileText(text);
 		} catch (Throwable t) {
 			_logger.error("error editing file, fullPath: {}", this.getCurrentPath(), t);
+			return FAILURE;
 		}
 		return SUCCESS;
 	}
@@ -77,6 +78,8 @@ public class FileBrowserAction extends BaseAction {
 	
 	public String upload() {
 		try {
+			String result = this.checkExistingFileExtension(this.getCurrentPath(), this.getUploadFileName(), false);
+			if (null != result) return result;
 			this.getStorageManager().saveFile(this.getCurrentPath() + this.getUploadFileName(), false, this.getInputStream());
 		} catch (Throwable t) {
 			_logger.error("error in upload", t);
@@ -93,7 +96,7 @@ public class FileBrowserAction extends BaseAction {
 	public String delete() {
 		try {
 			if (null == this.isDeleteFile()) {
-				this.addActionError(this.getText("filebrowser.error.delete.missingInformation"));
+				this.addActionError(this.getText("error.filebrowser.delete.missingInformation"));
 				return INPUT;
 			}
 			String subPath = this.getCurrentPath() + this.getFilename();
@@ -117,6 +120,9 @@ public class FileBrowserAction extends BaseAction {
 				filename += "." + this.getTextFileExtension();
 			}
 			String result = this.validateTextFileExtension(filename);
+			if (null != result) return result;
+			boolean expectedExist = (this.getStrutsAction() == ApsAdminSystemConstants.EDIT);
+			result = this.checkExistingFileExtension(this.getCurrentPath(), filename, expectedExist);
 			if (null != result) return result;
 			this.getStorageManager().editFile(this.getCurrentPath() + filename, false, stream);
 		} catch (Throwable t) {
@@ -144,7 +150,21 @@ public class FileBrowserAction extends BaseAction {
 	
 	protected String validateTextFileExtension(String filename) {
 		if (!this.isTextFile(filename)) {
-			this.addFieldError("textFileExtension", this.getText("filebrowser.error.addTextFile.wrongExtension"));
+			this.addFieldError("textFileExtension", this.getText("error.filebrowser.addTextFile.wrongExtension"));
+			return INPUT;
+		}
+		return null;
+	}
+	
+	protected String checkExistingFileExtension(String path, String filename, boolean expected) throws Throwable {
+		boolean exist = this.getStorageManager().exists(path + filename, false);
+		if (exist != expected) {
+			String[] args = new String[]{filename};
+			if (expected) {
+				this.addFieldError("filename", this.getText("error.filebrowser.file.doesNotExist", args));
+			} else {
+				this.addFieldError("filename", this.getText("error.filebrowser.file.exist", args));
+			}
 			return INPUT;
 		}
 		return null;
@@ -154,7 +174,7 @@ public class FileBrowserAction extends BaseAction {
 		try {
 			this.getStorageManager().createDirectory(this.getCurrentPath() + this.getDirname(), false);
 		} catch (Throwable t) {
-			_logger.error("error creating dir, fullPath: {} text:  {}", this.getCurrentPath(), this.getDirname(), t);
+			_logger.error("error creating dir, fullPath: {} text: {}", this.getCurrentPath(), this.getDirname(), t);
 			return FAILURE;
 		}
 		return SUCCESS;
@@ -164,7 +184,7 @@ public class FileBrowserAction extends BaseAction {
 		try {
 			InputStream is = this.getStorageManager().getStream(this.getCurrentPath() + this.getFilename(), false);
 			if (null == is) {
-				this.addActionError(this.getText("filebrowser.error.download.missingFile"));
+				this.addActionError(this.getText("error.filebrowser.download.missingFile"));
 				return INPUT;
 			}
 			this.setDownloadInputStream(is);

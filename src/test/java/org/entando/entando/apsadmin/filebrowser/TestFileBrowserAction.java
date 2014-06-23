@@ -124,6 +124,12 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 			String result = this.executeAddTextFile("admin", path, filename, extension, text);
 			assertEquals(Action.SUCCESS, result);
 			assertTrue(this._localStorageManager.exists(fullPath, false));
+			
+			result = this.executeAddTextFile("admin", path, filename, extension, text);
+			assertEquals(Action.INPUT, result);
+			assertEquals(1, this.getAction().getFieldErrors().size());
+			assertEquals(1, this.getAction().getFieldErrors().get("filename").size());
+			
 			String extractedText = this._localStorageManager.readFile(fullPath, false);
 			assertEquals(text, extractedText);
 			this._localStorageManager.deleteFile(fullPath, false);
