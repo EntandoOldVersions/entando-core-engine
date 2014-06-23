@@ -66,6 +66,7 @@ import org.entando.entando.apsadmin.api.TestApiServiceFinderAction;
 import org.entando.entando.apsadmin.common.TestActivityStream;
 import org.entando.entando.apsadmin.common.TestActivityStreamAction;
 import org.entando.entando.apsadmin.common.currentuser.TestCurrentUserProfileAction;
+import org.entando.entando.apsadmin.filebrowser.TestFileBrowserAction;
 import org.entando.entando.apsadmin.portal.guifragment.TestGuiFragmentAction;
 import org.entando.entando.apsadmin.portal.model.TestPageModelAction;
 import org.entando.entando.apsadmin.portal.model.TestPageModelFinderAction;
@@ -135,12 +136,17 @@ public class AllTests {
 		//Role
 		suite.addTestSuite(TestRoleAction.class);
 		suite.addTestSuite(TestRoleFinderAction.class);
+		
 		//Activity Stream
 		suite.addTestSuite(TestActivityStream.class);
 		suite.addTestSuite(TestActivityStreamAction.class);
 		
+		//File Browser
+		suite.addTestSuite(TestFileBrowserAction.class);
+		
 		//Fragment
 		suite.addTestSuite(TestGuiFragmentAction.class);
+		
 		return suite;
 	}
     

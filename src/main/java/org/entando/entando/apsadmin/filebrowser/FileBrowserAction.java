@@ -27,7 +27,6 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +51,7 @@ public class FileBrowserAction extends BaseAction {
 		try {
 			String result = this.validateTextFileExtension(this.getFilename());
 			if (null != result) return result;
+			this.setStrutsAction(ApsAdminSystemConstants.EDIT);
 			String text = this.getStorageManager().readFile(this.getCurrentPath() + this.getFilename(), false);
 			this.setFileText(text);
 		} catch (Throwable t) {
@@ -61,12 +61,17 @@ public class FileBrowserAction extends BaseAction {
 	}
 	
 	public String newFile() {
-		this.setStrutsAction(ApsAdminSystemConstants.ADD);
+		this.setStrutsAction(ADD_NEW_FILE);
+		return SUCCESS;
+	}
+	
+	public String uploadNewFile() {
+		this.setStrutsAction(UPLOAD_NEW_FILE);
 		return SUCCESS;
 	}
 	
 	public String newDirectory() {
-		this.setStrutsAction(ApsAdminSystemConstants.ADD);
+		this.setStrutsAction(ADD_NEW_DIRECTORY);
 		return SUCCESS;
 	}
 	
@@ -77,6 +82,11 @@ public class FileBrowserAction extends BaseAction {
 			_logger.error("error in upload", t);
 			return FAILURE;
 		}
+		return SUCCESS;
+	}
+	
+	public String trash() {
+		this.setStrutsAction(ApsAdminSystemConstants.DELETE);
 		return SUCCESS;
 	}
 	
@@ -103,7 +113,7 @@ public class FileBrowserAction extends BaseAction {
 		try {
 			InputStream stream = new ByteArrayInputStream(this.getFileText().getBytes());
 			String filename = this.getFilename();
-			if (this.getStrutsAction() == ApsAdminSystemConstants.ADD) {
+			if (this.getStrutsAction() == ADD_NEW_FILE) {
 				filename += "." + this.getTextFileExtension();
 			}
 			String result = this.validateTextFileExtension(filename);
@@ -134,7 +144,7 @@ public class FileBrowserAction extends BaseAction {
 	
 	protected String validateTextFileExtension(String filename) {
 		if (!this.isTextFile(filename)) {
-			this.addActionError(this.getText("filebrowser.error.addTextFile.wrongExtension"));
+			this.addFieldError("textFileExtension", this.getText("filebrowser.error.addTextFile.wrongExtension"));
 			return INPUT;
 		}
 		return null;
@@ -355,5 +365,9 @@ public class FileBrowserAction extends BaseAction {
 	private String _downloadContentType;
 	
 	private IStorageManager _storageManager;
+	
+	public static final int ADD_NEW_FILE = 11;
+	public static final int ADD_NEW_DIRECTORY = 12;
+	public static final int UPLOAD_NEW_FILE = 13;
 	
 }
