@@ -53,6 +53,9 @@ public class PageExecutorService implements ExecutorServiceInterface {
 		HttpServletRequest request = reqCtx.getRequest();
 		HttpServletResponse response = reqCtx.getResponse();
 		try {
+			if (response.isCommitted()) {
+				return;
+			}
 			IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 			PageModel model = page.getModel();
 			if (StringUtils.isBlank(model.getTemplate())) {

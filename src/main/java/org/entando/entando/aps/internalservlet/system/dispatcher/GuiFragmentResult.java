@@ -124,6 +124,8 @@ public class GuiFragmentResult extends ServletDispatcherResult {
 				boolean execution = this.executeDispatcherResult(invocation);
 				if (!execution) {
 					output = "The fragment '" + code + "' is not available";
+				} else {
+					return;
 				}
 			}
 			RequestContext reqCtx = (RequestContext) req.getAttribute(RequestContext.REQCTX);
