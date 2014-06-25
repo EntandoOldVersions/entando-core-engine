@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.system.tiles.impl;
+package org.entando.entando.apsadmin.system.tiles.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,22 +30,22 @@ import javax.servlet.ServletContext;
 import org.apache.tiles.impl.BasicTilesContainer;
 
 /**
-* @see com.agiletec.plugins.struts2.tiles.JapsStrutsTilesListener
-* @author zuanni G.Cocco
-*/
-public class JapsBasicTilesContainer extends BasicTilesContainer {
+ * @see org.entando.entando.apsadmin.system.tiles.EntandoStrutsTilesListener
+ * @author zuanni G.Cocco
+ */
+public class EntandoBasicTilesContainer extends BasicTilesContainer {
 	
 	@Override
 	public List<String> getResourceNames(String resourceString) {
 		StringTokenizer tokenizer = new StringTokenizer(resourceString, ",");
 		List<String> filenames = new ArrayList<String>();
-		System.out.println(com.agiletec.apsadmin.system.tiles.impl.JapsBasicTilesContainer.class.getName() + " Tiles Conf files: ");
+		System.out.println(EntandoBasicTilesContainer.class.getName() + " Tiles Conf files: ");
 		while (tokenizer.hasMoreTokens()) {
 			String currentFilename = tokenizer.nextToken().trim();
 			int index = currentFilename.indexOf(AXTER);
 			if (-1 == index) {
 				filenames.add(currentFilename);
-				System.out.println(com.agiletec.apsadmin.system.tiles.impl.JapsBasicTilesContainer.class.getName() + " " + currentFilename);
+				System.out.println(EntandoBasicTilesContainer.class.getName() + " " + currentFilename);
 			} else {
 				List<String> confFiles = new ArrayList<String>();
 				String rootInspectionDir = currentFilename.substring(0, index);
@@ -64,7 +64,7 @@ public class JapsBasicTilesContainer extends BasicTilesContainer {
 				String current = it.next();
 				if (!current.endsWith("/") && this.isConfResource(current, currentFilenamesConf)) {
 					confFiles.add(current);
-					System.out.println(com.agiletec.apsadmin.system.tiles.impl.JapsBasicTilesContainer.class.getName() + " " + current);
+					System.out.println(EntandoBasicTilesContainer.class.getName() + " " + current);
 				} else {
 					this.inspectResources(currentFilenamesConf, current, confFiles);
 				}

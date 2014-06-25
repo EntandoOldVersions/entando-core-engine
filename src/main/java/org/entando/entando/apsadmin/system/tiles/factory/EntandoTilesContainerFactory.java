@@ -15,7 +15,7 @@
 * Copyright 2013 Entando S.r.l. (http://www.entando.com) All rights reserved.
 *
 */
-package com.agiletec.apsadmin.system.tiles.factory;
+package org.entando.entando.apsadmin.system.tiles.factory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,38 +26,39 @@ import org.apache.tiles.TilesContainer;
 import org.apache.tiles.TilesException;
 import org.apache.tiles.factory.TilesContainerFactory;
 
-import com.agiletec.apsadmin.system.tiles.impl.JapsBasicTilesContainer;
+import org.entando.entando.apsadmin.system.tiles.EntandoStrutsTilesListener;
+import org.entando.entando.apsadmin.system.tiles.impl.EntandoBasicTilesContainer;
 
 /**
-* @see com.agiletec.plugins.struts2.tiles.JapsStrutsTilesListener
-* @version 1.0
-* @author zuanni G.Cocco
-*/
-public class JapsTilesContainerFactory extends TilesContainerFactory {
+ * @see org.entando.entando.apsadmin.system.tiles.EntandoStrutsTilesListener
+ * @author zuanni G.Cocco
+ */
+public class EntandoTilesContainerFactory extends TilesContainerFactory {
 	 
 	private static final Map<String, String> DEFAULTS = new HashMap<String, String>();
 
 	static {
-	        DEFAULTS.put(CONTAINER_FACTORY_INIT_PARAM, JapsTilesContainerFactory.class.getName());
+	        DEFAULTS.put(CONTAINER_FACTORY_INIT_PARAM, EntandoTilesContainerFactory.class.getName());
 	}
 	
-	public static JapsTilesContainerFactory getFactory(Object context) throws TilesException {
+	public static EntandoTilesContainerFactory getFactory(Object context) throws TilesException {
 		return getMyFactory(context, DEFAULTS);
 	}
 
-	public static JapsTilesContainerFactory getMyFactory(Object context, Map<String, String> defaults) throws TilesException {
+	public static EntandoTilesContainerFactory getMyFactory(Object context, Map<String, String> defaults) throws TilesException {
 		Map<String, String> configuration = new HashMap<String, String>(defaults);
 		configuration.putAll(getInitParameterMap(context));
-		JapsTilesContainerFactory factory =
-			(JapsTilesContainerFactory) JapsTilesContainerFactory.createFactory(configuration,
+		EntandoTilesContainerFactory factory =
+			(EntandoTilesContainerFactory) EntandoTilesContainerFactory.createFactory(configuration,
 					CONTAINER_FACTORY_INIT_PARAM);
 		factory.setDefaultConfiguration(defaults);
 		return factory;
 	}
 	
+	@Override
 	public TilesContainer createTilesContainer(Object context) throws TilesException {
 		ServletContext servletContext = (ServletContext) context;
-		JapsBasicTilesContainer container = new JapsBasicTilesContainer();
+		EntandoBasicTilesContainer container = new EntandoBasicTilesContainer();
 		container.setServletContext(servletContext);
 		this.initializeContainer(context, container);
 		return container;
