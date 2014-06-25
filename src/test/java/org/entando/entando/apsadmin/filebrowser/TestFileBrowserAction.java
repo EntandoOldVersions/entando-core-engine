@@ -22,6 +22,10 @@ import com.agiletec.apsadmin.ApsAdminBaseTestCase;
 import com.opensymphony.xwork2.Action;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.fail;
 import org.entando.entando.aps.system.services.storage.BasicFileAttributeView;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.slf4j.Logger;
@@ -41,12 +45,31 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 	}
 	
 	public void testBrowseFileSystemWithUserNotAllowed() throws Throwable {
-		String result = this.executeList("developersConf", null);
+		String result = this.executeList("developersConf", null, null);
 		assertEquals("apslogin", result);
 	}
 	
 	public void testBrowseFileSystem_1() throws Throwable {
-		String result = this.executeList("admin", null);
+		String result = this.executeList("admin", null, null);
+		assertEquals(Action.SUCCESS, result);
+		FileBrowserAction action = (FileBrowserAction) super.getAction();
+		BasicFileAttributeView[] fileAttributes = action.getFilesAttributes();
+		assertNotNull(fileAttributes);
+		assertEquals(2, fileAttributes.length);
+		for (int i = 0; i < fileAttributes.length; i++) {
+			BasicFileAttributeView bfav = fileAttributes[i];
+			assertTrue(bfav instanceof RootFolderAttributeView);
+			assertTrue(bfav.isDirectory());
+			if (i == 0) {
+				assertEquals("public", bfav.getName());
+			} else {
+				assertEquals("protected", bfav.getName());
+			}
+		}
+	}
+	
+	public void testBrowseFileSystem_2() throws Throwable {
+		String result = this.executeList("admin", null, false);
 		assertEquals(Action.SUCCESS, result);
 		FileBrowserAction action = (FileBrowserAction) super.getAction();
 		BasicFileAttributeView[] fileAttributes = action.getFilesAttributes();
@@ -71,8 +94,8 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		assertTrue(containsConf);
 	}
 	
-	public void testBrowseFileSystem_2() throws Throwable {
-		String result = this.executeList("admin", "conf" + File.separator);
+	public void testBrowseFileSystem_3() throws Throwable {
+		String result = this.executeList("admin", "conf" + File.separator, false);
 		assertEquals(Action.SUCCESS, result);
 		FileBrowserAction action = (FileBrowserAction) super.getAction();
 		BasicFileAttributeView[] fileAttributes = action.getFilesAttributes();
@@ -94,18 +117,18 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 	public void testValidateAddTextFile() throws Throwable {
 		String path = "conf" + File.separator;
 		try {
-			String result = this.executeAddTextFile("developersConf", path, "filename", "css", "content");
+			String result = this.executeAddTextFile("developersConf", path, "filename", "css", "content", false);
 			assertEquals("apslogin", result);
 			
-			result = this.executeAddTextFile("admin", path, "", "", "content");
+			result = this.executeAddTextFile("admin", path, "", "", "content", false);
 			assertEquals(Action.INPUT, result);
 			assertEquals(2, this.getAction().getFieldErrors().size());
 			
-			result = this.executeAddTextFile("admin", path, "filename", "", "");
+			result = this.executeAddTextFile("admin", path, "filename", "", "", false);
 			assertEquals(Action.INPUT, result);
 			assertEquals(1, this.getAction().getFieldErrors().size());
 			
-			result = this.executeAddTextFile("admin", path, "filename", "exe", "content");
+			result = this.executeAddTextFile("admin", path, "filename", "exe", "content", false);
 			assertEquals(Action.INPUT, result);
 			assertEquals(1, this.getAction().getFieldErrors().size());
 			
@@ -121,11 +144,11 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		String fullPath = path + filename + "." + extension;
 		String text = "This is the content";
 		try {
-			String result = this.executeAddTextFile("admin", path, filename, extension, text);
+			String result = this.executeAddTextFile("admin", path, filename, extension, text, false);
 			assertEquals(Action.SUCCESS, result);
 			assertTrue(this._localStorageManager.exists(fullPath, false));
 			
-			result = this.executeAddTextFile("admin", path, filename, extension, text);
+			result = this.executeAddTextFile("admin", path, filename, extension, text, false);
 			assertEquals(Action.INPUT, result);
 			assertEquals(1, this.getAction().getFieldErrors().size());
 			assertEquals(1, this.getAction().getFieldErrors().get("filename").size());
@@ -151,7 +174,7 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 			assertFalse(this._localStorageManager.exists(fullPath, false));
 			this._localStorageManager.saveFile(fullPath, false, new ByteArrayInputStream(text.getBytes()));
 			assertTrue(this._localStorageManager.exists(fullPath, false));
-			String result = this.executeDeleteFile("admin", path, fullFilename, true);
+			String result = this.executeDeleteFile("admin", path, fullFilename, true, false);
 			assertEquals(Action.SUCCESS, result);
 			assertFalse(this._localStorageManager.exists(fullPath, false));
 		} catch (Throwable t) {
@@ -160,15 +183,18 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		}
 	}
 	
-	private String executeList(String currentUser, String path) throws Throwable {
+	private String executeList(String currentUser, String path, Boolean isProtected) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/FileBrowser", "list");
 		this.addParameter("currentPath", path);
+		if (null != isProtected) {
+			this.addParameter("protectedFolder", isProtected.toString());
+		}
 		return this.executeAction();
 	}
 	
 	private String executeAddTextFile(String currentUser, String currentPath, 
-			String filename, String extension, String content) throws Throwable {
+			String filename, String extension, String content, Boolean isProtected) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/FileBrowser", "save");
 		this.addParameter("currentPath", currentPath);
@@ -176,16 +202,22 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		this.addParameter("textFileExtension", extension);
 		this.addParameter("fileText", content);
 		this.addParameter("strutsAction", FileBrowserAction.ADD_NEW_FILE);
+		if (null != isProtected) {
+			this.addParameter("protectedFolder", isProtected.toString());
+		}
 		return this.executeAction();
 	}
 	
 	private String executeDeleteFile(String currentUser, String currentPath, 
-			String filename, boolean deleteFile) throws Throwable {
+			String filename, boolean deleteFile, Boolean isProtected) throws Throwable {
 		this.setUserOnSession(currentUser);
 		this.initAction("/do/FileBrowser", "delete");
 		this.addParameter("currentPath", currentPath);
 		this.addParameter("filename", filename);
 		this.addParameter("deleteFile", new Boolean(deleteFile).toString());
+		if (null != isProtected) {
+			this.addParameter("protectedFolder", isProtected.toString());
+		}
 		return this.executeAction();
 	}
 	
