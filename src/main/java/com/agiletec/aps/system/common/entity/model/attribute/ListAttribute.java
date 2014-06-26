@@ -215,25 +215,18 @@ public class ListAttribute extends AbstractListAttribute {
         }
     }
     
-    @Override
-    public Status getStatus() {
-        boolean valued = true;
-        ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
-        List<Lang> langs = langManager.getLangs();
-        for (int i = 0; i < langs.size(); i++) {
-            Lang lang = langs.get(i);
-            List<AttributeInterface> attributeList = this.getAttributeList(lang.getCode());
-            if (attributeList == null || attributeList.isEmpty()) {
-                valued = false;
-                break;
-            }
-        }
-        if (valued) {
-            return Status.VALUED;
-        } else {
-            return Status.EMPTY;
-        }
-    }
+	@Override
+	public Status getStatus() {
+		ILangManager langManager = (ILangManager) this.getBeanFactory().getBean(SystemConstants.LANGUAGE_MANAGER, ILangManager.class);
+		Lang defaultLang = langManager.getDefaultLang();
+		List<AttributeInterface> attributeList = this.getAttributeList(defaultLang.getCode());
+		boolean valued = (null != attributeList && !attributeList.isEmpty());
+		if (valued) {
+			return Status.VALUED;
+		} else {
+			return Status.EMPTY;
+		}
+	}
     
     @Override
     public List<AttributeFieldError> validate(AttributeTracer tracer) {
