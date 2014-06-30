@@ -24,37 +24,32 @@ import java.util.Properties;
 import javax.servlet.ServletRequest;
 
 /**
- * 
- * @version 1.0
  * @author E.Santoboni
  */
 public class ApsRequestParamsUtil {
 	
-	public static String[] splitParam(String pname, String separator) {
+	protected static String[] splitParam(String pname, String separator) {
+        return purgeParameter(pname).split(separator);
+	}
+	
+	protected static String purgeParameter(String pname) {
         if (pname.endsWith(".x") || pname.endsWith(".y")) {
-        	return pname.substring(0, pname.length()-2).split(separator);
+        	return pname.substring(0, pname.length()-2);
         }
-        return pname.split(separator);
+        return pname;
 	}
 	
 	public static String[] getApsParams(String paramPrefix, String separator, ServletRequest request) {
 		String[] apsParams = null;
-		Enumeration params = request.getParameterNames();
-        while (params.hasMoreElements()) {
-        	String pname = (String) params.nextElement();
-        	if (pname.startsWith("action:")) {
-        		pname = pname.substring("action:".length());
-        	}
-        	if (pname.startsWith(paramPrefix)) {
-        		apsParams = splitParam(pname, separator);
-        		break;
-        	}
-        }
-        return apsParams;
+		String entandoActionName = extractEntandoActionName(request);
+		if (null != entandoActionName && entandoActionName.startsWith(paramPrefix)) {
+			apsParams = splitParam(entandoActionName, separator);
+		}
+		return apsParams;
 	}
 	
 	public static String createApsActionParam(String action, Properties params) {
-		StringBuffer buffer = new StringBuffer(action);
+		StringBuilder buffer = new StringBuilder(action);
 		if (params.size()>0) {
 			buffer.append("?");
 			Iterator keys = params.keySet().iterator();
@@ -69,5 +64,44 @@ public class ApsRequestParamsUtil {
 		}
 		return buffer.toString();
 	}
+	
+	public static String extractEntandoActionName(ServletRequest request) {
+		String entandoActionName = null;
+		Enumeration params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+        	String pname = (String) params.nextElement();
+        	if (pname.startsWith(ACTION_PREFIX)) {
+        		entandoActionName = pname.substring(ACTION_PREFIX.length());
+        		break;
+        	}
+        	if (pname.startsWith(ENTANDO_ACTION_PREFIX)) {
+        		entandoActionName = pname.substring(ENTANDO_ACTION_PREFIX.length());
+        		break;
+        	}
+        }
+		if (null != entandoActionName) {
+			entandoActionName = purgeParameter(entandoActionName);
+		}
+		return entandoActionName;
+	}
+	
+	public static Properties extractApsActionParameters(String entandoActionName) {
+		Properties properties = new Properties();
+		String[] blocks = entandoActionName.split("[?]");
+		if (blocks.length == 2) {
+			String paramBlock = blocks[1];
+			String[] params = paramBlock.split(";");
+			for (int i=0; i<params.length; i++) {
+				String[] parameter = params[i].split("=");
+				if (parameter.length == 2) {
+					properties.put(parameter[0], parameter[1]);
+				}
+			}
+		}
+		return properties;
+	}
+	
+	public static final String ACTION_PREFIX = "action:";
+	public static final String ENTANDO_ACTION_PREFIX = "entandoaction:";
 	
 }

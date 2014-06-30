@@ -17,6 +17,8 @@
 */
 package com.agiletec.apsadmin.tags.util;
 
+import com.agiletec.apsadmin.util.ApsRequestParamsUtil;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -58,7 +60,7 @@ public class Submit extends org.apache.struts2.components.Submit {
 					mapping.setMethod(findString(method));
 				}
 				mapping.setExtension("");
-				name = "entandoaction:" + actionMapper.getUriFromActionMapping(mapping);
+				name = ApsRequestParamsUtil.ENTANDO_ACTION_PREFIX + actionMapper.getUriFromActionMapping(mapping);
 			} else {
 				name = "method:" + findString(method);
 			}

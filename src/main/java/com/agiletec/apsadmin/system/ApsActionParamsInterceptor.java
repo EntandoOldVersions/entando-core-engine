@@ -17,15 +17,17 @@
 */
 package com.agiletec.apsadmin.system;
 
-import java.util.Enumeration;
+import com.agiletec.apsadmin.util.ApsRequestParamsUtil;
+import com.opensymphony.xwork2.ActionInvocation;
+import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
+
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
-
-import com.opensymphony.xwork2.ActionInvocation;
-import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 
 /**
  * Interceptor per la gestione degli "Aps Action Params", 
@@ -42,44 +44,23 @@ public class ApsActionParamsInterceptor extends AbstractInterceptor {
 	@Override
 	public String intercept(ActionInvocation invocation) throws Exception {
 		HttpServletRequest request = ServletActionContext.getRequest();
-		String entandoActionName = null;
-		Enumeration params = request.getParameterNames();
-        while (params.hasMoreElements()) {
-        	String pname = (String) params.nextElement();
-        	if (pname.startsWith("action:")) {
-        		entandoActionName = pname.substring("action:".length());
-        		break;
-        	}
-        	if (pname.startsWith("entandoaction:")) {
-        		entandoActionName = pname.substring("entandoaction:".length());
-        		break;
-        	}
-        }
-        if (null != entandoActionName) {
-        	if (entandoActionName.endsWith(".x") || entandoActionName.endsWith(".y")) {
-            	entandoActionName = entandoActionName.substring(0, entandoActionName.length()-2);
-            }
-        	if (entandoActionName.indexOf("?") >= 0 ) {
-        		this.createApsActionParam(entandoActionName, invocation);
-        	}
-        }
-        return invocation.invoke();
+		String entandoActionName = ApsRequestParamsUtil.extractEntandoActionName(request);
+		if (null != entandoActionName) {
+			this.createApsActionParam(entandoActionName, invocation);
+		}
+		return invocation.invoke();
 	}
 	
 	private void createApsActionParam(String entandoActionName, ActionInvocation invocation) {
-		String[] blocks = entandoActionName.split("[?]");
-		if (blocks.length == 2) {
-			String paramBlock = blocks[1];
-			String[] params = paramBlock.split(";");
-			for (int i=0; i<params.length; i++) {
-				Map parameters = invocation.getInvocationContext().getParameters();
-				HttpServletRequest request = ServletActionContext.getRequest();
-				String[] parameter = params[i].split("=");
-				if (parameter.length == 2) {
-					request.setAttribute(parameter[0], parameter[1]);
-					parameters.put(parameter[0], parameter[1]);
-				}
-			}
+		Map parameters = invocation.getInvocationContext().getParameters();
+		HttpServletRequest request = ServletActionContext.getRequest();
+		Properties properties = ApsRequestParamsUtil.extractApsActionParameters(entandoActionName);
+		Iterator<Object> iter = properties.keySet().iterator();
+		while (iter.hasNext()) {
+			String key = iter.next().toString();
+			Object value = properties.getProperty(key);
+			request.setAttribute(key, value);
+			parameters.put(key, value);
 		}
 	}
 	
