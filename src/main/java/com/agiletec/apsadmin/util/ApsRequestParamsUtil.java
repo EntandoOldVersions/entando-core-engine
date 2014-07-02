@@ -41,11 +41,21 @@ public class ApsRequestParamsUtil {
 	
 	public static String[] getApsParams(String paramPrefix, String separator, ServletRequest request) {
 		String[] apsParams = null;
-		String entandoActionName = extractEntandoActionName(request);
-		if (null != entandoActionName && entandoActionName.startsWith(paramPrefix)) {
-			apsParams = splitParam(entandoActionName, separator);
-		}
-		return apsParams;
+		Enumeration params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+        	String pname = (String) params.nextElement();
+        	if (pname.startsWith(ACTION_PREFIX)) {
+        		pname = pname.substring(ACTION_PREFIX.length());
+        	}
+			if (pname.startsWith(ENTANDO_ACTION_PREFIX)) {
+        		pname = pname.substring(ENTANDO_ACTION_PREFIX.length());
+        	}
+        	if (pname.startsWith(paramPrefix)) {
+        		apsParams = splitParam(pname, separator);
+        		break;
+        	}
+        }
+        return apsParams;
 	}
 	
 	public static String createApsActionParam(String action, Properties params) {
