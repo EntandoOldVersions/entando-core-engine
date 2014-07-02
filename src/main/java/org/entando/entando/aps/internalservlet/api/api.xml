@@ -8,7 +8,10 @@
     <package name="core_do/Front/Api/Resource" namespace="/do/Front/Api/Resource" extends="entando-front-default">
         
         <action name="list" class="frontApiResourceFinderAction">
-            <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/resource-list.jsp</result>
+            <result type="guiFragment">
+				<param name="code">entandoapi_is_resource_list</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/internalservlet/api/resource-list.jsp</param>
+			</result>
             <interceptor-ref name="entandoFrontEndFreeStack">
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
@@ -16,7 +19,10 @@
         
         <action name="detail" class="frontApiResourceAction">
             <result name="input" type="chain">list</result>
-            <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/resource-detail.jsp</result>
+			<result type="guiFragment">
+				<param name="code">entandoapi_is_resource_detail</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/internalservlet/api/resource-detail.jsp</param>
+			</result>
             <interceptor-ref name="entandoFrontEndFreeValidationStack" >
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
@@ -58,16 +64,25 @@
 	
     <package name="core_do/Front/Api/Service" namespace="/do/Front/Api/Service" extends="entando-front-default">
     	
-        <action name="list" class="frontApiServiceFinderAction">
-            <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/service-list.jsp</result>
+		<action name="list" class="frontApiServiceFinderAction">
+            <result type="guiFragment">
+				<param name="code">entandoapi_is_service_list</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/internalservlet/api/service-list.jsp</param>
+			</result>
             <interceptor-ref name="entandoFrontEndFreeStack">
                 <param name="chain.includeParameters">fieldErrors,actionErrors,actionMessages</param>
             </interceptor-ref>
         </action>
 		
         <action name="detail" class="frontApiServiceAction" method="detail">
-            <result name="input" type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/service-list.jsp</result>
-            <result type="dispatcher">/WEB-INF/aps/jsp/internalservlet/api/service-detail.jsp</result>
+            <result name="input" type="guiFragment">
+				<param name="code">entandoapi_is_service_list</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/internalservlet/api/service-list.jsp</param>
+			</result>
+            <result type="guiFragment">
+				<param name="code">entandoapi_is_service_detail</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/internalservlet/api/service-detail.jsp</param>
+			</result>
             <interceptor-ref name="entandoFrontEndFreeStack" />
         </action> 
 		
