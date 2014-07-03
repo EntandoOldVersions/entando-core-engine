@@ -148,8 +148,14 @@
 		</interceptors>
     	
 		<global-results>
-			<result name="failure" type="dispatcher">/WEB-INF/aps/jsp/system/internalServlet_error.jsp</result>
-			<result name="userNotAllowed" type="dispatcher">/WEB-INF/aps/jsp/system/internalServlet_userNotAllowed.jsp</result>
+			<result name="failure" type="guiFragment">
+				<param name="code">internal_servlet_generic_error</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/system/internalServlet_error.jsp</param>
+			</result>
+			<result name="userNotAllowed" type="guiFragment">
+				<param name="code">internal_servlet_user_not_allowed</param>
+				<param name="jspLocation">/WEB-INF/aps/jsp/system/internalServlet_userNotAllowed.jsp</param>
+			</result>
 		</global-results>
 		
 	</package>

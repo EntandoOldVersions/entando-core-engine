@@ -1869,6 +1869,24 @@ INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, lock
 	</form>
 	
 </#if>', 1);
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('internal_servlet_generic_error', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
+<@wp.i18n key="GENERIC_ERROR" />', 1);
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('internal_servlet_user_not_allowed', NULL, NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
+<@wp.i18n key="USER_NOT_ALLOWED" />', 1);
+INSERT INTO guifragment (code, widgettypecode, plugincode, gui, defaultgui, locked) VALUES ('messages_system', 'messages_system', NULL, NULL, '<#assign wp=JspTaglibs["/aps-core"]>
+
+<#assign currentPageCode><@wp.currentPage param="code" /></#assign>
+
+<#if (currentPageCode == ''notfound'')>
+<div class="alert alert-error alert-block">
+	<h1 class="alert-heading"><@wp.i18n key="PAGE_NOT_FOUND" escapeXml=false /></h1>
+</div>
+</#if>
+<#if (currentPageCode == ''errorpage'')>
+<div class="alert alert-error alert-block">
+	<h1 class="alert-heading"><@wp.i18n key="GENERIC_ERROR" escapeXml=false /></h1>
+</div>
+</#if>', 1);
 
 
 
