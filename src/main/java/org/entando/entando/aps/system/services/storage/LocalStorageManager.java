@@ -317,7 +317,7 @@ public class LocalStorageManager implements IStorageManager {
 	@Override
 	public BasicFileAttributeView getAttributes(String subPath, boolean isProtectedResource) throws ApsSystemException {
 		File file = this.getFile(subPath, isProtectedResource);
-		if (file.exists()) {
+		if (!file.exists()) {
 			return null;
 		} else {
 			return new BasicFileAttributeView(file);
