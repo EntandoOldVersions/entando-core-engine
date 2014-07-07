@@ -408,7 +408,7 @@
 			<springBean name="LocalStorageManagerInterface" method="addResource" />
 			<expectedType>org.entando.entando.aps.system.services.storage.api.JAXBStorageResource</expectedType>
 		</method>	
-		<method httpMethod="DELETE active="true" requiredAuth="true" requiredPermission="superuser">
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
 			<description>delete a storage resource</description>
 			<springBean name="LocalStorageManagerInterface" method="deleteResource" />
 			<parameters>
