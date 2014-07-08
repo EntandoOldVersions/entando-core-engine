@@ -380,7 +380,7 @@
 				<parameter key="path" required="false">
 					<description>root folder to browse. Can be null</description>
 				</parameter>
-				<parameter key="isProtected" required="true">
+				<parameter key="protected" required="true">
 					<description>defines the workspace. When 'true' points to the 'protected' area.</description>
 				</parameter>
 			</parameters>
@@ -398,7 +398,7 @@
 				<parameter key="path" required="true">
 					<description>Path to the object</description>
 				</parameter>
-				<parameter key="isProtected" required="true">
+				<parameter key="protected" required="true">
 					<description>defines the workspace. When 'true' points to the 'protected' area.</description>
 				</parameter>
 			</parameters>
@@ -415,7 +415,7 @@
 				<parameter key="path" required="true">
 					<description>Path to the object</description>
 				</parameter>
-				<parameter key="isProtected" required="true">
+				<parameter key="protected" required="true">
 					<description>by default is false</description>
 				</parameter>
 				<parameter key="recursive" required="false">

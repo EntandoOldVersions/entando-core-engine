@@ -19,6 +19,7 @@ package org.entando.entando.aps.system.services.storage.api;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,6 +29,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.CharEncoding;
 import org.entando.entando.aps.system.services.api.IApiErrorCodes;
 import org.entando.entando.aps.system.services.api.IApiExportable;
 import org.entando.entando.aps.system.services.api.model.ApiException;
@@ -50,6 +52,7 @@ public class LocalStorageManagerInterface implements IApiExportable {
 		String protectedValue = properties.getProperty(PARAM_IS_PROTECTED);
 		boolean isProtected = StringUtils.equalsIgnoreCase(protectedValue, "true");
 		try {
+			if (StringUtils.isNotBlank(pathValue)) pathValue = URLDecoder.decode(pathValue, "UTF-8");
 			if (!StorageManagerUtil.isValidDirName(pathValue)) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "The path '" + pathValue + "' does not exists", Response.Status.CONFLICT);
 			}
@@ -75,6 +78,7 @@ public class LocalStorageManagerInterface implements IApiExportable {
 		String protectedValue = properties.getProperty(PARAM_IS_PROTECTED);
 		boolean isProtected = StringUtils.equalsIgnoreCase(protectedValue, "true");
 		try {
+			if (StringUtils.isNotBlank(pathValue)) pathValue = URLDecoder.decode(pathValue, "UTF-8");
 			BasicFileAttributeView result = this.getStorageManager().getAttributes(pathValue, isProtected);
 			if (null == result) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "The path '" + pathValue + "' does not exists", Response.Status.CONFLICT);
@@ -100,6 +104,7 @@ public class LocalStorageManagerInterface implements IApiExportable {
 			//validate parent directory;
 			String path = StringUtils.removeEnd(storageResource.getName(), "/");
 			String parentFolder = FilenameUtils.getFullPathNoEndSeparator(path);
+			if (StringUtils.isNotBlank(parentFolder)) parentFolder = URLDecoder.decode(parentFolder, "UTF-8");
 			if (!StorageManagerUtil.isValidDirName(parentFolder)) {
 				throw new ApiException(IApiErrorCodes.API_VALIDATION_ERROR, "Invalid parent directory", Response.Status.CONFLICT);									
 			}
@@ -142,7 +147,8 @@ public class LocalStorageManagerInterface implements IApiExportable {
 		String pathValue = properties.getProperty(PARAM_PATH);
 		String protectedValue = properties.getProperty(PARAM_IS_PROTECTED);
 		boolean isProtected = StringUtils.equalsIgnoreCase(protectedValue, "true");
-    	try {    		
+    	try {    	
+    		if (StringUtils.isNotBlank(pathValue)) pathValue = URLDecoder.decode(pathValue, "UTF-8");
 			String path = StringUtils.removeEnd(pathValue, "/");
 			String parentFolder = FilenameUtils.getFullPathNoEndSeparator(path);
 			BasicFileAttributeView parentBasicFileAttributeView = this.getStorageManager().getAttributes(parentFolder, isProtected);
@@ -187,7 +193,7 @@ public class LocalStorageManagerInterface implements IApiExportable {
     	}
     }
 	
-	public String getApiResourceURLWithParams(Properties properties, BasicFileAttributeView fileAttributeView, String path, boolean isProtected) {
+	public String getApiResourceURLWithParams(Properties properties, BasicFileAttributeView fileAttributeView, String path, boolean isProtected) throws Throwable {
 		String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER); 
 		MediaType mediaType = (MediaType) properties.get(SystemConstants.API_PRODUCES_MEDIA_TYPE_PARAMETER);
 		String applicationBaseUrl = properties.getProperty(SystemConstants.API_APPLICATION_BASE_URL_PARAMETER);
@@ -195,6 +201,7 @@ public class LocalStorageManagerInterface implements IApiExportable {
 		StringBuilder stringBuilder = new StringBuilder(url);
 		
 		String fullPath = this.buildResourcePath(fileAttributeView, path);
+		if (StringUtils.isNotBlank(fullPath)) fullPath = URLDecoder.decode(fullPath, CharEncoding.UTF_8);
 		stringBuilder.append("?").append(PARAM_PATH).append("=").append(fullPath);
 		stringBuilder.append("&").append(PARAM_IS_PROTECTED).append("=").append(isProtected);
 		return stringBuilder.toString();
@@ -245,6 +252,6 @@ public class LocalStorageManagerInterface implements IApiExportable {
 
 	private IStorageManager _storageManager;
 	private static final String PARAM_PATH = "path";
-	private static final String PARAM_IS_PROTECTED = "isProtected";
+	private static final String PARAM_IS_PROTECTED = "protected";
 	private static final String PARAM_DELETE_RECURSIVE = "recursive";
 }
