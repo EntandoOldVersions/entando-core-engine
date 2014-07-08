@@ -77,7 +77,11 @@
 		<property name="protectedBaseDiskRoot" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceDiskRootFolder" /></property>
 		<property name="protectedBaseURL" ><jee:jndi-lookup jndi-name="java:comp/env/protectedResourceRootURL" /></property>
 	</bean>
-	
+
+	<bean id="LocalStorageManagerInterface" class="org.entando.entando.aps.system.services.storage.api.LocalStorageManagerInterface" >
+		<property name="storageManager" ref="StorageManager" />
+	</bean>
+
 	<util:map id="databaseTypeDrivers" map-class="java.util.Properties" value-type="java.util.List">
 		<entry>
 			<key><value>DERBY</value></key>
