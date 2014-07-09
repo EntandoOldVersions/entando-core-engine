@@ -46,4 +46,6 @@ public interface IContentDispenser {
 	 */
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx);
 	
+	public void resolveLinks(ContentRenderizationInfo renderizationInfo, RequestContext reqCtx);
+	
 }

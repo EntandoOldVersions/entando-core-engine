@@ -75,7 +75,7 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	@CacheableInfo(groups = "T(com.agiletec.plugins.jacms.aps.system.services.dispenser.BaseContentDispenser).getRenderizationInfoCacheGroupsCsv(#contentId, #modelId)")
 	public ContentRenderizationInfo getRenderizationInfo(String contentId, long modelId, String langCode, RequestContext reqCtx) {
 		PublicContentAuthorizationInfo authInfo = this.getContentAuthorizationHelper().getAuthorizationInfo(contentId);
-		if (authInfo == null) {
+		if (null == authInfo) {
 			return null;
 		}
 		return this.getRenderizationInfo(authInfo, contentId, modelId, langCode, reqCtx);
@@ -99,14 +99,24 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 				renderInfo.setRenderedContent(renderedContent);
 				return renderInfo;
 			}
-			String finalRenderedContent = this._linkResolver.resolveLinks(renderInfo.getCachedRenderedContent(), reqCtx);
-			renderInfo.setRenderedContent(finalRenderedContent);
 		} catch (Throwable t) {
 			_logger.error("Error while rendering content {}", contentId, t);
-			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
 			return null;
 		}
 		return renderInfo;
+	}
+	
+	@Override
+	public void resolveLinks(ContentRenderizationInfo renderizationInfo, RequestContext reqCtx) {
+		if (null == renderizationInfo || null == reqCtx) {
+			return;
+		}
+		try {
+			String finalRenderedContent = this.getLinkResolverManager().resolveLinks(renderizationInfo.getCachedRenderedContent(), reqCtx);
+			renderizationInfo.setRenderedContent(finalRenderedContent);
+		} catch (Throwable t) {
+			_logger.error("Error while resolve links for content {}", renderizationInfo.getContentId(), t);
+		}
 	}
 	
 	public ContentRenderizationInfo getBaseRenderizationInfo(PublicContentAuthorizationInfo authInfo, 
@@ -124,7 +134,6 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 			}
 		} catch (Throwable t) {
 			_logger.error("Error while rendering content {}", contentId, t);
-			//ApsSystemUtils.logThrowable(t, this, "getRenderedContent", "Error while rendering content " + contentId);
 			return null;
 		}
 		return renderInfo;

@@ -90,13 +90,13 @@ public class ContentViewerHelper implements IContentViewerHelper {
 	            if (null == renderizationInfo) {
 	            	_logger.warn("Null Renderization informations: content={}", contentId);
 	            }
+				this.getContentDispenser().resolveLinks(renderizationInfo, reqCtx);
 	            this.manageAttributeValues(renderizationInfo, publishExtraTitle, reqCtx);
             } else {
             	_logger.warn("Parametri visualizzazione contenuto incompleti: " +"contenuto={} modello={}", contentId, modelId);
             }
         } catch (Throwable t) {
         	_logger.error("Error extracting renderization info", t);
-        	//ApsSystemUtils.logThrowable(t, this, "getRenderizationInfo");
     		throw new ApsSystemException("Error extracting renderization info", t);
     	}
         return renderizationInfo;

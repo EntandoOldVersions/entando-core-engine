@@ -118,7 +118,7 @@ public class ContentRenderizationInfo implements Serializable {
 	 * This string has to contains all link resolved.
 	 * @param renderedContent The final rendered content.
 	 */
-	public void setRenderedContent(String renderedContent) {
+	protected void setRenderedContent(String renderedContent) {
 		this._renderedContent = renderedContent;
 	}
 	
