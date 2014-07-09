@@ -365,5 +365,65 @@
 			<responseClass>org.entando.entando.aps.system.services.api.model.LinkedListApiResponse</responseClass>
 		</method>
 	</resource>
+
+
+	<!-- *********** FileBrowser *********** -->
+
+	<resource name="storage" namespace="core">
+		<description>Browse the storage</description>
+		<source>core</source>
+		<method httpMethod="GET" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Return the widget type list</description>
+			<springBean name="LocalStorageManagerInterface" method="getListDirectory" />
+			<responseClass>org.entando.entando.aps.system.services.api.model.LinkedListApiResponse</responseClass>
+			<parameters>
+				<parameter key="path" required="false">
+					<description>root folder to browse. Can be null</description>
+				</parameter>
+				<parameter key="protected" required="true">
+					<description>defines the workspace. When 'true' points to the 'protected' area.</description>
+				</parameter>
+			</parameters>
+		</method>
+	</resource>
+
+	<resource name="storageResource" namespace="core">
+		<description>Handle the storage items</description>
+		<source>core</source>
+		<method httpMethod="GET" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Return the widget type list</description>
+			<springBean name="LocalStorageManagerInterface" method="getFile" />
+			<responseClass>org.entando.entando.aps.system.services.storage.api.BasicFileAttributeViewApiResponse</responseClass>
+			<parameters>
+				<parameter key="path" required="true">
+					<description>Path to the object</description>
+				</parameter>
+				<parameter key="protected" required="true">
+					<description>defines the workspace. When 'true' points to the 'protected' area.</description>
+				</parameter>
+			</parameters>
+		</method>
+		<method httpMethod="POST" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>Add a storage resource</description>
+			<springBean name="LocalStorageManagerInterface" method="addResource" />
+			<expectedType>org.entando.entando.aps.system.services.storage.api.JAXBStorageResource</expectedType>
+		</method>	
+		<method httpMethod="DELETE" active="true" requiredAuth="true" requiredPermission="superuser">
+			<description>delete a storage resource</description>
+			<springBean name="LocalStorageManagerInterface" method="deleteResource" />
+			<parameters>
+				<parameter key="path" required="true">
+					<description>Path to the object</description>
+				</parameter>
+				<parameter key="protected" required="true">
+					<description>by default is false</description>
+				</parameter>
+				<parameter key="recursive" required="false">
+					<description>When 'true', if the resource to delete is a folder, all the nested resources (if present) will be deleted. By default is 'false'.</description>
+				</parameter>
+			</parameters>
+		</method>	
+		
+	</resource>
 	
 </apiMethodDefinitions>

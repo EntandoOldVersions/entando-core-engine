@@ -11,3 +11,4 @@ nbactions.xml
 .gitignore~
 maven-eclipse.xml
 
+/target

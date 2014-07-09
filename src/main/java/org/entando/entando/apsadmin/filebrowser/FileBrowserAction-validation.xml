@@ -30,6 +30,10 @@
 			<param name="expression"><![CDATA[!(strutsAction == 12 && (dirname == null || dirname.trim().length() == 0))]]></param>
 			<message key="requiredstring" />
 		</field-validator>
+		<field-validator type="regex" short-circuit="true">
+           <param name="regex"><![CDATA[(^[\w|\.|\-| ]+?$)]]></param>
+           <message key="error.filebrowser.dirname.wrongCharacters" />
+        </field-validator>
 	</field>
 	
 	<field name="upload">

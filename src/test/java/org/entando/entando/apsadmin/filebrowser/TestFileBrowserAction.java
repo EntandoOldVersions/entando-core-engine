@@ -17,20 +17,18 @@
 */
 package org.entando.entando.apsadmin.filebrowser;
 
-import com.agiletec.aps.system.SystemConstants;
-import com.agiletec.apsadmin.ApsAdminBaseTestCase;
-
-import com.opensymphony.xwork2.Action;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.Assert.fail;
+import java.util.Collection;
+
 import org.entando.entando.aps.system.services.storage.BasicFileAttributeView;
 import org.entando.entando.aps.system.services.storage.IStorageManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.agiletec.aps.system.SystemConstants;
+import com.agiletec.apsadmin.ApsAdminBaseTestCase;
+import com.opensymphony.xwork2.Action;
 
 /**
  * @author E.Santoboni
@@ -146,6 +144,7 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		String text = "This is the content";
 		try {
 			String result = this.executeAddTextFile("admin", path, filename, extension, text, false);
+			//FileBrowserAction action = (FileBrowserAction) this.getAction();
 			assertEquals(Action.SUCCESS, result);
 			assertTrue(this._localStorageManager.exists(fullPath, false));
 			
@@ -163,6 +162,49 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 			throw t;
 		}
 	}
+
+	public void testAddTextFileWithErrors() throws Throwable {
+		String path = "conf" + File.separator;
+		String filename = "test_filename_1";
+		String extension = "css";
+		String fullPath = path + filename + "." + extension;
+		String text = "This is the content";
+		try {
+			
+			String filename1 = filename + "è";
+			fullPath = path + filename1 + "." + extension;
+			String result = this.executeAddTextFile("admin", path, filename1, extension, text, false);
+			assertEquals(Action.INPUT, result);
+			FileBrowserAction action = (FileBrowserAction) this.getAction();
+			Collection<String> actionErrors = action.getActionErrors();
+			assertEquals(1, actionErrors.size());
+			this._localStorageManager.deleteFile(fullPath, false);
+
+			String filename2 = "../" + filename;
+			fullPath = path + filename2 + "." + extension;
+			result = this.executeAddTextFile("admin", path, filename2, extension, text, false);
+			assertEquals(Action.INPUT, result);
+			action = (FileBrowserAction) this.getAction();
+			actionErrors = action.getActionErrors();
+			assertEquals(1, actionErrors.size());
+			this._localStorageManager.deleteFile(fullPath, false);
+
+			path = "../" + path;
+			fullPath = path + filename + "." + extension;
+			result = this.executeAddTextFile("admin", path, filename, extension, text, false);
+			assertEquals(Action.INPUT, result);
+			action = (FileBrowserAction) this.getAction();
+			actionErrors = action.getActionErrors();
+			assertEquals(1, actionErrors.size());
+			this._localStorageManager.deleteFile(fullPath, false);
+
+			
+		} catch (Throwable t) {
+			this._localStorageManager.deleteFile(fullPath, false);
+			throw t;
+		}
+	}
+	
 	
 	public void testDeleteFile() throws Throwable {
 		String path = "conf" + File.separator;
@@ -182,6 +224,46 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 			this._localStorageManager.deleteFile(fullPath, false);
 			throw t;
 		}
+	}
+	
+	public void testTrash() throws Throwable {
+		String path = "conf" + File.separator;
+		String filename = "test_filename_2";
+		String extension = "css";
+		String fullFilename = filename + "." + extension;
+		String fullPath = path + fullFilename;
+		String text = "This is the content";
+		this._localStorageManager.deleteFile(fullPath, false);
+		try {
+			assertFalse(this._localStorageManager.exists(fullPath, false));
+			this._localStorageManager.saveFile(fullPath, false, new ByteArrayInputStream(text.getBytes()));
+			assertTrue(this._localStorageManager.exists(fullPath, false));
+			
+			String result = this.executeTrashFile("admin", path, fullFilename, false);
+			assertEquals(Action.SUCCESS, result);
+
+			String path2 = path + "../../";
+			result = this.executeTrashFile("admin", path2, fullFilename, false);
+			assertEquals(Action.INPUT, result);
+			FileBrowserAction action = (FileBrowserAction) this.getAction();
+			Collection<String> actionErrors = action.getActionErrors();
+			assertEquals(1, actionErrors.size());
+			System.out.println(actionErrors);
+			
+			fullFilename = "../conf/" + fullFilename;
+			result = this.executeTrashFile("admin", path, fullFilename, false);
+			assertEquals(Action.INPUT, result);
+			action = (FileBrowserAction) this.getAction();
+			actionErrors = action.getActionErrors();
+			assertEquals(1, actionErrors.size());
+			System.out.println(actionErrors);
+			
+		} catch (Throwable t) {
+			this._localStorageManager.deleteFile(fullPath, false);
+			throw t;
+		}
+		
+		this._localStorageManager.deleteFile(fullPath, false);
 	}
 	
 	private String executeList(String currentUser, String path, Boolean isProtected) throws Throwable {
@@ -216,6 +298,17 @@ public class TestFileBrowserAction extends ApsAdminBaseTestCase {
 		this.addParameter("currentPath", currentPath);
 		this.addParameter("filename", filename);
 		this.addParameter("deleteFile", new Boolean(deleteFile).toString());
+		if (null != isProtected) {
+			this.addParameter("protectedFolder", isProtected.toString());
+		}
+		return this.executeAction();
+	}
+
+	private String executeTrashFile(String currentUser, String currentPath, String filename, Boolean isProtected) throws Throwable {
+		this.setUserOnSession(currentUser);
+		this.initAction("/do/FileBrowser", "trash");
+		this.addParameter("currentPath", currentPath);
+		this.addParameter("filename", filename);
 		if (null != isProtected) {
 			this.addParameter("protectedFolder", isProtected.toString());
 		}
