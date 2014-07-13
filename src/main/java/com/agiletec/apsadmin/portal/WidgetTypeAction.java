@@ -409,7 +409,8 @@ public class WidgetTypeAction extends AbstractPortalAction {
 			ApsProperties titles = type.getTitles();
 			this.setItalianTitle(titles.getProperty("it"));
 			this.setEnglishTitle(titles.getProperty("en"));
-			this.setMainGroup(type.getMainGroup());
+			String mainGroup = (StringUtils.isBlank(type.getMainGroup())) ? Group.FREE_GROUP_NAME : type.getMainGroup();
+			this.setMainGroup(mainGroup);
 			if (type.isLogic()) {
 				List<String> guiFragmentCodes = this.extractGuiFragmentCodes(this.getWidgetTypeCode());
 				for (int i = 0; i < guiFragmentCodes.size(); i++) {
