@@ -27,6 +27,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.IContentManager;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.IContentModelManager;
+import static junit.framework.Assert.assertEquals;
 
 /**
  * @author W.Ambu - E.Santoboni
@@ -43,22 +44,26 @@ public class TestContentDispenser extends BaseTestCase {
     	RequestContext reqCtx = this.getRequestContext();
     	
     	ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+		assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+    	this._contentDispenser.resolveLinks(outputInfo, reqCtx);
+		assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
     	
     	this.setUserOnSession("admin");
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART1", 2, "en", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedEnART1_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+    	this._contentDispenser.resolveLinks(outputInfo, reqCtx);
+		assertEquals(this.replaceNewLine(_attendedEnART1.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
     	
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedItART104.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     	
     	this.setUserOnSession("editorCoach");
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedItART104.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     	
     	this.setUserOnSession("pageManagerCoach");
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedItART104.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedItART104_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     }
     
     public void testGetRenderedContent_2() throws Throwable {
@@ -66,19 +71,25 @@ public class TestContentDispenser extends BaseTestCase {
     	this.setUserOnSession("admin");
     	
     	ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo("ART120", 2, "it", reqCtx);
+		assertEquals(this.replaceNewLine(_attendedItART120_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+    	this._contentDispenser.resolveLinks(outputInfo, reqCtx);
 		assertEquals(this.replaceNewLine(_attendedItART120.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
     	
 		outputInfo = this._contentDispenser.getRenderizationInfo("ART120", 2, "en", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedEnART120.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedEnART120_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
+    	this._contentDispenser.resolveLinks(outputInfo, reqCtx);
+		assertEquals(this.replaceNewLine(_attendedEnART120.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
     	
+		
+		
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART121", 2, "it", reqCtx);
-		assertEquals(this.replaceNewLine(_attendedItART121.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+		assertEquals(this.replaceNewLine(_attendedItART121_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     	
 		outputInfo = this._contentDispenser.getRenderizationInfo("ART121", 2, "en", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedEnART121.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedEnART121_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     	
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART122", 2, "en", reqCtx);
-    	assertEquals(this.replaceNewLine(_attendedEnART122.trim()), this.replaceNewLine(outputInfo.getRenderedContent().trim()));
+    	assertEquals(this.replaceNewLine(_attendedEnART122_cached.trim()), this.replaceNewLine(outputInfo.getCachedRenderedContent().trim()));
     }
 	
 	public void testGetRenderedContent_3() throws Throwable {
@@ -117,7 +128,7 @@ public class TestContentDispenser extends BaseTestCase {
 			RequestContext reqCtx = this.getRequestContext();
 			this.setUserOnSession("admin");
 			ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo(contentId, modelId, "en", reqCtx);
-			assertEquals("title (Text): testo=Title of Administrator's Content", outputInfo.getRenderedContent());
+			assertEquals("title (Text): testo=Title of Administrator's Content", outputInfo.getCachedRenderedContent());
 			
 			ContentModel model = this._contentModelManager.getContentModel(modelId);
 			String newContentShapeModel = "title: testo=$content.Titolo.getText()";
@@ -126,7 +137,7 @@ public class TestContentDispenser extends BaseTestCase {
 			this.waitNotifyingThread();
 			
 			outputInfo = this._contentDispenser.getRenderizationInfo(contentId, modelId, "en", reqCtx);
-			assertEquals("title: testo=Title of Administrator's Content", outputInfo.getRenderedContent());
+			assertEquals("title: testo=Title of Administrator's Content", outputInfo.getCachedRenderedContent());
 		} catch (Throwable t) {
 			throw t;
 		} finally {
@@ -150,15 +161,15 @@ public class TestContentDispenser extends BaseTestCase {
     	RequestContext reqCtx = this.getRequestContext();
     	
     	ContentRenderizationInfo outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals("Current user 'guest' can't view this content", outputInfo.getRenderedContent().trim());
+    	assertEquals("Current user 'guest' can't view this content", outputInfo.getCachedRenderedContent().trim());
     	
     	this.setUserOnSession("editorCustomers");
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals("Current user 'editorCustomers' can't view this content", outputInfo.getRenderedContent().trim());
+    	assertEquals("Current user 'editorCustomers' can't view this content", outputInfo.getCachedRenderedContent().trim());
     	
     	this.setUserOnSession("supervisorCustomers");
     	outputInfo = this._contentDispenser.getRenderizationInfo("ART104", 2, "it", reqCtx);
-    	assertEquals("Current user 'supervisorCustomers' can't view this content", outputInfo.getRenderedContent().trim());
+    	assertEquals("Current user 'supervisorCustomers' can't view this content", outputInfo.getCachedRenderedContent().trim());
     }
     
     public void testGetRenderedContentWithWrongModel() throws Throwable {
@@ -189,6 +200,16 @@ public class TestContentDispenser extends BaseTestCase {
     private IContentModelManager _contentModelManager = null;
 	private CacheInfoManager _cacheInfoManager;
     
+    private String _attendedEnART1_cached = 
+		"ART1;\n" 
+    	+ "Pippo;\n"
+    	+ "Paperino;\n"
+    	+ "Pluto;\n"
+    	+ "The title;\n"
+    	+ "Spiderman,#!U;http://www.spiderman.org!#;\n"
+    	+ "Image description,/Entando/resources/cms/images/lvback_d1.jpg;\n"
+    	+ "Mar 10, 2004;";
+    
     private String _attendedEnART1 = 
 		"ART1;\n" 
     	+ "Pippo;\n"
@@ -198,6 +219,17 @@ public class TestContentDispenser extends BaseTestCase {
     	+ "Spiderman,http://www.spiderman.org;\n"
     	+ "Image description,/Entando/resources/cms/images/lvback_d1.jpg;\n"
     	+ "Mar 10, 2004;";
+    
+    private String _attendedItART104_cached = 
+		"ART104;\n" 
+    	+ "Walter;\n"
+    	+ "Marco;\n"
+    	+ "Eugenio;\n"
+    	+ "William;\n"
+    	+ "Titolo Contenuto 2 Coach;\n"
+    	+ "Home jAPS,#!U;http://www.japsportal.org!#;\n"
+    	+ ",;\n"
+    	+ "4-gen-2007;";
     
     private String _attendedItART104 = 
 		"ART104;\n" 
@@ -210,31 +242,43 @@ public class TestContentDispenser extends BaseTestCase {
     	+ ",;\n"
     	+ "4-gen-2007;";
     
+    private String _attendedItART120_cached = 
+    	"ART120;\n" +
+    	"Titolo Contenuto degli &quot;Amministratori&quot;;\n" +
+    	"Pagina Iniziale jAPSPortal,#!U;http://www.japsportal.org!#;\n,;\n" +
+    	"28-mar-2009;";
+    
     private String _attendedItART120 = 
     	"ART120;\n" +
     	"Titolo Contenuto degli &quot;Amministratori&quot;;\n" +
     	"Pagina Iniziale jAPSPortal,http://www.japsportal.org;\n,;\n" +
     	"28-mar-2009;";
     
+    private String _attendedEnART120_cached = 
+    	"ART120;\n" +
+    	"Title of Administrator's Content;\n" +
+    	"jAPSPortal HomePage,#!U;http://www.japsportal.org!#;\n,;\n" +
+    	"Mar 28, 2009;";
+	
     private String _attendedEnART120 = 
     	"ART120;\n" +
     	"Title of Administrator's Content;\n" +
     	"jAPSPortal HomePage,http://www.japsportal.org;\n,;\n" +
     	"Mar 28, 2009;";
 	
-	private String _attendedItART121 = 
+	private String _attendedItART121_cached = 
     	"ART121;\n" +
     	"Titolo Contenuto degli &quot;Amministratori&quot; 2;\n" +
-    	"Pagina Iniziale W3C,http://www.w3.org/;\n,;\n" +
+    	"Pagina Iniziale W3C,#!U;http://www.w3.org/!#;\n,;\n" +
     	"30-mar-2009;";
 	
-	private String _attendedEnART121 = 
+	private String _attendedEnART121_cached = 
     	"ART121;\n" +
     	"Title of Administrator's Content &lt;2&gt;;\n" +
-    	"World Wide Web Consortium - Web Standards,http://www.w3.org/;\n,;\n" +
+    	"World Wide Web Consortium - Web Standards,#!U;http://www.w3.org/!#;\n,;\n" +
     	"Mar 30, 2009;";
 	
-	private String _attendedEnART122 = 
+	private String _attendedEnART122_cached = 
     	"ART122;\n" +
     	"Titolo Contenuto degli &quot;Amministratori&quot; 3;\n,;\n,;\n;";
     

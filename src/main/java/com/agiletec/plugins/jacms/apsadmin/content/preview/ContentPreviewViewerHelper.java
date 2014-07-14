@@ -30,6 +30,7 @@ import com.agiletec.aps.system.services.page.Widget;
 import com.agiletec.aps.util.ApsProperties;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.ContentViewerHelper;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.apsadmin.content.ContentActionConstants;
 
 /**
@@ -56,12 +57,18 @@ public class ContentPreviewViewerHelper extends ContentViewerHelper {
 			Content contentOnSession = (Content) request.getSession()
 					.getAttribute(ContentActionConstants.SESSION_PARAM_NAME_CURRENT_CONTENT_PREXIX + contentOnSessionMarker);
 			contentId = (contentOnSession.getId() == null ? contentOnSession.getTypeCode()+"123" : contentOnSession.getId());
-			ApsProperties showletConfig = widget.getConfig();
-			modelId = this.extractModelId(contentId, modelId, showletConfig);
+			ApsProperties widgetConfig = widget.getConfig();
+			modelId = this.extractModelId(contentId, modelId, widgetConfig);
 			if (null != contentId && null != modelId) {
 				long longModelId = new Long(modelId).longValue();
 				this.setStylesheet(longModelId, reqCtx);
-				renderedContent = this.getContentDispenser().getRenderedContent(contentId, longModelId, langCode, reqCtx);
+				ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentId, longModelId, langCode, reqCtx);
+	            if (null == renderizationInfo) {
+	            	_logger.warn("Null Renderization informations: content={}", contentId);
+	            } else {
+					this.getContentDispenser().resolveLinks(renderizationInfo, reqCtx);
+					renderedContent = renderizationInfo.getRenderedContent();
+				}
 			} else {
 				_logger.warn("Parametri visualizzazione contenuto incompleti: contenuto={} modello={}", contentId, modelId);
 			}

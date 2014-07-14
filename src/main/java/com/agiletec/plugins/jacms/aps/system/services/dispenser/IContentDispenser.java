@@ -33,6 +33,7 @@ public interface IContentDispenser {
 	 * @param langCode The code of the current lang.
 	 * @param reqCtx The request context.
 	 * @return The formatted content.
+	 * @deprecated use getRenderizationInfo(String, long, String, RequestContext)
 	 */
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx);
 	

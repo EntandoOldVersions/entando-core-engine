@@ -49,6 +49,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 import com.agiletec.plugins.jacms.aps.system.services.content.model.Content;
 import com.agiletec.plugins.jacms.aps.system.services.content.model.ContentRecordVO;
 import com.agiletec.plugins.jacms.aps.system.services.contentmodel.ContentModel;
+import com.agiletec.plugins.jacms.aps.system.services.dispenser.ContentRenderizationInfo;
 import com.agiletec.plugins.jacms.aps.system.services.dispenser.IContentDispenser;
 import com.agiletec.plugins.jacms.aps.system.services.resource.IResourceManager;
 
@@ -123,7 +124,10 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
             render.append(this.getItemsStartElement());
             for (int i = 0; i < contentsId.size(); i++) {
                 render.append(this.getItemStartElement());
-                render.append(this.getContentDispenser().getRenderedContent(contentsId.get(i), modelIdInteger, langCode, null));
+				ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(contentsId.get(i), modelIdInteger, langCode, null);
+	            if (null != renderizationInfo) {
+					render.append(renderizationInfo.getCachedRenderedContent());
+	            }
                 render.append(this.getItemEndElement());
             }
             render.append(this.getItemsEndElement());
@@ -179,7 +183,11 @@ public class ApiContentInterface extends AbstractCmsApiInterface {
                 return null;
             }
             String langCode = properties.getProperty(SystemConstants.API_LANG_CODE_PARAMETER);
-            render = this.getContentDispenser().getRenderedContent(id, modelIdInteger, langCode, null);
+            //render = this.getContentDispenser().getRenderedContent(id, modelIdInteger, langCode, null);
+			ContentRenderizationInfo renderizationInfo = this.getContentDispenser().getRenderizationInfo(id, modelIdInteger, langCode, null);
+			if (null != renderizationInfo) {
+				return renderizationInfo.getCachedRenderedContent();
+			}
         } catch (ApiException ae) {
             throw ae;
         } catch (Throwable t) {

@@ -61,12 +61,13 @@ public class BaseContentDispenser extends AbstractService implements IContentDis
 	}
 	
 	@Override
+	@Deprecated
 	public String getRenderedContent(String contentId, long modelId, String langCode, RequestContext reqCtx) {
 		ContentRenderizationInfo renderInfo = this.getRenderizationInfo(contentId, modelId, langCode, reqCtx);
 		if (null == renderInfo) {
 			return "";
 		}
-		return renderInfo.getRenderedContent();
+		return renderInfo.getCachedRenderedContent();
 	}
 	
 	@Override

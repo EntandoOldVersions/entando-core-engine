@@ -67,6 +67,9 @@ public class PageModelDOM {
 			Frame frame = frames[i];
 			Element frameElement = new Element(TAB_FRAME);
 			frameElement.setAttribute(ATTRIBUTE_POS, String.valueOf(i));
+			if (frame.isMainFrame()) {
+				frameElement.setAttribute(ATTRIBUTE_MAIN, "true");
+			}
 			Element descrElement = new Element(TAB_DESCR);
 			descrElement.setText(frame.getDescription());
 			frameElement.addContent(descrElement);

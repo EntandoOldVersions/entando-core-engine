@@ -422,8 +422,7 @@
 					<description>When 'true', if the resource to delete is a folder, all the nested resources (if present) will be deleted. By default is 'false'.</description>
 				</parameter>
 			</parameters>
-		</method>	
-		
+		</method>
 	</resource>
 	
 </apiMethodDefinitions>
