@@ -34,8 +34,8 @@ public class CDataIgnoreNamespacesWriter extends IgnoreNamespacesWriter {
     
 	@Override
     public void writeCharacters(String text) throws XMLStreamException {
-        if (CDataAdapter.isCdata(new String(text))) {
-            String parsedCDataText = CDataAdapter.parse(new String(text));
+        if (CDataAdapter.isCdata(text)) {
+            String parsedCDataText = CDataAdapter.parse(text);
             super.writeCharacters(parsedCDataText);
         } else {
             super.writeCharacters(text);

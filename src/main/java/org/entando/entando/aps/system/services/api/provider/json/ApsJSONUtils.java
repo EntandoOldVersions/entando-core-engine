@@ -51,10 +51,9 @@ public class ApsJSONUtils {
 	
 	public static XMLStreamWriter createStreamWriter(OutputStream os, 
 			QName qname, boolean writeXsiType, Configuration config, 
-			boolean serializeAsArray, List<String> arrayKeys, boolean dropRootElement) throws Exception {
+			boolean serializeAsArray, List<String> arrayKeys, boolean dropRootElement, String enc) throws Exception {
         MappedNamespaceConvention convention = new MappedNamespaceConvention(config);
-        AbstractXMLStreamWriter xsw = new CDataMappedXMLStreamWriter(convention, 
-                                            new OutputStreamWriter(os, UTF8));
+        AbstractXMLStreamWriter xsw = new CDataMappedXMLStreamWriter(convention, new OutputStreamWriter(os, enc));
         if (serializeAsArray) {
             if (arrayKeys != null) {
                 for (String key : arrayKeys) {
