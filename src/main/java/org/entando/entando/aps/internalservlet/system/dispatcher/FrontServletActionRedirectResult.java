@@ -91,7 +91,6 @@ public class FrontServletActionRedirectResult extends ServletRedirectResult impl
             } else {
                 this._method = this.conditionalParse(this._method, invocation);
             }
-
             String anchorDest = null;
             Map<String, String> redirectParams = new HashMap<String, String>();
             ResultConfig resultConfig = invocation.getProxy().getConfig().getResults().get(invocation.getResultCode());
@@ -99,23 +98,19 @@ public class FrontServletActionRedirectResult extends ServletRedirectResult impl
                 this.extractResultParams(redirectParams, resultConfig, invocation);
                 anchorDest = this.extractAnchorDest(resultConfig, invocation);
             }
-
             HttpServletRequest request = ServletActionContext.getRequest();
             RequestContext reqCtx = (RequestContext) request.getAttribute(RequestContext.REQCTX);
             this.extractInternalServletParams(redirectParams, reqCtx);
-
             IURLManager urlManager = (IURLManager) ApsWebApplicationUtils.getBean(SystemConstants.URL_MANAGER, request);
             Page currentPage = (Page) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
             Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
-            String url = urlManager.createUrl(currentPage, currentLang, redirectParams);
-            url = url.replaceAll("&amp;", "&");
+            String url = urlManager.createUrl(currentPage, currentLang, redirectParams, false, request);
             if (null != anchorDest) {
                 url += "#" + anchorDest;
             }
             this.setLocation(url);
         } catch (Throwable t) {
         	_logger.error("error in execute", t);
-            //ApsSystemUtils.logThrowable(t, this, "execute");
         }
         super.execute(invocation);
     }
