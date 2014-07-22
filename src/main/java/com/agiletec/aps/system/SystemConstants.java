@@ -268,7 +268,7 @@ public interface SystemConstants {
     
     /**
      * Parametro di sistema per la definizione dello stile della url dei link generati. 
-     * Se settato a 'standard', la url generata avrà la forma "applicationBaseUrl/langCode/pageCode.wp".
+     * Se settato a 'standard', la url generata avrà la forma "applicationBaseUrl/langCode/pageCode.page".
      * Se settato a 'breadcrumbs', la url generata avrà la forma "applicationBaseUrl/pages/langCode/pagePath/" dove pagePath è la concatenazione 
      * dei codici pagina dalla pagina radice alla pagina oggetto del link.
      */
@@ -277,7 +277,9 @@ public interface SystemConstants {
     public static final String CONFIG_PARAM_TREE_STYLE_PAGE = "treeStyle_page";
     public static final String CONFIG_PARAM_TREE_STYLE_CATEGORY = "treeStyle_category";
     
-	public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
+	public static final String CONFIG_PARAM_USE_JSESSIONID = "useJsessionId";
+	
+    public static final String CONFIG_PARAM_BASE_URL = "baseUrl";
 	
 	public static final String CONFIG_PARAM_BASE_URL_RELATIVE = "relative";
 	public static final String CONFIG_PARAM_BASE_URL_FROM_REQUEST = "request";
