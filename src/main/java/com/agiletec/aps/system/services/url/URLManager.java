@@ -94,7 +94,7 @@ public class URLManager extends AbstractURLManager {
 			}
 			HttpServletRequest request = (null != reqCtx) ? reqCtx.getRequest() : null;
 			String url = this.createUrl(page, lang, pageUrl.getParams(), pageUrl.isEscapeAmp(), request);
-			if (null != reqCtx) {
+			if (null != reqCtx && this.useJsessionId()) {
 				HttpServletResponse resp = reqCtx.getResponse();
 				String encUrl = resp.encodeURL(url.toString());  
 				return encUrl;
@@ -222,6 +222,11 @@ public class URLManager extends AbstractURLManager {
 	protected boolean isUrlStyleBreadcrumbs() {
 		String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_URL_STYLE);
 		return (param != null && param.trim().equals(SystemConstants.CONFIG_PARAM_URL_STYLE_BREADCRUMBS));
+	}
+	
+	protected boolean useJsessionId() {
+		String param = this.getConfigManager().getParam(SystemConstants.CONFIG_PARAM_USE_JSESSIONID);
+		return (param != null && Boolean.parseBoolean(param));
 	}
 	
 	protected ConfigInterface getConfigManager() {
