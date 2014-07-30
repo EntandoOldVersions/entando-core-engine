@@ -35,7 +35,7 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 * Event constructor
 	 */
 	public ApsEvent() {
-		super("jAPS Event");
+		super("Entando Event");
 		this.setSource(LOCAL_EVENT);
 	}
 	
@@ -52,12 +52,13 @@ public abstract class ApsEvent extends ApplicationEvent {
 	 * @return The interface class which the observer must implement 
 	 */
 	public abstract Class getObserverInterface();
-
+	
 	/**
 	 * Return the source of the event. 
 	 * The property can be a IP address, an host name, or else.
 	 * @return The source of the event.
 	 */
+	@Override
 	public String getSource() {
 		return _source;
 	}

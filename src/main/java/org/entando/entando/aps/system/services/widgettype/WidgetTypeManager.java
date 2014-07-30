@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.beanutils.BeanComparator;
 
 import org.entando.entando.aps.system.services.guifragment.GuiFragment;
@@ -144,6 +145,7 @@ public class WidgetTypeManager extends AbstractService
 			}
 			this.getWidgetTypeDAO().addWidgetType(widgetType);
 			this._widgetTypes.put(widgetType.getCode(), widgetType);
+			this.notifyWidgetTypeChanging(widgetType.getCode(), WidgetTypeChangedEvent.INSERT_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error adding a Widget Type", t);
 			throw new ApsSystemException("Error adding a Widget Type", t);
@@ -180,6 +182,7 @@ public class WidgetTypeManager extends AbstractService
 			}
 			this.getWidgetTypeDAO().deleteWidgetType(widgetTypeCode);
 			this._widgetTypes.remove(widgetTypeCode);
+			this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.REMOVE_OPERATION_CODE);
 		} catch (Throwable t) {
 			for (int i = 0; i < deletedFragments.size(); i++) {
 				GuiFragment guiFragment = deletedFragments.get(i);
@@ -203,8 +206,8 @@ public class WidgetTypeManager extends AbstractService
 			}
 			this.updateWidgetType(widgetTypeCode, titles, defaultConfig, Group.FREE_GROUP_NAME);
 		} catch (Throwable t) {
-			_logger.error("Error updating Showlet type titles : type code {}", widgetTypeCode, t);
-			throw new ApsSystemException("Error updating Showlet type titles : type code" + widgetTypeCode, t);
+			_logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
+			throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
 		}
 	}
 	
@@ -213,7 +216,7 @@ public class WidgetTypeManager extends AbstractService
 	public void updateShowletType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException {
 		this.updateWidgetType(widgetTypeCode, titles, defaultConfig, mainGroup);
 	}
-
+	
 	@Override
 	public void updateWidgetType(String widgetTypeCode, ApsProperties titles, ApsProperties defaultConfig, String mainGroup) throws ApsSystemException {
 		try {
@@ -229,9 +232,7 @@ public class WidgetTypeManager extends AbstractService
 			type.setTitles(titles);
 			type.setConfig(defaultConfig);
 			type.setMainGroup(mainGroup);
-			WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
-			event.setShowletTypeCode(widgetTypeCode);
-			this.notifyEvent(event);
+			this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
 			throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
@@ -249,6 +250,7 @@ public class WidgetTypeManager extends AbstractService
 			}
 			this.getWidgetTypeDAO().updateShowletTypeTitles(widgetTypeCode, titles);
 			type.setTitles(titles);
+			this.notifyWidgetTypeChanging(widgetTypeCode, WidgetTypeChangedEvent.UPDATE_OPERATION_CODE);
 		} catch (Throwable t) {
 			_logger.error("Error updating Widget type titles : type code {}", widgetTypeCode, t);
 			throw new ApsSystemException("Error updating Widget type titles : type code" + widgetTypeCode, t);
@@ -301,6 +303,13 @@ public class WidgetTypeManager extends AbstractService
 			throw new ApsSystemException("Error extracting utilizers", t);
 		}
 		return utilizers;
+	}
+	
+	private void notifyWidgetTypeChanging(String widgetTypeCode, int operationCode) throws ApsSystemException {
+		WidgetTypeChangedEvent event = new WidgetTypeChangedEvent();
+		event.setWidgetTypeCode(widgetTypeCode);
+		event.setOperationCode(operationCode);
+		this.notifyEvent(event);
 	}
 	
 	protected IWidgetTypeDAO getWidgetTypeDAO() {
