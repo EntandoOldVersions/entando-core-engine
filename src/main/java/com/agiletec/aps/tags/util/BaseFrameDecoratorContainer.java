@@ -31,24 +31,50 @@ public class BaseFrameDecoratorContainer implements IFrameDecoratorContainer {
 	}
 	
 	@Override
-	public boolean isShowletDecorator() {
+	public boolean isWidgetDecorator() {
 		return false;
 	}
 	
-	@Override
-	public String getHeaderPath() {
-		return _headerPath;
-	}
+	@Deprecated
 	public void setHeaderPath(String headerPath) {
-		this._headerPath = headerPath;
+		this.setHeaderJspPath(headerPath);
 	}
 	
 	@Override
-	public String getFooterPath() {
-		return _footerPath;
+	public String getHeaderJspPath() {
+		return _headerJspPath;
 	}
+	public void setHeaderJspPath(String headerJspPath) {
+		this._headerJspPath = headerJspPath;
+	}
+	
+	@Override
+	public String getHeaderFragmentCode() {
+		return _headerFragmentCode;
+	}
+	public void setHeaderFragmentCode(String headerFragmentCode) {
+		this._headerFragmentCode = headerFragmentCode;
+	}
+	
+	@Deprecated
 	public void setFooterPath(String footerPath) {
-		this._footerPath = footerPath;
+		this.setFooterJspPath(footerPath);
+	}
+	
+	@Override
+	public String getFooterJspPath() {
+		return _footerJspPath;
+	}
+	public void setFooterJspPath(String footerJspPath) {
+		this._footerJspPath = footerJspPath;
+	}
+	
+	@Override
+	public String getFooterFragmentCode() {
+		return _footerFragmentCode;
+	}
+	public void setFooterFragmentCode(String footerFragmentCode) {
+		this._footerFragmentCode = footerFragmentCode;
 	}
 	
 	@Override
@@ -59,8 +85,10 @@ public class BaseFrameDecoratorContainer implements IFrameDecoratorContainer {
 		this._order = order;
 	}
 	
-	private String _headerPath;
-	private String _footerPath;
+	private String _headerJspPath;
+	private String _headerFragmentCode;
+	private String _footerJspPath;
+	private String _footerFragmentCode;
 	private int _order;
 	
 }

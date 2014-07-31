@@ -27,11 +27,16 @@ public interface IFrameDecoratorContainer {
 	
 	public boolean needsDecoration(Widget widget, RequestContext reqCtx);
 	
-	public boolean isShowletDecorator();
+	public boolean isWidgetDecorator();
 	
-	public String getHeaderPath();
-
-	public String getFooterPath();
-
+	public String getHeaderJspPath();
+	
+	public String getHeaderFragmentCode();
+	
+	public String getFooterJspPath();
+	
+	public String getFooterFragmentCode();
+	
 	public int getOrder();
+	
 }
