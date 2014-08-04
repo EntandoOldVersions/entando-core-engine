@@ -77,7 +77,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	
 	@Override
 	public void insertGuiFragment(GuiFragment guiFragment) {
-		PreparedStatement stat = null;
 		Connection conn  = null;
 		try {
 			conn = this.getConnection();
@@ -89,11 +88,11 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error on insert guiFragment",  t);
 			throw new RuntimeException("Error on insert guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, conn);
+			this.closeConnection(conn);
 		}
 	}
 	
-	public void insertGuiFragment(GuiFragment guiFragment, Connection conn) {
+	protected void insertGuiFragment(GuiFragment guiFragment, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(ADD_GUIFRAGMENT);
@@ -116,13 +115,12 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error on insert guiFragment",  t);
 			throw new RuntimeException("Error on insert guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, null);
+			this.closeDaoResources(null, stat);
 		}
 	}
 
 	@Override
 	public void updateGuiFragment(GuiFragment guiFragment) {
-		PreparedStatement stat = null;
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -134,11 +132,11 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error updating guiFragment {}", guiFragment.getCode(),  t);
 			throw new RuntimeException("Error updating guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, conn);
+			this.closeConnection(conn);
 		}
 	}
-
-	public void updateGuiFragment(GuiFragment guiFragment, Connection conn) {
+	
+	protected void updateGuiFragment(GuiFragment guiFragment, Connection conn) {
 		PreparedStatement stat = null;
 		try {
 			stat = conn.prepareStatement(UPDATE_GUIFRAGMENT);
@@ -160,13 +158,12 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error updating guiFragment {}", guiFragment.getCode(),  t);
 			throw new RuntimeException("Error updating guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, null);
+			this.closeDaoResources(null, stat);
 		}
 	}
 	
 	@Override
 	public void removeGuiFragment(String code) {
-		PreparedStatement stat = null;
 		Connection conn = null;
 		try {
 			conn = this.getConnection();
@@ -178,7 +175,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error deleting guiFragment {}", code, t);
 			throw new RuntimeException("Error deleting guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, conn);
+			this.closeConnection(conn);
 		}
 	}
 	
@@ -193,7 +190,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error deleting guiFragment {}", code, t);
 			throw new RuntimeException("Error deleting guiFragment", t);
 		} finally {
-			this.closeDaoResources(null, stat, null);
+			this.closeDaoResources(null, stat);
 		}
 	}
 	
@@ -201,8 +198,6 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 	public GuiFragment loadGuiFragment(String code) {
 		GuiFragment guiFragment = null;
 		Connection conn = null;
-		PreparedStatement stat = null;
-		ResultSet res = null;
 		try {
 			conn = this.getConnection();
 			guiFragment = this.loadGuiFragment(code, conn);
@@ -210,12 +205,12 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error loading guiFragment with id {}", code, t);
 			throw new RuntimeException("Error loading guiFragment with id " + code, t);
 		} finally {
-			closeDaoResources(res, stat, conn);
+			this.closeConnection(conn);
 		}
 		return guiFragment;
 	}
 	
-	public GuiFragment loadGuiFragment(String code, Connection conn) {
+	protected GuiFragment loadGuiFragment(String code, Connection conn) {
 		GuiFragment guiFragment = null;
 		PreparedStatement stat = null;
 		ResultSet res = null;
@@ -232,7 +227,7 @@ public class GuiFragmentDAO extends AbstractSearcherDAO implements IGuiFragmentD
 			_logger.error("Error loading guiFragment with id {}", code, t);
 			throw new RuntimeException("Error loading guiFragment with id " + code, t);
 		} finally {
-			closeDaoResources(res, stat, null);
+			closeDaoResources(res, stat);
 		}
 		return guiFragment;
 	}
