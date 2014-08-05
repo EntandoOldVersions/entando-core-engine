@@ -68,7 +68,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			IContentListWidgetHelper helper = (IContentListWidgetHelper) ApsWebApplicationUtils.getBean(JacmsSystemConstants.CONTENT_LIST_HELPER, this.pageContext);
 			List<UserFilterOptionBean> defaultUserFilterOptions = helper.getConfiguredUserFilters(this, reqCtx);
 			this.addUserFilterOptions(defaultUserFilterOptions);
-			this.extractExtraShowletParameters(reqCtx);
+			this.extractExtraWidgetParameters(reqCtx);
 			if (null != this.getUserFilterOptions() && null != this.getUserFilterOptionsVar()) {
 				this.pageContext.setAttribute(this.getUserFilterOptionsVar(), this.getUserFilterOptions());
 			}
@@ -76,7 +76,6 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			this.pageContext.setAttribute(this.getListName(), contents);
 		} catch (Throwable t) {
 			_logger.error("error in end tag", t);
-			//ApsSystemUtils.logThrowable(t, this, "doEndTag");
 			throw new JspException("Error detected while finalising the tag", t);
 		}
 		this.release();
@@ -87,10 +86,10 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		List<String> contents = null;
 		try {
 			contents = helper.getContentsId(this, reqCtx);
-			Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
+			Widget currentWidget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
 			Integer maxElements = null;
-			if (null != currentShowlet.getConfig()) {
-				ApsProperties properties = currentShowlet.getConfig();
+			if (null != currentWidget && null != currentWidget.getConfig()) {
+				ApsProperties properties = currentWidget.getConfig();
 				String maxElementsString = properties.getProperty("maxElements");
 				try {
 					maxElements = Integer.parseInt(maxElementsString);
@@ -103,20 +102,19 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting content ids", t);
-			//ApsSystemUtils.logThrowable(t, this, "getContentsId");
 			throw new ApsSystemException("Error extracting content ids", t);
 		}
 		return contents;
 	}
 	
-	private void extractExtraShowletParameters(RequestContext reqCtx) {
+	private void extractExtraWidgetParameters(RequestContext reqCtx) {
 		try {
-			Widget widget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
-			ApsProperties config = widget.getConfig();
+			Widget currentWidget = (Widget) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_WIDGET));
+			ApsProperties config = (null != currentWidget) ? currentWidget.getConfig() : null;
 			if (null != config) {
 				Lang currentLang = (Lang) reqCtx.getExtraParam((SystemConstants.EXTRAPAR_CURRENT_LANG));
-				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.WIDGET_PARAM_TITLE, currentLang, this.getTitleVar());
-				this.addMultilanguageShowletParameter(config, IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
+				this.addMultilanguageWidgetParameter(config, IContentListWidgetHelper.WIDGET_PARAM_TITLE, currentLang, this.getTitleVar());
+				this.addMultilanguageWidgetParameter(config, IContentListWidgetHelper.WIDGET_PARAM_PAGE_LINK_DESCR, currentLang, this.getPageLinkDescriptionVar());
 				if (null != this.getPageLinkVar()) {
 					String pageLink = config.getProperty(ContentListHelper.WIDGET_PARAM_PAGE_LINK);
 					if (null != pageLink) {
@@ -126,17 +124,21 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting extra parameters", t);
-			//ApsSystemUtils.logThrowable(t, this, "extractExtraShowletParameters", "Error extracting extra parameters");
 		}
 	}
 	
-	protected void addMultilanguageShowletParameter(ApsProperties config, String showletParamPrefix, Lang currentLang, String var) {
-		if (null == var) return;
-		String paramValue = config.getProperty(showletParamPrefix + "_" + currentLang.getCode());
+	@Deprecated
+	protected void addMultilanguageShowletParameter(ApsProperties config, String widgetParamPrefix, Lang currentLang, String var) {
+		this.addMultilanguageWidgetParameter(config, widgetParamPrefix, currentLang, var);
+	}
+	
+	protected void addMultilanguageWidgetParameter(ApsProperties config, String widgetParamPrefix, Lang currentLang, String var) {
+		if (null == var || null == config) return;
+		String paramValue = config.getProperty(widgetParamPrefix + "_" + currentLang.getCode());
 		if (null == paramValue) {
 			ILangManager langManager = (ILangManager) ApsWebApplicationUtils.getBean(SystemConstants.LANGUAGE_MANAGER, this.pageContext);
 			Lang defaultLang = langManager.getDefaultLang();
-			paramValue = config.getProperty(showletParamPrefix + "_" + defaultLang.getCode());
+			paramValue = config.getProperty(widgetParamPrefix + "_" + defaultLang.getCode());
 		}
 		if (null != paramValue) {
 			this.pageContext.setAttribute(var, paramValue);
@@ -162,7 +164,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	public void addFilter(EntitySearchFilter filter) {
 		int len = this._filters.length;
 		EntitySearchFilter[] newFilters = new EntitySearchFilter[len + 1];
-		for(int i=0; i < len; i++){
+		for (int i=0; i < len; i++){
 			newFilters[i] = this._filters[i];
 		}
 		newFilters[len] = filter;
@@ -254,7 +256,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 		if (null == category) return;
 		int len = this._categories.length;
 		String[] newCategories = new String[len + 1];
-		for(int i=0; i < len; i++){
+		for (int i=0; i < len; i++){
 			newCategories[i] = this._categories[i];
 		}
 		newCategories[len] = category;
@@ -281,6 +283,7 @@ public class ContentListTag extends TagSupport implements IContentListTagBean {
 	
 	/**
 	 * Return true if the system caching must involved in the search process.
+	 * @return true if the system caching must involved
 	 */
 	@Override
 	public boolean isCacheable() {

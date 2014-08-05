@@ -51,7 +51,7 @@ import com.agiletec.plugins.jacms.aps.system.services.content.helper.IContentLis
 import com.agiletec.plugins.jacms.aps.system.services.content.widget.util.FilterUtils;
 
 /**
- * Classe helper per la showlet di erogazione contenuti in lista.
+ * Classe helper per la widget di erogazione contenuti in lista.
  * @author E.Santoboni
  */
 public class ContentListHelper extends BaseContentListHelper implements IContentListWidgetHelper {
@@ -114,7 +114,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			contentsId = this.executeFullTextSearch(bean, contentsId, reqCtx);
 		} catch (Throwable t) {
 			_logger.error("Error extracting contents id", t);
-			//ApsSystemUtils.logThrowable(t, this, "getContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
@@ -138,7 +137,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		try {
 			List<UserFilterOptionBean> userFilters = bean.getUserFilterOptions();
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-			ApsProperties config = widget.getConfig();
+			ApsProperties config = (null != widget) ? widget.getConfig() : null;
 			if (null == bean.getContentType() && null != config) {
 				bean.setContentType(config.getProperty(WIDGET_PARAM_CONTENT_TYPE));
 			}
@@ -148,7 +147,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			if (null == bean.getCategory() && null != config && null != config.getProperty(SHOWLET_PARAM_CATEGORY)) {
 				bean.setCategory(config.getProperty(SHOWLET_PARAM_CATEGORY));
 			}
-			this.addShowletFilters(bean, config, WIDGET_PARAM_FILTERS, reqCtx);
+			this.addWidgetFilters(bean, config, WIDGET_PARAM_FILTERS, reqCtx);
 			if (null != userFilters && userFilters.size() > 0) {
 				for (int i = 0; i < userFilters.size(); i++) {
 					UserFilterOptionBean userFilter = userFilters.get(i);
@@ -165,7 +164,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
                                 categories, orCategoryFilterClause, bean.getFilters(), userGroupCodes);
 		} catch (Throwable t) {
 			_logger.error("Error extracting contents id", t);
-			//ApsSystemUtils.logThrowable(t, this, "extractContentsId");
 			throw new ApsSystemException("Error extracting contents id", t);
 		}
 		return contentsId;
@@ -243,12 +241,17 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		return categoryCodes;
 	}
 	
+	@Deprecated
 	protected void addShowletFilters(IContentListTagBean bean, ApsProperties showletParams, String showletParamName, RequestContext reqCtx) {
-		if (null == showletParams) {
+		this.addWidgetFilters(bean, showletParams, showletParamName, reqCtx);
+	}
+	
+	protected void addWidgetFilters(IContentListTagBean bean, ApsProperties widgetParams, String widgetParamName, RequestContext reqCtx) {
+		if (null == widgetParams) {
 			return;
-		} 
-		String showletFilters = showletParams.getProperty(showletParamName);
-		EntitySearchFilter[] filters = this.getFilters(bean.getContentType(), showletFilters, reqCtx);
+		}
+		String widgetFilters = widgetParams.getProperty(widgetParamName);
+		EntitySearchFilter[] filters = this.getFilters(bean.getContentType(), widgetFilters, reqCtx);
 		if (null == filters) {
 			return;
 		}
@@ -276,8 +279,10 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 	protected static String buildCacheKey(String listName, Collection<String> userGroupCodes, RequestContext reqCtx) {
 		IPage page = (IPage) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_PAGE);
 		StringBuilder cacheKey = new StringBuilder(page.getCode());
-		Widget currentShowlet = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-		cacheKey.append("_").append(currentShowlet.getType().getCode());
+		Widget currentWidget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
+		if (null != currentWidget) {
+			cacheKey.append("_").append(currentWidget.getType().getCode());
+		}
 		Integer frame = (Integer) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_FRAME);
 		cacheKey.append("_").append(frame.intValue());
 		Lang currentLang = (Lang) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_LANG);
@@ -291,17 +296,17 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			String code = (String) groupCodes.get(i);
 			cacheKey.append("_").append(code);
 		}
-		if (null != currentShowlet.getConfig()) {
-			List<String> paramKeys = new ArrayList(currentShowlet.getConfig().keySet());
+		if (null != currentWidget && null != currentWidget.getConfig()) {
+			List<String> paramKeys = new ArrayList(currentWidget.getConfig().keySet());
 			Collections.sort(paramKeys);
 			for (int i=0; i<paramKeys.size(); i++) {
 				if (i==0) {
-					cacheKey.append("_SHOWLETPARAM");
+					cacheKey.append("_WIDGETPARAM");
 				} else {
 					cacheKey.append(",");
 				}
 				String paramkey = (String) paramKeys.get(i);
-				cacheKey.append(paramkey).append("=").append(currentShowlet.getConfig().getProperty(paramkey));
+				cacheKey.append(paramkey).append("=").append(currentWidget.getConfig().getProperty(paramkey));
 			}
 		}
 		if (null != listName) {
@@ -315,7 +320,7 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 		List<UserFilterOptionBean> userEntityFilters = null;
 		try {
 			Widget widget = (Widget) reqCtx.getExtraParam(SystemConstants.EXTRAPAR_CURRENT_WIDGET);
-			ApsProperties config = widget.getConfig();
+			ApsProperties config = (null != widget) ? widget.getConfig() : null;
 			if (null == config || null == config.getProperty(WIDGET_PARAM_CONTENT_TYPE)) {
 				return null;
 			}
@@ -333,7 +338,6 @@ public class ContentListHelper extends BaseContentListHelper implements IContent
 			}
 		} catch (Throwable t) {
 			_logger.error("Error extracting user filters", t);
-			//ApsSystemUtils.logThrowable(t, this, "getConfiguredUserFilters");
 			throw new ApsSystemException("Error extracting user filters", t);
 		}
 		return userEntityFilters;
