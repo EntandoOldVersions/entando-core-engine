@@ -141,11 +141,6 @@ public class InternalServletTag extends TagSupport {
 		return result;
 	}
 	
-	@Deprecated
-	protected String buildShowletOutput(IPage page, ResponseWrapper responseWrapper) throws JspException {
-		return this.buildWidgetOutput(page, responseWrapper);
-	}
-	
 	protected String buildWidgetOutput(IPage page, ResponseWrapper responseWrapper) throws JspException {
 		String output = null;
 		ServletRequest req =  this.pageContext.getRequest();
@@ -167,11 +162,6 @@ public class InternalServletTag extends TagSupport {
 			throw new JspException(msg, t);
 		}
 		return output;
-	}
-	
-	@Deprecated
-	protected void includeShowlet(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
-		this.includeWidget(reqCtx, responseWrapper, widget);
 	}
 	
 	protected void includeWidget(RequestContext reqCtx, ResponseWrapper responseWrapper, Widget widget) throws ServletException, IOException {
